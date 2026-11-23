@@ -1,11 +1,15 @@
 import { season, unitMap, traitMap } from "@/data";
 import { augmentArtPath } from "@/data/augment-art";
 import augments from "@/data/augment-catalog.json";
+import currentPatch from "@/data/current-patch.json";
 import emblemSnapshot from "@/data/emblem-stats.json";
+import familyStats from "@/data/guide-family-stats.json";
 import { itemWearers, specialItemWearers } from "@/data/item-library";
+import coreStats from "@/data/patch-recommendation-stats.json";
 import type { Publication, Section } from "@/domain/document";
 import { readableSection, sectionTeams } from "@/domain/document-flow";
 import { itemName, itemTerms } from "@/domain/gear-library";
+import { canRankRecommendations, currentFamilyBatch, guideFamilyRows, recommendationTier } from "@/domain/guide-family-stats";
 import { guideBoardName, guideLink, isEditorialSection, primaryFirst } from "@/domain/guide-reading";
 import { guideSearchKey, guideTraitNames, openingSearch } from "@/domain/guide-search";
 import { heroAugmentCategory, heroAugmentForGuide } from "@/domain/hero-augments";
@@ -55,9 +59,43 @@ const augmentIndex = augments.rows.map(entry => ({
   terms:[entry.name,entry.english],
 }));
 
+function searchGuides(live: Publication | null) {
+  if (!live) return [];
+  const current = sameEdition(live.season.id, currentPatch.seasonId);
+  const withFamilies = currentFamilyBatch(familyStats, live.season.id, currentPatch);
+  const withCores = current && canRankRecommendations(coreStats, live.season.id, currentPatch);
+  const reviewed = new Set(currentPatchRecommendations(live)?.entries.filter(row => row.status === "review")
+    .map(row => row.sectionId + ":" + row.teamId));
+  const cores = new Map((withCores ? coreStats.rows : []).map(row => [row.sectionId + ":" + row.teamId, row]));
+  const labels = { recommended: "推荐", secondary: "次选", review: "待复核" };
+  return live.sections.filter(section => readableSection(section) && !isEditorialSection(section) && !isVersionUpdate(section)).map(section => {
+    const teams = primaryFirst(sectionTeams(section), section.primaryTeamId);
+    const edition = section.gameData?.id ?? live.season.id;
+    const families = withFamilies ? guideFamilyRows(familyStats, edition, section.id, teams) : [];
+    const familiesByBoard = new Map<string, typeof families>();
+    for (const row of families) for (const board of row.boards) {
+      const list = familiesByBoard.get(board.id);
+      if (list) list.push(row);
+      else familiesByBoard.set(board.id, [row]);
+    }
+    const boardLabels = new Map(teams.map(board => {
+      const id = section.id + ":" + board.id;
+      const rows = familiesByBoard.get(board.id) ?? [];
+      const core = edition === coreStats.seasonId ? cores.get(id) : undefined;
+      const tiers = new Set(rows.map(row => recommendationTier(row.stat)));
+      if (!tiers.size) tiers.add(recommendationTier(core));
+      const [tier] = tiers;
+      const label = section.category === heroAugmentCategory ? "英雄强化" : reviewed.has(id) ? "待复核" :
+        tiers.size > 1 ? "全部攻略" : labels[tier];
+      return [board.id, label] as const;
+    }));
+    return { section, teams, families, familiesByBoard, boardLabels };
+  });
+}
+
+type SearchGuide = ReturnType<typeof searchGuides>[number];
 type Context = {
-  sections: Section[];
-  recommended: Set<string>;
+  guides: SearchGuide[];
   extra: ReturnType<typeof siteSearchIntent>;
   exclusion?: string;
   live: Publication | null;
@@ -69,15 +107,11 @@ function searchRows<T extends { hit: SiteSearchHit; terms: string[] }>(rows: T[]
     .sort((a,b) => b.rank - a.rank);
 }
 
-function guideCategory(section: Section, team: Team, context: Context) {
-  if (section.category === heroAugmentCategory) return "英雄强化";
-  return context.recommended.has(section.id + ":" + team.id) ? "本版推荐" : "全部攻略";
-}
-
-function guideHit(section: Section, team: Team, context: Context, detail?: string, unit?: Unit): BoardHit {
+function guideHit(guide: SearchGuide, team: Team, detail?: string, unit?: Unit): BoardHit {
+  const { section, boardLabels } = guide;
   return {
     id:team.id, name:section.title, href:guideLink(section.id,team.id), image:unit?.image,
-    detail:detail ?? team.webTitle, category:guideCategory(section, team, context),
+    detail:detail ?? team.webTitle, category:boardLabels.get(team.id),
   };
 }
 
@@ -85,19 +119,20 @@ function namedGuides(context: Context, term: string, items: Item[]) {
   const gearQuery = items.length > 0;
   const titleTerm = key(displayGuideName(term));
   const rankTitle = (name: string) => Math.max(searchNameRank(term, [name]), searchNameRank(titleTerm, [displayGuideName(name)]));
-  return context.sections.flatMap(section => {
-    const teams = primaryFirst(sectionTeams(section), section.primaryTeamId);
+  return context.guides.flatMap(guide => {
+    const { section, teams, familiesByBoard } = guide;
     const titleRank = rankTitle(section.title);
     if (!teams.length || (gearQuery && titleRank !== 3)) return [];
     const augment = heroAugmentForGuide(section);
     return teams.flatMap(team => {
       const name = guideBoardName(team);
       const titleScore = team.id === teams[0].id ? titleRank * 2 : 0;
-      const boardScore = Math.max(rankTitle(name), searchNameRank(term, [augment?.name ?? ""]));
+      const familyNames = familiesByBoard.get(team.id)?.map(({stat}) => rankTitle(stat.name)) ?? [];
+      const boardScore = Math.max(rankTitle(name), searchNameRank(term, [augment?.name ?? ""]), ...familyNames);
       const rank = Math.max(titleScore, boardScore);
       if (!rank) return [];
       const entry = titleScore && titleScore >= boardScore ? teams.find(board => board.id === section.reroll?.entryTeamId) : undefined;
-      const hit = guideHit(section, team, context, entry ? guideBoardName(entry) : team.id === teams[0].id ? undefined : name);
+      const hit = guideHit(guide, team, entry ? guideBoardName(entry) : team.id === teams[0].id ? undefined : name);
       return [{ rank, hit: entry ? { ...hit, href: guideLink(section.id, entry.id) } : hit }];
     });
   }).sort((a,b) => b.rank - a.rank)
@@ -106,26 +141,26 @@ function namedGuides(context: Context, term: string, items: Item[]) {
 }
 
 function heroGuides(context: Context, search: ReturnType<typeof homeSearchIntent>, unit?: Unit) {
-  return context.sections.flatMap(section => {
-    const teams = primaryFirst(sectionTeams(section), section.primaryTeamId);
+  return context.guides.flatMap(guide => {
+    const { section, teams, families } = guide;
     const [match] = matchHomeGuide(search.text, {
-      section, data: section.gameData ?? context.live?.season ?? season, catalog: season, teams, scope: search.scope,
+      section, data: section.gameData ?? context.live?.season ?? season, catalog: season, teams, families, scope: search.scope,
       isTransition: board => guideBoardKind(section, board, teams[0]) === "过渡",
     });
     if (!match) return [];
     const detail = match.unitLabel ?? match.context ?? guideBoardName(match.board);
-    return [{ rank: match.rank, hit: guideHit(section, match.board, context, detail, unit) }];
+    return [{ rank: match.rank, hit: guideHit(guide, match.board, detail, unit) }];
   }).sort((a,b) => b.rank - a.rank).slice(0, limit).map(entry => entry.hit);
 }
 
 function equippedBoards(item: Item, context: Context) {
   const isCurrent = (section: Section) => context.live && sameEdition((section.gameData ?? context.live.season).id,season.id);
-  return context.sections.filter(isCurrent).flatMap(section => {
-    const teams = primaryFirst(sectionTeams(section), section.primaryTeamId);
+  return context.guides.filter(({section}) => isCurrent(section)).flatMap(guide => {
+    const { section, teams } = guide;
     return equippedGuideRoutes(section, teams, teams, item.id, unitMap, context.exclusion, context.extra.lowCosts).map(({board, wearers, population}) => {
       const label = [...new Set(wearers.map(unit => unit.name))].join("、");
       const stage = board.id === teams[0].id ? population + "级" : guideBoardName(board);
-      return guideHit(section, board, context, stage + " · " + label + "携带", wearers[0]);
+      return guideHit(guide, board, stage + " · " + label + "携带", wearers[0]);
     });
   }).slice(0, limit);
 }
@@ -169,9 +204,7 @@ export async function performSiteSearch(input: string, exclude?: string, publica
   if (!term) return { query, intent:extra.intent, groups:[] };
   const live = publication === undefined ? await publicGuidePublication().catch(() => null) : publication;
   const context: Context = {
-    sections: live?.sections.filter(section => readableSection(section) && !isEditorialSection(section) && !isVersionUpdate(section)) ?? [],
-    recommended: new Set(currentPatchRecommendations(live)?.entries.filter(row =>
-      row.status === "recommended" || row.status === "conditional").map(row => row.sectionId + ":" + row.teamId)),
+    guides: searchGuides(live),
     extra,
     exclusion: exclude === "none" ? undefined : exclude && unitMap.has(exclude) ? exclude : extra.excluded
       ? heroIndex.find(row => searchNameRank(key(extra.excluded!), row.terms) === 3)?.hit.id : undefined,

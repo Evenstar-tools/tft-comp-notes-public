@@ -1,5 +1,6 @@
 import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
 import type { ReactNode } from "react";
+import { formatRecommendationMean } from "@/domain/guide-family-stats";
 import "../app/guide-stats-table.css";
 
 export type GuideStatsMetric = "pickRate" | "mean" | "topFourRate" | "winRate";
@@ -79,7 +80,7 @@ export function GuideStatsTable({ rows, metric, direction, onSort }: {
           return <td key={key} className="guide-stats-metric" role="cell" data-active={key === metric ? "true" : undefined}>
             <span className="guide-stats-mobile-label">{guideStatsMetricLabels[key]}</span>
             <strong className={key === "mean" && row.mean < 4 ? "guide-stats-low-mean" : undefined}>
-              {value === null || !Number.isFinite(value) ? "—" : formats[key].format(value)}
+              {value === null || !Number.isFinite(value) ? "—" : key === "mean" ? formatRecommendationMean(value) : formats[key].format(value)}
             </strong>
             {key === "pickRate" && <small>{gameFormat.format(row.games)} 场</small>}
           </td>;

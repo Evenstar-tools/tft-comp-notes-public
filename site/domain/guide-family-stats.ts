@@ -1,4 +1,5 @@
 import type { Team } from "./types";
+import { editionScope } from "./version-updates.ts";
 
 export interface GuideFamilyStat {
   sectionId: string;
@@ -25,6 +26,43 @@ export interface GuideFamilyBatch {
   updatedAt: string;
   totalFinishes?: number;
   rows: GuideFamilyStat[];
+}
+
+const placementCutoff = 4.5;
+export type RecommendationTier = "recommended" | "secondary" | "review";
+
+export function recommendationTier(stat?: Pick<GuideFamilyStat, "games" | "mean">): RecommendationTier {
+  if (!stat || !Number.isSafeInteger(stat.games) || stat.games < 100 ||
+      !Number.isFinite(stat.mean) || stat.mean < 1 || stat.mean > 8) return "review";
+  return stat.mean <= placementCutoff ? "recommended" : "secondary";
+}
+
+export function formatRecommendationMean(mean: number): string {
+  const usual = mean.toFixed(2);
+  if (mean <= placementCutoff || Number(usual) !== placementCutoff) return usual;
+  // A secondary route must not look like an exact 4.50 after rounding.
+  for (let digits = 3; digits < 16; digits++) {
+    const precise = mean.toFixed(digits);
+    if (Number(precise) > placementCutoff) return precise;
+  }
+  return String(mean);
+}
+
+export function currentFamilyBatch(
+  batch: Pick<GuideFamilyBatch, "seasonId" | "queue" | "patch" | "days" | "updatedAt">,
+  seasonId: string, patch?: { seasonId?: string; label: string; effectiveAt: string },
+): boolean {
+  if (!patch || batch.seasonId !== seasonId || !Number.isInteger(batch.days) || batch.days < 1 ||
+      !(Date.parse(batch.updatedAt) >= Date.parse(patch.effectiveAt))) return false;
+  const scope = editionScope(seasonId);
+  const queue = batch.queue?.toUpperCase();
+  if (!scope || (patch.seasonId && editionScope(patch.seasonId) !== scope)) return false;
+  if (scope.endsWith("-pbe") ? queue !== "PBE" : !["RANKED", "RANKED_TFT", "1100"].includes(queue)) return false;
+  // MetaTFT can label a PBE hotfix by date ("19.1 Nov-20") instead of a patch letter.
+  const version = /\b(\d+\.\d+)([a-z]?)\b/i;
+  const source = batch.patch?.match(version), current = patch.label.match(version);
+  return Boolean(source && current && source[1] === current[1] &&
+    (!source[2] || !current[2] || source[2].toLowerCase() === current[2].toLowerCase()));
 }
 
 export type GuideFamilyMetric = "pickRate" | "mean" | "topFourRate" | "winRate";
@@ -96,9 +134,8 @@ export function recommendationGroup(style: string, carryCosts: number[], rollLev
 export function selectRecommendationRoutes<T extends { group: RecommendationGroup; familyId: string; rating: RecommendationStat; conditional?: boolean }>(
   candidates: T[],
 ) {
-  const ranked = candidates.filter(({ rating }) =>
-    Number.isSafeInteger(rating.games) && rating.games >= 100 && rating.mean >= 1 && rating.mean <= 4.5
-  ).sort((a, b) => a.rating.mean - b.rating.mean || b.rating.games - a.rating.games);
+  const ranked = candidates.filter(({ rating }) => recommendationTier(rating) === "recommended")
+    .sort((a, b) => a.rating.mean - b.rating.mean || b.rating.games - a.rating.games);
   return recommendationGroups.flatMap(({ id }) => {
     const families = new Set<string>();
     const carries = new Set<string>();
@@ -122,7 +159,7 @@ export function selectRecommendationRoutes<T extends { group: RecommendationGrou
 export function guideFamilyRows(batch: GuideFamilyBatch, seasonId: string, sectionId: string, teams: Team[]) {
   if (batch.seasonId !== seasonId || !batch.patch || !batch.updatedAt || batch.days < 1) return [];
   return batch.rows.flatMap(stat => {
-    if (stat.sectionId !== sectionId || !(Number.isSafeInteger(stat.games) && stat.games >= 100 && stat.mean >= 1 && stat.mean <= 8)) return [];
+    if (stat.sectionId !== sectionId || recommendationTier(stat) === "review") return [];
     const team = stat.teamId ? teams.find(t => t.id === stat.teamId) : teams[0];
     if (!team) return [];
     const ids = new Set([stat.landingTeamId, team.id, ...(stat.sharedTeamIds ?? [])]);

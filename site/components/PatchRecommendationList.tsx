@@ -1,5 +1,5 @@
 import { guideLink } from "@/domain/guide-reading";
-import { recommendationGroups, type GuideFamilyBatch, type RecommendationGroup, type RecommendationStat } from "@/domain/guide-family-stats";
+import { formatRecommendationMean, recommendationGroups, type GuideFamilyBatch, type RecommendationGroup, type RecommendationStat } from "@/domain/guide-family-stats";
 import type { Team, Unit } from "@/domain/types";
 import { homeGuideReturn } from "@/lib/home-position";
 
@@ -70,7 +70,7 @@ export function PatchRecommendationList({ stats, cards, home }: {
                   {hit && <p className="home-patch-hit">{hit}</p>}
                 </div>
                 <span id={id + "-mean"} className={"home-patch-mean guide-placement " + tone}>
-                  <span>体系均名 <b>{rating.mean.toFixed(2)}</b></span>
+                  <span>体系均名 <b>{formatRecommendationMean(rating.mean)}</b></span>
                   <small>{rating.games.toLocaleString("zh-CN")} 场</small>
                 </span>
               </a>
