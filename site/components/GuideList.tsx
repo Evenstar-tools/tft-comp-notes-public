@@ -4,8 +4,9 @@ import { Fragment, useEffect, useLayoutEffect, useMemo, useRef, useState, type M
 import { ChevronRight, X } from "lucide-react";
 import { guideRerollTargets } from "@/domain/reroll-targets";
 import familyStats from "@/data/guide-family-stats.json";
+import coreStats from "@/data/patch-recommendation-stats.json";
 import { displayGuideName } from "@/domain/trait-names.mjs";
-import { compareGuideFamilyPerformance, familyMetricValue, guideFamilyRows, recommendationGroup, selectRecommendationRoutes, type GuideFamilyDirection, type GuideFamilyMetric, type GuideFamilyStat } from "@/domain/guide-family-stats";
+import { canRankRecommendations, compareGuideFamilyPerformance, currentFamilyBatch, familyMetricValue, formatRecommendationMean, guideFamilyRows, recommendationGroup, recommendationTier, selectRecommendationRoutes, type GuideFamilyDirection, type GuideFamilyMetric, type GuideFamilyStat } from "@/domain/guide-family-stats";
 import { carryMinGames, guideCarryRows } from "@/domain/guide-carry-stats";
 import { sectionTeams } from "@/domain/document-flow";
 import { boardTitle, groupGuides, type GuideFamily } from "@/domain/guide-families";
@@ -31,6 +32,8 @@ import { GuideCardBoard, GuideQuickView } from "./GuideCardBoard";
 import { GuideStatsTable, guideStatsMetricLabels, type GuideStatsTableRow } from "./GuideStatsTable";
 
 const backupCategory = "次选";
+const tierLabels = { recommended: "推荐", secondary: backupCategory, review: "待复核" } as const;
+const tierOrder: string[] = [tierLabels.recommended, tierLabels.review, tierLabels.secondary];
 const categoryOrder = ["连胜成型", "连败", "条件阵容", "慢搜", "高费", "史密奇", "纹章"];
 type View = "regular" | "hero-augments";
 type ArchiveSort = Exclude<GuideSort, "recommended">;
@@ -63,12 +66,13 @@ function categoryPriority(category: string) {
 }
 
 function browseCategory(section: Section, playstyle?: string) {
+  if (categoryLabel(section.category) === backupCategory) return playstyle ? "高费阵容" : "常规阵容";
   if (section.category === "慢搜阵容" && playstyle) return "高费阵容";
   return categoryLabel(section.category);
 }
 
 function defaultSort(view: View, filters: GuideFilters): GuideSort {
-  const backup = view === "regular" && categoryLabel(filters.category ?? "") === backupCategory;
+  const backup = view === "regular" && tierOrder.includes(categoryLabel(filters.category ?? ""));
   return filters.sort ?? (backup ? "category" : "recommended");
 }
 
@@ -132,7 +136,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
   const filterPanel = useRef<HTMLDetailsElement>(null);
   const recommended = view === "regular" && sort === "recommended";
   const selections = choices[view] ?? emptyFilters;
-  const active = recommended && selections.category === backupCategory ? { ...selections, category: "" } : selections;
+  const active = recommended && tierOrder.includes(selections.category) ? { ...selections, category: "" } : selections;
   const { category, style, cost } = active;
   const styleKey = guideStyleKey(style);
   const hasFilter = Boolean(category || style || cost);
@@ -149,7 +153,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
   const equipmentQuery = Boolean(selectedGear || (conditions.length === 1 && gearHits.length));
   const extraGearTerms = selectedGear ? query.trimStart().slice(lookupTerm.length).replace(/^\s*[+＋]\s?/, "") : "";
   function homeLink(target: View, { category, style, cost }: Selections, targetSort: GuideSort) {
-    const archiveCategory = target === "regular" && targetSort === "recommended" && category === backupCategory ? "" : category;
+    const archiveCategory = target === "regular" && targetSort === "recommended" && tierOrder.includes(category) ? "" : category;
     const ranking = target === "regular" && targetSort === "mean";
     const metric = ranking && performance.metric !== "mean" ? performance.metric : undefined;
     const direction = ranking && performance.direction !== (performance.metric === "mean" ? "asc" : "desc") ? performance.direction : undefined;
@@ -258,21 +262,19 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
   }, [sections, heroSections, season]);
 
   const visible = library[view];
+  const hasCurrentStats = currentFamilyBatch(familyStats, season.id, patch);
+  const hasCurrentCore = !!patch && canRankRecommendations(coreStats, season.id, patch);
+  const tierFilter = view === "regular" && tierOrder.includes(category) ? category : "";
   const availableFacets = view === "regular" ? [...visible, ...library["hero-augments"]] : visible;
-  const categories = [...new Set([...visible.map(section => section.viewCategory).filter(Boolean), ...(category ? [category] : [])])]
-    .filter(name => !recommended || name !== backupCategory)
+  const categories = [...new Set([...visible.map(section => section.viewCategory).filter(Boolean), ...(!recommended && view === "regular" ? tierOrder : []), ...(category ? [category] : [])])]
     .sort((a, b) => categoryPriority(a) - categoryPriority(b));
   const styles = new Map([...availableFacets.map(entry => entry.filterStyle), style].filter(Boolean)
     .map(tag => [guideStyleKey(tag), tag.replace(/^([一二三])费/, (text, digit: string) => ("一二三".indexOf(digit) + 1) + "费")] as const));
   const costs = [...new Set([...availableFacets.flatMap(entry => entry.costOptions), ...(cost ? [cost] : [])])].sort((a,b) => a-b);
   const decisions = new Map((recommendations?.entries ?? []).map(record => [`${record.sectionId}:${record.teamId}`, record]));
-  const secondaryGuides = new Set(recommendations?.entries.filter(record => record.status === "avoid").map(record => record.sectionId));
   function canShowBoard(section: Section, team: Team) {
     if (!recommended) return true;
-    const status = decisions.get(`${section.id}:${team.id}`)?.status;
-    const reviewedForRecommendation = status === "recommended" || status === "conditional";
-    return !secondaryGuides.has(section.id) && status !== "review" &&
-      (reviewedForRecommendation || categoryLabel(section.category) !== backupCategory);
+    return decisions.get(`${section.id}:${team.id}`)?.status !== "review";
   }
   const nextSelections = (target: View) => {
     if (choices[target]) return choices[target]!;
@@ -308,7 +310,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
   function candidatesFor(entries: typeof visible, terms = conditions, recommendationsOnly = recommended) {
     return entries.flatMap(entry => {
       const { section, data, teams, filterStyle, augment, viewCategory } = entry;
-      if ((category && viewCategory !== category) || (style && guideStyleKey(filterStyle) !== styleKey) || (cost && !entry.costOptions.includes(cost))) return [];
+      if ((category && !tierFilter && viewCategory !== category) || (style && guideStyleKey(filterStyle) !== styleKey) || (cost && !entry.costOptions.includes(cost))) return [];
       const searchTeams = recommendationsOnly ? teams.filter(board => canShowBoard(section, board)) : teams;
       if (recommendationsOnly && !searchTeams.length) return [];
       const one = (term: string) => {
@@ -387,8 +389,11 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
     if (!hits.length) return [];
     return [{ stat, team:hits[0].board, boards:hits.map(hit => hit.board) }];
   });
+  const boardTier = (section: Section, team: Team | undefined, stat?: Pick<GuideFamilyStat, "games" | "mean">) =>
+    decisions.get(`${section.id}:${team?.id}`)?.status === "review" ? "review" : recommendationTier(stat);
   const statsRows: GuideStatsTableRow[] = ranked ? candidates.flatMap(entry =>
-    matchingRows(entry).map(match => ({ ...match, entry }))
+    matchingRows(entry).filter(({team, stat}) => !tierFilter ||
+      tierLabels[boardTier(entry.section, team, hasCurrentStats ? stat : undefined)] === tierFilter).map(match => ({ ...match, entry }))
   ).sort((a, b) => compareGuideFamilyPerformance(a.stat, b.stat, performance.metric, performance.direction, familyStats.totalFinishes))
     .map(({ stat, team, entry }) => {
       const { section, data, playstyle } = entry;
@@ -418,36 +423,56 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
         topFourRate: familyMetricValue(stat, "topFourRate"), winRate: familyMetricValue(stat, "winRate"),
       };
     }) : [];
-  type Card = Result & { rating?: GuideFamilyStat; routes?: Team[]; cardId: string };
-  const results: Card[] = ranked ? [] : grouped.map(entry => {
-    const team = entry.team;
-    const matching = matchingRows(entry).filter(row => row.boards.some(board => board.id === team?.id));
-    const match = !isHeroList && matching.length === 1 ? matching[0] : undefined;
-    const routes = match?.stat.landingTeamId && team &&
-      match.boards.some(board => usedPopulation(board.pieces) !== usedPopulation(team.pieces)) ? match.boards : undefined;
-    return { ...entry, cardId: entry.section.id,
-      routes, rating: match?.stat };
+  type Card = Result & { rating?: Pick<GuideFamilyStat, "mean" | "games" | "name" | "topFourRate" | "winRate">;
+    core?: boolean; routeName?: string; clusterId?: GuideFamilyStat["clusterId"]; routes?: Team[]; cardId: string; tier: ReturnType<typeof recommendationTier> };
+  const results = ranked || recommended ? [] : grouped.flatMap<Card>(entry => {
+    const primaryCard = { ...entry, cardId: entry.section.id, tier: "review" as const };
+    if (isHeroList) return [primaryCard];
+    const cards: Card[] = [];
+    for (const route of [entry, ...entry.siblings]) {
+      const focus = route.team;
+      const matches = hasCurrentStats ? matchingRows(route) : [];
+      const includesBoard = (boards: Team[], team?: Team) => boards.some(board => board.id === team?.id);
+      for (const match of matches) {
+        const isFocus = includesBoard(match.boards, focus);
+        const hit = route.matches.find(result => result.board.id === match.team.id);
+        if (needle && !isFocus && (!hit || hit.rank < route.rank)) continue;
+        const team = isFocus ? focus : match.team;
+        const tier = boardTier(route.section, team, hasCurrentStats ? match.stat : undefined);
+        const routes = match.stat.landingTeamId && match.boards.some(board =>
+          usedPopulation(board.pieces) !== usedPopulation(team.pieces)) ? match.boards : undefined;
+        cards.push({ ...entry, ...route, team, routes, tier, rating: match.stat,
+          context: isFocus ? route.context : hit?.context, unitLabel: isFocus ? route.unitLabel : hit?.unitLabel,
+          routeName: displayGuideName(match.stat.name), clusterId: match.stat.clusterId,
+          cardId: isFocus && !cards.some(card => card.cardId === route.section.id) ? route.section.id : route.section.id + "-family-" + match.stat.clusterId });
+      }
+      if (matches.some(match => includesBoard(match.boards, focus))) continue;
+      const core = hasCurrentCore && route.data.id === coreStats.seasonId ? coreStats.rows.find(row =>
+        row.sectionId === route.section.id && row.teamId === focus?.id) : undefined;
+      if (route !== entry && !core) continue;
+      cards.push({ ...entry, ...route, tier: boardTier(route.section, focus, core), core: !!core,
+        rating: core, cardId: route.section.id });
+    }
+    return cards.filter(card => !tierFilter || tierLabels[card.tier] === tierFilter);
   });
-  if (needle) results.sort((a, b) => b.rank - a.rank);
+  if (!isHeroList) results.sort((a, b) => (needle ? b.rank - a.rank : 0) ||
+    tierOrder.indexOf(tierLabels[a.tier]) - tierOrder.indexOf(tierLabels[b.tier]) ||
+    Number(!!a.core) - Number(!!b.core) || (a.rating?.mean ?? 9) - (b.rating?.mean ?? 9) ||
+    (b.rating?.games ?? 0) - (a.rating?.games ?? 0));
+  else if (needle) results.sort((a, b) => b.rank - a.rank);
   const byCategory = !needle && sort === "category" && !isHeroList;
   const categoryGroups = new Map<string, Card[]>();
   for (const entry of results) {
-    const categoryName = byCategory ? entry.viewCategory : "";
+    const categoryName = byCategory ? tierLabels[entry.tier] : "";
     const group = categoryGroups.get(categoryName);
     if (group) group.push(entry);
     else categoryGroups.set(categoryName, [entry]);
   }
-  const groupPriority = (name: string) => {
-    if (name === "") return -2;
-    return categoryPriority(name);
-  };
-  const groups = [...categoryGroups].sort(([a], [b]) => groupPriority(a) - groupPriority(b));
+  const groups = [...categoryGroups].sort(([a], [b]) => tierOrder.indexOf(a) - tierOrder.indexOf(b));
   const groupLinks = byCategory && groups.length > 1 ? groups.map(([name], index) => ({
     label: categoryDisplay(name).replace(/成型阵容$|阵容$/, ""), id: name === backupCategory ? "backup-guides" : "guide-group-" + index,
   })) : [];
 
-  const hasCurrentStats = patch && familyStats.seasonId === season.id && familyStats.days > 0 &&
-    Date.parse(familyStats.updatedAt) >= Date.parse(patch.effectiveAt);
   const selectedRoutes = recommended && hasCurrentStats ? selectRecommendationRoutes(candidates.flatMap(entry => {
     const { section, data } = entry;
     if (entry.augment) return [];
@@ -477,7 +502,8 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
     const record = decisions.get(`${section.id}:${team.id}`);
     const primary = entry.teams[0]?.id === team.id;
     const [original, short] = shortOpenings[guideTitleWithoutPlaystyle(section.title, entry.playstyle)] ?? [];
-    const opening = record?.note ?? (primary && notes.opening.trim() === original ? short : homeOpening(notes.opening, rating.name));
+    const advice = record?.status === "recommended" || record?.status === "conditional" ? record.note : undefined;
+    const opening = advice ?? (primary && notes.opening.trim() === original ? short : homeOpening(notes.opening, rating.name));
     const roles = notes.roles;
     const roster = guideRoster(team, data, roles);
     const lineup: RecommendationCard["avatars"] = roster.map(({ unit, role }) => ({
@@ -539,7 +565,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
 
   const renderCards = (group: Card[], groupName: string, eager: boolean) => {
     const CardTitle = groupName ? "h3" : "h2";
-    return <div className="guide-list reader-list">{group.map(({ section, data, team, teams, matches, augment, siblings, family, rating: matchedRating, routes, cardId, context: searchContext, unitLabel, facet, playstyle }, index) => {
+    return <div className="guide-list reader-list">{group.map(({ section, data, team, teams, matches, augment, siblings, family, rating: matchedRating, core, routeName, clusterId, rows, routes, cardId, context: searchContext, unitLabel, facet, playstyle }, index) => {
       const primary = teams[0];
       const kind = team && guideBoardKind(section, team, primary);
       const alternative = team && team.id !== primary.id;
@@ -555,7 +581,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
       const intro = searchContext ?? entryNote ?? notes?.opening ?? "";
       const guideName = guideTitleWithoutPlaystyle(section.title, playstyle);
       const [sourceIntro, compactIntro] = shortOpenings[guideName] ?? [];
-      const title = guideTitleWithoutPlaystyle(team ? boardTitle(section, team) : section.title, playstyle);
+      const title = guideTitleWithoutPlaystyle(routeName ?? (team ? boardTitle(section, team) : section.title), playstyle);
       const opening = entryNote && !searchContext ? entryNote
         : !searchContext && !alternative && intro.trim() === sourceIntro ? compactIntro : homeOpening(intro, title, augment);
       const stage = section.reroll?.stages.find(entry => entry.teamId === team?.id);
@@ -588,9 +614,13 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
       const description = augment ? [augment.round, augment.label || augment.name, strategy].filter(Boolean).join(" · ")
         : alternative && team?.id !== family?.lead.team.id && kind && !title.includes(kind)
           ? [kind, strategy].filter(Boolean).join(" · ") : strategy ?? (playstyle ? "" : facet.style);
-      const variants = [...new Map([{ section, teams, matches }, ...siblings].flatMap(entry => {
+      const variants = [...new Map([{ section, teams, matches, rows }, ...siblings].flatMap(entry => {
         const options = needle ? entry.matches.filter(match => match.kind === "board").map(match => match.board) : entry.teams;
-        return options.filter(option => canShowBoard(entry.section, option) && option.id !== team?.id && !routes?.some(board => board.id === option.id) && (needle || guideBoardKind(entry.section, option, entry.teams[0]) !== "过渡"))
+        return options.filter(option => {
+          if (option.id === team?.id || routes?.some(board => board.id === option.id) || (!needle && guideBoardKind(entry.section, option, entry.teams[0]) === "过渡")) return false;
+          const owners = hasCurrentStats && !isHeroList ? entry.rows.filter(row => row.boards.some(board => board.id === option.id)) : [];
+          return owners.length ? owners.some(row => row.stat.clusterId === clusterId) : cardId === section.id;
+        })
           .map(option => [option.id, { option, origin: entry.section, original: entry.teams[0] }] as const);
       })).values()];
       const variantLinks = variants.length > 0 && <ul className="guide-variant-links" aria-label="阵容方案">{variants.map(({ option, origin, original }) => {
@@ -613,8 +643,8 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
               {review && <span className="guide-review-badge" id={reviewId} title={review.note}>待复核</span>}
             </div>
             {rating && <span id={ratingId} className={"guide-placement " + (rating.mean < 4.5 ? "strong" : rating.mean > 4.5 ? "weak" : "middle")}
-              title={familyStats.patch + " · 前四 " + (100 * rating.topFourRate).toFixed(1) + "% · 吃鸡 " + (100 * rating.winRate).toFixed(1) + "%"}>
-              <span>体系均名</span> <strong>{rating.mean.toFixed(2)}</strong><small>{rating.games.toLocaleString("zh-CN")} 场</small>
+              title={(core ? coreStats.patch + " · " + coreStats.hours + " 小时核心样本" : familyStats.patch + " · 近 " + familyStats.days + " 天体系样本") + " · 前四 " + (100 * rating.topFourRate).toFixed(1) + "% · 吃鸡 " + (100 * rating.winRate).toFixed(1) + "%"}>
+              {recommendationTier(rating) !== "review" && <><span>{core ? "核心均名" : "体系均名"}</span> <strong>{formatRecommendationMean(rating.mean)}</strong></>}<small>{rating.games.toLocaleString("zh-CN")} 场</small>
             </span>}
           </div>
           {description && <small className="guide-result-meta">{description}</small>}

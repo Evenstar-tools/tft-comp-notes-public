@@ -5,7 +5,7 @@ import { primaryFirst, matchGuideTeams, sourceSummary, complementItems, guideFac
 import { displayGuideName } from "../domain/trait-names.mjs";
 import { comboStarMask, comboTierCounts } from "../domain/combo-tiers.ts";
 import { guideStyleKey, guideWearerQuery, homeGuideFilter, matchOpeningSearch, openingSearch, searchPhaseNote } from "../domain/guide-search.ts";
-import { canRankRecommendations, compareGuideFamilyPerformance, familyMetricValue, guideFamilyRows, recommendationGroup, selectRecommendationRoutes } from "../domain/guide-family-stats.ts";
+import { canRankRecommendations, compareGuideFamilyPerformance, currentFamilyBatch, familyMetricValue, formatRecommendationMean, guideFamilyRows, recommendationGroup, recommendationTier, selectRecommendationRoutes } from "../domain/guide-family-stats.ts";
 import { posterShareLink, readPosterShare, validItemLibraryReturn } from "../domain/links.ts";
 import { compactGuideParagraph, compactUtilityCopy, rememberGuideCopy } from "../domain/guide-copy.ts";
 import { heroGuideIndex } from "../domain/hero-guides.ts";
@@ -340,6 +340,37 @@ test("recommendations compare a single patch window and use the intended roll pl
   assert.equal(recommendationGroup("速八运营", [4], 8), "fast8");
   assert.equal(recommendationGroup("速九运营", [5], 8), "fast9");
   assert.equal(recommendationGroup("慢搜", [4], 8), undefined);
+});
+
+test("archive and homepage use the same sample threshold and exact placement cutoff", () => {
+  const row = { games: 100, mean: 4.5 };
+  assert.equal(recommendationTier(row), "recommended");
+  assert.equal(recommendationTier({ ...row, mean: 4.49 }), "recommended");
+  assert.equal(recommendationTier({ ...row, mean: 4.503923 }), "secondary");
+  for (const missing of [undefined, { ...row, games: 99 }, { ...row, games: 100.1 },
+    { ...row, mean: NaN }, { ...row, mean: 0 }, { ...row, mean: 9 }]) {
+    assert.equal(recommendationTier(missing), "review");
+  }
+  assert.equal(formatRecommendationMean(4.5), "4.50");
+  assert.equal(formatRecommendationMean(4.503923), "4.504");
+  assert.equal(formatRecommendationMean(4.50008), "4.5001");
+  assert.equal(formatRecommendationMean(4.5102), "4.51");
+});
+
+test("a rolling family batch must match the live edition, queue and patch before grading guides", () => {
+  const season = "s19-pbe-19.1.0.5973071";
+  const patch = { label: "PBE 19.1a", effectiveAt: "2026-11-22T01:49:44Z" };
+  const batch = { seasonId: season, queue: "PBE", patch: "19.1 Nov-20", days: 3, updatedAt: "2026-11-23T09:31:13Z" };
+  assert.equal(currentFamilyBatch(batch, season, patch), true);
+  for (const changes of [{ seasonId: "s18-pbe" }, { queue: "RANKED" }, { patch: "19.10" },
+    { patch: "19.1b" }, { updatedAt: "2026-11-22T00:00:00Z" }, { days: 0 }]) {
+    assert.equal(currentFamilyBatch({ ...batch, ...changes }, season, patch), false);
+  }
+  assert.equal(currentFamilyBatch(batch, season), false);
+  assert.equal(currentFamilyBatch(batch, season, { ...patch, seasonId: "s19-live" }), false);
+  const live = { ...batch, seasonId: "s19-live", queue: "RANKED", patch: "19.1" };
+  assert.equal(currentFamilyBatch(live, live.seasonId, { ...patch, label: "19.1" }), true);
+  assert.equal(currentFamilyBatch({ ...live, queue: "PBE" }, live.seasonId, patch), false);
 });
 
 test("home shared filters keep the first usable text and ignore malformed option values", () => {
