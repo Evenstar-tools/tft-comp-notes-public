@@ -5,6 +5,7 @@ import { guideBoardName, primaryFirst } from "@/domain/guide-reading";
 import { gearFilters, type GearPageParams } from "@/domain/gear-library";
 import { itemGuideOrigin } from "@/domain/links";
 import { livePublication } from "@/server/publication";
+import { displayGuideName } from "@/domain/trait-names.mjs";
 
 export const dynamic = "force-dynamic";
 
@@ -27,7 +28,7 @@ export default async function Items({ searchParams }: {
           if (!itemMap.has(itemId)) continue;
           const uses = examples[itemId] ??= [];
           if (uses.some(use => use.sectionId === section.id && use.teamId === team.id && use.unitId === piece.unitId)) continue;
-          uses.push({ sectionId: section.id, teamId: team.id, title: section.title, boardName, isPrimary: team.id === teams[0]?.id, unitId: piece.unitId });
+          uses.push({ sectionId: section.id, teamId: team.id, title: displayGuideName(section.title), boardName: displayGuideName(boardName), isPrimary: team.id === teams[0]?.id, unitId: piece.unitId });
         }
       }
     }

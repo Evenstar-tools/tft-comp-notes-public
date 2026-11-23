@@ -4,6 +4,7 @@ import { Fragment, useEffect, useLayoutEffect, useMemo, useRef, useState, type M
 import { ChevronRight, X } from "lucide-react";
 import { guideRerollTargets } from "@/domain/reroll-targets";
 import familyStats from "@/data/guide-family-stats.json";
+import { displayGuideName } from "@/domain/trait-names.mjs";
 import { compareGuideFamilyPerformance, familyMetricValue, guideFamilyRows, recommendationGroup, selectRecommendationRoutes, type GuideFamilyDirection, type GuideFamilyMetric, type GuideFamilyStat } from "@/domain/guide-family-stats";
 import { carryMinGames, guideCarryRows } from "@/domain/guide-carry-stats";
 import { sectionTeams } from "@/domain/document-flow";
@@ -76,13 +77,13 @@ const shortOpenings: Record<string, readonly [source: string, short: string]> = 
   "四国风霞": ["霞来得早、场面能赢就走四国风。八级用四心之钢打工，先让霞上场做任务。", "霞来得早、场面能赢，八级用四心之钢打工。"],
   "高能流行芬妮&炸弹": ["六级上四高能、芬妮、斯维因，二费来得多再一起追三。", "六级追芬妮、璐璐和小炮。四个三星开巨星。"],
   "五天才玛尔扎哈": ["玛尔扎哈、艾克来得多就停七一起追三。五天才七级成型。", "玛尔扎哈、艾克来得多，七级一起追三。"],
-  "四酷炫德莱文": ["德莱文、布隆来得早，有青龙刀或无尽就走。前期两星韦鲁斯带输出装，两星俄洛伊带肉装。德莱文、布隆各自两星再接装，预留一张韦鲁斯和俄洛伊补羁绊。七级优先追德莱文和布隆，卡莎顺手留。", "德莱文、布隆来得早，有青龙刀或无尽就七级一起追三。"],
+  "四大触打击乐德莱文": ["德莱文、布隆来得早，有青龙刀或无尽就走。前期两星韦鲁斯带输出装，两星俄洛伊带肉装。德莱文、布隆各自两星再接装，预留一张韦鲁斯和俄洛伊补羁绊。七级优先追德莱文和布隆，卡莎顺手留。", "德莱文、布隆来得早，有青龙刀或无尽就七级一起追三。"],
   "五杀天使": ["炸弹人带羊刀，纳尔带肉。七级上纳尔、奥拉夫、死歌、炸弹人开天使，八级天使、约里克两星接装。不同名五杀合计 10 星开铁男，没开先用乌鸦，开了换铁男，九级补回乌鸦。", "七级开天使，八级找天使和约里克两星。"],
   "双电子泽丽": ["青龙刀、无尽先给芸阿娜，两星凯尔或卢锡安接装。八级掉大血就先 D 前排，稳住再上九。优先两星泽丽；女枪先两星就上她和卢锡安。蒙多两星再接蕾欧娜的肉装。", "八级掉血先 D 前排，九级泽丽或女枪谁先两星谁接装。"],
-  "七海洋扎克男枪": ["奥拉夫带男枪装，鳄鱼带两件肉装开艾希。七级上五个不同的海洋或主唱开扎克，塔里克只算一个。八级搜男枪、扎克，谁两星谁接装，留一张空装鳄鱼。", "七级凑五个不同的海洋或主唱开扎克，八级找扎克、男枪两星。"],
+  "七海之歌扎克男枪": ["奥拉夫带男枪装，鳄鱼带两件肉装开艾希。七级上五个不同的海洋或主唱开扎克，塔里克只算一个。八级搜男枪、扎克，谁两星谁接装，留一张空装鳄鱼。", "七级凑五个不同的海之歌或主唱开扎克，八级找扎克、男枪两星。"],
   "史密奇95": ["饮血、血手、泰坦先合给战士打工。八级先稳血，九级摆八个非唯一羁绊开史密奇。上限看两星主坦和先来的副 C。", "八级稳血，九级开八个非唯一羁绊解锁。"],
   "爵士乐史密奇": ["九级同时开出至少 8 个非唯一羁绊，确认解锁后再 D 史密奇。五杀线优先，烬先两星走四爵士，亚索早到走真伤。", "五杀优先，烬先两星走四爵士，亚索早到走真伤。"],
-  "三爵士女枪泽丽": ["女枪或泽丽谁先二星谁先接装。第二套输出装和前排齐备再做双 C，有战士装且已开锁时，补史密奇从边路切进去。", "女枪或泽丽谁先两星谁接装，装备够再做双 C。"],
+  "三爵士乐女枪泽丽": ["女枪或泽丽谁先二星谁先接装。第二套输出装和前排齐备再做双 C，有战士装且已开锁时，补史密奇从边路切进去。", "女枪或泽丽谁先两星谁接装，装备够再做双 C。"],
   "K/DA转芬妮": ["有 K/DA 纹章再走。二阶段选秀前刷 4 次解锁芬妮。金铲铲加大棒可合纹章。", "有 K/DA 转再走，二阶段选秀前刷 4 次开芬妮。"],
   "K/DA毒舞莉莉娅": ["2-1 拿到莉莉娅专属，先合离子或正义。五级先拼双保镖、五颗 K/DA 星。", "五级追莉莉娅，先合离子或正义。"],
   "救生员鳄鱼": ["2-1 拿到雷克顿专属，有大剑、反曲弓或锁子甲再走。雷克顿先穿两件装备开艾希，未解锁前用佐伊凑三海洋。", "鳄鱼先穿两件开艾希，六级追三。"],
@@ -392,7 +393,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
     .map(({ stat, team, entry }) => {
       const { section, data, playstyle } = entry;
       const notes = readingNotes(section, team, data);
-      const name = guideTitleWithoutPlaystyle(stat.name, playstyle);
+      const name = guideTitleWithoutPlaystyle(displayGuideName(stat.name), playstyle);
       const [original, short] = shortOpenings[guideTitleWithoutPlaystyle(section.title, playstyle)] ?? [];
       const decision = decisions.get(`${section.id}:${team.id}`);
       const opening = decision?.status === "recommended" || decision?.status === "conditional" ? decision.note
@@ -499,7 +500,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
       stages.set(board.id, { team: board, label: phase.label });
     }
     return {
-      group, rating, team, title: guideTitleWithoutPlaystyle(rating.name, entry.playstyle), avatars, opening, conditional,
+      group, rating, team, title: guideTitleWithoutPlaystyle(displayGuideName(rating.name), entry.playstyle), avatars, opening, conditional,
       entryTeamId: primary && (!needle || exact?.namedFamily) ? section.reroll?.entryTeamId : undefined,
       stages: [...stages.values()],
       strategy,

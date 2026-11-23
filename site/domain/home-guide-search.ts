@@ -5,6 +5,7 @@ import { guideSearchKey, guideStyleKey, guideTraitNames, guideWearerQuery, homeG
 import { traitCounts, usedPopulation } from "./team";
 import type { Season, Team, Unit } from "./types";
 import { unitSearchNames } from "./unit-search.mjs";
+import { displayGuideName } from "./trait-names.mjs";
 
 type Match = { board: Team; rank: number; context?: string; unitLabel?: string; namedFamily?: boolean; kind: "board" | "opening" | "guide" };
 
@@ -31,7 +32,9 @@ export function equippedGuideRoutes(section: Section, ordered: Team[], matching:
 
 export function familyNameMatches(stat: GuideFamilyStat, query: string) {
   const term = guideSearchKey(query);
-  return !!term && [stat.name, stat.sourceName, ...(stat.aliases ?? [])].some(name => guideSearchKey(name).includes(term));
+  const titleTerm = guideSearchKey(displayGuideName(query));
+  return !!term && [stat.name, stat.sourceName, ...(stat.aliases ?? [])].some(name =>
+    guideSearchKey(name).includes(term) || guideSearchKey(displayGuideName(name)).includes(titleTerm));
 }
 
 export function homeSearchIntent(query: string, scope: GuideSearchScope) {
@@ -129,11 +132,13 @@ export function matchHomeGuide(query: string, { section, data, catalog, teams, s
   }
 
   const includes = (text: string) => guideSearchKey(text).includes(term);
+  const titleTerm = guideSearchKey(displayGuideName(query));
+  const includesTitle = (title: string) => includes(title) || guideSearchKey(displayGuideName(title)).includes(titleTerm);
   const named = families.filter(({ stat }) => familyNameMatches(stat, query));
   if (named.length && !unitIds.size) {
     return teams.filter(board => named.some(row => (row.boards ?? [row.team]).some(option => option.id === board.id))).map(board => ({ ...entry(board, 5), namedFamily: true }));
   }
-  if (!unitIds.size && includes(section.title)) return teams.slice(0, 1).map(board => entry(board, 4));
+  if (!unitIds.size && includesTitle(section.title)) return teams.slice(0, 1).map(board => entry(board, 4));
   const exact = (text: string) => guideSearchKey(text) === term;
   const itemIds = new Set(data.items.filter(item => itemNames(item.name).some(includes)).map(item => item.id));
   const traitIds = new Set(data.traits.filter(trait => guideTraitNames(trait).some(includes)).map(trait => trait.id));
@@ -155,7 +160,7 @@ export function matchHomeGuide(query: string, { section, data, catalog, teams, s
     return teams.map(board => entry(board, 2, "guide"));
   }
   return teams.flatMap(board => {
-    if (includes(board.name)) return [entry(board, 3)];
+    if (includesTitle(board.webTitle ?? board.name) || includesTitle(board.name)) return [entry(board, 3)];
     const notes = readingNotes(section, board, data);
     return includes(notes.opening) ? [{ ...entry(board, 1, "opening"), context: notes.opening }] : [];
   }).sort((a, b) => b.rank - a.rank);
