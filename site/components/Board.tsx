@@ -81,12 +81,13 @@ export const Board = memo(function Board({
   const byPosition = new Map(pieces.map((piece) => [piece.position, piece]));
   const selectedPiece = pieces.find((entry) => entry.instanceId === selectedId);
   const selectedUnit = selectedPiece && units.get(selectedPiece.unitId);
-  const movingInstrument = dragPreview && instruments.get(dragPreview.source);
+  const origin = dragPreview?.source;
+  const movingInstrument = origin == null ? undefined : instruments.get(origin);
   const destination = dragPreview?.destination;
   const previewOrigin = movingInstrument ? (!dragPreview?.blocked ? destination : null) : currentInstrument?.[0];
   const coverage = previewOrigin == null || (movingInstrument || selectedInstrument)?.id === "infernalIdol"
     ? [] : boardNeighbors(previewOrigin);
-  const sourcePiece = dragPreview && byPosition.get(dragPreview.source);
+  const sourcePiece = origin == null ? undefined : byPosition.get(origin);
   const targetPiece = destination == null ? undefined : byPosition.get(destination);
   const draggedPiece = dragPreview?.alternate ? sourcePiece?.alternate : sourcePiece;
   const sourceName = draggedPiece && units.get(draggedPiece.unitId)?.name;
@@ -97,7 +98,8 @@ export const Board = memo(function Board({
   else if (dragPreview && destination == null) activeDragText = "拖到棋盘格内放置";
   else if (movingInstrument) activeDragText = movingInstrument.id === "infernalIdol"
     ? `移动${movingInstrument.name}` : `${movingInstrument.name} · 相邻格预览`;
-  else if (targetName) activeDragText = `将${sourceName}叠到${targetName}左上角`;
+  else if (targetName) activeDragText = sourceName ? `${sourceName}与${targetName}互换` : `松手叠放到${targetName}左上角`;
+  else if (origin === null) activeDragText = "松手放置棋子";
   else if (sourceName) activeDragText = `移动${sourceName}`;
 
   function clickCell(position: number, piece: Piece | undefined, trigger: HTMLButtonElement, instrument?: BoardInstrumentId) {
@@ -155,8 +157,7 @@ export const Board = memo(function Board({
                   data-has-alternate={!data && alternate ? "true" : undefined}
                   data-trait-focus={piece && relatedPieceIds ? (relatedPieceIds.has(piece.instanceId) ? "related" : "dimmed") : undefined}
                   onPointerDown={data ? undefined : event => {
-                    if (piece && onMove) start(event, target => onMove(piece.instanceId, target), slot =>
-                      !slot.classList.contains("is-filled") || (!!onSwitchAlternate && !piece.alternate && slot.dataset.hasAlternate !== "true"));
+                    if (piece && onMove) start(event, target => onMove(piece.instanceId, target));
                     if (instrument && onMoveInstrument) start(event, target => {
                       selectInstrument(null);
                       onMoveInstrument(instrument.id, target);

@@ -11,7 +11,7 @@ type BoardDrag = {
   ghost: HTMLElement | null;
 };
 
-export type BoardDragPreview = { source: number; destination: number | null; blocked: boolean; alternate: boolean };
+export type BoardDragPreview = { source: number | null; destination: number | null; blocked: boolean; alternate: boolean };
 
 export function useBoardDrag(
   onDropUnit?: (position: number, id: string) => void,
@@ -24,19 +24,22 @@ export function useBoardDrag(
   const frame = useRef(0);
   const suppressClick = useRef(false);
 
-  function showTarget(slot: HTMLElement | null, blocked = false, first = false) {
+  function showTarget(slot: HTMLElement | null, blocked = false, first = false, fromTray = false) {
     if (slot === target.current && !first) return;
     target.current?.removeAttribute("data-drop-target");
     const source = drag.current?.source;
     const sourcePosition = source?.dataset.boardSlot ?? source?.dataset.boardAlternateSlot;
     const destination = slot && slot.dataset.boardSlot !== sourcePosition ? slot : null;
-    if (destination) destination.dataset.dropTarget = blocked ? "blocked" : destination.classList.contains("is-filled") ? "stack" : "move";
+    if (destination) {
+      const kind = !destination.classList.contains("is-filled") ? "move" : fromTray ? "stack" : "swap";
+      destination.dataset.dropTarget = blocked ? "blocked" : kind;
+    }
     target.current = slot;
-    onPreview?.(source ? {
-      source: Number(sourcePosition),
+    onPreview?.(source || (fromTray && destination) ? {
+      source: source ? Number(sourcePosition) : null,
       destination: destination ? Number(destination.dataset.boardSlot) : null,
       blocked: !!destination && blocked,
-      alternate: source.dataset.boardAlternateSlot !== undefined,
+      alternate: source?.dataset.boardAlternateSlot !== undefined,
     } : null);
   }
 
@@ -150,7 +153,7 @@ export function useBoardDrag(
       if (!onDropUnit || !event.dataTransfer.types.includes("unit-id")) return;
       const slot = slotAt(event.currentTarget, event.target as Element);
       const blocked = slot !== null && !acceptsTray(slot);
-      showTarget(slot, blocked);
+      showTarget(slot, blocked, false, true);
       if (!slot || blocked) return;
       event.preventDefault();
       event.dataTransfer.dropEffect = "copy";

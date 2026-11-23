@@ -46,7 +46,7 @@ import { itemReference } from "@/data/item-library";
 import { akaliForms, conflictingForm, emptyTeam, equippedTraitIds, mixedForms, movePiece, relatedUnitIds, splitAlternate, stackPiece, switchAlternate, switchForm, teamFromCombo, teamText, traitCounts, usedPopulation } from "@/domain/team";
 import { independentDraft } from "@/domain/roster-import";
 import { boardStages, stageLabels, readTeamStage, writeTeamStage } from "@/domain/team-stages";
-import type { BoardInstrumentId, BoardStage, Item, Piece, Team } from "@/domain/types";
+import type { BoardInstrumentId, BoardStage, Item, Piece, PieceLoadout, Team } from "@/domain/types";
 import { QuickImport } from "./QuickImport";
 import { BoardPivots } from "./BoardPivots";
 import { Board } from "./Board";
@@ -456,7 +456,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
     const pieces = teamRef.current.pieces;
     if (!pieces.some(piece => piece.position === position)) return place(position, unitId);
     if (!unitMap.has(unitId)) return;
-    const incoming: Piece = { instanceId: crypto.randomUUID(), unitId, position, stars: 1, items: [] };
+    const incoming: PieceLoadout = { instanceId: crypto.randomUUID(), unitId, stars: 1, items: [] };
     const next = stackPiece(pieces, incoming, position);
     if (next !== pieces) commit(current => ({ ...current, pieces: next }));
   }, [commit, place]);
@@ -553,20 +553,10 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
     [commit, notify],
   );
   const movePieceTo = useCallback(
-    (instanceId: string, position: number) => {
-      const pieces = teamRef.current.pieces;
-      const source = pieces.find(entry => entry.instanceId === instanceId);
-      if (!source) return;
-      const target = pieces.find(entry => entry.position === position);
-      const next = target ? stackPiece(pieces, source, position) : movePiece(pieces, instanceId, position);
-      if (next === pieces) return;
-      commit(current => ({ ...current, pieces: next }));
-      if (target) {
-        setPieceSelection({ id: target.instanceId });
-        setSelectedId(target.unitId);
-        setRightPane("equipment");
-      }
-    },
+    (instanceId: string, position: number) => commit(current => {
+      const pieces = movePiece(current.pieces, instanceId, position);
+      return pieces === current.pieces ? current : { ...current, pieces };
+    }),
     [commit],
   );
   const switchBoardAlternate = useCallback((instanceId: string) => {
@@ -618,7 +608,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
       if (replacement) return;
       if (pieceRef.current) return movePieceTo(pieceRef.current, position);
       if (selectedRef.current) return place(position, selectedRef.current);
-      notify({ kind: "info", text: matrixMode ? "从羁绊网选棋子加入阵容。" : "拖到空格调整站位，拖到另一枚棋子上可叠放替补。" });
+      notify({ kind: "info", text: matrixMode ? "从羁绊网选棋子加入阵容。" : "从棋子架拖到已占格可加入替补，盘上棋子互拖交换站位。" });
     },
     [highlightRelated, matrixMode, mobileReplace, movePieceTo, notify, place, replacement],
   );

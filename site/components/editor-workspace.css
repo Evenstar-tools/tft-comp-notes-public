@@ -127,7 +127,7 @@
   opacity: .8;
 }
 .editor .workspace .board .board-hex[data-drop-target] .board-selection { color: var(--selection-ring); opacity: 1; }
-.editor .workspace .board .board-hex[data-drop-target="stack"] .board-selection { color: #ffc266; }
+.editor .workspace .board .board-hex:is([data-drop-target="stack"],[data-drop-target="swap"]) .board-selection { color: #ffc266; }
 .editor .workspace .board .board-hex[data-drop-target="blocked"] .board-selection { color: var(--danger); }
 .editor .board-hex[data-trait-focus="dimmed"]:not(.board-drag-ghost) :is(.board-avatar, .board-unit-name) {
   filter: saturate(.15) brightness(.67);
@@ -136,7 +136,14 @@
 .editor .strip-piece[data-trait-focus="dimmed"] > img { opacity: .48; }
 .editor .board .empty-hex-dot svg { display: none; }
 .editor .board .empty-hex-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--board-edge); }
-.editor .board .board-instrument-note { min-height: 19px; padding-top: 1px; }
+.editor .workspace .board-col > .board-instrument-note {
+  block-size: 20px;
+  padding: 0;
+  overflow: hidden;
+  line-height: 20px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
 .editor .workspace:not(.matrix-workspace) .unit-browser { padding: 6px 9px; }
 .editor .workspace:not(.matrix-workspace) .browser-toolbar { gap: 6px; margin-bottom: 4px; }
 .editor .workspace:not(.matrix-workspace) .browser-toolbar input { padding-block: 4px; }

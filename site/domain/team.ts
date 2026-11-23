@@ -1,6 +1,6 @@
 import { confirmedTraitLevel } from "./trait-activation.mjs";
 import type { Section } from "./document";
-import type { Item, Piece, Team, Trait, Unit } from "./types";
+import type { Item, Piece, PieceLoadout, Team, Trait, Unit } from "./types";
 
 export const akaliForms = ["akali-kda", "akali-true-damage"] as const;
 export function usedPopulation(pieces: Pick<Piece, "unitId">[]) {
@@ -114,13 +114,10 @@ export function movePiece(
   );
 }
 
-export function stackPiece(pieces: Piece[], incoming: Piece, position: number): Piece[] {
+export function stackPiece(pieces: Piece[], alternate: PieceLoadout, position: number): Piece[] {
   const target = pieces.find(piece => piece.position === position);
-  if (!target || target.alternate || incoming.alternate || target.instanceId === incoming.instanceId) return pieces;
-  const { instanceId, unitId, stars, items } = incoming;
-  return pieces.filter(piece => piece.instanceId !== instanceId).map(piece => piece === target
-    ? { ...piece, alternate: { instanceId, unitId, stars, items } }
-    : piece);
+  if (!target || target.alternate || pieces.some(piece => piece.instanceId === alternate.instanceId)) return pieces;
+  return pieces.map(piece => piece === target ? { ...piece, alternate } : piece);
 }
 
 export function switchAlternate(pieces: Piece[], instanceId: string): Piece[] {
