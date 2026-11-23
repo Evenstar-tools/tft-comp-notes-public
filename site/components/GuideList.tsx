@@ -455,10 +455,14 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
     }
     return cards.filter(card => !tierFilter || tierLabels[card.tier] === tierFilter);
   });
-  if (!isHeroList) results.sort((a, b) => (needle ? b.rank - a.rank : 0) ||
-    tierOrder.indexOf(tierLabels[a.tier]) - tierOrder.indexOf(tierLabels[b.tier]) ||
-    Number(!!a.core) - Number(!!b.core) || (a.rating?.mean ?? 9) - (b.rating?.mean ?? 9) ||
-    (b.rating?.games ?? 0) - (a.rating?.games ?? 0));
+  if (!isHeroList) results.sort((a, b) => {
+    const relevance = needle && tierFilter !== backupCategory ? b.rank - a.rank : 0;
+    const tier = tierOrder.indexOf(tierLabels[a.tier]) - tierOrder.indexOf(tierLabels[b.tier]);
+    if (relevance || tier) return relevance || tier;
+    const source = a.tier === "secondary" ? 0 : Number(!!a.core) - Number(!!b.core);
+    return source || (a.rating?.mean ?? 9) - (b.rating?.mean ?? 9) ||
+      (b.rating?.games ?? 0) - (a.rating?.games ?? 0);
+  });
   else if (needle) results.sort((a, b) => b.rank - a.rank);
   const byCategory = !needle && sort === "category" && !isHeroList;
   const categoryGroups = new Map<string, Card[]>();
