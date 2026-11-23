@@ -110,7 +110,10 @@ export function parseRoster(input: string, units: Unit[], items: Item[]): Roster
 
 function copyBoard(board: { pieces: Placement[]; instrumentPositions?: Team["instrumentPositions"] }) {
   return {
-    pieces: board.pieces.map(piece => ({ ...piece, instanceId: crypto.randomUUID(), items: [...piece.items] })),
+    pieces: board.pieces.map(piece => ({
+      ...piece, instanceId: crypto.randomUUID(), items: [...piece.items],
+      ...(piece.alternate && { alternate: { ...piece.alternate, instanceId: crypto.randomUUID(), items: [...piece.alternate.items] } }),
+    })),
     ...(board.instrumentPositions && { instrumentPositions: { ...board.instrumentPositions } }),
   };
 }

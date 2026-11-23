@@ -2,7 +2,7 @@
 
 [公开版本](https://github.com/Evenstar-tools/tft-comp-notes-public/releases) · [问题反馈](https://github.com/Evenstar-tools/tft-comp-notes-public/issues)
 
-本分支用于在 EdgeOne Makers 预览公开站。构建根目录为 `site`，框架预设为 Next，Node.js 使用 22.17.1，安装命令为 `npm ci`，构建命令为 `npm run build`，输出目录为 `.next`。
+本仓库是项目后续开发、代码评审和 EdgeOne 发布的入口。Makers 生产分支为 `main`，`deploy/edgeone-preview` 用于预览。构建根目录为 `site`，框架预设为 Next，Node.js 使用 22.17.1，安装命令为 `npm ci`，构建命令为 `npm run build`，输出目录为 `.next`。
 
 这是一个社区阵容工具，包含棋盘编辑器、英雄图鉴、羁绊与装备速查，以及按需配置的飞书发布集成。普通阵容编辑器支持匿名使用，阵容保存在当前浏览器。代码位于 `site/`。
 
@@ -29,9 +29,8 @@ npm run build
 
 ## 仓库维护
 
-- `main` 保留已验证的公开源码。提交 PR 通过 `domain-tests` 后合入。
-- `sites-vN` 对应一次已发布版本的公开源码快照，可在 Releases 查看。
-- 更新从已发布源码重新提取，复核对应版本和本地测试后进入 PR。通过同源快照保留可复现的发布版本。
+- 从本仓库 `main` 新建功能分支，开 PR 并在 `domain-tests` 通过后合入。GitHub Releases 用于保留已验证的公开版本。
+- 归档里有需要迁入的改动时，将适用于公开站的代码和已发布数据按功能整理成 PR，复核平台差异和隐私后合入。公开仓库仅保存可公开的内容，部署凭据放在 Makers 项目环境变量中。
 - 问题反馈请带上版本、入口和复现步骤。涉及安全漏洞时使用仓库的私密报告入口。
 
 ## 素材说明

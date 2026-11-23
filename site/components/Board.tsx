@@ -1,5 +1,5 @@
 "use client";
-import { memo, useMemo, useState } from "react";
+import { Fragment, memo, useMemo, useState } from "react";
 import { useBoardDrag, type BoardDragPreview } from "@/hooks/use-board-drag";
 import { Plus } from "lucide-react";
 import type { BoardInstrumentId, Piece, Season, Team } from "@/domain/types";
@@ -37,6 +37,8 @@ export const Board = memo(function Board({
   targeting,
   onCell,
   onMove,
+  onSwitchAlternate,
+  onSplitAlternate,
   instrumentPositions,
   onMoveInstrument,
   onSelectInstrument,
@@ -56,6 +58,8 @@ export const Board = memo(function Board({
   /** 点击任意格子；由编辑器决定是选中、放置还是移动。 */
   onCell: (position: number, piece: Piece | undefined, trigger: HTMLButtonElement) => void;
   onMove?: (instanceId: string, position: number) => void;
+  onSwitchAlternate?: (instanceId: string) => void;
+  onSplitAlternate?: (instanceId: string, position: number) => void;
   instrumentPositions?: Team["instrumentPositions"];
   onMoveInstrument?: (id: BoardInstrumentId, position: number) => void;
   onSelectInstrument?: () => void;
@@ -63,7 +67,7 @@ export const Board = memo(function Board({
   onRemove?: (instanceId: string) => void;
 }) {
   const [dragPreview, setDragPreview] = useState<BoardDragPreview | null>(null);
-  const { start, ...dragHandlers } = useBoardDrag(onDropUnit, !!onMove || !!onMoveInstrument, setDragPreview);
+  const { start, ...dragHandlers } = useBoardDrag(onDropUnit, !!onMove || !!onMoveInstrument, setDragPreview, !!onSwitchAlternate);
   const units = useMemo(() => data ? new Map(data.units.map(unit => [unit.id, unit])) : unitMap, [data]);
   const itemsById = useMemo(() => data ? new Map(data.items.map(item => [item.id, item])) : itemMap, [data]);
   const instruments = useMemo(() => boardInstruments(pieces, data ?? season, instrumentPositions), [pieces, data, instrumentPositions]);
@@ -82,14 +86,16 @@ export const Board = memo(function Board({
     ? [] : boardNeighbors(previewOrigin);
   const sourcePiece = dragPreview && byPosition.get(dragPreview.source);
   const targetPiece = destination == null ? undefined : byPosition.get(destination);
-  const sourceName = sourcePiece && units.get(sourcePiece.unitId)?.name;
+  const draggedPiece = dragPreview?.alternate ? sourcePiece?.alternate : sourcePiece;
+  const sourceName = draggedPiece && units.get(draggedPiece.unitId)?.name;
   const targetName = targetPiece && units.get(targetPiece.unitId)?.name;
   let activeDragText = "";
-  if (dragPreview?.blocked) activeDragText = "请放在没有棋子的格子";
+  if (dragPreview?.blocked) activeDragText = movingInstrument || dragPreview.alternate
+    ? "拖到空格放置" : "每格可叠放一个替补棋子";
   else if (dragPreview && destination == null) activeDragText = "拖到棋盘格内放置";
   else if (movingInstrument) activeDragText = movingInstrument.id === "infernalIdol"
     ? `移动${movingInstrument.name}` : `${movingInstrument.name} · 相邻格预览`;
-  else if (targetName) activeDragText = `${sourceName}与${targetName}互换`;
+  else if (targetName) activeDragText = `将${sourceName}叠到${targetName}左上角`;
   else if (sourceName) activeDragText = `移动${sourceName}`;
 
   function clickCell(position: number, piece: Piece | undefined, trigger: HTMLButtonElement, instrument?: BoardInstrumentId) {
@@ -129,6 +135,7 @@ export const Board = memo(function Board({
               const position = row * 7 + column;
               const piece = byPosition.get(position);
               const unit = piece && units.get(piece.unitId);
+              const alternate = piece?.alternate && onSwitchAlternate ? units.get(piece.alternate.unitId) : undefined;
               const instrument = !piece ? instruments.get(position) : undefined;
               const items = piece?.items.map((id) => itemsById.get(id)) ?? [];
               const name = unit ? unitLabel(unit).base : "";
@@ -137,16 +144,17 @@ export const Board = memo(function Board({
                 ? `${unit.name} ${piece!.stars}星${items.length ? ` 装备：${items.map((item) => item?.name ?? "").join("、")}` : ""}`
                 : instrument?.id === "infernalIdol" ? `${instrument.name}，站位示意`
                 : instrument ? `空位，${instrument.name}，乐器站位示意` : "空位";
-              return (
+              return <Fragment key={position}>
                 <button
                   type="button"
-                  key={position}
                   className={`board-hex${unit ? ` is-filled cost-${unit.cost}` : ""}${instrument ? " has-instrument" : ""}${isSelected ? " is-selected" : ""}${changedPositions?.includes(position) ? " read-change" : ""}${coverage.includes(position) ? " instrument-coverage" : ""}`}
                   style={CELL_STYLE[position]}
                   data-board-slot={!data ? position : undefined}
+                  data-has-alternate={!data && alternate ? "true" : undefined}
                   data-trait-focus={piece && relatedPieceIds ? (relatedPieceIds.has(piece.instanceId) ? "related" : "dimmed") : undefined}
                   onPointerDown={data ? undefined : event => {
-                    if (piece && onMove) start(event, target => onMove(piece.instanceId, target));
+                    if (piece && onMove) start(event, target => onMove(piece.instanceId, target), slot =>
+                      !slot.classList.contains("is-filled") || (!!onSwitchAlternate && !piece.alternate && slot.dataset.hasAlternate !== "true"));
                     if (instrument && onMoveInstrument) start(event, target => {
                       selectInstrument(null);
                       onMoveInstrument(instrument.id, target);
@@ -225,7 +233,20 @@ export const Board = memo(function Board({
                     />
                   </svg>
                 </button>
-              );
+                {piece && alternate && <button
+                  type="button"
+                  className={`board-alternate cost-${alternate.cost}`}
+                  data-board-alternate-slot={position}
+                  style={{ left: CELL_STYLE[position].left, top: CELL_STYLE[position].top }}
+                  aria-label={`换上${alternate.name}`}
+                  title={`换上${alternate.name} · 拖到空格拆开`}
+                  onClick={() => onSwitchAlternate?.(piece.instanceId)}
+                  onPointerDown={onSplitAlternate ? event => start(event, target => onSplitAlternate(piece.instanceId, target),
+                    slot => !slot.classList.contains("is-filled")) : undefined}
+                >
+                  <img src={alternate.image} alt="" width={40} height={40} draggable={false} />
+                </button>}
+              </Fragment>;
             })}
           </div>
         ))}

@@ -28,26 +28,6 @@ import type { BoardStage, Season, Team } from "@/domain/types";
 export type GuidePassage = { source: string; text: string; brief: boolean; blockId?: string };
 export type GuidePatchAdvice = { teamId: string; note: string; label: string; href: string };
 
-function StageSwapPortraits({ added, removed, units }: { added: string[]; removed: string[]; units: Season["units"] }) {
-  const portraits = [
-    ...added.map(id => ({ id, action: "上场" })),
-    ...removed.map(id => ({ id, action: "下场" })),
-  ].flatMap(({ id, action }, index) => {
-    const unit = units.find(entry => entry.id === id);
-    return unit?.image ? [{ unit, action, index }] : [];
-  });
-  const [focused, setFocused] = useState<number>();
-  if (portraits.length < 2) return null;
-  const current = portraits.find(portrait => portrait.index === focused) ?? portraits[0];
-  return <div className="guide-swap-portraits" role="group" aria-label="换人头像">
-    {portraits.map(({ unit, action, index }) => <button key={index} type="button"
-      className={"guide-swap-portrait cost-" + unit.cost} aria-label={`${action} ${unit.name}`}
-      title={`${action} ${unit.name}`} aria-pressed={current.index === index} onClick={() => setFocused(index)}>
-      <img src={unit.image} alt="" width={48} height={48} />
-    </button>)}
-  </div>;
-}
-
 export function GuideTeams({ section, data, initialTeam, publicationId, returnTo, renderHeader, renderNotes, variants, openPoster, initialPosterShare, patchAdvice }: {
   section: Section; data: Season; initialTeam?: string; publicationId?: string; returnTo?: string; renderHeader?: (team: Team) => ReactNode;
   renderNotes?: (team: Team, passages: GuidePassage[], roles: GuideRole[]) => ReactNode;
@@ -186,7 +166,7 @@ export function GuideTeams({ section, data, initialTeam, publicationId, returnTo
     const remaining = b.pieces.map(piece => piece.unitId);
     return a.pieces.flatMap(piece => {
       const index = remaining.indexOf(piece.unitId);
-      if (index === -1) return [piece.unitId];
+      if (index === -1) return [name(piece.unitId)];
       remaining.splice(index, 1);
       return [];
     });
@@ -227,11 +207,8 @@ export function GuideTeams({ section, data, initialTeam, publicationId, returnTo
   const traitRows = Object.entries(traitDiff).filter(([, values]) => values.length > 0);
   const hasChanges = !!comparisonFrom && !!(added.length || removed.length || traitRows.length);
   const nextRoster = (nextAdded.length || nextRemoved.length) ? <div className="guide-next-roster">
-    <StageSwapPortraits added={nextAdded} removed={nextRemoved} units={data.units} />
-    <div className="guide-next-roster-names">
-      {!!nextAdded.length && <span><b>上</b> {nextAdded.map(name).join("、")}</span>}
-      {!!nextRemoved.length && <span><b>下</b> {nextRemoved.map(name).join("、")}</span>}
-    </div>
+    {!!nextAdded.length && <span><b>上</b> {nextAdded.join("、")}</span>}
+    {!!nextRemoved.length && <span><b>下</b> {nextRemoved.join("、")}</span>}
   </div> : null;
   const region = section.generatedRegions?.[team.id];
   const picture = region && !section.reroll?.corrected.includes(team.id)
@@ -337,15 +314,12 @@ export function GuideTeams({ section, data, initialTeam, publicationId, returnTo
             </button>
           </div>}
         </div>}
-        {mainBoardActive && hasChanges && <details className="board-diff" key={`board-diff-${prev?.id}-${team.id}`} aria-label="阶段变化">
+        {mainBoardActive && hasChanges && <details className="board-diff" key={"board-diff-" + team.id} aria-label="阶段变化">
           <summary aria-label={comparisonFrom + "到" + comparisonTo + "的换人和羁绊"}>与{comparisonFrom}对比</summary>
-          {!!(added.length || removed.length) && <>
-            <StageSwapPortraits added={added} removed={removed} units={data.units} />
-            <dl className="board-diff-roster">
-              {!!added.length && <><dt>上场</dt><dd>{added.map(name).join("、")}</dd></>}
-              {!!removed.length && <><dt>下场</dt><dd>{removed.map(name).join("、")}</dd></>}
-            </dl>
-          </>}
+          {!!(added.length || removed.length) && <dl className="board-diff-roster">
+            {!!added.length && <><dt>上场</dt><dd>{added.join("、")}</dd></>}
+            {!!removed.length && <><dt>下场</dt><dd>{removed.join("、")}</dd></>}
+          </dl>}
           {!!traitRows.length && <details className="board-diff-traits">
             <summary>羁绊变化（{traitRows.reduce((count, [, values]) => count + values.length, 0)}）</summary>
             <dl>{traitRows.map(([label, values]) => (

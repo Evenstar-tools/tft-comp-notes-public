@@ -11,12 +11,13 @@ type BoardDrag = {
   ghost: HTMLElement | null;
 };
 
-export type BoardDragPreview = { source: number; destination: number | null; blocked: boolean };
+export type BoardDragPreview = { source: number; destination: number | null; blocked: boolean; alternate: boolean };
 
 export function useBoardDrag(
   onDropUnit?: (position: number, id: string) => void,
   movable = false,
   onPreview?: (preview: BoardDragPreview | null) => void,
+  allowStack = false,
 ) {
   const drag = useRef<BoardDrag | null>(null);
   const target = useRef<HTMLElement | null>(null);
@@ -27,12 +28,15 @@ export function useBoardDrag(
     if (slot === target.current && !first) return;
     target.current?.removeAttribute("data-drop-target");
     const source = drag.current?.source;
-    if (slot && slot !== source) slot.dataset.dropTarget = blocked ? "blocked" : slot.classList.contains("is-filled") ? "swap" : "move";
+    const sourcePosition = source?.dataset.boardSlot ?? source?.dataset.boardAlternateSlot;
+    const destination = slot && slot.dataset.boardSlot !== sourcePosition ? slot : null;
+    if (destination) destination.dataset.dropTarget = blocked ? "blocked" : destination.classList.contains("is-filled") ? "stack" : "move";
     target.current = slot;
     onPreview?.(source ? {
-      source: Number(source.dataset.boardSlot),
-      destination: slot && slot !== source ? Number(slot.dataset.boardSlot) : null,
-      blocked,
+      source: Number(sourcePosition),
+      destination: destination ? Number(destination.dataset.boardSlot) : null,
+      blocked: !!destination && blocked,
+      alternate: source.dataset.boardAlternateSlot !== undefined,
     } : null);
   }
 
@@ -64,8 +68,15 @@ export function useBoardDrag(
   }, [movable, reset]);
 
   function slotAt(board: HTMLElement, element: Element | null) {
-    const slot = element?.closest<HTMLElement>("[data-board-slot]") ?? null;
+    const alternate = element?.closest<HTMLElement>("[data-board-alternate-slot]");
+    const slot = alternate
+      ? board.querySelector<HTMLElement>(`[data-board-slot="${alternate.dataset.boardAlternateSlot}"]`)
+      : element?.closest<HTMLElement>("[data-board-slot]") ?? null;
     return slot && board.contains(slot) ? slot : null;
+  }
+
+  function acceptsTray(slot: HTMLElement) {
+    return !slot.classList.contains("is-filled") || (allowStack && slot.dataset.hasAlternate !== "true");
   }
 
   function dropSlot(board: HTMLElement, active: BoardDrag, x: number, y: number) {
@@ -106,6 +117,7 @@ export function useBoardDrag(
         ghost.classList.remove("is-selected");
         ghost.classList.add("board-drag-ghost");
         ghost.removeAttribute("data-board-slot");
+        ghost.removeAttribute("data-board-alternate-slot");
         ghost.setAttribute("aria-hidden", "true");
         ghost.inert = true;
         active.ghost = ghost;
@@ -135,10 +147,11 @@ export function useBoardDrag(
       if (drag.current?.pointerId === event.pointerId) reset();
     },
     onDragOver(event: DragEvent<HTMLDivElement>) {
-      if (!event.dataTransfer.types.includes("unit-id")) return;
+      if (!onDropUnit || !event.dataTransfer.types.includes("unit-id")) return;
       const slot = slotAt(event.currentTarget, event.target as Element);
-      showTarget(slot?.classList.contains("is-filled") ? null : slot);
-      if (!target.current) return;
+      const blocked = slot !== null && !acceptsTray(slot);
+      showTarget(slot, blocked);
+      if (!slot || blocked) return;
       event.preventDefault();
       event.dataTransfer.dropEffect = "copy";
     },
@@ -149,7 +162,7 @@ export function useBoardDrag(
       const slot = slotAt(event.currentTarget, event.target as Element);
       const id = event.dataTransfer.getData("unit-id");
       showTarget(null);
-      if (!slot || !id) return;
+      if (!slot || !id || !acceptsTray(slot)) return;
       event.preventDefault();
       onDropUnit?.(Number(slot.dataset.boardSlot), id);
     },

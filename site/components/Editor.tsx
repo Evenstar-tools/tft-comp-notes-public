@@ -43,7 +43,7 @@ import { unlockText } from "@/domain/unlocks";
 import { feishuSection, manageLink } from "@/domain/links";
 import { itemMap, season, unitLabel, unitMap } from "@/data";
 import { itemReference } from "@/data/item-library";
-import { akaliForms, conflictingForm, emptyTeam, equippedTraitIds, mixedForms, movePiece, relatedUnitIds, switchForm, teamFromCombo, teamText, traitCounts, usedPopulation } from "@/domain/team";
+import { akaliForms, conflictingForm, emptyTeam, equippedTraitIds, mixedForms, movePiece, relatedUnitIds, splitAlternate, stackPiece, switchAlternate, switchForm, teamFromCombo, teamText, traitCounts, usedPopulation } from "@/domain/team";
 import { independentDraft } from "@/domain/roster-import";
 import { boardStages, stageLabels, readTeamStage, writeTeamStage } from "@/domain/team-stages";
 import type { BoardInstrumentId, BoardStage, Item, Piece, Team } from "@/domain/types";
@@ -83,11 +83,12 @@ type Section = { id: string; title: string; level: number; category?: string };
 function compatiblePlayerBackup(team: Team) {
   return boardStages.every(stage => {
     const { pieces } = readTeamStage(team, stage);
+    const loadouts = pieces.flatMap(piece => piece.alternate ? [piece, piece.alternate] : [piece]);
     return pieces.length <= 28 &&
       new Set(pieces.map(piece => piece.position)).size === pieces.length &&
-      new Set(pieces.map(piece => piece.instanceId)).size === pieces.length &&
+      new Set(loadouts.map(piece => piece.instanceId)).size === loadouts.length &&
       !mixedForms(pieces) &&
-      pieces.every(piece => unitMap.has(piece.unitId) && piece.items.length <= 3 && piece.items.every(id => itemMap.has(id)));
+      loadouts.every(piece => unitMap.has(piece.unitId) && piece.items.length <= 3 && piece.items.every(id => itemMap.has(id)));
   });
 }
 
@@ -424,6 +425,14 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
     },
     [commit],
   );
+  const dropUnit = useCallback((position: number, unitId: string) => {
+    const pieces = teamRef.current.pieces;
+    if (!pieces.some(piece => piece.position === position)) return place(position, unitId);
+    if (!unitMap.has(unitId)) return;
+    const incoming: Piece = { instanceId: crypto.randomUUID(), unitId, position, stars: 1, items: [] };
+    const next = stackPiece(pieces, incoming, position);
+    if (next !== pieces) commit(current => ({ ...current, pieces: next }));
+  }, [commit, place]);
   const addUnit = useCallback(
     (unitId: string) => {
       const pieces = teamRef.current.pieces;
@@ -496,25 +505,65 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
   }, [commit, replacement]);
   const removePiece = useCallback(
     (instanceId: string) => {
-      commit((prev) => ({
-        ...prev,
-        pieces: prev.pieces.filter((entry) => entry.instanceId !== instanceId),
-      }));
+      const pieces = teamRef.current.pieces;
+      const current = pieces.find(entry => entry.instanceId === instanceId);
+      if (!current) return;
+      const { alternate, position } = current;
+      const remaining = pieces.filter(entry => entry !== current);
+      if (alternate && conflictingForm(remaining, alternate.unitId)) {
+        notify({ kind: "info", text: "替补与场上阿卡丽形态冲突，请先调整形态。" });
+        return;
+      }
+      const next = alternate
+        ? pieces.map(entry => entry === current ? { ...alternate, position } : entry)
+        : remaining;
+      commit(prev => ({ ...prev, pieces: next }));
       if (pieceRef.current === instanceId) {
         setPieceSelection(null);
         setSelectedId(null);
       }
     },
-    [commit],
+    [commit, notify],
   );
   const movePieceTo = useCallback(
-    (instanceId: string, position: number) =>
-      commit((prev) => {
-        const pieces = movePiece(prev.pieces, instanceId, position);
-        return pieces === prev.pieces ? prev : { ...prev, pieces };
-      }),
+    (instanceId: string, position: number) => {
+      const pieces = teamRef.current.pieces;
+      const source = pieces.find(entry => entry.instanceId === instanceId);
+      if (!source) return;
+      const target = pieces.find(entry => entry.position === position);
+      const next = target ? stackPiece(pieces, source, position) : movePiece(pieces, instanceId, position);
+      if (next === pieces) return;
+      commit(current => ({ ...current, pieces: next }));
+      if (target) {
+        setPieceSelection({ id: target.instanceId });
+        setSelectedId(target.unitId);
+        setRightPane("equipment");
+      }
+    },
     [commit],
   );
+  const switchBoardAlternate = useCallback((instanceId: string) => {
+    const pieces = teamRef.current.pieces;
+    const alternate = pieces.find(piece => piece.instanceId === instanceId)?.alternate;
+    if (!alternate) return;
+    const next = switchAlternate(pieces, instanceId);
+    if (next === pieces) {
+      notify({ kind: "info", text: "场上已有另一形态的阿卡丽，无法换上这个替补。" });
+      return;
+    }
+    commit(current => ({ ...current, pieces: next }));
+    setPieceSelection({ id: alternate.instanceId });
+    setSelectedId(alternate.unitId);
+    setRightPane("equipment");
+    setReplacement(null);
+    setMobileReplace(false);
+  }, [commit, notify]);
+  const splitBoardAlternate = useCallback((instanceId: string, position: number) => {
+    const pieces = teamRef.current.pieces;
+    const next = splitAlternate(pieces, instanceId, position);
+    if (next !== pieces) commit(current => ({ ...current, pieces: next }));
+    else notify({ kind: "info", text: "场上已有另一形态的阿卡丽，无法拆出这个替补。" });
+  }, [commit, notify]);
   const moveInstrumentTo = useCallback((id: BoardInstrumentId, position: number) => {
     if (!busyRef.current) commit(current => moveBoardInstrument(current, season, id, position));
   }, [commit]);
@@ -542,7 +591,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
       if (replacement) return;
       if (pieceRef.current) return movePieceTo(pieceRef.current, position);
       if (selectedRef.current) return place(position, selectedRef.current);
-      notify({ kind: "info", text: matrixMode ? "从羁绊网选棋子加入阵容。" : "点下方头像加入，拖动棋子调整站位。" });
+      notify({ kind: "info", text: matrixMode ? "从羁绊网选棋子加入阵容。" : "拖到空格调整站位，拖到另一枚棋子上可叠放替补。" });
     },
     [highlightRelated, matrixMode, mobileReplace, movePieceTo, notify, place, replacement],
   );
@@ -1282,9 +1331,11 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
                     targeting={targeting}
                     onCell={onCell}
                     onMove={movePieceTo}
+                    onSwitchAlternate={switchBoardAlternate}
+                    onSplitAlternate={splitBoardAlternate}
                     onMoveInstrument={moveInstrumentTo}
                     onSelectInstrument={selectInstrument}
-                    onDropUnit={mobileReplace ? undefined : place}
+                    onDropUnit={mobileReplace ? undefined : dropUnit}
                     onRemove={removePiece}
                   />
                 </div>

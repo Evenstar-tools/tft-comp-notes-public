@@ -17,11 +17,16 @@ function boardPosition(value: unknown): boolean {
   return typeof value === "number" && Number.isInteger(value) && value >= 0 && value < 28;
 }
 
+function isLoadout(value: unknown): boolean {
+  return record(value) && typeof value.instanceId === "string" && typeof value.unitId === "string" &&
+    (value.stars === 1 || value.stars === 2 || value.stars === 3) &&
+    Array.isArray(value.items) && value.items.every(item => typeof item === "string");
+}
+
 function isBoard(value: Record<string, unknown>): boolean {
   return Array.isArray(value.pieces) && value.pieces.every(piece =>
-    record(piece) && typeof piece.instanceId === "string" && typeof piece.unitId === "string" &&
-    boardPosition(piece.position) && (piece.stars === 1 || piece.stars === 2 || piece.stars === 3) &&
-    Array.isArray(piece.items) && piece.items.every(item => typeof item === "string"),
+    record(piece) && isLoadout(piece) && boardPosition(piece.position) &&
+    (piece.alternate === undefined || isLoadout(piece.alternate)),
   ) && (value.instrumentPositions === undefined || (
     record(value.instrumentPositions) && Object.values(value.instrumentPositions).every(boardPosition)
   ));

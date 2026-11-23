@@ -114,6 +114,31 @@ export function movePiece(
   );
 }
 
+export function stackPiece(pieces: Piece[], incoming: Piece, position: number): Piece[] {
+  const target = pieces.find(piece => piece.position === position);
+  if (!target || target.alternate || incoming.alternate || target.instanceId === incoming.instanceId) return pieces;
+  const { instanceId, unitId, stars, items } = incoming;
+  return pieces.filter(piece => piece.instanceId !== instanceId).map(piece => piece === target
+    ? { ...piece, alternate: { instanceId, unitId, stars, items } }
+    : piece);
+}
+
+export function switchAlternate(pieces: Piece[], instanceId: string): Piece[] {
+  const current = pieces.find(piece => piece.instanceId === instanceId);
+  if (!current?.alternate) return pieces;
+  const { position, alternate, ...loadout } = current;
+  const next = pieces.map(piece => piece === current ? { ...alternate, position, alternate: loadout } : piece);
+  return mixedForms(next) ? pieces : next;
+}
+
+export function splitAlternate(pieces: Piece[], instanceId: string, position: number): Piece[] {
+  if (!Number.isInteger(position) || position < 0 || position >= 28 || pieces.some(piece => piece.position === position)) return pieces;
+  const current = pieces.find(piece => piece.instanceId === instanceId);
+  if (!current?.alternate || conflictingForm(pieces, current.alternate.unitId)) return pieces;
+  const { alternate, ...active } = current;
+  return [...pieces.map(piece => piece === current ? active : piece), { ...alternate, position }];
+}
+
 export function emptyTeam(): Team {
   return {
     id: crypto.randomUUID(),

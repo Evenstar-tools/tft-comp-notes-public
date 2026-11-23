@@ -50,12 +50,15 @@ export interface Item {
   category?: string;
   status?: string;
 }
-export interface Piece {
+export interface PieceLoadout {
   instanceId: string;
   unitId: string;
-  position: number;
   stars: 1 | 2 | 3;
   items: string[];
+}
+export interface Piece extends PieceLoadout {
+  position: number;
+  alternate?: PieceLoadout;
 }
 export type BoardInstrumentId = "maracas" | "rainstick" | "infernalIdol";
 export type BoardStage = "early" | "mid" | "late";
