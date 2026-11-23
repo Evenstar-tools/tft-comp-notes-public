@@ -18,10 +18,11 @@ export type RecommendationCard = {
   hit?: string;
 };
 
-export function PatchRecommendationList({ stats, cards, home }: {
+export function PatchRecommendationList({ stats, cards, home, windowNote }: {
   stats: Pick<GuideFamilyBatch, "patch" | "queue" | "days" | "updatedAt"> & { sourceUrl: string };
   cards: RecommendationCard[];
   home: string;
+  windowNote?: string;
 }) {
   if (!cards.length) return null;
   const date = stats.updatedAt.slice(5, 10).replace("-", "/");
@@ -33,7 +34,7 @@ export function PatchRecommendationList({ stats, cards, home }: {
   return <div className="home-patch-recommendations">
     <div className="home-patch-meta">
       <p className="home-patch-sample">
-        {stats.queue} {stats.patch} · 近 {stats.days} 天 · <time dateTime={stats.updatedAt}>{date} {time} UTC</time> · <a href={stats.sourceUrl} target="_blank" rel="noreferrer">MetaTFT</a>
+        {windowNote && <>{windowNote} · </>}{stats.queue} {stats.patch} · 近 {stats.days} 天 · <time dateTime={stats.updatedAt}>{date} {time} UTC</time> · <a href={stats.sourceUrl} target="_blank" rel="noreferrer">MetaTFT</a>
       </p>
       {groups.length > 1 && <nav className="home-patch-jumps" aria-label="跳到推荐分组">
         {groups.map(({ id, label }) => <a key={id} href={"#home-patch-" + id}>{id === "reroll" ? "赌狗" : label}</a>)}

@@ -47,7 +47,7 @@ export function GuideCarryStats({ rows, builds }: ReturnType<typeof carryEvidenc
   return <div className="guide-carry-samples">
     {builds.length > 0 && <AugmentBoardBuilds boards={builds} />}
     {!!current.length && <ul>{current.map(row => <Sample key={row.carryId} row={row}/>)}</ul>}
-    {!!comparisons.length && <><h4>同九张换主 C</h4><ul>{comparisons.map(row => <Sample key={row.carryId} row={row}/>)}</ul></>}
+    {!!comparisons.length && <><h4>同名单 · 不同携装条件</h4><ul>{comparisons.map(row => <Sample key={row.carryId} row={row}/>)}</ul></>}
     {!!rows.length && <small>{carryPeriod}</small>}
   </div>;
 }

@@ -263,6 +263,10 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
 
   const visible = library[view];
   const hasCurrentStats = currentFamilyBatch(familyStats, season.id, patch);
+  const familyDataEnd = Date.parse(familyStats.updatedAt);
+  const patchStart = patch ? Date.parse(patch.effectiveAt) : NaN;
+  const familyWindowNote = familyDataEnd < patchStart ? "上一版快照"
+    : familyDataEnd - familyStats.days * 86400000 < patchStart ? "采样窗口跨版本更新" : undefined;
   const hasCurrentCore = !!patch && canRankRecommendations(coreStats, season.id, patch);
   const tierFilter = view === "regular" && tierOrder.includes(category) ? category : "";
   const availableFacets = view === "regular" ? [...visible, ...library["hero-augments"]] : visible;
@@ -782,7 +786,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
         </select>
       </label>}
       {ranked && statsRows.length > 0 && <p className="guide-rank-note home-stats-source">
-        {statsRows.length} 套 · {patch && Date.parse(familyStats.updatedAt) < Date.parse(patch.effectiveAt) ? "上一版 · " : ""}{familyStats.queue} {familyStats.patch} · 近 {familyStats.days} 天 · <time dateTime={familyStats.updatedAt} title={familyStats.updatedAt}>{familyStats.updatedAt.slice(5,10).replace("-", "/")} {familyStats.updatedAt.slice(11,16)} UTC</time> · <a href={familyStats.sourceUrl} target="_blank" rel="noreferrer">MetaTFT</a>
+        {statsRows.length} 套 · {familyWindowNote && <>{familyWindowNote} · </>}{familyStats.queue} {familyStats.patch} · 近 {familyStats.days} 天 · <time dateTime={familyStats.updatedAt} title={familyStats.updatedAt}>{familyStats.updatedAt.slice(5,10).replace("-", "/")} {familyStats.updatedAt.slice(11,16)} UTC</time> · <a href={familyStats.sourceUrl} target="_blank" rel="noreferrer">MetaTFT</a>
       </p>}
       {groupLinks.length > 0 && <nav className="home-group-jumps" aria-label="跳到阵容分组">
         {groupLinks.map(group => <a key={group.id} href={"#" + group.id}>{group.label}</a>)}
@@ -821,7 +825,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
     {searching && <p className="site-lookup-message" role="status">正在搜索…</p>}
 
     {recommended && <>
-      <PatchRecommendationList stats={familyStats} cards={recommendationCards} home={home} />
+      <PatchRecommendationList stats={familyStats} cards={recommendationCards} home={home} windowNote={familyWindowNote} />
       {!displayedCount && !crossTab.length && needle && showLookup && !equipmentQuery && <div className="empty-inline">{archiveLink}</div>}
       {!displayedCount && !crossTab.length && !showLookup && !searching && (needle || hasFilter ? emptyState : <div className="empty-inline"><p>{hasCurrentStats ? "暂无本版推荐" : "本版体系数据待更新"}</p>
         {archiveLink}

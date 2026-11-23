@@ -344,6 +344,15 @@ html[data-theme="dark"] .guide-placement.weak {color:#ff9ba3;}
 .guide-stat-switch button small {display:block;color:var(--muted);font-size:.78rem;margin-top:2px;font-variant-numeric:tabular-nums;}
 .guide-stat-body {padding:8px 4px;}
 .guide-stat-body > p {margin:2px 0;font-size:.875rem;}
+.guide-stat-body > .guide-stat-scope {margin-bottom:8px;}
+.guide-formation {margin:10px 0;font-size:.875rem;}
+.guide-formation > summary {width:fit-content;color:var(--accent);font-weight:650;cursor:pointer;}
+.guide-formation > p,.guide-formation > small {display:block;margin:5px 0;color:var(--muted);}
+.formation-table {width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;}
+.formation-table + .formation-table {margin-top:10px;}
+.formation-table caption {text-align:start;font-weight:650;margin:5px 0;}
+.formation-table :is(th,td) {padding:5px 4px;border-bottom:1px solid var(--line);text-align:end;white-space:nowrap;}
+.formation-table th:first-child {text-align:start;white-space:normal;}
 .guide-stage-stats > summary {padding:6px 0;color:var(--muted);font-size:.875rem;cursor:pointer;}
 .guide-stat-alternatives {margin-top:10px;}
 .guide-stat-alternatives h4 {margin:0 0 4px;font-size:.875rem;font-weight:650;}

@@ -3220,6 +3220,74 @@
           "rock": 3
         }
       }
+    },
+    {
+      "population": 9,
+      "roster": [
+        "bard",
+        "camille",
+        "galio",
+        "kayle",
+        "mel",
+        "olaf",
+        "smeech",
+        "swain",
+        "yorick"
+      ],
+      "url": "https://www.metatft.com/explorer?queue=PBE&patch=19.1&days=3&tab=comps&set=TFTSet19&level=9&unit=DA_Bard19-1&unit=DA_Camille19-1&unit=DA_Galio19-1&unit=DA_Kayle19-1&unit=DA_Mel19-1&unit=DA_Olaf19-1&unit=DA_Smeech19-1&unit=DA_Swain19-1&unit=DA_Yorick19-1&tactician_item_count=0&duplicate_unit_count=0",
+      "conditions": {
+        "kind": "full"
+      },
+      "observedOn": "2026-11-23",
+      "sampleScope": "9 级结算 · 固定九张 · 不限星级与装备 · 无额外人口装或重复棋子，纹章不限",
+      "games": 854,
+      "placementCounts": [
+        95,
+        134,
+        145,
+        161,
+        142,
+        108,
+        50,
+        19
+      ],
+      "mean": 3.87,
+      "topFourRate": 0.6264637002341921,
+      "winRate": 0.11124121779859485
+    },
+    {
+      "population": 9,
+      "roster": [
+        "gnar",
+        "karthus",
+        "kayle",
+        "locke",
+        "mordekaiser",
+        "olaf",
+        "swain",
+        "viego",
+        "yorick"
+      ],
+      "url": "https://www.metatft.com/explorer?queue=PBE&patch=19.1&days=3&tab=comps&set=TFTSet19&level=9&unit=DA_Gnar19-1&unit=DA_Karthus19-1&unit=DA_Kayle19-1&unit=DA_Locke19-1&unit=DA_Mordekaiser19-1&unit=DA_Olaf19-1&unit=DA_Swain19-1&unit=DA_Viego19-1&unit=DA_Yorick19-1&tactician_item_count=0&duplicate_unit_count=0",
+      "conditions": {
+        "kind": "full"
+      },
+      "observedOn": "2026-11-23",
+      "sampleScope": "9 级结算 · 固定九张 · 不限星级与装备 · 无额外人口装或重复棋子，纹章不限",
+      "games": 1297,
+      "placementCounts": [
+        92,
+        216,
+        284,
+        315,
+        203,
+        118,
+        54,
+        15
+      ],
+      "mean": 3.74,
+      "topFourRate": 0.6993060909791827,
+      "winRate": 0.07093292212798766
     }
   ],
   "edition": "s19-pbe-19.1",
@@ -3326,6 +3394,133 @@
           ],
           "label": "双核三星",
           "scope": "同四张 · 佛耶戈、贝蕾亚三星 · 不限人口"
+        }
+      ]
+    }
+  ],
+  "formationComparisons": [
+    {
+      "edition": "s19-pbe-19.1",
+      "patch": "PBE 19.1",
+      "windowHours": 72,
+      "checkedAt": "2026-11-23T16:24:55+00:00",
+      "population": 9,
+      "condition": "凯尔两星三格装备",
+      "exclusions": "无额外人口装、无重复棋子，纹章不限",
+      "boards": [
+        {
+          "name": "三爵士天使",
+          "roster": [
+            "bard",
+            "camille",
+            "galio",
+            "kayle",
+            "mel",
+            "olaf",
+            "smeech",
+            "swain",
+            "yorick"
+          ],
+          "sample": {
+            "url": "https://www.metatft.com/explorer?queue=PBE&patch=19.1&days=3&tab=comps&set=TFTSet19&level=9&unit=DA_Bard19-1&unit=DA_Camille19-1&unit=DA_Galio19-1&unit=DA_Kayle19-1_2_3&unit=DA_Mel19-1&unit=DA_Olaf19-1&unit=DA_Smeech19-1&unit=DA_Swain19-1&unit=DA_Yorick19-1&tactician_item_count=0&duplicate_unit_count=0",
+            "placementCounts": [
+              82,
+              122,
+              124,
+              127,
+              87,
+              58,
+              21,
+              9
+            ]
+          },
+          "subset": {
+            "condition": "史密奇也两星三格",
+            "remainder": "史密奇未同时两星三格",
+            "sample": {
+              "url": "https://www.metatft.com/explorer?queue=PBE&patch=19.1&days=3&tab=comps&set=TFTSet19&level=9&unit=DA_Bard19-1&unit=DA_Camille19-1&unit=DA_Galio19-1&unit=DA_Kayle19-1_2_3&unit=DA_Mel19-1&unit=DA_Olaf19-1&unit=DA_Smeech19-1_2_3&unit=DA_Swain19-1&unit=DA_Yorick19-1&tactician_item_count=0&duplicate_unit_count=0",
+              "placementCounts": [
+                58,
+                68,
+                64,
+                37,
+                14,
+                8,
+                1,
+                0
+              ]
+            }
+          },
+          "familyReference": {
+            "name": "爵士天使",
+            "checkedAt": "2026-11-23T16:32:43+00:00",
+            "windowHours": 72,
+            "url": "https://www.metatft.com/pbe-comps#DA_Jazz19-DA_Kayle19",
+            "placementCounts": [
+              2309,
+              2003,
+              1757,
+              1780,
+              1786,
+              1955,
+              1958,
+              1479
+            ]
+          }
+        },
+        {
+          "name": "七五杀天使",
+          "roster": [
+            "gnar",
+            "karthus",
+            "kayle",
+            "locke",
+            "mordekaiser",
+            "olaf",
+            "swain",
+            "viego",
+            "yorick"
+          ],
+          "sample": {
+            "url": "https://www.metatft.com/explorer?queue=PBE&patch=19.1&days=3&tab=comps&set=TFTSet19&level=9&unit=DA_Gnar19-1&unit=DA_Karthus19-1&unit=DA_Kayle19-1_2_3&unit=DA_Locke19-1&unit=DA_Mordekaiser19-1&unit=DA_Olaf19-1&unit=DA_Swain19-1&unit=DA_Viego19-1&unit=DA_Yorick19-1&tactician_item_count=0&duplicate_unit_count=0",
+            "placementCounts": [
+              82,
+              192,
+              259,
+              266,
+              151,
+              94,
+              32,
+              9
+            ]
+          }
+        },
+        {
+          "name": "四主宰天使扎克",
+          "roster": [
+            "ashe",
+            "kayle",
+            "locke",
+            "olaf",
+            "pyke",
+            "taric",
+            "yorick",
+            "zac",
+            "zeri"
+          ],
+          "sample": {
+            "url": "https://www.metatft.com/explorer?queue=PBE&patch=19.1&days=3&tab=comps&set=TFTSet19&level=9&unit=DA_Ashe19-1&unit=DA_Kayle19-1_2_3&unit=DA_Locke19-1&unit=DA_Olaf19-1&unit=DA_Pyke19-1&unit=DA_Taric19-1&unit=DA_Yorick19-1&unit=DA_Zac19-1&unit=DA_Zeri19-1&tactician_item_count=0&duplicate_unit_count=0",
+            "placementCounts": [
+              2,
+              5,
+              10,
+              12,
+              10,
+              5,
+              1,
+              1
+            ]
+          }
         }
       ]
     }
