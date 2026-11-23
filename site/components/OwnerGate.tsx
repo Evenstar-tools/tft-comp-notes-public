@@ -1,47 +1,49 @@
 "use client";
-import { useState } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
+import { useState, type FormEvent, type ReactNode } from "react";
+import { usePathname } from "next/navigation";
 import { useOwnerSession } from "./OwnerSession";
-import { request } from "./api";
+import { jsonPost, request } from "./api";
+import "@/app/owner-login.css";
 
-export function OwnerGate({ children }: { children: React.ReactNode }) {
+export function OwnerGate({ children }: { children: ReactNode }) {
   const { session, error: sessionError, refresh } = useOwnerSession();
   const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const pathname = usePathname();
-  const search = useSearchParams();
-  const returnTo = (pathname || "/editor") + (search.toString() ? "?" + search.toString() : "");
-  async function bind() {
+
+  async function signIn(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (submitting) return;
+    const form = event.currentTarget;
+    const code = new FormData(form).get("code");
+    setSubmitting(true);
+    setError("");
     try {
-      await request("/api/session", { method: "POST" });
+      await request("/api/session", jsonPost({ code }));
+      form.reset();
       await refresh();
     } catch (error) {
-      setError(error instanceof Error ? error.message : "绑定失败");
+      setError(error instanceof Error ? error.message : "登录失败");
+    } finally {
+      setSubmitting(false);
     }
   }
+
   if (session?.isOwner) return <>{children}</>;
   return (
-    <section className="empty-state">
-      <h1>{pathname === "/manage" ? "发布管理" : "阵容编辑器"}</h1>
-      {(error || sessionError) && <p role="alert">{error || sessionError}</p>}
+    <section className="empty-state owner-login">
+      <h1>{pathname === "/manage" ? "发布管理" : "站主工作区"}</h1>
       {!session ? (
-        <div>{sessionError ? <button onClick={() => void refresh()}>重新读取身份</button> : <p>正在读取身份…</p>}</div>
-      ) : !session.signedIn ? (
-        <a
-          className="button primary"
-          href={"/signin-with-chatgpt?return_to=" + encodeURIComponent(returnTo)}
-          target="_top"
-        >
-          登录站主账号
-        </a>
-      ) : session.needsSetup && session.setupAllowed ? (
-        <button className="primary" onClick={bind}>
-          将当前账号绑定为站主
-        </button>
-      ) : (
-        <p>
-          {session.needsSetup ? "站主绑定尚未配置。" : "当前账号没有编辑权限。"}
-        </p>
-      )}
+        sessionError ? <button type="button" onClick={() => void refresh()}>重新读取登录状态</button> : <p>正在读取登录状态…</p>
+      ) : session.loginConfigured ? (
+        <form onSubmit={signIn}>
+          <label htmlFor="owner-access-code">站主口令</label>
+          <input id="owner-access-code" name="code" type="password" autoComplete="current-password" maxLength={256} required />
+          <button className="primary" type="submit" disabled={submitting}>{submitting ? "正在登录…" : "登录"}</button>
+        </form>
+      ) : <p>站主口令尚未配置。</p>}
+      {(error || sessionError) && <p role="alert">{error || sessionError}</p>}
+      <a href="/editor">返回游客编辑器</a>
     </section>
   );
 }

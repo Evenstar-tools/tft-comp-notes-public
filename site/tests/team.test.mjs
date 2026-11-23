@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import { guideBoardKind, relatedUnitIds, traitCounts, movePiece, teamFromCombo, teamText, usedPopulation, mixedForms, conflictingForm, switchForm } from "../domain/team.ts";
+import { guideBoardKind, relatedUnitIds, traitCounts, movePiece, teamFromCombo, teamText, usedPopulation, mixedForms, conflictingForm, splitAlternate, stackPiece, switchAlternate, switchForm } from "../domain/team.ts";
 import { readTeamStage, writeTeamStage } from "../domain/team-stages.ts";
 const season = JSON.parse(
   fs.readFileSync(new URL("../data/season.json", import.meta.url), "utf8"),
@@ -78,6 +78,31 @@ test("moving onto an occupied board slot swaps and preserves equipment and stars
     { ...pieces[1], position: 0 },
   ]);
   assert.equal(movePiece(pieces, "a", 28), pieces);
+});
+test("stacked pieces keep separate loadouts and only the active piece counts until split", () => {
+  const active = { instanceId: "a", unitId: "jinx", stars: 1, items: [], position: 0 };
+  const incoming = { instanceId: "b", unitId: "baron-nashor", stars: 3, items: ["bow"] };
+  const stacked = stackPiece([active, { ...incoming, position: 1 }], { ...incoming, position: 1 }, 0);
+  assert.deepEqual(stacked, [{ ...active, alternate: incoming }]);
+  assert.equal(usedPopulation(stacked), 1);
+  assert.equal(stackPiece(stacked, { ...active, instanceId: "c", position: 7 }, 0), stacked);
+
+  const switched = switchAlternate(stacked, active.instanceId);
+  assert.equal(usedPopulation(switched), 2);
+  assert.deepEqual(switchAlternate(switched, incoming.instanceId), stacked);
+  assert.deepEqual(splitAlternate(switched, incoming.instanceId, 7), [
+    { ...incoming, position: 0 },
+    { ...active, position: 7 },
+  ]);
+});
+test("an alternate Akali can be stored while the other form is active but cannot join it on the board", () => {
+  const active = { instanceId: "a", unitId: "akali-kda", stars: 1, items: [], position: 0 };
+  const target = { ...active, instanceId: "b", unitId: "jinx", position: 1 };
+  const otherForm = { ...active, instanceId: "c", unitId: "akali-true-damage" };
+  const stacked = stackPiece([active, target], otherForm, 1);
+  assert.equal(stacked[1].alternate.unitId, otherForm.unitId);
+  assert.equal(switchAlternate(stacked, target.instanceId), stacked);
+  assert.equal(splitAlternate(stacked, target.instanceId, 7), stacked);
 });
 test("quest-only tiers stay separate from headcount, while ordinary seven-member tiers still activate", () => {
   function count(id, stars) {

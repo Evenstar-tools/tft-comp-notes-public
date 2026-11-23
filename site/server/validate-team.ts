@@ -6,16 +6,21 @@ import { season } from "@/data";
 import { ApiError } from "./access";
 
 const boardPosition = z.number().int().min(0).max(27);
+const pieceLoadout = z.object({
+  instanceId: z.string().uuid(),
+  unitId: z.string(),
+  stars: z.union([z.literal(1), z.literal(2), z.literal(3)]),
+  items: z.array(z.string()).max(3),
+});
 const board = z.object({
-  instrumentPositions: z.object({ maracas: boardPosition.optional(), rainstick: boardPosition.optional() }).strict().optional(),
+  instrumentPositions: z.object({
+    maracas: boardPosition.optional(), rainstick: boardPosition.optional(), infernalIdol: boardPosition.optional(),
+  }).strict().optional(),
   pieces: z
     .array(
-      z.object({
-        instanceId: z.string().uuid(),
-        unitId: z.string(),
+      pieceLoadout.extend({
         position: boardPosition,
-        stars: z.union([z.literal(1), z.literal(2), z.literal(3)]),
-        items: z.array(z.string()).max(3),
+        alternate: pieceLoadout.optional(),
       }),
     )
     .max(28),
@@ -38,13 +43,14 @@ const unitIds = new Set(season.units.map((unit) => unit.id));
 const itemIds = new Set(season.items.map((item) => item.id));
 
 function validateBoard({ pieces }: BoardSetup) {
+  const loadouts = pieces.flatMap(piece => piece.alternate ? [piece, piece.alternate] : [piece]);
   if (
     new Set(pieces.map((piece) => piece.position)).size !== pieces.length ||
-    new Set(pieces.map((piece) => piece.instanceId)).size !== pieces.length
+    new Set(loadouts.map((piece) => piece.instanceId)).size !== loadouts.length
   )
     throw new ApiError(400, "棋盘格或棋子实例重复");
   if (
-    pieces.some(
+    loadouts.some(
       (piece) =>
         !unitIds.has(piece.unitId) ||
         piece.items.some((id) => !itemIds.has(id)),

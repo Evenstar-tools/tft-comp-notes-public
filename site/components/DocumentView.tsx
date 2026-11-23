@@ -18,9 +18,12 @@ const placementTableHeaders = ["阵容", "场数", "均名", "前四", "登顶"]
 function safeUrl(url: string) {
   try {
     const parsed = new URL(url);
-    return ["https:", "http:"].includes(parsed.protocol)
-      ? parsed.href
-      : undefined;
+    if (parsed.origin === "https://tft.example.com"
+      && !parsed.username && !parsed.password
+      && /^\/(?:guides\/[A-Za-z0-9_-]+|emblems)\/?$/.test(parsed.pathname)) {
+      return parsed.pathname + parsed.search + parsed.hash;
+    }
+    return ["https:", "http:"].includes(parsed.protocol) ? parsed.href : undefined;
   } catch {
     return undefined;
   }
@@ -41,9 +44,10 @@ function Elements({ elements = [], start = 0 }: { elements?: RichElement[]; star
         if (style?.underline) child = <u>{child}</u>;
         if (style?.strikethrough) child = <s>{child}</s>;
         const url = style?.link?.url ?? element.mention_doc?.url;
-        if (url && safeUrl(url))
+        const href = url ? safeUrl(url) : undefined;
+        if (href)
           child = (
-            <a href={safeUrl(url)} target="_blank" rel="noreferrer">
+            <a href={href} target="_blank" rel="noreferrer">
               {child}
             </a>
           );

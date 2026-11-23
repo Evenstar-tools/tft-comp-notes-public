@@ -25,6 +25,10 @@ import {
 
 // Index pages only need the published chapters and boards. Reading the full guide also restores legacy media bindings.
 export async function publishedSnapshot(): Promise<Publication | null> {
+  if (!process.env.DATABASE_URL?.trim()) {
+    const { default: preview } = await import("@/data/public-preview.json");
+    return structuredClone(preview) as Publication;
+  }
   const row = await database()
     .prepare("SELECT body FROM snapshots WHERE id=(SELECT value FROM settings WHERE key='published_id')")
     .first<{ body: string }>();
@@ -39,19 +43,28 @@ export async function publicGuidePublication(): Promise<Publication | null> {
   return publication ? prepareForReading(includeRerollBoards(publication, season)) : null;
 }
 async function prepareForReading<T extends DocumentDraft>(publication: T): Promise<T> {
-  await Promise.all(publication.sections.map(async section => {
+  const legacyKeys = process.env.DATABASE_URL?.trim()
+    ? [...new Set(publication.sections.filter(section => !section.generatedRegions)
+      .flatMap(section => sectionTeams(section).map(team => "binding:" + team.id)))]
+    : [];
+  const legacyRows = legacyKeys.length ? await database()
+    .prepare("SELECT key,value FROM settings WHERE key IN (SELECT value FROM json_each(?))")
+    .bind(JSON.stringify(legacyKeys))
+    .all<{ key: string; value: string }>() : { results: [] };
+  const legacyBindings = new Map(legacyRows.results.map(row => [row.key, row.value]));
+  for (const section of publication.sections) {
     const teams = sectionTeams(section);
-    if (!teams.length) return;
-    // v13 snapshots contained the blocks, but kept the verified binding only in D1.
+    if (!teams.length) continue;
+    // Older snapshots stored their verified image bindings separately.
     if (!section.generatedRegions) {
       const blocks = new Map(allBlocks(section.blocks).map(block => [block.id, block]));
-      const bindings = await database().prepare("SELECT value FROM settings WHERE key IN (" + teams.map(() => "?").join(",") + ")")
-        .bind(...teams.map(team => "binding:" + team.id)).all<{ value: string }>();
-      for (const row of bindings.results) {
-        const binding = JSON.parse(row.value);
-        const team = teams.find(team => team.id === binding.team?.id);
+      for (const team of teams) {
+        const raw = legacyBindings.get("binding:" + team.id);
+        if (!raw) continue;
+        const binding = JSON.parse(raw);
         const caption = blocks.get(binding.textId);
-        if (!team || caption?.type !== "text" || blocks.get(binding.imageId)?.type !== "image") continue;
+        if (team.id !== binding.team?.id || caption?.type !== "text" ||
+          blocks.get(binding.imageId)?.type !== "image") continue;
         const text = caption.text ?? "";
         if (text.startsWith(`【阵容构建器 · ${team.id}】\n`) ||
           (typeof binding.expectedText === "string" && isBoardCaption(text, binding.expectedText, team.id))) {
@@ -61,7 +74,7 @@ async function prepareForReading<T extends DocumentDraft>(publication: T): Promi
     }
     if (sameEdition((section.gameData ?? publication.season).id, season.id)) refreshWebDetails(section);
     section.gameData = withGameData(section, publication.season).gameData;
-  }));
+  }
   return publication;
 }
 export async function draftDocument(): Promise<DocumentDraft | null> {
@@ -213,17 +226,13 @@ export async function synchronizeDocument() {
     title: blockText(block),
     content: normalize(block.block_id),
   })));
-  const teamRows = await database()
-    .prepare("SELECT body FROM teams")
-    .all<{ body: string }>();
+  const bindingRows = await database()
+    .prepare("SELECT settings.value FROM teams JOIN settings ON settings.key='binding:' || teams.id")
+    .all<{ value: string }>();
   const bindings: { sectionId: string; textId: string; imageId: string; team: Team }[] = [];
-  for (const row of teamRows.results) {
-    const team = JSON.parse(row.body) as Team;
-    const binding = await setting(`binding:${team.id}`);
-    if (binding) {
-      const b = JSON.parse(binding);
-      if (b.team) bindings.push(b);
-    }
+  for (const row of bindingRows.results) {
+    const binding = JSON.parse(row.value);
+    if (binding.team) bindings.push(binding);
   }
   const sectionIssues: NonNullable<DocumentDraft["sectionIssues"]> = [];
   attachBoundRegions(sections, bindings, issue => sectionIssues.push(issue)).forEach(warning => warnings.add(warning));
@@ -241,7 +250,9 @@ export async function synchronizeDocument() {
     if (prior?.summaryBlockId && authoredParagraphs(section).some(block => block.id === prior.summaryBlockId)) section.summaryBlockId = prior.summaryBlockId;
   }
   const media = mediaInSections(sections);
-  for (const image of media) await cacheMedia(image);
+  for (let start = 0; start < media.length; start += 4) {
+    await Promise.all(media.slice(start, start + 4).map(cacheMedia));
+  }
   if ((await documentInfo()).revision_id !== doc.revision_id)
     throw new ApiError(409, "读取期间飞书文档发生变化，请重新同步");
   const draft: DocumentDraft = {

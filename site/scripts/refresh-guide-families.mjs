@@ -13,7 +13,7 @@ const arg = (key) => args.includes(key) ? args[args.indexOf(key) + 1] : undefine
 const out = resolve(arg("--output") || resolve(root, "data/guide-family-stats.json"));
 const reviewPath = resolve(arg("--review") || resolve(root, "outputs/family-review/review.json"));
 const historyPath = resolve(arg("--history") || resolve(dirname(reviewPath), "family-history.json"));
-const catalogUrl = "https://evenstar-tft-library.zhangzeyu99.chatgpt.site/api/guides/catalog";
+const catalogUrl = "https://tft.example.com/api/guides/catalog";
 const previousReviewPath = arg("--previous-review");
 const readJson = async (file) => JSON.parse(await readFile(file, "utf8"));
 async function writeJson(file, value) {

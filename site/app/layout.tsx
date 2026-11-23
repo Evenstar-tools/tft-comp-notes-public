@@ -67,6 +67,13 @@ export default function RootLayout({
               <a href="https://noxutft.com/zh/tft-traits" target="_blank" rel="noreferrer">
                 NoxuTFT
               </a>
+              <a
+                href="https://example.com/document"
+                target="_blank"
+                rel="noreferrer"
+              >
+                S16 笔记
+              </a>
             </footer>
           </OwnerSession>
         </ThemeProvider>

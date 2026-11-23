@@ -40,7 +40,7 @@ function isGuideLink(block: ContentBlock, url: string) {
 export function includeWebDetails(section: Section, liveIds: ReadonlySet<string>, previousSummaryId?: string) {
   const guide = guides[section.id];
   if (section.kind !== "guide" || !guide) return;
-  const url = "https://evenstar-tft-library.zhangzeyu99.chatgpt.site/guides/" + section.id;
+  const url = "https://tft.example.com/guides/" + section.id;
   const links = section.blocks.filter(block => isGuideLink(block, url));
   if (!links.length) return;
 

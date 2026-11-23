@@ -157,6 +157,7 @@ export function TraitsLibrary({ initialQuery, initialTrait, initialTier, meta, o
           <div className="trait-data-heading trait-lookup-source">
             <span>{meta.current ? "PBE " + meta.patch + " · 近 " + meta.days + " 天 · " + meta.on.slice(0, 10) + " UTC" : "本版本战绩待更新"}</span>
             {meta.current && <a href={scopeOn && contextScope ? contextScope.url : meta.url} target="_blank" rel="noreferrer">MetaTFT ↗</a>}
+            <a href="https://www.datatft.com/rate?season=19#true-damage" target="_blank" rel="noreferrer">收菜奖励 ↗</a>
           </div>
         </div>
         <div className="trait-lookup-controls">

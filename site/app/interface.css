@@ -62,9 +62,17 @@ body:has(.editor) .site-footer {display:none}
 .editor .board-hex:not(.is-filled):hover .board-surface,.editor .board-hex[data-drop-target] .board-surface {background:var(--board-hover)}
 .editor .board-hex[data-drop-target] .board-selection {color:var(--selection-ring)}
 .editor .board-hex.is-filled .board-surface,.editor .board-hex.is-filled .board-items,.editor .board-hex.has-instrument .board-surface {touch-action:none;cursor:grab}
-.editor .board-hex[data-drag-source] {opacity:.35}
-.editor .board-hex.board-drag-ghost {z-index:4;pointer-events:none;will-change:transform}
+.editor .board [data-drag-source] {opacity:.35}
+.editor .board .board-drag-ghost {z-index:4;pointer-events:none;will-change:transform}
 .editor .board-drag-ghost * {pointer-events:none}
+.editor .board-alternate {
+  position:absolute;z-index:2;display:grid;place-items:center;
+  width:clamp(22px,5.7cqw,34px);height:auto;aspect-ratio:1;min-height:0;padding:0;
+  translate:10% 5%;border:2px solid var(--unit-cost,var(--board-edge));border-radius:50%;
+  background:var(--panel);box-shadow:0 0 0 1px var(--panel);touch-action:none;cursor:pointer;
+}
+.editor .board-alternate img {width:100%;height:100%;aspect-ratio:1;object-fit:cover;border-radius:50%;pointer-events:none}
+.editor .board-alternate:focus-visible {outline:2px solid var(--selection-ring);outline-offset:2px}
 .editor .empty-hex svg {width:16px;height:16px;opacity:.5}
 .editor .stars {display:inline-flex;gap:1px;align-items:center;justify-content:center;color:var(--gold,#d5b77b);line-height:1}
 .editor .trait-tracker {padding:0;margin:0;list-style:none;display:grid;grid-template-columns:minmax(0,1fr);gap:3px}

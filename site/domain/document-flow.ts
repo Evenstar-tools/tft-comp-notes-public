@@ -152,7 +152,7 @@ function sectionParts(section: Section) {
     ["正文", [body, teams.map(team => [team.id, team.notes])]],
     ["站位星级", boards.map(({ team, board, pieces }) => [team.id, team.name, pieces
       .map(piece => [piece.position, piece.unitId, piece.stars]),
-      board.instrumentPositions?.maracas, board.instrumentPositions?.rainstick])],
+      board.instrumentPositions?.maracas, board.instrumentPositions?.rainstick, board.instrumentPositions?.infernalIdol])],
     ["配装", boards.map(({ team, pieces }) => [team.id, pieces
       .map(piece => [piece.position, piece.items])])],
     ["主阵与阶段", [section.primaryTeamId, section.stageTeamIds ?? [], section.team?.id, boards.map(({ team, stage }) => [team.id, stage])]],

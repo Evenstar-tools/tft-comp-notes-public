@@ -6,7 +6,7 @@ import { guideBody, guideFacets, readingNotes, sourceSummary } from "../domain/g
 
 const season = JSON.parse(readFileSync(new URL("../data/season.json", import.meta.url)));
 const id = "sample-block-0420";
-const url = "https://evenstar-tft-library.zhangzeyu99.chatgpt.site/guides/" + id;
+const url = "https://tft.example.com/guides/" + id;
 const link = (href = url) => ({ id: "jump", type: "text", text: "网页详解", elements: [
   { text_run: { content: "网页详解", text_element_style: { link: { url: href } } } },
 ] });
@@ -55,7 +55,7 @@ test("web details require a matching self-link and preserve restored, moved or n
 
 test("a copied unlock paragraph follows the patch while hand-edited notes keep their text", () => {
   const id = "sample-block-0461";
-  const previous = "演示旧文案 5";
+  const previous = "示例旧文案 5";
   const run = {content:previous, text_element_style:{bold:false}};
   const section = {id:"sample-block-0214",blocks:[{id,type:"text",text:previous,elements:[{text_run:run}]}]};
   refreshWebDetails(section);

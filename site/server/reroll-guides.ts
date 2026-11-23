@@ -18,6 +18,8 @@ type BoardEdit = {
   notes?: string;
   positions?: Record<string, number>;
   originalPositions?: Record<string, number>;
+  items?: Record<string, string[]>;
+  originalItems?: Record<string, string[]>;
   stoneplateHolder?: string;
   originalInstruments?: Partial<Record<BoardInstrumentId, number>>;
   instrumentMoves?: Record<string, number>;
@@ -46,13 +48,18 @@ function editBoard(team: Team, edit: BoardEdit, data: Season) {
     piece.unitId === edit.stoneplateHolder && piece.items.includes("TFT_Item_GargoyleStoneplate"))) return team;
   if (Object.entries(edit.originalPositions ?? {}).some(([id, position]) =>
     team.pieces.find(piece => piece.unitId === id)?.position !== position)) return team;
+  if (Object.entries(edit.originalItems ?? {}).some(([id, expected]) => {
+    const items = team.pieces.find(piece => piece.unitId === id)?.items;
+    return !items || items.length !== expected.length || items.some((item, i) => item !== expected[i]);
+  })) return team;
   if (edit.originalInstruments) {
     const instruments = boardInstruments(team.pieces, data, team.instrumentPositions);
     if (Object.entries(edit.originalInstruments).some(([id, position]) => instruments.get(position)?.id !== id)) return team;
   }
 
-  const pieces = edit.positions ? team.pieces.map(piece => ({
+  const pieces = edit.positions || edit.items ? team.pieces.map(piece => ({
     ...piece, position: edit.positions?.[piece.unitId] ?? piece.position,
+    items: edit.items?.[piece.unitId] ?? piece.items,
   })) : team.pieces;
   const instrumentPositions = edit.instrumentMoves ? { ...team.instrumentPositions, ...edit.instrumentMoves } : team.instrumentPositions;
   const positions = [...pieces.map(piece => piece.position), ...Object.values(instrumentPositions ?? {})];
@@ -99,7 +106,7 @@ export function includeRerollBoards(snapshot: Publication, current: Season): Pub
       if (next === original) continue;
       teams.set(edit.teamId, next);
       if (edit.notes) advice[edit.teamId] = edit.notes;
-      if (edit.positions || edit.instrumentMoves) corrected.push(edit.teamId);
+      if (edit.positions || edit.items || edit.instrumentMoves) corrected.push(edit.teamId);
       if (edit.wording) wording.push(edit.wording);
     }
     for (const [id, team] of teams) {

@@ -19,7 +19,7 @@ resolver.deregister();
 const board = "00000000-0000-4000-8000-000000000007";
 const alternate = "00000000-0000-4000-8000-000000000031";
 const guideId = "sample-block-0307";
-const origin = "https://evenstar-tft-library.zhangzeyu99.chatgpt.site";
+const origin = "https://tft.example.com";
 const edition = "s19-pbe";
 const build = "6013636";
 const effective = "2026-11-21T20:55:00-04:00";
