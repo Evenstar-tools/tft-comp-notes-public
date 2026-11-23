@@ -32,11 +32,17 @@ test("shop flags replace old guide conditions, keeping each Akali form independe
 test("every live unlock shows resolved text, an identifiable build and valid related traits", () => {
   const ids = new Set(season.traits.map(t => t.id));
   const active = season.units.filter(hasUnlockCondition);
+  const builds = new Set();
   assert.ok(active.length > 0 && active.length < season.units.length);
   for (const unit of active) {
     assert.equal(unit.sourceUnlock, undefined, unit.id);
-    assert.ok(unit.unlock.source.label.includes(season.unlockRelease.build), unit.id);
+    const build = unit.unlock.source.label.match(/\b\d+\.\d+\.\d+\.\d+\b/)?.[0];
+    assert.ok(build, unit.id);
+    assert.match(unit.unlock.source.url, /^https:\/\//, unit.id);
+    builds.add(build);
     assert.doesNotMatch(unit.unlock.text + " " + unit.unlock.raw, /\bX+\b|<TFTCurveTable|待公布/i, unit.id);
     for (const trait of unit.unlock.traitIds ?? []) assert.ok(ids.has(trait), unit.id);
   }
+  const newest = [...builds].sort((a, b) => a.localeCompare(b, "en", { numeric: true })).at(-1);
+  assert.equal(newest, season.unlockRelease.build);
 });

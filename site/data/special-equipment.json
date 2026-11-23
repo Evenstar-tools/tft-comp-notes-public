@@ -131,13 +131,15 @@
       "stats": [
         {
           "label": "法术加成",
-          "value": "+30%"
+          "value": "+20%"
         },
         {
           "label": "法力回复",
           "value": "+2"
         }
-      ]
+      ],
+      "build": "19.1.0.6018196",
+      "sourceUrl": "https://i.redd.it/587f3bw91f3i1.png"
     },
     {
       "id": "DA_Artifact_CappaJuice",
@@ -232,13 +234,15 @@
       "stats": [
         {
           "label": "物理加成",
-          "value": "+25%"
+          "value": "+35%"
         },
         {
           "label": "攻速",
           "value": "+25%"
         }
-      ]
+      ],
+      "build": "19.1.0.6018196",
+      "sourceUrl": "https://i.redd.it/587f3bw91f3i1.png"
     },
     {
       "id": "DA_Artifact_ForbiddenIdol",
@@ -334,7 +338,7 @@
       "category": "artifact",
       "image": "/assets/items/DA_Artifact_Hullcrusher.webp",
       "name": "碎舰者",
-      "description": "战斗开始时：如果邻格内没有友军，获得400生命值、10%物理加成和10%法术加成。",
+      "description": "战斗开始时：如果邻格内没有友军，获得500生命值、15%物理加成和15%法术加成。",
       "stats": [
         {
           "label": "护甲",
@@ -344,7 +348,9 @@
           "label": "魔抗",
           "value": "+60"
         }
-      ]
+      ],
+      "build": "19.1.0.6018196",
+      "sourceUrl": "https://i.redd.it/587f3bw91f3i1.png"
     },
     {
       "id": "DA_Artifact_InfinityForce",
@@ -384,7 +390,7 @@
       "category": "artifact",
       "image": "/assets/items/DA_Artifact_LichBane.webp",
       "name": "巫妖之祸",
-      "description": "每次施放技能后的第一次普攻造成250–700额外魔法伤害，伤害随阶段提升。",
+      "description": "每次施放技能后的第一次普攻造成额外魔法伤害。第1至第6阶段分别造成200、200、300、400、500、600伤害，此后保持600。",
       "stats": [
         {
           "label": "法术加成",
@@ -394,7 +400,9 @@
           "label": "攻速",
           "value": "+10%"
         }
-      ]
+      ],
+      "build": "19.1.0.6018196",
+      "sourceUrl": "https://i.redd.it/587f3bw91f3i1.png"
     },
     {
       "id": "DA_Artifact_LightshieldCrest",
@@ -473,13 +481,15 @@
       "category": "artifact",
       "image": "/assets/items/DA_Artifact_MogulsMail.webp",
       "name": "大亨之铠",
-      "description": "在承受伤害时提供1护甲、1魔抗和5生命值，这个效果至多叠加至35次。\n\n在满层时，提供1金币并且每11秒继续提供1金币。\n\n唯一 - 每位弈子仅可装备1件",
+      "description": "在承受伤害时提供1护甲、1魔抗和3生命值，这个效果至多叠加至35次。\n\n在满层时，提供1金币并且每11秒继续提供1金币。\n\n唯一 - 每位弈子仅可装备1件",
       "stats": [
         {
           "label": "生命值",
           "value": "+300"
         }
-      ]
+      ],
+      "build": "19.1.0.6018196",
+      "sourceUrl": "https://i.redd.it/587f3bw91f3i1.png"
     },
     {
       "id": "DA_Artifact_NavoriFlickerblade",

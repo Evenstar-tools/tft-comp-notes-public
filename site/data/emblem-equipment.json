@@ -48,13 +48,15 @@
         },
         {
           "label": "物理加成",
-          "value": "+10%"
+          "value": "+15%"
         },
         {
           "label": "法术加成",
-          "value": "+10%"
+          "value": "+15%"
         }
-      ]
+      ],
+      "build": "19.1.0.6018196",
+      "sourceUrl": "https://i.redd.it/587f3bw91f3i1.png"
     },
     "emblem-hyperpop": {
       "name": "超流行乐纹章",
@@ -76,13 +78,15 @@
       "stats": [
         {
           "label": "生命值",
-          "value": "+250"
+          "value": "+300"
         },
         {
           "label": "攻速",
-          "value": "+15%"
+          "value": "+20%"
         }
-      ]
+      ],
+      "build": "19.1.0.6018196",
+      "sourceUrl": "https://i.redd.it/587f3bw91f3i1.png"
     },
     "emblem-ionic-spark": {
       "name": "离子火花纹章",
@@ -122,17 +126,19 @@
       "stats": [
         {
           "label": "生命值",
-          "value": "+150"
+          "value": "+100"
         },
         {
           "label": "物理加成",
-          "value": "+15%"
+          "value": "+10%"
         },
         {
           "label": "法术加成",
-          "value": "+15%"
+          "value": "+10%"
         }
-      ]
+      ],
+      "build": "19.1.0.6018196",
+      "sourceUrl": "https://i.redd.it/587f3bw91f3i1.png"
     },
     "emblem-pentakill": {
       "name": "五杀摇滚纹章",
@@ -242,9 +248,11 @@
       "stats": [
         {
           "label": "物理加成",
-          "value": "+10%"
+          "value": "+25%"
         }
-      ]
+      ],
+      "build": "19.1.0.6018196",
+      "sourceUrl": "https://i.redd.it/587f3bw91f3i1.png"
     },
     "emblem-juggernaut": {
       "name": "主唱纹章",
