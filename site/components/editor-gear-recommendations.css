@@ -51,12 +51,6 @@
   line-height: 1.2;
   cursor: pointer;
 }
-.editor-common-gear-list button span:not(.item-icon) {
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
 .editor-common-gear-list button small {
   color: var(--muted);
   font-size: 10px;

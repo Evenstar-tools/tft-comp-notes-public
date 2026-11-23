@@ -22,7 +22,9 @@ export type GearPageParams = {
 
 export const cookware = new Set(["TFT_Item_Spatula", "TFT_Item_FryingPan"]);
 export const isCookRecipe = (item: Item) => item.components?.some(id => cookware.has(id));
-export const itemName = (item: Item) => itemReference.items[item.id]?.name ?? item.name;
+export const itemName = (item: Item) => item.id === "TFT_Item_GuinsoosRageblade"
+  ? "羊刀"
+  : itemReference.items[item.id]?.name ?? item.name;
 export const recipeParts = (item: Item) => (item.components ?? []).flatMap(id => itemMap.get(id) ?? []);
 
 export const itemsByGroup: Record<ItemGroup, Item[]> = {
@@ -84,7 +86,8 @@ for (const [alias, name] of Object.entries(itemAliases)) {
 }
 export function itemTerms(item: Item) {
   const name = itemName(item);
-  return [name, item.name, ...(aliases.get(item.name) ?? []), ...(aliases.get(name.replace(/^光明版/, "")) ?? [])];
+  const officialName = itemReference.items[item.id]?.name ?? item.name;
+  return [name, officialName, item.name, ...(aliases.get(item.name) ?? []), ...(aliases.get(officialName.replace(/^光明版/, "")) ?? [])];
 }
 
 function matchingParts(item: Item, term: string) {
