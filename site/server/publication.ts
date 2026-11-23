@@ -25,6 +25,10 @@ import {
 
 // Index pages only need the published chapters and boards. Reading the full guide also restores legacy media bindings.
 export async function publishedSnapshot(): Promise<Publication | null> {
+  if (!process.env.DATABASE_URL?.trim()) {
+    const { default: preview } = await import("@/data/public-preview.json");
+    return structuredClone(preview) as Publication;
+  }
   const row = await database()
     .prepare("SELECT body FROM snapshots WHERE id=(SELECT value FROM settings WHERE key='published_id')")
     .first<{ body: string }>();
@@ -39,8 +43,10 @@ export async function publicGuidePublication(): Promise<Publication | null> {
   return publication ? prepareForReading(includeRerollBoards(publication, season)) : null;
 }
 async function prepareForReading<T extends DocumentDraft>(publication: T): Promise<T> {
-  const legacyKeys = [...new Set(publication.sections.filter(section => !section.generatedRegions)
-    .flatMap(section => sectionTeams(section).map(team => "binding:" + team.id)))];
+  const legacyKeys = process.env.DATABASE_URL?.trim()
+    ? [...new Set(publication.sections.filter(section => !section.generatedRegions)
+      .flatMap(section => sectionTeams(section).map(team => "binding:" + team.id)))]
+    : [];
   const legacyRows = legacyKeys.length ? await database()
     .prepare("SELECT key,value FROM settings WHERE key IN (SELECT value FROM json_each(?))")
     .bind(JSON.stringify(legacyKeys))

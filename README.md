@@ -2,11 +2,11 @@
 
 [公开版本](https://github.com/Evenstar-tools/tft-comp-notes-public/releases) · [问题反馈](https://github.com/Evenstar-tools/tft-comp-notes-public/issues)
 
-公开站将在 EdgeOne 部署。上线后，访问地址会更新在这里。
+本分支用于在 EdgeOne Makers 预览公开站。构建根目录为 `site`，框架预设为 Next，Node.js 使用 22.17.1，安装命令为 `npm ci`，构建命令为 `npm run build`，输出目录为 `.next`。
 
-这是一个社区阵容工具，包含棋盘编辑器、英雄图鉴、羁绊与装备速查，以及按需配置的飞书发布集成。普通阵容编辑器支持匿名使用，阵容保存在当前浏览器。代码位于 `site/`，当前源码快照对应已发布的 v163。
+这是一个社区阵容工具，包含棋盘编辑器、英雄图鉴、羁绊与装备速查，以及按需配置的飞书发布集成。普通阵容编辑器支持匿名使用，阵容保存在当前浏览器。代码位于 `site/`。
 
-公开快照带有供运行的赛季资料，运营文档标识和棋盘引用使用示例 ID。发布设施和飞书集成在自己的环境中配置。
+未配置数据库时，攻略使用随构建发布的脱敏快照。快照保留已发布的正文和交互棋盘，运营文档标识和棋盘引用使用公开专用 ID。
 
 ## 本地运行
 
@@ -15,17 +15,17 @@
 ```sh
 cd site
 npm ci
-npm run dev -- --port 5173 --host 127.0.0.1
+npm run dev -- --port 5173 --hostname 127.0.0.1
 ```
 
 打开 [本地编辑器](http://127.0.0.1:5173/editor) 或[英雄图鉴](http://127.0.0.1:5173/heroes)。构建与校验：
 
 ```sh
-node --experimental-strip-types --test tests/*.test.mjs
+npm test
 npm run build
 ```
 
-若要使用站主存储和发布功能，需为自己的部署初始化 `site/drizzle/` 中的 D1 迁移，并配置 R2。飞书集成读取运行环境中的 `FEISHU_APP_ID`、`FEISHU_APP_SECRET`、`FEISHU_DOCUMENT_ID`。如需配置可在浏览器中分享的文档跳转，可选用构建环境变量 `NEXT_PUBLIC_FEISHU_DOCUMENT_URL`。应用凭据和本地状态由自己的开发或部署环境管理。
+站主跨设备编辑需要初始化 libSQL 数据库和图片存储，并配置站主登录。所需环境变量见 `site/.env.example`。部署凭据通过 Makers 项目环境变量管理。
 
 ## 仓库维护
 
