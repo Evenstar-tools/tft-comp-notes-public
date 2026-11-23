@@ -143,13 +143,11 @@ export function GuideTeams({ section, data, initialTeam, initialStage, initialFl
     })),
     ...(siblings ?? []),
   ].map(variant => [variant.teamId, variant])).values()];
-  const rating = teamPlacement(team, section, "guide");
   const augment = heroAugmentForGuide(section);
   const heroGuide = !!augment || section.category === heroAugmentCategory;
   const familyRows = heroGuide ? [] : guideFamilyRows(familyStats, data.id, section.id, teams);
   const matchingFamily = familyRows.filter(row => row.boards.some(board => board.id === team.id));
   const overall = matchingFamily.length === 1 ? matchingFamily[0].stat : undefined;
-  const activeView = sampleView ?? (heroGuide ? "board" : "family");
   const performance = overall && <a className="guide-family-rating" href={mainBoardActive && !showFlex ? "#" + sampleId : overall.url}
     onClick={() => setSampleView("family")} title={overall.sourceName + " · " + familyStats.patch + " · 近 " + familyStats.days + " 天"}>
     <span>体系均名</span><strong>{overall.mean.toFixed(2)}</strong><small>{overall.games.toLocaleString("zh-CN")} 场</small>
@@ -439,8 +437,8 @@ export function GuideTeams({ section, data, initialTeam, initialStage, initialFl
       <div className="reader-support">
         {mainBoardActive && renderNotes?.(team, passages, notes.roles)}
         {mainBoardActive && !showFlex && <GuideMatchStats key={team.id} id={sampleId} team={team} teams={teams} section={section}
-          rating={rating} stage={inStage} edition={data.id} augmentName={augment?.name}
-          heroGuide={heroGuide} familyRows={familyRows} view={activeView} onSelectView={setSampleView} onPickTeam={selectSampleTeam} />}
+          stage={inStage} edition={data.id} augmentName={augment?.name}
+          heroGuide={heroGuide} familyRows={familyRows} view={sampleView} onSelectView={setSampleView} onPickTeam={selectSampleTeam} />}
         {mainBoardActive && (picture?.imageToken || session?.isOwner) && <div className="reader-links">
         <div className="guide-actions">
           {picture?.imageToken && <a href={"/api/media/" + encodeURIComponent(picture.imageToken)} target="_blank" rel="noreferrer">飞书原图</a>}

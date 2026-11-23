@@ -51,6 +51,49 @@ export interface PlacementBatch {
     coreRoster: string[];
     samples: { label: string; scope: string; url: string; observedOn: string; placementCounts: number[] }[];
   }[];
+  formationComparisons?: FormationComparison[];
+}
+
+type FormationSample = { url: string; placementCounts: number[] };
+export type FormationFamilyReference = FormationSample & { name: string; checkedAt: string; windowHours: number };
+
+export type FormationComparison = {
+  edition: string;
+  patch: string;
+  windowHours: number;
+  checkedAt: string;
+  population: number;
+  condition: string;
+  exclusions: string;
+  boards: {
+    name: string;
+    roster: string[];
+    sample: FormationSample;
+    familyReference?: FormationFamilyReference;
+    subset?: { condition: string; remainder: string; sample: FormationSample };
+  }[];
+};
+
+export function placementEvidenceKind(record: Pick<PlacementRecord, "url" | "conditions" | "referencesAugment">) {
+  if (record.referencesAugment || record.conditions?.augmentId) return "augment";
+  if (record.conditions?.kind === "core") return "core";
+  // Older records include the entire roster in `tab=units` queries. Those match co-occurrence.
+  return URL.canParse(record.url) && new URL(record.url).searchParams.get("tab") === "comps" ? "fixed" : "lineup";
+}
+
+export function formationComparisonFor(groups: FormationComparison[], edition: string, roster: string[], population: number) {
+  const identity = [...roster].sort().join(",");
+  for (const group of groups) {
+    if (population !== group.population || (edition !== group.edition && !edition.startsWith(group.edition + "."))) continue;
+    const board = group.boards.find(entry => [...entry.roster].sort().join(",") === identity);
+    if (board) return { group, board };
+  }
+}
+
+export function remainingPlacements(total: number[], subset: number[]) {
+  if (total.length !== 8 || subset.length !== 8 ||
+      !total.every((count, i) => Number.isSafeInteger(count) && Number.isSafeInteger(subset[i]) && subset[i] >= 0 && count >= subset[i])) return;
+  return total.map((count, i) => count - subset[i]);
 }
 
 export type PlacementRating = PlacementRecord & {

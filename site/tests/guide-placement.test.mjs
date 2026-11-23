@@ -1,6 +1,31 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { augmentBoardSamples, byBestMean, findPlacement, heroAugmentSortingMinGames, isLowWinRate, orderByPlacement, placementSortTier } from "../domain/guide-placement.ts";
+import { augmentBoardSamples, byBestMean, findPlacement, formationComparisonFor, heroAugmentSortingMinGames, isLowWinRate, orderByPlacement, placementEvidenceKind, placementSortTier, remainingPlacements } from "../domain/guide-placement.ts";
+
+test("legacy co-occurrence keeps its own scope even when the query lists all units", () => {
+  const url = "https://www.metatft.com/explorer?level=9&unit=DA_Kayle19-1&tab=";
+  assert.equal(placementEvidenceKind({ url: url + "units" }), "lineup");
+  assert.equal(placementEvidenceKind({ url: url + "comps" }), "fixed");
+  assert.equal(placementEvidenceKind({ url: url + "units", conditions: { kind: "full" } }), "lineup");
+  assert.equal(placementEvidenceKind({ url: url + "units", conditions: { kind: "core" } }), "core");
+  assert.equal(placementEvidenceKind({ url: url + "builds", referencesAugment: "hero augment" }), "augment");
+});
+
+test("a formation comparison attaches only to the exact roster, level and edition", () => {
+  const group = { edition: "s19-pbe-19.1", population: 2, boards: [{ roster: ["kayle", "smeech"] }] };
+  assert.equal(formationComparisonFor([group], "s19-pbe-19.1.0", ["smeech", "kayle"], 2)?.board, group.boards[0]);
+  assert.equal(formationComparisonFor([group], "s19-pbe-19.1", ["smeech", "kayle", "bard"], 2), undefined);
+  assert.equal(formationComparisonFor([group], "s19-pbe-19.1", ["smeech", "kayle"], 3), undefined);
+  assert.equal(formationComparisonFor([group], "s19-19.1", ["smeech", "kayle"], 2), undefined);
+});
+
+test("splitting a nested condition subtracts each rank and rejects incompatible buckets", () => {
+  const total = [82, 122, 124, 127, 87, 58, 21, 9];
+  const subset = [58, 68, 64, 37, 14, 8, 1, 0];
+  assert.deepEqual(remainingPlacements(total, subset), [24, 54, 60, 90, 73, 50, 20, 9]);
+  assert.equal(remainingPlacements(total, [83, ...subset.slice(1)]), undefined);
+  assert.equal(remainingPlacements(total, subset.slice(1)), undefined);
+});
 
 test("a family headline uses comparable average placement, keeping the author choice on a tie", () => {
   const first = {rating: {mean: 3.7, winRate: .3}};

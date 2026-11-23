@@ -1,6 +1,6 @@
 import batch from "@/data/guide-placement.json";
 import { season } from "@/data";
-import { findPlacement, type PlacementBatch, type PlacementRating } from "@/domain/guide-placement";
+import { findPlacement, placementEvidenceKind, type PlacementBatch, type PlacementRating } from "@/domain/guide-placement";
 import { oceanGravesGuideId, oceanGravesUnlockBoardId } from "@/domain/guide-reading";
 import { traitCounts, usedPopulation } from "@/domain/team";
 import { heroAugmentCategory, heroAugmentForGuide } from "@/domain/hero-augments";
@@ -9,24 +9,26 @@ import type { Team } from "@/domain/types";
 
 const frequency = new Intl.NumberFormat("zh-CN");
 const placementBatch = batch as PlacementBatch;
-const coreBatch: PlacementBatch = {
+const placementScopes = ["fixed", "core", "lineup", "augment"] as const;
+type PlacementScope = typeof placementScopes[number];
+const scopedBatches = new Map(placementScopes.map(scope => [scope, {
   ...placementBatch,
-  records: placementBatch.records.filter(record => record.conditions?.kind === "core" && !record.referencesAugment && !record.detailOnly),
-};
+  records: placementBatch.records.filter(record => placementEvidenceKind(record) === scope && (scope !== "core" || !record.detailOnly)),
+}]));
 const completedCategories = new Set(["completed", "artifact", "radiant", "support"]);
 const percent = new Intl.NumberFormat("zh-CN", { style: "percent", maximumFractionDigits: 1 });
 
-export function teamPlacement(team: Team, section: Section, scope?: "core" | "guide") {
+export function teamPlacement(team: Team, section: Section, scope?: PlacementScope) {
   const augment = heroAugmentForGuide(section);
   if (section.category === heroAugmentCategory && !augment) return;
   const data = section.gameData ?? season;
   const traitLevels = Object.fromEntries(traitCounts(team.pieces, data.units, data.traits, data.items).map(({ id, level }) => [id, level]));
-  return findPlacement(scope === "core" ? coreBatch : placementBatch, team.pieces.map(piece => piece.unitId), usedPopulation(team.pieces), {
+  return findPlacement((scope && scopedBatches.get(scope)) || placementBatch, team.pieces.map(piece => piece.unitId), usedPopulation(team.pieces), {
     edition: data.id,
     augmentId: augment?.name,
     teamId: team.id,
     requireBoundFull: section.reroll?.added.includes(team.id),
-    preferBoundCore: scope === "guide",
+    preferBoundCore: scope === "core",
     traitLevels,
     completedItems: augment ? new Set(data.items.filter(item => completedCategories.has(item.category ?? "") &&
       !/ThiefsGloves/i.test(item.id)).map(item => item.id)) : undefined,
@@ -39,7 +41,7 @@ export { guideBoardKind } from "@/domain/team";
 export function rankedOceanBoards(teams: Team[], section: Section) {
   if (section.id !== oceanGravesGuideId) return;
   return teams.filter(board => board.id !== oceanGravesUnlockBoardId).map(board => {
-    const sample = teamPlacement(board, section);
+    const sample = teamPlacement(board, section, "fixed");
     const exact = sample?.conditions?.kind === "full" && sample.conditions.teamId === board.id;
     return { board, sample: exact ? sample : undefined };
   }).sort((a, b) => (a.sample?.mean ?? Infinity) - (b.sample?.mean ?? Infinity)
@@ -50,12 +52,13 @@ export function PlacementBadge({ rating, id }: { rating?: PlacementRating; id?: 
   if (!rating?.games) return null;
   const games = frequency.format(rating.games) + " 场";
   const limited = rating.mean === undefined;
-  const core = rating.conditions?.kind === "core";
+  const kind = placementEvidenceKind(rating);
+  const label = { fixed: "棋盘均名", core: "核心均名", lineup: "名单共现均名", augment: "强化样本均名" }[kind];
   const description = rating.referencesAugment ? "按主 C 实际出装识别的棋盘样本" : limited ? "样本不足"
-    : core || rating.sampleLabel ? [rating.patch, rating.window, rating.date, rating.sampleScope].filter(Boolean).join(" · ") : undefined;
+    : kind !== "fixed" || rating.sampleLabel ? [rating.patch, rating.window, rating.date, rating.sampleScope].filter(Boolean).join(" · ") : undefined;
   return <span id={id} className={"guide-placement " + rating.tone + (rating.referencesAugment ? " is-reference" : "")}
     title={description}>
-    {rating.mean === undefined ? <span>{games}</span> : <><span>{rating.referencesAugment ? "同装均名" : rating.sampleLabel ?? (core ? "核心均名" : "棋盘均名")}</span> <strong>{rating.mean.toFixed(2)}</strong><small>{games}</small></>}
+    {rating.mean === undefined ? <span>{games}{kind === "augment" ? "" : " · 少量样本"}</span> : <><span>{rating.referencesAugment ? "同装均名" : kind === "lineup" ? label : rating.sampleLabel ?? label}</span> <strong>{rating.mean.toFixed(2)}</strong><small>{games}</small></>}
   </span>;
 }
 
@@ -73,7 +76,9 @@ export function PlacementRates({ rating, stage }: { rating?: PlacementRating; st
 
 export function PlacementMethod({ rating }: { rating?: PlacementRating }) {
   if (!rating?.games) return null;
-  const scope = rating.sampleScope || (rating.conditions?.kind === "core" ? "指定核心棋子同场结算" : `${rating.population} 人口结算 · 固定本盘名单`);
+  const kind = placementEvidenceKind(rating);
+  const scope = kind === "lineup" ? "结算时包含这张棋盘的名单，可能有额外棋子。"
+    : rating.sampleScope || (kind === "core" ? "只筛指定核心和查询条件，其余棋子可变。" : `${rating.population} 级结算 · 固定本盘名单`);
   return <div className="placement-method">
     <p>{scope}</p>
     <a href={rating.url} target="_blank" rel="noreferrer">MetaTFT ↗</a>
