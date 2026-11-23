@@ -90,7 +90,6 @@ export function EditorGearRecommendations({ unit, items, gearSource, onEquip, on
                 <button type="button" key={item.id} onClick={() => onEquip(item)}
                   aria-label={`装备${name}，${detail}`} title={`${name} · ${detail}`}>
                   <ItemIcon item={item} size={24} />
-                  <span>{name}</span>
                   <small>{count.format(games)} 场</small>
                   {hasPlacementDelta && <small className="editor-common-gear-delta">
                     {placementDelta === undefined ? "—" : <HeroItemPlacementDelta value={placementDelta} />}

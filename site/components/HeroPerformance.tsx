@@ -2,6 +2,7 @@ import { Fragment, useRef } from "react";
 import { ArrowDown, ArrowUp, ArrowUpRight, Lock } from "lucide-react";
 import { itemMap, season, traitMap, unitLabel } from "@/data";
 import stats from "@/data/hero-stats.json";
+import { itemName } from "@/domain/gear-library";
 import { rankHeroes, type HeroItemSample, type HeroItemSource, type HeroResult } from "@/domain/hero-insights";
 import { itemLink } from "@/domain/links";
 import type { Unit } from "@/domain/types";
@@ -141,7 +142,7 @@ export function HeroCommonItems({ unit, items, gearSource }: {
         return <li key={itemId}>
           <a href={itemLink(item.id, unit.id)}>
             <ItemIcon item={item} size={28} />
-            <span>{item.name}<small>{exactGames.format(games)} 场
+            <span>{itemName(item)}<small>{exactGames.format(games)} 场
               {placementDelta !== undefined && <> · <span className="sr-only">名次差 </span>
                 <HeroItemPlacementDelta value={placementDelta} />
               </>}
