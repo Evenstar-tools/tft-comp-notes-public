@@ -4,6 +4,7 @@ import familyData from "@/data/guide-family-stats.json";
 import type { Section } from "@/domain/document";
 import { guideFamilyRows, type GuideFamilyBatch, type GuideFamilyStat } from "@/domain/guide-family-stats";
 import { guideBoardName } from "@/domain/guide-reading";
+import { displayGuideName } from "@/domain/trait-names.mjs";
 import type { Team } from "@/domain/types";
 import type { PlacementRating } from "@/domain/guide-placement";
 import { carryEvidence, GuideCarryStats } from "./GuideCarryStats";
@@ -22,11 +23,11 @@ function FamilyStats({ rows, rare }: {
   if (!rows.length && !rare.length) return <p className="muted">这张棋盘暂无对应的体系战绩。</p>;
   return <div className="guide-carry-samples">
     {!!rows.length && <ul>{rows.map(({ stat }) => <li key={stat.clusterId}>
-      <div className="carry-sample-head"><strong>{stat.name}</strong><span>体系均名 <b>{stat.mean.toFixed(2)}</b> · {number.format(stat.games)} 场</span></div>
+      <div className="carry-sample-head"><strong>{displayGuideName(stat.name)}</strong><span>体系均名 <b>{stat.mean.toFixed(2)}</b> · {number.format(stat.games)} 场</span></div>
       <p>前四 {percent.format(stat.topFourRate)} · 登顶 {percent.format(stat.winRate)}</p>
       <div className="carry-source"><a href={stat.url} target="_blank" rel="noreferrer">{stat.sourceName} · {family.patch} · 近 {family.days} 天 ↗</a></div>
     </li>)}</ul>}
-    {rare.map(stat => <p key={stat.clusterId}><a href={stat.url} target="_blank" rel="noreferrer">{stat.name} · {number.format(stat.games)} 场
+    {rare.map(stat => <p key={stat.clusterId}><a href={stat.url} target="_blank" rel="noreferrer">{displayGuideName(stat.name)} · {number.format(stat.games)} 场
       {stat.games === 1 && Number.isInteger(stat.mean) && stat.mean >= 1 && stat.mean <= 8 ? ` · 第 ${stat.mean} 名` : ""} ↗</a></p>)}
   </div>;
 }

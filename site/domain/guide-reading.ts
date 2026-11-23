@@ -3,9 +3,41 @@ import type { Piece, Season, Team, Unit } from "./types";
 import { unitSearchNames } from "./unit-search.mjs";
 import { rerollRoute } from "./reroll-stages.ts";
 import { guideBoardKind, usedPopulation } from "./team.ts";
+import { displayGuideName } from "./trait-names.mjs";
 
 export function allBlocks(blocks: ContentBlock[]): ContentBlock[] {
   return blocks.flatMap(block => [block, ...allBlocks(block.children ?? [])]);
+}
+
+export function guideSectionWithCurrentNames(section: Section): Section {
+  const renameTeam = (team: Team): Team => ({
+    ...team,
+    name: displayGuideName(team.name),
+    ...(team.webTitle && { webTitle: displayGuideName(team.webTitle) }),
+  });
+  const renameHeadings = (blocks: ContentBlock[]): ContentBlock[] => blocks.map(block => {
+    const title = (block.type === "heading" || block.label) && block.text ? displayGuideName(block.text) : block.text;
+    return {
+      ...block,
+      ...(title !== block.text && {
+        text: title,
+        elements: block.elements?.map(element => element.text_run ? {
+          ...element, text_run: { ...element.text_run, content: displayGuideName(element.text_run.content) },
+        } : element),
+      }),
+      ...(block.children && { children: renameHeadings(block.children) }),
+    };
+  });
+  return {
+    ...section,
+    title: displayGuideName(section.title),
+    blocks: renameHeadings(section.blocks),
+    ...(section.team && { team: renameTeam(section.team) }),
+    ...(section.teams && { teams: section.teams.map(renameTeam) }),
+    ...(section.reroll && { reroll: { ...section.reroll, stages: section.reroll.stages.map(stage => ({
+      ...stage, name: displayGuideName(stage.name),
+    })) } }),
+  };
 }
 
 const authoringInstructions = "在本篇文档维护 S19 阵容推荐。一级标题用于分类，二级标题用于阵容，三级标题用于变种与运营说明。网页同步后先进入草稿，预览并发布后才对访客可见。";

@@ -17,6 +17,7 @@ import {
 } from "@/domain/site-search";
 import type { Item, Team, Unit } from "@/domain/types";
 import { guideBoardKind } from "@/domain/team";
+import { displayGuideName } from "@/domain/trait-names.mjs";
 import { unitSearchNames } from "@/domain/unit-search.mjs";
 import { isVersionUpdate, sameEdition } from "@/domain/version-updates";
 import { currentPatchRecommendations } from "./patch-recommendations";
@@ -82,15 +83,17 @@ function guideHit(section: Section, team: Team, context: Context, detail?: strin
 
 function namedGuides(context: Context, term: string, items: Item[]) {
   const gearQuery = items.length > 0;
+  const titleTerm = key(displayGuideName(term));
+  const rankTitle = (name: string) => Math.max(searchNameRank(term, [name]), searchNameRank(titleTerm, [displayGuideName(name)]));
   return context.sections.flatMap(section => {
     const teams = primaryFirst(sectionTeams(section), section.primaryTeamId);
-    const titleRank = searchNameRank(term, [section.title]);
+    const titleRank = rankTitle(section.title);
     if (!teams.length || (gearQuery && titleRank !== 3)) return [];
     const augment = heroAugmentForGuide(section);
     return teams.flatMap(team => {
       const name = guideBoardName(team);
       const titleScore = team.id === teams[0].id ? titleRank * 2 : 0;
-      const boardScore = searchNameRank(term, [name, augment?.name ?? ""]);
+      const boardScore = Math.max(rankTitle(name), searchNameRank(term, [augment?.name ?? ""]));
       const rank = Math.max(titleScore, boardScore);
       if (!rank) return [];
       const entry = titleScore && titleScore >= boardScore ? teams.find(board => board.id === section.reroll?.entryTeamId) : undefined;

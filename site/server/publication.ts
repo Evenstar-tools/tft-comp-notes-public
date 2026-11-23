@@ -1,6 +1,6 @@
 import { attachBoundRegions, duplicatePublishedTeam, isBoardCaption, readableSection, sectionTeams, splitSections } from "@/domain/document-flow";
 import { season, traitMap, unitMap } from "@/data";
-import { allBlocks, authoredParagraphs, isEditorialSection } from "@/domain/guide-reading";
+import { allBlocks, authoredParagraphs, guideSectionWithCurrentNames, isEditorialSection } from "@/domain/guide-reading";
 import { guideExecutionUnitIds } from "@/domain/guide-execution";
 import { isVersionUpdate, sameEdition } from "@/domain/version-updates";
 import { getPublishedPatchRecommendations, sectionsAfterPartialPublish } from "@/domain/patch-recommendations";
@@ -41,7 +41,13 @@ export async function livePublication(): Promise<Publication | null> {
 }
 export async function publicGuidePublication(): Promise<Publication | null> {
   const publication = await publishedSnapshot();
-  return publication ? prepareForReading(includeRerollBoards(publication, season)) : null;
+  if (!publication) return null;
+  const prepared = await prepareForReading(includeRerollBoards(publication, season));
+  return {
+    ...prepared,
+    sections: prepared.sections.map(section => (section.gameData?.id ?? prepared.season.id).startsWith("s19-") &&
+      (section.kind === "guide" || sectionTeams(section).length) ? guideSectionWithCurrentNames(section) : section),
+  };
 }
 async function prepareForReading<T extends DocumentDraft>(publication: T): Promise<T> {
   const legacyKeys = process.env.DATABASE_URL?.trim()

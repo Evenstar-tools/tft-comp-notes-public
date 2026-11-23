@@ -2,6 +2,7 @@ import { season } from "@/data";
 import { sameEdition } from "@/domain/version-updates";
 import { AugmentLibrary } from "@/components/AugmentLibrary";
 import { publishedSnapshot } from "@/server/publication";
+import { displayGuideName } from "@/domain/trait-names.mjs";
 import { heroAugmentForGuide } from "@/domain/hero-augments";
 import { sectionTeams } from "@/domain/document-flow";
 import { guideBoardName, guideStrategyLabel, primaryFirst } from "@/domain/guide-reading";
@@ -33,10 +34,11 @@ export default async function AugmentsPage({ searchParams }: {
       const teams = primaryFirst(sectionTeams(section), section.primaryTeamId);
       const primary = teams[0];
       const boardNames = Object.fromEntries(teams.map(team => [
-        team.id, team === primary ? guideStrategyLabel(section, team, section.gameData ?? season, primary) ?? guideBoardName(team)
-          : guideBoardName(team),
+        team.id, displayGuideName(team === primary
+          ? guideStrategyLabel(section, team, section.gameData ?? season, primary) ?? guideBoardName(team)
+          : guideBoardName(team)),
       ]));
-      guides[augment.id] = { title: section.title, sectionId: section.id, primaryTeamId: primary?.id, boardNames };
+      guides[augment.id] = { title: displayGuideName(section.title), sectionId: section.id, primaryTeamId: primary?.id, boardNames };
       teams.forEach(team => activeTeams.add(team.id));
     }
   }

@@ -1,7 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { primaryFirst, matchGuideTeams, sourceSummary, complementItems, guideFacets, guidePlaystyle, guideRoster, guideBody, guideRoute, guideRollLevel, guideStrategyLabel, guideTitleWithoutPlaystyle, guideUnitMatch, readingNotes, isAuthoringIntroduction, isEditorialSection, parseGuideFilters } from "../domain/guide-reading.ts";
+import { primaryFirst, matchGuideTeams, sourceSummary, complementItems, guideFacets, guidePlaystyle, guideRoster, guideBody, guideRoute, guideRollLevel, guideStrategyLabel, guideTitleWithoutPlaystyle, guideUnitMatch, readingNotes, isAuthoringIntroduction, isEditorialSection, parseGuideFilters, guideSectionWithCurrentNames } from "../domain/guide-reading.ts";
+import { displayGuideName } from "../domain/trait-names.mjs";
 import { comboStarMask, comboTierCounts } from "../domain/combo-tiers.ts";
 import { guideStyleKey, guideWearerQuery, homeGuideFilter, matchOpeningSearch, openingSearch, searchPhaseNote } from "../domain/guide-search.ts";
 import { canRankRecommendations, compareGuideFamilyPerformance, familyMetricValue, guideFamilyRows, recommendationGroup, selectRecommendationRoutes } from "../domain/guide-family-stats.ts";
@@ -16,6 +17,29 @@ const data = json("../data/season.json");
 const meta = json("../data/combos-s19-meta.json");
 const tiers = json("../data/combo-tiers-s19.json").traits;
 const teams = [{id:"jazz",name:"备选",pieces:[{unitId:"bard"},{unitId:"ziggs"}]}, {id:"nine",name:"九人口",pieces:[{unitId:"ziggs"},{unitId:"nidalee"}]}];
+
+test("S19 guide titles and stage labels use current trait names with the original board IDs", () => {
+  const guide = { id: "original", title: "四酷炫德莱文", category: "慢搜阵容", primaryTeamId: "draven",
+    teams: [{ id: "draven", name: "花式德莱文", webTitle: "7级 · 双花射", pieces: [] }],
+    reroll: { stages: [{ teamId: "draven", name: "疾风泽丽" }] },
+    blocks: [{ id: "heading", type: "heading", text: "六保镖", elements: [{ text_run: { content: "六保镖" } }] },
+      { id: "notes", type: "text", text: "德莱文可以带泰坦的坚决。" }],
+  };
+  const display = guideSectionWithCurrentNames(guide);
+  assert.equal(display.title, "四大触打击乐德莱文");
+  assert.equal(display.id, guide.id);
+  assert.equal(display.primaryTeamId, guide.primaryTeamId);
+  assert.equal(display.teams[0].name, "花式射手德莱文");
+  assert.equal(display.teams[0].webTitle, "7级 · 双花式射手");
+  assert.equal(display.reroll.stages[0].name, "迅击鼓手泽丽");
+  assert.equal(display.blocks[0].elements[0].text_run.content, "六护卫");
+  assert.equal(display.blocks[1].text, guide.blocks[1].text);
+  assert.equal(guide.title, "四酷炫德莱文");
+  assert.equal(displayGuideName("七海洋扎克男枪"), "七海之歌扎克男枪");
+  assert.equal(displayGuideName("8级 · 三海三杀三摇滚"), "8级 · 三海之歌三杀三摇滚恶魔");
+  assert.equal(displayGuideName("花式射手 · 情绪摇滚 · 五杀天使 · 七离子金克丝"), "花式射手 · 情绪摇滚 · 五杀天使 · 七离子金克丝");
+  assert.equal(displayGuideName(display.title), display.title);
+});
 
 test("hero positioning uses the actual linked board and only recommends solo Amumu when adjoining cells are empty", () => {
   const final = { id: "final", name: "8级成型", notes: "", pieces: [] };

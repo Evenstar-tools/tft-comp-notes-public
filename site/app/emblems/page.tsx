@@ -4,6 +4,7 @@ import { readableSection, sectionTeams } from "@/domain/document-flow";
 import { guideBoardName, guideLink, primaryFirst } from "@/domain/guide-reading";
 import { gearFilters, type GearPageParams } from "@/domain/gear-library";
 import { livePublication } from "@/server/publication";
+import { displayGuideName } from "@/domain/trait-names.mjs";
 import "./emblem-stats.css";
 
 export const metadata = { title: "转职数据" };
@@ -21,7 +22,7 @@ export default async function Emblems({ searchParams }: { searchParams: Promise<
         if (itemMap.get(itemId)?.category !== "emblem") continue;
         const uses = guideUses[itemId] ??= [];
         if (uses.some(use => use.sectionId === section.id && use.teamId === team.id && use.unitId === piece.unitId)) continue;
-        uses.push({ unitId: piece.unitId, sectionId: section.id, teamId: team.id, title: section.title, board });
+        uses.push({ unitId: piece.unitId, sectionId: section.id, teamId: team.id, title: displayGuideName(section.title), board: displayGuideName(board) });
       }
     }
   }
