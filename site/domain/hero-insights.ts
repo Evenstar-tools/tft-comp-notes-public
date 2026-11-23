@@ -1,7 +1,7 @@
 import type { Item, Unit } from "./types";
 
 export type HeroResult = { games: number; mean: number; top4Rate: number; winRate: number };
-export type HeroItemSample = { itemId: string; games: number; mean?: number; rate?: number };
+export type HeroItemSample = { itemId: string; games: number; mean?: number; rate?: number; placementDelta?: number };
 export type HeroItemSource = { source: string; version: string; window: string; date: string; minGames: number };
 
 export function rankHeroes(
@@ -29,18 +29,19 @@ export function rankHeroes(
 
 export function commonHeroItems(
   items: ReadonlyMap<string, Item>,
-  samples: Record<string, { rows: { unitId: string; games: number; mean?: number | null; rate?: number | null }[] }>,
+  samples: Record<string, { rows: { unitId: string; games: number; mean?: number | null; rate?: number | null; placementDelta?: number }[] }>,
   minGames: number,
 ) {
   const byHero: Record<string, HeroItemSample[]> = {};
   for (const [itemId, sample] of Object.entries(samples)) {
     if (items.get(itemId)?.category !== "completed") continue;
-    for (const { unitId, games, mean, rate } of sample.rows) {
+    for (const { unitId, games, mean, rate, placementDelta } of sample.rows) {
       if (games >= minGames) (byHero[unitId] ??= []).push({
         itemId,
         games,
         ...(typeof mean === "number" && { mean }),
         ...(typeof rate === "number" && { rate }),
+        ...(placementDelta !== undefined && { placementDelta }),
       });
     }
   }

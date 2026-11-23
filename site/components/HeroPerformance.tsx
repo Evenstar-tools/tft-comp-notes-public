@@ -7,6 +7,7 @@ import { itemLink } from "@/domain/links";
 import type { Unit } from "@/domain/types";
 import { hasUnlockCondition } from "@/domain/unlocks";
 import { ItemIcon } from "./ItemIcon";
+import { HeroItemPlacementDelta } from "./HeroItemPlacementDelta";
 
 const sampleByHero: Record<string, HeroResult | undefined> = stats.rows;
 const ranks = rankHeroes(season.units, stats.rows, stats.minGames);
@@ -134,13 +135,17 @@ export function HeroCommonItems({ unit, items, gearSource }: {
 }) {
   return <section className="detail-section hero-common-items" aria-label="常见成装">
       <div className="hero-detail-heading"><h3>常见成装</h3></div>
-      {items.length ? <ul>{items.map(({ itemId, games }) => {
+      {items.length ? <ul>{items.map(({ itemId, games, placementDelta }) => {
         const item = itemMap.get(itemId);
         if (!item) return null;
         return <li key={itemId}>
           <a href={itemLink(item.id, unit.id)}>
             <ItemIcon item={item} size={28} />
-            <span>{item.name}<small>{exactGames.format(games)} 场</small></span>
+            <span>{item.name}<small>{exactGames.format(games)} 场
+              {placementDelta !== undefined && <> · <span className="sr-only">名次差 </span>
+                <HeroItemPlacementDelta value={placementDelta} />
+              </>}
+            </small></span>
           </a>
         </li>;
       })}</ul> : <p className="hero-data-note">暂无达到 {gearSource.minGames} 场的成装样本。</p>}

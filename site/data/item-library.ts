@@ -18,7 +18,7 @@ interface ItemWearers {
   totalGames?: number;
   mean?: number;
   winRate?: number;
-  rows: { unitId: string; games: number; mean?: number; rate?: number; winRate?: number }[];
+  rows: { unitId: string; games: number; mean?: number; rate?: number; winRate?: number; placementDelta?: number }[];
 }
 
 export const itemReference = {

@@ -1,6 +1,17 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { itemCohort } from "../scripts/special-item-cohort.mjs";
+import { itemCohort, itemPlacementDelta } from "../scripts/special-item-cohort.mjs";
+
+test("item placement delta compares against the same hero without the item", () => {
+  const overall = [100, 0, 100, 0, 0, 0, 0, 0];
+  const worn = [100, 0, 0, 0, 0, 0, 0, 0];
+  assert.equal(itemPlacementDelta(worn, overall, 100), -2);
+  assert.equal(itemPlacementDelta([0, 0, 100, 0, 0, 0, 0, 0], overall, 100), 2);
+  assert.equal(itemPlacementDelta(worn, overall, 101), undefined);
+  assert.equal(itemPlacementDelta(worn, [100, 0, 99, 0, 0, 0, 0, 0], 100), undefined);
+  assert.equal(itemPlacementDelta(worn, [99, 0, 101, 0, 0, 0, 0, 0], 100), undefined);
+  assert.equal(itemPlacementDelta(worn, undefined, 100), undefined);
+});
 
 test("item scores match the wearers' exact hotfix and day window", () => {
   const hotfix = ["19.1", "a"];
