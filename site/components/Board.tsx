@@ -46,9 +46,11 @@ export const Board = memo(function Board({
   onRemove,
   data,
   changedPositions,
+  readOnly = false,
 }: {
   data?: Season;
   changedPositions?: number[];
+  readOnly?: boolean;
   pieces: Piece[];
   /** 当前选中的棋盘棋子 instanceId。 */
   selectedId: string | null;
@@ -164,7 +166,7 @@ export const Board = memo(function Board({
                   title={instrument ? `${instrument.name} · 站位示意` : undefined}
                   aria-pressed={piece || (onMoveInstrument && instrument) ? isSelected : undefined}
                   onClick={event => clickCell(position, piece, event.currentTarget, instrument?.id)}
-                  disabled={!!data && !piece}
+                  disabled={readOnly || (!!data && !piece)}
                   onContextMenu={data ? undefined : (event) => {
                     if (!piece) return;
                     event.preventDefault();

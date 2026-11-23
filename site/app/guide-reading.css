@@ -174,13 +174,23 @@ html[data-theme="dark"] .guide-placement.weak {color:#ff9ba3;}
 }
 .guide-board-footer {display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px 12px;}
 .guide-board-actions {display:flex;align-items:center;gap:6px;margin-inline-start:auto;}
-.guide-board-rating {display:none;}
+.guide-editor-action {position:relative;}
+.guide-board-actions .guide-editor-link {padding-inline:12px;border-color:var(--accent);background:var(--accent);color:var(--panel);white-space:nowrap;}
+.guide-board-actions .guide-editor-link:hover {filter:brightness(.94);}
+.guide-editor-error {position:absolute;z-index:2;inset-inline-end:0;top:calc(100% + 6px);width:210px;padding:8px;background:var(--panel);border:1px solid var(--line);border-radius:6px;font-size:.8125rem;}
+@media (max-width:380px) {
+  .guide-board-actions .guide-editor-link {width:44px;padding-inline:0;}
+  .guide-editor-link > span {display:none;}
+}
 @media (min-width:1100px) {
-  .guide-board-rating {display:inline-flex;align-items:center;min-height:44px;padding-inline:9px;border-radius:6px;}
   .guide-reader .guide-gear > h3 {display:flex;align-items:center;min-height:44px;}
-  .guide-board-rating:hover {background:var(--raised);}
-  .guide-board-rating :is(.guide-placement,.guide-placement.is-reference) {max-width:none;}
-  .guide-board-rating .guide-placement small {flex-basis:auto;margin-inline-start:4px;}
+}
+.guide-family-rating {display:inline-flex;align-items:baseline;gap:5px;min-height:34px;padding:6px 9px;margin-inline-start:auto;border-radius:6px;color:var(--accent);font-size:.875rem;font-variant-numeric:tabular-nums;white-space:nowrap;}
+.guide-family-rating:hover {background:var(--raised);}
+.guide-family-rating strong {font-size:1.1rem;}
+.guide-family-rating small {color:var(--muted);}
+@media (max-width:620px) {
+  .guide-family-rating {flex-basis:100%;margin-inline-start:0;padding-inline:0;}
 }
 .guide-zoom-trigger {display:inline-flex;align-items:center;justify-content:center;gap:5px;min-height:44px;padding:5px 8px;background:var(--panel);color:var(--accent);font-size:.875rem;font-weight:600;}
 .guide-board-zoom {width:44px;}

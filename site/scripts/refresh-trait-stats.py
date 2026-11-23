@@ -46,8 +46,10 @@ def fetch(url, params=None):
 
 def published_scopes(mapping):
     groups = {}
+    source_window = {"queue": "PBE", "patch": "current", "days": str(DAYS)}
     for url in [RENATA, *(row["url"] for row in load(DATA / "guide-placement.json")["records"])]:
-        parts = parse_qsl(urlsplit(url).query)
+        parts = [(key, value) for key, value in parse_qsl(urlsplit(url).query)
+                 if source_window.get(key) != value]
         if ("set", "TFTSet19") not in parts:
             continue
         units = sorted(set(v for k, v in parts if k == "unit"))

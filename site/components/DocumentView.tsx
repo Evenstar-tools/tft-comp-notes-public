@@ -8,7 +8,7 @@ import { compactGuideParagraph, guideCopyKey, hasGuideLinks, rememberGuideCopy }
 import { rerollRoute } from "@/domain/reroll-stages";
 import { heroAugmentForGuide, heroAugmentLabel, heroAugmentLibrary } from "@/domain/hero-augments";
 import { displayTraitNames } from "@/domain/trait-names.mjs";
-import type { Season, Team } from "@/domain/types";
+import type { BoardStage, Season, Team } from "@/domain/types";
 import type { ContentBlock, RichElement, Section } from "@/domain/document";
 import type { ReactNode } from "react";
 
@@ -177,8 +177,8 @@ function Block({ block, folded, start = 0, replacement }: { block: ContentBlock;
       );
   }
 }
-export function DocumentView({ section, gameData, publicationId, initialTeam, variants, openPoster, initialPosterShare, returnTo, showCategory = true, patchAdvice }: {
-  section: Section; gameData?: Season; publicationId?: string; initialTeam?: string; returnTo?: string;
+export function DocumentView({ section, gameData, publicationId, initialTeam, initialStage, initialFlex, variants, openPoster, initialPosterShare, returnTo, showCategory = true, patchAdvice }: {
+  section: Section; gameData?: Season; publicationId?: string; initialTeam?: string; initialStage?: BoardStage; initialFlex?: string; returnTo?: string;
   variants?: Record<string, import("@/domain/guide-families").PosterVariant[]>; openPoster?: boolean; initialPosterShare?: import("@/domain/links").PosterShare;
   showCategory?: boolean;
   patchAdvice?: GuidePatchAdvice[];
@@ -272,7 +272,7 @@ export function DocumentView({ section, gameData, publicationId, initialTeam, va
           : returnPath === "/emblems" ? "返回转职"
             : returnTo ? "返回阵容列表" : augment ? "英雄强化" : "全部阵容";
   const playstyle = guidePlaystyle(section);
-  function header(title: string, guideName?: string) {
+  function header(title: string, guideName?: string, performance?: ReactNode) {
     const context = guideName ? guideTitleWithoutPlaystyle(guideName, playstyle) : !augment || !publicationId ? category : "";
     return <>
       {(publicationId || context) && <div className="guide-header-meta">
@@ -282,25 +282,26 @@ export function DocumentView({ section, gameData, publicationId, initialTeam, va
       <div className="guide-page-heading">
         <Title className="guide-page-title">{guideTitleWithoutPlaystyle(title, playstyle)}</Title>
         {playstyle && <span className="guide-playstyle-tag" title="打法">{playstyle}</span>}
+        {performance}
       </div>
       {augment && <p className="guide-hero-augment"><strong><a href={augmentHref(augment.id)} title={augment.name}>{augment.label} ↗</a></strong> <span>{augment.round} {augment.rarity} · {augment.role}</span></p>}
     </>;
   }
-  function teamHeader(team: Team) {
+  function teamHeader(team: Team, performance?: ReactNode) {
     const stage = section.reroll?.stages.find(entry => entry.teamId === team.id);
     const formation = stage && stage.boardRole !== "variant" ? rerollRoute(section, team)?.final ?? team : team;
     const title = boardTitle(section, formation);
-    if (formation.id !== primary?.id && title !== section.title && !title.startsWith(section.title + " · ")) return header(title, section.title);
+    if (formation.id !== primary?.id && title !== section.title && !title.startsWith(section.title + " · ")) return header(title, section.title, performance);
     const name = publicationId && formation.id !== primary?.id
       ? guideBoardName(formation).match(/^[一二三四五六七八九十\d]+(?:级|人口)\s*·\s*(.+)$/)?.[1].trim()
       : undefined;
-    if (name && name !== section.title && !/^(主阵|过渡|成型|上限|稳血|变阵)$/.test(name)) return header(name, section.title);
-    return header(title);
+    if (name && name !== section.title && !/^(主阵|过渡|成型|上限|稳血|变阵)$/.test(name)) return header(name, section.title, performance);
+    return header(title, undefined, performance);
   }
   return (
     <article className={primary ? "document-view with-guide-board" : "document-view"}>
       {primary && gameData ? <GuideTeams key={section.id + (section.primaryTeamId ?? "")} section={section} data={gameData} initialTeam={initialTeam}
-        publicationId={publicationId} returnTo={returnTo} renderHeader={teamHeader} renderNotes={selectedText}
+        initialStage={initialStage} initialFlex={initialFlex} publicationId={publicationId} returnTo={returnTo} renderHeader={teamHeader} renderNotes={selectedText}
         variants={variants} openPoster={openPoster} initialPosterShare={initialPosterShare} patchAdvice={patchAdvice} /> : header(section.title)}
       {!primary && section.blocks.map((block) => (
         <Block key={block.id} block={block} folded={folded} />

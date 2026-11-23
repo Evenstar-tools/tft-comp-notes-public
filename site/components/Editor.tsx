@@ -62,6 +62,7 @@ import { SelectionSheet, UnitBrowser, UnitDetails, type BrowserFilters } from ".
 import { request } from "./api";
 import { downloadBlob, exportTeamImage } from "./export-team";
 import { GuidePoster } from "./GuidePoster";
+import { readGuideBoardTransfer } from "./guide-board-transfer";
 import { exportPlayerTeams, importPlayerTeams, isPlayerTeamStorageKey, readPlayerTeams, savePlayerTeam } from "./player-team-storage";
 import "./editor-workspace.css";
 
@@ -150,6 +151,9 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
   const incomingDraft = copyQuery ? (sourceCopy?.query === copyQuery ? sourceCopy.team : null) : comboDraft;
   const handledCombo = useRef<string | null>(null);
   const [comboOrigin, setComboOrigin] = useState("");
+  const guideBoardId = ownerMode ? null : params.get("guideBoard");
+  const [guideBoardSource, setGuideBoardSource] = useState<{ title: string; href: string } | null>(null);
+  const handledGuideBoard = useRef<string | null>(null);
   const [wantedForm, setWantedForm] = useState<string | null>(null);
   const incomingTeamId = ownerMode ? params.get("team") : null;
   const incomingUnitId = params.get("unit");
@@ -354,6 +358,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
     window.history.replaceState(window.history.state, "", url.pathname + url.search);
     if (!draft) return;
     setComboOrigin(copyQuery && sectionId && copyId ? guideLink(sectionId, copyId) : origin?.startsWith("/combos?") ? origin : "/combos");
+    setGuideBoardSource(null);
     setRestore(null);
     showDraft(draft);
     setReplacement(null); setMobileReplace(false);
@@ -371,6 +376,28 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
       notify({ kind: "error", text: "组合链接无效或与当前赛季不符，请从八人口组合重新选择。" });
     } else if (!restore && !dirty) finishCombo(incomingDraft);
   }, [importKey, copyQuery, incomingDraft, draftChecked, saved, restore, dirty, finishCombo, notify]);
+  useEffect(() => {
+    if (!guideBoardId || handledGuideBoard.current === guideBoardId || !saved) return;
+    handledGuideBoard.current = guideBoardId;
+    const transfer = readGuideBoardTransfer(guideBoardId);
+    const url = new URL(window.location.href);
+    url.searchParams.delete("guideBoard");
+    window.history.replaceState(window.history.state, "", url.pathname + url.search);
+    if (!transfer) {
+      notify({ kind: "error", text: "棋盘没有带过来，请回到攻略重新点击「带入编辑器」。" });
+      return;
+    }
+    const source = readTeamStage(transfer.team, transfer.team.mainStage ?? "late");
+    const draft = independentDraft({ ...source, name: transfer.title.slice(0, 80) }, emptyTeam());
+    setGuideBoardSource({ title: transfer.title, href: transfer.href });
+    showDraft(draft);
+    setReplacement(null); setMobileReplace(false);
+    setHistory([]); setFuture([]); setWantedForm(null);
+    const focus = draft.pieces.find(piece => piece.unitId === transfer.focusUnit) ??
+      draft.pieces.find(piece => piece.items.length === 3) ?? draft.pieces[0];
+    setSelectedId(focus?.unitId ?? null);
+    setPieceSelection(focus ? { id: focus.instanceId } : null);
+  }, [guideBoardId, saved, notify, showDraft]);
   const pendingTeam = incomingTeamId && handledTeam.current !== incomingTeamId;
   const writeIssue = feishuBoardIssue(draftTeam);
   const writableSections = sections?.filter((entry) => entry.level === 2 || entry.id === known?.sectionId) ?? [];
@@ -684,6 +711,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
     showDraft(next);
     setWantedForm(null);
     setComboOrigin("");
+    setGuideBoardSource(null);
     setSelectedId(null);
     setPieceSelection(null);
     setReplacement(null);
@@ -891,6 +919,10 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
       {showPoster && <GuidePoster team={draftTeam} data={season} close={() => setShowPoster(false)}
         setDefault={posterFormat => commit(prev => ({...prev, posterFormat}))} />}
       <h1 className="sr-only">阵容构建器</h1>
+      {guideBoardSource && <div className="editor-guide-source">
+        <div><strong>来自{guideBoardSource.title}</strong><small>{known ? "已保存在本机" : "本地草稿"}</small></div>
+        <a href={guideBoardSource.href}>返回原棋盘</a>
+      </div>}
       {copyQuery && copyError && <div className="banner" role="alert">{copyError}<button onClick={() => setRetryCopy(v => v + 1)}>重新读取棋盘</button></div>}
       {copyQuery && !incomingDraft && !copyError && <p role="status">正在读取所选发布棋盘…</p>}
       {importKey && incomingDraft && handledCombo.current !== importKey && draftChecked && (restore || dirty) && (

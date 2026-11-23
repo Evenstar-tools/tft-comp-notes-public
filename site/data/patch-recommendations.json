@@ -1,11 +1,7 @@
 {
   "seasonId": "s19-pbe",
   "build": "6014015",
-  "reviewedAt": "2026-11-23T03:06:31+00:00",
-  "window": {
-    "start": "2026-11-22T21:06:31Z",
-    "end": "2026-11-23T03:06:31Z"
-  },
+  "reviewedAt": "2026-11-23T09:22:23+00:00",
   "entries": [
     {
       "sectionId": "sample-block-0122",
@@ -80,6 +76,43 @@
       "note": "大剑多、德莱文和布隆来得顺，七级一起追三。",
       "sources": [
         "https://www.metatft.com/explorer?tab=units&set=TFTSet19&trait=DA_Illbeats19_3&unit=DA_Draven19-1&unit=DA_Braum19-1"
+      ]
+    },
+    {
+      "sectionId": "sample-block-0251",
+      "teamId": "00000000-0000-4000-8000-000000000102",
+      "status": "recommended",
+      "note": "轻语、正义能合就走。七级先开扎克，八级找两星男枪和扎克。",
+      "sources": [
+        "https://www.metatft.com/pbe-comps#DA_OceanSong19-DA_Graves19"
+      ]
+    },
+    {
+      "sectionId": "sample-block-0251",
+      "teamId": "00000000-0000-4000-8000-000000000075",
+      "status": "conditional",
+      "note": "八级男枪、扎克两星先稳血，能上九再补岩雀接法装。",
+      "sources": [
+        "https://www.metatft.com/pbe-comps#DA_OceanSong19-DA_Zac19"
+      ]
+    },
+    {
+      "sectionId": "sample-block-0338",
+      "teamId": "00000000-0000-4000-8000-000000000078",
+      "status": "conditional",
+      "note": "羊刀、海妖能合再走。挂摇滚打三轮解锁薇恩，八级找薇恩、约里克两星。",
+      "sources": [
+        "https://www.metatft.com/pbe-comps#DA_DemonVision19-DA_Vayne19",
+        "https://mobalytics.gg/tft/set19/comps-guide/rock-3MHpApsYN7190RAOvqC40aQm5Or"
+      ]
+    },
+    {
+      "sectionId": "sample-block-0229",
+      "teamId": "00000000-0000-4000-8000-000000000071",
+      "status": "conditional",
+      "note": "玛尔扎哈和艾克来得多再走。七级五天才追三，男爵开了再补。",
+      "sources": [
+        "https://www.metatft.com/pbe-comps#DA_Prodigy19-DA_Malzahar19"
       ]
     }
   ]

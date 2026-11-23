@@ -23,10 +23,11 @@ def fetch_counts(url):
     exact = ("tab", "comps") in pairs
     if ("set", "TFTSet19") not in pairs or not (exact or ("tab", "units") in pairs):
         raise ValueError(f"Unsupported season or query: {url}")
-    params = [("queue", "PBE"), ("patch", "current"), ("days", 3), ("formatnoarray", "true"), ("compact", "true")]
+    window = {"queue": "PBE", "patch": "current", "days": "3"}
+    params = [*window.items(), ("formatnoarray", "true"), ("compact", "true")]
     units, traits = set(), set()
     for key, value in pairs:
-        if key in ("tab", "set"):
+        if key in ("tab", "set") or window.get(key) == value:
             continue
         if key in ("trait", "level", "emblem_count", "tactician_item_count", "duplicate_unit_count"):
             params.append((key, value))

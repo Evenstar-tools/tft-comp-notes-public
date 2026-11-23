@@ -1,6 +1,6 @@
 import { parseGuideFilters, type GuideFilters } from "./guide-reading";
 
-const filterKeys = ["q", "view", "category", "style", "cost", "sort", "scope", "exclude"] as const;
+const filterKeys = ["q", "view", "category", "style", "cost", "sort", "scope", "exclude", "metric", "direction"] as const;
 export type GuideSearchPage = "/" | "/find" | "/search";
 export const guideNavigationChange = "guide-navigation-change";
 

@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import { primaryFirst, matchGuideTeams, sourceSummary, complementItems, guideFacets, guidePlaystyle, guideRoster, guideBody, guideRoute, guideRollLevel, guideStrategyLabel, guideTitleWithoutPlaystyle, guideUnitMatch, readingNotes, isAuthoringIntroduction, isEditorialSection, parseGuideFilters } from "../domain/guide-reading.ts";
 import { comboStarMask, comboTierCounts } from "../domain/combo-tiers.ts";
 import { guideStyleKey, guideWearerQuery, homeGuideFilter, matchOpeningSearch, openingSearch, searchPhaseNote } from "../domain/guide-search.ts";
-import { canRankRecommendations, guideFamilyRows, recommendationGroup, selectRecommendationRoutes } from "../domain/guide-family-stats.ts";
+import { canRankRecommendations, compareGuideFamilyPerformance, familyMetricValue, guideFamilyRows, recommendationGroup, selectRecommendationRoutes } from "../domain/guide-family-stats.ts";
 import { posterShareLink, readPosterShare, validItemLibraryReturn } from "../domain/links.ts";
 import { compactGuideParagraph, compactUtilityCopy, rememberGuideCopy } from "../domain/guide-copy.ts";
 import { heroGuideIndex } from "../domain/hero-guides.ts";
@@ -262,6 +262,32 @@ test("a ranked family opens its reviewed board and never transfers a missing var
   assert.deepEqual(guideFamilyRows(jinx,"S19","jinx",[boards[0]]),[]);
   assert.deepEqual(guideFamilyRows(jinx,"S19","jinx",[boards[1]])[0].boards,[boards[1]]);
   assert.deepEqual(guideFamilyRows({...jinx,rows:[{...jinx.rows[0],games:99}]},"S19","jinx",boards),[]);
+  const variants = [{id:"another-cap"},{id:"new-carry"}];
+  const reviewed = {...jinx,rows:[{...jinx.rows[0],sharedTeamIds:["another-cap","retired","eight"]}]};
+  assert.deepEqual(guideFamilyRows(reviewed,"S19","jinx",[...variants,...boards])[0].boards.map(t=>t.id),
+    ["eight","nine","another-cap"]);
+});
+
+test("family performance ranks complete metrics and keeps missing values last in either direction", () => {
+  const common = { mean: 4.2, topFourRate: 0.55, winRate: 0.12 };
+  const more = { ...common, games: 200, clusterId: "101" };
+  const fewer = { ...common, games: 100, clusterId: "103" };
+  const earlier = { ...fewer, clusterId: 102 };
+  const leader = { ...common, games: 120, mean: 3.8, winRate: 0.2, clusterId: "104" };
+  const unknown = { ...common, games: 400, mean: Infinity, topFourRate: 1.1, winRate: null, clusterId: "105" };
+  const rank = (metric, direction, totalFinishes) => [unknown, fewer, leader, earlier, more]
+    .sort((a, b) => compareGuideFamilyPerformance(a, b, metric, direction, totalFinishes));
+
+  assert.equal(familyMetricValue(more, "pickRate", 1000), 0.2);
+  assert.equal(familyMetricValue(more, "pickRate"), null);
+  assert.equal(familyMetricValue(more, "pickRate", 0), null);
+  assert.equal(familyMetricValue(more, "pickRate", 100), null);
+  assert.equal(familyMetricValue(unknown, "topFourRate"), null);
+  assert.equal(familyMetricValue(unknown, "winRate"), null);
+  assert.deepEqual(rank("mean", "asc"), [leader, more, earlier, fewer, unknown]);
+  assert.deepEqual(rank("mean", "desc"), [more, earlier, fewer, leader, unknown]);
+  assert.deepEqual(rank("winRate", "desc"), [leader, more, earlier, fewer, unknown]);
+  assert.deepEqual(rank("pickRate", "desc", 250), [more, leader, earlier, fewer, unknown]);
 });
 
 test("home search normalizes common population, trait and playstyle queries", () => {

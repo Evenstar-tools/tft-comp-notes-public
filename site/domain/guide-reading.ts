@@ -86,7 +86,7 @@ export function sourceSummary(section: Section) {
 
 export type GuideSearchScope = "all" | "carry" | "unit";
 export type GuideSort = "recommended" | "mean" | "category";
-export type GuideFilters = { view?: string; q?: string; category?: string; style?: string; cost?: string; sort?: GuideSort; scope?: GuideSearchScope; exclude?: "rakan" | "none" };
+export type GuideFilters = { view?: string; q?: string; category?: string; style?: string; cost?: string; sort?: GuideSort; scope?: GuideSearchScope; exclude?: "rakan" | "none"; metric?: "pickRate" | "mean" | "topFourRate" | "winRate"; direction?: "asc" | "desc" };
 
 export function parseGuideFilters(values: Record<string, string | string[] | undefined>): GuideFilters {
   const read = (key: keyof GuideFilters) => {
@@ -96,11 +96,14 @@ export function parseGuideFilters(values: Record<string, string | string[] | und
   };
   const view = read("view"), sort = read("sort"), cost = read("cost"), scope = read("scope"), style = read("style");
   const exclude = read("exclude");
+  const metric = read("metric"), direction = read("direction");
   return {
     view: view === "hero-augments" ? view : undefined,
     sort: sort === "mean" || sort === "category" ? sort : undefined,
     ...(scope === "carry" || scope === "unit" ? { scope } : {}),
     ...(exclude === "rakan" || exclude === "none" ? { exclude } : {}),
+    ...(sort === "mean" && (metric === "pickRate" || metric === "mean" || metric === "topFourRate" || metric === "winRate") ? { metric } : {}),
+    ...(sort === "mean" && (direction === "asc" || direction === "desc") ? { direction } : {}),
     q: read("q"),
     category: read("category"),
     style: playstyleCode(style) ?? style,
@@ -146,8 +149,11 @@ export function legacyHyperpopFinalAdvice(section: Section, team: Team) {
 
 type RouteStep = { label: string; text: string; team?: Team };
 
+export const oceanGravesGuideId = "sample-block-0251";
+export const oceanGravesUnlockBoardId = "00000000-0000-4000-8000-000000000062";
+
 export function guideRoute(section: Section, teams: Team[], current: Team): { phases: RouteStep[]; choices?: RouteStep[]; opening?: string } | undefined {
-  const oceanGraves = section.id === "sample-block-0251";
+  const oceanGraves = section.id === oceanGravesGuideId;
   const staged = rerollRoute(section, current);
   if (!oceanGraves && staged && (staged.stages.length || staged.variants.length)) {
     const phases = staged.stages.map(stage => ({ label: stage.name, text: "", team: stage.team }));
@@ -187,11 +193,15 @@ export function guideRoute(section: Section, teams: Team[], current: Team): { ph
     ].filter(step => step.team) };
   }
   if (oceanGraves) {
-    return { phases: [
-      phase("7级解锁扎克", board("七级")),
-      phase("8级成型", board("八级")),
-      phase("9级上限", board("九级")),
-    ].filter(step => step.team) };
+    const find = (id: string) => teams.find(team => team.id === id);
+    const step = (label: string, id: string, prefix: string) => phase(label, find(id) ?? board(prefix), section.reroll?.advice[id]);
+    return {
+      phases: [
+        step("7级 · 解锁扎克", oceanGravesUnlockBoardId, "七级"),
+        step("8级 · 七海成型", "00000000-0000-4000-8000-000000000075", "八级"),
+        step("9级上限 · 七海岩雀", "00000000-0000-4000-8000-000000000076", "九级"),
+      ].filter(entry => entry.team),
+    };
   }
   if (section.id === "sample-block-0368") {
     return {

@@ -1,5 +1,5 @@
 import { guideLink } from "@/domain/guide-reading";
-import { recommendationGroups, type RecommendationGroup, type RecommendationStat, type RecommendationStats } from "@/domain/guide-family-stats";
+import { recommendationGroups, type GuideFamilyBatch, type RecommendationGroup, type RecommendationStat } from "@/domain/guide-family-stats";
 import type { Team, Unit } from "@/domain/types";
 import { homeGuideReturn } from "@/lib/home-position";
 
@@ -19,7 +19,7 @@ export type RecommendationCard = {
 };
 
 export function PatchRecommendationList({ stats, cards, home }: {
-  stats: RecommendationStats;
+  stats: Pick<GuideFamilyBatch, "patch" | "queue" | "days" | "updatedAt"> & { sourceUrl: string };
   cards: RecommendationCard[];
   home: string;
 }) {
@@ -33,7 +33,7 @@ export function PatchRecommendationList({ stats, cards, home }: {
   return <div className="home-patch-recommendations">
     <div className="home-patch-meta">
       <p className="home-patch-sample">
-        核心构筑 · 近 {stats.hours} 小时 · <time dateTime={stats.updatedAt}>{date} {time} UTC</time> · <a href="https://www.metatft.com/explorer?set=TFTSet19" target="_blank" rel="noreferrer">MetaTFT</a>
+        {stats.queue} {stats.patch} · 近 {stats.days} 天 · <time dateTime={stats.updatedAt}>{date} {time} UTC</time> · <a href={stats.sourceUrl} target="_blank" rel="noreferrer">MetaTFT</a>
       </p>
       {groups.length > 1 && <nav className="home-patch-jumps" aria-label="跳到推荐分组">
         {groups.map(({ id, label }) => <a key={id} href={"#home-patch-" + id}>{id === "reroll" ? "赌狗" : label}</a>)}
@@ -70,7 +70,7 @@ export function PatchRecommendationList({ stats, cards, home }: {
                   {hit && <p className="home-patch-hit">{hit}</p>}
                 </div>
                 <span id={id + "-mean"} className={"home-patch-mean guide-placement " + tone}>
-                  <span>均名 <b>{rating.mean.toFixed(2)}</b></span>
+                  <span>体系均名 <b>{rating.mean.toFixed(2)}</b></span>
                   <small>{rating.games.toLocaleString("zh-CN")} 场</small>
                 </span>
               </a>

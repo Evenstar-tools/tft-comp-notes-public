@@ -1,6 +1,6 @@
 import type { Section } from "./document";
 import { sectionTeams } from "./document-flow";
-import { allBlocks, authoredParagraphs, guideBoardName, guideBody, guideRoster, legacyHyperpopFinalAdvice, primaryFirst, readingNotes } from "./guide-reading";
+import { allBlocks, authoredParagraphs, guideBoardName, guideBody, guideRoster, legacyHyperpopFinalAdvice, oceanGravesGuideId, oceanGravesUnlockBoardId, primaryFirst, readingNotes } from "./guide-reading";
 import { heroAugmentForGuide } from "./hero-augments";
 import { unlockText } from "./unlocks";
 import { traitCounts, usedPopulation } from "./team";
@@ -37,15 +37,17 @@ export function posterStageOptions(section: Section | undefined, current: Team):
     });
   }
   if (!section) return [];
+  const ocean = section.id === oceanGravesGuideId;
   const route = rerollRoute(section, current);
   if (route && route.stages.length) {
     return [...new Map([...route.stages.map(stage => stage.team), route.final]
-      .filter(board => board.id !== current.id).map(board => [board.id, board])).values()];
+      .filter(board => board.id !== current.id && (!ocean || board.id !== oceanGravesUnlockBoardId))
+      .map(board => [board.id, board])).values()];
   }
   const main = mainBoard(section);
   if (!main) return [];
   const stages = orderPosterStages(sectionTeams(section), section.stageTeamIds ?? [])
-    .filter(team => team.id !== main.id);
+    .filter(team => team.id !== main.id && (!ocean || team.id !== oceanGravesUnlockBoardId));
   if (current.id === main.id) return stages;
   if (!stages.some(team => team.id === current.id)) return [];
   const timeline = [...stages, main].sort((a, b) => usedPopulation(a.pieces) - usedPopulation(b.pieces));
@@ -236,6 +238,11 @@ function fitsBoard(line: string, team: Team, data: Season) {
 }
 
 export function posterOperations(section: Section | undefined, current: Team, data: Season, stages: Team[]): Operation[] {
+  const oceanOpening = section?.id === oceanGravesGuideId && section.reroll?.entryTeamId === current.id
+    ? section.reroll.advice[current.id] : undefined;
+  if (oceanOpening) {
+    return [{ level: usedPopulation(current.pieces), label: "解锁与搜牌", lines: actions(oceanOpening) }];
+  }
   if (section?.reroll && rerollRoute(section, current)?.stages.length) {
     return [...stages, current].sort((first, second) => usedPopulation(first.pieces) - usedPopulation(second.pieces)).map(board => ({
       level: usedPopulation(board.pieces), board, label: posterStageTitle(board),

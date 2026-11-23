@@ -2,7 +2,7 @@ import type { Section } from "./document";
 import { sectionTeams } from "./document-flow";
 import { guideBoardName, guideFacets, guideRollLevel, primaryFirst, readingNotes } from "./guide-reading";
 import { heroAugmentForGuide, heroAugmentCategory } from "./hero-augments";
-import { byBestMean, type PlacementRating } from "./guide-placement";
+import type { PlacementRating } from "./guide-placement";
 import { usedPopulation } from "./team";
 import type { Season, Team } from "./types";
 
@@ -101,7 +101,6 @@ export function groupGuides(sections: Section[], season: Season, rate: Rate): Gu
     if (existing) { existing.sections.push(section); existing.boards.push(...boards); }
     else groups.push({ sections: [section], boards, lead: anchor });
   }
-  for (const group of groups) group.lead = byBestMean(group.lead, group.boards);
   return groups;
 }
 

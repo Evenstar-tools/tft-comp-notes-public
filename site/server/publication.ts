@@ -1,6 +1,7 @@
 import { attachBoundRegions, duplicatePublishedTeam, isBoardCaption, readableSection, sectionTeams, splitSections } from "@/domain/document-flow";
 import { season, traitMap, unitMap } from "@/data";
 import { allBlocks, authoredParagraphs, isEditorialSection } from "@/domain/guide-reading";
+import { guideExecutionUnitIds } from "@/domain/guide-execution";
 import { isVersionUpdate, sameEdition } from "@/domain/version-updates";
 import { getPublishedPatchRecommendations, sectionsAfterPartialPublish } from "@/domain/patch-recommendations";
 import currentPatch from "@/data/current-patch.json";
@@ -88,7 +89,14 @@ function withGameData(section: Section, data: Season): Section {
   const pieces = teams.flatMap(team => [team, ...Object.values(team.stages ?? {})].flatMap(board => board.pieces));
   const unitIds = new Set(pieces.map(piece => piece.unitId));
   const currentEdition = sameEdition(snapshot.id, season.id);
-  const units = snapshot.units.filter(unit => unitIds.has(unit.id)).map(unit => {
+  const executionUnits = currentEdition ? guideExecutionUnitIds(section.id, teams) : [];
+  const availableUnits = new Map(snapshot.units.map(unit => [unit.id, unit]));
+  for (const id of executionUnits) {
+    unitIds.add(id);
+    const current = unitMap.get(id);
+    if (current && !availableUnits.has(id)) availableUnits.set(id, current);
+  }
+  const units = [...availableUnits.values()].filter(unit => unitIds.has(unit.id)).map(unit => {
     const current = currentEdition && unitMap.get(unit.id);
     return current ? { ...unit, traits: current.traits, unlock: current.unlock, sourceUnlock: current.sourceUnlock } : unit;
   });
