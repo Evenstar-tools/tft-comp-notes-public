@@ -127,7 +127,7 @@
   opacity: .8;
 }
 .editor .workspace .board .board-hex[data-drop-target] .board-selection { color: var(--selection-ring); opacity: 1; }
-.editor .workspace .board .board-hex[data-drop-target="stack"] .board-selection { color: #ffc266; }
+.editor .workspace .board .board-hex:is([data-drop-target="stack"],[data-drop-target="swap"]) .board-selection { color: #ffc266; }
 .editor .workspace .board .board-hex[data-drop-target="blocked"] .board-selection { color: var(--danger); }
 .editor .board-hex[data-trait-focus="dimmed"]:not(.board-drag-ghost) :is(.board-avatar, .board-unit-name) {
   filter: saturate(.15) brightness(.67);

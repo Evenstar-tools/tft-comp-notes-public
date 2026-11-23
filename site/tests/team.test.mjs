@@ -82,10 +82,17 @@ test("moving onto an occupied board slot swaps and preserves equipment and stars
 test("stacked pieces keep separate loadouts and only the active piece counts until split", () => {
   const active = { instanceId: "a", unitId: "jinx", stars: 1, items: [], position: 0 };
   const incoming = { instanceId: "b", unitId: "baron-nashor", stars: 3, items: ["bow"] };
-  const stacked = stackPiece([active, { ...incoming, position: 1 }], { ...incoming, position: 1 }, 0);
+  const stacked = stackPiece([active], incoming, 0);
   assert.deepEqual(stacked, [{ ...active, alternate: incoming }]);
   assert.equal(usedPopulation(stacked), 1);
-  assert.equal(stackPiece(stacked, { ...active, instanceId: "c", position: 7 }, 0), stacked);
+  const other = { ...active, instanceId: "c", position: 1 };
+  assert.equal(stackPiece(stacked, other, 0), stacked);
+  const occupied = [...stacked, other];
+  assert.equal(stackPiece(occupied, other, 0), occupied);
+  assert.deepEqual(movePiece(occupied, other.instanceId, 0), [
+    { ...stacked[0], position: 1 },
+    { ...other, position: 0 },
+  ]);
 
   const switched = switchAlternate(stacked, active.instanceId);
   assert.equal(usedPopulation(switched), 2);
@@ -98,7 +105,7 @@ test("stacked pieces keep separate loadouts and only the active piece counts unt
 test("an alternate Akali can be stored while the other form is active but cannot join it on the board", () => {
   const active = { instanceId: "a", unitId: "akali-kda", stars: 1, items: [], position: 0 };
   const target = { ...active, instanceId: "b", unitId: "jinx", position: 1 };
-  const otherForm = { ...active, instanceId: "c", unitId: "akali-true-damage" };
+  const otherForm = { instanceId: "c", unitId: "akali-true-damage", stars: 1, items: [] };
   const stacked = stackPiece([active, target], otherForm, 1);
   assert.equal(stacked[1].alternate.unitId, otherForm.unitId);
   assert.equal(switchAlternate(stacked, target.instanceId), stacked);
