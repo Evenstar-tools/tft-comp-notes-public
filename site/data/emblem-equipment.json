@@ -1,0 +1,326 @@
+{
+  "build": "19.1.0.6014015",
+  "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_en_us.json",
+  "items": {
+    "emblem-beach-pop": {
+      "name": "海洋之歌纹章",
+      "description": "携带者获得【海洋之歌】羁绊。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+250"
+        },
+        {
+          "label": "法力回复",
+          "value": "+2"
+        }
+      ]
+    },
+    "emblem-classical": {
+      "name": "古典乐纹章",
+      "description": "携带者获得【古典乐】羁绊。\n技能命中的敌人陷入迷醉，持续3秒。陷入迷醉的敌人会为古典乐弈子提供加成。",
+      "stats": [
+        {
+          "label": "护甲",
+          "value": "+20"
+        },
+        {
+          "label": "魔抗",
+          "value": "+20"
+        },
+        {
+          "label": "攻速",
+          "value": "+20%"
+        }
+      ]
+    },
+    "emblem-heartsteel": {
+      "name": "心之钢纹章",
+      "description": "携带者获得【心之钢】羁绊。\n获得心之钢每项本命加成的125%。",
+      "stats": [
+        {
+          "label": "护甲",
+          "value": "+20"
+        },
+        {
+          "label": "魔抗",
+          "value": "+20"
+        },
+        {
+          "label": "物理加成",
+          "value": "+10%"
+        },
+        {
+          "label": "法术加成",
+          "value": "+10%"
+        }
+      ]
+    },
+    "emblem-hyperpop": {
+      "name": "超流行乐纹章",
+      "description": "携带者获得【超流行乐】羁绊。\n无法合成。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+250"
+        },
+        {
+          "label": "攻速",
+          "value": "+20%"
+        }
+      ]
+    },
+    "emblem-illbeats": {
+      "name": "酷炫节拍纹章",
+      "description": "携带者获得【酷炫节拍】羁绊。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+250"
+        },
+        {
+          "label": "攻速",
+          "value": "+15%"
+        }
+      ]
+    },
+    "emblem-ionic-spark": {
+      "name": "离子火花纹章",
+      "description": "携带者获得【离子火花】羁绊。",
+      "stats": [
+        {
+          "label": "护甲",
+          "value": "+20"
+        },
+        {
+          "label": "魔抗",
+          "value": "+20"
+        },
+        {
+          "label": "攻速",
+          "value": "+20%"
+        }
+      ]
+    },
+    "emblem-jazz": {
+      "name": "爵士乐纹章",
+      "description": "携带者获得【爵士乐】羁绊。\n无法合成。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+100"
+        },
+        {
+          "label": "攻速",
+          "value": "+10%"
+        }
+      ]
+    },
+    "emblem-k-da": {
+      "name": "K/DA纹章",
+      "description": "携带者获得【K/DA】羁绊。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+150"
+        },
+        {
+          "label": "物理加成",
+          "value": "+15%"
+        },
+        {
+          "label": "法术加成",
+          "value": "+15%"
+        }
+      ]
+    },
+    "emblem-pentakill": {
+      "name": "五杀摇滚纹章",
+      "description": "携带者获得【五杀摇滚】羁绊。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+250"
+        },
+        {
+          "label": "物理加成",
+          "value": "+15%"
+        },
+        {
+          "label": "法术加成",
+          "value": "+15%"
+        }
+      ]
+    },
+    "emblem-rock": {
+      "name": "摇滚乐纹章",
+      "description": "携带者获得【摇滚乐】羁绊。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+250"
+        },
+        {
+          "label": "攻速",
+          "value": "+15%"
+        },
+        {
+          "label": "暴击率",
+          "value": "+20%"
+        }
+      ]
+    },
+    "emblem-true-damage": {
+      "name": "真实伤害纹章",
+      "description": "携带者获得【真实伤害】羁绊。\n无法合成。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+150"
+        },
+        {
+          "label": "物理加成",
+          "value": "+10%"
+        },
+        {
+          "label": "法术加成",
+          "value": "+10%"
+        }
+      ]
+    },
+    "emblem-arcanist": {
+      "name": "黑魔法师纹章",
+      "description": "携带者获得【黑魔法师】羁绊。\n击杀时获得10法力值。",
+      "stats": [
+        {
+          "label": "法术加成",
+          "value": "+25%"
+        }
+      ]
+    },
+    "emblem-bodyguard": {
+      "name": "保镖纹章",
+      "description": "携带者获得【保镖】羁绊。\n获得相当于总护甲20%的物理加成和相当于总魔抗20%的法术加成。",
+      "stats": [
+        {
+          "label": "护甲",
+          "value": "+30"
+        },
+        {
+          "label": "魔抗",
+          "value": "+30"
+        }
+      ]
+    },
+    "emblem-choreographer": {
+      "name": "编舞师纹章",
+      "description": "携带者获得【编舞师】羁绊。\n在前两排时，受到的治疗和护盾效果提高25%。在后两排时，获得20%攻速和额外移速。\n无法合成。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+200"
+        },
+        {
+          "label": "法力回复",
+          "value": "+1"
+        }
+      ]
+    },
+    "emblem-frontman": {
+      "name": "泰坦纹章",
+      "description": "携带者获得【泰坦】羁绊。\n每过5秒，下次攻击会造成相当于自身最大生命值12%的魔法伤害。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+200"
+        }
+      ]
+    },
+    "emblem-hitmaker": {
+      "name": "金曲制作人纹章",
+      "description": "携带者获得【金曲制作人】羁绊。\n携带者额外成为一名大腕枪手。",
+      "stats": [
+        {
+          "label": "物理加成",
+          "value": "+10%"
+        }
+      ]
+    },
+    "emblem-juggernaut": {
+      "name": "主唱纹章",
+      "description": "携带者获得【主唱】羁绊。\n携带者免疫控制，每有1000点最大生命值，获得5%伤害增幅。\n无法合成。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+250"
+        }
+      ]
+    },
+    "emblem-manager": {
+      "name": "经理纹章",
+      "description": "携带者获得【经理】羁绊。\n施放技能时，为聚光灯格上的友军回复相当于本次消耗20%的法力值。\n无法合成。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+250"
+        },
+        {
+          "label": "法力回复",
+          "value": "+2"
+        }
+      ]
+    },
+    "emblem-prodigy": {
+      "name": "天才纹章",
+      "description": "携带者获得【天才】羁绊。\n施放技能时，每消耗10法力值，获得1%最大生命值。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+150"
+        },
+        {
+          "label": "法力回复",
+          "value": "+1"
+        }
+      ]
+    },
+    "emblem-renegade": {
+      "name": "非主流纹章",
+      "description": "携带者获得【非主流】羁绊。\n暴击有50%几率造成40%额外暴击伤害。",
+      "stats": [
+        {
+          "label": "暴击率",
+          "value": "+20%"
+        }
+      ]
+    },
+    "emblem-slayer": {
+      "name": "裁决战士纹章",
+      "description": "携带者获得【裁决战士】羁绊。\n根据目标已损失的生命值，最多额外造成40%伤害。",
+      "stats": [
+        {
+          "label": "护甲",
+          "value": "+20"
+        },
+        {
+          "label": "魔抗",
+          "value": "+20"
+        },
+        {
+          "label": "攻速",
+          "value": "+15%"
+        }
+      ]
+    },
+    "emblem-swiftstriker": {
+      "name": "迅捷攻手纹章",
+      "description": "携带者获得【迅捷攻手】羁绊。\n普攻附带12–50点额外真实伤害，伤害随阶段提升。",
+      "stats": [
+        {
+          "label": "攻速",
+          "value": "+20%"
+        }
+      ]
+    }
+  }
+}

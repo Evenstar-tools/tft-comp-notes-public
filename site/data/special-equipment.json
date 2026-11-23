@@ -1,0 +1,1717 @@
+{
+  "build": "19.1.0.6014015",
+  "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json",
+  "items": [
+    {
+      "id": "DA_ChaliceOfPower",
+      "category": "support",
+      "image": "/assets/items/DA_ChaliceOfPower.webp",
+      "name": "能量圣杯",
+      "description": "携带者及同一排2格内的友军获得25%法术加成和1法力回复。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+150"
+        }
+      ]
+    },
+    {
+      "id": "DA_RanduinsOmen",
+      "category": "support",
+      "image": "/assets/items/DA_RanduinsOmen.webp",
+      "name": "兰顿之兆",
+      "description": "携带者及1格内的友军获得33护甲和魔抗。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+150"
+        }
+      ]
+    },
+    {
+      "id": "DA_ZekesHerald",
+      "category": "support",
+      "image": "/assets/items/DA_ZekesHerald.webp",
+      "name": "基克的先驱",
+      "description": "携带者及同一排2格内的友军获得33%攻速。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+150"
+        }
+      ]
+    },
+    {
+      "id": "DA_ZZRotPortal",
+      "category": "support",
+      "image": "/assets/items/DA_ZZRotPortal.webp",
+      "name": "兹若特传送门",
+      "description": "召唤一只大型虚空生物。它的强度随阶段提升。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+150"
+        }
+      ]
+    },
+    {
+      "id": "DA_AdaptiveHelm_Radiant",
+      "category": "radiant",
+      "image": "/assets/items/DA_AdaptiveHelm_Radiant.webp",
+      "name": "光明版适应性头盔",
+      "description": "从所有来源中获得额外的30%法力值。携带者获得基于其角色定位的一个额外加成：\n\n坦克和战士：获得80护甲和魔抗。\n\n其它角色定位：获得35%物理加成和法术加成。",
+      "stats": [
+        {
+          "label": "魔抗",
+          "value": "+40"
+        },
+        {
+          "label": "法力回复",
+          "value": "+6"
+        }
+      ]
+    },
+    {
+      "id": "DA_ArchangelsStaffRadiant",
+      "category": "radiant",
+      "image": "/assets/items/DA_ArchangelsStaffRadiant.webp",
+      "name": "光明版大天使之杖",
+      "description": "在战斗期间，每5秒获得40%法术加成。",
+      "stats": [
+        {
+          "label": "法术加成",
+          "value": "+60%"
+        },
+        {
+          "label": "法力回复",
+          "value": "+2"
+        }
+      ]
+    },
+    {
+      "id": "DA_Artifact_AegisOfDawn",
+      "category": "artifact",
+      "image": "/assets/items/DA_Artifact_AegisOfDawn.webp",
+      "name": "黎明圣盾",
+      "description": "每2.5秒从1格内的敌人处偷取3护甲，并按自身护甲治疗，治疗量随阶段提升。同时携带黄昏圣盾时，每1.25秒触发。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+400"
+        },
+        {
+          "label": "护甲",
+          "value": "+50"
+        }
+      ]
+    },
+    {
+      "id": "DA_Artifact_AegisOfDusk",
+      "category": "artifact",
+      "image": "/assets/items/DA_Artifact_AegisOfDusk.webp",
+      "name": "黄昏圣盾",
+      "description": "每2.5秒，从1格内的敌人处偷取3魔抗，并造成相当于携带者18%魔抗值的魔法伤害。\n\n如果还携带了【黎明圣盾】，则转而每1.25秒触发这件装备的效果。\n\n造成的伤害基于阶段提升。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+400"
+        },
+        {
+          "label": "魔抗",
+          "value": "+70"
+        }
+      ]
+    },
+    {
+      "id": "DA_Artifact_BlightingJewel",
+      "category": "artifact",
+      "image": "/assets/items/DA_Artifact_BlightingJewel.webp",
+      "name": "枯萎珠宝",
+      "description": "造成魔法伤害时使目标降低3魔抗。目标魔抗为0时，携带者改为获得2法力值。持续伤害对每名目标每0.5秒最多触发一次。",
+      "stats": [
+        {
+          "label": "法术加成",
+          "value": "+30%"
+        },
+        {
+          "label": "法力回复",
+          "value": "+2"
+        }
+      ]
+    },
+    {
+      "id": "DA_Artifact_CappaJuice",
+      "category": "artifact",
+      "image": "/assets/items/DA_Artifact_CappaJuice.webp",
+      "name": "帽子饮品",
+      "description": "携带者在每次参与击杀后戴上1顶帽子。携带者从每顶帽子中获得1%物理加成和法术加成。阵亡时，失去20%总帽子数。",
+      "stats": [
+        {
+          "label": "物理加成",
+          "value": "+25%"
+        },
+        {
+          "label": "法术加成",
+          "value": "+25%"
+        },
+        {
+          "label": "攻速",
+          "value": "+25%"
+        }
+      ]
+    },
+    {
+      "id": "DA_Artifact_Dawncore",
+      "category": "artifact",
+      "image": "/assets/items/DA_Artifact_Dawncore.webp",
+      "name": "黎明核心",
+      "description": "携带者的最大法力值缩减10。后续的技能施放会使最大法力值缩减5%，直至最小值15。",
+      "stats": [
+        {
+          "label": "物理加成",
+          "value": "+20%"
+        },
+        {
+          "label": "法术加成",
+          "value": "+20%"
+        },
+        {
+          "label": "法力回复",
+          "value": "+1"
+        }
+      ]
+    },
+    {
+      "id": "DA_Artifact_DeathsDefiance",
+      "category": "artifact",
+      "image": "/assets/items/DA_Artifact_DeathsDefiance.webp",
+      "name": "死亡蔑视",
+      "description": "携带者受到伤害的50%会转而在4秒内作为非致命伤害逐渐承受。\n\n唯一 - 每个弈子仅可装备1件",
+      "stats": [
+        {
+          "label": "物理加成",
+          "value": "+25%"
+        },
+        {
+          "label": "护甲",
+          "value": "+40"
+        },
+        {
+          "label": "攻速",
+          "value": "+15%"
+        },
+        {
+          "label": "全能吸血",
+          "value": "+25%"
+        }
+      ]
+    },
+    {
+      "id": "DA_Artifact_EternalPact",
+      "category": "artifact",
+      "image": "/assets/items/DA_Artifact_EternalPact.webp",
+      "name": "永恒契约",
+      "description": "每场战斗绑定最大生命值最高的友军。该友军阵亡时，携带者获得10法力回复和40%法术加成。\n\n该友军施放技能时，携带者回复10法力。每6秒，携带者为该友军提供相当于自身200%法术加成的护盾。",
+      "stats": [
+        {
+          "label": "法术加成",
+          "value": "+35%"
+        },
+        {
+          "label": "法力回复",
+          "value": "+1"
+        }
+      ]
+    },
+    {
+      "id": "DA_Artifact_Fishbones",
+      "category": "artifact",
+      "image": "/assets/items/DA_Artifact_Fishbones.webp",
+      "name": "鱼骨头",
+      "description": "携带者的攻击会瞄准随机的敌人。获得+2攻击距离。",
+      "stats": [
+        {
+          "label": "物理加成",
+          "value": "+25%"
+        },
+        {
+          "label": "攻速",
+          "value": "+25%"
+        }
+      ]
+    },
+    {
+      "id": "DA_Artifact_ForbiddenIdol",
+      "category": "artifact",
+      "image": "/assets/items/DA_Artifact_ForbiddenIdol.webp",
+      "name": "禁忌雕像",
+      "description": "护盾效果会将其40%的护盾值转化为最大生命值作为替代。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+500"
+        },
+        {
+          "label": "法力回复",
+          "value": "+2"
+        }
+      ]
+    },
+    {
+      "id": "DA_Artifact_GamblersBlade",
+      "category": "artifact",
+      "image": "/assets/items/DA_Artifact_GamblersBlade.webp",
+      "name": "投机者之刃",
+      "description": "获得1%x你金币存款的额外攻击速度（在30金币时达到最大值）。\n\n每次攻击有6%几率掉落1金币。\n\n唯一 - 每位英雄仅可装备1件",
+      "stats": [
+        {
+          "label": "攻速",
+          "value": "+55%"
+        }
+      ]
+    },
+    {
+      "id": "DA_Artifact_GoldCollector",
+      "category": "artifact",
+      "image": "/assets/items/DA_Artifact_GoldCollector.webp",
+      "name": "金币收集者",
+      "description": "攻击和技能会处决生命值低于最大生命值12%的目标。处决有33%几率掉落1金币。\n\n唯一 - 每个弈子仅可装备1件",
+      "stats": [
+        {
+          "label": "物理加成",
+          "value": "+35%"
+        },
+        {
+          "label": "暴击率",
+          "value": "+20%"
+        }
+      ]
+    },
+    {
+      "id": "DA_Artifact_HellfireHatchet",
+      "category": "artifact",
+      "image": "/assets/items/DA_Artifact_HellfireHatchet.webp",
+      "name": "恶火小斧",
+      "description": "攻击造成相当于携带者最大生命值3%的额外物理伤害。每损失1%生命值，获得1.5%攻击速度。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+400"
+        },
+        {
+          "label": "全能吸血",
+          "value": "+20%"
+        }
+      ]
+    },
+    {
+      "id": "DA_Artifact_HorizonFocus",
+      "category": "artifact",
+      "image": "/assets/items/DA_Artifact_HorizonFocus.webp",
+      "name": "视界专注",
+      "description": "将一名敌人眩晕时会引发闪电对其进行打击，造成相当于其30%最大生命值的魔法伤害。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+250"
+        },
+        {
+          "label": "护甲",
+          "value": "+20"
+        },
+        {
+          "label": "魔抗",
+          "value": "+20"
+        },
+        {
+          "label": "法力回复",
+          "value": "+2"
+        }
+      ]
+    },
+    {
+      "id": "DA_Artifact_Hullcrusher",
+      "category": "artifact",
+      "image": "/assets/items/DA_Artifact_Hullcrusher.webp",
+      "name": "碎舰者",
+      "description": "战斗开始时：如果邻格内没有友军，获得400生命值、10%物理加成和10%法术加成。",
+      "stats": [
+        {
+          "label": "护甲",
+          "value": "+60"
+        },
+        {
+          "label": "魔抗",
+          "value": "+60"
+        }
+      ]
+    },
+    {
+      "id": "DA_Artifact_InfinityForce",
+      "category": "artifact",
+      "image": "/assets/items/DA_Artifact_InfinityForce.webp",
+      "name": "三相之力",
+      "description": "成吨的一切！",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+300"
+        },
+        {
+          "label": "物理加成",
+          "value": "+30%"
+        },
+        {
+          "label": "法术加成",
+          "value": "+30%"
+        },
+        {
+          "label": "护甲",
+          "value": "+30"
+        },
+        {
+          "label": "魔抗",
+          "value": "+30"
+        },
+        {
+          "label": "攻速",
+          "value": "+30%"
+        }
+      ]
+    },
+    {
+      "id": "DA_Artifact_LichBane",
+      "category": "artifact",
+      "image": "/assets/items/DA_Artifact_LichBane.webp",
+      "name": "巫妖之祸",
+      "description": "每次施放技能后的第一次普攻造成250–700额外魔法伤害，伤害随阶段提升。",
+      "stats": [
+        {
+          "label": "法术加成",
+          "value": "+55%"
+        },
+        {
+          "label": "攻速",
+          "value": "+10%"
+        }
+      ]
+    },
+    {
+      "id": "DA_Artifact_LightshieldCrest",
+      "category": "artifact",
+      "image": "/assets/items/DA_Artifact_LightshieldCrest.webp",
+      "name": "光盾徽章",
+      "description": "每3秒，为生命值百分比最低的友军提供持续5秒的护盾，护盾值相当于携带者70%的护甲与魔法抗性总和。\n\n阵亡时，为所有友军提供该护盾。",
+      "stats": [
+        {
+          "label": "护甲",
+          "value": "+55"
+        },
+        {
+          "label": "魔抗",
+          "value": "+55"
+        }
+      ]
+    },
+    {
+      "id": "DA_Artifact_LudensTempest",
+      "category": "artifact",
+      "image": "/assets/items/DA_Artifact_LudensTempest.webp",
+      "name": "卢登的激荡",
+      "description": "在击杀目标时，会对与目标相距最近的两个敌人造成魔法伤害，伤害值为过量伤害的100%外加130。",
+      "stats": [
+        {
+          "label": "物理加成",
+          "value": "+55%"
+        },
+        {
+          "label": "法术加成",
+          "value": "+55%"
+        }
+      ]
+    },
+    {
+      "id": "DA_Artifact_Manazane",
+      "category": "artifact",
+      "image": "/assets/items/DA_Artifact_Manazane.webp",
+      "name": "魔蕴",
+      "description": "在战斗中首次施放技能后，在5秒内持续回复共110法力值。",
+      "stats": [
+        {
+          "label": "物理加成",
+          "value": "+15%"
+        },
+        {
+          "label": "法术加成",
+          "value": "+15%"
+        },
+        {
+          "label": "法力回复",
+          "value": "+1"
+        }
+      ]
+    },
+    {
+      "id": "DA_Artifact_Mittens",
+      "category": "artifact",
+      "image": "/assets/items/DA_Artifact_Mittens.webp",
+      "name": "连指手套",
+      "description": "将携带者缩小，为其提供移动速度提升并免疫缓速、灼烧、以及重伤。\n\n缓速：降低攻击速度。\n灼烧：每秒造成目标一部分最大生命值的真实伤害。\n重伤：降低受到的治疗效果。",
+      "stats": [
+        {
+          "label": "攻速",
+          "value": "+65%"
+        },
+        {
+          "label": "伤害增幅",
+          "value": "+15%"
+        }
+      ]
+    },
+    {
+      "id": "DA_Artifact_MogulsMail",
+      "category": "artifact",
+      "image": "/assets/items/DA_Artifact_MogulsMail.webp",
+      "name": "大亨之铠",
+      "description": "在承受伤害时提供1护甲、1魔抗和5生命值，这个效果至多叠加至35次。\n\n在满层时，提供1金币并且每11秒继续提供1金币。\n\n唯一 - 每位弈子仅可装备1件",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+300"
+        }
+      ]
+    },
+    {
+      "id": "DA_Artifact_NavoriFlickerblade",
+      "category": "artifact",
+      "image": "/assets/items/DA_Artifact_NavoriFlickerblade.webp",
+      "name": "纳沃利烁刃",
+      "description": "攻击提供4%可叠加的攻击速度。每3次攻击还会提供2%物理加成和2%法术加成。",
+      "stats": [
+        {
+          "label": "法术加成",
+          "value": "+10%"
+        },
+        {
+          "label": "攻速",
+          "value": "+20%"
+        }
+      ]
+    },
+    {
+      "id": "DA_Artifact_RapidFireCannon",
+      "category": "artifact",
+      "image": "/assets/items/DA_Artifact_RapidFireCannon.webp",
+      "name": "疾射火炮",
+      "description": "获得+1攻击距离，并且这个距离会在携带者每击败一个敌人时提升1。",
+      "stats": [
+        {
+          "label": "攻速",
+          "value": "+55%"
+        },
+        {
+          "label": "伤害增幅",
+          "value": "+5%"
+        }
+      ]
+    },
+    {
+      "id": "DA_Artifact_SeekersArmguard",
+      "category": "artifact",
+      "image": "/assets/items/DA_Artifact_SeekersArmguard.webp",
+      "name": "探索者的护臂",
+      "description": "参与击杀后会使携带者的护甲、魔抗和法术加成提升20。",
+      "stats": [
+        {
+          "label": "法术加成",
+          "value": "+25%"
+        },
+        {
+          "label": "护甲",
+          "value": "+10"
+        },
+        {
+          "label": "魔抗",
+          "value": "+10"
+        },
+        {
+          "label": "全能吸血",
+          "value": "+20%"
+        }
+      ]
+    },
+    {
+      "id": "DA_Artifact_SilvermereDawn",
+      "category": "artifact",
+      "image": "/assets/items/DA_Artifact_SilvermereDawn.webp",
+      "name": "密银黎明",
+      "description": "为携带者提供免疫晕眩，并且携带者的攻击可以使目标晕眩0.8秒。\n\n携带者的攻击速度被锁定在0.5。",
+      "stats": [
+        {
+          "label": "物理加成",
+          "value": "+150%"
+        },
+        {
+          "label": "护甲",
+          "value": "+30"
+        },
+        {
+          "label": "魔抗",
+          "value": "+30"
+        },
+        {
+          "label": "全能吸血",
+          "value": "+30%"
+        }
+      ]
+    },
+    {
+      "id": "DA_Artifact_SnipersFocus",
+      "category": "artifact",
+      "image": "/assets/items/DA_Artifact_SnipersFocus.webp",
+      "name": "狙击手的专注",
+      "description": "在对抗相距4格或更远的目标们时获得40%伤害增幅。",
+      "stats": [
+        {
+          "label": "物理加成",
+          "value": "+20%"
+        },
+        {
+          "label": "法术加成",
+          "value": "+20%"
+        },
+        {
+          "label": "攻速",
+          "value": "+20%"
+        },
+        {
+          "label": "法力回复",
+          "value": "+3"
+        }
+      ]
+    },
+    {
+      "id": "DA_Artifact_StatikkShiv",
+      "category": "artifact",
+      "image": "/assets/items/DA_Artifact_StatikkShiv.webp",
+      "name": "斯塔缇克电刃",
+      "description": "每第3次攻击对6名敌人造成15+携带者35%法术加成的额外魔法伤害。",
+      "stats": [
+        {
+          "label": "法术加成",
+          "value": "+25%"
+        },
+        {
+          "label": "攻速",
+          "value": "+40%"
+        }
+      ]
+    },
+    {
+      "id": "DA_Item_Artifact_TalismanOfAscension",
+      "category": "artifact",
+      "image": "/assets/items/DA_Item_Artifact_TalismanOfAscension.webp",
+      "name": "飞升护符",
+      "description": "在22秒后，获得100%最大生命值、12法力回复和120%伤害增幅，持续到战斗环节结束。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+450"
+        },
+        {
+          "label": "物理加成",
+          "value": "+20%"
+        },
+        {
+          "label": "法术加成",
+          "value": "+20%"
+        }
+      ]
+    },
+    {
+      "id": "DA_Artifact_TheIndomitable",
+      "category": "artifact",
+      "image": "/assets/items/DA_Artifact_TheIndomitable.webp",
+      "name": "顽强不屈",
+      "description": "携带者的移动速度大幅降低。\n\n获得15%最大生命值、不可阻挡效果，并将当前目标拉到近战距离。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+500"
+        },
+        {
+          "label": "护甲",
+          "value": "+20"
+        },
+        {
+          "label": "魔抗",
+          "value": "+20"
+        }
+      ]
+    },
+    {
+      "id": "DA_Artifact_TitanicHydra",
+      "category": "artifact",
+      "image": "/assets/items/DA_Artifact_TitanicHydra.webp",
+      "name": "巨型九头蛇",
+      "description": "攻击对目标和邻格敌人造成相当于携带者最大生命值2%外加4%物理加成的额外物理伤害。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+300"
+        },
+        {
+          "label": "物理加成",
+          "value": "+20%"
+        },
+        {
+          "label": "攻速",
+          "value": "+20%"
+        }
+      ]
+    },
+    {
+      "id": "DA_Artifact_VoidGauntlet",
+      "category": "artifact",
+      "image": "/assets/items/DA_Artifact_VoidGauntlet.webp",
+      "name": "虚空护手",
+      "description": "储存30%最大生命值且每秒再额外储存2.5%。阵亡时，释放相当于已储存生命值的魔法伤害，由4格内的敌人均摊。\n\n唯一 - 每个弈子仅可装备1件",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+300"
+        },
+        {
+          "label": "伤害减免",
+          "value": "+10%"
+        }
+      ]
+    },
+    {
+      "id": "DA_Artifact_WitsEnd",
+      "category": "artifact",
+      "image": "/assets/items/DA_Artifact_WitsEnd.webp",
+      "name": "智慧末刃",
+      "description": "普攻造成25–100额外魔法伤害，伤害随阶段提升。携带者按其造成魔法伤害的25%回复生命值。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+300"
+        },
+        {
+          "label": "护甲",
+          "value": "+20"
+        },
+        {
+          "label": "魔抗",
+          "value": "+20"
+        },
+        {
+          "label": "攻速",
+          "value": "+25%"
+        }
+      ]
+    },
+    {
+      "id": "DA_Artifact_ZhonyasParadox",
+      "category": "artifact",
+      "image": "/assets/items/DA_Artifact_ZhonyasParadox.webp",
+      "name": "中娅悖论",
+      "description": "每场战斗仅触发1次：在40%生命值时，携带者获得持续3秒的免疫伤害、不可阻挡和不可被选取效果。\n\n唯一 - 每个弈子仅可装备1件",
+      "stats": [
+        {
+          "label": "法术加成",
+          "value": "+25%"
+        },
+        {
+          "label": "护甲",
+          "value": "+25"
+        },
+        {
+          "label": "魔抗",
+          "value": "+25"
+        }
+      ]
+    },
+    {
+      "id": "DA_BloodthirsterRadiant",
+      "category": "radiant",
+      "image": "/assets/items/DA_BloodthirsterRadiant.webp",
+      "name": "光明版饮血剑",
+      "description": "每场战斗一次。生命值降至60%时，获得相当于50%最大生命值的护盾，并在此后获得30%额外全能吸血，持续到战斗结束。",
+      "stats": [
+        {
+          "label": "物理加成",
+          "value": "+30%"
+        },
+        {
+          "label": "法术加成",
+          "value": "+30%"
+        },
+        {
+          "label": "魔抗",
+          "value": "+40"
+        },
+        {
+          "label": "全能吸血",
+          "value": "+40%"
+        }
+      ]
+    },
+    {
+      "id": "DA_BlueBuffRadiant",
+      "category": "radiant",
+      "image": "/assets/items/DA_BlueBuffRadiant.webp",
+      "name": "光明版蓝霸符",
+      "description": "战斗开始时获得20法力值。",
+      "stats": [
+        {
+          "label": "物理加成",
+          "value": "+40%"
+        },
+        {
+          "label": "法术加成",
+          "value": "+40%"
+        },
+        {
+          "label": "法力回复",
+          "value": "+12"
+        }
+      ]
+    },
+    {
+      "id": "DA_BrambleVestRadiant",
+      "category": "radiant",
+      "image": "/assets/items/DA_BrambleVestRadiant.webp",
+      "name": "光明版棘刺背心",
+      "description": "获得12%最大生命值。\n\n使来自攻击的伤害降低10%。在被任一攻击命中时，对邻格所有敌人造成200魔法伤害。\n\n冷却时间：2秒",
+      "stats": [
+        {
+          "label": "护甲",
+          "value": "+100"
+        }
+      ]
+    },
+    {
+      "id": "DA_CrownguardRadiant",
+      "category": "radiant",
+      "image": "/assets/items/DA_CrownguardRadiant.webp",
+      "name": "光明版冕卫",
+      "description": "战斗开始时获得20%最大生命值的护盾，持续8秒。携带者受到的治疗和护盾效果提高25%。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+100"
+        },
+        {
+          "label": "法术加成",
+          "value": "+10%"
+        },
+        {
+          "label": "护甲",
+          "value": "+20"
+        }
+      ]
+    },
+    {
+      "id": "DA_DeathbladeRadiant",
+      "category": "radiant",
+      "image": "/assets/items/DA_DeathbladeRadiant.webp",
+      "name": "光明版死亡之刃",
+      "description": "从所有来源获得的物理加成提高30%。",
+      "stats": [
+        {
+          "label": "物理加成",
+          "value": "+100%"
+        }
+      ]
+    },
+    {
+      "id": "DA_DragonsClawRadiant",
+      "category": "radiant",
+      "image": "/assets/items/DA_DragonsClawRadiant.webp",
+      "name": "光明版巨龙之爪",
+      "description": "获得28%最大生命值。\n\n每2秒，回复5%最大生命值。",
+      "stats": [
+        {
+          "label": "魔抗",
+          "value": "+120"
+        }
+      ]
+    },
+    {
+      "id": "DA_EdgeOfNightRadiant",
+      "category": "radiant",
+      "image": "/assets/items/DA_EdgeOfNightRadiant.webp",
+      "name": "光明版夜之锋刃",
+      "description": "在40%生命值时，短暂变为不可被选取状态、摆脱负面效果并治疗所有已损失生命值。",
+      "stats": [
+        {
+          "label": "物理加成",
+          "value": "+30%"
+        },
+        {
+          "label": "法术加成",
+          "value": "+30%"
+        },
+        {
+          "label": "护甲",
+          "value": "+40"
+        },
+        {
+          "label": "攻速",
+          "value": "+30%"
+        }
+      ]
+    },
+    {
+      "id": "DA_EvenshroudRadiant",
+      "category": "radiant",
+      "image": "/assets/items/DA_EvenshroudRadiant.webp",
+      "name": "光明版薄暮法袍",
+      "description": "3格内的敌人们会被施加30%护甲击碎。在战斗的最初20秒获得50护甲和魔抗。\n\n护甲击碎：降低护甲值",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+500"
+        },
+        {
+          "label": "魔抗",
+          "value": "+40"
+        }
+      ]
+    },
+    {
+      "id": "DA_GargoyleStoneplate_Radiant",
+      "category": "radiant",
+      "image": "/assets/items/DA_GargoyleStoneplate_Radiant.webp",
+      "name": "光明版石像鬼石板甲",
+      "description": "每有一个敌人以携带者为目标，携带者就会获得20护甲和20魔抗。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+400"
+        },
+        {
+          "label": "护甲",
+          "value": "+50"
+        },
+        {
+          "label": "魔抗",
+          "value": "+50"
+        }
+      ]
+    },
+    {
+      "id": "DA_GiantSlayer_Radiant",
+      "category": "radiant",
+      "image": "/assets/items/DA_GiantSlayer_Radiant.webp",
+      "name": "光明版巨人杀手",
+      "description": "对抗坦克时获得30%额外伤害增幅。",
+      "stats": [
+        {
+          "label": "物理加成",
+          "value": "+30%"
+        },
+        {
+          "label": "法术加成",
+          "value": "+30%"
+        },
+        {
+          "label": "攻速",
+          "value": "+30%"
+        },
+        {
+          "label": "伤害增幅",
+          "value": "+30%"
+        }
+      ]
+    },
+    {
+      "id": "DA_GuinsoosRagebladeRadiant",
+      "category": "radiant",
+      "image": "/assets/items/DA_GuinsoosRagebladeRadiant.webp",
+      "name": "光明版鬼索的狂暴之刃",
+      "description": "每秒获得16%可叠加的攻击速度。",
+      "stats": [
+        {
+          "label": "法术加成",
+          "value": "+20%"
+        },
+        {
+          "label": "攻速",
+          "value": "+25%"
+        }
+      ]
+    },
+    {
+      "id": "DA_HandOfJusticeRadiant",
+      "category": "radiant",
+      "image": "/assets/items/DA_HandOfJusticeRadiant.webp",
+      "name": "光明版正义之手",
+      "description": "获得2个效果：\n• 35%物理加成和35%法术加成。\n• 25%全能吸血。\n\n生命值高于50%时，物理加成和法术加成翻倍。生命值低于50%时，全能吸血翻倍。",
+      "stats": [
+        {
+          "label": "暴击率",
+          "value": "+40%"
+        },
+        {
+          "label": "法力回复",
+          "value": "+2"
+        }
+      ]
+    },
+    {
+      "id": "DA_HextechGunbladeRadiant",
+      "category": "radiant",
+      "image": "/assets/items/DA_HextechGunbladeRadiant.webp",
+      "name": "光明版海克斯科技枪刃",
+      "description": "为生命值百分比最低的友军提供相当于造成伤害40%的治疗。",
+      "stats": [
+        {
+          "label": "物理加成",
+          "value": "+40%"
+        },
+        {
+          "label": "法术加成",
+          "value": "+40%"
+        },
+        {
+          "label": "全能吸血",
+          "value": "+30%"
+        },
+        {
+          "label": "法力回复",
+          "value": "+2"
+        }
+      ]
+    },
+    {
+      "id": "DA_InfinityEdgeRadiant",
+      "category": "radiant",
+      "image": "/assets/items/DA_InfinityEdgeRadiant.webp",
+      "name": "光明版无尽之刃",
+      "description": "获得技能暴击。\n\n技能暴击：技能伤害可以造成暴击。额外的【技能暴击】提供10%暴击伤害。",
+      "stats": [
+        {
+          "label": "物理加成",
+          "value": "+75%"
+        },
+        {
+          "label": "暴击率",
+          "value": "+75%"
+        }
+      ]
+    },
+    {
+      "id": "DA_IonicSparkRadiant",
+      "category": "radiant",
+      "image": "/assets/items/DA_IonicSparkRadiant.webp",
+      "name": "光明版离子火花",
+      "description": "对2格内的敌人们施加30%魔抗击碎。在敌人施放一次技能时，对该敌人造成相当于其300%法力值消耗的魔法伤害。\n\n魔抗击碎：降低魔法抗性",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+700"
+        },
+        {
+          "label": "法术加成",
+          "value": "+30%"
+        },
+        {
+          "label": "魔抗",
+          "value": "+70"
+        }
+      ]
+    },
+    {
+      "id": "DA_JeweledGauntletRadiant",
+      "category": "radiant",
+      "image": "/assets/items/DA_JeweledGauntletRadiant.webp",
+      "name": "光明版珠光护手",
+      "description": "获得技能暴击。\n\n技能暴击：技能伤害可以造成暴击。额外的【技能暴击】提供10%暴击伤害。",
+      "stats": [
+        {
+          "label": "法术加成",
+          "value": "+75%"
+        },
+        {
+          "label": "暴击率",
+          "value": "+75%"
+        }
+      ]
+    },
+    {
+      "id": "DA_KrakensFury_Radiant",
+      "category": "radiant",
+      "image": "/assets/items/DA_KrakensFury_Radiant.webp",
+      "name": "光明版海妖之怒",
+      "description": "每次普攻提供7%可叠加物理加成，最多叠加15次。攻击15次后，获得30%攻击速度。",
+      "stats": [
+        {
+          "label": "物理加成",
+          "value": "+20%"
+        },
+        {
+          "label": "魔抗",
+          "value": "+40"
+        },
+        {
+          "label": "攻速",
+          "value": "+20%"
+        }
+      ]
+    },
+    {
+      "id": "DA_LastWhisperRadiant",
+      "category": "radiant",
+      "image": "/assets/items/DA_LastWhisperRadiant.webp",
+      "name": "光明版最后的轻语",
+      "description": "攻击和技能伤害都会对目标施加持续至战斗环节结束的30%护甲击碎。这个效果不会叠加。\n\n护甲击碎：降低护甲值",
+      "stats": [
+        {
+          "label": "物理加成",
+          "value": "+45%"
+        },
+        {
+          "label": "攻速",
+          "value": "+40%"
+        },
+        {
+          "label": "暴击率",
+          "value": "+40%"
+        }
+      ]
+    },
+    {
+      "id": "DA_MorellonomiconRadiant",
+      "category": "radiant",
+      "image": "/assets/items/DA_MorellonomiconRadiant.webp",
+      "name": "光明版莫雷洛秘典",
+      "description": "攻击和技能的伤害对敌人们造成持续10秒的2%灼烧效果和33%重伤效果。\n\n灼烧：每秒造成目标一部分最大生命值的真实伤害\n重伤：降低受到的治疗效果",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+300"
+        },
+        {
+          "label": "法术加成",
+          "value": "+35%"
+        },
+        {
+          "label": "法力回复",
+          "value": "+2"
+        }
+      ]
+    },
+    {
+      "id": "DA_NashorsToothRadiant",
+      "category": "radiant",
+      "image": "/assets/items/DA_NashorsToothRadiant.webp",
+      "name": "光明版纳什之牙",
+      "description": "每次普攻提供4额外法力值，如果暴击则提升至6额外法力值。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+300"
+        },
+        {
+          "label": "法术加成",
+          "value": "+30%"
+        },
+        {
+          "label": "攻速",
+          "value": "+20%"
+        },
+        {
+          "label": "暴击率",
+          "value": "+40%"
+        }
+      ]
+    },
+    {
+      "id": "DA_ProtectorsVowRadiant",
+      "category": "radiant",
+      "image": "/assets/items/DA_ProtectorsVowRadiant.webp",
+      "name": "光明版圣盾使的誓约",
+      "description": "战斗开始时：获得40法力值。\n\n生命值达到40%时，获得30法力值和相当于最大生命值50%的护盾值。",
+      "stats": [
+        {
+          "label": "护甲",
+          "value": "+50"
+        },
+        {
+          "label": "魔抗",
+          "value": "+50"
+        },
+        {
+          "label": "法力回复",
+          "value": "+2"
+        }
+      ]
+    },
+    {
+      "id": "DA_QuicksilverRadiant",
+      "category": "radiant",
+      "image": "/assets/items/DA_QuicksilverRadiant.webp",
+      "name": "光明版水银",
+      "description": "在战斗的最初45秒内获得不可阻挡效果。\n\n每秒获得6%可叠加的攻击速度。",
+      "stats": [
+        {
+          "label": "魔抗",
+          "value": "+40"
+        },
+        {
+          "label": "攻速",
+          "value": "+40%"
+        },
+        {
+          "label": "暴击率",
+          "value": "+40%"
+        }
+      ]
+    },
+    {
+      "id": "DA_RabadonsDeathcap_Radiant",
+      "category": "radiant",
+      "image": "/assets/items/DA_RabadonsDeathcap_Radiant.webp",
+      "name": "光明版灭世者的死亡之帽",
+      "description": "从所有来源获得的法术加成提高30%。",
+      "stats": [
+        {
+          "label": "法术加成",
+          "value": "+115%"
+        }
+      ]
+    },
+    {
+      "id": "DA_RedBuffRadiant",
+      "category": "radiant",
+      "image": "/assets/items/DA_RedBuffRadiant.webp",
+      "name": "光明版红霸符",
+      "description": "攻击和技能的伤害对敌人们造成持续5秒的2%灼烧效果和33%重伤效果。\n\n灼烧：每秒造成目标一部分最大生命值的真实伤害\n重伤：降低受到的治疗效果",
+      "stats": [
+        {
+          "label": "攻速",
+          "value": "+80%"
+        },
+        {
+          "label": "伤害增幅",
+          "value": "+6%"
+        }
+      ]
+    },
+    {
+      "id": "DA_SpearOfShojinRadiant",
+      "category": "radiant",
+      "image": "/assets/items/DA_SpearOfShojinRadiant.webp",
+      "name": "光明版朔极之矛",
+      "description": "每次攻击提供10 额外法力值。",
+      "stats": [
+        {
+          "label": "物理加成",
+          "value": "+30%"
+        },
+        {
+          "label": "法术加成",
+          "value": "+30%"
+        },
+        {
+          "label": "法力回复",
+          "value": "+2"
+        }
+      ]
+    },
+    {
+      "id": "DA_SpiritVisage_Radiant",
+      "category": "radiant",
+      "image": "/assets/items/DA_SpiritVisage_Radiant.webp",
+      "name": "光明版振奋盔甲",
+      "description": "每秒回复4%已损失生命值。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+700"
+        },
+        {
+          "label": "伤害减免",
+          "value": "+18%"
+        },
+        {
+          "label": "法力回复",
+          "value": "+4"
+        }
+      ]
+    },
+    {
+      "id": "DA_SteadfastHeartRadiant",
+      "category": "radiant",
+      "image": "/assets/items/DA_SteadfastHeartRadiant.webp",
+      "name": "光明版坚定之心",
+      "description": "获得10%伤害减免。在高于50%生命值时，转而获得30%伤害减免。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+500"
+        },
+        {
+          "label": "护甲",
+          "value": "+40"
+        },
+        {
+          "label": "暴击率",
+          "value": "+40%"
+        }
+      ]
+    },
+    {
+      "id": "DA_SteraksGageRadiant",
+      "category": "radiant",
+      "image": "/assets/items/DA_SteraksGageRadiant.webp",
+      "name": "光明版斯特拉克的挑战护手",
+      "description": "在40%生命值时，获得相当于携带者40%最大生命值的护盾值，在4秒内快速衰减。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+300"
+        },
+        {
+          "label": "物理加成",
+          "value": "+45%"
+        }
+      ]
+    },
+    {
+      "id": "DA_StrikersFlailRadiant",
+      "category": "radiant",
+      "image": "/assets/items/DA_StrikersFlailRadiant.webp",
+      "name": "光明版强袭者的链枷",
+      "description": "暴击提供持续5秒的10%伤害增幅，可叠加至多4次。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+300"
+        },
+        {
+          "label": "攻速",
+          "value": "+20%"
+        },
+        {
+          "label": "暴击率",
+          "value": "+40%"
+        },
+        {
+          "label": "伤害增幅",
+          "value": "+20%"
+        }
+      ]
+    },
+    {
+      "id": "DA_SunfireCape_Radiant",
+      "category": "radiant",
+      "image": "/assets/items/DA_SunfireCape_Radiant.webp",
+      "name": "光明版日炎斗篷",
+      "description": "获得8%最大生命值。\n\n每过2秒，对2格内的一名敌人施加持续10秒的1%灼烧效果和33%重伤效果。\n\n灼烧：每秒造成目标一部分最大生命值的真实伤害\n重伤：降低受到的治疗效果。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+150"
+        },
+        {
+          "label": "护甲",
+          "value": "+20"
+        }
+      ]
+    },
+    {
+      "id": "DA_ThiefsGlovesRadiant",
+      "category": "radiant",
+      "image": "/assets/items/DA_ThiefsGlovesRadiant.webp",
+      "name": "光明版窃贼手套",
+      "description": "每回合：装备2件随机光明版装备\n\n[需要用掉3个装备格。]",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+150"
+        },
+        {
+          "label": "暴击率",
+          "value": "+20%"
+        }
+      ]
+    },
+    {
+      "id": "DA_TitansResolve_Radiant",
+      "category": "radiant",
+      "image": "/assets/items/DA_TitansResolve_Radiant.webp",
+      "name": "光明版泰坦的坚决",
+      "description": "攻击或受到伤害时获得4%物理加成和法术加成，最多叠加25次。叠满后获得30%额外最大生命值并免疫控制。",
+      "stats": [
+        {
+          "label": "护甲",
+          "value": "+40"
+        },
+        {
+          "label": "攻速",
+          "value": "+20%"
+        }
+      ]
+    },
+    {
+      "id": "DA_VoidStaffRadiant",
+      "category": "radiant",
+      "image": "/assets/items/DA_VoidStaffRadiant.webp",
+      "name": "光明版虚空之杖",
+      "description": "攻击和技能伤害都会对目标施加持续至战斗环节结束的30%魔抗击碎。这个效果不会叠加。\n\n魔抗击碎：降低魔法抗性",
+      "stats": [
+        {
+          "label": "法术加成",
+          "value": "+75%"
+        },
+        {
+          "label": "攻速",
+          "value": "+30%"
+        },
+        {
+          "label": "法力回复",
+          "value": "+2"
+        }
+      ]
+    },
+    {
+      "id": "DA_WarmogsArmorRadiant",
+      "category": "radiant",
+      "image": "/assets/items/DA_WarmogsArmorRadiant.webp",
+      "name": "光明版狂徒铠甲",
+      "description": "获得36%最大生命值。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+1200"
+        }
+      ]
+    }
+  ],
+  "recipes": {
+    "emblem-arcanist": {
+      "name": "黑魔法师纹章",
+      "description": "携带者获得【黑魔法师】羁绊。",
+      "stats": [
+        {
+          "label": "法术加成",
+          "value": "+25%"
+        }
+      ],
+      "components": [
+        "TFT_Item_FryingPan",
+        "TFT_Item_NeedlesslyLargeRod"
+      ],
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "emblem-bodyguard": {
+      "name": "保镖纹章",
+      "description": "携带者获得【保镖】羁绊。",
+      "stats": [
+        {
+          "label": "护甲",
+          "value": "+30"
+        },
+        {
+          "label": "魔抗",
+          "value": "+30"
+        }
+      ],
+      "components": [
+        "TFT_Item_FryingPan",
+        "TFT_Item_ChainVest"
+      ],
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "emblem-rock": {
+      "name": "摇滚乐纹章",
+      "description": "携带者获得【摇滚乐】羁绊。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+250"
+        },
+        {
+          "label": "攻速",
+          "value": "+15%"
+        },
+        {
+          "label": "暴击率",
+          "value": "+20%"
+        }
+      ],
+      "components": [
+        "TFT_Item_Spatula",
+        "TFT_Item_SparringGloves"
+      ],
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "emblem-frontman": {
+      "name": "泰坦纹章",
+      "description": "携带者获得【泰坦】羁绊。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+200"
+        }
+      ],
+      "components": [
+        "TFT_Item_FryingPan",
+        "TFT_Item_GiantsBelt"
+      ],
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "emblem-heartsteel": {
+      "name": "心之钢纹章",
+      "description": "携带者获得【心之钢】羁绊。\n\n偏好效果：获得每个【心之钢】加成的125%。",
+      "stats": [
+        {
+          "label": "护甲",
+          "value": "+20"
+        },
+        {
+          "label": "魔抗",
+          "value": "+20"
+        },
+        {
+          "label": "物理加成",
+          "value": "+10%"
+        },
+        {
+          "label": "法术加成",
+          "value": "+10%"
+        }
+      ],
+      "components": [
+        "TFT_Item_Spatula",
+        "TFT_Item_ChainVest"
+      ],
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "emblem-hitmaker": {
+      "name": "金曲制作人纹章",
+      "description": "携带者获得【金曲制作人】羁绊。",
+      "stats": [
+        {
+          "label": "物理加成",
+          "value": "+10%"
+        }
+      ],
+      "components": [
+        "TFT_Item_FryingPan",
+        "TFT_Item_BFSword"
+      ],
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "emblem-illbeats": {
+      "name": "酷炫节拍纹章",
+      "description": "携带者获得【酷炫节拍】羁绊。",
+      "stats": [
+        {
+          "label": "护甲",
+          "value": "+0"
+        },
+        {
+          "label": "魔抗",
+          "value": "+0"
+        },
+        {
+          "label": "攻速",
+          "value": "+15%"
+        }
+      ],
+      "components": [
+        "TFT_Item_Spatula",
+        "TFT_Item_GiantsBelt"
+      ],
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "emblem-ionic-spark": {
+      "name": "离子火花纹章",
+      "description": "携带者获得【离子火花】羁绊。",
+      "stats": [
+        {
+          "label": "护甲",
+          "value": "+20"
+        },
+        {
+          "label": "魔抗",
+          "value": "+20"
+        },
+        {
+          "label": "攻速",
+          "value": "+20%"
+        }
+      ],
+      "components": [
+        "TFT_Item_Spatula",
+        "TFT_Item_NegatronCloak"
+      ],
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "emblem-k-da": {
+      "name": "K/DA纹章",
+      "description": "携带者获得【K/DA】羁绊。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+150"
+        },
+        {
+          "label": "物理加成",
+          "value": "+15%"
+        },
+        {
+          "label": "法术加成",
+          "value": "+15%"
+        }
+      ],
+      "components": [
+        "TFT_Item_Spatula",
+        "TFT_Item_NeedlesslyLargeRod"
+      ],
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "emblem-slayer": {
+      "name": "裁决战士纹章",
+      "description": "携带者获得【裁决战士】羁绊。",
+      "stats": [
+        {
+          "label": "物理加成",
+          "value": "+0%"
+        },
+        {
+          "label": "法术加成",
+          "value": "+0%"
+        }
+      ],
+      "components": [
+        "TFT_Item_FryingPan",
+        "TFT_Item_NegatronCloak"
+      ],
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "emblem-beach-pop": {
+      "name": "海洋之歌纹章",
+      "description": "携带者获得【海洋之歌】羁绊。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+250"
+        },
+        {
+          "label": "法力回复",
+          "value": "+2"
+        }
+      ],
+      "components": [
+        "TFT_Item_Spatula",
+        "TFT_Item_TearOfTheGoddess"
+      ],
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "emblem-pentakill": {
+      "name": "五杀摇滚纹章",
+      "description": "携带者获得【五杀摇滚】羁绊。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+250"
+        },
+        {
+          "label": "物理加成",
+          "value": "+15%"
+        },
+        {
+          "label": "法术加成",
+          "value": "+15%"
+        }
+      ],
+      "components": [
+        "TFT_Item_Spatula",
+        "TFT_Item_BFSword"
+      ],
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "emblem-prodigy": {
+      "name": "天才纹章",
+      "description": "携带者获得【天才】羁绊。\n\n施放技能时，每消耗10法力值，就会获得1%最大生命值。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+150"
+        },
+        {
+          "label": "法力回复",
+          "value": "+1"
+        }
+      ],
+      "components": [
+        "TFT_Item_FryingPan",
+        "TFT_Item_TearOfTheGoddess"
+      ],
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "emblem-renegade": {
+      "name": "非主流纹章",
+      "description": "携带者获得【非主流】羁绊。",
+      "stats": [
+        {
+          "label": "暴击率",
+          "value": "+20%"
+        },
+        {
+          "label": "暴击伤害",
+          "value": "+0%"
+        }
+      ],
+      "components": [
+        "TFT_Item_FryingPan",
+        "TFT_Item_SparringGloves"
+      ],
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "emblem-swiftstriker": {
+      "name": "迅捷攻手纹章",
+      "description": "携带者获得【迅捷攻手】羁绊。",
+      "stats": [
+        {
+          "label": "攻速",
+          "value": "+20%"
+        }
+      ],
+      "components": [
+        "TFT_Item_FryingPan",
+        "TFT_Item_RecurveBow"
+      ],
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "emblem-classical": {
+      "name": "古典乐纹章",
+      "description": "携带者获得【古典乐】羁绊，其技能会使命中的敌人陷入迷醉，持续3秒。\n\n陷入迷醉的敌人会为【古典乐】弈子提供加成。",
+      "stats": [
+        {
+          "label": "护甲",
+          "value": "+20"
+        },
+        {
+          "label": "魔抗",
+          "value": "+20"
+        },
+        {
+          "label": "攻速",
+          "value": "+20%"
+        }
+      ],
+      "components": [
+        "TFT_Item_Spatula",
+        "TFT_Item_RecurveBow"
+      ],
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    }
+  }
+}

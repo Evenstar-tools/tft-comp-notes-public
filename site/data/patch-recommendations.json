@@ -1,0 +1,86 @@
+{
+  "seasonId": "s19-pbe",
+  "build": "6014015",
+  "reviewedAt": "2026-11-23T03:06:31+00:00",
+  "window": {
+    "start": "2026-11-22T21:06:31Z",
+    "end": "2026-11-23T03:06:31Z"
+  },
+  "entries": [
+    {
+      "sectionId": "sample-block-0122",
+      "teamId": "00000000-0000-4000-8000-000000000044",
+      "status": "recommended",
+      "note": "烈娜塔、狗头来牌顺，六级一起追三，八级补六保镖。",
+      "sources": [
+        "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&trait=DA_Bodyguard19_3&unit=DA_RenataGlasc19-1&unit=DA_Jax19-1&unit=DA_Nasus19-1&unit=DA_KSante19-1&unit=DA_Garen19-1&unit=DA_Leona19-1&unit=DA_Tibbers19-1&unit=DA_Lillia19-1"
+      ]
+    },
+    {
+      "sectionId": "sample-block-0243",
+      "teamId": "00000000-0000-4000-8000-000000000087",
+      "status": "recommended",
+      "note": "佛耶戈、贝蕾亚来得多，七级追三，前排扛不住就先补质量。",
+      "sources": [
+        "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&trait=DA_Mosher19_3&unit=DA_Viego19-1&unit=DA_Briar19-1&unit=DA_Yorick19-1&unit=DA_Yasuo19-1&unit=DA_Yone19-1&unit=DA_Camille19-1&unit=DA_Kayn19-1&unit=DA_Olaf19-1"
+      ]
+    },
+    {
+      "sectionId": "sample-block-0420",
+      "teamId": "00000000-0000-4000-8000-000000000042",
+      "status": "conditional",
+      "note": "吉格斯、可酷伯来得早再走。可酷伯先三星就先给肉装。",
+      "sources": [
+        "https://www.metatft.com/explorer?set=TFTSet19&tab=units&unit=DA_Ziggs19-1&unit=DA_Seraphine19_Indie-1&unit=DA_Kobuko19-1&unit=DA_Lulu19-1&unit=DA_Tristana19-1&unit=DA_Swain19-1"
+      ]
+    },
+    {
+      "sectionId": "sample-block-0214",
+      "teamId": "00000000-0000-4000-8000-000000000104",
+      "status": "conditional",
+      "note": "霞来得早、能连胜再走，八级先做解锁，稳血再上九。",
+      "sources": [
+        "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=9&unit=DA_KSante19-1&unit=DA_DrMundo19-1&unit=DA_Leona19-1&unit=DA_LeeSin19-1&unit=DA_Wukong19-1&unit=DA_Alune19-1&unit=DA_Aphelios19-1&unit=DA_Janna19-1&unit=DA_Xayah19-1"
+      ]
+    },
+    {
+      "sectionId": "sample-block-0307",
+      "teamId": "00000000-0000-4000-8000-000000000007",
+      "status": "avoid",
+      "note": "八级先找金克丝、龙女两星，格温解锁后再开七离子。",
+      "sources": [
+        "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&trait=DA_IonicSpark19_3&tactician_item_count=0&duplicate_unit_count=0&emblem_count=0&unit=DA_Elise19-1&unit=DA_Tibbers19-1&unit=DA_Annie19-1&unit=DA_Shyvana19-1&unit=DA_Aurora19-1&unit=DA_Jinx19-1&unit=DA_Gwen19-1&unit=DA_Leona19-1",
+        "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&trait=DA_IonicSpark19_3&tactician_item_count=0&duplicate_unit_count=0&emblem_count=0&unit=DA_Elise19-1&unit=DA_Tibbers19-1&unit=DA_Annie19-1&unit=DA_Shyvana19-1&unit=DA_Aurora19-1&unit=DA_Jinx19-1&unit=DA_Gwen19-1&unit=DA_Leona19-1&unit=DA_MissFortune19-1"
+      ]
+    },
+    {
+      "sectionId": "sample-block-0051",
+      "teamId": "00000000-0000-4000-8000-000000000059",
+      "status": "conditional",
+      "note": "物理装能合再走。八级烬、锤石两星接装，锤石没开先用狗头。",
+      "sources": [
+        "https://www.metatft.com/explorer?tab=units&set=TFTSet19&trait=DA_Virtuosos19_2&unit=DA_Jhin19-1&unit=DA_Thresh19-1",
+        "https://www.metatft.com/explorer?tab=units&set=TFTSet19&trait=DA_Virtuosos19_2&unit=DA_Jhin19-1&unit=DA_Thresh19-1&level=8"
+      ]
+    },
+    {
+      "sectionId": "sample-block-0468",
+      "teamId": "00000000-0000-4000-8000-000000000106",
+      "status": "avoid",
+      "note": "八级成型偏弱。已经进了就先补两星前排稳血。",
+      "sources": [
+        "https://www.metatft.com/explorer?tab=units&set=TFTSet19&trait=DA_Juggernaut19_2&unit=DA_Kayle19-1&unit=DA_Zac19-1",
+        "https://www.metatft.com/explorer?tab=units&set=TFTSet19&trait=DA_Juggernaut19_2&unit=DA_Kayle19-1&unit=DA_Zac19-1&level=8"
+      ]
+    },
+    {
+      "sectionId": "sample-block-0407",
+      "teamId": "00000000-0000-4000-8000-000000000029",
+      "status": "conditional",
+      "note": "大剑多、德莱文和布隆来得顺，七级一起追三。",
+      "sources": [
+        "https://www.metatft.com/explorer?tab=units&set=TFTSet19&trait=DA_Illbeats19_3&unit=DA_Draven19-1&unit=DA_Braum19-1"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+.hero-artwork {
+  display: block;
+  overflow: hidden;
+  pointer-events: none;
+  container-type: size;
+}
+.hero-artwork > img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: center 38%;
+}
+@supports (width: 1cqw) {
+  .hero-artwork[data-focused] > img {
+    /* Size to cover, then align the focal point and clamp to the image edges. */
+    --art-rendered-width: max(100cqw, 168.6183cqh);
+    --art-rendered-height: max(59.3056cqw, 100cqh);
+    width: var(--art-rendered-width);
+    height: var(--art-rendered-height);
+    left: clamp(calc(100cqw - var(--art-rendered-width)),
+      calc(65cqw - var(--art-x) * var(--art-rendered-width)), 0px);
+    top: clamp(calc(100cqh - var(--art-rendered-height)),
+      calc(var(--art-target-y, 45cqh) - var(--art-y) * var(--art-rendered-height)), 0px);
+  }
+}

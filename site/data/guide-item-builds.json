@@ -1,0 +1,514 @@
+{
+  "season": "s19-pbe-19.1.",
+  "patch": "PBE 19.1",
+  "date": "2026-11-19",
+  "windowDays": 3,
+  "itemNames": {
+    "TFT_Item_ArchangelsStaff": "大天使之杖",
+    "TFT_Item_Deathblade": "死亡之刃",
+    "TFT_Item_GuinsoosRageblade": "鬼索的狂暴之刃",
+    "TFT_Item_HextechGunblade": "海克斯科技枪刃",
+    "TFT_Item_InfinityEdge": "无尽之刃",
+    "TFT_Item_JeweledGauntlet": "珠光护手",
+    "TFT_Item_LastWhisper": "最后的轻语",
+    "TFT_Item_Leviathan": "纳什之牙",
+    "TFT_Item_MadredsBloodrazor": "巨人杀手",
+    "TFT_Item_PowerGauntlet": "强袭者的链枷",
+    "TFT_Item_RabadonsDeathcap": "灭世者的死亡之帽",
+    "TFT_Item_RapidFireCannon": "红霸符",
+    "TFT_Item_RunaansHurricane": "海妖之怒",
+    "TFT_Item_SpearOfShojin": "朔极之矛",
+    "TFT_Item_StatikkShiv": "虚空之杖"
+  },
+  "records": [
+    {
+      "teamId": "00000000-0000-4000-8000-000000000007",
+      "unitId": "jinx",
+      "traitId": "ionic-spark",
+      "tier": 7,
+      "level": 8,
+      "stars": 2,
+      "url": "https://www.metatft.com/explorer?tab=builds&unit=DA_Jinx19-1_2_3&level=8&trait=DA_IonicSpark19_3&set=TFTSet19",
+      "builds": [
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_LastWhisper"
+          ],
+          "games": 942,
+          "mean": 4.84
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 664,
+          "mean": 4.69
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_InfinityEdge"
+          ],
+          "games": 444,
+          "mean": 4.81
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 360,
+          "mean": 4.91
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 312,
+          "mean": 4.89
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 286,
+          "mean": 4.65
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_PowerGauntlet",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 218,
+          "mean": 5.22
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_LastWhisper"
+          ],
+          "games": 170,
+          "mean": 4.74
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 162,
+          "mean": 4.69
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 144,
+          "mean": 4.99
+        }
+      ]
+    },
+    {
+      "teamId": "00000000-0000-4000-8000-000000000031",
+      "unitId": "jinx",
+      "traitId": "ionic-spark",
+      "tier": 7,
+      "level": 9,
+      "stars": 2,
+      "url": "https://www.metatft.com/explorer?tab=builds&unit=DA_Jinx19-1_2_3&level=9&trait=DA_IonicSpark19_3&set=TFTSet19",
+      "builds": [
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_LastWhisper"
+          ],
+          "games": 2808,
+          "mean": 3.16
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 1996,
+          "mean": 3.27
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_InfinityEdge"
+          ],
+          "games": 1218,
+          "mean": 3.23
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 1061,
+          "mean": 3.08
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 979,
+          "mean": 3.11
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 833,
+          "mean": 3.19
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_PowerGauntlet",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 558,
+          "mean": 3.08
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_LastWhisper"
+          ],
+          "games": 451,
+          "mean": 3.17
+        }
+      ]
+    },
+    {
+      "teamId": "00000000-0000-4000-8000-000000000104",
+      "unitId": "xayah",
+      "traitId": "gu-feng",
+      "tier": 4,
+      "level": 9,
+      "stars": 2,
+      "url": "https://www.metatft.com/explorer?tab=builds&unit=DA_Xayah19-1_2_3&level=9&trait=DA_Heavenscale19_3&set=TFTSet19",
+      "builds": [
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_LastWhisper",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 908,
+          "mean": 3.94
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_PowerGauntlet",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 413,
+          "mean": 3.96
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 368,
+          "mean": 4.03
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_LastWhisper"
+          ],
+          "games": 360,
+          "mean": 4.07
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 346,
+          "mean": 4.26
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 345,
+          "mean": 3.88
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 240,
+          "mean": 4.1
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_RapidFireCannon",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 222,
+          "mean": 4.32
+        }
+      ]
+    },
+    {
+      "teamId": "00000000-0000-4000-8000-000000000017",
+      "unitId": "malzahar",
+      "traitId": "prodigy",
+      "tier": 5,
+      "level": 7,
+      "stars": 3,
+      "url": "https://www.metatft.com/explorer?tab=builds&unit=DA_Malzahar19-1_3_3&level=7&trait=DA_Prodigy19_4&set=TFTSet19",
+      "builds": [
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_PowerGauntlet",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 328,
+          "mean": 3.31
+        },
+        {
+          "items": [
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 61,
+          "mean": 2.64
+        },
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 56,
+          "mean": 3.36
+        }
+      ]
+    },
+    {
+      "teamId": "00000000-0000-4000-8000-000000000071",
+      "unitId": "malzahar",
+      "traitId": "prodigy",
+      "tier": 5,
+      "level": 9,
+      "stars": 3,
+      "url": "https://www.metatft.com/explorer?tab=builds&unit=DA_Malzahar19-1_3_3&level=9&trait=DA_Prodigy19_4&set=TFTSet19",
+      "builds": [
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_PowerGauntlet",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 1088,
+          "mean": 1.5
+        },
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 245,
+          "mean": 1.52
+        },
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 240,
+          "mean": 1.47
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 238,
+          "mean": 1.54
+        },
+        {
+          "items": [
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 209,
+          "mean": 1.43
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_JeweledGauntlet"
+          ],
+          "games": 139,
+          "mean": 1.42
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 139,
+          "mean": 1.67
+        },
+        {
+          "items": [
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 129,
+          "mean": 1.37
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 123,
+          "mean": 1.55
+        }
+      ]
+    },
+    {
+      "teamId": "00000000-0000-4000-8000-000000000064",
+      "unitId": "kayle",
+      "traitId": "pentakill",
+      "tier": 7,
+      "level": 8,
+      "stars": 2,
+      "url": "https://www.metatft.com/explorer?tab=builds&unit=DA_Kayle19-1_2_3&level=8&trait=DA_Pentakill19_3&set=TFTSet19",
+      "builds": [
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 792,
+          "mean": 4.89
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_JeweledGauntlet"
+          ],
+          "games": 582,
+          "mean": 5.04
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 408,
+          "mean": 5.05
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_StatikkShiv"
+          ],
+          "games": 316,
+          "mean": 4.93
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 292,
+          "mean": 5.04
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 243,
+          "mean": 5.03
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_JeweledGauntlet"
+          ],
+          "games": 193,
+          "mean": 4.9
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 184,
+          "mean": 4.65
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_Leviathan"
+          ],
+          "games": 176,
+          "mean": 5.0
+        }
+      ]
+    }
+  ]
+}

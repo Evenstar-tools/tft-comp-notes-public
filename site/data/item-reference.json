@@ -1,0 +1,973 @@
+{
+  "build": "19.1.0.6014015",
+  "date": "2026-11-22",
+  "sources": [
+    {
+      "label": "MetaTFT PBE 简中装备数据",
+      "url": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    {
+      "label": "MetaTFT 同版本英文数据",
+      "url": "https://data.metatft.com/lookups/TFTSet19_pbe_en_us.json"
+    },
+    {
+      "label": "Riot PBE 发行记录",
+      "url": "https://sieve.services.riotcdn.net/api/v1/products/teamfighttactics/version-sets/pbe-global"
+    }
+  ],
+  "items": {
+    "TFT_Item_BFSword": {
+      "name": "暴风大剑",
+      "description": "+10%物理加成",
+      "stats": [
+        {
+          "label": "物理加成",
+          "value": "+10%"
+        }
+      ],
+      "components": [],
+      "pbeId": "DA_Component_BFSword",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_RecurveBow": {
+      "name": "反曲之弓",
+      "description": "+10%攻击速度",
+      "stats": [
+        {
+          "label": "攻速",
+          "value": "+10%"
+        }
+      ],
+      "components": [],
+      "pbeId": "DA_Component_RecurveBow",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_NeedlesslyLargeRod": {
+      "name": "无用大棒",
+      "description": "+10%法术加成",
+      "stats": [
+        {
+          "label": "法术加成",
+          "value": "+10%"
+        }
+      ],
+      "components": [],
+      "pbeId": "DA_Component_NeedlesslyLargeRod",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_TearOfTheGoddess": {
+      "name": "女神之泪",
+      "description": "+1法力回复",
+      "stats": [
+        {
+          "label": "法力回复",
+          "value": "+1"
+        }
+      ],
+      "components": [],
+      "pbeId": "DA_Component_TearOfTheGoddess",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_ChainVest": {
+      "name": "锁子甲",
+      "description": "+20护甲",
+      "stats": [
+        {
+          "label": "护甲",
+          "value": "+20"
+        }
+      ],
+      "components": [],
+      "pbeId": "DA_Component_ChainVest",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_NegatronCloak": {
+      "name": "负极斗篷",
+      "description": "+20魔抗",
+      "stats": [
+        {
+          "label": "魔抗",
+          "value": "+20"
+        }
+      ],
+      "components": [],
+      "pbeId": "DA_Component_NegatronCloak",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_GiantsBelt": {
+      "name": "巨人腰带",
+      "description": "+150生命值",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+150"
+        }
+      ],
+      "components": [],
+      "pbeId": "DA_Component_GiantsBelt",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_SparringGloves": {
+      "name": "拳套",
+      "description": "+20%暴击几率",
+      "stats": [
+        {
+          "label": "暴击率",
+          "value": "+20%"
+        }
+      ],
+      "components": [],
+      "pbeId": "DA_Component_SparringGloves",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_Spatula": {
+      "name": "金铲铲",
+      "description": "与基础散件合成对应纹章。与金铲铲或金锅锅合成人口装备。",
+      "stats": [],
+      "components": [],
+      "pbeId": "DA_Component_Spatula",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_FryingPan": {
+      "name": "金锅锅",
+      "description": "与基础散件合成对应纹章。与金铲铲或金锅锅合成人口装备。",
+      "stats": [],
+      "components": [],
+      "pbeId": "DA_Component_FryingPan",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_AdaptiveHelm": {
+      "name": "适应性头盔",
+      "description": "从所有来源中获得额外的15%法力值。携带者获得基于其角色定位的一个额外加成：\n\n坦克和战士：获得80护甲和魔抗。\n\n其它角色定位：获得10%物理加成和法术加成。",
+      "stats": [
+        {
+          "label": "魔抗",
+          "value": "+20"
+        },
+        {
+          "label": "法力回复",
+          "value": "+3"
+        }
+      ],
+      "components": [
+        "TFT_Item_NegatronCloak",
+        "TFT_Item_TearOfTheGoddess"
+      ],
+      "pbeId": "DA_AdaptiveHelm",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_ArchangelsStaff": {
+      "name": "大天使之杖",
+      "description": "在战斗期间，每5秒获得20%法术加成。",
+      "stats": [
+        {
+          "label": "法术加成",
+          "value": "+30%"
+        },
+        {
+          "label": "法力回复",
+          "value": "+1"
+        }
+      ],
+      "components": [
+        "TFT_Item_NeedlesslyLargeRod",
+        "TFT_Item_TearOfTheGoddess"
+      ],
+      "pbeId": "DA_ArchangelsStaff",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_Bloodthirster": {
+      "name": "饮血剑",
+      "description": "每场战斗限一次。生命值降至60%时，获得相当于25%最大生命值的护盾。此效果触发后，战斗剩余时间获得15%额外全能吸血。",
+      "stats": [
+        {
+          "label": "物理加成",
+          "value": "+15%"
+        },
+        {
+          "label": "法术加成",
+          "value": "+15%"
+        },
+        {
+          "label": "魔抗",
+          "value": "+20"
+        },
+        {
+          "label": "全能吸血",
+          "value": "+20%"
+        }
+      ],
+      "components": [
+        "TFT_Item_BFSword",
+        "TFT_Item_NegatronCloak"
+      ],
+      "pbeId": "DA_Bloodthirster",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_BlueBuff": {
+      "name": "蓝霸符",
+      "description": "战斗开始时，获得10法力值。",
+      "stats": [
+        {
+          "label": "物理加成",
+          "value": "+15%"
+        },
+        {
+          "label": "法术加成",
+          "value": "+15%"
+        },
+        {
+          "label": "法力回复",
+          "value": "+6"
+        }
+      ],
+      "components": [
+        "TFT_Item_TearOfTheGoddess",
+        "TFT_Item_TearOfTheGoddess"
+      ],
+      "pbeId": "DA_BlueBuff",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_BrambleVest": {
+      "name": "棘刺背心",
+      "description": "获得6%最大生命值。\n\n减免来自攻击的5%伤害。在被任一攻击命中时，对邻格所有敌人造成100魔法伤害。\n\n冷却时间：2秒",
+      "stats": [
+        {
+          "label": "护甲",
+          "value": "+50"
+        }
+      ],
+      "components": [
+        "TFT_Item_ChainVest",
+        "TFT_Item_ChainVest"
+      ],
+      "pbeId": "DA_BrambleVest",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_Crownguard": {
+      "name": "冕卫",
+      "description": "战斗开始时，获得相当于20%最大生命值的护盾，持续8秒。携带者获得的治疗和护盾提高25%。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+100"
+        },
+        {
+          "label": "法术加成",
+          "value": "+10%"
+        },
+        {
+          "label": "护甲",
+          "value": "+20"
+        }
+      ],
+      "components": [
+        "TFT_Item_NeedlesslyLargeRod",
+        "TFT_Item_ChainVest"
+      ],
+      "pbeId": "DA_Crownguard",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_Deathblade": {
+      "name": "死亡之刃",
+      "description": "从所有来源获得的物理加成提高15%。",
+      "stats": [
+        {
+          "label": "物理加成",
+          "value": "+60%"
+        }
+      ],
+      "components": [
+        "TFT_Item_BFSword",
+        "TFT_Item_BFSword"
+      ],
+      "pbeId": "DA_Deathblade",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_DragonsClaw": {
+      "name": "巨龙之爪",
+      "description": "获得6%最大生命值。每2秒，回复2.5%最大生命值。",
+      "stats": [
+        {
+          "label": "魔抗",
+          "value": "+60"
+        }
+      ],
+      "components": [
+        "TFT_Item_NegatronCloak",
+        "TFT_Item_NegatronCloak"
+      ],
+      "pbeId": "DA_DragonsClaw",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_FrozenHeart": {
+      "name": "圣盾使的誓约",
+      "description": "战斗开始时：获得20法力值。\n\n生命值达到40%时，获得15法力值和相当于20%最大生命值的护盾值。",
+      "stats": [
+        {
+          "label": "护甲",
+          "value": "+25"
+        },
+        {
+          "label": "魔抗",
+          "value": "+25"
+        },
+        {
+          "label": "法力回复",
+          "value": "+1"
+        }
+      ],
+      "components": [
+        "TFT_Item_TearOfTheGoddess",
+        "TFT_Item_ChainVest"
+      ],
+      "pbeId": "DA_ProtectorsVow",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_GargoyleStoneplate": {
+      "name": "石像鬼石板甲",
+      "description": "每有一个敌人以携带者为目标，携带者就会获得10护甲和10魔抗。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+100"
+        },
+        {
+          "label": "护甲",
+          "value": "+25"
+        },
+        {
+          "label": "魔抗",
+          "value": "+25"
+        }
+      ],
+      "components": [
+        "TFT_Item_ChainVest",
+        "TFT_Item_NegatronCloak"
+      ],
+      "pbeId": "DA_GargoyleStoneplate",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_GuardianAngel": {
+      "name": "夜之锋刃",
+      "description": "在40%生命值时，短暂变为不可被选取状态、摆脱负面效果并回复15%已损失生命值。",
+      "stats": [
+        {
+          "label": "物理加成",
+          "value": "+10%"
+        },
+        {
+          "label": "法术加成",
+          "value": "+10%"
+        },
+        {
+          "label": "护甲",
+          "value": "+20"
+        },
+        {
+          "label": "攻速",
+          "value": "+15%"
+        }
+      ],
+      "components": [
+        "TFT_Item_BFSword",
+        "TFT_Item_ChainVest"
+      ],
+      "pbeId": "DA_EdgeOfNight",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_GuinsoosRageblade": {
+      "name": "鬼索的狂暴之刃",
+      "description": "每秒获得7%可叠加的攻击速度。",
+      "stats": [
+        {
+          "label": "法术加成",
+          "value": "+10%"
+        },
+        {
+          "label": "攻速",
+          "value": "+10%"
+        }
+      ],
+      "components": [
+        "TFT_Item_RecurveBow",
+        "TFT_Item_NeedlesslyLargeRod"
+      ],
+      "pbeId": "DA_GuinsoosRageblade",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_HextechGunblade": {
+      "name": "海克斯科技枪刃",
+      "description": "为生命值百分比最低的友军提供相当于造成伤害值20%的治疗。",
+      "stats": [
+        {
+          "label": "物理加成",
+          "value": "+20%"
+        },
+        {
+          "label": "法术加成",
+          "value": "+20%"
+        },
+        {
+          "label": "全能吸血",
+          "value": "+15%"
+        },
+        {
+          "label": "法力回复",
+          "value": "+1"
+        }
+      ],
+      "components": [
+        "TFT_Item_BFSword",
+        "TFT_Item_NeedlesslyLargeRod"
+      ],
+      "pbeId": "DA_HextechGunblade",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_InfinityEdge": {
+      "name": "无尽之刃",
+      "description": "获得技能暴击。\n\n技能暴击：技能伤害可以造成暴击。额外的【技能暴击】提供10%暴击伤害。",
+      "stats": [
+        {
+          "label": "物理加成",
+          "value": "+35%"
+        },
+        {
+          "label": "暴击率",
+          "value": "+35%"
+        }
+      ],
+      "components": [
+        "TFT_Item_BFSword",
+        "TFT_Item_SparringGloves"
+      ],
+      "pbeId": "DA_InfinityEdge",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_IonicSpark": {
+      "name": "离子火花",
+      "description": "对2格内的敌人们施加30%魔抗击碎。在敌人施放一次技能时，对该敌人造成相当于其150%法力值消耗的魔法伤害。\n\n魔抗击碎：降低魔法抗性",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+350"
+        },
+        {
+          "label": "法术加成",
+          "value": "+15%"
+        },
+        {
+          "label": "魔抗",
+          "value": "+35"
+        }
+      ],
+      "components": [
+        "TFT_Item_NeedlesslyLargeRod",
+        "TFT_Item_NegatronCloak"
+      ],
+      "pbeId": "DA_IonicSpark",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_JeweledGauntlet": {
+      "name": "珠光护手",
+      "description": "获得技能暴击。\n\n技能暴击：技能伤害可以造成暴击。额外的【技能暴击】提供10%暴击伤害。",
+      "stats": [
+        {
+          "label": "法术加成",
+          "value": "+35%"
+        },
+        {
+          "label": "暴击率",
+          "value": "+35%"
+        }
+      ],
+      "components": [
+        "TFT_Item_NeedlesslyLargeRod",
+        "TFT_Item_SparringGloves"
+      ],
+      "pbeId": "DA_JeweledGauntlet",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_LastWhisper": {
+      "name": "最后的轻语",
+      "description": "普攻和技能伤害都会对目标施加持续3秒的30%护甲击碎。这个效果不会叠加。\n\n护甲击碎：降低护甲值",
+      "stats": [
+        {
+          "label": "物理加成",
+          "value": "+15%"
+        },
+        {
+          "label": "攻速",
+          "value": "+20%"
+        },
+        {
+          "label": "暴击率",
+          "value": "+20%"
+        }
+      ],
+      "components": [
+        "TFT_Item_RecurveBow",
+        "TFT_Item_SparringGloves"
+      ],
+      "pbeId": "DA_LastWhisper",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_Leviathan": {
+      "name": "纳什之牙",
+      "description": "每次普攻提供2额外法力值，如果暴击则提升至4额外法力值。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+150"
+        },
+        {
+          "label": "法术加成",
+          "value": "+15%"
+        },
+        {
+          "label": "攻速",
+          "value": "+10%"
+        },
+        {
+          "label": "暴击率",
+          "value": "+20%"
+        }
+      ],
+      "components": [
+        "TFT_Item_RecurveBow",
+        "TFT_Item_GiantsBelt"
+      ],
+      "pbeId": "DA_NashorsTooth",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_MadredsBloodrazor": {
+      "name": "巨人杀手",
+      "description": "对抗坦克时获得15%额外伤害增幅。",
+      "stats": [
+        {
+          "label": "物理加成",
+          "value": "+15%"
+        },
+        {
+          "label": "法术加成",
+          "value": "+15%"
+        },
+        {
+          "label": "攻速",
+          "value": "+15%"
+        },
+        {
+          "label": "伤害增幅",
+          "value": "+15%"
+        }
+      ],
+      "components": [
+        "TFT_Item_BFSword",
+        "TFT_Item_RecurveBow"
+      ],
+      "pbeId": "DA_GiantSlayer",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_Morellonomicon": {
+      "name": "莫雷洛秘典",
+      "description": "攻击和技能的伤害对敌人们造成持续10秒的1%灼烧效果和33%重伤效果。\n\n灼烧：每秒造成目标一部分最大生命值的真实伤害\n重伤：降低受到的治疗效果",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+150"
+        },
+        {
+          "label": "法术加成",
+          "value": "+20%"
+        },
+        {
+          "label": "法力回复",
+          "value": "+1"
+        }
+      ],
+      "components": [
+        "TFT_Item_NeedlesslyLargeRod",
+        "TFT_Item_GiantsBelt"
+      ],
+      "pbeId": "DA_Morellonomicon",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_NightHarvester": {
+      "name": "坚定之心",
+      "description": "获得5%伤害减免。在高于50%生命值时，转而获得15%伤害减免。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+250"
+        },
+        {
+          "label": "护甲",
+          "value": "+20"
+        },
+        {
+          "label": "暴击率",
+          "value": "+20%"
+        }
+      ],
+      "components": [
+        "TFT_Item_ChainVest",
+        "TFT_Item_SparringGloves"
+      ],
+      "pbeId": "DA_SteadfastHeart",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_PowerGauntlet": {
+      "name": "强袭者的链枷",
+      "description": "暴击提供持续5秒的5%伤害增幅，可叠加至多4次。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+150"
+        },
+        {
+          "label": "攻速",
+          "value": "+10%"
+        },
+        {
+          "label": "暴击率",
+          "value": "+20%"
+        },
+        {
+          "label": "伤害增幅",
+          "value": "+10%"
+        }
+      ],
+      "components": [
+        "TFT_Item_GiantsBelt",
+        "TFT_Item_SparringGloves"
+      ],
+      "pbeId": "DA_StrikersFlail",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_Quicksilver": {
+      "name": "水银",
+      "description": "在战斗的最初18秒内获得不可阻挡效果。\n\n每秒获得3%可叠加的攻击速度。",
+      "stats": [
+        {
+          "label": "魔抗",
+          "value": "+20"
+        },
+        {
+          "label": "攻速",
+          "value": "+15%"
+        },
+        {
+          "label": "暴击率",
+          "value": "+20%"
+        }
+      ],
+      "components": [
+        "TFT_Item_SparringGloves",
+        "TFT_Item_NegatronCloak"
+      ],
+      "pbeId": "DA_Quicksilver",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_RabadonsDeathcap": {
+      "name": "灭世者的死亡之帽",
+      "description": "从所有来源获得的法术加成提高15%。",
+      "stats": [
+        {
+          "label": "法术加成",
+          "value": "+60%"
+        }
+      ],
+      "components": [
+        "TFT_Item_NeedlesslyLargeRod",
+        "TFT_Item_NeedlesslyLargeRod"
+      ],
+      "pbeId": "DA_RabadonsDeathcap",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_RapidFireCannon": {
+      "name": "红霸符",
+      "description": "攻击和技能的伤害对敌人们造成持续5秒的1%灼烧效果和33%重伤效果。\n\n灼烧：每秒造成目标一部分最大生命值的真实伤害\n重伤：降低受到的治疗效果",
+      "stats": [
+        {
+          "label": "攻速",
+          "value": "+45%"
+        },
+        {
+          "label": "伤害增幅",
+          "value": "+3%"
+        }
+      ],
+      "components": [
+        "TFT_Item_RecurveBow",
+        "TFT_Item_RecurveBow"
+      ],
+      "pbeId": "DA_RedBuff",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_RedBuff": {
+      "name": "日炎斗篷",
+      "description": "获得8%最大生命值。\n\n每过2秒，对2格内的一名敌人施加持续10秒的1%灼烧效果和33%重伤效果。\n\n灼烧：每秒造成目标一部分最大生命值的真实伤害\n重伤：降低受到的治疗效果。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+150"
+        },
+        {
+          "label": "护甲",
+          "value": "+20"
+        }
+      ],
+      "components": [
+        "TFT_Item_ChainVest",
+        "TFT_Item_GiantsBelt"
+      ],
+      "pbeId": "DA_SunfireCape",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_Redemption": {
+      "name": "振奋盔甲",
+      "description": "每秒回复2%已损失生命值。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+300"
+        },
+        {
+          "label": "伤害减免",
+          "value": "+10%"
+        },
+        {
+          "label": "法力回复",
+          "value": "+2"
+        }
+      ],
+      "components": [
+        "TFT_Item_TearOfTheGoddess",
+        "TFT_Item_GiantsBelt"
+      ],
+      "pbeId": "DA_SpiritVisage",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_RunaansHurricane": {
+      "name": "海妖之怒",
+      "description": "每次攻击提供3.5%可叠加物理加成，最多叠加15次。攻击15次后，获得15%攻击速度。",
+      "stats": [
+        {
+          "label": "物理加成",
+          "value": "+10%"
+        },
+        {
+          "label": "魔抗",
+          "value": "+20"
+        },
+        {
+          "label": "攻速",
+          "value": "+10%"
+        }
+      ],
+      "components": [
+        "TFT_Item_NegatronCloak",
+        "TFT_Item_RecurveBow"
+      ],
+      "pbeId": "DA_KrakensFury",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_SpearOfShojin": {
+      "name": "朔极之矛",
+      "description": "每次普攻提供5额外法力值。",
+      "stats": [
+        {
+          "label": "物理加成",
+          "value": "+15%"
+        },
+        {
+          "label": "法术加成",
+          "value": "+15%"
+        },
+        {
+          "label": "法力回复",
+          "value": "+1"
+        }
+      ],
+      "components": [
+        "TFT_Item_BFSword",
+        "TFT_Item_TearOfTheGoddess"
+      ],
+      "pbeId": "DA_SpearOfShojin",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_SpectralGauntlet": {
+      "name": "薄暮法袍",
+      "description": "2格内的敌人们会被施加30%护甲击碎。在战斗的最初15秒获得15护甲和魔抗。\n\n护甲击碎：降低护甲值",
+      "stats": [
+        {
+          "label": "魔抗",
+          "value": "+20"
+        },
+        {
+          "label": "生命值",
+          "value": "+250"
+        }
+      ],
+      "components": [
+        "TFT_Item_NegatronCloak",
+        "TFT_Item_GiantsBelt"
+      ],
+      "pbeId": "DA_Evenshroud",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_StatikkShiv": {
+      "name": "虚空之杖",
+      "description": "攻击和技能伤害都会对目标施加持续5秒的30%魔抗击碎。这个效果不会叠加。\n\n魔抗击碎：降低魔法抗性",
+      "stats": [
+        {
+          "label": "法术加成",
+          "value": "+35%"
+        },
+        {
+          "label": "攻速",
+          "value": "+15%"
+        },
+        {
+          "label": "法力回复",
+          "value": "+1"
+        }
+      ],
+      "components": [
+        "TFT_Item_RecurveBow",
+        "TFT_Item_TearOfTheGoddess"
+      ],
+      "pbeId": "DA_VoidStaff",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_SteraksGage": {
+      "name": "斯特拉克的挑战护手",
+      "description": "在40%生命值时，获得相当于携带者40%最大生命值的护盾值，在4秒内快速衰减。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+300"
+        },
+        {
+          "label": "物理加成",
+          "value": "+45%"
+        }
+      ],
+      "components": [
+        "TFT_Item_BFSword",
+        "TFT_Item_GiantsBelt"
+      ],
+      "pbeId": "DA_SteraksGage",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_ThiefsGloves": {
+      "name": "窃贼手套",
+      "description": "每回合：装备2件随机装备\n\n[需要用掉3个装备格。]",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+150"
+        },
+        {
+          "label": "暴击率",
+          "value": "+20%"
+        }
+      ],
+      "components": [
+        "TFT_Item_SparringGloves",
+        "TFT_Item_SparringGloves"
+      ],
+      "pbeId": "DA_ThiefsGloves",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_TitansResolve": {
+      "name": "泰坦的坚决",
+      "description": "攻击或受到伤害时获得2%物理加成和法术加成，最多叠加25层。叠满后，获得15%最大生命值并免疫控制。",
+      "stats": [
+        {
+          "label": "护甲",
+          "value": "+20"
+        },
+        {
+          "label": "攻速",
+          "value": "+10%"
+        }
+      ],
+      "components": [
+        "TFT_Item_ChainVest",
+        "TFT_Item_RecurveBow"
+      ],
+      "pbeId": "DA_TitansResolve",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_UnstableConcoction": {
+      "name": "正义之手",
+      "description": "获得2个效果：\n• 18%物理加成和18%法术加成。\n• 12%全能吸血。\n\n生命值高于50%时，物理加成和法术加成翻倍。生命值低于50%时，全能吸血翻倍。",
+      "stats": [
+        {
+          "label": "暴击率",
+          "value": "+20%"
+        },
+        {
+          "label": "法力回复",
+          "value": "+1"
+        }
+      ],
+      "components": [
+        "TFT_Item_TearOfTheGoddess",
+        "TFT_Item_SparringGloves"
+      ],
+      "pbeId": "DA_HandOfJustice",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_WarmogsArmor": {
+      "name": "狂徒铠甲",
+      "description": "获得18%最大生命值。",
+      "stats": [
+        {
+          "label": "生命值",
+          "value": "+500"
+        }
+      ],
+      "components": [
+        "TFT_Item_GiantsBelt",
+        "TFT_Item_GiantsBelt"
+      ],
+      "pbeId": "DA_WarmogsArmor",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_ForceOfNature": {
+      "name": "金铲铲冠冕",
+      "description": "你的队伍获得+1最大队伍规模。\n在你赢下战斗时，有10%几率掉落1金币。",
+      "stats": [],
+      "components": [
+        "TFT_Item_Spatula",
+        "TFT_Item_Spatula"
+      ],
+      "pbeId": "DA_TacticiansCrown",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_TacticiansRing": {
+      "name": "金锅铲冠冕",
+      "description": "你的队伍获得最大队伍规模+1。\n\n在战斗10秒后，有10%几率掉落1金币。",
+      "stats": [],
+      "components": [
+        "TFT_Item_Spatula",
+        "TFT_Item_FryingPan"
+      ],
+      "pbeId": "DA_TacticiansCape",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    },
+    "TFT_Item_TacticiansScepter": {
+      "name": "金锅锅冠冕",
+      "description": "你的队伍获得+1最大队伍规模。\n\n在携带者阵亡时，有10%几率掉落1金币。",
+      "stats": [],
+      "components": [
+        "TFT_Item_FryingPan",
+        "TFT_Item_FryingPan"
+      ],
+      "pbeId": "DA_TacticiansShield",
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+    }
+  }
+}

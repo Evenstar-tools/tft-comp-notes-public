@@ -1,0 +1,755 @@
+{
+  "beach-pop": {
+    "summary": "摆放乐器来强化相邻友军。受强化的友军每 3 秒回复 2% 生命值，受强化的海之歌弈子还会获得攻速并回复法力。",
+    "tiers": [
+      {
+        "min": 3,
+        "description": "获得 1 件乐器。受强化的海之歌弈子获得 25% 攻速，每 3 秒回复 5 法力。"
+      },
+      {
+        "min": 5,
+        "description": "获得 2 件乐器。攻速提高至 40%，每 3 秒回复 8 法力。"
+      },
+      {
+        "min": 7,
+        "description": "攻速加成为 40%。每 10 秒吹来海风，为海之歌弈子回复 20% 生命值和 40 法力。"
+      }
+    ],
+    "emblem": {
+      "name": "海洋之歌纹章",
+      "image": "/assets/traits/emblem-beach-pop.webp",
+      "components": [
+        "TFT_Item_Spatula",
+        "TFT_Item_TearOfTheGoddess"
+      ]
+    },
+    "gameName": "海之歌"
+  },
+  "classical": {
+    "summary": "成员以各自的方式使敌人陷入迷醉。每名敌人每维持 6 秒迷醉，成员的伤害增幅就提高 1%。",
+    "tiers": [
+      {
+        "min": 2,
+        "description": "获得 8% 伤害增幅。被迷醉的敌人少造成 10% 伤害。"
+      },
+      {
+        "min": 4,
+        "description": "获得 20% 伤害增幅。被迷醉的敌人阵亡时抛出玫瑰，为一名古典乐弈子回复 10% 生命值。"
+      },
+      {
+        "min": 6,
+        "description": "获得 35% 伤害增幅。被迷醉的敌人阵亡时有 15% 概率加入你的备战席。"
+      }
+    ],
+    "emblem": {
+      "name": "古典乐纹章",
+      "image": "/assets/traits/emblem-classical.webp",
+      "components": [
+        "TFT_Item_Spatula",
+        "TFT_Item_RecurveBow"
+      ]
+    },
+    "gameName": "古典乐"
+  },
+  "edm": {
+    "summary": "贾克斯施法时发射光束，蔚的技能获得额外猛击和治疗。",
+    "tiers": [
+      {
+        "min": 2,
+        "description": "贾克斯向最近的两名敌人发射穿透光束，每穿过一名敌人伤害降低 40%。蔚额外猛击一次，并回复相当于本次技能伤害 15% 的生命值。"
+      }
+    ]
+  },
+  "gu-feng": {
+    "summary": "国风弈子获得随玩家等级增长的属性。",
+    "tiers": [
+      {
+        "min": 2,
+        "description": "每个玩家等级提供 2% 攻击力和法术强度，以及 2 点护甲和魔抗。"
+      },
+      {
+        "min": 3,
+        "description": "每个玩家等级额外提供 2% 生命值。"
+      },
+      {
+        "min": 4,
+        "description": "二选一获得国风专属卷轴，其中一份可以开启升到 11 级的路径。"
+      }
+    ],
+    "gameName": "国风"
+  },
+  "heartsteel": {
+    "summary": "每名不同的心之钢弈子都能为全队提供一项增益。提高羁绊档位，还能选择成员强化其技能。",
+    "tiers": [
+      {
+        "min": 1,
+        "description": "已上场的心之钢成员为全队提供各自的增益。"
+      },
+      {
+        "min": 3,
+        "description": "选择第一名本命成员，强化其技能。"
+      },
+      {
+        "min": 5,
+        "description": "再选择第二名本命成员。"
+      },
+      {
+        "min": 7,
+        "description": "心之钢弈子额外获得已激活心之钢增益的 120%。完成专属棱彩任务后触发乐队回归。"
+      }
+    ],
+    "emblem": {
+      "name": "心之钢纹章",
+      "image": "/assets/traits/emblem-heartsteel.webp",
+      "components": [
+        "TFT_Item_Spatula",
+        "TFT_Item_ChainVest"
+      ]
+    }
+  },
+  "hyperpop": {
+    "summary": "高能流行弈子获得生命值和攻速。玩家对战后，一至四星分别产生 3/6/12/40 点热度，每次参与击杀额外产生 1 点。达到新的热度等级时获得奖励。",
+    "tiers": [
+      {
+        "min": 2,
+        "description": "获得 100 生命值和 10% 攻速。"
+      },
+      {
+        "min": 3,
+        "description": "获得 150 生命值和 15% 攻速，获得的热度变为 1.5 倍。"
+      },
+      {
+        "min": 4,
+        "description": "获得 200 生命值和 20% 攻速，获得的热度变为 2.5 倍。"
+      },
+      {
+        "min": 5,
+        "description": "获得 350 生命值和 33% 攻速，获得的热度变为 3 倍。"
+      }
+    ],
+    "emblem": {
+      "name": "超流行乐纹章",
+      "image": "/assets/traits/emblem-hyperpop.webp"
+    }
+  },
+  "illbeats": {
+    "summary": "在混音器里分配分贝来选择属性。大触打击乐弈子获得完整混音加成，其余队友获得一半。",
+    "tiers": [
+      {
+        "min": 2,
+        "description": "获得 10 分贝。"
+      },
+      {
+        "min": 3,
+        "description": "获得 15 分贝。"
+      },
+      {
+        "min": 4,
+        "description": "获得 18 分贝，混音加成提高 65%。"
+      }
+    ],
+    "emblem": {
+      "name": "酷炫节拍纹章",
+      "image": "/assets/traits/emblem-illbeats.webp",
+      "components": [
+        "TFT_Item_Spatula",
+        "TFT_Item_GiantsBelt"
+      ]
+    },
+    "gameName": "大触打击乐"
+  },
+  "ionic-spark": {
+    "summary": "成员获得生命值。每 4 秒，粉丝向成员送出一轮信件或礼物。",
+    "tiers": [
+      {
+        "min": 3,
+        "description": "获得 100 生命值。信件回复 2% 生命值并提供 7% 攻速。"
+      },
+      {
+        "min": 5,
+        "description": "获得 225 生命值。专属礼物提供 22% 攻击力或法术强度。"
+      },
+      {
+        "min": 7,
+        "description": "获得 450 生命值。每打完两场玩家对战获得金币和一个消耗品。"
+      },
+      {
+        "min": 10,
+        "description": "需完成专属棱彩任务。粉丝冲上舞台。"
+      }
+    ],
+    "emblem": {
+      "name": "离子火花纹章",
+      "image": "/assets/traits/emblem-ionic-spark.webp",
+      "components": [
+        "TFT_Item_Spatula",
+        "TFT_Item_NegatronCloak"
+      ]
+    }
+  },
+  "jazz": {
+    "summary": "每激活一种非唯一羁绊，全队就能获得一份生命值和伤害增幅。",
+    "tiers": [
+      {
+        "min": 2,
+        "description": "每种提供 1.5% 生命值和 1% 伤害增幅。"
+      },
+      {
+        "min": 3,
+        "description": "每种提供 2.5% 生命值和 1.5% 伤害增幅。"
+      },
+      {
+        "min": 4,
+        "description": "每种提供 3.5% 生命值和 2% 伤害增幅。"
+      }
+    ],
+    "emblem": {
+      "name": "爵士乐纹章",
+      "image": "/assets/traits/emblem-jazz.webp"
+    },
+    "gameName": "爵士乐"
+  },
+  "k-da": {
+    "summary": "K/DA 弈子的总星级每到一档便解锁一首歌。开战时和 8 秒后，K/DA 弈子各获得一次已解锁的歌曲效果。",
+    "tiers": [
+      {
+        "min": 3,
+        "description": "《POP/STARS》使最大法力值降低 10%。"
+      },
+      {
+        "min": 5,
+        "description": "《DRUM GO DUM》提供相当于 12% 最大生命值的护盾，持续 8 秒。"
+      },
+      {
+        "min": 7,
+        "description": "《VILLAIN》提供 45% 攻速，在 8 秒内衰减。"
+      },
+      {
+        "min": 10,
+        "description": "《I’LL SHOW YOU》将此前歌曲的效果提高到 1.25 倍。"
+      },
+      {
+        "min": 13,
+        "description": "《WATCH ME》使全体敌人晕眩 1 秒。"
+      },
+      {
+        "min": 15,
+        "description": "《FIRESTARTER》在 8 秒内造成相当于敌人 12% 最大生命值的魔法伤害。"
+      },
+      {
+        "min": 21,
+        "description": "取得专属棱彩任务并达到 21 星后，《GIRLS》使 K/DA 成员升到四星。"
+      }
+    ],
+    "emblem": {
+      "name": "K/DA纹章",
+      "image": "/assets/traits/emblem-k-da.webp",
+      "components": [
+        "TFT_Item_Spatula",
+        "TFT_Item_NeedlesslyLargeRod"
+      ]
+    }
+  },
+  "pentakill": {
+    "summary": "成员获得攻击力和法术强度。前几名低于 10% 生命值的敌人会被处决，并在原地召唤友军食尸鬼。",
+    "tiers": [
+      {
+        "min": 3,
+        "description": "获得 15% 攻击力和法术强度，可处决 2 名敌人。"
+      },
+      {
+        "min": 5,
+        "description": "获得 30% 攻击力和法术强度，可处决 3 名敌人。"
+      },
+      {
+        "min": 7,
+        "description": "获得 35% 攻击力和法术强度，可处决 4 名敌人。首名阵亡敌人改为召唤铁娘子。完成专属任务后进入棱彩档。"
+      }
+    ],
+    "emblem": {
+      "name": "五杀摇滚纹章",
+      "image": "/assets/traits/emblem-pentakill.webp",
+      "components": [
+        "TFT_Item_Spatula",
+        "TFT_Item_BFSword"
+      ]
+    },
+    "gameName": "五杀乐队"
+  },
+  "r-b": {
+    "summary": "队伍受到的技能伤害降低。两位成员同时登场时，最强的梅尔和芮尔会共享伤害与治疗。",
+    "tiers": [
+      {
+        "min": 1,
+        "description": "全队受到的技能伤害降低 6%。"
+      },
+      {
+        "min": 2,
+        "description": "芮尔分担梅尔所受伤害的 70%，并回复相当于梅尔所造成伤害 20% 的生命值。"
+      }
+    ],
+    "gameName": "R&B"
+  },
+  "rock": {
+    "summary": "召唤炼狱偶像。上场的摇滚成员星级越高，偶像越强。",
+    "tiers": [
+      {
+        "min": 3,
+        "description": "召唤炼狱偶像。"
+      },
+      {
+        "min": 4,
+        "description": "摇滚成员造成伤害时，偶像回复相当于该伤害 10% 的生命值。"
+      },
+      {
+        "min": 5,
+        "description": "偶像施法时向能命中最多敌人的方向发射巨型冲击波。"
+      },
+      {
+        "min": 7,
+        "description": "偶像每存活 3 秒发射 2 道电击，把摇滚成员所造成伤害的 18% 作为魔法伤害再次造成。"
+      }
+    ],
+    "emblem": {
+      "name": "摇滚乐纹章",
+      "image": "/assets/traits/emblem-rock.webp",
+      "components": [
+        "TFT_Item_Spatula",
+        "TFT_Item_SparringGloves"
+      ]
+    },
+    "gameName": "摇滚恶魔"
+  },
+  "true-damage": {
+    "summary": "A 面靠获胜积攒珠光贵气，B 面靠落败积攒。每 4 回合可兑换奖励或继续累积，羁绊效果取决于当前唱片面。",
+    "tiers": [
+      {
+        "min": 3,
+        "description": "A 面提供 18% 额外真实伤害，每次击杀得 2 珠光贵气，获胜再得 15。B 面落败得 20，每连败一场再加 4，获胜损失当前珠光贵气的 20%。"
+      },
+      {
+        "min": 5,
+        "description": "A 面提供 30% 额外真实伤害，每次击杀得 4 珠光贵气，获胜再得 20。B 面每回合战斗后回复 2 点玩家生命值并获得 2 经验。完成棱彩任务后，A 面提高珠光贵气收益，B 面击杀会掉金币。"
+      }
+    ],
+    "emblem": {
+      "name": "真实伤害纹章",
+      "image": "/assets/traits/emblem-true-damage.webp"
+    }
+  },
+  "arcanist": {
+    "summary": "全队获得法术强度，法师获得更高的加成。",
+    "tiers": [
+      {
+        "min": 2,
+        "description": "全队获得 12% 法术强度，法师获得 25%。"
+      },
+      {
+        "min": 4,
+        "description": "全队获得 18% 法术强度，法师获得 50%。"
+      },
+      {
+        "min": 6,
+        "description": "全队获得 30% 法术强度，法师获得 75%。"
+      }
+    ],
+    "emblem": {
+      "name": "黑魔法师纹章",
+      "image": "/assets/traits/emblem-arcanist.webp",
+      "components": [
+        "TFT_Item_FryingPan",
+        "TFT_Item_NeedlesslyLargeRod"
+      ]
+    }
+  },
+  "bodyguard": {
+    "summary": "羁绊激活后，只要还有保镖存活，全队获得 15 点护甲和魔抗，保镖另外获得下列双抗。",
+    "tiers": [
+      {
+        "min": 2,
+        "description": "保镖额外获得 22 点护甲和魔抗。"
+      },
+      {
+        "min": 4,
+        "description": "保镖额外获得 55 点护甲和魔抗。"
+      },
+      {
+        "min": 6,
+        "description": "保镖额外获得 105 点护甲和魔抗。"
+      }
+    ],
+    "emblem": {
+      "name": "保镖纹章",
+      "image": "/assets/traits/emblem-bodyguard.webp",
+      "components": [
+        "TFT_Item_FryingPan",
+        "TFT_Item_ChainVest"
+      ]
+    },
+    "gameName": "护卫"
+  },
+  "choreographer": {
+    "summary": "开战时，前两排友军获得护盾，后两排友军获得伤害增幅。编舞师获得双倍效果。",
+    "tiers": [
+      {
+        "min": 2,
+        "description": "前排获得 150 护盾，后排获得 6% 伤害增幅。"
+      },
+      {
+        "min": 3,
+        "description": "前排获得 225 护盾，后排获得 10% 伤害增幅。"
+      },
+      {
+        "min": 4,
+        "description": "前排获得 375 护盾，后排获得 15% 伤害增幅。"
+      },
+      {
+        "min": 5,
+        "description": "前排获得 550 护盾，后排获得 20% 伤害增幅。"
+      }
+    ],
+    "emblem": {
+      "name": "编舞师纹章",
+      "image": "/assets/traits/emblem-choreographer.webp"
+    },
+    "gameName": "编舞师"
+  },
+  "collab": {
+    "summary": "合奏弈子每累计造成或受到 8 次伤害就获得灵感，提高攻击力和法强。玩家对战中每触发 7 次灵感，获得合奏弈子的复制体。",
+    "tiers": [
+      {
+        "min": 3,
+        "description": "灵感提供 8% 攻击力和法术强度。"
+      },
+      {
+        "min": 5,
+        "description": "灵感提供 20% 攻击力和法术强度。"
+      }
+    ]
+  },
+  "encore": {
+    "summary": "成员用技能发射飞行道具时，会额外发射一枚较弱的飞行道具。",
+    "tiers": [
+      {
+        "min": 2,
+        "description": "额外飞行道具的效能为 25%。"
+      },
+      {
+        "min": 4,
+        "description": "额外飞行道具的效能为 50%。"
+      }
+    ]
+  },
+  "frontman": {
+    "summary": "全队获得 100 最大生命值。泰坦获得额外生命值，首次施法后加成提高。",
+    "tiers": [
+      {
+        "min": 2,
+        "description": "额外生命值为 15%，首次施法后提高到 25%。"
+      },
+      {
+        "min": 4,
+        "description": "额外生命值为 22%，首次施法后提高到 40%。"
+      },
+      {
+        "min": 6,
+        "description": "额外生命值为 35%，首次施法后提高到 60%。"
+      }
+    ],
+    "emblem": {
+      "name": "泰坦纹章",
+      "image": "/assets/traits/emblem-frontman.webp",
+      "components": [
+        "TFT_Item_FryingPan",
+        "TFT_Item_GiantsBelt"
+      ]
+    },
+    "gameName": "主唱"
+  },
+  "hitmaker": {
+    "summary": "制作人获得 12% 攻击力。携带装备最多的制作人成为大腕射手，获得额外攻击力。",
+    "tiers": [
+      {
+        "min": 2,
+        "description": "1 名大腕射手额外获得 20% 攻击力。"
+      },
+      {
+        "min": 4,
+        "description": "2 名大腕射手各额外获得 40% 攻击力。"
+      }
+    ],
+    "emblem": {
+      "name": "金曲制作人纹章",
+      "image": "/assets/traits/emblem-hitmaker.webp",
+      "components": [
+        "TFT_Item_FryingPan",
+        "TFT_Item_BFSword"
+      ]
+    },
+    "gameName": "制作人"
+  },
+  "juggernaut": {
+    "summary": "主宰获得伤害减免。损失生命值越多，减免越高。",
+    "tiers": [
+      {
+        "min": 2,
+        "description": "伤害减免从 18% 增至 25%。"
+      },
+      {
+        "min": 4,
+        "description": "伤害减免从 28% 增至 35%。"
+      },
+      {
+        "min": 6,
+        "description": "伤害减免从 35% 增至 48%。"
+      }
+    ],
+    "emblem": {
+      "name": "主唱纹章",
+      "image": "/assets/traits/emblem-juggernaut.webp"
+    },
+    "gameName": "主宰"
+  },
+  "manager": {
+    "summary": "开战时站在聚光灯格的友军立即获得加成，此后每 5 秒触发一次。",
+    "tiers": [
+      {
+        "min": 2,
+        "description": "获得 6% 攻击力和法术强度。"
+      },
+      {
+        "min": 3,
+        "description": "每次额外获得 8 法力。"
+      },
+      {
+        "min": 4,
+        "description": "每次额外掉落 1 金币。"
+      }
+    ],
+    "emblem": {
+      "name": "经理纹章",
+      "image": "/assets/traits/emblem-manager.webp"
+    }
+  },
+  "prodigy": {
+    "summary": "全队获得 1 法力回复，天才获得更高的法力回复。",
+    "tiers": [
+      {
+        "min": 2,
+        "description": "天才获得 2 法力回复。"
+      },
+      {
+        "min": 3,
+        "description": "天才获得 3 法力回复。"
+      },
+      {
+        "min": 4,
+        "description": "天才获得 5 法力回复。"
+      },
+      {
+        "min": 5,
+        "description": "天才获得 6 法力回复。天才的技能还会为生命值最低的友军治疗，治疗量为技能伤害的 10%。"
+      }
+    ],
+    "emblem": {
+      "name": "天才纹章",
+      "image": "/assets/traits/emblem-prodigy.webp",
+      "components": [
+        "TFT_Item_FryingPan",
+        "TFT_Item_TearOfTheGoddess"
+      ]
+    }
+  },
+  "renegade": {
+    "summary": "非主流弈子获得技能暴击、暴击几率和暴击伤害。",
+    "tiers": [
+      {
+        "min": 2,
+        "description": "获得 15% 暴击几率和 12% 暴击伤害。"
+      },
+      {
+        "min": 3,
+        "description": "获得 20% 暴击几率和 18% 暴击伤害。"
+      },
+      {
+        "min": 4,
+        "description": "获得 25% 暴击几率和 22% 暴击伤害。"
+      },
+      {
+        "min": 5,
+        "description": "获得 35% 暴击几率、25% 暴击伤害和 10% 伤害减免。"
+      }
+    ],
+    "emblem": {
+      "name": "非主流纹章",
+      "image": "/assets/traits/emblem-renegade.webp",
+      "components": [
+        "TFT_Item_FryingPan",
+        "TFT_Item_SparringGloves"
+      ]
+    },
+    "gameName": "非主流"
+  },
+  "slayer": {
+    "summary": "成员获得攻速与全能吸血。随已损失生命值提高，两项加成最多翻倍。",
+    "tiers": [
+      {
+        "min": 2,
+        "description": "获得 20% 攻速和 8% 全能吸血。"
+      },
+      {
+        "min": 4,
+        "description": "获得 40% 攻速和 10% 全能吸血。"
+      },
+      {
+        "min": 6,
+        "description": "获得 65% 攻速和 12% 全能吸血。"
+      }
+    ],
+    "emblem": {
+      "name": "裁决战士纹章",
+      "image": "/assets/traits/emblem-slayer.webp",
+      "components": [
+        "TFT_Item_FryingPan",
+        "TFT_Item_NegatronCloak"
+      ]
+    },
+    "gameName": "舞者"
+  },
+  "swiftstriker": {
+    "summary": "全队获得 10% 攻速。疾风射手每 2 秒额外叠加攻速，最多 5 层。",
+    "tiers": [
+      {
+        "min": 2,
+        "description": "每层提供 5% 攻速。"
+      },
+      {
+        "min": 3,
+        "description": "每层提供 7% 攻速。"
+      },
+      {
+        "min": 4,
+        "description": "每层提供 13% 攻速。"
+      },
+      {
+        "min": 5,
+        "description": "每层提供 20% 攻速。"
+      }
+    ],
+    "emblem": {
+      "name": "迅捷攻手纹章",
+      "image": "/assets/traits/emblem-swiftstriker.webp",
+      "components": [
+        "TFT_Item_FryingPan",
+        "TFT_Item_RecurveBow"
+      ]
+    },
+    "gameName": "迅击鼓手"
+  },
+  "trickshot": {
+    "summary": "成员的普攻和技能都可以在敌人之间弹射。",
+    "tiers": [
+      {
+        "min": 2,
+        "description": "弹射 1 次，造成前一次伤害的 22%。"
+      },
+      {
+        "min": 3,
+        "description": "弹射 1 次，造成前一次伤害的 33%。"
+      },
+      {
+        "min": 4,
+        "description": "弹射 2 次，每次造成前一次伤害的 33%。"
+      }
+    ]
+  },
+  "goth": {
+    "summary": "每场战斗中，最强的泽丽首次对某个敌人造成伤害时，从该敌人身上偷取 8% 攻击力。",
+    "tiers": []
+  },
+  "melodic-heart": {
+    "summary": "开战后的前 12 秒，最强的格温被迷雾笼罩，无法被普攻选中。雾中的友军获得 10% 伤害减免。",
+    "tiers": [],
+    "gameName": "灵罗吉他"
+  },
+  "8-bit": {
+    "summary": "全队造成的伤害计入总分，厄运小姐的伤害算三倍。每次打破一个分数纪录就能领奖。",
+    "tiers": [],
+    "gameName": "8比特"
+  },
+  "beat-master": {
+    "summary": "芮尔降到 50% 生命值时上马，2 秒内回满血。骑乘时最大法力值减少 40，每第三次普攻按自身护甲和魔抗对一条直线造成魔法伤害。",
+    "tiers": [],
+    "gameName": "节奏大师"
+  },
+  "boy-band": {
+    "summary": "一、二星洛带 2 个可摆放的分身，三星洛带 9 个。分身有洛 50% 的最大生命值，造成他 30% 的伤害，并复制他的成装、光明装备和纹章。",
+    "tiers": [],
+    "gameName": "幻翎BOYS"
+  },
+  "composer": {
+    "summary": "商店可能刷出神秘乐器，每种稀有度各一件。每收集一件，全队获得 3% 法强，玛尔扎哈获得双倍。集齐五件且最强的玛尔扎哈累计造成 6 万伤害，解锁纳什男爵。",
+    "tiers": []
+  },
+  "country": {
+    "summary": "开战时，最强的阿利斯塔若有超过 500 点额外生命值，获得 15% 伤害减免。",
+    "tiers": [],
+    "gameName": "乡村音乐"
+  },
+  "disco": {
+    "summary": "全队每秒回复 0.8% 最大生命值。努努和威朗普在一场战斗中施法 6 次，全队获得 125% 攻速。",
+    "tiers": []
+  },
+  "emo": {
+    "summary": "开战时，若阿木木身边六格都没有友军，按他的一、二、三星分别获得 25、40、55 点护甲和魔抗。",
+    "tiers": []
+  },
+  "freestyle": {
+    "summary": "真实伤害阿卡丽的被动随唱片切换。A 面赚金币，B 面回复小小英雄生命值。",
+    "tiers": [],
+    "gameName": "说唱女王"
+  },
+  "indie": {
+    "summary": "战斗结束后，萨勒芬妮吸引粉丝并送出随机弈子。你第一次合出三星弈子时，她成为新星，升级技能并发放订阅奖励。累计合出 4 个三星弈子后，她成为巨星。",
+    "tiers": [],
+    "gameName": "独立音乐人"
+  },
+  "mariachi": {
+    "summary": "奈德丽施法时若生命值高于 75%，变为豹形扑击。否则先治疗自己，再投出标枪。生命值降到 50% 以下时，她跳开并变回人形。",
+    "tiers": [],
+    "gameName": "马里亚奇"
+  },
+  "one-monster-band": {
+    "summary": "纳什男爵占 2 人口，并且不可阻挡。他第一次施法后，从所有敌人身上偷取攻击力、法强、攻速和暴击率。",
+    "tiers": [],
+    "gameName": "一只怪乐团"
+  },
+  "synthwave": {
+    "summary": "盖伦降到 35% 生命值时，获得持续 6 秒的护盾。护盾值等于他本场战斗已获得治疗量与护盾量之和的 50%。",
+    "tiers": [],
+    "gameName": "合成器浪潮"
+  },
+  "tango": {
+    "summary": "崔斯特选择最近的一名友军当舞伴。两人获得 15% 攻速，造成伤害时给目标施加持续 3 秒的 1% 灼烧和 33% 重伤。",
+    "tiers": []
+  },
+  "hype-man": {
+    "summary": "高能流行弈子每造成 2500 伤害，或每承受 2500 伤害，额外攒 1 点热力。",
+    "tiers": [],
+    "gameName": "气氛大王"
+  },
+  "producer": {
+    "summary": "娑娜上场后可选择一支乐队加入，为该乐队提供羁绊数。她的额外攻击力和攻速全部转为法强。",
+    "tiers": [],
+    "gameName": "音乐总监"
+  },
+  "record-mogul": {
+    "summary": "立即获得一份唱片合同，此后每 4 回合再得一份。签约弈子获得 5% 伤害增幅，每次击杀为蒙多医生增加 25 点永久生命值。卖掉签约弈子或把他放回备战席可收回合同。",
+    "tiers": []
+  },
+  "windblessed": {
+    "summary": "开战时，最强的迦娜向前放出一道龙卷风。一、二、三星分别击飞沿途敌人 1.25、1.75、99 秒。",
+    "tiers": [],
+    "gameName": "风仙子"
+  }
+}

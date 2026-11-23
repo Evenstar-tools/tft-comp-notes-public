@@ -1,0 +1,319 @@
+import { attachBoundRegions, duplicatePublishedTeam, isBoardCaption, readableSection, sectionTeams, splitSections } from "@/domain/document-flow";
+import { season, traitMap, unitMap } from "@/data";
+import { allBlocks, authoredParagraphs, isEditorialSection } from "@/domain/guide-reading";
+import { isVersionUpdate, sameEdition } from "@/domain/version-updates";
+import { getPublishedPatchRecommendations, sectionsAfterPartialPublish } from "@/domain/patch-recommendations";
+import currentPatch from "@/data/current-patch.json";
+import type {
+  ContentBlock,
+  DocumentDraft,
+  Publication,
+  Section,
+} from "@/domain/document";
+import type { Season, Team } from "@/domain/types";
+import { database, setting, ApiError } from "./access";
+import { includeWebDetails, refreshWebDetails } from "./guide-details";
+import { includeRerollBoards } from "./reroll-guides";
+import {
+  blockText,
+  cacheMedia,
+  documentId,
+  documentInfo,
+  readDocument,
+  type FeishuBlock,
+} from "./feishu";
+
+// Index pages only need the published chapters and boards. Reading the full guide also restores legacy media bindings.
+export async function publishedSnapshot(): Promise<Publication | null> {
+  const row = await database()
+    .prepare("SELECT body FROM snapshots WHERE id=(SELECT value FROM settings WHERE key='published_id')")
+    .first<{ body: string }>();
+  return row ? JSON.parse(row.body) as Publication : null;
+}
+export async function livePublication(): Promise<Publication | null> {
+  const publication = await publishedSnapshot();
+  return publication ? prepareForReading(publication) : null;
+}
+export async function publicGuidePublication(): Promise<Publication | null> {
+  const publication = await publishedSnapshot();
+  return publication ? prepareForReading(includeRerollBoards(publication, season)) : null;
+}
+async function prepareForReading<T extends DocumentDraft>(publication: T): Promise<T> {
+  await Promise.all(publication.sections.map(async section => {
+    const teams = sectionTeams(section);
+    if (!teams.length) return;
+    // v13 snapshots contained the blocks, but kept the verified binding only in D1.
+    if (!section.generatedRegions) {
+      const blocks = new Map(allBlocks(section.blocks).map(block => [block.id, block]));
+      const bindings = await database().prepare("SELECT value FROM settings WHERE key IN (" + teams.map(() => "?").join(",") + ")")
+        .bind(...teams.map(team => "binding:" + team.id)).all<{ value: string }>();
+      for (const row of bindings.results) {
+        const binding = JSON.parse(row.value);
+        const team = teams.find(team => team.id === binding.team?.id);
+        const caption = blocks.get(binding.textId);
+        if (!team || caption?.type !== "text" || blocks.get(binding.imageId)?.type !== "image") continue;
+        const text = caption.text ?? "";
+        if (text.startsWith(`【阵容构建器 · ${team.id}】\n`) ||
+          (typeof binding.expectedText === "string" && isBoardCaption(text, binding.expectedText, team.id))) {
+          (section.generatedRegions ??= {})[team.id] = { textId: binding.textId, imageId: binding.imageId };
+        }
+      }
+    }
+    if (sameEdition((section.gameData ?? publication.season).id, season.id)) refreshWebDetails(section);
+    section.gameData = withGameData(section, publication.season).gameData;
+  }));
+  return publication;
+}
+export async function draftDocument(): Promise<DocumentDraft | null> {
+  const value = await setting("document_draft");
+  return value ? prepareForReading(JSON.parse(value) as DocumentDraft) : null;
+}
+function withGameData(section: Section, data: Season): Section {
+  const teams = sectionTeams(section);
+  if (!teams.length) return section;
+  const snapshot = section.gameData ?? data;
+  const pieces = teams.flatMap(team => [team, ...Object.values(team.stages ?? {})].flatMap(board => board.pieces));
+  const unitIds = new Set(pieces.map(piece => piece.unitId));
+  const currentEdition = sameEdition(snapshot.id, season.id);
+  const units = snapshot.units.filter(unit => unitIds.has(unit.id)).map(unit => {
+    const current = currentEdition && unitMap.get(unit.id);
+    return current ? { ...unit, traits: current.traits, unlock: current.unlock, sourceUnlock: current.sourceUnlock } : unit;
+  });
+  const traitIds = new Set(units.flatMap((unit) => unit.traits));
+  const itemIds = new Set(pieces.flatMap(piece => piece.items));
+  const available = new Map((snapshot.sourceDate === data.sourceDate ? data.items : []).map(item => [item.id, item]));
+  for (const item of snapshot.items) available.set(item.id, item);
+  for (const id of [...itemIds]) {
+    const item = available.get(id);
+    if (item?.traitId) traitIds.add(item.traitId);
+    for (const part of item?.components ?? []) itemIds.add(part);
+  }
+  const traits = currentEdition
+    ? [...traitIds].flatMap(id => traitMap.get(id) ?? snapshot.traits.find(trait => trait.id === id) ?? [])
+    : snapshot.traits.filter(trait => traitIds.has(trait.id));
+  return { ...section, gameData: { ...snapshot, units, traits,
+    items: [...available.values()].filter(item => itemIds.has(item.id)),
+  } };
+}
+export function mediaInSections(sections: Section[]) {
+  const result = new Set<string>();
+  const visit = (blocks: ContentBlock[]) =>
+    blocks.forEach((block) => {
+      if (block.imageToken) result.add(block.imageToken);
+      if (block.children) visit(block.children);
+    });
+  sections.forEach((section) => visit(section.blocks));
+  return [...result];
+}
+async function saveDraft(draft: DocumentDraft, expected: string | null) {
+  const value = JSON.stringify(draft);
+  const result = expected === null
+    ? await database().prepare("INSERT OR IGNORE INTO settings (key,value) VALUES ('document_draft',?)").bind(value).run()
+    : await database().prepare("UPDATE settings SET value=? WHERE key='document_draft' AND value=?").bind(value, expected).run();
+  if (!result.meta.changes) throw new ApiError(409, "草稿已有新版本，请刷新预览后再试");
+}
+
+export async function editGuidePreview(draftId: string, sectionId: string, primaryTeamId: string, summaryBlockId?: string, stageTeamIds?: string[]) {
+  const raw = await setting("document_draft");
+  const draft: DocumentDraft | null = raw ? JSON.parse(raw) : null;
+  if (!draft || draft.id !== draftId) throw new ApiError(409, "草稿已更新，请刷新预览");
+  const section = draft.sections.find(entry => entry.id === sectionId);
+  if (!section || !sectionTeams(section).some(team => team.id === primaryTeamId)) throw new ApiError(400, "所选阵容不在此章节");
+  if (summaryBlockId && !authoredParagraphs(section).some(entry => entry.id === summaryBlockId)) throw new ApiError(400, "摘要段落已移动，请重新选择");
+  const memberIds = new Set(sectionTeams(section).map(team => team.id));
+  if (stageTeamIds?.some(id => !memberIds.has(id) || id === primaryTeamId)) throw new ApiError(400, "过渡棋盘须属于本章节并与主阵不同");
+  section.stageTeamIds = [...new Set(stageTeamIds ?? section.stageTeamIds ?? [])].filter(id => id !== primaryTeamId);
+  section.primaryTeamId = primaryTeamId;
+  if (summaryBlockId) section.summaryBlockId = summaryBlockId; else delete section.summaryBlockId;
+  draft.id = crypto.randomUUID();
+  await saveDraft(draft, raw);
+}
+
+export async function synchronizeDocument() {
+  const raw = await setting("document_draft");
+  const previous: DocumentDraft | null = raw ? JSON.parse(raw) : await livePublication();
+  const doc = await readDocument();
+  const map = new Map(doc.blocks.map((block) => [block.block_id, block]));
+  const warnings = new Set<string>();
+  const normalize = (id: string, depth = 0): ContentBlock => {
+    const block = map.get(id);
+    if (!block || depth > 20) {
+      warnings.add("有无法解析的嵌套内容");
+      return {
+        id,
+        type: "unsupported",
+        text: "此内容暂无法显示，请在飞书中查看",
+      };
+    }
+    const common = {
+      id,
+      ...(block.children?.length
+        ? {
+            children: block.children.map((child) =>
+              normalize(child, depth + 1),
+            ),
+          }
+        : {}),
+    };
+    const textKeys: Record<number, string> = {
+      2: "text",
+      12: "bullet",
+      13: "ordered",
+      14: "code",
+      15: "quote",
+      17: "todo",
+    };
+    const textKey =
+      block.block_type >= 3 && block.block_type <= 11
+        ? `heading${block.block_type - 2}`
+        : textKeys[block.block_type];
+    if (textKey)
+      return {
+        ...common,
+        type: textKey.startsWith("heading")
+          ? "heading"
+          : block.block_type === 17
+            ? "text"
+            : (textKey as ContentBlock["type"]),
+        elements: block[textKey]?.elements ?? [],
+        level: block.block_type - 2,
+        text: blockText(block),
+      };
+    if (block.block_type === 27 && block.image?.token)
+      return { ...common, type: "image", imageToken: block.image.token };
+    if (block.block_type === 19) return { ...common, type: "quote" };
+    if (block.block_type === 22) return { ...common, type: "divider" };
+    if ([24, 25, 31, 32].includes(block.block_type))
+      return {
+        ...common,
+        type: (
+          { 24: "columns", 25: "column", 31: "table", 32: "cell" } as const
+        )[block.block_type as 24 | 25 | 31 | 32],
+        columnCount: block.table?.property?.column_size,
+      };
+    warnings.add(`未支持飞书块类型 ${block.block_type}`);
+    return {
+      ...common,
+      type: "unsupported",
+      text: `暂不支持此内容（类型 ${block.block_type}），请在飞书中查看`,
+    };
+  };
+  const root = map.get(documentId());
+  const ordered = (
+    root?.children ??
+    doc.blocks
+      .filter((block) => block.parent_id === documentId())
+      .map((block) => block.block_id)
+  )
+    .map((id) => map.get(id)!)
+    .filter(Boolean);
+  const sections = splitSections(ordered.map(block => ({
+    id: block.block_id,
+    level: block.block_type >= 3 && block.block_type <= 11 ? block.block_type - 2 : undefined,
+    title: blockText(block),
+    content: normalize(block.block_id),
+  })));
+  const teamRows = await database()
+    .prepare("SELECT body FROM teams")
+    .all<{ body: string }>();
+  const bindings: { sectionId: string; textId: string; imageId: string; team: Team }[] = [];
+  for (const row of teamRows.results) {
+    const team = JSON.parse(row.body) as Team;
+    const binding = await setting(`binding:${team.id}`);
+    if (binding) {
+      const b = JSON.parse(binding);
+      if (b.team) bindings.push(b);
+    }
+  }
+  const sectionIssues: NonNullable<DocumentDraft["sectionIssues"]> = [];
+  attachBoundRegions(sections, bindings, issue => sectionIssues.push(issue)).forEach(warning => warnings.add(warning));
+  const liveBlockIds = new Set(map.keys());
+  for (const section of sections) {
+    const prior = previous?.sections.find(entry => entry.id === section.id);
+    includeWebDetails(section, liveBlockIds, prior?.summaryBlockId);
+    const currentTeams = sectionTeams(section);
+    if (prior?.primaryTeamId && currentTeams.some(team => team.id === prior.primaryTeamId)) section.primaryTeamId = prior.primaryTeamId;
+    const known = new Set(prior ? sectionTeams(prior).map(team => team.id) : []);
+    const configured = (prior?.stageTeamIds ?? []).filter(id => currentTeams.some(team => team.id === id));
+    const addedStages = currentTeams.filter(team => team.sectionId === section.id && team.boardRole === "stage" && !known.has(team.id)).map(team => team.id);
+    const stages = [...configured, ...addedStages].filter(id => id !== (section.primaryTeamId ?? section.team?.id));
+    if (stages.length || prior?.stageTeamIds) section.stageTeamIds = stages;
+    if (prior?.summaryBlockId && authoredParagraphs(section).some(block => block.id === prior.summaryBlockId)) section.summaryBlockId = prior.summaryBlockId;
+  }
+  const media = mediaInSections(sections);
+  for (const image of media) await cacheMedia(image);
+  if ((await documentInfo()).revision_id !== doc.revision_id)
+    throw new ApiError(409, "读取期间飞书文档发生变化，请重新同步");
+  const draft: DocumentDraft = {
+    id: crypto.randomUUID(),
+    title: doc.title,
+    revision: doc.revision_id,
+    syncedAt: new Date().toISOString(),
+    sections: sections.map((section) => withGameData(section, season)),
+    media,
+    warnings: [...warnings],
+    sectionIssues,
+    season,
+  };
+  await saveDraft(draft, raw);
+  return draft;
+}
+export async function publishSections(
+  draftId: string,
+  sectionIds: string[],
+  removeIds: string[],
+) {
+  const draft = await draftDocument();
+  if (!draft || draft.id !== draftId)
+    throw new ApiError(409, "预览已更新，请重新检查后发布");
+  if ((await documentInfo()).revision_id !== draft.revision)
+    throw new ApiError(409, "飞书文档已更新，请先重新同步和预览");
+  if (!sectionIds.length && !removeIds.length)
+    throw new ApiError(400, "请选择要发布的章节");
+  if (
+    sectionIds.some(
+      (id) => !draft.sections.some(section => section.id === id && readableSection(section) && !isEditorialSection(section)),
+    )
+  )
+    throw new ApiError(400, "章节不存在");
+  if (!sameEdition(season.id, draft.season.id) &&
+      draft.sections.some(section => sectionIds.includes(section.id) && isVersionUpdate(section))) {
+    throw new ApiError(409, "版本简报的赛季或服务器与本站不同，请重新同步。");
+  }
+  const previous = await livePublication();
+  const selected = new Set(sectionIds);
+  const combined = sectionsAfterPartialPublish(previous?.sections ?? [], draft.sections, sectionIds, removeIds)
+    .map(section => {
+      if (selected.has(section.id)) return isVersionUpdate(section) ? { ...section, updateEdition: draft.season.id } : section;
+      return isVersionUpdate(section)
+        ? { ...section, updateEdition: section.updateEdition ?? previous?.season.id ?? draft.season.id }
+        : withGameData(section, previous?.season ?? draft.season);
+    });
+  const duplicate = duplicatePublishedTeam(combined);
+  if (duplicate) throw new ApiError(409, duplicate);
+  if (selected.has("introduction")) {
+    const { issues } = getPublishedPatchRecommendations(combined, currentPatch.seasonId, currentPatch.build, currentPatch.effectiveAt);
+    if (issues.length) throw new ApiError(400, issues.join(" "));
+  }
+  combined.sort(
+    (a, b) =>
+      draft.sections.findIndex((section) => section.id === a.id) -
+      draft.sections.findIndex((section) => section.id === b.id),
+  );
+  const publication: Publication = {
+    ...draft,
+    id: crypto.randomUUID(),
+    sections: combined,
+    media: mediaInSections(combined),
+    publishedAt: new Date().toISOString(),
+    previousId: previous?.id,
+  };
+  const db = database();
+  const [inserted] = await db.batch([
+    db.prepare("INSERT INTO snapshots (id,body,created_at) SELECT ?,?,? WHERE json_extract((SELECT value FROM settings WHERE key='document_draft'),'$.id')=? AND (SELECT value FROM settings WHERE key='published_id') IS ?")
+      .bind(publication.id, JSON.stringify(publication), publication.publishedAt, draftId, previous?.id ?? null),
+    db.prepare("INSERT INTO settings (key,value) SELECT 'published_id',id FROM snapshots WHERE id=? ON CONFLICT(key) DO UPDATE SET value=excluded.value").bind(publication.id),
+  ]);
+  if (!inserted.meta.changes) throw new ApiError(409, "发布内容已更新，请刷新预览后再发布");
+  return publication;
+}

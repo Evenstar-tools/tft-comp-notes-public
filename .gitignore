@@ -1,0 +1,18 @@
+# 本地密钥、缓存、运行数据和过程文件
+.env*
+.dev.vars*
+*.pem
+*.key
+*.pfx
+*.p12
+*.sqlite*
+*.db
+*.har
+.auth/
+.playwright-cli/
+.wrangler/
+.sites-runtime/
+node_modules/
+_work/
+.DS_Store
+Thumbs.db

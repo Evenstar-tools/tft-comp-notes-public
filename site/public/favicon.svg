@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -2 48 52" width="48" height="48">
+  <style>
+    .upper { fill: #f5d799; }
+    .lower { fill: #c79e62; }
+    @media (prefers-color-scheme: light) {
+      .upper { fill: #825327; }
+      .lower { fill: #4d3422; }
+    }
+  </style>
+  <path class="lower" fill-rule="evenodd" d="M17 19.5 31 27.6v12.2L17 48 3 39.8V27.6Zm0 7.9-7 4v4.5l7 4 7-4v-4.5Z"/>
+  <path class="upper" fill-rule="evenodd" d="M30 0 43 7.5v15L30 30l-13-7.5v-15Zm0 8.4-6 3.5v6.2l6 3.5 6-3.5v-6.2Z"/>
+</svg>

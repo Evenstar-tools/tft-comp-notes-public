@@ -1,0 +1,106 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { attachBoundRegions, duplicatePublishedTeam, reviewIssues, sectionChanges, sameGeneratedSection, isBoardCaption, feishuBoardIssue, attachSectionTeam, findSection, readableSection, sectionTeams, splitSections } from "../domain/document-flow.ts";
+
+const entry = (id, level, title) => ({ id, level, title, content: { id, type: level ? "heading" : "text", text: title } });
+const team = (id, unit) => ({ id, name:id, pieces:[{unitId:unit}], revision:1 });
+
+test("category headings keep stable identities but only real content can be published", () => {
+ const sections = splitSections([entry("intro",undefined,"说明"),entry("c1",1,"连胜"),entry("g1",2,"阵容A"),entry("p1",undefined,"过渡"),entry("c2",1,"次选")]);
+ assert.deepEqual(sections.filter(readableSection).map(s=>s.id),["introduction","g1"]);
+ assert.equal(sections.find(s=>s.id==="g1").category,"连胜");
+ assert.equal(sections.find(s=>s.id==="c1").kind,"category");
+});
+test("bold Feishu category labels split sections and keep guide IDs and phase anchors", () => {
+ const rich = text => [{text_run:{content:text,text_element_style:{bold:true}}}];
+ const label = (id,title) => ({...entry(id,undefined,title),content:{id,type:"text",text:title,elements:rich(title)}});
+ const sections = splitSections([label("category","1. 连胜成型阵容"),entry("guide",2,"阵容A"),
+   label("phase","九级补女枪"),entry("op",undefined,"九级补女枪开双金曲。"),label("next","英雄强化阵容"),entry("hero",2,"阵容B")]);
+ assert.equal(findSection(sections,"phase").id,"guide");
+ assert.equal(findSection(sections,"guide").category,"连胜成型阵容");
+ assert.equal(findSection(sections,"guide").blocks[0].label,true);
+ assert.equal(findSection(sections,"hero").category,"英雄强化阵容");
+ const raw = [
+   {block_id:"root",block_type:1,children:["guide","next","text","image"]},
+   {block_id:"guide",block_type:4},{block_id:"next",block_type:2,text:{elements:rich("英雄强化阵容")}},
+   {block_id:"text",block_type:2},{block_id:"image",block_type:27},
+ ];
+ assert.equal(sameGeneratedSection(raw,"root","guide","text","image"),false);
+ assert.equal(sameGeneratedSection(raw,"root","next","text","image"),true);
+});
+
+test("legacy generated text can become its verified caption while preserving hand-edit protection", () => {
+ const legacy = "【阵容构建器 · board】\n九级 · 补女枪\n9 人口\n烬 2星 · 第4排第1格";
+ assert.equal(isBoardCaption("九级 · 补女枪",legacy,"board"),true);
+ assert.equal(isBoardCaption("九级 · 补女枪",legacy,"different"),false);
+ assert.equal(isBoardCaption("九级 · 手改",legacy,"board"),false);
+ assert.equal(isBoardCaption(legacy,legacy,"board"),true);
+ assert.equal(isBoardCaption("九级 · 补女枪","九级 · 补女枪","board"),true);
+ assert.match(feishuBoardIssue({name:"未命名阵容 · 过渡",pieces:[{}]}), /正式名称/);
+ assert.match(feishuBoardIssue({name:"阵容编辑示例（待填）",pieces:[{}]}), /正式名称/);
+ assert.match(feishuBoardIssue({name:"四古典烬",pieces:[]}), /摆好阵容/);
+ assert.equal(feishuBoardIssue({name:"PBE试阵",pieces:[{}]}),undefined);
+ assert.deepEqual(attachBoundRegions([],[{sectionId:"removed",textId:"t",imageId:"i",team:team("board","jhin")}]),[]);
+});
+
+test("third-level variant binds to the parent guide and keeps every team", () => {
+ const sections = splitSections([entry("c",1,"连胜"),entry("g",2,"阵容"),entry("v",3,"变种"),entry("p",undefined,"说明")]);
+ attachSectionTeam(sections,"g",team("a","hero-a"));
+ attachSectionTeam(sections,"v",team("b","hero-b"));
+ attachSectionTeam(sections,"v",{...team("b","hero-b"),revision:2});
+ const guide=findSection(sections,"v");
+ assert.equal(guide.id,"g");
+ assert.deepEqual(guide.blocks.map(b=>b.id),["v","p"]);
+ assert.deepEqual(sectionTeams(guide).map(t=>[t.id,t.revision]),[["a",1],["b",2]]);
+ assert.equal(guide.team.id,"a");
+});
+test("legacy published snapshots remain readable and category-bound teams remain reachable", () => {
+ const legacy={id:"old",title:"旧攻略",category:"连胜",blocks:[],team:team("old","hero")};
+ assert.equal(readableSection(legacy),true);
+ assert.deepEqual(sectionTeams(legacy),[legacy.team]);
+ const sections=splitSections([entry("c",1,"连胜"),entry("g",2,"新攻略")]);
+ attachSectionTeam(sections,"c",team("legacy-binding","hero"));
+ assert.equal(readableSection(sections[0]),true);
+ assert.equal(sections[0].id,"c");
+});
+test("live generated region ownership determines preview, search membership and what can be written", () => {
+ const text={id:"t",type:"text"}, image={id:"i",type:"image",imageToken:"img"};
+ const guide=(id,blocks)=>({id,title:id,kind:"guide",category:"笔记",blocks});
+ const binding={sectionId:"A",textId:"t",imageId:"i",team:team("draft","jinx")};
+ for (const [a,b,owner,warns] of [[[text,image],[],"A",false],[[],[{id:"nested",type:"column",children:[text,image]}],"B",true],[[text],[image],null,true],[[],[],null,true]]) {
+   const sections=[guide("A",a),guide("B",b)];
+   assert.equal(attachBoundRegions(sections,[binding]).length>0,warns);
+   assert.deepEqual(sections.filter(s=>sectionTeams(s).some(t=>t.pieces[0].unitId==="jinx")).map(s=>s.id),owner?[owner]:[]);
+ }
+ const a={...guide("A",[]),team:binding.team}, b={...guide("B",[]),teams:[binding.team]};
+ assert.match(duplicatePublishedTeam([a,b]), /同时选择/);
+ assert.equal(duplicatePublishedTeam([a,guide("B",[])]),undefined);
+ const raw=[{block_id:"root",block_type:1,children:["A","B","col"]},{block_id:"A",block_type:4},{block_id:"B",block_type:4},{block_id:"col",block_type:25,children:["t","i"]},{block_id:"t",block_type:2},{block_id:"i",block_type:27}];
+ assert.equal(sameGeneratedSection(raw,"root","B","t","i"),true);
+ assert.equal(sameGeneratedSection(raw,"root","A","t","i"),false);
+});
+
+test("publishing reconciles body and lineup edits separately and attaches moved boards to both headings", () => {
+  const text = {id:"t", type:"text", text:"D 二星烬"};
+  const image = {id:"i", type:"image", imageToken:"board"};
+  const board = {id:"board", name:"古典烬八级", notes:"", pieces:[{unitId:"jhin",stars:2,position:21,items:["a"]}]};
+  const original = { id:"A", title:"四古典烬", category:"连胜", kind:"guide", blocks:[text,image], team:board };
+  assert.deepEqual(sectionChanges({...original,blocks:[{...text,text:"烬两星稳血"},image]},original),["正文"]);
+  assert.deepEqual(sectionChanges({...original,team:{...board,pieces:[{...board.pieces[0], stars:3}]}},original),["站位星级"]);
+  assert.deepEqual(sectionChanges({...original,team:{...board,instrumentPositions:{maracas:5}}},original),["站位星级"]);
+  assert.deepEqual(sectionChanges({...original,team:{...board,pieces:[{...board.pieces[0], items:["b"]}]}},original),["配装"]);
+  const early = { pieces: [{unitId:"varus", position:20, stars:1, items:["a"]}] };
+  const withStage = {...original, team:{...board, stages:{early}}};
+  const movedInstrument = {...early, instrumentPositions:{maracas:4}};
+  assert.deepEqual(sectionChanges({...original, team:{...board, stages:{early:movedInstrument}}},withStage),["站位星级"]);
+  const reequipped = { pieces: [{...early.pieces[0], items:["b"]}] };
+  assert.deepEqual(sectionChanges({...original, team:{...board, stages:{early:reequipped}}},withStage),["配装"]);
+  assert.deepEqual(sectionChanges({...original, team:{...board, stages:{mid:early}}},withStage),["主阵与阶段"]);
+  const sections = [{...original,blocks:[],team:undefined},{...original,id:"B",title:"另一篇",team:undefined}];
+  const sectionIssues = [];
+  const warnings = attachBoundRegions(sections,[{sectionId:"A",textId:"t",imageId:"i",team:board}],issue => sectionIssues.push(issue));
+  const {bySection,general} = reviewIssues({sections,warnings,sectionIssues},[original]);
+  assert.ok(bySection.get("A")[0].includes("另一篇"));
+  assert.deepEqual(bySection.get("A"),bySection.get("B"));
+  assert.deepEqual(general,[]);
+});

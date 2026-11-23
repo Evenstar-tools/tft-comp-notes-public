@@ -1,0 +1,56 @@
+{
+  "sample-block-0420": {
+    "targets": ["ziggs", "kobuko", "seraphine", "lulu", "tristana"],
+    "boards": {
+      "00000000-0000-4000-8000-000000000066": ["ziggs", "kobuko"],
+      "00000000-0000-4000-8000-000000000098": ["ziggs", "kobuko"],
+      "00000000-0000-4000-8000-000000000089": ["ziggs", "kobuko"]
+    }
+  },
+  "sample-block-0229": { "targets": ["malzahar", "ekko"] },
+  "sample-block-0464": {
+    "targets": ["neeko", "lillia"],
+    "boards": { "00000000-0000-4000-8000-000000000114": ["neeko", "lillia", "gragas"] }
+  },
+  "sample-block-0122": {
+    "targets": ["renata-glasc", "nasus"],
+    "boards": {
+      "00000000-0000-4000-8000-000000000044": ["renata-glasc", "nasus", "jax"],
+      "00000000-0000-4000-8000-000000000048": ["renata-glasc", "nasus", "jax"],
+      "00000000-0000-4000-8000-000000000046": ["renata-glasc", "nasus", "jax"],
+      "00000000-0000-4000-8000-000000000023": ["jax", "nasus"],
+      "00000000-0000-4000-8000-000000000084": ["jax", "nasus"]
+    }
+  },
+  "sample-block-0243": { "targets": ["viego", "briar"] },
+  "sample-block-0407": { "targets": ["draven", "braum"] },
+  "sample-block-0203": { "targets": ["yunara", "elise"] },
+  "sample-block-0327": { "targets": ["ashe", "renekton"] },
+  "sample-block-0367": {
+    "targets": ["neeko", "lillia", "seraphine"],
+    "boards": {
+      "00000000-0000-4000-8000-000000000033": ["neeko", "lillia"],
+      "00000000-0000-4000-8000-000000000086": ["neeko", "lillia"],
+      "00000000-0000-4000-8000-000000000094": ["neeko", "lillia", "seraphine", "gragas"]
+    }
+  },
+  "sample-block-0020": {
+    "targets": ["lillia", "kennen"],
+    "boards": {
+      "00000000-0000-4000-8000-000000000038": ["lillia"],
+      "00000000-0000-4000-8000-000000000056": ["lillia"]
+    }
+  },
+  "sample-block-0171": { "targets": ["renekton", "illaoi"] },
+  "sample-block-0466": { "targets": ["annie"] },
+  "sample-block-0273": { "targets": ["elise", "sett"] },
+  "sample-block-0064": {
+    "targets": ["kennen", "lillia"],
+    "boards": {
+      "00000000-0000-4000-8000-000000000012": ["kennen"],
+      "00000000-0000-4000-8000-000000000081": ["kennen"]
+    }
+  },
+  "sample-block-0281": { "targets": ["olaf"] },
+  "sample-block-0258": { "targets": ["sett"] }
+}

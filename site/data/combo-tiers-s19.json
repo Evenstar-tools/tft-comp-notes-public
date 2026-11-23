@@ -1,0 +1,246 @@
+{
+  "build": "19.1.0.5973071",
+  "date": "2026-11-18",
+  "manifest": "https://teamfighttactics.secure.dyn.riotcdn.net/channels/public/releases/10596A06EDFD8872.manifest",
+  "localizedLookupUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_en_us.json",
+  "traits": {
+    "gu-feng": {
+      "activeAt": 2,
+      "bronzeRanges": [
+        [
+          2,
+          2
+        ]
+      ]
+    },
+    "jazz": {
+      "activeAt": 2,
+      "bronzeRanges": [
+        [
+          2,
+          2
+        ]
+      ]
+    },
+    "hyperpop": {
+      "activeAt": 2,
+      "bronzeRanges": [
+        [
+          2,
+          2
+        ]
+      ]
+    },
+    "illbeats": {
+      "activeAt": 2,
+      "bronzeRanges": [
+        [
+          2,
+          2
+        ]
+      ]
+    },
+    "classical": {
+      "activeAt": 2,
+      "bronzeRanges": [
+        [
+          2,
+          3
+        ]
+      ]
+    },
+    "ionic-spark": {
+      "activeAt": 3,
+      "bronzeRanges": [
+        [
+          3,
+          4
+        ]
+      ]
+    },
+    "beach-pop": {
+      "activeAt": 3,
+      "bronzeRanges": [
+        [
+          3,
+          4
+        ]
+      ]
+    },
+    "true-damage": {
+      "activeAt": 3,
+      "bronzeRanges": [
+        [
+          3,
+          4
+        ]
+      ]
+    },
+    "heartsteel": {
+      "activeAt": 1,
+      "bronzeRanges": [
+        [
+          1,
+          2
+        ]
+      ]
+    },
+    "pentakill": {
+      "activeAt": 3,
+      "bronzeRanges": [
+        [
+          3,
+          4
+        ]
+      ]
+    },
+    "rock": {
+      "activeAt": 3,
+      "bronzeRanges": [
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    "k-da": {
+      "activeAt": 3,
+      "bronzeRanges": [
+        [
+          3,
+          4
+        ]
+      ]
+    },
+    "edm": {
+      "activeAt": 2,
+      "bronzeRanges": []
+    },
+    "r-b": {
+      "activeAt": 1,
+      "bronzeRanges": [
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    "manager": {
+      "activeAt": 2,
+      "bronzeRanges": [
+        [
+          2,
+          2
+        ]
+      ]
+    },
+    "trickshot": {
+      "activeAt": 2,
+      "bronzeRanges": [
+        [
+          2,
+          2
+        ]
+      ]
+    },
+    "choreographer": {
+      "activeAt": 2,
+      "bronzeRanges": [
+        [
+          2,
+          2
+        ]
+      ]
+    },
+    "renegade": {
+      "activeAt": 2,
+      "bronzeRanges": [
+        [
+          2,
+          2
+        ]
+      ]
+    },
+    "hitmaker": {
+      "activeAt": 2,
+      "bronzeRanges": [
+        [
+          2,
+          3
+        ]
+      ]
+    },
+    "encore": {
+      "activeAt": 2,
+      "bronzeRanges": [
+        [
+          2,
+          3
+        ]
+      ]
+    },
+    "bodyguard": {
+      "activeAt": 2,
+      "bronzeRanges": [
+        [
+          2,
+          3
+        ]
+      ]
+    },
+    "slayer": {
+      "activeAt": 2,
+      "bronzeRanges": [
+        [
+          2,
+          3
+        ]
+      ]
+    },
+    "arcanist": {
+      "activeAt": 2,
+      "bronzeRanges": [
+        [
+          2,
+          3
+        ]
+      ]
+    },
+    "frontman": {
+      "activeAt": 2,
+      "bronzeRanges": [
+        [
+          2,
+          3
+        ]
+      ]
+    },
+    "swiftstriker": {
+      "activeAt": 2,
+      "bronzeRanges": [
+        [
+          2,
+          2
+        ]
+      ]
+    },
+    "juggernaut": {
+      "activeAt": 2,
+      "bronzeRanges": [
+        [
+          2,
+          3
+        ]
+      ]
+    },
+    "prodigy": {
+      "activeAt": 2,
+      "bronzeRanges": [
+        [
+          2,
+          2
+        ]
+      ]
+    }
+  }
+}

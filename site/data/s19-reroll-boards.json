@@ -1,0 +1,2143 @@
+[
+  {
+    "sectionId": "sample-block-0254",
+    "entryTeamId": "00000000-0000-4000-8000-000000000052",
+    "stages": [
+      {
+        "teamId": "00000000-0000-4000-8000-000000000052",
+        "name": "6级追三",
+        "boardRole": "stage",
+        "parentTeamId": "00000000-0000-4000-8000-000000000050",
+        "notes": "六级追伊泽瑞尔和内瑟斯，卢锡安来得顺一起追。奎桑提或加里奥没到，先用两星前排顶。",
+        "roles": [
+          {
+            "label": "主C",
+            "units": [
+              "ezreal"
+            ]
+          },
+          {
+            "label": "主坦",
+            "units": [
+              "nasus"
+            ]
+          },
+          {
+            "label": "副C",
+            "units": [
+              "lucian"
+            ]
+          }
+        ]
+      }
+    ],
+    "edits": [
+      {
+        "teamId": "00000000-0000-4000-8000-000000000050",
+        "notes": "七级有烬先开双古典。伊泽瑞尔三星、前排能扛就上八补悠米开四安可。"
+      },
+      {"teamId": "00000000-0000-4000-8000-000000000050", "originalPositions": {"ezreal": 22, "lucian": 23, "jhin": 27}, "positions": {"ezreal": 21, "lucian": 27, "jhin": 23}},
+      {"teamId": "00000000-0000-4000-8000-000000000052", "originalPositions": {"ezreal": 22}, "positions": {"ezreal": 21}},
+      {"teamId": "00000000-0000-4000-8000-000000000050", "positions": {"sett": 7, "galio": 11}, "stoneplateHolder": "nasus", "originalPositions": {"nasus": 3, "sett": 1, "k-sante": 4, "galio": 5}},
+      {"teamId": "00000000-0000-4000-8000-000000000052", "positions": {"sett": 7, "galio": 11}, "stoneplateHolder": "nasus", "originalPositions": {"nasus": 3, "sett": 1, "k-sante": 4, "galio": 5}}
+    ]
+  },
+  {
+    "sectionId": "sample-block-0214",
+    "stages": [
+      {
+        "teamId": "00000000-0000-4000-8000-000000000037",
+        "name": "8级过渡",
+        "notes": "布隆居中先吃伤害，日炎蕾欧娜站靠敌方前排密集的一侧。永恩退到第二排，从坦克背后进场。霞、卢锡安分开，霞上场继续做解锁。",
+        "parentTeamId": "00000000-0000-4000-8000-000000000104",
+        "boardRole": "stage",
+        "roles": [
+          {"label": "主C", "units": ["xayah"]},
+          {"label": "主坦", "units": ["braum"]},
+          {"label": "功能装", "units": ["leona"]}
+        ]
+      },
+      {
+        "teamId": "00000000-0000-4000-8000-000000000070",
+        "name": "9级 · 女枪替位",
+        "notes": "厄斐琉斯没开就先用女枪，前排仍由悟空或两星蒙多扛。女枪和霞隔一格，迦娜在另一边。女枪拿剩余物理装。",
+        "parentTeamId": "00000000-0000-4000-8000-000000000104",
+        "boardRole": "variant",
+        "roles": [
+          {"label": "主C", "units": ["xayah"]},
+          {"label": "主坦", "units": ["wukong"]},
+          {"label": "功能装", "units": ["janna"]},
+          {"label": "副C", "units": ["lee-sin"]}
+        ],
+        "pieces": [
+          {"unitId": "wukong", "position": 3, "stars": 2, "items": ["TFT_Item_GargoyleStoneplate", "TFT_Item_WarmogsArmor", "TFT_Item_Redemption"]},
+          {"unitId": "dr-mundo", "position": 5, "stars": 1, "items": []},
+          {"unitId": "k-sante", "position": 8, "stars": 2, "items": []},
+          {"unitId": "leona", "position": 10, "stars": 2, "items": []},
+          {"unitId": "lee-sin", "position": 11, "stars": 1, "items": ["TFT_Item_SteraksGage", "TFT_Item_TitansResolve", "TFT_Item_Bloodthirster"]},
+          {"unitId": "alune", "position": 21, "stars": 2, "items": []},
+          {"unitId": "janna", "position": 23, "stars": 1, "items": ["TFT_Item_Morellonomicon", "TFT_Item_SpearOfShojin", "TFT_Item_RabadonsDeathcap"]},
+          {"unitId": "xayah", "position": 27, "stars": 2, "items": ["TFT_Item_LastWhisper", "TFT_Item_InfinityEdge", "TFT_Item_SpearOfShojin"]},
+          {"unitId": "miss-fortune", "position": 25, "stars": 1, "items": []}
+        ]
+      },
+      {
+        "teamId": "00000000-0000-4000-8000-000000000112",
+        "name": "9级 · 双爵士努努",
+        "notes": "蒙多先两星就带板甲居中，加里奥和努努护两翼。悟空和李青在第二排，霞与迦娜分开。卢锡安先开双爵士。",
+        "parentTeamId": "00000000-0000-4000-8000-000000000104",
+        "boardRole": "variant",
+        "roles": [
+          {"label": "主C", "units": ["xayah"]},
+          {"label": "主坦", "units": ["dr-mundo"]},
+          {"label": "功能装", "units": ["janna"]},
+          {"label": "副C", "units": ["lee-sin"]}
+        ],
+        "pieces": [
+          {"unitId": "galio", "position": 1, "stars": 2, "items": []},
+          {"unitId": "dr-mundo", "position": 3, "stars": 2, "items": ["TFT_Item_GargoyleStoneplate", "TFT_Item_WarmogsArmor", "TFT_Item_Redemption"]},
+          {"unitId": "nunu-willump", "position": 5, "stars": 1, "items": []},
+          {"unitId": "wukong", "position": 10, "stars": 2, "items": []},
+          {"unitId": "lee-sin", "position": 11, "stars": 1, "items": ["TFT_Item_SteraksGage", "TFT_Item_TitansResolve", "TFT_Item_Bloodthirster"]},
+          {"unitId": "janna", "position": 21, "stars": 1, "items": ["TFT_Item_Morellonomicon", "TFT_Item_SpearOfShojin", "TFT_Item_RabadonsDeathcap"]},
+          {"unitId": "alune", "position": 23, "stars": 2, "items": []},
+          {"unitId": "lucian", "position": 25, "stars": 1, "items": []},
+          {"unitId": "xayah", "position": 27, "stars": 2, "items": ["TFT_Item_LastWhisper", "TFT_Item_InfinityEdge", "TFT_Item_SpearOfShojin"]}
+        ]
+      },
+      {
+        "teamId": "00000000-0000-4000-8000-000000000090",
+        "name": "9级 · 五离子金克丝",
+        "notes": "希瓦娜带肉顶前，悟空带日炎接另一侧。格温从第二排侧翼进场。金克丝和霞分开，先留离子主力已有的装备。",
+        "parentTeamId": "00000000-0000-4000-8000-000000000104",
+        "boardRole": "variant",
+        "roles": [
+          {"label": "主C", "units": ["jinx"]},
+          {"label": "主坦", "units": ["shyvana"]},
+          {"label": "功能装", "units": ["wukong"]},
+          {"label": "副C", "units": ["gwen"]}
+        ],
+        "pieces": [
+          {"unitId": "wukong", "position": 2, "stars": 2, "items": ["TFT_Item_RedBuff", "TFT_Item_NightHarvester"]},
+          {"unitId": "shyvana", "position": 4, "stars": 2, "items": ["TFT_Item_Redemption", "TFT_Item_GargoyleStoneplate", "TFT_Item_NightHarvester"]},
+          {"unitId": "elise", "position": 8, "stars": 2, "items": []},
+          {"unitId": "lee-sin", "position": 10, "stars": 1, "items": []},
+          {"unitId": "gwen", "position": 12, "stars": 2, "items": ["TFT_Item_GuinsoosRageblade", "TFT_Item_Bloodthirster", "TFT_Item_StatikkShiv"]},
+          {"unitId": "janna", "position": 21, "stars": 2, "items": []},
+          {"unitId": "lux", "position": 23, "stars": 2, "items": []},
+          {"unitId": "xayah", "position": 25, "stars": 2, "items": []},
+          {"unitId": "jinx", "position": 27, "stars": 2, "items": ["TFT_Item_GuinsoosRageblade", "TFT_Item_LastWhisper", "TFT_Item_InfinityEdge"]}
+        ]
+      },
+      {
+        "teamId": "00000000-0000-4000-8000-000000000015",
+        "name": "10级上限 · 补女枪",
+        "notes": "十级补女枪，放在霞对侧，拉露恩向前挪一排。前排沿用九级质量，霞留主装，女枪捡剩余物理装。",
+        "parentTeamId": "00000000-0000-4000-8000-000000000104",
+        "boardRole": "stage",
+        "roles": [
+          {"label": "主C", "units": ["xayah"]},
+          {"label": "主坦", "units": ["wukong"]},
+          {"label": "功能装", "units": ["janna"]},
+          {"label": "副C", "units": ["lee-sin"]}
+        ],
+        "pieces": [
+          {"unitId": "wukong", "position": 3, "stars": 2, "items": ["TFT_Item_GargoyleStoneplate", "TFT_Item_WarmogsArmor", "TFT_Item_Redemption"]},
+          {"unitId": "dr-mundo", "position": 5, "stars": 2, "items": []},
+          {"unitId": "k-sante", "position": 8, "stars": 2, "items": []},
+          {"unitId": "leona", "position": 10, "stars": 2, "items": []},
+          {"unitId": "lee-sin", "position": 11, "stars": 1, "items": ["TFT_Item_SteraksGage", "TFT_Item_TitansResolve", "TFT_Item_Bloodthirster"]},
+          {"unitId": "janna", "position": 23, "stars": 1, "items": ["TFT_Item_Morellonomicon", "TFT_Item_SpearOfShojin", "TFT_Item_RabadonsDeathcap"]},
+          {"unitId": "xayah", "position": 27, "stars": 2, "items": ["TFT_Item_LastWhisper", "TFT_Item_InfinityEdge", "TFT_Item_SpearOfShojin"]},
+          {"unitId": "alune", "position": 15, "stars": 2, "items": []},
+          {"unitId": "aphelios", "position": 25, "stars": 2, "items": []},
+          {"unitId": "miss-fortune", "position": 21, "stars": 1, "items": []}
+        ]
+      }
+    ],
+    "edits": [
+      {
+        "teamId": "00000000-0000-4000-8000-000000000037",
+        "originalName": "八人口霞 · 四心之钢过渡",
+        "notes": "布隆居中先吃伤害，日炎蕾欧娜站靠敌方前排密集的一侧。永恩退到第二排，从坦克背后进场。霞、卢锡安分开，霞上场继续做解锁。",
+        "originalPositions": {
+          "k-sante": 1,
+          "sett": 2,
+          "leona": 3,
+          "yone": 4,
+          "braum": 5,
+          "ezreal": 21,
+          "lucian": 25,
+          "xayah": 27
+        },
+        "positions": {
+          "k-sante": 1,
+          "sett": 5,
+          "leona": 4,
+          "yone": 11,
+          "braum": 3,
+          "ezreal": 21,
+          "lucian": 23,
+          "xayah": 26
+        }
+      },
+      {
+        "teamId": "00000000-0000-4000-8000-000000000104",
+        "originalName": "九人口四国风 · 霞悟空",
+        "notes": "板甲悟空第一排居中，李青站他身后偏右，霞和迦娜分边。蒙多先两星接肉时，让蒙多顶中间，悟空往旁边让一格。",
+        "originalPositions": {
+          "k-sante": 1,
+          "dr-mundo": 2,
+          "leona": 3,
+          "lee-sin": 4,
+          "wukong": 5,
+          "alune": 21,
+          "aphelios": 23,
+          "janna": 25,
+          "xayah": 27
+        },
+        "positions": {
+          "k-sante": 8,
+          "dr-mundo": 5,
+          "leona": 10,
+          "lee-sin": 11,
+          "wukong": 3,
+          "alune": 21,
+          "aphelios": 25,
+          "janna": 23,
+          "xayah": 27
+        }
+      },
+      {"teamId": "00000000-0000-4000-8000-000000000104", "originalPositions": {"janna": 23, "alune": 21}, "positions": {"janna": 21, "alune": 23}},
+      {"teamId": "00000000-0000-4000-8000-000000000037", "originalPositions": {"xayah": 26}, "positions": {"xayah": 27}},
+      {"teamId": "00000000-0000-4000-8000-000000000037", "positions": {"k-sante": 7, "sett": 12}, "stoneplateHolder": "braum", "originalPositions": {"braum": 3, "k-sante": 1, "sett": 5, "leona": 4}},
+      {"teamId": "00000000-0000-4000-8000-000000000112", "positions": {"nunu-willump": 12}, "stoneplateHolder": "dr-mundo", "originalPositions": {"dr-mundo": 3, "galio": 1, "nunu-willump": 5}, "notes": "蒙多先两星就带板甲居中，加里奥站另一侧，努努在第二排。悟空和李青在第二排，霞与迦娜分开。卢锡安先开双爵士。"}
+    ]
+  },
+  {
+    "sectionId": "sample-block-0020",
+    "stages": [
+      {
+        "teamId": "00000000-0000-4000-8000-000000000072",
+        "name": "5级追三",
+        "notes": "五级追三星莉莉娅、凯南。凯南站第一排，莉莉娅从他身后进场叠毒。妮蔻和酒桶补 K/DA。"
+      },
+      {
+        "teamId": "00000000-0000-4000-8000-000000000056",
+        "name": "5级四护卫",
+        "notes": "五级追三星莉莉娅。狗头站第一排，莉莉娅从同侧第二排进场叠毒。狗头或烈娜塔没来，先开双护卫双安可。",
+        "parentTeamId": "00000000-0000-4000-8000-000000000038",
+        "pieces": [
+          {
+            "unitId": "nasus",
+            "stars": 2,
+            "position": 2,
+            "items": [
+              "TFT_Item_GargoyleStoneplate"
+            ]
+          },
+          {
+            "unitId": "kennen",
+            "stars": 2,
+            "position": 4,
+            "items": []
+          },
+          {
+            "unitId": "jax",
+            "stars": 1,
+            "position": 5,
+            "items": []
+          },
+          {
+            "unitId": "lillia",
+            "stars": 3,
+            "position": 9,
+            "items": [
+              "TFT_Item_IonicSpark",
+              "TFT_Item_UnstableConcoction"
+            ]
+          },
+          {
+            "unitId": "renata-glasc",
+            "stars": 1,
+            "position": 23,
+            "items": []
+          }
+        ],
+        "roles": [
+          {
+            "label": "主C",
+            "units": [
+              "lillia"
+            ]
+          },
+          {
+            "label": "主坦",
+            "units": [
+              "nasus"
+            ]
+          },
+          {
+            "label": "副C",
+            "units": [
+              "renata-glasc"
+            ]
+          },
+          {
+            "label": "功能装",
+            "units": [
+              "lillia"
+            ]
+          }
+        ]
+      }
+    ],
+    "edits": [
+      {"teamId": "00000000-0000-4000-8000-000000000091", "originalPositions": {"ahri": 25}, "positions": {"ahri": 27}},
+      {"teamId": "00000000-0000-4000-8000-000000000091", "positions": {"leona": 10, "nasus": 12}, "stoneplateHolder": "kennen", "originalPositions": {"kennen": 2, "gragas": 3, "leona": 4, "nasus": 5}},
+      {"teamId": "00000000-0000-4000-8000-000000000038", "positions": {"kennen": 10, "k-sante": 11, "leona": 12}, "stoneplateHolder": "nasus", "originalPositions": {"nasus": 2, "kennen": 3, "jax": 1, "k-sante": 4, "leona": 5}}
+    ]
+  },
+  {
+    "sectionId": "sample-block-0273",
+    "stages": [
+      {
+        "teamId": "00000000-0000-4000-8000-000000000073",
+        "name": "5级追三",
+        "notes": "五级追三星伊莉丝、瑟提。瑟提先扛，伊莉丝从他身后打第一口。安妮没来用佐伊开双法师，安妮来了开三离子。"
+      }
+    ],
+    "edits": [
+      {"teamId": "00000000-0000-4000-8000-000000000103", "positions": {"annie": 9, "shyvana": 12}, "stoneplateHolder": "sett", "originalPositions": {"sett": 1, "braum": 2, "annie": 3, "shyvana": 5}}
+    ]
+  },
+  {
+    "sectionId": "sample-block-0064",
+    "stages": [
+      {
+        "teamId": "00000000-0000-4000-8000-000000000040",
+        "name": "5级三真伤",
+        "notes": "五级追三星凯南、莉莉娅。艾克一星就能开三真伤。莉莉娅顶前排，凯南对准三格内最远的敌人。"
+      },
+      {
+        "teamId": "00000000-0000-4000-8000-000000000047",
+        "name": "5级缺艾克",
+        "notes": "五级追三星凯南、莉莉娅。缺艾克时用酒桶、莉莉娅、妮蔻开 K/DA，艾克来了换酒桶开三真伤。",
+        "pieces": [
+          {
+            "unitId": "lillia",
+            "stars": 3,
+            "position": 2,
+            "items": [
+              "TFT_Item_GargoyleStoneplate",
+              "TFT_Item_RedBuff"
+            ]
+          },
+          {
+            "unitId": "gragas",
+            "stars": 1,
+            "position": 4,
+            "items": []
+          },
+          {
+            "unitId": "kennen",
+            "stars": 3,
+            "position": 9,
+            "items": [
+              "TFT_Item_BlueBuff",
+              "TFT_Item_JeweledGauntlet"
+            ]
+          },
+          {
+            "unitId": "qiyana",
+            "stars": 1,
+            "position": 11,
+            "items": []
+          },
+          {
+            "unitId": "neeko",
+            "stars": 2,
+            "position": 24,
+            "items": []
+          }
+        ],
+        "roles": [
+          {
+            "label": "主C",
+            "units": [
+              "kennen"
+            ]
+          },
+          {
+            "label": "主坦",
+            "units": [
+              "lillia"
+            ]
+          },
+          {
+            "label": "功能装",
+            "units": [
+              "lillia"
+            ]
+          }
+        ]
+      },
+      {
+        "teamId": "00000000-0000-4000-8000-000000000081",
+        "name": "5级四护卫",
+        "notes": "五级追三星凯南。狗头先扛，凯南站他身后，对准三格内最远的敌人。缺狗头或烈娜塔先用三真伤过渡。",
+        "parentTeamId": "00000000-0000-4000-8000-000000000012",
+        "pieces": [
+          {
+            "unitId": "nasus",
+            "stars": 2,
+            "position": 2,
+            "items": [
+              "TFT_Item_GargoyleStoneplate"
+            ]
+          },
+          {
+            "unitId": "lillia",
+            "stars": 2,
+            "position": 3,
+            "items": []
+          },
+          {
+            "unitId": "jax",
+            "stars": 1,
+            "position": 5,
+            "items": []
+          },
+          {
+            "unitId": "kennen",
+            "stars": 3,
+            "position": 9,
+            "items": [
+              "TFT_Item_BlueBuff",
+              "TFT_Item_JeweledGauntlet"
+            ]
+          },
+          {
+            "unitId": "renata-glasc",
+            "stars": 1,
+            "position": 23,
+            "items": []
+          }
+        ],
+        "roles": [
+          {
+            "label": "主C",
+            "units": [
+              "kennen"
+            ]
+          },
+          {
+            "label": "主坦",
+            "units": [
+              "nasus"
+            ]
+          },
+          {
+            "label": "副C",
+            "units": [
+              "renata-glasc"
+            ]
+          }
+        ]
+      }
+    ],
+    "edits": [
+      {"teamId": "00000000-0000-4000-8000-000000000045", "positions": {"gragas": 10}, "stoneplateHolder": "lillia", "originalPositions": {"lillia": 2, "ekko": 3, "gragas": 4}},
+      {"teamId": "00000000-0000-4000-8000-000000000012", "positions": {"lillia": 10, "k-sante": 11, "leona": 12}, "stoneplateHolder": "nasus", "originalPositions": {"nasus": 2, "lillia": 3, "jax": 1, "k-sante": 4, "leona": 5}}
+    ]
+  },
+  {
+    "sectionId": "sample-block-0281",
+    "stages": [
+      {
+        "teamId": "00000000-0000-4000-8000-000000000051",
+        "name": "5级追三",
+        "notes": "五级追三星奥拉夫。塔里克先扛，奥拉夫和带轻语的纳尔同侧打前排。缺安妮用佐伊开双法师。"
+      }
+    ],
+    "edits": [
+      {"teamId": "00000000-0000-4000-8000-000000000097", "originalPositions": {"olaf": 22, "gnar": 23}, "positions": {"olaf": 21, "gnar": 22}},
+      {"teamId": "00000000-0000-4000-8000-000000000051", "originalPositions": {"olaf": 22, "gnar": 23}, "positions": {"olaf": 21, "gnar": 22}},
+      {"teamId": "00000000-0000-4000-8000-000000000097", "positions": {"zac": 8, "ekko": 11}, "stoneplateHolder": "taric", "originalPositions": {"taric": 1, "yorick": 3, "zac": 2, "ekko": 5}}
+    ]
+  },
+  {
+    "sectionId": "sample-block-0258",
+    "stages": [
+      {
+        "teamId": "00000000-0000-4000-8000-000000000063",
+        "name": "5级追三",
+        "notes": "五级追三星瑟提。伊莉丝先扛，瑟提站第二排，跟带轻语的伊泽瑞尔同侧。缺卢锡安用两星韦鲁斯开双安可。"
+      }
+    ]
+  },
+  {
+    "sectionId": "sample-block-0464",
+    "stages": [
+      {
+        "teamId": "00000000-0000-4000-8000-000000000053",
+        "name": "5级追三",
+        "notes": "五级追三星妮蔻、莉莉娅。莉莉娅先扛，带离子的酒桶贴妮蔻要打的前排。"
+      }
+    ],
+    "edits": [
+      {
+        "teamId": "00000000-0000-4000-8000-000000000053",
+        "positions": {
+          "gragas": 2,
+          "kennen": 4
+        },
+        "originalName": "五级慢搜",
+        "originalPositions": {
+          "gragas": 4,
+          "kennen": 2
+        }
+      },
+      {"teamId": "00000000-0000-4000-8000-000000000009", "originalPositions": {"neeko": 22}, "positions": {"neeko": 21}},
+      {"teamId": "00000000-0000-4000-8000-000000000114", "originalPositions": {"neeko": 22, "ahri": 26}, "positions": {"neeko": 21, "ahri": 27}},
+      {"teamId": "00000000-0000-4000-8000-000000000113", "originalPositions": {"neeko": 22}, "positions": {"neeko": 21}},
+      {"teamId": "00000000-0000-4000-8000-000000000053", "originalPositions": {"neeko": 22}, "positions": {"neeko": 21}},
+      {"teamId": "00000000-0000-4000-8000-000000000039", "originalPositions": {"neeko": 22}, "positions": {"neeko": 21}},
+      {"teamId": "00000000-0000-4000-8000-000000000009", "positions": {"leona": 8}, "stoneplateHolder": "lillia", "originalPositions": {"lillia": 3, "leona": 2, "gragas": 4}},
+      {"teamId": "00000000-0000-4000-8000-000000000114", "positions": {"lillia": 7}, "stoneplateHolder": "gragas", "originalPositions": {"gragas": 3, "lillia": 1, "leona": 4}},
+      {"teamId": "00000000-0000-4000-8000-000000000113", "positions": {"leona": 8}, "stoneplateHolder": "lillia", "originalPositions": {"lillia": 3, "leona": 2, "gragas": 4}},
+      {"teamId": "00000000-0000-4000-8000-000000000053", "positions": {"kennen": 10}, "stoneplateHolder": "lillia", "originalPositions": {"lillia": 3, "kennen": 4, "gragas": 2}},
+      {"teamId": "00000000-0000-4000-8000-000000000039", "positions": {"leona": 8}, "stoneplateHolder": "lillia", "originalPositions": {"lillia": 3, "leona": 2, "gragas": 4}}
+    ]
+  },
+  {
+    "sectionId": "sample-block-0203",
+    "stages": [
+      {
+        "teamId": "00000000-0000-4000-8000-000000000016",
+        "name": "5级追三",
+        "notes": "五级追三星芸阿娜、伊莉丝。芸阿娜和吉格斯同侧打前排。两星吉格斯带一件装备解锁可酷伯，解锁前用瑟提。"
+      },
+      {
+        "teamId": "00000000-0000-4000-8000-000000000069",
+        "name": "5级未开可酷伯",
+        "notes": "五级追三星芸阿娜、伊莉丝。可酷伯解锁前用两星瑟提顶前排，伊莉丝接肉装。两星吉格斯带一件装备解锁可酷伯。",
+        "pieces": [
+          {
+            "unitId": "annie",
+            "stars": 1,
+            "position": 2,
+            "items": []
+          },
+          {
+            "unitId": "elise",
+            "stars": 3,
+            "position": 3,
+            "items": [
+              "TFT_Item_GargoyleStoneplate",
+              "TFT_Item_WarmogsArmor"
+            ]
+          },
+          {
+            "unitId": "sett",
+            "stars": 2,
+            "position": 4,
+            "items": []
+          },
+          {
+            "unitId": "yunara",
+            "stars": 3,
+            "position": 22,
+            "items": [
+              "TFT_Item_GuinsoosRageblade",
+              "TFT_Item_LastWhisper"
+            ]
+          },
+          {
+            "unitId": "ziggs",
+            "stars": 2,
+            "position": 24,
+            "items": [
+              "TFT_Item_SpearOfShojin"
+            ]
+          }
+        ],
+        "roles": [
+          {
+            "label": "主C",
+            "units": [
+              "yunara"
+            ]
+          },
+          {
+            "label": "主坦",
+            "units": [
+              "elise"
+            ]
+          },
+          {
+            "label": "副C",
+            "units": [
+              "ziggs"
+            ]
+          },
+          {
+            "label": "功能装",
+            "units": [
+              "yunara"
+            ]
+          }
+        ]
+      }
+    ],
+    "edits": [
+      {
+        "teamId": "00000000-0000-4000-8000-000000000016",
+        "positions": {
+          "ziggs": 24
+        },
+        "originalName": "五级慢搜",
+        "originalPositions": {
+          "ziggs": 26
+        }
+      },
+      {
+        "teamId": "00000000-0000-4000-8000-000000000109",
+        "notes": "二阶段选秀前刷四次解锁芬妮，前排能扛再上。芸阿娜和吉格斯同侧先打一名敌人，芬妮分到另一侧。",
+        "positions": {
+          "ziggs": 24,
+          "seraphine": 26
+        },
+        "originalName": "五级 · 芬妮",
+        "originalPositions": {
+          "ziggs": 26,
+          "seraphine": 25
+        }
+      },
+      {"teamId": "00000000-0000-4000-8000-000000000016", "originalPositions": {"yunara": 22}, "positions": {"yunara": 21}},
+      {"teamId": "00000000-0000-4000-8000-000000000109", "originalPositions": {"yunara": 22}, "positions": {"yunara": 21}},
+      {"teamId": "00000000-0000-4000-8000-000000000069", "originalPositions": {"yunara": 22}, "positions": {"yunara": 21}},
+      {"teamId": "00000000-0000-4000-8000-000000000016", "positions": {"kobuko": 10}, "stoneplateHolder": "elise", "originalPositions": {"elise": 3, "annie": 2, "kobuko": 4}},
+      {"teamId": "00000000-0000-4000-8000-000000000069", "positions": {"sett": 10}, "stoneplateHolder": "elise", "originalPositions": {"elise": 3, "annie": 2, "sett": 4}}
+    ]
+  },
+  {
+    "sectionId": "sample-block-0122",
+    "stages": [
+      {
+        "teamId": "00000000-0000-4000-8000-000000000118",
+        "name": "6级追三",
+        "notes": "六级追三星烈娜塔、内瑟斯。狗头居中，带离子的贾克斯跟他同侧，烈娜塔站后两排。缺奎桑提用两星凯南保四护卫。"
+      },
+      {
+        "teamId": "00000000-0000-4000-8000-000000000058",
+        "name": "6级带芬妮",
+        "notes": "六级追三星烈娜塔、内瑟斯。芬妮已解锁且到两星，再用她换辛德拉。保四护卫双古典，少双编舞。",
+        "parentTeamId": "00000000-0000-4000-8000-000000000065",
+        "pieces": [
+          {
+            "unitId": "lillia",
+            "stars": 2,
+            "position": 2,
+            "items": [
+              "TFT_Item_RedBuff"
+            ]
+          },
+          {
+            "unitId": "nasus",
+            "stars": 3,
+            "position": 3,
+            "items": [
+              "TFT_Item_WarmogsArmor"
+            ]
+          },
+          {
+            "unitId": "k-sante",
+            "stars": 1,
+            "position": 4,
+            "items": []
+          },
+          {
+            "unitId": "jax",
+            "stars": 2,
+            "position": 10,
+            "items": [
+              "TFT_Item_IonicSpark"
+            ]
+          },
+          {
+            "unitId": "renata-glasc",
+            "stars": 3,
+            "position": 22,
+            "items": [
+              "TFT_Item_SpearOfShojin",
+              "TFT_Item_ArchangelsStaff"
+            ]
+          },
+          {
+            "unitId": "seraphine",
+            "stars": 2,
+            "position": 26,
+            "items": []
+          }
+        ],
+        "roles": [
+          {
+            "label": "主C",
+            "units": [
+              "renata-glasc"
+            ]
+          },
+          {
+            "label": "主坦",
+            "units": [
+              "nasus"
+            ]
+          },
+          {
+            "label": "副C",
+            "units": [
+              "seraphine"
+            ]
+          },
+          {
+            "label": "功能装",
+            "units": [
+              "lillia",
+              "jax"
+            ]
+          }
+        ]
+      },
+      {
+        "teamId": "00000000-0000-4000-8000-000000000048",
+        "name": "6级追三",
+        "notes": "六级慢搜烈娜塔和狗头，贾克斯来得多就一起追三。青龙刀、饮血、泰坦齐了，贾克斯也能接主 C。",
+        "parentTeamId": "00000000-0000-4000-8000-000000000044",
+        "pieces": [
+          {
+            "unitId": "lillia",
+            "stars": 2,
+            "position": 2,
+            "items": []
+          },
+          {
+            "unitId": "nasus",
+            "stars": 3,
+            "position": 3,
+            "items": [
+              "TFT_Item_IonicSpark",
+              "TFT_Item_RedBuff"
+            ]
+          },
+          {
+            "unitId": "k-sante",
+            "stars": 1,
+            "position": 4,
+            "items": []
+          },
+          {
+            "unitId": "jax",
+            "stars": 3,
+            "position": 10,
+            "items": [
+              "TFT_Item_SpearOfShojin",
+              "TFT_Item_Bloodthirster",
+              "TFT_Item_TitansResolve"
+            ]
+          },
+          {
+            "unitId": "viego",
+            "stars": 1,
+            "position": 9,
+            "items": []
+          },
+          {
+            "unitId": "renata-glasc",
+            "stars": 3,
+            "position": 21,
+            "items": [
+              "TFT_Item_BlueBuff",
+              "TFT_Item_ArchangelsStaff"
+            ]
+          }
+        ],
+        "roles": [
+          {
+            "label": "主C",
+            "units": [
+              "renata-glasc"
+            ]
+          },
+          {
+            "label": "主坦",
+            "units": [
+              "nasus"
+            ]
+          },
+          {
+            "label": "副C",
+            "units": [
+              "jax"
+            ]
+          }
+        ]
+      },
+      {
+        "teamId": "00000000-0000-4000-8000-000000000023",
+        "name": "八级 · 双电子贾克斯",
+        "notes": "贾克斯、狗头先三，烈娜塔差得多就升人口。两星安妮带一件装备解锁提伯斯，蔚、泽丽到齐再换下烈娜塔、盖伦。",
+        "boardRole": "variant",
+        "parentTeamId": "00000000-0000-4000-8000-000000000044",
+        "pieces": [
+          {
+            "unitId": "nasus",
+            "stars": 3,
+            "position": 1,
+            "items": [
+              "TFT_Item_RedBuff",
+              "TFT_Item_IonicSpark",
+              "TFT_Item_WarmogsArmor"
+            ]
+          },
+          {
+            "unitId": "vi",
+            "stars": 1,
+            "position": 2,
+            "items": []
+          },
+          {
+            "unitId": "lillia",
+            "stars": 2,
+            "position": 3,
+            "items": []
+          },
+          {
+            "unitId": "k-sante",
+            "stars": 2,
+            "position": 4,
+            "items": []
+          },
+          {
+            "unitId": "tibbers",
+            "stars": 2,
+            "position": 5,
+            "items": []
+          },
+          {
+            "unitId": "leona",
+            "stars": 2,
+            "position": 6,
+            "items": []
+          },
+          {
+            "unitId": "jax",
+            "stars": 3,
+            "position": 14,
+            "items": [
+              "TFT_Item_SpearOfShojin",
+              "TFT_Item_Bloodthirster",
+              "TFT_Item_TitansResolve"
+            ]
+          },
+          {
+            "unitId": "zeri",
+            "stars": 1,
+            "position": 21,
+            "items": [
+              "TFT_Item_InfinityEdge",
+              "TFT_Item_LastWhisper"
+            ]
+          }
+        ],
+        "roles": [
+          {
+            "label": "主C",
+            "units": [
+              "jax"
+            ]
+          },
+          {
+            "label": "主坦",
+            "units": [
+              "nasus"
+            ]
+          },
+          {
+            "label": "副C",
+            "units": [
+              "zeri"
+            ]
+          }
+        ]
+      },
+      {
+        "teamId": "00000000-0000-4000-8000-000000000084",
+        "name": "九级 · 双主宰贾克斯",
+        "notes": "八级稳血后再升九，补酒桶开双主宰。莉莉娅、蕾欧娜各两星就到 5 星 K/DA。泽丽接剩余物理装。",
+        "boardRole": "variant",
+        "parentTeamId": "00000000-0000-4000-8000-000000000044",
+        "pieces": [
+          {
+            "unitId": "gragas",
+            "stars": 1,
+            "position": 0,
+            "items": []
+          },
+          {
+            "unitId": "nasus",
+            "stars": 3,
+            "position": 1,
+            "items": [
+              "TFT_Item_RedBuff",
+              "TFT_Item_IonicSpark",
+              "TFT_Item_WarmogsArmor"
+            ]
+          },
+          {
+            "unitId": "vi",
+            "stars": 2,
+            "position": 2,
+            "items": []
+          },
+          {
+            "unitId": "lillia",
+            "stars": 2,
+            "position": 3,
+            "items": []
+          },
+          {
+            "unitId": "k-sante",
+            "stars": 2,
+            "position": 4,
+            "items": []
+          },
+          {
+            "unitId": "tibbers",
+            "stars": 2,
+            "position": 5,
+            "items": []
+          },
+          {
+            "unitId": "leona",
+            "stars": 2,
+            "position": 6,
+            "items": []
+          },
+          {
+            "unitId": "jax",
+            "stars": 3,
+            "position": 14,
+            "items": [
+              "TFT_Item_SpearOfShojin",
+              "TFT_Item_Bloodthirster",
+              "TFT_Item_TitansResolve"
+            ]
+          },
+          {
+            "unitId": "zeri",
+            "stars": 2,
+            "position": 21,
+            "items": [
+              "TFT_Item_InfinityEdge",
+              "TFT_Item_LastWhisper",
+              "TFT_Item_SpearOfShojin"
+            ]
+          }
+        ],
+        "roles": [
+          {
+            "label": "主C",
+            "units": [
+              "jax"
+            ]
+          },
+          {
+            "label": "主坦",
+            "units": [
+              "nasus"
+            ]
+          },
+          {
+            "label": "副C",
+            "units": [
+              "zeri"
+            ]
+          }
+        ]
+      }
+    ],
+    "edits": [
+      {
+        "teamId": "00000000-0000-4000-8000-000000000044",
+        "notes": "烈娜塔和狗头六级追三。贾克斯来得多一起追三，三件套齐了打双 C。",
+        "wording": {
+          "before": "优先烈娜塔三星、狗头三星；贾克斯有饮血和泰坦再留牌追三。",
+          "after": "烈娜塔、狗头先追三。贾克斯来得多、能凑青龙刀饮血泰坦时一起追三。"
+        }
+      },
+      {
+        "teamId": "00000000-0000-4000-8000-000000000046",
+        "name": "九级 · 双电子烈娜塔贾克斯",
+        "notes": "烈娜塔、贾克斯双 C。八级稳血后升九，下盖伦，上佛耶戈和蔚。",
+        "wording": {
+          "before": "贾克斯捡剩下的青龙刀、饮血和泰坦。",
+          "after": "三星贾克斯带青龙刀、饮血、泰坦，和蔚一起开电子舞曲。"
+        }
+      },
+      {"teamId": "00000000-0000-4000-8000-000000000028", "originalPositions": {"renata-glasc": 22}, "positions": {"renata-glasc": 21}},
+      {"teamId": "00000000-0000-4000-8000-000000000099", "originalPositions": {"renata-glasc": 22}, "positions": {"renata-glasc": 21}},
+      {"teamId": "00000000-0000-4000-8000-000000000118", "originalPositions": {"renata-glasc": 22}, "positions": {"renata-glasc": 21}},
+      {"teamId": "00000000-0000-4000-8000-000000000065", "originalPositions": {"renata-glasc": 22}, "positions": {"renata-glasc": 21}},
+      {"teamId": "00000000-0000-4000-8000-000000000111", "originalPositions": {"renata-glasc": 22}, "positions": {"renata-glasc": 21}},
+      {"teamId": "00000000-0000-4000-8000-000000000058", "originalPositions": {"renata-glasc": 22, "seraphine": 26}, "positions": {"renata-glasc": 21, "seraphine": 27}},
+      {"teamId": "00000000-0000-4000-8000-000000000028", "positions": {"k-sante": 11}, "stoneplateHolder": "nasus", "originalPositions": {"nasus": 3, "lillia": 2, "k-sante": 4}},
+      {"teamId": "00000000-0000-4000-8000-000000000099", "positions": {"k-sante": 11}, "stoneplateHolder": "nasus", "originalPositions": {"nasus": 3, "lillia": 2, "k-sante": 4}},
+      {"teamId": "00000000-0000-4000-8000-000000000065", "positions": {"k-sante": 11, "leona": 7}, "stoneplateHolder": "nasus", "originalPositions": {"nasus": 3, "lillia": 2, "k-sante": 4, "leona": 1}},
+      {"teamId": "00000000-0000-4000-8000-000000000111", "positions": {"k-sante": 11, "leona": 7}, "stoneplateHolder": "nasus", "originalPositions": {"nasus": 3, "lillia": 2, "k-sante": 4, "leona": 1}}
+    ]
+  },
+  {
+    "sectionId": "sample-block-0327",
+    "stages": [
+      {
+        "teamId": "00000000-0000-4000-8000-000000000020",
+        "name": "6级追三",
+        "notes": "六级追三星艾希、雷克顿。鳄鱼先穿两件解锁艾希，解锁前用佐伊开三海之歌。巴德、加里奥没齐，用芸阿娜、瑟提。砂槌贴艾希。",
+        "pieces": [
+          {
+            "unitId": "taric",
+            "stars": 2,
+            "position": 2,
+            "items": []
+          },
+          {
+            "unitId": "renekton",
+            "stars": 3,
+            "position": 3,
+            "items": [
+              "TFT_Item_GargoyleStoneplate",
+              "TFT_Item_WarmogsArmor"
+            ]
+          },
+          {
+            "unitId": "sett",
+            "stars": 2,
+            "position": 4,
+            "items": []
+          },
+          {
+            "unitId": "jax",
+            "stars": 2,
+            "position": 10,
+            "items": []
+          },
+          {
+            "unitId": "ashe",
+            "stars": 3,
+            "position": 22,
+            "items": [
+              "TFT_Item_GuinsoosRageblade",
+              "TFT_Item_LastWhisper"
+            ]
+          },
+          {
+            "unitId": "yunara",
+            "stars": 2,
+            "position": 25,
+            "items": []
+          }
+        ],
+        "roles": [
+          {
+            "label": "主C",
+            "units": [
+              "ashe"
+            ]
+          },
+          {
+            "label": "主坦",
+            "units": [
+              "renekton"
+            ]
+          }
+        ]
+      },
+      {
+        "teamId": "00000000-0000-4000-8000-000000000054",
+        "name": "6级双爵士",
+        "notes": "六级追三星艾希、雷克顿。巴德、加里奥都到手再开双爵士。鳄鱼先穿两件解锁艾希，砂槌贴艾希。"
+      },
+      {
+        "teamId": "00000000-0000-4000-8000-000000000010",
+        "name": "6级带芬妮",
+        "notes": "六级追三星艾希、雷克顿。前排扛得住且芬妮两星，再用她换贾克斯。砂槌贴艾希，七级可补回贾克斯。",
+        "parentTeamId": "00000000-0000-4000-8000-000000000054"
+      }
+    ],
+    "edits": [
+      {
+        "teamId": "00000000-0000-4000-8000-000000000054",
+        "instrumentMoves": {
+          "maracas": 15
+        },
+        "originalName": "六级慢搜",
+        "originalInstruments": {
+          "maracas": 9
+        }
+      },
+      {
+        "teamId": "00000000-0000-4000-8000-000000000010",
+        "instrumentMoves": {
+          "maracas": 15
+        },
+        "originalName": "六级 · 芬妮",
+        "originalInstruments": {
+          "maracas": 9
+        }
+      },
+      {
+        "teamId": "00000000-0000-4000-8000-000000000020",
+        "instrumentMoves": {
+          "maracas": 15
+        }
+      },
+      {"teamId": "00000000-0000-4000-8000-000000000054", "originalPositions": {"ashe": 22}, "positions": {"ashe": 21}},
+      {"teamId": "00000000-0000-4000-8000-000000000010", "originalPositions": {"ashe": 22}, "positions": {"ashe": 21}},
+      {"teamId": "00000000-0000-4000-8000-000000000020", "originalPositions": {"ashe": 22}, "positions": {"ashe": 21}},
+      {"teamId": "00000000-0000-4000-8000-000000000054", "positions": {"galio": 11}, "stoneplateHolder": "renekton", "originalPositions": {"renekton": 3, "taric": 2, "galio": 4}, "originalInstruments": {"maracas": 15}},
+      {"teamId": "00000000-0000-4000-8000-000000000010", "positions": {"galio": 10}, "stoneplateHolder": "renekton", "originalPositions": {"renekton": 3, "taric": 2, "galio": 4}, "originalInstruments": {"maracas": 15}},
+      {"teamId": "00000000-0000-4000-8000-000000000020", "positions": {"sett": 11}, "stoneplateHolder": "renekton", "originalPositions": {"renekton": 3, "taric": 2, "sett": 4}, "originalInstruments": {"maracas": 15}}
+    ]
+  },
+  {
+    "sectionId": "sample-block-0171",
+    "stages": [
+      {
+        "teamId": "00000000-0000-4000-8000-000000000079",
+        "name": "6级追三",
+        "notes": "六级追三星雷克顿、俄洛伊，鳄鱼优先。俄洛伊带肉装先扛，鳄鱼穿饮血、泰坦解锁艾希，从第二排进场。缺艾希用佐伊保三海之歌。"
+      },
+      {
+        "teamId": "00000000-0000-4000-8000-000000000032",
+        "name": "6级带芬妮",
+        "notes": "六级追三星雷克顿、俄洛伊。芬妮已解锁且到两星，再用她换奥拉夫。俄洛伊先扛，鳄鱼站第二排，缺艾希用佐伊。",
+        "parentTeamId": "00000000-0000-4000-8000-000000000100",
+        "pieces": [
+          {
+            "unitId": "illaoi",
+            "stars": 3,
+            "position": 2,
+            "items": [
+              "TFT_Item_GargoyleStoneplate",
+              "TFT_Item_WarmogsArmor"
+            ]
+          },
+          {
+            "unitId": "taric",
+            "stars": 2,
+            "position": 4,
+            "items": [
+              "TFT_Item_RedBuff"
+            ]
+          },
+          {
+            "unitId": "renekton",
+            "stars": 3,
+            "position": 9,
+            "items": [
+              "TFT_Item_Bloodthirster",
+              "TFT_Item_TitansResolve"
+            ]
+          },
+          {
+            "unitId": "jax",
+            "stars": 2,
+            "position": 11,
+            "items": []
+          },
+          {
+            "unitId": "ashe",
+            "stars": 2,
+            "position": 23,
+            "items": [
+              "TFT_Item_LastWhisper"
+            ]
+          },
+          {
+            "unitId": "seraphine",
+            "stars": 2,
+            "position": 26,
+            "items": []
+          }
+        ],
+        "roles": [
+          {
+            "label": "主C",
+            "units": [
+              "renekton"
+            ]
+          },
+          {
+            "label": "主坦",
+            "units": [
+              "illaoi"
+            ]
+          },
+          {
+            "label": "副C",
+            "units": [
+              "seraphine"
+            ]
+          },
+          {
+            "label": "功能装",
+            "units": [
+              "taric",
+              "ashe"
+            ]
+          }
+        ]
+      }
+    ],
+    "edits": [
+      {
+        "teamId": "00000000-0000-4000-8000-000000000032",
+        "instrumentMoves": {
+          "maracas": 3
+        }
+      },
+      {"teamId": "00000000-0000-4000-8000-000000000100", "originalPositions": {"seraphine": 26}, "positions": {"seraphine": 27}}
+    ]
+  },
+  {
+    "sectionId": "sample-block-0466",
+    "stages": [
+      {
+        "teamId": "00000000-0000-4000-8000-000000000088",
+        "name": "6级追三",
+        "notes": "六级追三星安妮，狗头来得多再一起追。两星狗头先扛，熊站他身后让安妮骑。缺熊用莉莉娅补双护卫，熊两星再接肉装。"
+      }
+    ],
+    "edits": [
+      {
+        "teamId": "00000000-0000-4000-8000-000000000088",
+        "positions": {
+          "nasus": 3,
+          "tibbers": 9
+        },
+        "originalName": "六级慢 D · 三离子",
+        "originalPositions": {
+          "nasus": 2,
+          "tibbers": 3
+        }
+      },
+      {"teamId": "00000000-0000-4000-8000-000000000035", "originalPositions": {"malzahar": 23}, "positions": {"malzahar": 21}},
+      {"teamId": "00000000-0000-4000-8000-000000000035", "positions": {"ekko": 7, "shyvana": 10, "swain": 11}, "stoneplateHolder": "tibbers", "originalPositions": {"tibbers": 3, "elise": 2, "ekko": 1, "shyvana": 4, "swain": 5}},
+      {"teamId": "00000000-0000-4000-8000-000000000088", "positions": {"swain": 11}, "stoneplateHolder": "nasus", "originalPositions": {"nasus": 3, "elise": 4, "swain": 5}}
+    ]
+  },
+  {
+    "sectionId": "sample-block-0420",
+    "entryTeamId": "00000000-0000-4000-8000-000000000096",
+    "edits": [
+      {
+        "teamId": "00000000-0000-4000-8000-000000000042",
+        "originalName": "五高能三编舞",
+        "name": "九级上限 · 五高能三编舞"
+      },
+      {"teamId": "00000000-0000-4000-8000-000000000042", "originalPositions": {"seraphine": 22}, "positions": {"seraphine": 27}},
+      {"teamId": "00000000-0000-4000-8000-000000000066", "originalPositions": {"ziggs": 22}, "positions": {"ziggs": 21}},
+      {"teamId": "00000000-0000-4000-8000-000000000096", "originalPositions": {"ziggs": 22, "seraphine": 24}, "positions": {"ziggs": 21, "seraphine": 27}},
+      {"teamId": "00000000-0000-4000-8000-000000000098", "positions": {"galio": 11}, "stoneplateHolder": "kobuko", "originalPositions": {"kobuko": 3, "swain": 1, "galio": 5}},
+      {"teamId": "00000000-0000-4000-8000-000000000089", "positions": {"shyvana": 10}, "stoneplateHolder": "kobuko", "originalPositions": {"kobuko": 3, "shyvana": 4, "elise": 2}}
+    ],
+    "stages": [
+      {
+        "teamId": "00000000-0000-4000-8000-000000000066",
+        "name": "5级追三",
+        "notes": "五级追三星吉格斯、可酷伯。两星吉格斯带一件装备解锁可酷伯，没来先用瑟提。芬妮还没解锁就上佐伊开双法师。",
+        "pieces": [
+          {
+            "unitId": "elise",
+            "stars": 2,
+            "position": 2,
+            "items": []
+          },
+          {
+            "unitId": "kobuko",
+            "stars": 3,
+            "position": 3,
+            "items": [
+              "TFT_Item_GargoyleStoneplate"
+            ]
+          },
+          {
+            "unitId": "ziggs",
+            "stars": 3,
+            "position": 22,
+            "items": [
+              "TFT_Item_GuinsoosRageblade",
+              "TFT_Item_JeweledGauntlet"
+            ]
+          },
+          {
+            "unitId": "seraphine",
+            "stars": 2,
+            "position": 23,
+            "items": [
+              "TFT_Item_SpearOfShojin"
+            ]
+          },
+          {
+            "unitId": "yunara",
+            "stars": 2,
+            "position": 26,
+            "items": []
+          }
+        ],
+        "roles": [
+          {
+            "label": "主C",
+            "units": [
+              "ziggs"
+            ]
+          },
+          {
+            "label": "主坦",
+            "units": [
+              "kobuko"
+            ]
+          },
+          {
+            "label": "副C",
+            "units": [
+              "seraphine"
+            ]
+          }
+        ]
+      },
+      {
+        "teamId": "00000000-0000-4000-8000-000000000096",
+        "name": "6级追三",
+        "notes": "六级上四高能加芬妮、斯维因。芬妮、璐璐和小炮都追三，凑够四个三星开芬妮巨星。斯维因两星够用。没解锁芬妮就走八级三爵士。",
+        "pieces": [
+          {
+            "unitId": "kobuko",
+            "stars": 3,
+            "position": 3,
+            "items": [
+              "TFT_Item_GargoyleStoneplate",
+              "TFT_Item_WarmogsArmor"
+            ]
+          },
+          {
+            "unitId": "swain",
+            "stars": 2,
+            "position": 9,
+            "items": [
+              "TFT_Item_Crownguard"
+            ]
+          },
+          {
+            "unitId": "ziggs",
+            "stars": 3,
+            "position": 22,
+            "items": [
+              "TFT_Item_GuinsoosRageblade",
+              "TFT_Item_JeweledGauntlet"
+            ]
+          },
+          {
+            "unitId": "seraphine",
+            "stars": 3,
+            "position": 24,
+            "items": [
+              "TFT_Item_SpearOfShojin",
+              "TFT_Item_StatikkShiv"
+            ]
+          },
+          {
+            "unitId": "lulu",
+            "stars": 3,
+            "position": 25,
+            "items": []
+          },
+          {
+            "unitId": "tristana",
+            "stars": 3,
+            "position": 26,
+            "items": []
+          }
+        ],
+        "roles": [
+          {
+            "label": "主C",
+            "units": [
+              "ziggs"
+            ]
+          },
+          {
+            "label": "主坦",
+            "units": [
+              "kobuko"
+            ]
+          },
+          {
+            "label": "副C",
+            "units": [
+              "seraphine"
+            ]
+          },
+          {
+            "label": "副坦",
+            "units": [
+              "swain"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "sectionId": "sample-block-0367",
+    "stages": [
+      {
+        "teamId": "00000000-0000-4000-8000-000000000033",
+        "name": "5级追三",
+        "notes": "有 K/DA 纹章，且二阶段选秀前解锁芬妮再玩。五级追三星妮蔻、莉莉娅，芬妮先两星。上三个不同的 K/DA 成员解锁伊芙琳。",
+        "pieces": [
+          {
+            "unitId": "lillia",
+            "stars": 3,
+            "position": 2,
+            "items": [
+              "TFT_Item_RedBuff"
+            ]
+          },
+          {
+            "unitId": "gragas",
+            "stars": 2,
+            "position": 3,
+            "items": [
+              "TFT_Item_GargoyleStoneplate"
+            ]
+          },
+          {
+            "unitId": "kennen",
+            "stars": 2,
+            "position": 4,
+            "items": []
+          },
+          {
+            "unitId": "neeko",
+            "stars": 3,
+            "position": 23,
+            "items": []
+          },
+          {
+            "unitId": "seraphine",
+            "stars": 2,
+            "position": 25,
+            "items": [
+              "emblem-k-da",
+              "TFT_Item_SpearOfShojin"
+            ]
+          }
+        ],
+        "roles": [
+          {
+            "label": "主C",
+            "units": [
+              "seraphine"
+            ]
+          },
+          {
+            "label": "主坦",
+            "units": [
+              "gragas"
+            ]
+          },
+          {
+            "label": "功能装",
+            "units": [
+              "lillia"
+            ]
+          }
+        ],
+        "equivalentStageId": "00000000-0000-4000-8000-000000000086"
+      },
+      {
+        "teamId": "00000000-0000-4000-8000-000000000086",
+        "name": "5级追三",
+        "notes": "五级追三星妮蔻、莉莉娅再升六。芬妮先两星，酒桶带肉装。"
+      },
+      {
+        "teamId": "00000000-0000-4000-8000-000000000115",
+        "name": "6级追三",
+        "notes": "六级补伊芙琳，追三星芬妮。缺伊芙琳用两星韦鲁斯开双安可。",
+        "pieces": [
+          {
+            "unitId": "lillia",
+            "stars": 3,
+            "position": 2,
+            "items": [
+              "TFT_Item_RedBuff"
+            ]
+          },
+          {
+            "unitId": "gragas",
+            "stars": 2,
+            "position": 3,
+            "items": [
+              "TFT_Item_GargoyleStoneplate",
+              "TFT_Item_IonicSpark"
+            ]
+          },
+          {
+            "unitId": "kennen",
+            "stars": 2,
+            "position": 4,
+            "items": []
+          },
+          {
+            "unitId": "evelynn",
+            "stars": 2,
+            "position": 9,
+            "items": []
+          },
+          {
+            "unitId": "neeko",
+            "stars": 3,
+            "position": 23,
+            "items": []
+          },
+          {
+            "unitId": "seraphine",
+            "stars": 3,
+            "position": 25,
+            "items": [
+              "emblem-k-da",
+              "TFT_Item_SpearOfShojin",
+              "TFT_Item_JeweledGauntlet"
+            ]
+          }
+        ],
+        "roles": [
+          {
+            "label": "主C",
+            "units": [
+              "seraphine"
+            ]
+          },
+          {
+            "label": "主坦",
+            "units": [
+              "gragas"
+            ]
+          },
+          {
+            "label": "功能装",
+            "units": [
+              "lillia"
+            ]
+          }
+        ],
+        "equivalentStageId": "00000000-0000-4000-8000-000000000055"
+      },
+      {
+        "teamId": "00000000-0000-4000-8000-000000000055",
+        "name": "6级追三",
+        "notes": "六级追三星芬妮，配三星妮蔻、莉莉娅开十三星 K/DA。升七再冲十五星档。"
+      }
+    ],
+    "edits": [
+      {
+        "teamId": "00000000-0000-4000-8000-000000000094",
+        "name": "7级 · K/DA 十五星档",
+        "notes": "芬妮带 K/DA 纹章。妮蔻、莉莉娅、芬妮三星，搭配两星酒桶、伊芙琳和一星蕾欧娜、阿狸，正好十五星。酒桶也三星就是十六星，仍开十五星档。",
+        "originalName": "七人口16星"
+      },
+      {"teamId": "00000000-0000-4000-8000-000000000094", "originalPositions": {"seraphine": 24}, "positions": {"seraphine": 27}},
+      {"teamId": "00000000-0000-4000-8000-000000000055", "originalPositions": {"seraphine": 24}, "positions": {"seraphine": 27}},
+      {"teamId": "00000000-0000-4000-8000-000000000086", "originalPositions": {"seraphine": 24}, "positions": {"seraphine": 27}},
+      {"teamId": "00000000-0000-4000-8000-000000000033", "originalPositions": {"seraphine": 25}, "positions": {"seraphine": 27}},
+      {"teamId": "00000000-0000-4000-8000-000000000115", "originalPositions": {"seraphine": 25}, "positions": {"seraphine": 27}},
+      {"teamId": "00000000-0000-4000-8000-000000000094", "positions": {"leona": 10}, "stoneplateHolder": "gragas", "originalPositions": {"gragas": 3, "lillia": 2, "leona": 4}},
+      {"teamId": "00000000-0000-4000-8000-000000000055", "positions": {"kennen": 10}, "stoneplateHolder": "gragas", "originalPositions": {"gragas": 3, "lillia": 2, "kennen": 4}},
+      {"teamId": "00000000-0000-4000-8000-000000000086", "positions": {"kennen": 10}, "stoneplateHolder": "gragas", "originalPositions": {"gragas": 3, "lillia": 2, "kennen": 4}},
+      {"teamId": "00000000-0000-4000-8000-000000000033", "positions": {"kennen": 10}, "stoneplateHolder": "gragas", "originalPositions": {"gragas": 3, "lillia": 2, "kennen": 4}},
+      {"teamId": "00000000-0000-4000-8000-000000000115", "positions": {"kennen": 10}, "stoneplateHolder": "gragas", "originalPositions": {"gragas": 3, "lillia": 2, "kennen": 4}}
+    ]
+  },
+  {
+    "sectionId": "sample-block-0243",
+    "stages": [
+      {
+        "teamId": "00000000-0000-4000-8000-000000000041",
+        "parentTeamId": "00000000-0000-4000-8000-000000000087",
+        "name": "7级四舞者",
+        "notes": "佛耶戈、贝蕾亚先搜两星，缺亚索或永恩时用四舞者，布隆和奥拉夫补两主宰。阿木木单顶，起手身边留空。",
+        "pieces": [
+          {
+            "unitId": "amumu",
+            "stars": 2,
+            "position": 3,
+            "items": [
+              "TFT_Item_SpectralGauntlet",
+              "TFT_Item_WarmogsArmor"
+            ]
+          },
+          {
+            "unitId": "braum",
+            "stars": 2,
+            "position": 1,
+            "items": []
+          },
+          {
+            "unitId": "olaf",
+            "stars": 2,
+            "position": 5,
+            "items": []
+          },
+          {
+            "unitId": "viego",
+            "stars": 2,
+            "position": 8,
+            "items": [
+              "TFT_Item_GuardianAngel",
+              "TFT_Item_UnstableConcoction"
+            ]
+          },
+          {
+            "unitId": "briar",
+            "stars": 2,
+            "position": 7,
+            "items": [
+              "TFT_Item_Bloodthirster"
+            ]
+          },
+          {
+            "unitId": "kayn",
+            "stars": 2,
+            "position": 11,
+            "items": []
+          },
+          {
+            "unitId": "camille",
+            "stars": 2,
+            "position": 12,
+            "items": []
+          }
+        ],
+        "roles": [
+          {
+            "label": "主C",
+            "units": [
+              "viego"
+            ]
+          },
+          {
+            "label": "主坦",
+            "units": [
+              "amumu"
+            ]
+          },
+          {
+            "label": "副C",
+            "units": [
+              "briar"
+            ]
+          }
+        ]
+      },
+      {
+        "teamId": "00000000-0000-4000-8000-000000000074",
+        "parentTeamId": "00000000-0000-4000-8000-000000000087",
+        "name": "7级六舞者",
+        "notes": "七级上场不同名舞者或真实伤害弈子合计六星解锁亚索，亚索、永恩到手开六舞者。双 C 两星先稳血再慢 D，阿木木留空邻格，贝蕾亚看对手后排换边。",
+        "pieces": [
+          {
+            "unitId": "amumu",
+            "stars": 2,
+            "position": 3,
+            "items": [
+              "TFT_Item_SpectralGauntlet",
+              "TFT_Item_WarmogsArmor"
+            ]
+          },
+          {
+            "unitId": "camille",
+            "stars": 2,
+            "position": 1,
+            "items": []
+          },
+          {
+            "unitId": "yone",
+            "stars": 1,
+            "position": 5,
+            "items": []
+          },
+          {
+            "unitId": "viego",
+            "stars": 2,
+            "position": 8,
+            "items": [
+              "TFT_Item_GuardianAngel",
+              "TFT_Item_UnstableConcoction",
+              "TFT_Item_InfinityEdge"
+            ]
+          },
+          {
+            "unitId": "briar",
+            "stars": 2,
+            "position": 7,
+            "items": [
+              "TFT_Item_Bloodthirster",
+              "TFT_Item_SteraksGage"
+            ]
+          },
+          {
+            "unitId": "yasuo",
+            "stars": 1,
+            "position": 11,
+            "items": []
+          },
+          {
+            "unitId": "kayn",
+            "stars": 2,
+            "position": 12,
+            "items": []
+          }
+        ],
+        "roles": [
+          {
+            "label": "主C",
+            "units": [
+              "viego"
+            ]
+          },
+          {
+            "label": "主坦",
+            "units": [
+              "amumu"
+            ]
+          },
+          {
+            "label": "副C",
+            "units": [
+              "briar"
+            ]
+          }
+        ]
+      }
+    ],
+    "edits": [
+      {
+        "teamId": "00000000-0000-4000-8000-000000000087",
+        "notes": "双 C 追三后升八，下阿木木，上约里克和奥拉夫。约里克带薄暮、日炎站双 C 同侧第一排，佛耶戈从第二排进场，贝蕾亚看对手后排换边。",
+        "positions": {
+          "yorick": 2,
+          "olaf": 3,
+          "camille": 5,
+          "viego": 8,
+          "briar": 7,
+          "kayn": 11,
+          "yone": 10,
+          "yasuo": 6
+        },
+        "originalName": "八级 · 六舞者佛耶戈",
+        "originalPositions": {
+          "yorick": 3,
+          "olaf": 2,
+          "camille": 4,
+          "viego": 14,
+          "briar": 15,
+          "kayn": 21,
+          "yone": 22,
+          "yasuo": 26
+        }
+      }
+    ]
+  },
+  {
+    "sectionId": "sample-block-0229",
+    "stages": [
+      {
+        "teamId": "00000000-0000-4000-8000-000000000005",
+        "parentTeamId": "00000000-0000-4000-8000-000000000017",
+        "name": "7级起搜",
+        "notes": "玛尔扎哈、艾克先到两星再慢 D，拉露恩没到用斯维因顶两星前排。四名不同的天才在七级解锁拉露恩，买到即换斯维因开五天才。",
+        "pieces": [
+          {
+            "unitId": "swain",
+            "stars": 2,
+            "position": 1,
+            "items": []
+          },
+          {
+            "unitId": "ekko",
+            "stars": 2,
+            "position": 3,
+            "items": [
+              "TFT_Item_GargoyleStoneplate",
+              "TFT_Item_WarmogsArmor"
+            ]
+          },
+          {
+            "unitId": "braum",
+            "stars": 2,
+            "position": 5,
+            "items": [
+              "TFT_Item_RedBuff"
+            ]
+          },
+          {
+            "unitId": "neeko",
+            "stars": 2,
+            "position": 15,
+            "items": []
+          },
+          {
+            "unitId": "yuumi",
+            "stars": 1,
+            "position": 21,
+            "items": []
+          },
+          {
+            "unitId": "lux",
+            "stars": 2,
+            "position": 23,
+            "items": []
+          },
+          {
+            "unitId": "malzahar",
+            "stars": 2,
+            "position": 26,
+            "items": [
+              "TFT_Item_JeweledGauntlet",
+              "TFT_Item_RabadonsDeathcap"
+            ]
+          }
+        ],
+        "roles": [
+          {
+            "label": "主C",
+            "units": [
+              "malzahar"
+            ]
+          },
+          {
+            "label": "主坦",
+            "units": [
+              "ekko"
+            ]
+          },
+          {
+            "label": "功能装",
+            "units": [
+              "braum"
+            ]
+          }
+        ]
+      },
+      {
+        "teamId": "00000000-0000-4000-8000-000000000017",
+        "name": "7级追出",
+        "notes": "优先玛尔扎哈、艾克三星，布隆顺路追。艾克居中接首轮集火，带日炎的布隆靠玛尔扎哈火力侧。"
+      }
+    ],
+    "edits": [
+      {
+        "teamId": "00000000-0000-4000-8000-000000000017",
+        "name": "7级 · 五天才追出后",
+        "notes": "优先玛尔扎哈、艾克三星，布隆顺路追。艾克居中接首轮集火，带日炎的布隆靠玛尔扎哈火力侧。",
+        "positions": {
+          "braum": 5,
+          "ekko": 3,
+          "malzahar": 26
+        },
+        "originalName": "七人口五天才 · 追三费",
+        "originalPositions": {
+          "braum": 2,
+          "ekko": 4,
+          "malzahar": 27
+        }
+      },
+      {
+        "teamId": "00000000-0000-4000-8000-000000000071",
+        "notes": "两项任务都做完才能买到男爵。男爵占两人口，放第二排跟艾克、布隆同侧进场。",
+        "positions": {
+          "braum": 5,
+          "ekko": 3,
+          "malzahar": 26,
+          "baron-nashor": 12
+        },
+        "originalName": "九人口五天才 · 男爵上限",
+        "originalPositions": {
+          "braum": 2,
+          "ekko": 4,
+          "malzahar": 27,
+          "baron-nashor": 19
+        }
+      },
+      {"teamId": "00000000-0000-4000-8000-000000000017", "originalPositions": {"malzahar": 26}, "positions": {"malzahar": 27}},
+      {"teamId": "00000000-0000-4000-8000-000000000071", "originalPositions": {"malzahar": 26}, "positions": {"malzahar": 27}},
+      {"teamId": "00000000-0000-4000-8000-000000000005", "originalPositions": {"malzahar": 26}, "positions": {"malzahar": 27}},
+      {"teamId": "00000000-0000-4000-8000-000000000005", "positions": {"swain": 7}, "stoneplateHolder": "ekko", "originalPositions": {"ekko": 3, "swain": 1, "braum": 5}}
+    ]
+  },
+  {
+    "sectionId": "sample-block-0407",
+    "stages": [
+      {
+        "teamId": "00000000-0000-4000-8000-000000000013",
+        "name": "7级起搜",
+        "notes": "德莱文、布隆先到两星才分别接韦鲁斯的输出装和俄洛伊的肉装。布隆居中顶，轻语卡莎和德莱文同侧隔一格，遇到大范围伤害再分边。"
+      }
+    ],
+    "edits": [
+      {
+        "teamId": "00000000-0000-4000-8000-000000000013",
+        "notes": "德莱文、布隆先到两星才分别接韦鲁斯的输出装和俄洛伊的肉装。布隆居中顶，轻语卡莎和德莱文同侧隔一格，遇到大范围伤害再分边。",
+        "positions": {
+          "draven": 22,
+          "kai-sa": 24,
+          "varus": 27
+        },
+        "originalName": "七级慢搜",
+        "originalPositions": {
+          "draven": 21,
+          "kai-sa": 27,
+          "varus": 24
+        },
+        "wording": {
+          "before": "德莱文和卡莎分底角。",
+          "after": "德莱文和带轻语的卡莎同侧隔一格，遇到范围伤害再分边。"
+        }
+      },
+      {
+        "teamId": "00000000-0000-4000-8000-000000000029",
+        "notes": "德莱文三星升八加悠米，薇恩解锁到手才换韦鲁斯。日炎俄洛伊靠双 C 侧，轻语卡莎和德莱文默认打同一片前排。",
+        "positions": {
+          "draven": 22,
+          "kai-sa": 24,
+          "yuumi": 27
+        },
+        "originalName": "八级成型",
+        "originalPositions": {
+          "draven": 21,
+          "kai-sa": 27,
+          "yuumi": 24
+        }
+      },
+      {"teamId": "00000000-0000-4000-8000-000000000029", "originalPositions": {"draven": 22, "kai-sa": 24}, "positions": {"draven": 21, "kai-sa": 23}},
+      {"teamId": "00000000-0000-4000-8000-000000000013", "originalPositions": {"draven": 22, "kai-sa": 24}, "positions": {"draven": 21, "kai-sa": 23}},
+      {"teamId": "00000000-0000-4000-8000-000000000029", "positions": {"swain": 11}, "stoneplateHolder": "braum", "originalPositions": {"braum": 3, "illaoi": 1, "swain": 5}},
+      {"teamId": "00000000-0000-4000-8000-000000000013", "positions": {"swain": 11}, "stoneplateHolder": "braum", "originalPositions": {"braum": 3, "illaoi": 1, "swain": 5}}
+    ]
+  },
+  {
+    "sectionId": "sample-block-0251",
+    "stages": [
+      {
+        "teamId": "00000000-0000-4000-8000-000000000119",
+        "parentTeamId": "00000000-0000-4000-8000-000000000075",
+        "name": "八级 · 三海三杀三摇滚男枪",
+        "boardRole": "variant",
+        "notes": "七级上奥拉夫、约里克、洛克、塔里克、男枪、贾克斯、安妮（或佐伊），同时解锁凯尔和扎克。到手后换下贾克斯和安妮（或佐伊），八级补派克。派克要七级起战斗结束时至少有 85 金，血量低就先搜牌。\n奥拉夫打工，男枪两星接装。队友有薄暮减甲时，男枪可把轻语换夜刃。扎克带石板甲单顶，砂槌贴扎克和男枪。没石板甲时可用圣盾使的誓约。",
+        "roles": [
+          {"label": "主C", "units": ["graves"]},
+          {"label": "主坦", "units": ["zac"]},
+          {"label": "副C", "units": ["pyke"]},
+          {"label": "功能装", "units": ["yorick"]}
+        ],
+        "instrumentPositions": {"maracas": 8},
+        "pieces": [
+          {"unitId": "zac", "position": 2, "stars": 2, "items": ["TFT_Item_GargoyleStoneplate", "TFT_Item_WarmogsArmor", "TFT_Item_Redemption"]},
+          {"unitId": "yorick", "position": 10, "stars": 2, "items": ["TFT_Item_RedBuff"]},
+          {"unitId": "taric", "position": 9, "stars": 2, "items": []},
+          {"unitId": "olaf", "position": 27, "stars": 2, "items": []},
+          {"unitId": "graves", "position": 7, "stars": 2, "items": ["TFT_Item_UnstableConcoction", "TFT_Item_PowerGauntlet", "TFT_Item_LastWhisper"]},
+          {"unitId": "pyke", "position": 16, "stars": 1, "items": ["TFT_Item_ThiefsGloves"]},
+          {"unitId": "locke", "position": 15, "stars": 2, "items": []},
+          {"unitId": "kayle", "position": 21, "stars": 2, "items": []}
+        ]
+      }
+    ],
+    "edits": [
+      {
+        "teamId": "00000000-0000-4000-8000-000000000076",
+        "originalName": "九级 · 岩雀",
+        "name": "九级上限 · 岩雀"
+      },
+      {
+        "teamId": "00000000-0000-4000-8000-000000000075",
+        "originalName": "八级 · 艾希",
+        "name": "八级成型 · 艾希"
+      },
+      {"teamId": "00000000-0000-4000-8000-000000000076", "positions": {"renekton": 11}, "stoneplateHolder": "zac", "originalPositions": {"zac": 3, "taric": 1, "renekton": 5}, "originalInstruments": {"maracas": 9, "rainstick": 15}},
+      {"teamId": "00000000-0000-4000-8000-000000000062", "positions": {"illaoi": 10}, "stoneplateHolder": "renekton", "originalPositions": {"renekton": 3, "taric": 1, "illaoi": 5}, "originalInstruments": {"maracas": 2}},
+      {"teamId": "00000000-0000-4000-8000-000000000075", "positions": {"renekton": 11}, "stoneplateHolder": "zac", "originalPositions": {"zac": 3, "taric": 1, "renekton": 5}, "originalInstruments": {"maracas": 9, "rainstick": 15}}
+    ]
+  },
+  {
+    "sectionId": "sample-block-0468",
+    "entryTeamId": "00000000-0000-4000-8000-000000000120",
+    "stages": [
+      {
+        "teamId": "00000000-0000-4000-8000-000000000120",
+        "name": "8级成型",
+        "notes": "先让海之歌棋子带两件装备解锁艾希。七级摆奥拉夫、纳尔、卡尔萨斯、艾希、塔里克、佐伊、雷克顿，一起解锁凯尔、扎克。八级搜两人二星，巴德没来用两星贾克斯。九级补泽丽，派克解锁后换巴德。",
+        "parentTeamId": "00000000-0000-4000-8000-000000000106",
+        "boardRole": "stage",
+        "roles": [
+          {"label": "主C", "units": ["kayle"]},
+          {"label": "主坦", "units": ["zac"]},
+          {"label": "副坦", "units": ["yorick"]}
+        ],
+        "pieces": [
+          {"unitId": "olaf", "position": 1, "stars": 2, "items": []},
+          {"unitId": "taric", "position": 2, "stars": 2, "items": []},
+          {"unitId": "zac", "position": 3, "stars": 2, "items": ["TFT_Item_Crownguard", "TFT_Item_GargoyleStoneplate", "TFT_Item_Redemption"]},
+          {"unitId": "yorick", "position": 4, "stars": 2, "items": ["TFT_Item_SpectralGauntlet", "TFT_Item_GargoyleStoneplate", "TFT_Item_WarmogsArmor"]},
+          {"unitId": "locke", "position": 14, "stars": 2, "items": []},
+          {"unitId": "kayle", "position": 21, "stars": 2, "items": ["TFT_Item_GuinsoosRageblade", "TFT_Item_Morellonomicon", "TFT_Item_RabadonsDeathcap"]},
+          {"unitId": "bard", "position": 25, "stars": 2, "items": []},
+          {"unitId": "ashe", "position": 27, "stars": 2, "items": []}
+        ]
+      }
+    ],
+    "edits": [
+      {
+        "teamId": "00000000-0000-4000-8000-000000000106",
+        "originalName": "九级 · 四主宰天使扎克",
+        "name": "九级上限 · 四主宰天使扎克"
+      },
+      {"teamId": "00000000-0000-4000-8000-000000000106", "originalPositions": {"zeri": 22, "ashe": 27}, "positions": {"zeri": 27, "ashe": 22}},
+      {"teamId": "00000000-0000-4000-8000-000000000106", "positions": {"yorick": 5, "olaf": 7, "taric": 8}, "stoneplateHolder": "zac", "originalPositions": {"zac": 3, "yorick": 4, "olaf": 1, "taric": 2}, "originalInstruments": {"maracas": 9}},
+      {"teamId": "00000000-0000-4000-8000-000000000120", "positions": {"yorick": 5, "olaf": 7, "taric": 8}, "stoneplateHolder": "zac", "originalPositions": {"zac": 3, "olaf": 1, "taric": 2, "yorick": 4}, "originalInstruments": {"maracas": 9}}
+    ]
+  },
+  {
+    "sectionId": "sample-block-0290",
+    "stages": [],
+    "edits": [
+      {"teamId": "00000000-0000-4000-8000-000000000080", "originalPositions": {"samira": 22}, "positions": {"samira": 21}},
+      {"teamId": "00000000-0000-4000-8000-000000000108", "positions": {"galio": 10}, "stoneplateHolder": "rell", "originalPositions": {"rell": 3, "swain": 2, "galio": 4}},
+      {"teamId": "00000000-0000-4000-8000-000000000022", "positions": {"galio": 10}, "stoneplateHolder": "rell", "originalPositions": {"rell": 3, "swain": 2, "galio": 4}}
+    ]
+  },
+  {
+    "sectionId": "sample-block-0154",
+    "stages": [],
+    "edits": [
+      {"teamId": "00000000-0000-4000-8000-000000000101", "originalPositions": {"lucian": 26, "xayah": 27}, "positions": {"lucian": 27, "xayah": 26}},
+      {"teamId": "00000000-0000-4000-8000-000000000026", "positions": {"dr-mundo": 7}, "stoneplateHolder": "leona", "originalPositions": {"leona": 3, "dr-mundo": 1, "rell": 5}},
+      {"teamId": "00000000-0000-4000-8000-000000000101", "positions": {"sett": 12}, "stoneplateHolder": "galio", "originalPositions": {"galio": 3, "lillia": 1, "sett": 5}}
+    ]
+  },
+  {
+    "sectionId": "sample-block-0051",
+    "stages": [],
+    "edits": [
+      {"teamId": "00000000-0000-4000-8000-000000000036", "originalPositions": {"jhin": 26, "vladimir": 27}, "positions": {"jhin": 27, "vladimir": 26}},
+      {"teamId": "00000000-0000-4000-8000-000000000092", "originalPositions": {"jhin": 26, "vladimir": 27}, "positions": {"jhin": 27, "vladimir": 26}},
+      {"teamId": "00000000-0000-4000-8000-000000000059", "positions": {"nasus": 10, "galio": 11}, "stoneplateHolder": "thresh", "originalPositions": {"thresh": 2, "k-sante": 1, "nasus": 3, "galio": 4}},
+      {"teamId": "00000000-0000-4000-8000-000000000034", "positions": {"nasus": 10, "galio": 11}, "stoneplateHolder": "thresh", "originalPositions": {"thresh": 2, "k-sante": 1, "nasus": 3, "galio": 4}}
+    ]
+  },
+  {
+    "sectionId": "sample-block-0338",
+    "stages": [],
+    "edits": [
+      {"teamId": "00000000-0000-4000-8000-000000000068", "originalPositions": {"vayne": 22}, "positions": {"vayne": 21}},
+      {"teamId": "00000000-0000-4000-8000-000000000078", "positions": {"olaf": 8, "camille": 11}, "stoneplateHolder": "yorick", "originalPositions": {"yorick": 3, "swain": 1, "olaf": 2, "camille": 5}}
+    ]
+  },
+  {
+    "sectionId": "sample-block-0235",
+    "stages": [],
+    "edits": [
+      {"teamId": "00000000-0000-4000-8000-000000000105", "positions": {"galio": 10, "nunu-willump": 13}, "stoneplateHolder": "dr-mundo", "originalPositions": {"dr-mundo": 3, "leona": 1, "galio": 5, "nunu-willump": 6}},
+      {"teamId": "00000000-0000-4000-8000-000000000003", "positions": {"galio": 10}, "stoneplateHolder": "leona", "originalPositions": {"leona": 3, "renekton": 1, "galio": 5}}
+    ]
+  },
+  {
+    "sectionId": "sample-block-0452",
+    "stages": [],
+    "edits": [
+      {"teamId": "00000000-0000-4000-8000-000000000093", "positions": {"qiyana": 11, "yorick": 12}, "stoneplateHolder": "zac", "originalPositions": {"zac": 3, "qiyana": 1, "vi": 2, "yorick": 4}, "originalInstruments": {"maracas": 16}}
+    ]
+  },
+  {
+    "sectionId": "sample-block-0394",
+    "stages": [],
+    "edits": [
+      {"teamId": "00000000-0000-4000-8000-000000000083", "positions": {"galio": 12, "nunu-willump": 13}, "stoneplateHolder": "thresh", "originalPositions": {"thresh": 3, "nasus": 1, "galio": 5, "nunu-willump": 6}},
+      {"teamId": "00000000-0000-4000-8000-000000000018", "positions": {"galio": 12}, "stoneplateHolder": "nasus", "originalPositions": {"nasus": 3, "thresh": 1, "galio": 5}}
+    ]
+  },
+  {
+    "sectionId": "sample-block-0368",
+    "stages": [],
+    "edits": [
+      {"teamId": "00000000-0000-4000-8000-000000000011", "positions": {"jax": 11}, "stoneplateHolder": "dr-mundo", "originalPositions": {"dr-mundo": 3, "leona": 1, "jax": 5}},
+      {"teamId": "00000000-0000-4000-8000-000000000021", "positions": {"k-sante": 7, "braum": 11}, "stoneplateHolder": "galio", "originalPositions": {"galio": 3, "k-sante": 1, "braum": 5, "swain": 6}},
+      {"teamId": "00000000-0000-4000-8000-000000000077", "positions": {"braum": 11}, "stoneplateHolder": "galio", "originalPositions": {"galio": 3, "illaoi": 1, "braum": 5}},
+      {"teamId": "00000000-0000-4000-8000-000000000027", "positions": {"lillia": 7}, "stoneplateHolder": "galio", "originalPositions": {"galio": 3, "lillia": 1, "swain": 5}},
+      {"teamId": "00000000-0000-4000-8000-000000000085", "positions": {"lillia": 7}, "stoneplateHolder": "galio", "originalPositions": {"galio": 3, "lillia": 1, "swain": 5}, "notes": "加里奥顶第一排，斯维因在第二排，卢锡安带后排装，凯隐代持史密奇装。"}
+    ]
+  },
+  {
+    "sectionId": "sample-block-0275",
+    "stages": [],
+    "edits": [
+      {"teamId": "00000000-0000-4000-8000-000000000082", "positions": {"swain": 11}, "stoneplateHolder": "yorick", "originalPositions": {"yorick": 3, "galio": 1, "swain": 5}},
+      {"teamId": "00000000-0000-4000-8000-000000000107", "positions": {"jax": 12}, "stoneplateHolder": "ekko", "originalPositions": {"ekko": 3, "kennen": 1, "jax": 5}},
+      {"teamId": "00000000-0000-4000-8000-000000000117", "positions": {"jax": 10}, "stoneplateHolder": "ekko", "originalPositions": {"ekko": 3, "kennen": 1, "jax": 5}},
+      {"teamId": "00000000-0000-4000-8000-000000000004", "positions": {"jax": 12}, "stoneplateHolder": "ekko", "originalPositions": {"ekko": 3, "kennen": 1, "jax": 5}},
+      {"teamId": "00000000-0000-4000-8000-000000000008", "positions": {"swain": 11}, "stoneplateHolder": "galio", "originalPositions": {"galio": 3, "annie": 1, "swain": 5}},
+      {"teamId": "00000000-0000-4000-8000-000000000014", "positions": {"swain": 11}, "stoneplateHolder": "galio", "originalPositions": {"galio": 3, "annie": 1, "swain": 5}},
+      {"teamId": "00000000-0000-4000-8000-000000000116", "positions": {"jax": 7}, "stoneplateHolder": "ekko", "originalPositions": {"ekko": 3, "jax": 1, "rell": 5}}
+    ]
+  },
+  {
+    "sectionId": "sample-block-0307",
+    "stages": [],
+    "edits": [
+      {"teamId": "00000000-0000-4000-8000-000000000007", "positions": {"elise": 7, "tibbers": 8, "annie": 10}, "stoneplateHolder": "shyvana", "originalPositions": {"shyvana": 5, "elise": 1, "tibbers": 2, "annie": 3, "leona": 4}},
+      {"teamId": "00000000-0000-4000-8000-000000000031", "positions": {"elise": 7, "tibbers": 8, "annie": 9}, "stoneplateHolder": "shyvana", "originalPositions": {"shyvana": 5, "elise": 1, "tibbers": 2, "annie": 3, "leona": 4}}
+    ]
+  },
+  {
+    "sectionId": "sample-block-0219",
+    "stages": [],
+    "edits": [
+      {"teamId": "00000000-0000-4000-8000-000000000064", "positions": {"locke": 9, "viego": 10}, "stoneplateHolder": "yorick", "originalPositions": {"yorick": 2, "locke": 3, "viego": 4, "olaf": 5}},
+      {"teamId": "00000000-0000-4000-8000-000000000024", "positions": {"locke": 9, "viego": 10}, "stoneplateHolder": "yorick", "originalPositions": {"yorick": 2, "locke": 3, "viego": 4, "olaf": 5, "swain": 6}},
+      {"teamId": "00000000-0000-4000-8000-000000000019", "positions": {"locke": 9, "viego": 10}, "stoneplateHolder": "yorick", "originalPositions": {"yorick": 2, "locke": 3, "viego": 4, "olaf": 5, "swain": 6}}
+    ]
+  },
+  {
+    "sectionId": "sample-block-0006",
+    "stages": [],
+    "edits": [
+      {"teamId": "00000000-0000-4000-8000-000000000067", "positions": {"lillia": 8, "ekko": 11}, "stoneplateHolder": "leona", "originalPositions": {"leona": 3, "lillia": 2, "gragas": 4, "ekko": 5}}
+    ]
+  },
+  {
+    "sectionId": "sample-block-0411",
+    "stages": [],
+    "edits": [
+      {"teamId": "00000000-0000-4000-8000-000000000095", "positions": {"k-sante": 8}, "stoneplateHolder": "leona", "originalPositions": {"leona": 3, "k-sante": 2, "sett": 5}}
+    ]
+  },
+  {
+    "sectionId": "sample-block-0173",
+    "stages": [],
+    "edits": [
+      {"teamId": "00000000-0000-4000-8000-000000000006", "positions": {"illaoi": 10}, "stoneplateHolder": "thresh", "originalPositions": {"thresh": 3, "nasus": 2, "illaoi": 4}}
+    ]
+  }
+]

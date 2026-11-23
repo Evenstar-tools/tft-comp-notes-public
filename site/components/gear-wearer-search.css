@@ -1,0 +1,64 @@
+.gear-wearer-search { position: relative; flex: 1; min-width: 0; }
+.gear-wearer-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding-inline: 11px 5px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--panel);
+}
+.gear-wearer-field:focus-within { border-color: var(--accent); }
+.gear-wearer-field > svg { flex: none; color: var(--muted); }
+.gear-wearer-field input {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  min-height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  outline: none;
+}
+.gear-wearer-field input:focus-visible { outline: none; }
+.gear-wearer-field :is(.gear-wearer-clear, .gear-wearer-chip) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex: none;
+  min-height: 34px;
+  padding: 3px 6px;
+  margin: 3px 0;
+  border-radius: 5px;
+  line-height: 1.25;
+}
+.gear-wearer-chip { max-width: 65%; border-color: var(--accent); color: var(--accent); }
+.gear-wearer-chip span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gear-wearer-chip img, .gear-wearer-options img { flex: none; object-fit: cover; border-radius: 4px; }
+.gear-wearer-chip svg { flex: none; }
+.gear-wearer-field .gear-wearer-clear { min-width: 34px; border: 0; background: transparent; color: var(--muted); }
+.gear-wearer-options {
+  position: absolute;
+  z-index: 8;
+  inset: calc(100% + 5px) 0 auto;
+  max-width: 28rem;
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 10px 24px #0003;
+}
+.gear-wearer-options li { display: flex; align-items: center; gap: 9px; min-height: 44px; padding: 4px 8px; border-radius: 5px; cursor: pointer; }
+.gear-wearer-options li[aria-selected=true] { background: var(--raised); color: var(--accent); }
+.gear-wearer-options li > small { margin-inline-start: auto; color: var(--muted); }
+.gear-wearer-options li span small { margin-inline-start: 5px; color: var(--muted); }
+@media (max-width: 580px) {
+  .gear-wearer-field input { font-size: 16px; }
+  .gear-wearer-field :is(.gear-wearer-clear, .gear-wearer-chip) { min-height: 38px; }
+}

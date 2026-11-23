@@ -1,0 +1,10 @@
+[
+  {"id":"classical-jhin","name":"四古典烬","trait":"DA_Virtuosos19","min":4,"units":{"DA_Jhin19":1,"DA_Thresh19":1},"rule":"至少四古典，烬和锤石同场"},
+  {"id":"heavenscale-xayah","name":"四国风霞","trait":"DA_Heavenscale19","min":4,"units":{"DA_Xayah19":1,"DA_Wukong19":1},"rule":"至少四国风，霞和悟空同场"},
+  {"id":"ionic-jinx","name":"七离子金克丝","trait":"DA_IonicSpark19","min":7,"units":{"DA_Jinx19":1},"rule":"至少七离子，金克丝上场"},
+  {"id":"prodigy-malzahar","name":"五天才玛尔扎哈","trait":"DA_Prodigy19","min":5,"units":{"DA_Malzahar19":1,"DA_Ekko19":1},"rule":"至少五天才，玛尔扎哈和艾克同场"},
+  {"id":"hyperpop-ziggs","name":"高能流行芬妮＆炸弹","trait":"DA_GlitterBomb19","min":4,"units":{"DA_Ziggs19":3,"DA_Seraphine19_Indie":1,"DA_Kobuko19":1},"rule":"至少四高能，三星吉格斯、芬妮和可酷伯同场"},
+  {"id":"pentakill-kayle","name":"五杀天使","trait":"DA_Pentakill19","min":5,"units":{"DA_Kayle19":1,"DA_Yorick19":1},"rule":"五杀乐队至少开到五，凯尔和约里克同场"},
+  {"id":"bodyguard-renata","name":"四保镖烈娜塔","trait":"DA_Bodyguard19","min":4,"units":{"DA_RenataGlasc19":3,"DA_Nasus19":1},"rule":"至少四保镖，三星烈娜塔和内瑟斯同场"},
+  {"id":"ocean-graves","name":"七海洋扎克男枪","trait":"DA_OceanSong19","min":7,"units":{"DA_Graves19":1,"DA_Zac19":1},"rule":"至少七海洋，男枪和扎克同场"}
+]

@@ -1,0 +1,74 @@
+.site-lookup-results { display: grid; gap: 12px; min-width: 0; }
+.site-lookup-group { min-width: 0; }
+.site-lookup-group > h2, .site-lookup-other > h2 {
+  color: var(--muted);
+  font-size: .85rem;
+  font-weight: 650;
+  margin: 0 0 6px;
+}
+.site-lookup-result {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 42px;
+  padding: 5px 9px;
+  border-radius: 4px;
+  color: var(--text);
+  text-decoration: none;
+}
+.site-lookup-result:hover, .site-lookup-result:focus-visible { background: var(--raised); }
+.site-lookup-result > img { border-radius: 4px; flex: 0 0 auto; object-fit: cover; }
+.site-lookup-label { flex: 1 1 auto; line-height: 1.35; min-width: 0; }
+.site-lookup-label > strong { font-size: .91rem; }
+.site-lookup-label > small { display: block; overflow-wrap: anywhere; }
+.site-lookup-result small { color: var(--muted); font-size: .76rem; }
+.site-lookup-metrics { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: flex-end; gap: 1px 7px; text-align: right; }
+.site-lookup-metrics > strong { color: var(--accent); font-size: .83rem; font-variant-numeric: tabular-nums; }
+.site-lookup-gear { border: 1px solid var(--line); border-radius: 8px; padding: 7px; }
+.site-lookup-gear > .site-lookup-result { min-height: 49px; margin-bottom: 8px; background: var(--raised); }
+.site-lookup-gear > .site-lookup-result > img { width: 34px; height: 34px; }
+.site-lookup-gear > .site-lookup-result .site-lookup-label strong { font-size: 1rem; }
+.site-lookup-evidence-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+.site-lookup-evidence { min-width: 0; }
+.site-lookup-evidence + .site-lookup-evidence { border-inline-start: 1px solid var(--line); padding-inline-start: 8px; }
+.site-lookup-evidence > header { display: flex; align-items: center; justify-content: space-between; gap: 5px; min-height: 36px; padding: 0 9px; }
+.site-lookup-evidence h3 { margin: 0; font-size: .875rem; font-weight: 700; }
+.site-lookup-holders .site-lookup-metrics { display: grid; grid-template-columns: max-content 5em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.site-lookup-holders .site-lookup-metrics > small { grid-column: 2; }
+.site-lookup-evidence header button {
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  color: var(--muted);
+  background: var(--panel);
+  cursor: pointer;
+  padding: 4px 7px;
+  font-size: .76rem;
+}
+.site-lookup-evidence header button[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.site-lookup-evidence > p, .site-lookup-message { color: var(--muted); font-size: .84rem; margin: 5px 9px 8px; }
+.site-lookup-source { display: block; color: var(--muted); font-size: .75rem; padding: 8px 9px 3px; margin-top: 3px; border-top: 1px solid var(--line); }
+.home-search-results { display: grid; gap: 10px 16px; align-items: start; margin: 8px 0 12px; }
+.home-search-results > .site-lookup-other, .home-search-results > .site-lookup-results {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 10px;
+  min-width: 0;
+}
+.home-search-results .site-lookup-other > h2 { padding-inline: 8px; }
+.home-search-results .site-lookup-other article + article { border-top: 1px solid var(--line); }
+.home-search-results .site-lookup-other .guide-result-main {
+  flex-direction: row; align-items: center; gap: 9px; min-height: 48px; padding: 7px 8px; border-radius: 4px;
+}
+.home-search-results .site-lookup-other .guide-result-main img { border-bottom: 2px solid var(--unit-cost); }
+.home-search-results .site-lookup-other .guide-review-badge,
+.home-search-results .site-lookup-other .guide-result-main > small { flex: none; }
+.site-lookup-arrow { flex: none; color: var(--muted); }
+@media (min-width: 1000px) {
+  .home-search-results[data-with-reference] { grid-template-columns: minmax(0, 1.8fr) minmax(250px, 1fr); }
+}
+@media (max-width: 580px) {
+  .site-lookup-evidence-grid { grid-template-columns: 1fr; }
+  .site-lookup-evidence + .site-lookup-evidence { border-inline-start: 0; padding-inline-start: 0; border-top: 1px solid var(--line); }
+  .site-lookup-metrics { gap: 1px 5px; }
+}
