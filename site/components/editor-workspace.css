@@ -136,7 +136,14 @@
 .editor .strip-piece[data-trait-focus="dimmed"] > img { opacity: .48; }
 .editor .board .empty-hex-dot svg { display: none; }
 .editor .board .empty-hex-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--board-edge); }
-.editor .board .board-instrument-note { min-height: 19px; padding-top: 1px; }
+.editor .workspace .board-col > .board-instrument-note {
+  block-size: 20px;
+  padding: 0;
+  overflow: hidden;
+  line-height: 20px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
 .editor .workspace:not(.matrix-workspace) .unit-browser { padding: 6px 9px; }
 .editor .workspace:not(.matrix-workspace) .browser-toolbar { gap: 6px; margin-bottom: 4px; }
 .editor .workspace:not(.matrix-workspace) .browser-toolbar input { padding-block: 4px; }
