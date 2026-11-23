@@ -1,6 +1,8 @@
 # 云顶之弈阵容笔记
 
-[在线工具](https://evenstar-tft-library.zhangzeyu99.chatgpt.site) · [公开版本](https://github.com/Evenstar-tools/tft-comp-notes-public/releases) · [问题反馈](https://github.com/Evenstar-tools/tft-comp-notes-public/issues)
+[公开版本](https://github.com/Evenstar-tools/tft-comp-notes-public/releases) · [问题反馈](https://github.com/Evenstar-tools/tft-comp-notes-public/issues)
+
+公开站将在 EdgeOne 部署。上线后，访问地址会更新在这里。
 
 这是一个社区阵容工具，包含棋盘编辑器、英雄图鉴、羁绊与装备速查，以及按需配置的飞书发布集成。普通阵容编辑器支持匿名使用，阵容保存在当前浏览器。代码位于 `site/`，当前源码快照对应已发布的 v163。
 
