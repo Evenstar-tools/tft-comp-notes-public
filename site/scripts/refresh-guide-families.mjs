@@ -77,6 +77,7 @@ const history = await readJson(historyPath).catch(e=>{if(e.code==="ENOENT") retu
 const catalog = arg("--catalog") ? await readJson(arg("--catalog")) : await fetchJson(catalogUrl);
 if (catalog.seasonId !== season.id || !catalog.boards?.length) throw Error("缺少当前赛季公开攻略目录，保留上一批。");
 const publicBoards = catalog.boards.filter(b => b.edition === season.id);
+const publicBoardById = new Map(publicBoards.map(board => [board.teamId, board]));
 if (!publicBoards.length) throw Error("当前攻略目录与站点版本不一致。");
 async function fetchJson(url) {
   const res = await fetch(url, {signal:AbortSignal.timeout(30000)});
@@ -90,6 +91,7 @@ const unitIds = new Map(lookup.units.filter(u=>u.apiName && (u.name || forms[u.a
 const evidence = arg("--evidence") ? await readJson(arg("--evidence")) : [];
 const distributions = new Map();
 const reviewed = new Set();
+const matchedBoardIds = new Set();
 const rows = [];
 const review = [];
 const smallSamples = [];
@@ -122,7 +124,26 @@ for (const b of bindings.rows) {
     review.push({id:b.clusterId,guide:b.name,reason:"不足 100 场，留在攻略检索",games:metric.games});
     continue;
   }
-  const { representativeUnits, ...info }=b;
+  const { representativeUnits, ...info } = b;
+  const anchor = publicBoardById.get(info.teamId);
+  if (!anchor || anchor.sectionId !== info.sectionId || anchor.special) {
+    review.push({id:b.clusterId,guide:b.name,reason:"主盘已变或应独立检索"});
+    continue;
+  }
+  const ids = [...new Set([info.landingTeamId, ...(info.sharedTeamIds ?? [])].filter(Boolean))];
+  const compatible = ids.filter(id => {
+    const board = publicBoardById.get(id);
+    const carries = board?.roles.filter(role => role.label === "主C" || role.label === "主输出").flatMap(role => role.units) ?? [];
+    return board?.sectionId === info.sectionId && !board.special && !board.emblems?.length && board.kind !== "过渡"
+      && carries.some(id => info.carryIds.includes(id))
+      && (!anchor.rollLevel || !board.rollLevel || anchor.rollLevel === board.rollLevel);
+  });
+  if (info.sharedTeamIds) info.sharedTeamIds = info.sharedTeamIds.filter(id => compatible.includes(id));
+  if (info.landingTeamId && !compatible.includes(info.landingTeamId)) delete info.landingTeamId;
+  if (compatible.length !== ids.length) review.push({id:b.clusterId,guide:b.name,reason:"变阵主 C、搜牌条件或目录已变",teamIds:ids.filter(id => !compatible.includes(id))});
+  const teamIds = [...new Set([info.teamId, ...compatible])];
+  if (teamIds.some(id => matchedBoardIds.has(id))) throw Error("同一棋盘绑定多个体系：" + teamIds.join(", "));
+  for (const id of teamIds) matchedBoardIds.add(id);
   rows.push({...info,...metric});
   const prev=comparable && prior.rows.find(r=>r.clusterId===b.clusterId);
   if(prev && prev.games && prior.totalFinishes) {

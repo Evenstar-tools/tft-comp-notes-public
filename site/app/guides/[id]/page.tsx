@@ -13,16 +13,17 @@ import { currentPatchRecommendations } from "@/server/patch-recommendations";
 import { patchRecommendationLabels } from "@/domain/patch-recommendations";
 import currentPatch from "@/data/current-patch.json";
 import { readPosterShare, validItemLibraryReturn } from "@/domain/links";
+import { boardStages } from "@/domain/team-stages";
 export const metadata = { title: "阵容笔记" };
 export const dynamic = "force-dynamic";
 export default async function Guide({
   params, searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ team?: string | string[]; poster?: string | string[]; posterFormat?: string | string[]; posterStages?: string | string[]; from?: string | string[] }>;
+  searchParams: Promise<{ team?: string | string[]; stage?: string | string[]; flex?: string | string[]; poster?: string | string[]; posterFormat?: string | string[]; posterStages?: string | string[]; from?: string | string[] }>;
 }) {
   const { id } = await params;
-  const { team, poster, posterFormat, posterStages, from } = await searchParams;
+  const { team, stage, flex, poster, posterFormat, posterStages, from } = await searchParams;
   const returnTo = validHomeReturn(from) ?? validAugmentReturn(from) ?? validVersionReturn(from) ?? validHeroReturn(from) ?? validItemLibraryReturn(from);
   const live = await publicGuidePublication();
   const section = live?.sections.find((entry) => entry.id === id);
@@ -42,7 +43,9 @@ export default async function Guide({
   return (
     <div className="reading-page">
       <DocumentView section={section} gameData={section.gameData ?? live!.season} publicationId={live!.id}
-        initialTeam={typeof team === "string" ? team : section.reroll?.entryTeamId ?? preferred?.id} variants={variants} openPoster={poster === "1"} returnTo={returnTo}
+        initialTeam={typeof team === "string" ? team : section.reroll?.entryTeamId ?? preferred?.id}
+        initialStage={boardStages.find(option => option === stage)} initialFlex={typeof flex === "string" ? flex : undefined}
+        variants={variants} openPoster={poster === "1"} returnTo={returnTo}
         initialPosterShare={poster === "1" ? readPosterShare(posterFormat, posterStages) : undefined} patchAdvice={patchAdvice} />
     </div>
   );

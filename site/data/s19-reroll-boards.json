@@ -1961,40 +1961,391 @@
         "parentTeamId": "00000000-0000-4000-8000-000000000075",
         "name": "八级 · 三海三杀三摇滚男枪",
         "boardRole": "variant",
-        "notes": "七级上奥拉夫、约里克、洛克、塔里克、男枪、贾克斯、安妮（或佐伊），同时解锁凯尔和扎克。到手后换下贾克斯和安妮（或佐伊），八级补派克。派克要七级起战斗结束时至少有 85 金，血量低就先搜牌。\n奥拉夫打工，男枪两星接装。队友有薄暮减甲时，男枪可把轻语换夜刃。扎克带石板甲单顶，砂槌贴扎克和男枪。没石板甲时可用圣盾使的誓约。",
+        "notes": "派克已解锁、三五杀到齐才转。男枪、扎克两星优先，砂槌贴双核，约里克带日炎站侧前。打不过就回七海。",
         "roles": [
-          {"label": "主C", "units": ["graves"]},
-          {"label": "主坦", "units": ["zac"]},
-          {"label": "副C", "units": ["pyke"]},
-          {"label": "功能装", "units": ["yorick"]}
+          {
+            "label": "主C",
+            "units": [
+              "graves"
+            ]
+          },
+          {
+            "label": "主坦",
+            "units": [
+              "zac"
+            ]
+          },
+          {
+            "label": "副C",
+            "units": [
+              "pyke"
+            ]
+          },
+          {
+            "label": "功能装",
+            "units": [
+              "yorick"
+            ]
+          }
         ],
-        "instrumentPositions": {"maracas": 8},
+        "instrumentPositions": {
+          "maracas": 8,
+          "infernalIdol": 26
+        },
         "pieces": [
-          {"unitId": "zac", "position": 2, "stars": 2, "items": ["TFT_Item_GargoyleStoneplate", "TFT_Item_WarmogsArmor", "TFT_Item_Redemption"]},
-          {"unitId": "yorick", "position": 10, "stars": 2, "items": ["TFT_Item_RedBuff"]},
-          {"unitId": "taric", "position": 9, "stars": 2, "items": []},
-          {"unitId": "olaf", "position": 27, "stars": 2, "items": []},
-          {"unitId": "graves", "position": 7, "stars": 2, "items": ["TFT_Item_UnstableConcoction", "TFT_Item_PowerGauntlet", "TFT_Item_LastWhisper"]},
-          {"unitId": "pyke", "position": 16, "stars": 1, "items": ["TFT_Item_ThiefsGloves"]},
-          {"unitId": "locke", "position": 15, "stars": 2, "items": []},
-          {"unitId": "kayle", "position": 21, "stars": 2, "items": []}
+          {
+            "unitId": "zac",
+            "position": 2,
+            "stars": 2,
+            "items": [
+              "TFT_Item_GargoyleStoneplate",
+              "TFT_Item_WarmogsArmor",
+              "TFT_Item_Redemption"
+            ]
+          },
+          {
+            "unitId": "yorick",
+            "position": 10,
+            "stars": 2,
+            "items": [
+              "TFT_Item_RedBuff"
+            ]
+          },
+          {
+            "unitId": "taric",
+            "position": 9,
+            "stars": 2,
+            "items": []
+          },
+          {
+            "unitId": "olaf",
+            "position": 27,
+            "stars": 2,
+            "items": []
+          },
+          {
+            "unitId": "graves",
+            "position": 7,
+            "stars": 2,
+            "items": [
+              "TFT_Item_UnstableConcoction",
+              "TFT_Item_PowerGauntlet",
+              "TFT_Item_LastWhisper"
+            ]
+          },
+          {
+            "unitId": "pyke",
+            "position": 16,
+            "stars": 1,
+            "items": [
+              "TFT_Item_ThiefsGloves"
+            ]
+          },
+          {
+            "unitId": "locke",
+            "position": 15,
+            "stars": 2,
+            "items": []
+          },
+          {
+            "unitId": "kayle",
+            "position": 21,
+            "stars": 2,
+            "items": []
+          }
         ]
       }
     ],
     "edits": [
       {
-        "teamId": "00000000-0000-4000-8000-000000000076",
-        "originalName": "九级 · 岩雀",
-        "name": "九级上限 · 岩雀"
+        "teamId": "00000000-0000-4000-8000-000000000062",
+        "name": "7级 · 解锁扎克",
+        "notes": "七级上塔里克、佐伊、雷克顿、辛德拉、奥拉夫解锁扎克。奥拉夫带男枪装，鳄鱼带扎克装，砂槌贴两人。",
+        "positions": {
+          "taric": 10,
+          "renekton": 3,
+          "illaoi": 11,
+          "olaf": 8,
+          "swain": 12,
+          "zoe": 22,
+          "syndra": 27
+        },
+        "originalPositions": {
+          "taric": 1,
+          "renekton": 3,
+          "illaoi": [
+            10,
+            5
+          ],
+          "olaf": 9,
+          "swain": [
+            11,
+            11
+          ],
+          "zoe": 22,
+          "syndra": [
+            26,
+            26
+          ]
+        },
+        "instrumentMoves": {
+          "maracas": 9
+        },
+        "items": {
+          "olaf": [
+            "TFT_Item_UnstableConcoction",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_GuardianAngel"
+          ],
+          "renekton": [
+            "TFT_Item_WarmogsArmor",
+            "TFT_Item_GargoyleStoneplate",
+            "TFT_Item_Redemption"
+          ]
+        },
+        "originalItems": {
+          "olaf": [
+            "TFT_Item_UnstableConcoction",
+            "TFT_Item_InfinityEdge"
+          ],
+          "renekton": [
+            "TFT_Item_WarmogsArmor",
+            "TFT_Item_GargoyleStoneplate"
+          ]
+        },
+        "originalInstruments": {
+          "maracas": 2
+        }
       },
       {
         "teamId": "00000000-0000-4000-8000-000000000075",
-        "originalName": "八级 · 艾希",
-        "name": "八级成型 · 艾希"
+        "name": "8级成型 · 七海",
+        "notes": "七级上塔里克、佐伊、雷克顿、辛德拉、奥拉夫解锁扎克。奥拉夫带男枪装，鳄鱼带扎克装。八级搜男枪、扎克两星，两件乐器都贴两人。",
+        "positions": {
+          "taric": 10,
+          "zac": 2,
+          "graves": 8,
+          "renekton": 7,
+          "swain": 12,
+          "zoe": 24,
+          "syndra": 21,
+          "ashe": 27
+        },
+        "originalPositions": {
+          "taric": 1,
+          "zac": 3,
+          "renekton": [
+            11,
+            5
+          ],
+          "graves": 10,
+          "swain": 12,
+          "zoe": 21,
+          "ashe": 24,
+          "syndra": 27
+        },
+        "instrumentMoves": {
+          "maracas": 9,
+          "rainstick": 1
+        },
+        "items": {
+          "ashe": []
+        },
+        "originalItems": {
+          "ashe": [
+            "TFT_Item_GuinsoosRageblade"
+          ]
+        },
+        "originalInstruments": {
+          "maracas": 9,
+          "rainstick": 15
+        }
       },
-      {"teamId": "00000000-0000-4000-8000-000000000076", "positions": {"renekton": 11}, "stoneplateHolder": "zac", "originalPositions": {"zac": 3, "taric": 1, "renekton": 5}, "originalInstruments": {"maracas": 9, "rainstick": 15}},
-      {"teamId": "00000000-0000-4000-8000-000000000062", "positions": {"illaoi": 10}, "stoneplateHolder": "renekton", "originalPositions": {"renekton": 3, "taric": 1, "illaoi": 5}, "originalInstruments": {"maracas": 2}},
-      {"teamId": "00000000-0000-4000-8000-000000000075", "positions": {"renekton": 11}, "stoneplateHolder": "zac", "originalPositions": {"zac": 3, "taric": 1, "renekton": 5}, "originalInstruments": {"maracas": 9, "rainstick": 15}}
+      {
+        "teamId": "00000000-0000-4000-8000-000000000076",
+        "name": "9级上限 · 七海岩雀",
+        "notes": "岩雀换艾希，俄洛伊换斯维因，再补悠米。男枪沿用八级装。砂槌贴男枪、扎克，雨棍贴男枪和左下角的岩雀。",
+        "positions": {
+          "taric": 10,
+          "zac": 2,
+          "graves": 8,
+          "renekton": 7,
+          "illaoi": 12,
+          "zoe": 24,
+          "taliyah": 21,
+          "syndra": 27,
+          "yuumi": 25
+        },
+        "originalPositions": {
+          "taric": 1,
+          "zac": 3,
+          "renekton": [
+            11,
+            5
+          ],
+          "graves": 10,
+          "illaoi": 12,
+          "zoe": 20,
+          "taliyah": 21,
+          "yuumi": 24,
+          "syndra": 27
+        },
+        "instrumentMoves": {
+          "maracas": 9,
+          "rainstick": 15
+        },
+        "items": {
+          "taliyah": [
+            "TFT_Item_SpearOfShojin",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_RabadonsDeathcap"
+          ]
+        },
+        "originalItems": {
+          "taliyah": [
+            "TFT_Item_SpearOfShojin"
+          ]
+        },
+        "originalInstruments": {
+          "maracas": 9,
+          "rainstick": 15
+        }
+      },
+      {
+        "teamId": "00000000-0000-4000-8000-000000000030",
+        "originalName": "9级 · 五海洋男枪派克",
+        "name": "9级 · 五海三摇滚派克",
+        "notes": "派克已解锁，能上九再转。扎克带薄暮，男枪、派克打同侧。砂槌贴男枪、扎克，雨棍贴男枪和左下角的岩雀。",
+        "positions": {
+          "zac": 2,
+          "renekton": 7,
+          "pyke": 14,
+          "swain": 10,
+          "ezreal": 27,
+          "graves": 8,
+          "olaf": 17,
+          "taliyah": 21,
+          "zoe": 22
+        },
+        "originalPositions": {
+          "zac": 3,
+          "renekton": 7,
+          "pyke": 8,
+          "swain": 10,
+          "ezreal": 14,
+          "graves": 16,
+          "olaf": 17,
+          "taliyah": 21,
+          "zoe": 22
+        },
+        "instrumentMoves": {
+          "maracas": 9,
+          "rainstick": 15,
+          "infernalIdol": 3
+        }
+      },
+      {
+        "teamId": "00000000-0000-4000-8000-000000000102",
+        "originalName": "九级 · 五海洋三离子男枪",
+        "name": "9级 · 五海三离子",
+        "notes": "阿萝拉、希瓦娜先来再转。男枪用轻语破甲。砂槌贴男枪、扎克，雨棍贴男枪和左下角的岩雀，阿萝拉放另一侧。",
+        "positions": {
+          "graves": 8,
+          "zac": 2,
+          "aurora": 27,
+          "taliyah": 21,
+          "shyvana": 10,
+          "annie": 17,
+          "ezreal": 14,
+          "renekton": 7,
+          "zoe": 22
+        },
+        "originalPositions": {
+          "graves": 8,
+          "zac": 3,
+          "aurora": 21,
+          "taliyah": 22,
+          "shyvana": 2,
+          "annie": 17,
+          "ezreal": 14,
+          "renekton": 10,
+          "zoe": 27
+        },
+        "instrumentMoves": {
+          "maracas": 9,
+          "rainstick": 15
+        },
+        "items": {
+          "taliyah": [
+            "TFT_Item_SpearOfShojin",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_ArchangelsStaff"
+          ]
+        },
+        "originalItems": {
+          "taliyah": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_JeweledGauntlet"
+          ]
+        }
+      },
+      {
+        "teamId": "00000000-0000-4000-8000-000000000119",
+        "originalName": "八级 · 三海三杀三摇滚男枪",
+        "name": "8级 · 三海三杀三摇滚",
+        "notes": "派克已解锁、三五杀到齐才转。男枪、扎克两星优先，砂槌贴双核，约里克带日炎站侧前。打不过就回七海。",
+        "originalPositions": {
+          "zac": 2,
+          "yorick": 10,
+          "taric": 9,
+          "olaf": 27,
+          "graves": 7,
+          "pyke": 16,
+          "locke": 15,
+          "kayle": 21
+        },
+        "instrumentMoves": {
+          "maracas": 8,
+          "infernalIdol": 26
+        }
+      }
+    ],
+    "entryTeamId": "00000000-0000-4000-8000-000000000075",
+    "hiddenLegacy": [
+      {
+        "id": "sample-block-0728",
+        "prefix": "八级艾希盘 428 场"
+      },
+      {
+        "id": "sample-block-0584",
+        "prefix": "11 月 21 日热补后四小时"
+      },
+      {
+        "id": "sample-block-0597",
+        "prefix": "带乐器的一图流"
+      }
+    ],
+    "wording": [
+      {
+        "before": "凑 5 名不同的海洋或主唱",
+        "after": "凑 5 名不同的海之歌或主宰"
+      },
+      {
+        "before": "七级五名不同的海洋或主唱",
+        "after": "七级五名不同的海之歌或主宰"
+      },
+      {
+        "before": "开战时让塔里克、鳄鱼、辛德拉、男枪和这张五费分别站上强化格，集齐 1 至 5 费。",
+        "after": "解锁岩雀时，把辛德拉挪到第 3 排第 3 格，再用任意五费换斯维因，放第 3 排第 4 格。两件乐器合计覆盖塔里克、雷克顿、辛德拉、男枪和五费，开战时凑齐 1 至 5 费。"
+      },
+      {
+        "before": "扎克顶前排，男枪放第二、三排，派克补近战输出。三摇滚召唤亚托克斯。图中沙锤放二排三格，雨声棒放三排二格。",
+        "after": "扎克顶第一排，男枪和派克打同侧。砂槌贴扎克和男枪，雨棍贴男枪和岩雀。"
+      },
+      {
+        "before": "副C：艾希。鬼索的狂暴之刃。",
+        "after": "艾希空装补七海。"
+      }
     ]
   },
   {
@@ -2088,16 +2439,16 @@
         "teamId": "00000000-0000-4000-8000-000000000059",
         "stoneplateHolder": "thresh",
         "originalPositions": {"k-sante": 1, "thresh": 2, "nasus": 3, "galio": 4, "vladimir": 9, "jhin": 21, "mel": 23, "lucian": 27},
-        "positions": {"thresh": 4, "galio": 1, "nasus": 9, "vladimir": 17, "jhin": 27, "mel": 21, "lucian": 25, "k-sante": 11},
+        "positions": {"thresh": 4, "galio": 1, "nasus": 2, "vladimir": 8, "jhin": 27, "mel": 25, "lucian": 21, "k-sante": 3},
         "originalItems": {"k-sante": ["TFT_Item_SpectralGauntlet"], "thresh": ["TFT_Item_GargoyleStoneplate", "TFT_Item_WarmogsArmor", "TFT_Item_Redemption"], "jhin": ["TFT_Item_InfinityEdge", "TFT_Item_PowerGauntlet", "TFT_Item_Deathblade"], "mel": ["TFT_Item_BlueBuff", "TFT_Item_Morellonomicon"]},
         "items": {"thresh": ["TFT_Item_GargoyleStoneplate", "TFT_Item_Redemption", "TFT_Item_Crownguard"], "jhin": ["TFT_Item_InfinityEdge", "TFT_Item_Deathblade", "TFT_Item_LastWhisper"], "mel": ["TFT_Item_BlueBuff", "TFT_Item_Morellonomicon", "TFT_Item_ArchangelsStaff"], "k-sante": []},
-        "notes": "八级搜两星烬和锤石。锤石在烬这一侧接火，加里奥分到另一侧，梅尔和烬分守底角。吸血鬼没来先用烈娜塔保四古典。"
+        "notes": "八级搜两星烬和锤石。锤石在首排右侧半单顶，其他前排靠左。烬守右底角，梅尔和他同侧集火。吸血鬼没来先用烈娜塔保四古典。"
       },
       {
         "teamId": "00000000-0000-4000-8000-000000000034",
         "stoneplateHolder": "thresh",
         "originalPositions": {"k-sante": 1, "thresh": 2, "nasus": 3, "galio": 4, "vladimir": 9, "jhin": 21, "mel": 23, "miss-fortune": 25, "lucian": 27},
-        "positions": {"thresh": 4, "galio": 1, "nasus": 9, "vladimir": 17, "jhin": 27, "mel": 21, "lucian": 23, "k-sante": 11},
+        "positions": {"thresh": 4, "galio": 1, "nasus": 2, "vladimir": 8, "jhin": 27, "mel": 25, "lucian": 21, "miss-fortune": 23, "k-sante": 3},
         "originalItems": {"k-sante": ["TFT_Item_SpectralGauntlet"], "thresh": ["TFT_Item_GargoyleStoneplate", "TFT_Item_WarmogsArmor", "TFT_Item_Redemption"], "jhin": ["TFT_Item_InfinityEdge", "TFT_Item_PowerGauntlet", "TFT_Item_Deathblade"], "mel": ["TFT_Item_BlueBuff", "TFT_Item_Morellonomicon"]},
         "items": {"thresh": ["TFT_Item_GargoyleStoneplate", "TFT_Item_Redemption", "TFT_Item_Crownguard"], "jhin": ["TFT_Item_InfinityEdge", "TFT_Item_Deathblade", "TFT_Item_LastWhisper"], "mel": ["TFT_Item_BlueBuff", "TFT_Item_Morellonomicon", "TFT_Item_ArchangelsStaff"], "k-sante": []}
       }
@@ -2114,8 +2465,29 @@
   {
     "sectionId": "sample-block-0235",
     "stages": [],
+    "wording": [
+      {"before": "女枪先两星，下泽丽、巴德，上女枪、卢锡安。保留双电子、双爵士，三疾风换双制作人。卢锡安打工时先留一张，再卖带装的交装备。", "after": "女枪先两星就切女枪盘。泽丽、酒桶、史密奇换成女枪、卢锡安、约里克。卢锡安打工时先留一张空装的，再卖带装的交装备。"}
+    ],
+    "hiddenLegacy": [
+      {"id": "sample-block-0108", "prefix": "PBE 19.1 数据"},
+      {"id": "sample-block-0430", "prefix": "PBE 19.1 近三天，九级泽丽原盘 426 场"},
+      {"id": "sample-block-0430", "prefix": "固定九人 100 场"},
+      {"id": "sample-block-0402", "prefix": "MetaTFT 固定九人"},
+      {"id": "sample-block-0814", "prefix": "PBE 19.1 近三天，原九人泽丽 426 场"}
+    ],
     "edits": [
-      {"teamId": "00000000-0000-4000-8000-000000000105", "positions": {"galio": 10, "nunu-willump": 13}, "stoneplateHolder": "dr-mundo", "originalPositions": {"dr-mundo": 3, "leona": 1, "galio": 5, "nunu-willump": 6}},
+      {
+        "teamId": "00000000-0000-4000-8000-000000000105",
+        "positions": {"leona": 2, "vi": 8, "gragas": 9, "dr-mundo": 10, "jax": 11, "galio": 12, "nunu-willump": 13, "smeech": 14, "zeri": 21},
+        "originalPositions": {"dr-mundo": 3, "leona": 1, "galio": 5, "nunu-willump": 6, "jax": 8, "vi": 11, "yorick": 12, "bard": 22, "zeri": 27},
+        "originalItems": {"yorick": [], "bard": []},
+        "replacements": {
+          "yorick": {"unitId": "gragas", "stars": 1, "items": []},
+          "bard": {"unitId": "smeech", "stars": 1, "items": []}
+        },
+        "notes": "蕾欧娜第一排单顶，泽丽站左下角。九级留巴德凑八个常规羁绊，解锁史密奇后再换下他。",
+        "wording": {"before": "优先两星泽丽接装，留巴德开三疾风。女枪先两星时改上女枪、卢锡安开双制作人。下艾克、雷克顿，上蔚、努努，第九格补蒙多。蒙多两星再接蕾欧娜的肉装。", "after": "九级先上酒桶，留巴德凑齐八个常规羁绊。解锁史密奇后原位换下巴德。泽丽两星接输出装，蒙多两星再接蕾欧娜的肉装。"}
+      },
       {"teamId": "00000000-0000-4000-8000-000000000003", "positions": {"galio": 10}, "stoneplateHolder": "leona", "originalPositions": {"leona": 3, "renekton": 1, "galio": 5}}
     ]
   },

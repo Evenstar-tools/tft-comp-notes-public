@@ -9,14 +9,14 @@ import { itemName, itemTerms } from "@/domain/gear-library";
 import { guideBoardName, guideLink, isEditorialSection, primaryFirst } from "@/domain/guide-reading";
 import { guideSearchKey, guideTraitNames, openingSearch } from "@/domain/guide-search";
 import { heroAugmentCategory, heroAugmentForGuide } from "@/domain/hero-augments";
-import { homeSearchIntent, matchHomeGuide } from "@/domain/home-guide-search";
+import { equippedGuideRoutes, homeSearchIntent, matchHomeGuide } from "@/domain/home-guide-search";
 import { emblemLink, itemLink } from "@/domain/links";
 import {
   indexedEmblemTerms, rankedWearers, searchNameRank, siteSearchIntent,
   type BoardHit, type SearchGearDetail, type SiteSearchGroup, type SiteSearchHit, type SiteSearchResponse,
 } from "@/domain/site-search";
 import type { Item, Team, Unit } from "@/domain/types";
-import { guideBoardKind, usedPopulation } from "@/domain/team";
+import { guideBoardKind } from "@/domain/team";
 import { unitSearchNames } from "@/domain/unit-search.mjs";
 import { isVersionUpdate, sameEdition } from "@/domain/version-updates";
 import { currentPatchRecommendations } from "./patch-recommendations";
@@ -119,26 +119,11 @@ function equippedBoards(item: Item, context: Context) {
   const isCurrent = (section: Section) => context.live && sameEdition((section.gameData ?? context.live.season).id,season.id);
   return context.sections.filter(isCurrent).flatMap(section => {
     const teams = primaryFirst(sectionTeams(section), section.primaryTeamId);
-    const candidates = new Map<string, { hit: BoardHit; primary: boolean; population: number }>();
-    for (const team of teams) {
-      const wearers = team.pieces.flatMap(piece => {
-        const unit = unitMap.get(piece.unitId);
-        return unit && unit.id !== context.exclusion && (!context.extra.lowCosts || unit.cost <= 3) && piece.items.includes(item.id)
-          ? [unit] : [];
-      });
-      if (!wearers.length) continue;
-      const stage = section.reroll?.stages.find(row => row.teamId === team.id);
-      const mainStage = section.stageTeamIds?.includes(team.id) || team.boardRole === "stage";
-      const route = stage?.parentTeamId ?? (stage || mainStage ? teams[0].id : team.id);
-      const primary = team.id === route;
-      const population = usedPopulation(team.pieces);
-      const current = candidates.get(route);
-      if (current && (current.primary || !primary && current.population >= population)) continue;
+    return equippedGuideRoutes(section, teams, teams, item.id, unitMap, context.exclusion, context.extra.lowCosts).map(({board, wearers, population}) => {
       const label = [...new Set(wearers.map(unit => unit.name))].join("、");
-      const board = team.id === teams[0].id ? population + "级" : guideBoardName(team);
-      candidates.set(route, { hit:guideHit(section, team, context, board + " · " + label + "携带", wearers[0]), primary, population });
-    }
-    return [...candidates.values()].map(row => row.hit);
+      const stage = board.id === teams[0].id ? population + "级" : guideBoardName(board);
+      return guideHit(section, board, context, stage + " · " + label + "携带", wearers[0]);
+    });
   }).slice(0, limit);
 }
 

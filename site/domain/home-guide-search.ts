@@ -3,10 +3,31 @@ import { authoredParagraphs, guideBody, guideUnitMatch, readingNotes, type Guide
 import type { GuideFamilyStat } from "./guide-family-stats";
 import { guideSearchKey, guideStyleKey, guideTraitNames, guideWearerQuery, homeGuideFilter, matchOpeningSearch, openingSearch } from "./guide-search";
 import { traitCounts, usedPopulation } from "./team";
-import type { Season, Team } from "./types";
+import type { Season, Team, Unit } from "./types";
 import { unitSearchNames } from "./unit-search.mjs";
 
 type Match = { board: Team; rank: number; context?: string; unitLabel?: string; namedFamily?: boolean; kind: "board" | "opening" | "guide" };
+
+export function equippedGuideRoutes(section: Section, ordered: Team[], matching: Team[], itemId: string,
+  unitIndex: ReadonlyMap<string, Unit>, exclude?: string, lowCosts = false) {
+  const routes = new Map<string, { board: Team; wearers: Unit[]; primary: boolean; population: number }>();
+  for (const board of matching) {
+    const wearers = board.pieces.flatMap(piece => {
+      const unit = unitIndex.get(piece.unitId);
+      return unit && unit.id !== exclude && (!lowCosts || unit.cost <= 3) && piece.items.includes(itemId) ? [unit] : [];
+    });
+    if (!wearers.length) continue;
+    const stage = section.reroll?.stages.find(row => row.teamId === board.id);
+    const mainStage = section.stageTeamIds?.includes(board.id) || board.boardRole === "stage";
+    const routeId = stage?.parentTeamId ?? (stage || mainStage ? ordered[0].id : board.id);
+    const primary = board.id === routeId;
+    const population = usedPopulation(board.pieces);
+    const previous = routes.get(routeId);
+    if (previous && (previous.primary || !primary && previous.population >= population)) continue;
+    routes.set(routeId, { board, wearers, primary, population });
+  }
+  return [...routes.values()];
+}
 
 export function familyNameMatches(stat: GuideFamilyStat, query: string) {
   const term = guideSearchKey(query);

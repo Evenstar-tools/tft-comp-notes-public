@@ -17,15 +17,23 @@ type BoardEdit = {
   originalName?: string;
   notes?: string;
   positions?: Record<string, number>;
-  originalPositions?: Record<string, number>;
+  originalPositions?: Record<string, number | number[]>;
   items?: Record<string, string[]>;
+  replacements?: Record<string, Pick<Piece, "unitId" | "stars" | "items">>;
   originalItems?: Record<string, string[]>;
   stoneplateHolder?: string;
   originalInstruments?: Partial<Record<BoardInstrumentId, number>>;
   instrumentMoves?: Record<string, number>;
   wording?: { before: string; after: string };
 };
-type Guide = { sectionId: string; entryTeamId?: string; stages: Stage[]; edits?: BoardEdit[] };
+type Guide = {
+  sectionId: string;
+  entryTeamId?: string;
+  stages: Stage[];
+  edits?: BoardEdit[];
+  wording?: NonNullable<BoardEdit["wording"]>[];
+  hiddenLegacy?: { id: string; prefix: string }[];
+};
 const guides = new Map((data as Guide[]).map(guide => [guide.sectionId, guide]));
 
 function replaceWording(block: ContentBlock, edits: NonNullable<BoardEdit["wording"]>[]): ContentBlock {
@@ -46,8 +54,10 @@ function editBoard(team: Team, edit: BoardEdit, data: Season) {
   if (edit.originalName && guideBoardName(team) !== edit.originalName) return team;
   if (edit.stoneplateHolder && !team.pieces.some(piece =>
     piece.unitId === edit.stoneplateHolder && piece.items.includes("TFT_Item_GargoyleStoneplate"))) return team;
-  if (Object.entries(edit.originalPositions ?? {}).some(([id, position]) =>
-    team.pieces.find(piece => piece.unitId === id)?.position !== position)) return team;
+  if (Object.entries(edit.originalPositions ?? {}).some(([id, accepted]) => {
+    const position = team.pieces.find(piece => piece.unitId === id)?.position;
+    return position === undefined || (Array.isArray(accepted) ? !accepted.includes(position) : position !== accepted);
+  })) return team;
   if (Object.entries(edit.originalItems ?? {}).some(([id, expected]) => {
     const items = team.pieces.find(piece => piece.unitId === id)?.items;
     return !items || items.length !== expected.length || items.some((item, i) => item !== expected[i]);
@@ -57,10 +67,16 @@ function editBoard(team: Team, edit: BoardEdit, data: Season) {
     if (Object.entries(edit.originalInstruments).some(([id, position]) => instruments.get(position)?.id !== id)) return team;
   }
 
-  const pieces = edit.positions || edit.items ? team.pieces.map(piece => ({
-    ...piece, position: edit.positions?.[piece.unitId] ?? piece.position,
-    items: edit.items?.[piece.unitId] ?? piece.items,
-  })) : team.pieces;
+  if (Object.entries(edit.replacements ?? {}).some(([id, replacement]) =>
+    team.pieces.filter(piece => piece.unitId === id).length !== 1 ||
+    !data.units.some(unit => unit.id === replacement.unitId))) return team;
+  const pieces = edit.positions || edit.items || edit.replacements ? team.pieces.map(piece => {
+    const next = edit.replacements?.[piece.unitId] ? { ...piece, ...edit.replacements[piece.unitId] } : piece;
+    return {
+      ...next, position: edit.positions?.[next.unitId] ?? next.position,
+      items: edit.items?.[next.unitId] ?? next.items,
+    };
+  }) : team.pieces;
   const instrumentPositions = edit.instrumentMoves ? { ...team.instrumentPositions, ...edit.instrumentMoves } : team.instrumentPositions;
   const positions = [...pieces.map(piece => piece.position), ...Object.values(instrumentPositions ?? {})];
   if (new Set(positions).size !== positions.length || positions.some(position => position < 0 || position > 27)) return team;
@@ -80,7 +96,7 @@ export function includeRerollBoards(snapshot: Publication, current: Season): Pub
     const advice: Record<string, string> = {};
     const added: string[] = [];
     const corrected: string[] = [];
-    const wording: NonNullable<BoardEdit["wording"]>[] = [];
+    const wording: NonNullable<BoardEdit["wording"]>[] = [...(guide.wording ?? [])];
     const stages = guide.stages.flatMap(({ pieces, instrumentPositions, ...stage }) => {
       if (stage.parentTeamId && !teams.has(stage.parentTeamId)) return [];
       if (!teams.has(stage.teamId)) {
@@ -106,7 +122,7 @@ export function includeRerollBoards(snapshot: Publication, current: Season): Pub
       if (next === original) continue;
       teams.set(edit.teamId, next);
       if (edit.notes) advice[edit.teamId] = edit.notes;
-      if (edit.positions || edit.items || edit.instrumentMoves) corrected.push(edit.teamId);
+      if (edit.positions || edit.items || edit.replacements || edit.instrumentMoves) corrected.push(edit.teamId);
       if (edit.wording) wording.push(edit.wording);
     }
     for (const [id, team] of teams) {
@@ -124,7 +140,10 @@ export function includeRerollBoards(snapshot: Publication, current: Season): Pub
     for (const item of current.items) if (items.has(item.id)) for (const part of item.components ?? []) items.add(part);
     return {
       ...section, team: section.team && teams.get(section.team.id), teams: [...teams.values()], stageTeamIds,
-      blocks: wording.length ? section.blocks.map(block => replaceWording(block, wording)) : section.blocks,
+      blocks: section.blocks.flatMap(block => {
+        if (guide.hiddenLegacy?.some(entry => entry.id === block.id && block.text?.startsWith(entry.prefix))) return [];
+        return wording.length ? [replaceWording(block, wording)] : [block];
+      }),
       reroll: { entryTeamId: guide.entryTeamId && teams.has(guide.entryTeamId) ? guide.entryTeamId : undefined, stages, advice, added, corrected },
       gameData: {
         ...base,

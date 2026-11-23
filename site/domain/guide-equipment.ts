@@ -1,4 +1,14 @@
 import type { Item } from "./types";
+import { itemAliases } from "./roster-import.ts";
+
+const itemShortNames = new Map(Object.entries(itemAliases).map(([alias, name]) => [name, alias]));
+
+export function equipmentLabel(item: Item) {
+  const shortName = itemShortNames.get(item.name);
+  if (shortName) return shortName;
+  const base = item.name.replace(/^光明版/, "");
+  return item.category === "radiant" ? "光明" + (itemShortNames.get(base) ?? base) : item.name;
+}
 
 export type GearTarget = { owner: string; item: Item };
 export type GearBag = Record<string, number>;

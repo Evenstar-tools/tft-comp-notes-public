@@ -1,0 +1,156 @@
+.guide-reader .guide-board-options--reviewed {
+  display: grid;
+  grid-template-columns: var(--guide-columns);
+  gap: 8px var(--guide-column-gap);
+}
+.guide-reader .guide-board-options--reviewed > .guide-phases {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+.guide-reader .guide-board-options--reviewed > .guide-phases button {
+  display: grid;
+  align-content: center;
+  justify-content: start;
+  gap: 3px;
+  min-width: 0;
+  min-height: 54px;
+  padding: 7px 11px;
+  background: var(--panel);
+  text-align: start;
+  white-space: normal;
+}
+.guide-reader .guide-board-options--reviewed > .guide-phases button[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: var(--raised);
+  color: var(--accent);
+}
+.guide-board-options--reviewed .guide-phases small {
+  color: var(--muted);
+  font-size: .8125rem;
+  line-height: 1.25;
+}
+.guide-variants.guide-ocean-choices {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  width: 100%;
+}
+.guide-reroll .guide-ocean-choices button {
+  grid-template-columns: minmax(0, 1fr) auto;
+  padding-inline: 10px;
+  border-color: var(--line);
+  background: var(--panel);
+}
+.guide-reroll .guide-ocean-choices button[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: var(--raised);
+}
+.guide-ocean-choices small {
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+}
+@media (max-width: 1000px) {
+  .guide-variants.guide-ocean-choices { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 600px) {
+  .guide-variants.guide-ocean-choices { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .guide-reroll .guide-ocean-choices button { font-size: .8125rem; }
+}
+.guide-extra-phases {
+  flex-basis: 100%;
+  color: var(--muted);
+  font-size: .875rem;
+}
+.guide-extra-phases summary { cursor: pointer; padding-block: 5px; }
+.guide-extra-phases button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+
+.guide-flex-slot {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px 11px;
+  min-height: 46px;
+  margin-top: 8px;
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--panel);
+  color: var(--text);
+  font-size: .875rem;
+}
+.guide-flex-swap,
+.guide-flex-swap > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.guide-flex-swap > span { font-weight: 650; }
+.guide-flex-swap > svg,
+.guide-flex-label { color: var(--accent); flex: none; }
+.guide-flex-swap img,
+.guide-gear-holder img { object-fit: cover; border-radius: 4px; flex: none; }
+.guide-flex-reason {
+  padding-inline-start: 9px;
+  border-inline-start: 1px solid var(--line);
+  color: var(--muted);
+}
+.guide-flex-slot button {
+  min-height: 34px;
+  margin-inline-start: auto;
+  padding: 3px 8px;
+  background: var(--raised);
+  color: var(--accent);
+  white-space: nowrap;
+}
+.guide-flex-slot button[aria-pressed="true"] { border-color: var(--accent); }
+
+.guide-opening-gear {
+  margin: 6px 0 10px;
+  padding: 8px 9px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--raised);
+  color: var(--text);
+  font-size: .875rem;
+}
+.guide-opening-gear h4 {
+  margin: 0 0 5px;
+  color: var(--accent);
+  font-size: .9375rem;
+  font-weight: 700;
+}
+.guide-opening-gear ul { margin: 0; padding: 0; list-style: none; }
+.guide-gear-handoff {
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(0, .95fr) minmax(0, 1.15fr);
+  align-items: center;
+  gap: 5px;
+  min-height: 34px;
+}
+.guide-gear-handoff + .guide-gear-handoff { border-top: 1px solid var(--line); }
+.guide-gear-first,
+.guide-gear-first-icons,
+.guide-gear-holder {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+}
+.guide-gear-first-icons { gap: 2px; flex: none; }
+.guide-gear-first-icons > a { display: inline-flex; }
+.guide-gear-recipient { color: var(--accent); font-weight: 650; }
+.guide-gear-recipient svg { flex: none; }
+.guide-opening-gear p { margin: 5px 0 0; color: var(--muted); line-height: 1.45; }
+
+@media (max-width: 760px) {
+  .guide-reader .guide-board-options--reviewed { grid-template-columns: 1fr; }
+  .guide-reader .guide-board-options--reviewed > .guide-phases button { padding-inline: 7px; }
+  .guide-flex-slot button { min-height: 44px; }
+}
+@media (min-width: 381px) and (max-width: 760px) {
+  .guide-gear-handoff { display: flex; flex-wrap: wrap; justify-content: space-between; column-gap: 4px; }
+}
+@media (max-width: 380px), (min-width: 761px) and (max-width: 1030px) {
+  .guide-gear-first { flex-wrap: wrap; gap: 2px 5px; }
+  .guide-gear-handoff { min-height: 42px; padding-block: 3px; }
+}

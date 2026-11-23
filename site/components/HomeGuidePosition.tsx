@@ -37,7 +37,7 @@ export function HomeGuidePosition() {
     function remember(event: MouseEvent) {
       if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || !(event.target instanceof Element)) return;
       const link = event.target.closest<HTMLAnchorElement>("a[data-home-board], a.guide-result-main");
-      const card = link?.closest<HTMLElement>("article[id^='guide-card-']");
+      const card = link?.closest<HTMLElement>("[id^='guide-card-']");
       if (!link || !card) return;
       const from = validHomeReturn(new URL(link.href).searchParams.get("from"));
       if (!from) return;

@@ -31,14 +31,17 @@ function DistributionChart({ sample, recentGames, showCaption }: { sample: Distr
 export function GuideDistribution({ team, sectionId, rating, edition, heroGuide }: { team: Team; sectionId: string; rating?: PlacementRating; edition: string; heroGuide: boolean }) {
   const groupId = useId();
   const primary = rating?.mean !== undefined && rating.placementCounts?.length === 8 && rating.placementCounts.reduce((a,b)=>a+b,0) === rating.games
-    ? { label: rating.conditions?.kind === "core" ? "当前核心筛选" : "当前整盘", counts: rating.placementCounts, scope: rating.sampleScope || `${rating.population} 级 · 当前整套棋子`, date: rating.date, url: rating.url } : null;
+    ? { label: rating.conditions?.kind === "core" ? "核心成型" : "当前整盘", counts: rating.placementCounts, scope: rating.sampleScope || `${rating.population} 级 · 当前整套棋子`, date: rating.date, url: rating.url } : null;
   const ref = stats.renataNasusReference;
   const canCompare = !heroGuide && stats.edition && (edition === stats.edition || edition.startsWith(stats.edition + "."));
   const core = canCompare && usedPopulation(team.pieces) === 8 &&
     team.pieces.some(p=>p.unitId === "renata-glasc" && p.stars === 3 && p.items.length === 3) && team.pieces.some(p=>p.unitId === "nasus") && ref
     ? { label:"核心双卡", counts: ref.placementCounts, scope: "八级 · 三星三件烈娜塔＋内瑟斯 · 其余六人不限", date: ref.observedOn, url: ref.url } : null;
   const unitIds = new Set(team.pieces.map(p => p.unitId));
-  const comparisons = canCompare ? stats.boardComparisons?.find(group => group.sectionId === sectionId && group.coreRoster.every(id => unitIds.has(id)))?.samples ?? [] : [];
+  const comparison = canCompare ? stats.boardComparisons?.find(group => group.sectionId === sectionId
+    && (!group.teamId || (group.teamId === team.id && group.coreRoster.length === team.pieces.length))
+    && group.coreRoster.every(id => unitIds.has(id))) : undefined;
+  const comparisons = comparison?.samples ?? [];
   const options = [...(primary ? [primary] : []), ...(core ? [core] : []), ...comparisons
     .filter(sample => sample.url !== primary?.url && sample.placementCounts.length === 8 && sample.placementCounts.reduce((a,b)=>a+b,0) >= stats.minGames)
     .map(sample => ({ label:sample.label, counts:sample.placementCounts, scope:sample.scope, date:sample.observedOn, url:sample.url }))]
@@ -48,7 +51,9 @@ export function GuideDistribution({ team, sectionId, rating, edition, heroGuide 
     recentGames={!!rating?.referencesAugment && sample === primary}
     showCaption={options.length > 1 || sample !== primary || !!rating?.conditions || !!rating?.sampleScope} />;
   return <details className="guide-distribution">
-    <summary>{comparisons.length > 0 && options.length > 1 ? "名次分布与追三星对比" : "名次分布"}</summary>
+    <summary>{comparisons.length > 0 && options.length > 1
+      ? comparison?.teamId ? "名次分布与成型对照" : "名次分布与追三星对比"
+      : "名次分布"}</summary>
     {options.length === 1 ? chart(options[0]) : <fieldset className="distribution-scopes">
       <legend>名次统计范围</legend>
       {options.map((option, index) => {

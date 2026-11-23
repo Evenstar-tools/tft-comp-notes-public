@@ -20,6 +20,8 @@ export interface PlacementRecord {
   placementCounts?: number[];
   url: string;
   sampleScope?: string;
+  sampleLabel?: string;
+  detailOnly?: boolean;
   observedOn?: string;
   boardObservation?: {
     patchId: string;
@@ -45,6 +47,7 @@ export interface PlacementBatch {
   renataNasusReference?: { url: string; observedOn: string; placementCounts: number[] };
   boardComparisons?: {
     sectionId: string;
+    teamId?: string;
     coreRoster: string[];
     samples: { label: string; scope: string; url: string; observedOn: string; placementCounts: number[] }[];
   }[];

@@ -89,7 +89,7 @@ export function GuidePoster({ section, team, data, variants, pickVariant, setDef
 
   const downloadLabel = <><Download size={16} aria-hidden />下载图片</>;
   const canSetDefault = setDefault && format !== defaultPosterFormat(team, section);
-  const hasBoardChoice = !!pickVariant && !!variants?.length;
+  const hasBoardChoice = !!pickVariant && variants?.some(variant => variant.teamId !== team.id);
   const boardNavigation = previewBoards.length > 1 && <div className="poster-preview-nav" role="group" aria-label="跳到预览棋盘">
     <span aria-hidden="true">跳到棋盘</span>
     {previewBoards.map(({ id, name, level }) => <button key={id} type="button" title={name}
@@ -117,7 +117,8 @@ export function GuidePoster({ section, team, data, variants, pickVariant, setDef
             const next = variants?.find(variant => variant.teamId === event.target.value);
             if (next) pickVariant?.(next, format);
           }}>
-            <option value={team.id}>{title === team.name ? title : posterStageTitle(team)}</option>
+            {!variants?.some(variant => variant.teamId === team.id) &&
+              <option value={team.id}>{title === team.name ? title : posterStageTitle(team)}</option>}
             {variants?.map(variant => <option key={variant.teamId} value={variant.teamId}>{variant.title}</option>)}
           </select>
         </label> : <p className="poster-board-caption">{subtitle || title}</p>}

@@ -1,25 +1,24 @@
 "use client";
 import { useState } from "react";
+import { ArrowRight } from "lucide-react";
 import { complementItems, guideRoster, type GuideRole } from "@/domain/guide-reading";
 import { compactUtilityCopy } from "@/domain/guide-copy";
+import { equipmentLabel } from "@/domain/guide-equipment";
+import { guideOpeningGear } from "@/domain/guide-execution";
 import { itemLink } from "@/domain/links";
-import { itemAliases } from "@/domain/roster-import";
 import type { Item, Piece, Season, Team, Unit } from "@/domain/types";
 import { ItemIcon } from "./ItemIcon";
 import { CarouselGear, matchingBuildScope, ThirdGear } from "./GuideEquipmentTools";
 
-const itemShortNames = new Map(Object.entries(itemAliases).map(([alias, name]) => [name, alias]));
 const unitShortNames: Record<string, string> = { "nunu-willump": "努努", "renata-glasc": "烈娜塔" };
+const openingItemNames: Record<string, string> = {
+  TFT_Item_UnstableConcoction: "正义",
+  TFT_Item_RunaansHurricane: "海妖",
+};
 
-function equipmentLabel(item: Item) {
-  const shortName = itemShortNames.get(item.name);
-  if (shortName) return shortName;
-  const base = item.name.replace(/^光明版/, "");
-  return item.category === "radiant" ? "光明" + (itemShortNames.get(base) ?? base) : item.name;
-}
-
-export function GuideEquipment({ team, data, roles, selectedPiece, onSelectPiece, guideHref }: {
+export function GuideEquipment({ team, data, roles, selectedPiece, onSelectPiece, guideHref, sectionId, guideStats = true }: {
   team: Team; data: Season; roles: GuideRole[]; selectedPiece: string; onSelectPiece: (id: string, trigger: HTMLButtonElement) => void; guideHref?: string;
+  sectionId?: string; guideStats?: boolean;
 }) {
   const [partId, setPartId] = useState("");
   const items = new Map(data.items.map(item => [item.id, item]));
@@ -30,7 +29,8 @@ export function GuideEquipment({ team, data, roles, selectedPiece, onSelectPiece
     const item = items.get(id);
     return item?.components?.length === 2 && item.components.every(part => items.has(part)) ? [{ owner: unit.name, item }] : [];
   }));
-  const sample = matchingBuildScope(team, data);
+  const sample = guideStats ? matchingBuildScope(team, data) : undefined;
+  const opening = sectionId && guideOpeningGear(sectionId, team, data);
   const others = members.filter(member => !member.piece.items.length);
   const utilities = roles.filter(role => role.label === "功能装");
   const owners = new Map<string, string[]>();
@@ -82,6 +82,24 @@ export function GuideEquipment({ team, data, roles, selectedPiece, onSelectPiece
 
   return <section className="guide-gear" aria-label="当前棋盘配装">
     <h3>{equipped.length ? "配装" : "阵容棋子"}</h3>
+    {opening && <section className="guide-opening-gear" aria-label="开装与接装">
+      <h4>开装与接装</h4>
+      <ul>{opening.rows.map(row => <li key={row.to.id} className="guide-gear-handoff">
+        <div className="guide-gear-first">
+          <span className="guide-gear-first-icons">{row.items.map(item =>
+            <a key={item.id} href={itemLink(item.id, row.to.id, guideHref)} aria-label={item.name} title={item.name}>
+              <ItemIcon item={item} size={21} />
+            </a>)}
+          </span>
+          <span>{row.items.map(item => openingItemNames[item.id] ?? equipmentLabel(item)).join("、")}</span>
+        </div>
+        <span className="guide-gear-holder"><img src={row.from.image} width={22} height={22} alt="" />{row.fromLabel}先带</span>
+        <span className="guide-gear-holder guide-gear-recipient"><ArrowRight size={15} aria-hidden />
+          <img src={row.to.image} width={22} height={22} alt="" />{row.toLabel}{["", "一", "两", "三"][row.stars]}星接
+        </span>
+      </li>)}</ul>
+      <p>{opening.note}</p>
+    </section>}
     {!!equipped.length && <ul className="guide-loadouts">{equipped.map(member => {
       const utility = utilityNote(member.unit.id);
       return <li className="guide-loadout" key={member.piece.instanceId}>

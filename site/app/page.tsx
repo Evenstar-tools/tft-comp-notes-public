@@ -19,8 +19,8 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
   const [live, query] = await Promise.all([publicGuidePublication(), searchParams]);
   const filters = parseGuideFilters(query);
   const fromItem = validItemLibraryReturn(query.fromItem);
-  const term = filters.q ?? "";
-  const initialSearch = term && !filters.scope && !guideWearerQuery(term) && splitGuideConditions(term).length === 1
+  const term = splitGuideConditions(filters.q ?? "")[0];
+  const initialSearch = term && !filters.scope && !guideWearerQuery(term)
     ? await performSiteSearch(term, filters.exclude, live).catch(() => undefined) : undefined;
   const sections = live?.sections.filter(section => readableSection(section) && !isEditorialSection(section) && !isVersionUpdate(section)) ?? [];
   const guides = sections.filter(section => section.kind === "guide" || sectionTeams(section).length || section.title !== section.category);

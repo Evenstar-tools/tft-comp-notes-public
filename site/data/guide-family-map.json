@@ -5,13 +5,15 @@
   "rows": [
     {
       "clusterId": "427012",
-      "sourceName": "Beach Pop Graves",
+      "sourceName": "Renegade Graves",
       "name": "五海洋三离子男枪",
       "sectionId": "sample-block-0251",
       "teamId": "00000000-0000-4000-8000-000000000102",
       "aliases": [
         "离子男枪",
-        "海洋男枪阿萝拉"
+        "海洋男枪阿萝拉",
+        "非主流格雷福斯",
+        "非主流男枪"
       ],
       "carryIds": [
         "graves"
@@ -37,7 +39,8 @@
       "teamId": "00000000-0000-4000-8000-000000000076",
       "aliases": [
         "海洋岩雀",
-        "海洋扎克"
+        "海洋扎克",
+        "海之歌扎克"
       ],
       "carryIds": [
         "graves",
@@ -54,15 +57,17 @@
         "DA_Yuumi19",
         "DA_Zac19",
         "DA_Zoe19"
-      ]
+      ],
+      "landingTeamId": "00000000-0000-4000-8000-000000000075"
     },
     {
       "clusterId": "427000",
       "sourceName": "Hyperpop Kobuko",
-      "name": "四主唱高能炸弹",
+      "name": "高能流行芬妮&炸弹",
       "sectionId": "sample-block-0420",
       "teamId": "00000000-0000-4000-8000-000000000089",
       "aliases": [
+        "四主唱高能炸弹",
         "高能可酷伯",
         "四主唱炸弹",
         "高能炸弹人"
@@ -81,7 +86,8 @@
         "DA_Tristana19",
         "DA_Yunara19",
         "DA_Ziggs19"
-      ]
+      ],
+      "landingTeamId": "00000000-0000-4000-8000-000000000042"
     },
     {
       "clusterId": "427013",
@@ -98,7 +104,7 @@
       ],
       "url": "https://www.metatft.com/pbe-comps#DA_Juggernaut19-DA_Zac19",
       "representativeUnits": [
-        "DA_Ashe19",
+        "DA_Graves19",
         "DA_Kayle19",
         "DA_Locke19",
         "DA_Olaf19",
@@ -211,6 +217,11 @@
         "DA_Nasus19",
         "DA_RenataGlasc19",
         "DA_Tibbers19"
+      ],
+      "sharedTeamIds": [
+        "00000000-0000-4000-8000-000000000065",
+        "00000000-0000-4000-8000-000000000111",
+        "00000000-0000-4000-8000-000000000046"
       ]
     },
     {
@@ -240,33 +251,6 @@
       ]
     },
     {
-      "clusterId": "427003",
-      "sourceName": "Jazz Kayle",
-      "name": "爵士天使",
-      "sectionId": "sample-block-0275",
-      "teamId": "00000000-0000-4000-8000-000000000082",
-      "aliases": [
-        "三爵士五杀",
-        "爵士凯尔"
-      ],
-      "carryIds": [
-        "kayle",
-        "smeech"
-      ],
-      "url": "https://www.metatft.com/pbe-comps#DA_Jazz19-DA_Kayle19",
-      "representativeUnits": [
-        "DA_Bard19",
-        "DA_Camille19",
-        "DA_Galio19",
-        "DA_Kayle19",
-        "DA_Mel19",
-        "DA_Olaf19",
-        "DA_Smeech19",
-        "DA_Swain19",
-        "DA_Yorick19"
-      ]
-    },
-    {
       "clusterId": "427010",
       "sourceName": "Prodigy Malzahar",
       "name": "五天才玛尔扎哈·男爵",
@@ -284,7 +268,6 @@
         "DA_Alune19",
         "DA_BaronNashor19",
         "DA_Braum19",
-        "DA_DrMundo19",
         "DA_Ekko19",
         "DA_Lux19",
         "DA_Malzahar19",
@@ -314,6 +297,10 @@
         "DA_Leona19",
         "DA_Wukong19",
         "DA_Xayah19"
+      ],
+      "sharedTeamIds": [
+        "00000000-0000-4000-8000-000000000070",
+        "00000000-0000-4000-8000-000000000015"
       ]
     },
     {
@@ -340,6 +327,11 @@
         "DA_Swain19",
         "DA_Thresh19",
         "DA_Vladimir19"
+      ],
+      "sharedTeamIds": [
+        "00000000-0000-4000-8000-000000000034",
+        "00000000-0000-4000-8000-000000000036",
+        "00000000-0000-4000-8000-000000000092"
       ]
     },
     {
@@ -390,6 +382,9 @@
         "DA_Swain19",
         "DA_Viego19",
         "DA_Yorick19"
+      ],
+      "sharedTeamIds": [
+        "00000000-0000-4000-8000-000000000064"
       ]
     },
     {
@@ -461,6 +456,7 @@
         "DA_Kaisa19",
         "DA_Olaf19",
         "DA_Swain19",
+        "DA_Vayne19",
         "DA_Yuumi19"
       ]
     },
@@ -487,6 +483,9 @@
         "DA_Renekton19",
         "DA_Vi19",
         "DA_Zac19"
+      ],
+      "sharedTeamIds": [
+        "00000000-0000-4000-8000-000000000020"
       ]
     },
     {

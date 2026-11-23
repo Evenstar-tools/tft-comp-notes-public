@@ -3548,80 +3548,12 @@
           {
             "id": "sample-block-0264",
             "type": "text",
-            "text": "优先两星泽丽接装，留巴德开三疾风。女枪先两星时改上女枪、卢锡安开双制作人。下艾克、雷克顿，上蔚、努努，第九格补蒙多。蒙多两星再接蕾欧娜的肉装。"
+            "text": "九级先上酒桶，留巴德凑齐八个常规羁绊。解锁史密奇后原位换下巴德。泽丽两星接输出装，蒙多两星再接蕾欧娜的肉装。"
           },
           {
             "id": "sample-block-0393",
             "type": "text",
             "text": "4-5 若是 65 血、八级 52/68、54 金，拉九要 16 金，剩 38 金。场上能稳且换牌已备齐，可以当轮上九，找五费概率由 3% 到 15%。稳血但缺换牌，留钱等 5-1。每轮大掉血就留八级先搜二星打工 C 和二星前排，稳住再上九。"
-          },
-          {
-            "id": "sample-block-0108",
-            "type": "text",
-            "text": "PBE 19.1 数据",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "PBE 19.1 数据",
-                  "text_element_style": {
-                    "bold": true
-                  }
-                }
-              }
-            ],
-            "label": true
-          },
-          {
-            "id": "sample-block-0430",
-            "type": "text",
-            "text": "PBE 19.1 近三天，九级泽丽原盘 426 场、均名 4.00。二星泽丽三格装备时 302 场、均名 3.40。"
-          },
-          {
-            "id": "sample-block-0402",
-            "type": "text",
-            "text": "MetaTFT 固定九人 · 冠军原局 · PBE 解锁与羁绊",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "MetaTFT 固定九人",
-                  "text_element_style": {
-                    "link": {
-                      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_DrMundo19-1&unit=DA_Nunu19-1&unit=DA_Galio19-1&unit=DA_Yorick19-1&unit=DA_Leona19-1&unit=DA_Jax19-1&unit=DA_Vi19-1&unit=DA_Bard19-1&unit=DA_Zeri19-1"
-                    }
-                  }
-                }
-              },
-              {
-                "text_run": {
-                  "content": " · "
-                }
-              },
-              {
-                "text_run": {
-                  "content": "冠军原局",
-                  "text_element_style": {
-                    "link": {
-                      "url": "https://www.metatft.com/player/pbe/gujueyanxia2005-1020?match=PBE1_4535951142"
-                    }
-                  }
-                }
-              },
-              {
-                "text_run": {
-                  "content": " · "
-                }
-              },
-              {
-                "text_run": {
-                  "content": "PBE 解锁与羁绊",
-                  "text_element_style": {
-                    "link": {
-                      "url": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
-                    }
-                  }
-                }
-              }
-            ]
           }
         ]
       }

@@ -25,7 +25,9 @@
   "sample-block-0243": { "targets": ["viego", "briar"] },
   "sample-block-0407": { "targets": ["draven", "braum"] },
   "sample-block-0203": { "targets": ["yunara", "elise"] },
-  "sample-block-0327": { "targets": ["ashe", "renekton"] },
+  "sample-block-0327": { "targets": ["ashe", "renekton", "jax"] },
+  "sample-block-0764": { "targets": ["evelynn", "kai-sa", "ekko"] },
+  "sample-block-0254": { "targets": ["ezreal", "nasus", "lucian"] },
   "sample-block-0367": {
     "targets": ["neeko", "lillia", "seraphine"],
     "boards": {

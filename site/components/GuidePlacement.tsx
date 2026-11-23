@@ -1,6 +1,7 @@
 import batch from "@/data/guide-placement.json";
 import { season } from "@/data";
 import { findPlacement, type PlacementBatch, type PlacementRating } from "@/domain/guide-placement";
+import { oceanGravesGuideId, oceanGravesUnlockBoardId } from "@/domain/guide-reading";
 import { traitCounts, usedPopulation } from "@/domain/team";
 import { heroAugmentCategory, heroAugmentForGuide } from "@/domain/hero-augments";
 import type { Section } from "@/domain/document";
@@ -10,7 +11,7 @@ const frequency = new Intl.NumberFormat("zh-CN");
 const placementBatch = batch as PlacementBatch;
 const coreBatch: PlacementBatch = {
   ...placementBatch,
-  records: placementBatch.records.filter(record => record.conditions?.kind === "core" && !record.referencesAugment),
+  records: placementBatch.records.filter(record => record.conditions?.kind === "core" && !record.referencesAugment && !record.detailOnly),
 };
 const completedCategories = new Set(["completed", "artifact", "radiant", "support"]);
 const percent = new Intl.NumberFormat("zh-CN", { style: "percent", maximumFractionDigits: 1 });
@@ -35,16 +36,26 @@ export function teamPlacement(team: Team, section: Section, scope?: "core" | "gu
 
 export { guideBoardKind } from "@/domain/team";
 
+export function rankedOceanBoards(teams: Team[], section: Section) {
+  if (section.id !== oceanGravesGuideId) return;
+  return teams.filter(board => board.id !== oceanGravesUnlockBoardId).map(board => {
+    const sample = teamPlacement(board, section);
+    const exact = sample?.conditions?.kind === "full" && sample.conditions.teamId === board.id;
+    return { board, sample: exact ? sample : undefined };
+  }).sort((a, b) => (a.sample?.mean ?? Infinity) - (b.sample?.mean ?? Infinity)
+    || (b.sample?.games ?? 0) - (a.sample?.games ?? 0));
+}
+
 export function PlacementBadge({ rating, id }: { rating?: PlacementRating; id?: string }) {
   if (!rating?.games) return null;
   const games = frequency.format(rating.games) + " 场";
   const limited = rating.mean === undefined;
   const core = rating.conditions?.kind === "core";
   const description = rating.referencesAugment ? "按主 C 实际出装识别的棋盘样本" : limited ? "样本不足"
-    : core ? [rating.patch, rating.window, rating.date, rating.sampleScope].filter(Boolean).join(" · ") : undefined;
+    : core || rating.sampleLabel ? [rating.patch, rating.window, rating.date, rating.sampleScope].filter(Boolean).join(" · ") : undefined;
   return <span id={id} className={"guide-placement " + rating.tone + (rating.referencesAugment ? " is-reference" : "")}
     title={description}>
-    {rating.mean === undefined ? <span>{games}</span> : <><span>{rating.referencesAugment ? "同装均名" : core ? "核心均名" : "棋盘均名"}</span> <strong>{rating.mean.toFixed(2)}</strong><small>{games}</small></>}
+    {rating.mean === undefined ? <span>{games}</span> : <><span>{rating.referencesAugment ? "同装均名" : rating.sampleLabel ?? (core ? "核心均名" : "棋盘均名")}</span> <strong>{rating.mean.toFixed(2)}</strong><small>{games}</small></>}
   </span>;
 }
 

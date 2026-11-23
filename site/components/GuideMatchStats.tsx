@@ -8,10 +8,10 @@ import type { Team } from "@/domain/types";
 import type { PlacementRating } from "@/domain/guide-placement";
 import { carryEvidence, GuideCarryStats } from "./GuideCarryStats";
 import { GuideDistribution } from "./GuideDistribution";
-import { PlacementBadge, PlacementMethod, PlacementRates, teamPlacement } from "./GuidePlacement";
+import { PlacementBadge, PlacementMethod, PlacementRates, rankedOceanBoards, teamPlacement } from "./GuidePlacement";
 
 const family = familyData as GuideFamilyBatch & { smallSamples?: GuideFamilyStat[] };
-const views = [["board", "当前棋盘"], ["carry", "主 C 装备"], ["family", "体系战绩"]] as const;
+const views = [["family", "体系战绩"], ["board", "终盘样本"], ["carry", "主 C 装备"]] as const;
 export type MatchStatsView = typeof views[number][0];
 const number = new Intl.NumberFormat("zh-CN");
 const percent = new Intl.NumberFormat("zh-CN", { style: "percent", maximumFractionDigits: 1 });
@@ -37,13 +37,13 @@ function countLabel(groups: { games: number }[]) {
   return samples.length === 1 ? number.format(samples[0].games) + " 场" : samples.length + " 组";
 }
 
-export function GuideMatchStats({ id, rating, stage, team, teams, section, edition, augmentName, heroGuide, view, onSelectView, onPickTeam }: {
+export function GuideMatchStats({ id, rating, stage, team, teams, section, edition, augmentName, heroGuide, familyRows, view, onSelectView, onPickTeam }: {
   id: string; rating?: PlacementRating; stage: boolean; team: Team; teams: Team[];
   section: Section; edition: string; augmentName?: string; heroGuide: boolean; view: MatchStatsView;
+  familyRows: ReturnType<typeof guideFamilyRows>;
   onSelectView: (view: MatchStatsView) => void;
   onPickTeam: (team: Team, view: MatchStatsView) => void;
 }) {
-  const familyRows = guideFamilyRows(family, edition, section.id, teams);
   const rareRows = family.seasonId === edition
     ? family.smallSamples?.filter(stat => stat.sectionId === section.id && stat.games > 0) ?? [] : [];
   function evidenceFor(board: Team) {
@@ -59,17 +59,22 @@ export function GuideMatchStats({ id, rating, stage, team, teams, section, editi
     return { carry, rows, rare, groups };
   }
   const { carry, rows, rare, groups } = evidenceFor(team);
-  const available = !groups[view].some(sample => sample.games > 0)
+  const oceanBoards = view === "board" ? rankedOceanBoards(teams, section) : undefined;
+  const available = oceanBoards ? oceanBoards.flatMap(({ board, sample }) => {
+    if (board.id === team.id || !sample?.games) return [];
+    const count = number.format(sample.games) + " 场";
+    return [{ board, view: "board" as const, label: sample.mean === undefined ? count : sample.mean.toFixed(2) + " · " + count }];
+  }) : !groups[view].some(sample => sample.games > 0)
     ? teams.filter(board => board.id !== team.id).flatMap(board => {
         const other = evidenceFor(board).groups;
         const nextView = [view, ...views.map(([type]) => type)].find(type => other[type].some(sample => sample.games > 0));
         return nextView ? [{ board, view: nextView, label: countLabel(other[nextView]) }] : [];
       }) : [];
   const alternatives = !!available.length && <div className="guide-stat-alternatives">
-    <h4>其他棋盘</h4>
+    <h4>{oceanBoards ? "其他终盘样本" : "其他棋盘"}</h4>
     <ul>{available.map(next => <li key={next.board.id}>
       <button type="button" onClick={() => onPickTeam(next.board, next.view)}>
-        <span>{guideBoardName(next.board)}</span><small>{views.find(([value]) => value === next.view)?.[1]} · {next.label}</small>
+        <span>{guideBoardName(next.board)}</span><small>{!oceanBoards && <>{views.find(([value]) => value === next.view)?.[1]} · </>}{next.label}</small>
       </button>
     </li>)}</ul>
   </div>;
@@ -86,7 +91,7 @@ export function GuideMatchStats({ id, rating, stage, team, teams, section, editi
   return <section id={id} className="guide-match-stats" aria-label="阵容战绩">
     <div className="guide-stat-switch" role="group" aria-label="战绩范围">
       {views.map(([value, label]) => <button key={value} type="button" aria-pressed={view === value} onClick={() => onSelectView(value)}>
-        <span>{value === "board" && rating?.conditions?.kind === "core" && rating.conditions.teamId ? "核心战绩" : label}</span>
+        <span>{label}</span>
         <small>{countLabel(groups[value])}</small>
       </button>)}
     </div>

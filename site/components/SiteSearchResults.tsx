@@ -4,9 +4,11 @@ import { useEffect, useState } from "react";
 import type { SiteSearchHit, SiteSearchResponse } from "@/domain/site-search";
 import "./site-search-results.css";
 
-type SearchState = { phase: "idle" } | { phase: "loading" } | { phase: "error" } | { phase: "ready"; result: SiteSearchResponse };
+type SearchState = { phase: "idle" } | { phase: "loading" } | { phase: "error" } | {
+  phase: "ready"; result: SiteSearchResponse; refreshing?: boolean;
+};
 
-export function useSiteSearch(query: string, exclude?: string, initial?: SiteSearchResponse, initialExclude?: string): SearchState {
+export function useSiteSearch(query: string, exclude?: string, initial?: SiteSearchResponse, initialExclude?: string, keepQueryResult = false): SearchState {
   const term = query.trim();
   const key = term + "\0" + (exclude ?? "");
   const [loaded, setLoaded] = useState<{ key: string; search: SearchState }>();
@@ -32,7 +34,13 @@ export function useSiteSearch(query: string, exclude?: string, initial?: SiteSea
 
   if (!term) return { phase: "idle" };
   if (useInitial && initial) return { phase: "ready", result: initial };
-  return loaded?.key === key ? loaded.search : { phase: "loading" };
+  if (loaded?.key === key) return loaded.search;
+  if (keepQueryResult) {
+    const previous = loaded?.search.phase === "ready" ? loaded.search.result : undefined;
+    const old = previous?.query === term ? previous : initial?.query === term ? initial : undefined;
+    if (old) return { phase: "ready", result: old, refreshing: true };
+  }
+  return { phase: "loading" };
 }
 
 type LinkResult = Pick<SiteSearchHit, "id" | "name" | "href" | "image" | "detail" | "category"> & { games?: number; mean?: number };

@@ -4,6 +4,7 @@ export interface GuideFamilyStat {
   sectionId: string;
   teamId?: string;
   landingTeamId?: string;
+  sharedTeamIds?: string[];
   clusterId: string | number;
   name: string;
   sourceName: string;
@@ -22,7 +23,35 @@ export interface GuideFamilyBatch {
   patch: string;
   days: number;
   updatedAt: string;
+  totalFinishes?: number;
   rows: GuideFamilyStat[];
+}
+
+export type GuideFamilyMetric = "pickRate" | "mean" | "topFourRate" | "winRate";
+export type GuideFamilyDirection = "asc" | "desc";
+
+export function familyMetricValue(row: GuideFamilyStat, metric: GuideFamilyMetric, totalFinishes?: number): number | null {
+  if (metric === "pickRate") {
+    if (totalFinishes === undefined || !Number.isSafeInteger(totalFinishes) || totalFinishes <= 0 ||
+        !Number.isSafeInteger(row.games) || row.games < 0 || row.games > totalFinishes) return null;
+    return row.games / totalFinishes;
+  }
+
+  const value = row[metric];
+  const [minimum, maximum] = metric === "mean" ? [1, 8] : [0, 1];
+  return Number.isFinite(value) && value >= minimum && value <= maximum ? value : null;
+}
+
+export function compareGuideFamilyPerformance(
+  a: GuideFamilyStat, b: GuideFamilyStat, metric: GuideFamilyMetric,
+  direction: GuideFamilyDirection, totalFinishes?: number,
+): number {
+  const left = familyMetricValue(a, metric, totalFinishes);
+  const right = familyMetricValue(b, metric, totalFinishes);
+  if (left === null && right !== null) return 1;
+  if (right === null && left !== null) return -1;
+  if (left !== null && right !== null && left !== right) return direction === "asc" ? left - right : right - left;
+  return b.games - a.games || String(a.clusterId).localeCompare(String(b.clusterId));
 }
 
 export const recommendationGroups = [
@@ -96,8 +125,8 @@ export function guideFamilyRows(batch: GuideFamilyBatch, seasonId: string, secti
     if (stat.sectionId !== sectionId || !(Number.isSafeInteger(stat.games) && stat.games >= 100 && stat.mean >= 1 && stat.mean <= 8)) return [];
     const team = stat.teamId ? teams.find(t => t.id === stat.teamId) : teams[0];
     if (!team) return [];
-    const landing = stat.landingTeamId && teams.find(option => option.id === stat.landingTeamId);
-    const boards = landing && landing.id !== team.id ? [landing, team] : [team];
+    const ids = new Set([stat.landingTeamId, team.id, ...(stat.sharedTeamIds ?? [])]);
+    const boards = [...ids].flatMap(id => teams.find(option => option.id === id) ?? []);
     return [{ stat, team, boards }];
   });
 }
