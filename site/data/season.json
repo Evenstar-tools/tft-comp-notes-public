@@ -1925,15 +1925,16 @@
         "updatedAt": "2026.11.19"
       },
       "unlock": {
-        "text": "7 级及以上，激活「摇滚」并上场战斗 3 回合。",
-        "raw": "Field Rock for 3 combats.",
+        "text": "7 级及以上，场上不同名的「摇滚」或「花式射手」弈子合计达到 5 星。",
+        "raw": "5 unique star levels of Rock or Trickshot + Level 7",
         "note": "",
         "source": {
-          "label": "MetaTFT · Riot PBE 19.1.0.6014015",
-          "url": "https://data.metatft.com/lookups/TFTSet19_pbe_en_us.json"
+          "label": "PBE 更新公告 · 19.1.0.6018196",
+          "url": "https://i.redd.it/z3wd5bw91f3i1.png"
         },
         "traitIds": [
-          "rock"
+          "rock",
+          "trickshot"
         ]
       }
     },
@@ -2484,12 +2485,12 @@
         "updatedAt": "2026.11.19"
       },
       "unlock": {
-        "text": "让不同名的「五杀摇滚」弈子合计达到 10 星。",
-        "raw": "10 unique star levels of Pentakill",
+        "text": "让场上不同名的「五杀摇滚」弈子合计达到 9 星。",
+        "raw": "9 unique star levels of Pentakill.",
         "note": "",
         "source": {
-          "label": "MetaTFT · Riot PBE 19.1.0.6014015",
-          "url": "https://data.metatft.com/lookups/TFTSet19_pbe_en_us.json"
+          "label": "PBE 更新公告 · 19.1.0.6018196",
+          "url": "https://i.redd.it/a1psvaw91f3i1.png"
         },
         "traitIds": [
           "pentakill"
@@ -4387,8 +4388,8 @@
     "PBE 解锁条件以当前构建的商店标记与任务为准。"
   ],
   "unlockRelease": {
-    "build": "19.1.0.6014015",
-    "date": "2026-11-22",
-    "guideUrl": "https://teamfighttactics.leagueoflegends.com/en-us/news/media/tft-set-19-prismatic-tour-overview/"
+    "build": "19.1.0.6018196",
+    "date": "2026-11-23",
+    "guideUrl": "https://www.reddit.com/r/CompetitiveTFT/comments/1y3s2sn/pbe_patch_notes_1123/"
   }
 }
