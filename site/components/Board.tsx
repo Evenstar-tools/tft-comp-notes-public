@@ -4,7 +4,7 @@ import { useBoardDrag, type BoardDragPreview } from "@/hooks/use-board-drag";
 import { Plus } from "lucide-react";
 import type { BoardInstrumentId, Piece, Season, Team } from "@/domain/types";
 import { itemMap, season, unitLabel, unitMap } from "@/data";
-import { boardInstruments, BOARD_INSTRUMENT_NOTE } from "@/domain/board-instruments";
+import { boardInstruments, boardMarkerNote } from "@/domain/board-instruments";
 import {
   BOARD_WIDTH,
   BOARD_HEIGHT,
@@ -78,15 +78,17 @@ export const Board = memo(function Board({
   const movingInstrument = dragPreview && instruments.get(dragPreview.source);
   const destination = dragPreview?.destination;
   const previewOrigin = movingInstrument ? (!dragPreview?.blocked ? destination : null) : currentInstrument?.[0];
-  const coverage = previewOrigin == null ? [] : boardNeighbors(previewOrigin);
+  const coverage = previewOrigin == null || (movingInstrument || selectedInstrument)?.id === "infernalIdol"
+    ? [] : boardNeighbors(previewOrigin);
   const sourcePiece = dragPreview && byPosition.get(dragPreview.source);
   const targetPiece = destination == null ? undefined : byPosition.get(destination);
   const sourceName = sourcePiece && units.get(sourcePiece.unitId)?.name;
   const targetName = targetPiece && units.get(targetPiece.unitId)?.name;
   let activeDragText = "";
-  if (dragPreview?.blocked) activeDragText = "乐器请放在没有棋子的格子";
+  if (dragPreview?.blocked) activeDragText = "请放在没有棋子的格子";
   else if (dragPreview && destination == null) activeDragText = "拖到棋盘格内放置";
-  else if (movingInstrument) activeDragText = `${movingInstrument.name} · 相邻格预览`;
+  else if (movingInstrument) activeDragText = movingInstrument.id === "infernalIdol"
+    ? `移动${movingInstrument.name}` : `${movingInstrument.name} · 相邻格预览`;
   else if (targetName) activeDragText = `${sourceName}与${targetName}互换`;
   else if (sourceName) activeDragText = `移动${sourceName}`;
 
@@ -133,7 +135,8 @@ export const Board = memo(function Board({
               const isSelected = piece ? piece.instanceId === selectedId : !!instrument && selectedInstrument?.id === instrument.id;
               const occupantLabel = unit
                 ? `${unit.name} ${piece!.stars}星${items.length ? ` 装备：${items.map((item) => item?.name ?? "").join("、")}` : ""}`
-                : instrument ? `空位，${instrument.name}，${BOARD_INSTRUMENT_NOTE}` : "空位";
+                : instrument?.id === "infernalIdol" ? `${instrument.name}，站位示意`
+                : instrument ? `空位，${instrument.name}，乐器站位示意` : "空位";
               return (
                 <button
                   type="button"
@@ -150,7 +153,7 @@ export const Board = memo(function Board({
                     }, slot => !slot.classList.contains("is-filled"));
                   }}
                   aria-label={`第${row + 1}排第${column + 1}格 ${occupantLabel}`}
-                  title={instrument ? `${instrument.name} · ${BOARD_INSTRUMENT_NOTE}` : undefined}
+                  title={instrument ? `${instrument.name} · 站位示意` : undefined}
                   aria-pressed={piece || (onMoveInstrument && instrument) ? isSelected : undefined}
                   onClick={event => clickCell(position, piece, event.currentTarget, instrument?.id)}
                   disabled={!!data && !piece}
@@ -228,7 +231,7 @@ export const Board = memo(function Board({
         ))}
       </div>
       {(instruments.size > 0 || onMoveInstrument) && <p className="board-instrument-note" role={onMoveInstrument ? "status" : undefined}>
-        {activeDragText || (!!instruments.size && `${BOARD_INSTRUMENT_NOTE}${onMoveInstrument && selectedInstrument ? ` · 选空格移动${selectedInstrument.name}` : onMoveInstrument ? " · 可拖动" : ""}`)}
+        {activeDragText || (!!instruments.size && `${boardMarkerNote(instruments)}${onMoveInstrument && selectedInstrument ? ` · 选空格移动${selectedInstrument.name}` : onMoveInstrument ? " · 可拖动" : ""}`)}
       </p>}
       {!data && selectedPiece && selectedUnit && (
         <div className="board-mobile-detail" aria-label="所选棋子详情">

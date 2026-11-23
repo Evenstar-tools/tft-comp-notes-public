@@ -4,6 +4,13 @@
     "entryTeamId": "00000000-0000-4000-8000-000000000052",
     "stages": [
       {
+        "teamId": "00000000-0000-4000-8000-000000000123",
+        "name": "8级同侧集火",
+        "boardRole": "variant",
+        "parentTeamId": "00000000-0000-4000-8000-000000000050",
+        "notes": "对手前排偏一侧时，卢锡安和伊泽瑞尔同侧集火。遇切后或大范围伤害，换回双角。"
+      },
+      {
         "teamId": "00000000-0000-4000-8000-000000000052",
         "name": "6级追三",
         "boardRole": "stage",
@@ -1001,7 +1008,15 @@
     "sectionId": "sample-block-0327",
     "stages": [
       {
+        "teamId": "00000000-0000-4000-8000-000000000122",
+        "name": "8级补扎克蔚",
+        "boardRole": "stage",
+        "parentTeamId": "00000000-0000-4000-8000-000000000054",
+        "notes": "扎克换塔里克，再补蔚和奎桑提。蔚未到先留塔里克开双主宰，砂槌贴艾希。"
+      },
+      {
         "teamId": "00000000-0000-4000-8000-000000000020",
+        "boardRole": "variant",
         "name": "6级追三",
         "notes": "六级追三星艾希、雷克顿。鳄鱼先穿两件解锁艾希，解锁前用佐伊开三海之歌。巴德、加里奥没齐，用芸阿娜、瑟提。砂槌贴艾希。",
         "pieces": [
@@ -1070,6 +1085,7 @@
       },
       {
         "teamId": "00000000-0000-4000-8000-000000000010",
+        "boardRole": "variant",
         "name": "6级带芬妮",
         "notes": "六级追三星艾希、雷克顿。前排扛得住且芬妮两星，再用她换贾克斯。砂槌贴艾希，七级可补回贾克斯。",
         "parentTeamId": "00000000-0000-4000-8000-000000000054"
@@ -2039,12 +2055,52 @@
   },
   {
     "sectionId": "sample-block-0051",
-    "stages": [],
+    "stages": [
+      {
+        "teamId": "00000000-0000-4000-8000-000000000121",
+        "parentTeamId": "00000000-0000-4000-8000-000000000059",
+        "name": "八级 · 四摇滚古典烬",
+        "boardRole": "variant",
+        "notes": "七级用韦鲁斯、奥拉夫、斯维因开三摇滚打三轮，解锁薇恩。派克要七级起战斗结束有 85 金，没开先用奥拉夫。八级搜烬和锤石两星，锤石单顶、第二排留空开吸血鬼。薇恩跟烬同侧吃轻语破甲，怕范围伤害时和韦鲁斯换边。",
+        "roles": [
+          {"label": "主C", "units": ["jhin"]},
+          {"label": "主坦", "units": ["thresh"]},
+          {"label": "副C", "units": ["vayne"]},
+          {"label": "功能装", "units": ["vladimir"]}
+        ],
+        "instrumentPositions": {"infernalIdol": 17},
+        "pieces": [
+          {"unitId": "thresh", "position": 4, "stars": 2, "items": ["TFT_Item_GargoyleStoneplate", "TFT_Item_Redemption", "TFT_Item_Crownguard"]},
+          {"unitId": "swain", "position": 16, "stars": 2, "items": []},
+          {"unitId": "vladimir", "position": 18, "stars": 1, "items": ["TFT_Item_AdaptiveHelm", "TFT_Item_StatikkShiv", "TFT_Item_Morellonomicon"]},
+          {"unitId": "varus", "position": 21, "stars": 2, "items": []},
+          {"unitId": "samira", "position": 23, "stars": 2, "items": []},
+          {"unitId": "pyke", "position": 24, "stars": 1, "items": []},
+          {"unitId": "vayne", "position": 26, "stars": 2, "items": ["TFT_Item_GuinsoosRageblade", "TFT_Item_RunaansHurricane", "TFT_Item_RunaansHurricane"]},
+          {"unitId": "jhin", "position": 27, "stars": 2, "items": ["TFT_Item_InfinityEdge", "TFT_Item_Deathblade", "TFT_Item_LastWhisper"]}
+        ]
+      }
+    ],
     "edits": [
       {"teamId": "00000000-0000-4000-8000-000000000036", "originalPositions": {"jhin": 26, "vladimir": 27}, "positions": {"jhin": 27, "vladimir": 26}},
       {"teamId": "00000000-0000-4000-8000-000000000092", "originalPositions": {"jhin": 26, "vladimir": 27}, "positions": {"jhin": 27, "vladimir": 26}},
-      {"teamId": "00000000-0000-4000-8000-000000000059", "positions": {"nasus": 10, "galio": 11}, "stoneplateHolder": "thresh", "originalPositions": {"thresh": 2, "k-sante": 1, "nasus": 3, "galio": 4}},
-      {"teamId": "00000000-0000-4000-8000-000000000034", "positions": {"nasus": 10, "galio": 11}, "stoneplateHolder": "thresh", "originalPositions": {"thresh": 2, "k-sante": 1, "nasus": 3, "galio": 4}}
+      {
+        "teamId": "00000000-0000-4000-8000-000000000059",
+        "stoneplateHolder": "thresh",
+        "originalPositions": {"k-sante": 1, "thresh": 2, "nasus": 3, "galio": 4, "vladimir": 9, "jhin": 21, "mel": 23, "lucian": 27},
+        "positions": {"thresh": 4, "galio": 1, "nasus": 9, "vladimir": 17, "jhin": 27, "mel": 21, "lucian": 25, "k-sante": 11},
+        "originalItems": {"k-sante": ["TFT_Item_SpectralGauntlet"], "thresh": ["TFT_Item_GargoyleStoneplate", "TFT_Item_WarmogsArmor", "TFT_Item_Redemption"], "jhin": ["TFT_Item_InfinityEdge", "TFT_Item_PowerGauntlet", "TFT_Item_Deathblade"], "mel": ["TFT_Item_BlueBuff", "TFT_Item_Morellonomicon"]},
+        "items": {"thresh": ["TFT_Item_GargoyleStoneplate", "TFT_Item_Redemption", "TFT_Item_Crownguard"], "jhin": ["TFT_Item_InfinityEdge", "TFT_Item_Deathblade", "TFT_Item_LastWhisper"], "mel": ["TFT_Item_BlueBuff", "TFT_Item_Morellonomicon", "TFT_Item_ArchangelsStaff"], "k-sante": []},
+        "notes": "八级搜两星烬和锤石。锤石在烬这一侧接火，加里奥分到另一侧，梅尔和烬分守底角。吸血鬼没来先用烈娜塔保四古典。"
+      },
+      {
+        "teamId": "00000000-0000-4000-8000-000000000034",
+        "stoneplateHolder": "thresh",
+        "originalPositions": {"k-sante": 1, "thresh": 2, "nasus": 3, "galio": 4, "vladimir": 9, "jhin": 21, "mel": 23, "miss-fortune": 25, "lucian": 27},
+        "positions": {"thresh": 4, "galio": 1, "nasus": 9, "vladimir": 17, "jhin": 27, "mel": 21, "lucian": 23, "k-sante": 11},
+        "originalItems": {"k-sante": ["TFT_Item_SpectralGauntlet"], "thresh": ["TFT_Item_GargoyleStoneplate", "TFT_Item_WarmogsArmor", "TFT_Item_Redemption"], "jhin": ["TFT_Item_InfinityEdge", "TFT_Item_PowerGauntlet", "TFT_Item_Deathblade"], "mel": ["TFT_Item_BlueBuff", "TFT_Item_Morellonomicon"]},
+        "items": {"thresh": ["TFT_Item_GargoyleStoneplate", "TFT_Item_Redemption", "TFT_Item_Crownguard"], "jhin": ["TFT_Item_InfinityEdge", "TFT_Item_Deathblade", "TFT_Item_LastWhisper"], "mel": ["TFT_Item_BlueBuff", "TFT_Item_Morellonomicon", "TFT_Item_ArchangelsStaff"], "k-sante": []}
+      }
     ]
   },
   {

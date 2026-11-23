@@ -7,6 +7,28 @@
   "redFrom": 4.25,
   "records": [
     {
+      "population": 8,
+      "roster": [
+        "ashe",
+        "bard",
+        "galio",
+        "jax",
+        "k-sante",
+        "renekton",
+        "vi",
+        "zac"
+      ],
+      "games": 77,
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&tab=comps&level=8&unit=DA_Ashe19-1&unit=DA_Jax19-1&unit=DA_Renekton19-1&unit=DA_Zac19-1&unit=DA_Vi19-1&unit=DA_Galio19-1&unit=DA_KSante19-1&unit=DA_Bard19-1&days=3",
+      "sampleScope": "八级结算 · 固定名单 · 无纹章、人口装或重复弈子",
+      "conditions": {
+        "kind": "full",
+        "teamId": "00000000-0000-4000-8000-000000000122",
+        "population": 8
+      },
+      "observedOn": "2026-11-23"
+    },
+    {
       "population": 7,
       "roster": [
         "ekko",
@@ -84,11 +106,10 @@
         "sett",
         "yuumi"
       ],
-      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&days=3&level=8&trait=DA_Heartsteel19_2&trait=DA_Encore19_2&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Ezreal19-1_3&unit=DA_Lucian19-1&unit=DA_Nasus19-1&unit=DA_Sett19-1&unit=DA_Galio19-1&unit=DA_KSante19-1&unit=DA_Jhin19-1&unit=DA_Yuumi19-1",
-      "sampleScope": "八级结算 · 伊泽瑞尔三星 · 四安可三心钢 · 无纹章、人口装或重复弈子",
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&tab=comps&level=8&trait=DA_Encore19_2&trait=DA_Heartsteel19_2&unit=DA_Sett19-1&unit=DA_Ezreal19-1_3&unit=DA_Lucian19-1&unit=DA_Nasus19-1&unit=DA_Galio19-1&unit=DA_KSante19-1&unit=DA_Jhin19-1&unit=DA_Yuumi19-1&days=3",
+      "sampleScope": "八级结算 · 伊泽瑞尔三星 · 四安可三心之钢 · 同名单共用数据",
       "conditions": {
         "kind": "full",
-        "teamId": "00000000-0000-4000-8000-000000000050",
         "population": 8,
         "traits": {
           "heartsteel": 3,
@@ -101,20 +122,20 @@
           }
         ]
       },
-      "games": 316,
+      "games": 370,
       "placementCounts": [
-        69,
-        109,
-        76,
-        36,
-        17,
+        78,
+        131,
+        89,
+        41,
+        22,
         9,
         0,
         0
       ],
       "mean": 2.53,
-      "topFourRate": 0.9177215189873418,
-      "winRate": 0.21835443037974683,
+      "topFourRate": 0.9162162162162162,
+      "winRate": 0.21081081081081082,
       "observedOn": "2026-11-23"
     },
     {
@@ -1680,22 +1701,69 @@
         "thresh",
         "vladimir"
       ],
-      "games": 1639,
-      "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=8&unit=DA_KSante19-1&unit=DA_Thresh19-1&unit=DA_Nasus19-1&unit=DA_Galio19-1&unit=DA_Vladimir19-1&unit=DA_Jhin19-1&unit=DA_Mel19-1&unit=DA_Lucian19-1",
-      "observedOn": "2026-11-23",
-      "mean": 5.29,
-      "topFourRate": 0.3209273947528981,
-      "winRate": 0.019524100061012812,
+      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Lucian19-1&unit=DA_Nasus19-1&unit=DA_Galio19-1&unit=DA_KSante19-1&unit=DA_Mel19-1&unit=DA_Jhin19-1&unit=DA_Thresh19-1&unit=DA_Vladimir19-1&queue=PBE&patch=current&days=3",
+      "sampleScope": "八级结算 · 固定八张 · 无纹章、额外人口或重复棋子",
+      "conditions": {
+        "kind": "full",
+        "teamId": "00000000-0000-4000-8000-000000000059",
+        "traits": {
+          "classical": 4,
+          "jazz": 2
+        }
+      },
+      "games": 1337,
       "placementCounts": [
-        32,
+        30,
+        51,
+        144,
+        212,
+        287,
+        264,
+        210,
+        139
+      ],
+      "mean": 5.25,
+      "topFourRate": 0.3268511593118923,
+      "winRate": 0.02243829468960359,
+      "observedOn": "2026-11-23"
+    },
+    {
+      "population": 8,
+      "roster": [
+        "jhin",
+        "pyke",
+        "samira",
+        "swain",
+        "thresh",
+        "varus",
+        "vayne",
+        "vladimir"
+      ],
+      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Varus19-1&unit=DA_Samira19-1&unit=DA_Jhin19-1&unit=DA_Thresh19-1&unit=DA_Vayne19-1&unit=DA_Pyke19-1&unit=DA_Vladimir19-1&unit=DA_Swain19-1&queue=PBE&patch=current&days=3",
+      "sampleScope": "八级结算 · 固定八张 · 无纹章、额外人口或重复棋子",
+      "conditions": {
+        "kind": "full",
+        "teamId": "00000000-0000-4000-8000-000000000121",
+        "traits": {
+          "classical": 4,
+          "rock": 4
+        }
+      },
+      "games": 291,
+      "placementCounts": [
+        2,
+        3,
+        31,
+        43,
+        61,
         59,
-        159,
-        276,
-        336,
-        343,
-        265,
-        169
-      ]
+        61,
+        31
+      ],
+      "mean": 5.52,
+      "topFourRate": 0.27147766323024053,
+      "winRate": 0.006872852233676976,
+      "observedOn": "2026-11-23"
     },
     {
       "population": 9,

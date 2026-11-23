@@ -1,10 +1,7 @@
-import { env } from "cloudflare:workers";
-import { getChatGPTUser } from "@/app/chatgpt-auth";
+import { database } from "./runtime-db";
+import { defaultOwnerId, hasOwnerSession } from "./owner-session";
 
-export function database() {
-  if (!env.DB) throw new Error("站点数据库尚未连接");
-  return env.DB;
-}
+export { database };
 export async function setting(key: string) {
   const row = await database()
     .prepare("SELECT value FROM settings WHERE key = ?")
@@ -28,33 +25,25 @@ export class ApiError extends Error {
     super(message);
   }
 }
-export async function requireOwner(request?: Request) {
-  const user = await getChatGPTUser();
-  if (!user) throw new ApiError(401, "请先登录站主账号");
-  const ownerId = await setting("owner_id");
-  if (ownerId !== user.userId)
-    throw new ApiError(
-      403,
-      ownerId ? "仅站主可以执行此操作" : "请先完成站主绑定",
-    );
-  if (request && !["GET", "HEAD"].includes(request.method))
-    assertSameOrigin(request);
-  return user;
+async function ownerIdentity() {
+  return { userId: await setting("owner_id") || defaultOwnerId, displayName: "站主" };
 }
-/** Server-rendered owner pages may fall back to OwnerGate if identity/storage is unavailable. */
+export async function requireOwner(request?: Request) {
+  if (request && !["GET", "HEAD"].includes(request.method)) assertSameOrigin(request);
+  if (!(await hasOwnerSession())) throw new ApiError(401, "请先登录站主账号");
+  return ownerIdentity();
+}
 export async function currentOwner() {
   try {
-    const user = await getChatGPTUser();
-    if (!user || (await setting("owner_id")) !== user.userId) return null;
-    return user;
+    return await hasOwnerSession() ? await ownerIdentity() : null;
   } catch {
     return null;
   }
 }
 export function assertSameOrigin(request: Request) {
   const origin = request.headers.get("origin");
-  if (!origin || origin !== new URL(request.url).origin)
-    throw new ApiError(403, "请求来源不匹配");
+  const expected = new URL(process.env.SITE_ORIGIN || request.url).origin;
+  if (!origin || origin !== expected) throw new ApiError(403, "请求来源不匹配");
 }
 export function apiError(error: unknown) {
   if (error instanceof ApiError)

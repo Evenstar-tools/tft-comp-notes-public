@@ -1,5 +1,5 @@
 import { BOARD_HEIGHT, BOARD_WIDTH, HEX_HEIGHT, HEX_WIDTH, hexPosition } from "@/domain/board-layout";
-import { boardInstruments, BOARD_INSTRUMENT_NOTE } from "@/domain/board-instruments";
+import { boardInstruments, boardMarkerNote } from "@/domain/board-instruments";
 import type { Section } from "@/domain/document";
 import { guideRoster, readingNotes } from "@/domain/guide-reading";
 import { heroArtworkFocus } from "@/domain/hero-artwork";
@@ -13,13 +13,14 @@ const ink = "#252637", muted = "#585867", accent = "#564276", paper = "#faf8f3";
 const border: Record<number, string> = { 1: "#afbacb", 2: "#55c99a", 3: "#65bafa", 4: "#cd91ff", 5: "#f3be58", 7: "#ff956e" };
 const unitNames: Record<string, string> = {
   "厄运小姐": "女枪", "烈娜塔·戈拉斯克": "烈娜塔", "努努和威朗普": "努努", "蒙多医生": "蒙多",
-  "萨勒芬妮": "芬妮", "崔丝塔娜": "小炮",
+  "萨勒芬妮": "芬妮", "崔丝塔娜": "小炮", "弗拉基米尔": "吸血鬼",
 };
 const itemNames: Record<string, string> = {
   "朔极之矛": "青龙刀", "无尽之刃": "无尽", "最后的轻语": "轻语", "鬼索的狂暴之刃": "羊刀",
   "海克斯科技枪刃": "科技枪", "珠光护手": "法爆", "莫雷洛秘典": "鬼书", "石像鬼石板甲": "石像鬼",
   "斯特拉克的挑战护手": "血手", "泰坦的坚决": "泰坦", "强袭者的链枷": "链枷", "日炎斗篷": "日炎",
   "灭世者的死亡之帽": "帽子", "窃贼手套": "偷偷", "振奋盔甲": "振奋", "狂徒铠甲": "狂徒",
+  "大天使之杖": "大天使", "适应性头盔": "适应头盔",
 };
 const roleNames: Record<string, string> = { 主输出: "主C", 前期输出: "主C", 后期输出: "副C", 物理输出: "副C" };
 type Ctx = CanvasRenderingContext2D;
@@ -158,9 +159,22 @@ export async function guidePoster({ section, team, data, format = defaultPosterF
       }
     }
     y += boardHeight + 7;
-    if (instruments?.size) y = block(c, BOARD_INSTRUMENT_NOTE, pad, y, inner, 12.5, muted, 18);
+    if (instruments?.size) y = block(c, boardMarkerNote(instruments), pad, y, inner, 12.5, muted, 18);
     const traits = traitCounts(board.pieces, data.units, data.traits, data.items).filter(trait => traitGroup(trait) === "已开常规");
-    return traits.length ? block(c, traits.map(trait => trait.level + " " + trait.name).join("　"), pad, y, inner, 14, accent, 19, 650) : y;
+    font(c, 14, 650);
+    c.fillStyle = accent;
+    let x = pad;
+    for (const trait of traits) {
+      const label = trait.level + " " + trait.name;
+      const width = c.measureText(label).width;
+      if (x > pad && x + width > pad + inner) {
+        x = pad;
+        y += 19;
+      }
+      c.fillText(label, x, y);
+      x += width + 14;
+    }
+    return traits.length ? y + 19 : y;
   }
 
   function drawGear(c: Ctx, board: Team, y: number, alreadyShown: Set<string>) {

@@ -22,10 +22,10 @@
   "sample-block-0307": {
     "summaryId": "sample-block-0391",
     "previousText": {
-      "sample-block-0063": "演示旧文案 1",
-      "sample-block-0268": "演示旧文案 2",
-      "sample-block-0279": "演示旧文案 3",
-      "sample-block-0138": "演示旧文案 4"
+      "sample-block-0063": "示例旧文案 1",
+      "sample-block-0268": "示例旧文案 2",
+      "sample-block-0279": "示例旧文案 3",
+      "sample-block-0138": "示例旧文案 4"
     },
     "groups": [
       {
@@ -282,7 +282,7 @@
   },
   "sample-block-0214": {
     "previousText": {
-      "sample-block-0461": "演示旧文案 5"
+      "sample-block-0461": "示例旧文案 5"
     },
     "summaryId": "sample-block-0434",
     "groups": [
@@ -585,7 +585,7 @@
   },
   "sample-block-0420": {
     "previousText": {
-      "sample-block-0365": "演示旧文案 6"
+      "sample-block-0365": "示例旧文案 6"
     },
     "summaryId": "sample-block-0026",
     "groups": [
@@ -3224,7 +3224,12 @@
   },
   "sample-block-0051": {
     "previousText": {
-      "sample-block-0305": "演示旧文案 7"
+      "sample-block-0305": "示例旧文案 7",
+      "sample-block-0318": "示例旧文案 8",
+      "sample-block-0239": "示例旧文案 9",
+      "sample-block-0415": "示例旧文案 10",
+      "sample-block-0371": "示例旧文案 11",
+      "sample-block-0126": "示例旧文案 12"
     },
     "summaryId": "sample-block-0297",
     "groups": [
@@ -3239,12 +3244,12 @@
           {
             "id": "sample-block-0318",
             "type": "text",
-            "text": "主C：烬。无尽、死亡之刃优先。奎桑提的薄暮能罩住烬先打的前排，就补链枷。破甲不稳定就带轻语，遇到厚前排可用巨杀替死亡之刃。"
+            "text": "主C：烬。无尽、死亡之刃、轻语。有队友带薄暮覆盖同侧时，轻语可换链枷。"
           },
           {
             "id": "sample-block-0239",
             "type": "text",
-            "text": "主坦：锤石。板甲、狂徒、振奋。薄暮给烬同侧的奎桑提，鬼书先给烈娜塔，成型交给梅尔。"
+            "text": "主坦：锤石。石板甲、振奋、冕卫，冕卫可换狂徒。鬼书先给烈娜塔，成型交给梅尔。"
           },
           {
             "id": "sample-block-0274",
@@ -3296,7 +3301,7 @@
           {
             "id": "sample-block-0415",
             "type": "text",
-            "text": "八级挑一轮前两排只留一人，解锁弗拉基米尔后摆回。弗拉基米尔没到先留烈娜塔保四古典。梅尔和弗拉基米尔开双黑魔，梅尔带鬼书补重伤。"
+            "text": "八级挑一轮前两排只留一人，解锁弗拉基米尔后摆回。弗拉基米尔没到先留烈娜塔保四古典。"
           },
           {
             "id": "sample-block-0128",
@@ -3322,12 +3327,12 @@
           {
             "id": "sample-block-0371",
             "type": "text",
-            "text": "棋盘配装 · 九级 · 补女枪\n主C：烬。保留八级三件套。\n主坦：锤石。板甲、狂徒、振奋。\n功能装：奎桑提。烬同侧带薄暮。\n功能装：梅尔。鬼书挂重伤，蓝霸符回蓝。\n副C：厄运小姐。物理余装。"
+            "text": "棋盘配装 · 九级 · 补女枪\n主C：烬。无尽、死亡之刃、轻语。\n主坦：锤石。石板甲、振奋、冕卫。\n副C：梅尔。蓝霸符、鬼书、大天使。\n副C：厄运小姐。物理余装。"
           },
           {
             "id": "sample-block-0126",
             "type": "text",
-            "text": "棋盘配装 · 八级 · 四古典烬\n主C：烬。无尽、死亡之刃。薄暮覆盖时补链枷，破甲不稳就带轻语。\n主坦：锤石。板甲、狂徒、振奋。\n功能装：奎桑提。烬同侧带薄暮。\n功能装：梅尔。蓝霸符、鬼书。有现成红霸符也能打，重伤优先做一件。"
+            "text": "棋盘配装 · 八级 · 四古典烬\n主C：烬。无尽、死亡之刃、轻语。\n主坦：锤石。石板甲、振奋、冕卫。\n副C：梅尔。蓝霸符、鬼书、大天使。"
           },
           {
             "id": "sample-block-0113",
@@ -3340,7 +3345,7 @@
   },
   "sample-block-0394": {
     "previousText": {
-      "sample-block-0353": "演示旧文案 8"
+      "sample-block-0353": "示例旧文案 13"
     },
     "summaryId": "sample-block-0197",
     "groups": [
@@ -3473,10 +3478,10 @@
   },
   "sample-block-0235": {
     "previousText": {
-      "sample-block-0419": "演示旧文案 9",
-      "sample-block-0264": "演示旧文案 10",
-      "sample-block-0430": "演示旧文案 11",
-      "sample-block-0314": "演示旧文案 12"
+      "sample-block-0419": "示例旧文案 14",
+      "sample-block-0264": "示例旧文案 15",
+      "sample-block-0430": "示例旧文案 16",
+      "sample-block-0314": "示例旧文案 17"
     },
     "summaryId": "sample-block-0056",
     "groups": [
@@ -3874,7 +3879,7 @@
                   "content": "爵士乐史密奇其他分支",
                   "text_element_style": {
                     "link": {
-                      "url": "https://evenstar-tft-library.zhangzeyu99.chatgpt.site/guides/sample-block-0275"
+                      "url": "https://tft.example.com/guides/sample-block-0275"
                     }
                   }
                 }
@@ -4287,7 +4292,7 @@
   },
   "sample-block-0275": {
     "previousText": {
-      "sample-block-0444": "演示旧文案 13"
+      "sample-block-0444": "示例旧文案 18"
     },
     "summaryId": "sample-block-0224",
     "groups": [
@@ -5948,7 +5953,7 @@
                   "content": "K/DA 纹章与芬妮携带数据",
                   "text_element_style": {
                     "link": {
-                      "url": "https://evenstar-tft-library.zhangzeyu99.chatgpt.site/emblems?trait=k-da&unit=seraphine"
+                      "url": "https://tft.example.com/emblems?trait=k-da&unit=seraphine"
                     }
                   }
                 }
@@ -7563,7 +7568,7 @@
   },
   "sample-block-0064": {
     "previousText": {
-      "sample-block-0137": "演示旧文案 14"
+      "sample-block-0137": "示例旧文案 19"
     },
     "summaryId": "sample-block-0170",
     "groups": [

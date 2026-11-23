@@ -1,20 +1,7 @@
 import type { PosterFormat } from "./poster.ts";
 
-function configuredFeishuDocument() {
-  const configured = process.env.NEXT_PUBLIC_FEISHU_DOCUMENT_URL;
-  if (!configured) return;
-  try {
-    const url = new URL(configured);
-    if (url.protocol !== "https:" || !/(^|\.)feishu\.cn$/.test(url.hostname) ||
-      url.username || url.password || !/^\/(docx|wiki)\/[a-zA-Z0-9]+\/?$/.test(url.pathname)) return;
-    return url.origin + url.pathname;
-  } catch {
-    return;
-  }
-}
-export const FEISHU_DOCUMENT = configuredFeishuDocument();
 export function feishuSection(id?: string) {
-  return FEISHU_DOCUMENT ? FEISHU_DOCUMENT + (id ? "#" + encodeURIComponent(id) : "") : undefined;
+  return "/api/document/open" + (id ? "?" + new URLSearchParams({ section: id }) : "");
 }
 export const ownerEditorPath = "/editor/owner";
 export function editorLink(teamId: string) { return ownerEditorPath + "?team=" + encodeURIComponent(teamId); }

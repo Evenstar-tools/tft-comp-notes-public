@@ -7,7 +7,9 @@ import { ApiError } from "./access";
 
 const boardPosition = z.number().int().min(0).max(27);
 const board = z.object({
-  instrumentPositions: z.object({ maracas: boardPosition.optional(), rainstick: boardPosition.optional() }).strict().optional(),
+  instrumentPositions: z.object({
+    maracas: boardPosition.optional(), rainstick: boardPosition.optional(), infernalIdol: boardPosition.optional(),
+  }).strict().optional(),
   pieces: z
     .array(
       z.object({

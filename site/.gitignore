@@ -43,3 +43,12 @@ yarn-error.log*
 
 # OS metadata
 .DS_Store
+
+# Portable runtime state and configuration template
+/.local/
+!/.env.example
+
+# Tencent Cloud EdgeOne
+.env
+.edgeone/*
+.tef_dist/*

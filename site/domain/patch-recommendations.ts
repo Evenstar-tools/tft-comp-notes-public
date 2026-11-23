@@ -30,7 +30,7 @@ const statusFromText = new Map<string, PatchRecommendation["status"]>([
   ["避开", "avoid"], ["别硬玩", "avoid"], ["暂不推荐", "avoid"], [patchRecommendationLabels.avoid, "avoid"],
   ["复核", "review"], ["待复核", "review"],
 ]);
-const origin = "https://evenstar-tft-library.zhangzeyu99.chatgpt.site";
+const origin = "https://tft.example.com";
 const guidePath = /^\/guides\/([A-Za-z0-9_-]{1,100})\/?$/;
 const uuid = /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i;
 const marker = "阵容推荐", endMarker = "阵容推荐结束";

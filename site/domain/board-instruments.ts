@@ -9,6 +9,14 @@ export interface BoardInstrument {
 }
 
 export const BOARD_INSTRUMENT_NOTE = "乐器站位示意";
+const idol: BoardInstrument = {
+  id: "infernalIdol", name: "地狱偶像", image: "/assets/infernal-idol.webp",
+};
+
+export function boardMarkerNote(instruments: ReadonlyMap<number, BoardInstrument>) {
+  if (![...instruments.values()].some(instrument => instrument.id === idol.id)) return BOARD_INSTRUMENT_NOTE;
+  return instruments.size > 1 ? "乐器与地狱偶像站位示意" : "地狱偶像站位示意";
+}
 
 // 名称采用 PBE 简中，组合和位置用于示意。
 const examples: readonly (BoardInstrument & { preferred: number })[] = [
@@ -21,13 +29,16 @@ function boardPosition(position?: number): position is number {
 }
 
 export function boardInstruments(pieces: readonly Piece[], data: Season, positions?: Team["instrumentPositions"]): Map<number, BoardInstrument> {
-  const level = traitCounts([...pieces], data.units, data.traits, data.items)
-    .find(trait => trait.id === "beach-pop")?.level ?? 0;
+  const traits = traitCounts([...pieces], data.units, data.traits, data.items);
+  const level = traits.find(trait => trait.id === "beach-pop")?.level ?? 0;
   const result = new Map<number, BoardInstrument>();
+  const occupied = new Set(pieces.map(piece => piece.position));
+  const idolPosition = positions?.infernalIdol;
+  if (boardPosition(idolPosition) && !occupied.has(idolPosition)
+    && traits.some(trait => trait.id === "rock" && trait.level >= 3)) result.set(idolPosition, idol);
   const count = level >= 5 ? 2 : level >= 3 ? 1 : 0;
   if (!count) return result;
 
-  const occupied = new Set(pieces.map(piece => piece.position));
   const instruments = examples.slice(0, count);
   const placed = new Set<BoardInstrumentId>();
   for (const instrument of instruments) {

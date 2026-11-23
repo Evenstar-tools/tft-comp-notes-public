@@ -1,7 +1,7 @@
 import { season, unitMap } from "@/data";
 import { traitCounts, traitLines, usedPopulation } from "@/domain/team";
 import type { Team } from "@/domain/types";
-import { boardInstruments, BOARD_INSTRUMENT_NOTE } from "@/domain/board-instruments";
+import { boardInstruments, boardMarkerNote } from "@/domain/board-instruments";
 import { BOARD_WIDTH, HEX_WIDTH, HEX_HEIGHT, HEX_POINTS, STAR_PATH, hexPosition } from "@/domain/board-layout";
 const colors: Record<number, string> = {
   1: "#9ba4b7",
@@ -103,7 +103,7 @@ export async function exportTeamImage(team: Team): Promise<Blob> {
   const scale = 1250 / BOARD_WIDTH;
   const width = HEX_WIDTH * scale, height = HEX_HEIGHT * scale;
   const instruments = boardInstruments(team.pieces, season, team.instrumentPositions);
-  if (instruments.size) ctx.fillText(BOARD_INSTRUMENT_NOTE, 48, 128);
+  if (instruments.size) ctx.fillText(boardMarkerNote(instruments), 48, 128);
   const urls = team.pieces.flatMap((piece) => [
     unitMap.get(piece.unitId)?.image,
     ...piece.items.map((id) => season.items.find((item) => item.id === id)?.image),

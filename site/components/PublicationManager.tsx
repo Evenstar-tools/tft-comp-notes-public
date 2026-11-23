@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { findSection, readableSection, reviewIssues, sectionChanges, sectionTeams } from "@/domain/document-flow";
-import { FEISHU_DOCUMENT, editorLink, feishuSection } from "@/domain/links";
+import { editorLink, feishuSection } from "@/domain/links";
 import { authoredParagraphs, isEditorialSection } from "@/domain/guide-reading";
 import { orderPosterStages, posterStageTitle } from "@/domain/poster";
 import { usedPopulation } from "@/domain/team";
@@ -146,7 +146,7 @@ export function PublicationManager() {
     <>
       <div className="page-heading">
         <h1>发布管理</h1>
-        {!section && FEISHU_DOCUMENT && <a
+        {!section && <a
           className="button"
           href={feishuSection(requested ?? undefined)}
           target="_blank"
@@ -259,7 +259,7 @@ export function PublicationManager() {
             <>
               <div className="flow-actions preview-actions">
                 <a className="preview-back" href="#publish-selection">↑ 返回发布列表</a>
-                {FEISHU_DOCUMENT && <a href={feishuSection(section.id)} target="_blank" rel="noreferrer">编辑飞书正文 ↗</a>}
+                <a href={feishuSection(section.id)} target="_blank" rel="noreferrer">编辑飞书正文 ↗</a>
                 {sectionTeams(section).map(team => <a key={team.id} href={editorLink(team.id)}>
                   {team.name === section.title ? "修改阵容" : "修改：" + team.name}
                 </a>)}

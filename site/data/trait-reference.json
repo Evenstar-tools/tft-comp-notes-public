@@ -291,11 +291,11 @@
     "gameName": "R&B"
   },
   "rock": {
-    "summary": "召唤炼狱偶像。上场的摇滚成员星级越高，偶像越强。",
+    "summary": "召唤地狱偶像。上场的摇滚成员星级越高，偶像越强。",
     "tiers": [
       {
         "min": 3,
-        "description": "召唤炼狱偶像。"
+        "description": "召唤地狱偶像。"
       },
       {
         "min": 4,

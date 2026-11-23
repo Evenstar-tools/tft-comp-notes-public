@@ -1,13 +1,14 @@
 "use client";
 
-import { ChevronDown, ClipboardList, Moon, PanelsTopLeft, SquarePen, Sun } from "lucide-react";
+import { ChevronDown, ClipboardList, LogOut, Moon, PanelsTopLeft, SquarePen, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { currentGuideNavigation, guideNavigationChange } from "@/domain/guide-navigation";
 import { ownerEditorPath } from "@/domain/links";
 import { useOwnerSession } from "./OwnerSession";
 import { SiteSearchOverlay } from "./SiteSearchOverlay";
+import { request } from "./api";
 
 const referenceLinks = [
   ["/heroes", "英雄"], ["/traits", "羁绊"], ["/augments", "海克斯"],
@@ -50,6 +51,21 @@ export function SiteNav() {
   const search = useSyncExternalStore(subscribeToGuideNavigation, guideQuery, initialGuideQuery);
   const current = { pathname, search };
   const navigation = useRef<HTMLElement>(null);
+  const [signingOut, setSigningOut] = useState(false);
+  const [signOutError, setSignOutError] = useState("");
+
+  async function signOut() {
+    if (signingOut) return;
+    setSigningOut(true);
+    setSignOutError("");
+    try {
+      await request("/api/session", { method: "DELETE" });
+      window.location.assign("/editor");
+    } catch {
+      setSignOutError("退出失败，请重试。");
+      setSigningOut(false);
+    }
+  }
 
   useEffect(() => {
     function dismiss(event: PointerEvent) {
@@ -86,7 +102,10 @@ export function SiteNav() {
             <div className="task-mobile-tools">
               <a href="/updates" aria-current={isCurrent("/updates") ? "page" : undefined}>版本更新</a>
               <a href={ownerEditorPath} aria-current={isCurrent(ownerEditorPath) ? "page" : undefined}>{ownerAccessLabel}</a>
-              {session?.isOwner && <a href="/manage">发布管理</a>}
+              {session?.isOwner && <>
+                <a href="/manage">发布管理</a>
+                <button type="button" className="theme-toggle" disabled={signingOut} onClick={() => void signOut()}>退出站主</button>
+              </>}
               <ThemeToggle />
             </div>
           </div>
@@ -107,7 +126,10 @@ export function SiteNav() {
           {session?.isOwner && <a href="/manage" aria-label="发布管理" title="发布管理" aria-current={isCurrent("/manage") ? "page" : undefined}>
             <ClipboardList size={16} aria-hidden />
           </a>}
+          {session?.isOwner && <button type="button" className="theme-toggle" aria-label="退出站主" title="退出站主"
+            disabled={signingOut} onClick={() => void signOut()}><LogOut size={16} aria-hidden /></button>}
         </nav>
+        {signOutError && <span role="alert">{signOutError}</span>}
         <ThemeToggle />
       </div>
     </>

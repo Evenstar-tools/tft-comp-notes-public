@@ -57,7 +57,7 @@ export interface Piece {
   stars: 1 | 2 | 3;
   items: string[];
 }
-export type BoardInstrumentId = "maracas" | "rainstick";
+export type BoardInstrumentId = "maracas" | "rainstick" | "infernalIdol";
 export type BoardStage = "early" | "mid" | "late";
 export interface BoardSetup {
   pieces: Piece[];

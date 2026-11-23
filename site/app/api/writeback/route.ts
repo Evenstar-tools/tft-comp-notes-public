@@ -1,10 +1,14 @@
-import { apiError, ApiError, database, requireOwner } from "@/server/access";
+import { setting, apiError, ApiError, database, requireOwner } from "@/server/access";
 import { writeTeam } from "@/server/writeback";
 import { readPngSize } from "@/server/png-size";
 import { readSavedTeam } from "@/server/teams";
 export async function POST(request: Request) {
   try {
     const user = await requireOwner(request);
+    if (process.env.FEISHU_WRITEBACK_ENABLED !== "true")
+      throw new ApiError(503, "站主尚未启用飞书写回");
+    if (await setting("edgeone_import_mode") === "public-only")
+      throw new ApiError(409, "当前仅恢复公开阵容。导入旧站完整图文绑定后可写回飞书。");
     const form = await request.formData();
     const image = form.get("image"),
       teamId = form.get("teamId"),

@@ -1,0 +1,24 @@
+.owner-login {
+  width: min(100%, 410px);
+  margin: clamp(24px, 8vh, 96px) auto;
+  text-align: left;
+}
+.owner-login form {
+  display: grid;
+  gap: 10px;
+  margin-block: 20px;
+}
+.owner-login label { font-weight: 600; }
+.owner-login :is(input, button) {
+  min-height: 42px;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+.owner-login input {
+  width: 100%;
+  border: 1px solid var(--line);
+  background: var(--raised);
+  color: var(--text);
+}
+.owner-login a { color: var(--accent); }
+.owner-login [role="alert"] { color: var(--danger); }
