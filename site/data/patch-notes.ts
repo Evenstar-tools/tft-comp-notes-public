@@ -3,6 +3,63 @@ import type { PatchReference } from "../domain/patch-reference";
 // Numbers cover the star level or breakpoint named in each row.
 export const patchReferences: PatchReference[] = [
   {
+    id: "pbe-6018196",
+    edition: "s19-pbe",
+    title: "PBE 11/23 更新 · 薇恩和铁男解锁",
+    date: "2026-11-23",
+    dateLabel: "PBE1 实装 · UTC",
+    build: "19.1.0.6018196",
+    source: { name: "设计师公告", url: "https://x.com/TheTruexy/status/2124948130936541578" },
+    highlights: [
+      "七级找薇恩，改看摇滚恶魔或花式射手的不同名弈子星级，合计需要 5 星。五杀乐队解锁铁男从 10 星降到 9 星。",
+      "古典女枪、海之歌男枪和五杀天使的技能加强，泽丽的激光伤害降低。五摇滚伤害不变，七摇滚才吃到这次加强。",
+      "烈娜塔配狗头时，二星、三星狗头的自疗和群疗都比上版低。高能流行在 200 热度换了奖励，K/DA 的 15 星伤害也下调。",
+    ],
+    observation: "七级搜薇恩前先数场上不同名弈子的星级；五杀天使过渡时，凑到 9 星就可以找铁男。公告还列出了周末已实装的男枪双倍伤害修复、真伤阿卡丽 320 珠光解锁、真伤 B 面珠光调整和「数星星」停用。",
+    groups: {
+      "解锁": [
+        { name: "薇恩", unit: "vayne", aliases: ["VN"], guides: ["sample-block-0338", "sample-block-0407"],
+          values: [["七级及以上", "激活摇滚恶魔出战 3 回合", "摇滚恶魔或花式射手的不同名弈子合计 5 星"]] },
+        { name: "莫德凯撒", unit: "mordekaiser", aliases: ["铁男"], guides: ["sample-block-0219"],
+          values: [["五杀乐队不同名弈子星级总和", "10 星", "9 星"]] },
+      ],
+      "弈子": [
+        { name: "薇恩", unit: "vayne", aliases: ["VN"], guides: ["sample-block-0338", "sample-block-0407"],
+          values: [["技能攻击力系数（1／2／3 星）", "165%／250%／2000%", "175%／265%／2400%"]] },
+        { name: "厄运小姐", unit: "miss-fortune", aliases: ["女枪", "MF"], guides: ["sample-block-0394", "sample-block-0154"],
+          values: [["技能攻击力系数（1／2 星）", "140%／210%", "150%／225%"]] },
+        { name: "泽丽", unit: "zeri", guides: ["sample-block-0235", "sample-block-0154"],
+          values: [["激光攻击力系数（1／2 星）", "145%／215%", "135%／200%"]] },
+        { name: "格雷福斯", unit: "graves", aliases: ["男枪"], guides: ["sample-block-0251", "sample-block-0452"],
+          values: [["技能攻击力系数（1／2 星）", "40%／60%", "42%／63%"]] },
+        { name: "凯尔", unit: "kayle", aliases: ["天使"], guides: ["sample-block-0219", "sample-block-0468"],
+          values: [["剑刃伤害（1／2／3 星）", "37／55／400", "42／63／480"]] },
+        { name: "内瑟斯", unit: "nasus", aliases: ["狗头", "烈娜塔"], guides: ["sample-block-0122"],
+          values: [["自身每秒治疗（2／3 星）", "150／250", "130／225"], ["友军每秒治疗（2／3 星）", "35／60", "30／50"]] },
+        { name: "萨勒芬妮", unit: "seraphine", aliases: ["芬妮"], guides: ["sample-block-0420", "sample-block-0367"],
+          values: [["明日新星的额外音符", "8 个", "6 个"]] },
+      ],
+      "羁绊": [
+        { name: "摇滚恶魔", aliases: ["摇滚", "Rock"], guides: ["sample-block-0338"],
+          values: [["技能伤害（5／7 摇滚）", "450／600", "450／650"]] },
+        { name: "高能流行", aliases: ["Hyperpop"], guides: ["sample-block-0420"],
+          values: [["200 热度奖励", "1 个次级英雄复制器", "1 个微型英雄复制器＋1 金币"]] },
+        { name: "K/DA", guides: ["sample-block-0764", "sample-block-0464", "sample-block-0006"],
+          values: [["15 星的目标生命值伤害", "12%", "10%"]] },
+      ],
+      "海克斯": [
+        { name: "棱彩巡演：五杀乐队+", aliases: ["Pentakill Prismatic Tour+"], guides: ["sample-block-0219"],
+          values: [["赠送的奥拉夫", "二星", "一星"]] },
+        { name: "棱彩巡演：K/DA+", aliases: ["K/DA Prismatic Tour+"], guides: ["sample-block-0764"],
+          values: [["次级／微型英雄复制器", "各 2 个", "各 1 个"]] },
+      ],
+      "装备": [
+        { name: "K/DA纹章", aliases: ["K/DA Emblem"], guides: ["sample-block-0367"],
+          values: [["生命值", "150", "100"], ["攻击力／法术强度", "各 15%", "各 10%"]] },
+      ],
+    },
+  },
+  {
     id: "pbe-6014015",
     edition: "s19-pbe",
     title: "PBE 19.1a 真实伤害热补",

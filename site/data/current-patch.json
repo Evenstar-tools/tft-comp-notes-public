@@ -1,8 +1,8 @@
 {
   "seasonId": "s19-pbe",
-  "build": "6014015",
-  "label": "PBE 19.1a",
-  "effectiveAt": "2026-11-22T01:49:44Z",
-  "updateId": "pbe-6014015",
-  "sourceUrl": "https://matches3.metatft.com/PBE1_4536593900.json"
+  "build": "6018196",
+  "label": "PBE 19.1a · 11/23",
+  "effectiveAt": "2026-11-23T19:41:35Z",
+  "updateId": "pbe-6018196",
+  "sourceUrl": "https://matches3.metatft.com/PBE1_4536780050.json"
 }
