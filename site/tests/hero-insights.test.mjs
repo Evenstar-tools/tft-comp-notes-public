@@ -23,12 +23,12 @@ test("ranks forms independently within the same cost and excludes thin samples",
 test("keeps complete items with enough wearer samples, ranked separately per form", () => {
   const samples = {
     gloves: { rows: [{ unitId: "akali-kda", games: 200 }, { unitId: "akali-true-damage", games: 99 }] },
-    edge: { rows: [{ unitId: "akali-kda", games: 100, mean: 4.06, rate: 0.28 }, { unitId: "akali-true-damage", games: 120, mean: null, rate: null }] },
+    edge: { rows: [{ unitId: "akali-kda", games: 100, mean: 4.06, rate: 0.28, placementDelta: -0.17 }, { unitId: "akali-true-damage", games: 120, mean: null, rate: null }] },
     sword: { rows: [{ unitId: "akali-kda", games: 500 }] },
   };
   const items = new Map([["gloves", { category: "completed" }], ["edge", { category: "completed" }], ["sword", { category: "component" }]]);
   assert.deepEqual(commonHeroItems(items, samples, 100), {
-    "akali-kda": [{ itemId: "gloves", games: 200 }, { itemId: "edge", games: 100, mean: 4.06, rate: 0.28 }],
+    "akali-kda": [{ itemId: "gloves", games: 200 }, { itemId: "edge", games: 100, mean: 4.06, rate: 0.28, placementDelta: -0.17 }],
     "akali-true-damage": [{ itemId: "edge", games: 120 }],
   });
 });

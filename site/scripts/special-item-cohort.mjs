@@ -12,6 +12,14 @@ export function placements(places) {
   };
 }
 
+export function itemPlacementDelta(worn, overall, minGames) {
+  if (!overall || worn.some((count, index) => count > overall[index])) return undefined;
+  const withItem = placements(worn);
+  const withoutItem = placements(overall.map((count, index) => count - worn[index]));
+  if (withItem.games < minGames || withoutItem.games < minGames) return undefined;
+  return rounded(withItem.mean - withoutItem.mean);
+}
+
 export function itemCohort(data, itemId, patch, days) {
   const cohort = data.unit_games?.[0]?.patch;
   if (data.queue_id !== "pbe" || data.tft_set !== "TFTSet19" || data.unit_games?.length !== 1 ||

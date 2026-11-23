@@ -11,6 +11,7 @@ import type { HeroItemSample, HeroItemSource } from "@/domain/hero-insights";
 import { itemLink } from "@/domain/links";
 import type { Unit } from "@/domain/types";
 import { ConditionalGear } from "./ConditionalGear";
+import { HeroItemPlacementDelta, heroItemDeltaHint } from "./HeroItemPlacementDelta";
 import { ItemIcon } from "./ItemIcon";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import "./hero-loadout.css";
@@ -31,6 +32,7 @@ export function HeroLoadout({ unit, items, gearSource }: { unit: Unit; items: He
   const lockTrigger = useRef<HTMLButtonElement>(null);
   const supportsBuilds = season.id.startsWith(`s19-pbe-${buildSource.patch}.`) && Object.hasOwn(buildSource.units, unit.id);
   const sampledItems = items.map(row => ({ ...row, item: itemMap.get(row.itemId) }));
+  const hasPlacementDelta = sampledItems.some(row => row.item && row.placementDelta !== undefined);
   const firstWithSample = sampledItems.find(row => lockableIds.has(row.itemId))?.item;
   const defaultItem = firstWithSample ?? lockableItems[0];
   const defaultIds = defaultItem ? [defaultItem.id] : [];
@@ -67,8 +69,12 @@ export function HeroLoadout({ unit, items, gearSource }: { unit: Unit; items: He
         <span>{gearSource.source} · {gearSource.version} · {gearSource.window} · {gearSource.date.slice(5).replace("-", "/")}</span>
       </header>
       {sampledItems.length ? <table>
-        <thead><tr><th scope="col">装备</th><th scope="col">场数</th><th scope="col">均名</th><th scope="col">携带率</th></tr></thead>
-        <tbody>{sampledItems.map(({ itemId, item, games, mean, rate }) => {
+        <thead><tr>
+          <th scope="col">装备</th><th scope="col">场数</th><th scope="col">均名</th>
+          {hasPlacementDelta && <th scope="col" title={heroItemDeltaHint}>名次差</th>}
+          <th scope="col">携带率</th>
+        </tr></thead>
+        <tbody>{sampledItems.map(({ itemId, item, games, mean, rate, placementDelta }) => {
           if (!item) return null;
           const label = itemName(item);
           const lockable = supportsBuilds && lockableIds.has(itemId);
@@ -87,6 +93,7 @@ export function HeroLoadout({ unit, items, gearSource }: { unit: Unit; items: He
             </div></th>
             <td>{number.format(games)}</td>
             <td>{mean?.toFixed(2) ?? "—"}</td>
+            {hasPlacementDelta && <td>{placementDelta === undefined ? "—" : <HeroItemPlacementDelta value={placementDelta} />}</td>}
             <td>{typeof rate === "number" ? ratio.format(rate) : "—"}</td>
           </tr>;
         })}</tbody>

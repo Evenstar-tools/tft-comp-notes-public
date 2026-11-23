@@ -7,6 +7,7 @@ import buildSource from "@/data/conditional-gear-unit-ids.json";
 import { itemName } from "@/domain/gear-library";
 import type { HeroItemSample, HeroItemSource } from "@/domain/hero-insights";
 import type { Item, Unit } from "@/domain/types";
+import { formatHeroItemDelta, HeroItemPlacementDelta, heroItemDeltaHint } from "./HeroItemPlacementDelta";
 import { ItemIcon } from "./ItemIcon";
 import "./editor-gear-recommendations.css";
 
@@ -58,6 +59,7 @@ export function EditorGearRecommendations({ unit, items, gearSource, onEquip, on
     const item = itemMap.get(sample.itemId);
     return item ? [{ ...sample, item }] : [];
   }).slice(0, 4);
+  const hasPlacementDelta = common.some(row => row.placementDelta !== undefined);
   const sample = current?.sample;
   const builds = (sample?.rows ?? []).flatMap(row => {
     const gear = row.items.map(id => itemMap.get(id));
@@ -70,17 +72,18 @@ export function EditorGearRecommendations({ unit, items, gearSource, onEquip, on
       <section aria-label="常用装备">
         <div className="editor-gear-heading">
           <h3>常用装备</h3>
-          <span title={`${gearSource.source} · ${gearSource.version} · ${gearSource.window} · ${gearSource.date}`}>
-            {gearSource.source} · {gearSource.date.slice(5).replace("-", "/")}
+          <span title={hasPlacementDelta ? heroItemDeltaHint : `${gearSource.source} · ${gearSource.version} · ${gearSource.window} · ${gearSource.date}`}>
+            {hasPlacementDelta && "名次差 · "}{gearSource.source} · {gearSource.date.slice(5).replace("-", "/")}
           </span>
         </div>
         {common.length ? (
           <div className="editor-common-gear-list">
-            {common.map(({ item, games, mean, rate: carryRate }) => {
+            {common.map(({ item, games, mean, rate: carryRate, placementDelta }) => {
               const name = itemName(item);
               const detail = [
                 `${count.format(games)} 场`,
                 mean === undefined ? undefined : `均名 ${mean.toFixed(2)}`,
+                placementDelta === undefined ? undefined : `名次差 ${formatHeroItemDelta(placementDelta)}`,
                 carryRate === undefined ? undefined : `携带率 ${rate.format(carryRate)}`,
               ].filter(Boolean).join(" · ");
               return (
@@ -89,6 +92,9 @@ export function EditorGearRecommendations({ unit, items, gearSource, onEquip, on
                   <ItemIcon item={item} size={24} />
                   <span>{name}</span>
                   <small>{count.format(games)} 场</small>
+                  {hasPlacementDelta && <small className="editor-common-gear-delta">
+                    {placementDelta === undefined ? "—" : <HeroItemPlacementDelta value={placementDelta} />}
+                  </small>}
                 </button>
               );
             })}

@@ -1,0 +1,7 @@
+.hero-item-placement-delta {
+  font-variant-numeric: tabular-nums;
+  font-weight: 650;
+  white-space: nowrap;
+}
+.hero-item-placement-delta[data-tone="good"] { color: light-dark(#24623f, #91d7ab); }
+.hero-item-placement-delta[data-tone="weak"] { color: light-dark(#a1373c, #ff9ca4); }

@@ -63,6 +63,7 @@
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
+.editor-common-gear-list button .editor-common-gear-delta { font-size: 11px; }
 .editor-build-recommendations {
   padding-top: 5px;
   border-top: 1px solid var(--line);

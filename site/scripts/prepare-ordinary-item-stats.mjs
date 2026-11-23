@@ -1,7 +1,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { parseArgs } from "node:util";
-import { itemCohort, placements, rounded } from "./special-item-cohort.mjs";
+import { itemCohort, itemPlacementDelta, placements, rounded } from "./special-item-cohort.mjs";
 
 const dataUrl = name => new URL("../data/" + name + ".json", import.meta.url);
 const { values: { evidence, out } } = parseArgs({ options: { evidence: { type: "string" }, out: { type: "string" } } });
@@ -29,14 +29,19 @@ async function collect(id, itemName) {
   if (!response.ok) throw new Error(`HTTP ${response.status} · ${itemName}`);
   const result = await response.json();
   const { version, stats: { games: totalGames, mean, winRate } } = itemCohort(result, itemName, source.patch, days);
-  const overall = new Map(result.units_overall.map(row => [row.unit, placements(row.places).games]));
+  const overall = new Map(result.units_overall.map(row => [row.unit, { games: placements(row.places).games, places: row.places }]));
   const rows = result.units.flatMap(row => {
     const stats = placements(row.places);
     const unitId = unitIds.get(row.unit);
     if (!unitId && stats.games >= minGames) throw new Error("Unmapped wearer " + row.unit + " · " + itemName);
     if (!unitId || !stats.games) return [];
-    const appearances = overall.get(row.unit);
-    return [{ unitId, ...stats, ...(appearances >= stats.games ? { rate: rounded(stats.games / appearances) } : {}) }];
+    const baseline = overall.get(row.unit);
+    const placementDelta = itemPlacementDelta(row.places, baseline?.places, minGames);
+    return [{
+      unitId, ...stats,
+      ...(baseline && baseline.games >= stats.games && { rate: rounded(stats.games / baseline.games) }),
+      ...(placementDelta !== undefined && { placementDelta }),
+    }];
   }).sort((a, b) => b.games - a.games || a.unitId.localeCompare(b.unitId));
   if (new Set(rows.map(row => row.unitId)).size !== rows.length) throw new Error("Duplicate wearer for " + itemName);
   if (evidence) await writeFile(join(evidence, `ordinary-${id}.json`), JSON.stringify({ url, result }) + "\n", "utf8");
