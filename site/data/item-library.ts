@@ -28,9 +28,9 @@ export const itemReference = {
     ...specialEquipment.recipes,
     ...Object.fromEntries(Object.entries(emblems.items).map(([id, entry]) => [id, {
       ...(specialEquipment.recipes as Record<string, ItemReference>)[id],
-      ...entry,
       sourceUrl: emblems.sourceUrl,
       build: emblems.build,
+      ...entry,
     }])),
     ...Object.fromEntries(specialEquipment.items.map(item => [item.id, item])),
   },
