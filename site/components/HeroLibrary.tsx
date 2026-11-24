@@ -2,8 +2,10 @@
 import { useLayoutEffect, useMemo, useRef, useSyncExternalStore } from "react";
 import { useSearchParams } from "next/navigation";
 import { ArrowUpRight } from "lucide-react";
-import { season, unitMap, traitMap } from "@/data";
-import type { HeroItemSample, HeroItemSource } from "@/domain/hero-insights";
+import { itemMap, season, unitMap, traitMap } from "@/data";
+import liveStats from "@/data/hero-stats.json";
+import type { WearerSnapshot } from "@/data/item-library";
+import { commonHeroItems, type HeroItemSample, type HeroItemSource } from "@/domain/hero-insights";
 import { hasUnlockCondition } from "@/domain/unlocks";
 import { guideLink } from "@/domain/guide-reading";
 import { heroGuideGroups, type HeroGuideIndex } from "@/domain/hero-guides";
@@ -14,8 +16,10 @@ import {
   matchesUnitFilter,
   type BrowserFilters,
 } from "./UnitBrowser";
-import { HeroBattleSummary, HeroCommonItems, HeroResultsTable, type HeroSort } from "./HeroPerformance";
+import { HeroBattleSummary, HeroCommonItems, HeroResultsTable, type HeroSort, type HeroStats } from "./HeroPerformance";
+import { HeroLoadout } from "./HeroLoadout";
 import { HeroProfile } from "./HeroProfile";
+import { StatPeriodSelect, useStatArchive, useStatPeriod } from "./StatPeriod";
 import { usePageReturnView } from "./usePageReturnView";
 
 const lockedCount = season.units.filter(hasUnlockCondition).length;
@@ -46,7 +50,7 @@ function libraryHref(params: URLSearchParams) {
   return "/heroes" + (params.size ? "?" + params.toString() : "");
 }
 
-export function HeroLibrary({ guides, commonItems, gearSource }: {
+export function HeroLibrary({ guides, commonItems, gearSource: liveGearSource }: {
   guides: HeroGuideIndex | null;
   commonItems: Record<string, HeroItemSample[]>;
   gearSource: HeroItemSource;
@@ -56,6 +60,17 @@ export function HeroLibrary({ guides, commonItems, gearSource }: {
   const params = useMemo(() => new URLSearchParams(queryString), [queryString]);
   const unit = unitMap.get(params.get("unit") ?? "");
   const statistics = params.get("tab") === "stats";
+  const { period, selectPeriod } = useStatPeriod();
+  const heroArchive = useStatArchive<HeroStats>(unit || statistics ? period : undefined, "heroes");
+  const gearArchive = useStatArchive<{ standard: WearerSnapshot }>(unit ? period : undefined, "equipment");
+  const archivedGear = gearArchive.data?.standard;
+  const previousItems = useMemo(() => archivedGear ?
+    commonHeroItems(itemMap, archivedGear.items, archivedGear.minGames) : undefined, [archivedGear]);
+  const stats = period ? heroArchive.data : liveStats;
+  const gearSource = period ? archivedGear : liveGearSource;
+  const availableItems = period ? previousItems : commonItems;
+  const selector = <StatPeriodSelect period={period} onChange={selectPeriod} />;
+  const archiveNote = period && <p className="stat-period-note">{period.description}</p>;
   const library = useRef<HTMLDivElement>(null);
   const [sort, setSort] = usePageReturnView<HeroSort>("heroLibraryVisit", { field: "mean", order: "ascending" }, scrollPanels);
   const traitId = params.get("trait") ?? "";
@@ -109,10 +124,23 @@ export function HeroLibrary({ guides, commonItems, gearSource }: {
   const returnHref = libraryHref(new URLSearchParams(params.toString()));
 
   const editorHref = unit ? "/editor?" + new URLSearchParams({ unit:unit.id, from:returnHref }) : undefined;
+  const heroArchiveNotice = <p className="stat-period-note" role="status">
+    {heroArchive.status === "error" ? "这批英雄数据暂不可读。" : "正在读取这批英雄数据…"}
+  </p>;
+  const gearArchiveNotice = <p className="stat-period-note" role="status">
+    {gearArchive.status === "error" ? "这批装备数据暂不可读。" : "正在读取这批装备数据…"}
+  </p>;
 
   if (unit && focused) return <HeroProfile key={unit.id} unit={unit}
-    guides={guides === null ? null : related} items={commonItems[unit.id] ?? []}
-    gearSource={gearSource} returnHref={returnHref} editorHref={editorHref}
+    guides={guides === null ? null : related} returnHref={returnHref} editorHref={editorHref}
+    statsContent={<>
+      <div className="hero-profile-stat-period">{selector}{archiveNote}</div>
+      <div className="hero-profile-performance">
+        {stats ? <HeroBattleSummary unit={unit} stats={stats} /> : heroArchiveNotice}
+      </div>
+      {gearSource ? <HeroLoadout key={period?.id ?? "current"} unit={unit} items={availableItems?.[unit.id] ?? []}
+        gearSource={gearSource} period={period?.id} /> : gearArchiveNotice}
+    </>}
     backLabel={statistics ? "返回数据榜" : "返回英雄图鉴"}
     onBack={() => {
       if (history.state?.heroProfileEntry) history.back();
@@ -125,8 +153,12 @@ export function HeroLibrary({ guides, commonItems, gearSource }: {
   const dossier = unit && <>
     <UnitDetails unit={unit} jumpToTraits augmented={enhanced} onAugmentedChange={value => update({ augment: value ? augment?.id ?? "" : "" })}
       action={!enhanced && <>
-      <HeroBattleSummary unit={unit} />
-      <HeroCommonItems unit={unit} items={commonItems[unit.id] ?? []} gearSource={gearSource} />
+      {selector}
+      {archiveNote}
+      {stats ? <HeroBattleSummary unit={unit} stats={stats} /> : heroArchiveNotice}
+      {stats && gearSource && <HeroCommonItems unit={unit} items={availableItems?.[unit.id] ?? []}
+        gearSource={gearSource} stats={stats} period={period?.id} />}
+      {!gearSource && gearArchiveNotice}
       {(related.length > 0 || guides === null) && <section className="related-guides hero-guide-groups" aria-label="相关阵容">
         <h3>相关阵容</h3>
         {heroGuideGroups.map(group => {
@@ -193,12 +225,13 @@ export function HeroLibrary({ guides, commonItems, gearSource }: {
             return <a key={id} href={libraryHref(destination)} aria-current={id === activeView ? "page" : undefined}>{label}</a>;
           })}
         </nav>
-        {!statistics && <div className="hero-catalog-meta">
+        {statistics ? selector : <div className="hero-catalog-meta">
           {release
             ? <a href={release.guideUrl} target="_blank" rel="noreferrer" title={`${lockedCount} 种形态需解锁，资料日期 ${updatedDate}`}>解锁说明 <ArrowUpRight size={13} aria-hidden /></a>
             : <span>{lockedCount} 种需解锁</span>}
         </div>}
       </div>
+      {statistics && archiveNote}
       <div ref={library} className={`library-columns is-index${matrix ? " is-matrix" : ""}${statistics ? " is-statistics" : ""}`}>
         <UnitBrowser
           selectedId={unit?.id ?? null}
@@ -208,7 +241,9 @@ export function HeroLibrary({ guides, commonItems, gearSource }: {
           explainSearch
           matrixDetails={dossier}
           matrixReading={{ trait: traitIds[0], tier: Number(params.get("tier")) || undefined, profileAction }}
-          renderList={statistics ? units => <HeroResultsTable units={units} selectedId={unit?.id} onSelect={select} sort={sort} setSort={setSort} /> : undefined}
+          renderList={statistics ? units => stats ?
+            <HeroResultsTable stats={stats} units={units} selectedId={unit?.id} onSelect={select} sort={sort} setSort={setSort} /> :
+            heroArchiveNotice : undefined}
           onFiltersChange={value => update({
             ...(unit && value.view === "cards" && !matchesUnitFilter(value)(unit) && { unit: "" }),
             q: value.query,

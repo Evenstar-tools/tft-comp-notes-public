@@ -1,23 +1,31 @@
 import { Fragment, useRef } from "react";
 import { ArrowDown, ArrowUp, ArrowUpRight, Lock } from "lucide-react";
 import { itemMap, season, traitMap, unitLabel } from "@/data";
-import stats from "@/data/hero-stats.json";
 import { itemName } from "@/domain/gear-library";
 import { rankHeroes, type HeroItemSample, type HeroItemSource, type HeroResult } from "@/domain/hero-insights";
 import { itemLink } from "@/domain/links";
+import { withStatPeriod } from "@/domain/stat-periods";
 import type { Unit } from "@/domain/types";
 import { hasUnlockCondition } from "@/domain/unlocks";
 import { ItemIcon } from "./ItemIcon";
 import { HeroItemPlacementDelta } from "./HeroItemPlacementDelta";
 
-const sampleByHero: Record<string, HeroResult | undefined> = stats.rows;
-const ranks = rankHeroes(season.units, stats.rows, stats.minGames);
+export type HeroStats = {
+  source: string;
+  sourceUrl: string;
+  version: string;
+  days: number;
+  date: string;
+  minGames: number;
+  rows: Record<string, HeroResult>;
+  previous?: { date: string; rows: Record<string, { mean: number; games: number }> };
+};
+
 const shortGames = new Intl.NumberFormat("zh-CN", { notation: "compact", maximumFractionDigits: 1 });
 const exactGames = new Intl.NumberFormat("zh-CN");
 const percent = (rate: number) => `${(rate * 100).toFixed(1)}%`;
-const windowLabel = `${stats.version} · 近 ${stats.days} 天 · ${stats.date}`;
+const windowLabel = (stats: HeroStats) => `${stats.version} · 近 ${stats.days} 天 · ${stats.date}`;
 const snapshotDate = (date: string) => date.slice(5).replace("-", "/");
-const history = (stats as { previous?: { date: string; rows: Record<string, { mean: number; games: number }> } }).previous;
 const dataColumns = [
   { field: "mean", label: "均名", order: "ascending" },
   { field: "top4Rate", label: "前四率", order: "descending" },
@@ -25,7 +33,7 @@ const dataColumns = [
   { field: "games", label: "场数", order: "descending" },
 ] as const;
 
-function HeroStatsSource() {
+function HeroStatsSource({ stats }: { stats: HeroStats }) {
   return <a className="hero-data-source" href={stats.sourceUrl} target="_blank" rel="noreferrer">
     {stats.source}<ArrowUpRight size={12} aria-hidden />
   </a>;
@@ -33,11 +41,14 @@ function HeroStatsSource() {
 
 export type HeroSort = { field: typeof dataColumns[number]["field"]; order: "ascending" | "descending" };
 
-export function HeroResultsTable({ units, selectedId, onSelect, sort, setSort }: {
+export function HeroResultsTable({ stats, units, selectedId, onSelect, sort, setSort }: {
+  stats: HeroStats;
   units: Unit[]; selectedId?: string; onSelect: (id: string) => void;
   sort: HeroSort; setSort: (sort: HeroSort) => void;
 }) {
   const scroll = useRef<HTMLDivElement>(null);
+  const sampleByHero: Record<string, HeroResult | undefined> = stats.rows;
+  const ranks = rankHeroes(season.units, stats.rows, stats.minGames);
   const rows = [...units].sort((left, right) => {
     const leftRow = sampleByHero[left.id], rightRow = sampleByHero[right.id];
     const leftValue = sort.field === "games" || ranks.has(left.id) ? leftRow?.[sort.field] : undefined;
@@ -50,10 +61,10 @@ export function HeroResultsTable({ units, selectedId, onSelect, sort, setSort }:
 
   return <div className="hero-results">
     <div className="hero-results-note">
-      <span>{windowLabel}</span>
+      <span>{windowLabel(stats)}</span>
       <span className="hero-results-source">
         <span>按形态 · 满 {stats.minGames} 场排名</span>
-        <HeroStatsSource />
+        <HeroStatsSource stats={stats} />
       </span>
     </div>
     {rows.length ? <div className="hero-results-scroll" ref={scroll}>
@@ -110,12 +121,13 @@ export function HeroResultsTable({ units, selectedId, onSelect, sort, setSort }:
   </div>;
 }
 
-export function HeroBattleSummary({ unit }: { unit: Unit }) {
-  const result = sampleByHero[unit.id];
-  const rank = ranks.get(unit.id);
+export function HeroBattleSummary({ unit, stats }: { unit: Unit; stats: HeroStats }) {
+  const result = stats.rows[unit.id];
+  const rank = rankHeroes(season.units, stats.rows, stats.minGames).get(unit.id);
+  const history = stats.previous;
   const previous = history?.rows[unit.id];
   return <section className="detail-section hero-performance" aria-label="实战数据">
-      <div className="hero-detail-heading"><h3>实战数据</h3><HeroStatsSource /></div>
+      <div className="hero-detail-heading"><h3>实战数据</h3><HeroStatsSource stats={stats} /></div>
       <p className="hero-performance-window">{stats.version} · 近 {stats.days} 天 · {snapshotDate(stats.date)} 更新</p>
       {result && rank ? <dl className="hero-metric-strip">
         <div><dt>均名</dt><dd>{result.mean.toFixed(2)}<small>同费 {rank.place}/{rank.total}</small></dd></div>
@@ -131,8 +143,9 @@ export function HeroBattleSummary({ unit }: { unit: Unit }) {
   </section>;
 }
 
-export function HeroCommonItems({ unit, items, gearSource }: {
+export function HeroCommonItems({ unit, items, gearSource, stats, period }: {
   unit: Unit; items: HeroItemSample[]; gearSource: HeroItemSource;
+  stats: HeroStats; period?: string;
 }) {
   return <section className="detail-section hero-common-items" aria-label="常见成装">
       <div className="hero-detail-heading"><h3>常见成装</h3></div>
@@ -140,7 +153,7 @@ export function HeroCommonItems({ unit, items, gearSource }: {
         const item = itemMap.get(itemId);
         if (!item) return null;
         return <li key={itemId}>
-          <a href={itemLink(item.id, unit.id)}>
+          <a href={withStatPeriod(itemLink(item.id, unit.id), period)}>
             <ItemIcon item={item} size={28} />
             <span>{itemName(item)}<small>{exactGames.format(games)} 场
               {placementDelta !== undefined && <> · <span className="sr-only">名次差 </span>
@@ -152,7 +165,7 @@ export function HeroCommonItems({ unit, items, gearSource }: {
       })}</ul> : <p className="hero-data-note">暂无达到 {gearSource.minGames} 场的成装样本。</p>}
       <details className="hero-data-note">
         <summary>数据来源</summary>
-        <p>战绩 · {windowLabel} · <HeroStatsSource /></p>
+        <p>战绩 · {windowLabel(stats)} · <HeroStatsSource stats={stats} /></p>
         <p>成装 · {gearSource.source} · {gearSource.version} · {gearSource.window} · {gearSource.date}</p>
       </details>
   </section>;

@@ -21,14 +21,14 @@ async function getJson(url) {
   return response.json();
 }
 
-function cohortUrl(itemName) {
-  const params = new URLSearchParams({ queue: "PBE", patch: "current", days: String(days), permit_filter_adjustment: "true", itemName });
+function cohortUrl(itemName, { patch, bPatch }) {
+  const params = new URLSearchParams({ queue: "PBE", patch, b_patch: bPatch, days: String(days), permit_filter_adjustment: "false", itemName });
   return `${api}?${params}`;
 }
 
-function histogramMap(result, patch) {
-  if (result.tft_set !== set || result.queue_id !== "pbe" || !result.unit_games?.length ||
-      result.unit_games.some(row => row.patch[0] !== patch) || !result.units_overall?.length ||
+function histogramMap(result, { patch, bPatch }) {
+  if (result.tft_set !== set || result.queue_id !== "pbe" || result.unit_games?.length !== 1 ||
+      result.unit_games[0].patch?.[0] !== patch || result.unit_games[0].patch?.[1] !== bPatch || !result.units_overall?.length ||
       !Number.isFinite(result.updated) || result.updated <= 0) throw new Error("Unexpected PBE cohort");
   const byUnit = new Map();
   for (const { unit, places } of result.units_overall) {
@@ -39,17 +39,20 @@ function histogramMap(result, patch) {
   return byUnit;
 }
 
+const current = await readFile(new URL("../data/current-patch.json", import.meta.url), "utf8").then(JSON.parse);
+const cohort = current.metaTftPatch;
+if (current.seasonId !== "s19-pbe" || !cohort?.patch || !cohort.bPatch) throw new Error("Verify the PBE patch and hotfix before collecting hero stats");
 const [season, lookup, result, saved] = await Promise.all([
   readFile(new URL("../data/season.json", import.meta.url), "utf8").then(JSON.parse),
   getJson(lookupUrl),
-  getJson(cohortUrl("TFT_Item_RapidFireCannon")),
+  getJson(cohortUrl("TFT_Item_RapidFireCannon", cohort)),
   readFile(output, "utf8").then(JSON.parse).catch(error => {
     if (error.code !== "ENOENT") throw error;
   }),
 ]);
 const patch = lookup._metadata?.release?.match(/^rls-(\d+\.\d+)\./)?.[1];
-if (!patch || lookup._metadata.set !== set || !season.id.startsWith(`s19-pbe-${patch}.`)) throw new Error("Expected matching S19 PBE game data");
-const overall = histogramMap(result, patch);
+if (patch !== cohort.patch || lookup._metadata.set !== set || !season.id.startsWith(`s19-pbe-${patch}.`)) throw new Error("Expected matching S19 PBE game data");
+const overall = histogramMap(result, cohort);
 const used = new Set();
 const rows = {};
 const sum = counts => counts.reduce((total, count) => total + count, 0);
@@ -75,7 +78,8 @@ if (!Object.keys(rows).length) throw new Error("No matching hero samples");
 const updated = new Date(result.updated);
 const date = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Shanghai" }).format(updated);
 const snapshot = {
-  source: "MetaTFT", sourceUrl: `https://www.metatft.com/units?set=${set}`, version: `S19 PBE ${patch}`,
+  source: "MetaTFT", sourceUrl: `https://www.metatft.com/units?${new URLSearchParams({ set, queue: "PBE", patch, b_patch: cohort.bPatch, days: String(days) })}`,
+  version: `S19 PBE ${patch}${cohort.bPatch}`,
   days, minGames: 100, date, updatedAt: updated.toISOString(), rows,
 };
 if (saved?.source === snapshot.source && saved.version === snapshot.version && saved.days === snapshot.days) {

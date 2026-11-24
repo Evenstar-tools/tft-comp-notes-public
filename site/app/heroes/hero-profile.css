@@ -10,6 +10,13 @@
   align-items: center;
   gap: 10px;
 }
+.hero-profile-stat-period {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .35rem .75rem;
+}
+.hero-profile-stat-period p { margin: 0; }
 .hero-profile-back, .hero-profile-build-link {
   display: inline-flex;
   align-items: center;

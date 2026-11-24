@@ -1,0 +1,22 @@
+.stat-period {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  color: var(--muted);
+  font-size: .78rem;
+  white-space: nowrap;
+}
+
+.stat-period select {
+  color: var(--text);
+  background: var(--raised);
+  border: 1px solid var(--line);
+  border-radius: .35rem;
+  padding: .35rem .4rem;
+  max-width: 100%;
+}
+
+.stat-period-note {
+  color: var(--muted);
+  font-size: .78rem;
+}

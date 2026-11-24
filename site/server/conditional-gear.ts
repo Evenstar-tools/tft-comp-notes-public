@@ -3,6 +3,7 @@ import currentPatch from "@/data/current-patch.json";
 import references from "@/data/item-reference.json";
 import season from "@/data/season.json";
 import { conditionalGearSource, maxLockedGearItems, remainingGearRows } from "@/domain/conditional-gear";
+import { getStatPeriod } from "@/domain/stat-periods";
 
 const upstream = "https://api-hc.metatft.com/tft-explorer-api/unit_builds/";
 const explorer = "https://www.metatft.com/explorer";
@@ -16,8 +17,15 @@ const cacheEntries = 40;
 export const conditionalGearAvailable = season.id.startsWith(`s19-pbe-${source.patch}.`);
 const { metaTftPatch }: { metaTftPatch?: { patch: string; bPatch?: string }; seasonId: string } = currentPatch;
 const bPatch = currentPatch.seasonId === "s19-pbe" && metaTftPatch?.patch === source.patch ? metaTftPatch.bPatch : undefined;
-const cohortFilters: Record<string, string> = { queue: "PBE", patch: source.patch, days: String(windowDays), duplicate_unit_count: "0" };
-if (bPatch) cohortFilters.b_patch = bPatch;
+type CohortPatch = { patch: string; bPatch?: string };
+const defaultCohort: CohortPatch = { patch: source.patch, bPatch };
+
+function cohortFilters({ patch, bPatch }: CohortPatch) {
+  return {
+    queue: "PBE", patch, days: String(windowDays), duplicate_unit_count: "0",
+    ...(bPatch && { b_patch: bPatch }),
+  };
+}
 
 const sourceUnits: Readonly<Record<string, string>> = source.units;
 const referenceItems: Readonly<Record<string, { pbeId?: string }>> = references.items;
@@ -32,21 +40,25 @@ for (const item of season.items) {
 }
 const sourceItems = new Map([...gameItems].map(([sourceId, itemId]) => [itemId, sourceId]));
 
-type GearQuery = { unitApi: string; stars: "1" | "2" | "3"; lockedItems: string[] };
+type GearQuery = { unitApi: string; stars: "1" | "2" | "3"; lockedItems: string[]; cohort: CohortPatch };
 type GearBuild = { items: [string, string, string]; games: number; mean: number | null };
 type Cohort = { builds: GearBuild[]; asOf: string };
 const cache = new Map<string, Cohort & { expires: number }>();
 
 export function readGearQuery(params: URLSearchParams): GearQuery | undefined {
   const lockedItems = params.getAll("item");
+  const periodIds = params.getAll("stats");
   if (params.getAll("unit").length !== 1 || params.getAll("stars").length !== 1 ||
-      params.size !== 2 + lockedItems.length || lockedItems.length > maxLockedGearItems ||
+      periodIds.length > 1 || params.size !== 2 + lockedItems.length + periodIds.length ||
+      lockedItems.length > maxLockedGearItems ||
       new Set(lockedItems).size !== lockedItems.length) return;
   const unit = params.get("unit") ?? "";
   const stars = params.get("stars");
   if (!Object.hasOwn(sourceUnits, unit) || lockedItems.some(id => !sourceItems.has(id))
       || (stars !== "1" && stars !== "2" && stars !== "3")) return;
-  return { unitApi: sourceUnits[unit], stars, lockedItems };
+  const period = periodIds.length ? getStatPeriod(periodIds[0]) : undefined;
+  if (periodIds.length && (period?.channel !== "pbe" || !period.metaTft)) return;
+  return { unitApi: sourceUnits[unit], stars, lockedItems, cohort: period?.metaTft ?? defaultCohort };
 }
 
 async function readBuildPayload(response: Response): Promise<unknown> {
@@ -105,14 +117,15 @@ function buildRows(payload: unknown, unitApi: string): GearBuild[] {
   return builds.sort((a, b) => b.games - a.games);
 }
 
-async function loadCohort(unitApi: string, stars: GearQuery["stars"]): Promise<Cohort> {
-  const key = `${unitApi}/${stars}`;
+async function loadCohort(unitApi: string, stars: GearQuery["stars"], cohort: CohortPatch): Promise<Cohort> {
+  const key = `${cohort.patch}/${cohort.bPatch ?? ""}/${windowDays}/${unitApi}/${stars}`;
   const now = Date.now();
   const existing = cache.get(key);
   if (existing && existing.expires > now) return existing;
   cache.delete(key);
   const filter = new URLSearchParams({
-    ...cohortFilters, compact: "true", formatnoarray: "true",
+    ...cohortFilters(cohort), compact: "true", formatnoarray: "true",
+    ...(cohort.bPatch && { permit_filter_adjustment: "false" }),
     unit_tier_numitems_unique: `${unitApi}-1_${stars}_3`,
     item_holder_unit: `${unitApi}-1`,
   });
@@ -132,14 +145,14 @@ async function loadCohort(unitApi: string, stars: GearQuery["stars"]): Promise<C
   return entry;
 }
 
-export async function conditionalGearBuilds({ unitApi, stars, lockedItems }: GearQuery) {
-  const { builds, asOf } = await loadCohort(unitApi, stars);
+export async function conditionalGearBuilds({ unitApi, stars, lockedItems, cohort }: GearQuery) {
+  const { builds, asOf } = await loadCohort(unitApi, stars, cohort);
   const rows = lockedItems.length
     ? remainingGearRows(builds, lockedItems)
     : builds.filter(build => build.games >= minGames).slice(0, 3);
   const sourceQuery = new URLSearchParams({
-    ...cohortFilters, tab: "builds", set: source.set,
+    ...cohortFilters(cohort), tab: "builds", set: source.set,
     unit: `${unitApi}-1_${stars}_3`, item_holder_unit: `${unitApi}-1`,
   });
-  return { rows, patch: `PBE ${source.patch}${bPatch ?? ""}`, windowDays, minGames, asOf, sourceUrl: `${explorer}?${sourceQuery}`, limit };
+  return { rows, patch: `PBE ${cohort.patch}${cohort.bPatch ?? ""}`, windowDays, minGames, asOf, sourceUrl: `${explorer}?${sourceQuery}`, limit };
 }

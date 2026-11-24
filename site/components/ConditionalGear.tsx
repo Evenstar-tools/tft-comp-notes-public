@@ -4,11 +4,13 @@ import { LockKeyhole } from "lucide-react";
 import { itemMap, season, traitMap, unitMap } from "@/data";
 import { conditionalGearCohorts, conditionalGearItemNames, conditionalGearRows, conditionalGearSource } from "@/domain/conditional-gear";
 import { itemName } from "@/domain/gear-library";
+import { getStatPeriod } from "@/domain/stat-periods";
 import type { Item } from "@/domain/types";
 import { ItemIcon } from "./ItemIcon";
 import "./conditional-gear.css";
 
 const number = new Intl.NumberFormat("zh-CN");
+const queryDate = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Shanghai" });
 const defaultWearerIds: readonly string[] = [];
 const initialResultCount = 5;
 const extraResultCount = 10;
@@ -25,17 +27,20 @@ type GlobalSample = {
   limit: number;
 };
 
-export function ConditionalGear({ lockedItems, wearer = "", wearerIds = defaultWearerIds, active = true, fixedWearer = false, holdControl }: {
+export function ConditionalGear({ lockedItems, wearer = "", wearerIds = defaultWearerIds, active = true, fixedWearer = false, holdControl, period }: {
   lockedItems: readonly Item[];
   wearer?: string;
   wearerIds?: readonly string[];
   active?: boolean;
   fixedWearer?: boolean;
   holdControl?: ReactNode;
+  period?: string;
 }) {
   const title = useId();
+  const historicalPeriod = period ? getStatPeriod(period) : undefined;
+  const hasSampleSource = !period || (historicalPeriod?.channel === "pbe" && !!historicalPeriod.metaTft);
   const lockedIds = lockedItems.map(item => item.id);
-  const cohorts = conditionalGearCohorts(season.id, lockedIds);
+  const cohorts = period ? [] : conditionalGearCohorts(season.id, lockedIds);
   const candidates = [...new Set([wearer, ...cohorts.map(entry => entry.unitId), ...wearerIds])]
     .filter(id => unitMap.has(id));
   const defaultUnitId = unitMap.has(wearer) ? wearer : wearerIds.find(id => unitMap.has(id)) ?? candidates[0] ?? "";
@@ -49,7 +54,7 @@ export function ConditionalGear({ lockedItems, wearer = "", wearerIds = defaultW
   const forStars = forUnit.filter(entry => entry.stars === stars);
   const [scopeChoice, setScopeChoice] = useState("");
   const scope = forStars.find(entry => entry.teamId === scopeChoice) ?? forStars[0];
-  const canUseGuide = !fixedWearer || !!forStars.length;
+  const canUseGuide = !period && (!fixedWearer || !!forStars.length);
   const [modeChoice, setMode] = useState<Source>("global");
   const mode = canUseGuide ? modeChoice : "global";
   const [order, setOrder] = useState<Order>("games");
@@ -58,10 +63,11 @@ export function ConditionalGear({ lockedItems, wearer = "", wearerIds = defaultW
   const [globalResult, setGlobalResult] = useState<{ key: string; data: GlobalSample | null }>();
   const query = new URLSearchParams({ unit: unitId, stars: String(stars) });
   for (const id of lockedIds) query.append("item", id);
+  if (period) query.set("stats", period);
   const requestUrl = "/api/gear-builds?" + query;
   const requestKey = requestUrl + "/" + attempt;
   useEffect(() => {
-    if (!active || mode !== "global" || !unitId) return;
+    if (!active || mode !== "global" || !unitId || !hasSampleSource) return;
     const controller = new AbortController();
     fetch(requestUrl, { signal: controller.signal })
       .then(async response => {
@@ -74,7 +80,7 @@ export function ConditionalGear({ lockedItems, wearer = "", wearerIds = defaultW
         if (!controller.signal.aborted) setGlobalResult({ key: requestKey, data: null });
       });
     return () => controller.abort();
-  }, [active, mode, requestKey, requestUrl, unitId]);
+  }, [active, hasSampleSource, mode, requestKey, requestUrl, unitId]);
   const currentResult = globalResult?.key === requestKey ? globalResult : undefined;
   const global = mode === "global" ? currentResult?.data : undefined;
   const rows = mode === "global" ? global?.rows ?? [] : scope ? conditionalGearRows(scope, lockedIds) : [];
@@ -103,7 +109,7 @@ export function ConditionalGear({ lockedItems, wearer = "", wearerIds = defaultW
         <ItemIcon item={singleItem} size={22} /><strong>{itemName(singleItem)}</strong>
       </span>)}
     </div>
-    {unit && <div className="conditional-gear-toolbar"><div className="conditional-gear-filters">
+    {unit && hasSampleSource && <div className="conditional-gear-toolbar"><div className="conditional-gear-filters">
       {!fixedWearer && <label>英雄<select aria-label="英雄" value={unitId} onChange={event => changeUnit(event.target.value)}>
         {candidates.map(id => <option key={id} value={id}>{unitMap.get(id)?.name}</option>)}
       </select></label>}
@@ -127,7 +133,8 @@ export function ConditionalGear({ lockedItems, wearer = "", wearerIds = defaultW
     </div>}</div>}
     {global && <div className="conditional-gear-scope">
       <strong>{global.patch}</strong>
-      <span>{fixedWearer ? "取数" : "截至"} {global.asOf.slice(0, 10)} · 近 {global.windowDays} 天{!fixedWearer && ` · 无重复棋子 · 来源最多 ${global.limit} 组`}</span>
+      {period ? <span>旧构建 · 近 {global.windowDays} 天查询 · {queryDate.format(new Date(global.asOf))} 取数</span> :
+        <span>取数 {queryDate.format(new Date(global.asOf))} · 近 {global.windowDays} 天{!fixedWearer && ` · 无重复棋子 · 来源最多 ${global.limit} 组`}</span>}
       <a href={global.sourceUrl} target="_blank" rel="noreferrer">MetaTFT 原始数据</a>
     </div>}
     {mode === "guide" && scope && <>
@@ -166,7 +173,9 @@ export function ConditionalGear({ lockedItems, wearer = "", wearerIds = defaultW
         {visibleCount > initialResultCount && <button type="button" className="conditional-gear-more"
           onClick={() => setVisibleCount(initialResultCount)}>收起</button>}
       </div>}
-    </> : mode === "global" && unit && active && !currentResult
+    </> : !hasSampleSource
+      ? <p className="conditional-gear-empty" role="status">这期暂无可核对的三件套来源。</p>
+      : mode === "global" && unit && active && !currentResult
       ? <p className="conditional-gear-empty" role="status">正在查三件套…</p>
       : mode === "global" && currentResult?.data === null
         ? <div className="conditional-gear-empty conditional-gear-error" role="status">

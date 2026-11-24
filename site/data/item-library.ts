@@ -41,7 +41,7 @@ export const itemReference = {
   items: Record<string, ItemReference>;
 };
 
-interface WearerSnapshot {
+export interface WearerSnapshot {
   source: string;
   version: string;
   window: string;

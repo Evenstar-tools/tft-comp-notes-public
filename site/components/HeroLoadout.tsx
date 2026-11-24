@@ -9,6 +9,7 @@ import { maxLockedGearItems } from "@/domain/conditional-gear";
 import { gearHref, gearMatches, itemName } from "@/domain/gear-library";
 import type { HeroItemSample, HeroItemSource } from "@/domain/hero-insights";
 import { itemLink } from "@/domain/links";
+import { withStatPeriod } from "@/domain/stat-periods";
 import type { Unit } from "@/domain/types";
 import { ConditionalGear } from "./ConditionalGear";
 import { HeroItemPlacementDelta, heroItemDeltaHint } from "./HeroItemPlacementDelta";
@@ -24,7 +25,9 @@ const lockableItems = [...itemMap.values()].filter(item =>
 );
 const lockableIds = new Set(lockableItems.map(item => item.id));
 
-export function HeroLoadout({ unit, items, gearSource }: { unit: Unit; items: HeroItemSample[]; gearSource: HeroItemSource }) {
+export function HeroLoadout({ unit, items, gearSource, period }: {
+  unit: Unit; items: HeroItemSample[]; gearSource: HeroItemSource; period?: string;
+}) {
   const [choice, setChoice] = useState<{ unitId: string; itemIds: string[] }>();
   const [gearQuery, setGearQuery] = useState("");
   const buildId = useId();
@@ -65,7 +68,7 @@ export function HeroLoadout({ unit, items, gearSource }: { unit: Unit; items: He
     <section className="hero-loadout-items" aria-label="单件装备">
       <header>
         <h3>单件装备</h3>
-        <a className="hero-loadout-all text-link" href={gearHref("all", undefined, { wearer: unit.id })}>查看全部装备<ArrowUpRight size={13} aria-hidden="true" /></a>
+        <a className="hero-loadout-all text-link" href={withStatPeriod(gearHref("all", undefined, { wearer: unit.id }), period)}>查看全部装备<ArrowUpRight size={13} aria-hidden="true" /></a>
         <span>{gearSource.source} · {gearSource.version} · {gearSource.window} · {gearSource.date.slice(5).replace("-", "/")}</span>
       </header>
       {sampledItems.length ? <table>
@@ -87,7 +90,7 @@ export function HeroLoadout({ unit, items, gearSource }: { unit: Unit; items: He
                 onClick={() => pickItem(itemId)}>
                 <ItemIcon item={item} size={26} /><span>{label}</span>
               </button> : <span className="hero-loadout-pick"><ItemIcon item={item} size={26} />{label}</span>}
-              <a href={itemLink(itemId, unit.id)} title={"查看" + label + "属性和战绩"} aria-label={"查看" + label + "属性和战绩"}>
+              <a href={withStatPeriod(itemLink(itemId, unit.id), period)} title={"查看" + label + "属性和战绩"} aria-label={"查看" + label + "属性和战绩"}>
                 <ArrowUpRight size={13} aria-hidden />
               </a>
             </div></th>
@@ -100,7 +103,7 @@ export function HeroLoadout({ unit, items, gearSource }: { unit: Unit; items: He
       </table> : <p className="hero-loadout-empty">暂无达到 {gearSource.minGames} 场的单件样本。</p>}
     </section>
     {supportsBuilds && <div className="hero-loadout-builds" id={buildId} ref={builds}>
-      <ConditionalGear lockedItems={lockedItems} wearer={unit.id} fixedWearer holdControl={
+      <ConditionalGear lockedItems={lockedItems} wearer={unit.id} fixedWearer period={period} holdControl={
         <Popover onOpenChange={open => { if (!open) setGearQuery(""); }}>
           <PopoverTrigger asChild>
             <button type="button" className="hero-loadout-lock" ref={lockTrigger}

@@ -7,9 +7,12 @@ const dataUrl = name => new URL("../data/" + name + ".json", import.meta.url);
 const { values: { evidence, out } } = parseArgs({ options: { evidence: { type: "string" }, out: { type: "string" } } });
 if (evidence) await mkdir(evidence, { recursive: true });
 const read = name => readFile(dataUrl(name), "utf8").then(JSON.parse);
-const [previous, reference, source] = await Promise.all(
-  ["item-wearers", "item-reference", "conditional-gear-unit-ids"].map(read),
+const [previous, reference, source, current] = await Promise.all(
+  ["item-wearers", "item-reference", "conditional-gear-unit-ids", "current-patch"].map(read),
 );
+const cohort = current.metaTftPatch;
+if (current.seasonId !== "s19-pbe" || cohort?.patch !== source.patch || !cohort.bPatch)
+  throw new Error("Verify the PBE patch and hotfix before collecting equipment stats");
 const ids = Object.keys(previous.items);
 const unitIds = new Map(Object.entries(source.units).map(([id, apiName]) => [apiName, id]));
 const sourceIds = ids.map(id => reference.items[id]?.pbeId);
@@ -22,13 +25,14 @@ const endpoint = "https://api-hc.metatft.com/tft-stat-api/item_detail";
 
 async function collect(id, itemName) {
   const query = new URLSearchParams({
-    itemName, queue: "PBE", patch: "current", days: String(days), permit_filter_adjustment: "false",
+    itemName, queue: "PBE", patch: cohort.patch, b_patch: cohort.bPatch, days: String(days), permit_filter_adjustment: "false",
   });
   const url = endpoint + "?" + query;
   const response = await fetch(url, { signal: AbortSignal.timeout(18_000) });
   if (!response.ok) throw new Error(`HTTP ${response.status} · ${itemName}`);
   const result = await response.json();
   const { version, stats: { games: totalGames, mean, winRate } } = itemCohort(result, itemName, source.patch, days);
+  if (version !== cohort.patch + cohort.bPatch) throw new Error("Unexpected PBE hotfix for " + itemName);
   const overall = new Map(result.units_overall.map(row => [row.unit, { games: placements(row.places).games, places: row.places }]));
   const rows = result.units.flatMap(row => {
     const stats = placements(row.places);
