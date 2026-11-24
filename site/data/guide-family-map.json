@@ -1,11 +1,11 @@
 {
   "set": "TFTSet19",
   "queue": "PBE",
-  "model": 427,
+  "model": 428,
   "rows": [
     {
-      "clusterId": "427012",
-      "sourceName": "Renegade Graves",
+      "clusterId": "428031",
+      "sourceName": "Beach Pop Graves Zac",
       "name": "五海洋三离子男枪",
       "sectionId": "sample-block-0251",
       "teamId": "00000000-0000-4000-8000-000000000102",
@@ -18,7 +18,7 @@
       "carryIds": [
         "graves"
       ],
-      "url": "https://www.metatft.com/pbe-comps#DA_OceanSong19-DA_Graves19",
+      "url": "https://www.metatft.com/pbe-comps#DA_OceanSong19-DA_Graves19-DA_Zac19",
       "representativeUnits": [
         "DA_Annie19",
         "DA_Aurora19",
@@ -32,8 +32,8 @@
       ]
     },
     {
-      "clusterId": "427028",
-      "sourceName": "Beach Pop Zac",
+      "clusterId": "428034",
+      "sourceName": "Beach Pop Zac Graves",
       "name": "七海洋扎克男枪",
       "sectionId": "sample-block-0251",
       "teamId": "00000000-0000-4000-8000-000000000076",
@@ -46,7 +46,7 @@
         "graves",
         "taliyah"
       ],
-      "url": "https://www.metatft.com/pbe-comps#DA_OceanSong19-DA_Zac19",
+      "url": "https://www.metatft.com/pbe-comps#DA_OceanSong19-DA_Zac19-DA_Graves19",
       "representativeUnits": [
         "DA_Graves19",
         "DA_Illaoi19",
@@ -61,36 +61,35 @@
       "landingTeamId": "00000000-0000-4000-8000-000000000075"
     },
     {
-      "clusterId": "427000",
+      "clusterId": "428003",
       "sourceName": "Hyperpop Kobuko",
       "name": "高能流行芬妮&炸弹",
       "sectionId": "sample-block-0420",
-      "teamId": "00000000-0000-4000-8000-000000000089",
+      "teamId": "00000000-0000-4000-8000-000000000042",
       "aliases": [
-        "四主唱高能炸弹",
-        "高能可酷伯",
-        "四主唱炸弹",
-        "高能炸弹人"
+        "芬妮炸弹",
+        "高能芬妮",
+        "高能可酷伯"
       ],
       "carryIds": [
-        "ziggs"
+        "ziggs",
+        "seraphine"
       ],
       "url": "https://www.metatft.com/pbe-comps#DA_GlitterBomb19-DA_Kobuko19",
       "representativeUnits": [
-        "DA_Elise19",
+        "DA_Garen19",
         "DA_Kobuko19",
         "DA_Lulu19",
-        "DA_Shyvana19",
+        "DA_Nidalee19",
+        "DA_Seraphine19_Indie",
         "DA_Swain19",
         "DA_Teemo19",
         "DA_Tristana19",
-        "DA_Yunara19",
         "DA_Ziggs19"
-      ],
-      "landingTeamId": "00000000-0000-4000-8000-000000000042"
+      ]
     },
     {
-      "clusterId": "427013",
+      "clusterId": "428035",
       "sourceName": "Juggernaut Zac",
       "name": "四主宰天使扎克",
       "sectionId": "sample-block-0468",
@@ -104,7 +103,7 @@
       ],
       "url": "https://www.metatft.com/pbe-comps#DA_Juggernaut19-DA_Zac19",
       "representativeUnits": [
-        "DA_Graves19",
+        "DA_Ashe19",
         "DA_Kayle19",
         "DA_Locke19",
         "DA_Olaf19",
@@ -116,7 +115,7 @@
       ]
     },
     {
-      "clusterId": "427041",
+      "clusterId": "428053",
       "sourceName": "Swiftstriker Zeri",
       "name": "双电子泽丽",
       "sectionId": "sample-block-0235",
@@ -141,7 +140,7 @@
       ]
     },
     {
-      "clusterId": "427004",
+      "clusterId": "428011",
       "sourceName": "Ionic Spark Jinx",
       "name": "七离子金克丝",
       "sectionId": "sample-block-0307",
@@ -168,7 +167,7 @@
       ]
     },
     {
-      "clusterId": "427006",
+      "clusterId": "428007",
       "sourceName": "Rock Vayne",
       "name": "五摇滚薇恩",
       "sectionId": "sample-block-0338",
@@ -193,8 +192,8 @@
       ]
     },
     {
-      "clusterId": "427026",
-      "sourceName": "Bodyguard Jax",
+      "clusterId": "428002",
+      "sourceName": "Bodyguard Renata Glasc",
       "name": "六保镖贾克斯烈娜塔",
       "sectionId": "sample-block-0122",
       "teamId": "00000000-0000-4000-8000-000000000044",
@@ -207,7 +206,7 @@
         "renata-glasc",
         "jax"
       ],
-      "url": "https://www.metatft.com/pbe-comps#DA_Bodyguard19-DA_Jax19",
+      "url": "https://www.metatft.com/pbe-comps#DA_Bodyguard19-DA_RenataGlasc19",
       "representativeUnits": [
         "DA_Garen19",
         "DA_Jax19",
@@ -217,16 +216,11 @@
         "DA_Nasus19",
         "DA_RenataGlasc19",
         "DA_Tibbers19"
-      ],
-      "sharedTeamIds": [
-        "00000000-0000-4000-8000-000000000065",
-        "00000000-0000-4000-8000-000000000111",
-        "00000000-0000-4000-8000-000000000046"
       ]
     },
     {
-      "clusterId": "427027",
-      "sourceName": "Slayer Viego",
+      "clusterId": "428013",
+      "sourceName": "Slayer Viego Briar",
       "name": "六舞者佛耶戈",
       "sectionId": "sample-block-0243",
       "teamId": "00000000-0000-4000-8000-000000000087",
@@ -238,7 +232,7 @@
         "viego",
         "briar"
       ],
-      "url": "https://www.metatft.com/pbe-comps#DA_Mosher19-DA_Viego19",
+      "url": "https://www.metatft.com/pbe-comps#DA_Mosher19-DA_Viego19-DA_Briar19",
       "representativeUnits": [
         "DA_Briar19",
         "DA_Camille19",
@@ -251,7 +245,7 @@
       ]
     },
     {
-      "clusterId": "427010",
+      "clusterId": "428009",
       "sourceName": "Prodigy Malzahar",
       "name": "五天才玛尔扎哈·男爵",
       "sectionId": "sample-block-0229",
@@ -275,8 +269,8 @@
       ]
     },
     {
-      "clusterId": "427002",
-      "sourceName": "Gu Feng Wukong",
+      "clusterId": "428025",
+      "sourceName": "Gu Feng Xayah Wukong",
       "name": "四国风霞",
       "sectionId": "sample-block-0214",
       "teamId": "00000000-0000-4000-8000-000000000104",
@@ -286,7 +280,7 @@
       "carryIds": [
         "xayah"
       ],
-      "url": "https://www.metatft.com/pbe-comps#DA_Heavenscale19-DA_Wukong19",
+      "url": "https://www.metatft.com/pbe-comps#DA_Heavenscale19-DA_Xayah19-DA_Wukong19",
       "representativeUnits": [
         "DA_Alune19",
         "DA_Aphelios19",
@@ -297,15 +291,11 @@
         "DA_Leona19",
         "DA_Wukong19",
         "DA_Xayah19"
-      ],
-      "sharedTeamIds": [
-        "00000000-0000-4000-8000-000000000070",
-        "00000000-0000-4000-8000-000000000015"
       ]
     },
     {
-      "clusterId": "427021",
-      "sourceName": "Classical Thresh",
+      "clusterId": "428004",
+      "sourceName": "Classical Jhin",
       "name": "四古典烬",
       "sectionId": "sample-block-0051",
       "teamId": "00000000-0000-4000-8000-000000000059",
@@ -316,7 +306,7 @@
       "carryIds": [
         "jhin"
       ],
-      "url": "https://www.metatft.com/pbe-comps#DA_Virtuosos19-DA_Thresh19",
+      "url": "https://www.metatft.com/pbe-comps#DA_Virtuosos19-DA_Jhin19",
       "representativeUnits": [
         "DA_Galio19",
         "DA_Jhin19",
@@ -329,13 +319,11 @@
         "DA_Vladimir19"
       ],
       "sharedTeamIds": [
-        "00000000-0000-4000-8000-000000000034",
-        "00000000-0000-4000-8000-000000000036",
-        "00000000-0000-4000-8000-000000000092"
+        "00000000-0000-4000-8000-000000000034"
       ]
     },
     {
-      "clusterId": "427005",
+      "clusterId": "428010",
       "sourceName": "K/DA Neeko",
       "name": "K/DA妮蔻",
       "sectionId": "sample-block-0464",
@@ -360,7 +348,7 @@
       ]
     },
     {
-      "clusterId": "427011",
+      "clusterId": "428030",
       "sourceName": "Pentakill Kayle",
       "name": "五杀天使",
       "sectionId": "sample-block-0219",
@@ -388,56 +376,7 @@
       ]
     },
     {
-      "clusterId": "427008",
-      "sourceName": "Prodigy Malzahar Ekko",
-      "name": "五天才玛尔扎哈·布隆",
-      "sectionId": "sample-block-0229",
-      "teamId": "00000000-0000-4000-8000-000000000017",
-      "aliases": [
-        "天才蚂蚱",
-        "天才艾克"
-      ],
-      "carryIds": [
-        "malzahar"
-      ],
-      "url": "https://www.metatft.com/pbe-comps#DA_Prodigy19-DA_Malzahar19-DA_Ekko19",
-      "representativeUnits": [
-        "DA_Alune19",
-        "DA_BaronNashor19",
-        "DA_Braum19",
-        "DA_Ekko19",
-        "DA_Lux19",
-        "DA_Malzahar19",
-        "DA_Neeko19"
-      ]
-    },
-    {
-      "clusterId": "427033",
-      "sourceName": "Jazz Smeech",
-      "name": "爵士史密奇",
-      "sectionId": "sample-block-0368",
-      "teamId": "00000000-0000-4000-8000-000000000011",
-      "aliases": [
-        "爵士史密奇95"
-      ],
-      "carryIds": [
-        "smeech"
-      ],
-      "url": "https://www.metatft.com/pbe-comps#DA_Jazz19-DA_Smeech19",
-      "representativeUnits": [
-        "DA_Bard19",
-        "DA_DrMundo19",
-        "DA_Leona19",
-        "DA_Lucian19",
-        "DA_MissFortune19",
-        "DA_Rell19",
-        "DA_Smeech19",
-        "DA_Yone19",
-        "DA_Zeri19"
-      ]
-    },
-    {
-      "clusterId": "427037",
+      "clusterId": "428032",
       "sourceName": "Illbeats Draven",
       "name": "四酷炫德莱文",
       "sectionId": "sample-block-0407",
@@ -458,61 +397,6 @@
         "DA_Swain19",
         "DA_Vayne19",
         "DA_Yuumi19"
-      ]
-    },
-    {
-      "clusterId": "427030",
-      "sourceName": "Swiftstriker Ashe",
-      "name": "海洋艾希",
-      "sectionId": "sample-block-0327",
-      "teamId": "00000000-0000-4000-8000-000000000054",
-      "aliases": [
-        "迅击艾希",
-        "海洋寒冰"
-      ],
-      "carryIds": [
-        "ashe"
-      ],
-      "url": "https://www.metatft.com/pbe-comps#DA_Swiftstriker19-DA_Ashe19",
-      "representativeUnits": [
-        "DA_Ashe19",
-        "DA_Bard19",
-        "DA_Galio19",
-        "DA_Jax19",
-        "DA_KSante19",
-        "DA_Renekton19",
-        "DA_Vi19",
-        "DA_Zac19"
-      ],
-      "sharedTeamIds": [
-        "00000000-0000-4000-8000-000000000020"
-      ]
-    },
-    {
-      "clusterId": "427038",
-      "sourceName": "Renegade Pyke",
-      "name": "非主流派克男枪",
-      "sectionId": "sample-block-0452",
-      "teamId": "00000000-0000-4000-8000-000000000093",
-      "aliases": [
-        "非主流派克",
-        "派克男枪",
-        "派克九五"
-      ],
-      "carryIds": [
-        "pyke"
-      ],
-      "url": "https://www.metatft.com/pbe-comps#DA_Renegade19-DA_Pyke19",
-      "representativeUnits": [
-        "DA_Aurora19",
-        "DA_Evelynn19",
-        "DA_Graves19",
-        "DA_Pyke19",
-        "DA_Qiyana19",
-        "DA_Taric19",
-        "DA_Vi19",
-        "DA_Yorick19",
-        "DA_Zac19"
       ]
     }
   ]

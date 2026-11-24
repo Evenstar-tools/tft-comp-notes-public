@@ -1,7 +1,8 @@
 {
   "seasonId": "s19-pbe",
   "build": "6018196",
-  "label": "PBE 19.1a · 11/23",
+  "label": "PBE 19.1b · 11/23",
+  "metaTftPatch": { "patch": "19.1", "bPatch": "b" },
   "effectiveAt": "2026-11-23T19:41:35Z",
   "updateId": "pbe-6018196",
   "sourceUrl": "https://matches3.metatft.com/PBE1_4536780050.json"

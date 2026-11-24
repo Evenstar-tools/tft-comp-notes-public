@@ -1,118 +1,82 @@
 {
   "seasonId": "s19-pbe",
-  "build": "6014015",
-  "reviewedAt": "2026-11-23T09:22:23+00:00",
+  "build": "6018196",
+  "reviewedAt": "2026-11-24T01:13:08Z",
+  "window": {
+    "start": "2026-11-23T19:41:35Z",
+    "end": "2026-11-24T01:07:09.092Z"
+  },
   "entries": [
     {
-      "sectionId": "sample-block-0122",
-      "teamId": "00000000-0000-4000-8000-000000000044",
+      "sectionId": "sample-block-0051",
+      "teamId": "00000000-0000-4000-8000-000000000059",
       "status": "recommended",
-      "note": "烈娜塔、狗头来牌顺，六级一起追三，八级补六保镖。",
+      "note": "莎弥拉带烬装过渡，尽早开古典解锁锤石。八级找烬和锤石两星，有余钱再上九。",
       "sources": [
-        "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&trait=DA_Bodyguard19_3&unit=DA_RenataGlasc19-1&unit=DA_Jax19-1&unit=DA_Nasus19-1&unit=DA_KSante19-1&unit=DA_Garen19-1&unit=DA_Leona19-1&unit=DA_Tibbers19-1&unit=DA_Lillia19-1"
-      ]
-    },
-    {
-      "sectionId": "sample-block-0243",
-      "teamId": "00000000-0000-4000-8000-000000000087",
-      "status": "recommended",
-      "note": "佛耶戈、贝蕾亚来得多，七级追三，前排扛不住就先补质量。",
-      "sources": [
-        "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&trait=DA_Mosher19_3&unit=DA_Viego19-1&unit=DA_Briar19-1&unit=DA_Yorick19-1&unit=DA_Yasuo19-1&unit=DA_Yone19-1&unit=DA_Camille19-1&unit=DA_Kayn19-1&unit=DA_Olaf19-1"
-      ]
-    },
-    {
-      "sectionId": "sample-block-0420",
-      "teamId": "00000000-0000-4000-8000-000000000042",
-      "status": "conditional",
-      "note": "吉格斯、可酷伯来得早再走。可酷伯先三星就先给肉装。",
-      "sources": [
-        "https://www.metatft.com/explorer?set=TFTSet19&tab=units&unit=DA_Ziggs19-1&unit=DA_Seraphine19_Indie-1&unit=DA_Kobuko19-1&unit=DA_Lulu19-1&unit=DA_Tristana19-1&unit=DA_Swain19-1"
-      ]
-    },
-    {
-      "sectionId": "sample-block-0214",
-      "teamId": "00000000-0000-4000-8000-000000000104",
-      "status": "conditional",
-      "note": "霞来得早、能连胜再走，八级先做解锁，稳血再上九。",
-      "sources": [
-        "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=9&unit=DA_KSante19-1&unit=DA_DrMundo19-1&unit=DA_Leona19-1&unit=DA_LeeSin19-1&unit=DA_Wukong19-1&unit=DA_Alune19-1&unit=DA_Aphelios19-1&unit=DA_Janna19-1&unit=DA_Xayah19-1"
+        "https://www.metatft.com/pbe-comps#DA_Virtuosos19-DA_Jhin19"
       ]
     },
     {
       "sectionId": "sample-block-0307",
-      "teamId": "00000000-0000-4000-8000-000000000007",
-      "status": "avoid",
-      "note": "八级先找金克丝、龙女两星，格温解锁后再开七离子。",
-      "sources": [
-        "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&trait=DA_IonicSpark19_3&tactician_item_count=0&duplicate_unit_count=0&emblem_count=0&unit=DA_Elise19-1&unit=DA_Tibbers19-1&unit=DA_Annie19-1&unit=DA_Shyvana19-1&unit=DA_Aurora19-1&unit=DA_Jinx19-1&unit=DA_Gwen19-1&unit=DA_Leona19-1",
-        "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&trait=DA_IonicSpark19_3&tactician_item_count=0&duplicate_unit_count=0&emblem_count=0&unit=DA_Elise19-1&unit=DA_Tibbers19-1&unit=DA_Annie19-1&unit=DA_Shyvana19-1&unit=DA_Aurora19-1&unit=DA_Jinx19-1&unit=DA_Gwen19-1&unit=DA_Leona19-1&unit=DA_MissFortune19-1"
-      ]
-    },
-    {
-      "sectionId": "sample-block-0051",
-      "teamId": "00000000-0000-4000-8000-000000000059",
-      "status": "conditional",
-      "note": "物理装能合再走。八级烬、锤石两星接装，锤石没开先用狗头。",
-      "sources": [
-        "https://www.metatft.com/explorer?tab=units&set=TFTSet19&trait=DA_Virtuosos19_2&unit=DA_Jhin19-1&unit=DA_Thresh19-1",
-        "https://www.metatft.com/explorer?tab=units&set=TFTSet19&trait=DA_Virtuosos19_2&unit=DA_Jhin19-1&unit=DA_Thresh19-1&level=8"
-      ]
-    },
-    {
-      "sectionId": "sample-block-0468",
-      "teamId": "00000000-0000-4000-8000-000000000106",
-      "status": "avoid",
-      "note": "八级成型偏弱。已经进了就先补两星前排稳血。",
-      "sources": [
-        "https://www.metatft.com/explorer?tab=units&set=TFTSet19&trait=DA_Juggernaut19_2&unit=DA_Kayle19-1&unit=DA_Zac19-1",
-        "https://www.metatft.com/explorer?tab=units&set=TFTSet19&trait=DA_Juggernaut19_2&unit=DA_Kayle19-1&unit=DA_Zac19-1&level=8"
-      ]
-    },
-    {
-      "sectionId": "sample-block-0407",
-      "teamId": "00000000-0000-4000-8000-000000000029",
-      "status": "conditional",
-      "note": "大剑多、德莱文和布隆来得顺，七级一起追三。",
-      "sources": [
-        "https://www.metatft.com/explorer?tab=units&set=TFTSet19&trait=DA_Illbeats19_3&unit=DA_Draven19-1&unit=DA_Braum19-1"
-      ]
-    },
-    {
-      "sectionId": "sample-block-0251",
-      "teamId": "00000000-0000-4000-8000-000000000102",
+      "teamId": "00000000-0000-4000-8000-000000000031",
       "status": "recommended",
-      "note": "轻语、正义能合就走。七级先开扎克，八级找两星男枪和扎克。",
+      "note": "八级先让金克丝、龙女两星稳血。离子生命值下调，前排没质量时先用两星坦。",
       "sources": [
-        "https://www.metatft.com/pbe-comps#DA_OceanSong19-DA_Graves19"
-      ]
-    },
-    {
-      "sectionId": "sample-block-0251",
-      "teamId": "00000000-0000-4000-8000-000000000075",
-      "status": "conditional",
-      "note": "八级男枪、扎克两星先稳血，能上九再补岩雀接法装。",
-      "sources": [
-        "https://www.metatft.com/pbe-comps#DA_OceanSong19-DA_Zac19"
+        "https://www.metatft.com/pbe-comps#DA_IonicSpark19-DA_Jinx19"
       ]
     },
     {
       "sectionId": "sample-block-0338",
       "teamId": "00000000-0000-4000-8000-000000000078",
       "status": "conditional",
-      "note": "羊刀、海妖能合再走。挂摇滚打三轮解锁薇恩，八级找薇恩、约里克两星。",
+      "note": "七级先数摇滚或花式射手不同名棋子的星级，合计 5 星解锁薇恩。八级有约里克接肉装再追两星薇恩。",
       "sources": [
-        "https://www.metatft.com/pbe-comps#DA_DemonVision19-DA_Vayne19",
-        "https://mobalytics.gg/tft/set19/comps-guide/rock-3MHpApsYN7190RAOvqC40aQm5Or"
+        "https://www.metatft.com/pbe-comps#DA_DemonVision19-DA_Vayne19"
       ]
     },
     {
       "sectionId": "sample-block-0229",
       "teamId": "00000000-0000-4000-8000-000000000071",
       "status": "conditional",
-      "note": "玛尔扎哈和艾克来得多再走。七级五天才追三，男爵开了再补。",
+      "note": "七级慢搜玛尔扎哈和艾克，艾克拿肉装。男爵解锁后再补。",
       "sources": [
         "https://www.metatft.com/pbe-comps#DA_Prodigy19-DA_Malzahar19"
+      ]
+    },
+    {
+      "sectionId": "sample-block-0420",
+      "teamId": "00000000-0000-4000-8000-000000000042",
+      "status": "conditional",
+      "note": "五级追吉格斯、可酷伯，六级追芬妮、璐璐、小炮三星，帮芬妮开巨星。可酷伯先三星就先接肉装。",
+      "sources": [
+        "https://www.metatft.com/pbe-comps#DA_GlitterBomb19-DA_Kobuko19"
+      ]
+    },
+    {
+      "sectionId": "sample-block-0122",
+      "teamId": "00000000-0000-4000-8000-000000000044",
+      "status": "conditional",
+      "note": "六级一起追烈娜塔、狗头，肉装给狗头。前排两星能扛再留钱慢搜。",
+      "sources": [
+        "https://www.metatft.com/pbe-comps#DA_Bodyguard19-DA_RenataGlasc19"
+      ]
+    },
+    {
+      "sectionId": "sample-block-0219",
+      "teamId": "00000000-0000-4000-8000-000000000019",
+      "status": "conditional",
+      "note": "有羊刀开局再走。解锁凯尔后八级找凯尔和约里克，五杀不同名棋子合计 9 星解锁铁男。",
+      "sources": [
+        "https://www.metatft.com/pbe-comps#DA_Pentakill19-DA_Kayle19"
+      ]
+    },
+    {
+      "sectionId": "sample-block-0235",
+      "teamId": "00000000-0000-4000-8000-000000000105",
+      "status": "avoid",
+      "note": "八级先补前排质量，稳住再上九找泽丽。只有一星泽丽时，保留两星打工主 C。",
+      "sources": [
+        "https://www.metatft.com/pbe-comps#DA_Swiftstriker19-DA_Zeri19"
       ]
     }
   ]
