@@ -6,7 +6,7 @@ import { guideRerollTargets } from "@/domain/reroll-targets";
 import familyStats from "@/data/guide-family-stats.json";
 import coreStats from "@/data/patch-recommendation-stats.json";
 import { displayGuideName } from "@/domain/trait-names.mjs";
-import { canRankRecommendations, compareGuideFamilyPerformance, currentFamilyBatch, familyMetricValue, formatRecommendationMean, guideFamilyRows, recommendationGroup, recommendationTier, selectRecommendationRoutes, type GuideFamilyDirection, type GuideFamilyMetric, type GuideFamilyStat } from "@/domain/guide-family-stats";
+import { canRankRecommendations, compareGuideFamilyPerformance, currentFamilyBatch, currentRecommendationEvidence, familyMetricValue, formatRecommendationMean, guideFamilyRows, previousRecommendationDeadline, recommendationGroup, recommendationTier, selectRecommendationRoutes, type GuideFamilyDirection, type GuideFamilyMetric, type GuideFamilySnapshot, type GuideFamilyStat } from "@/domain/guide-family-stats";
 import { carryMinGames, guideCarryRows } from "@/domain/guide-carry-stats";
 import { sectionTeams } from "@/domain/document-flow";
 import { boardTitle, groupGuides, type GuideFamily } from "@/domain/guide-families";
@@ -111,12 +111,15 @@ function homeOpening(text: string, title: string, augment?: ReturnType<typeof he
   return text.match(/^[^。！；\n]+[。！；]?/)?.[0].trim() ?? "";
 }
 
-export function GuideList({ sections, heroSections, season, initial = {}, initialSearch, recommendations, patch, fromItem }: {
+const homeFamilyStats: GuideFamilySnapshot & { previous?: GuideFamilySnapshot } = familyStats;
+
+export function GuideList({ sections, heroSections, season, initial = {}, initialSearch, recommendations, patch, fromItem, checkedAt }: {
   sections: Section[]; heroSections: Section[]; season: Season; initial?: GuideFilters;
   initialSearch?: SiteSearchResponse;
   recommendations?: PatchRecommendationBatch;
   patch?: { build: string; label: string; updateId: string; effectiveAt: string };
   fromItem?: string;
+  checkedAt: number;
 }) {
   const initialView: View = initial.view === "hero-augments" ? "hero-augments" : "regular";
   const [view, setView] = useState<View>(initialView);
@@ -266,7 +269,16 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
   const familyDataEnd = Date.parse(familyStats.updatedAt);
   const patchStart = patch ? Date.parse(patch.effectiveAt) : NaN;
   const familyWindowNote = familyDataEnd < patchStart ? "上一版快照"
+    : homeFamilyStats.build === patch?.build && patch?.build ? "仅当前构建"
     : familyDataEnd - familyStats.days * 86400000 < patchStart ? "采样窗口跨版本更新" : undefined;
+  const [expiredAt, setExpiredAt] = useState(0);
+  const previousFamilyStats = homeFamilyStats.previous ?? homeFamilyStats;
+  const previousDeadline = previousRecommendationDeadline(previousFamilyStats, season.id, patch, Math.max(checkedAt, expiredAt));
+  useEffect(() => {
+    if (previousDeadline === undefined) return;
+    const timer = window.setTimeout(() => setExpiredAt(previousDeadline), Math.max(0, previousDeadline - Date.now()));
+    return () => window.clearTimeout(timer);
+  }, [previousDeadline]);
   const hasCurrentCore = !!patch && canRankRecommendations(coreStats, season.id, patch);
   const tierFilter = view === "regular" && tierOrder.includes(category) ? category : "";
   const availableFacets = view === "regular" ? [...visible, ...library["hero-augments"]] : visible;
@@ -278,7 +290,8 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
   const decisions = new Map((recommendations?.entries ?? []).map(record => [`${record.sectionId}:${record.teamId}`, record]));
   function canShowBoard(section: Section, team: Team) {
     if (!recommended) return true;
-    return decisions.get(`${section.id}:${team.id}`)?.status !== "review";
+    const status = decisions.get(`${section.id}:${team.id}`)?.status;
+    return status !== "review" && status !== "avoid";
   }
   const nextSelections = (target: View) => {
     if (choices[target]) return choices[target]!;
@@ -314,6 +327,8 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
   function candidatesFor(entries: typeof visible, terms = conditions, recommendationsOnly = recommended) {
     return entries.flatMap(entry => {
       const { section, data, teams, filterStyle, augment, viewCategory } = entry;
+      const searchFamilies = recommendationsOnly && previousDeadline !== undefined && previousFamilyStats !== homeFamilyStats
+        ? [...entry.rows, ...guideFamilyRows(previousFamilyStats, data.id, section.id, teams)] : entry.rows;
       if ((category && !tierFilter && viewCategory !== category) || (style && guideStyleKey(filterStyle) !== styleKey) || (cost && !entry.costOptions.includes(cost))) return [];
       const searchTeams = recommendationsOnly ? teams.filter(board => canShowBoard(section, board)) : teams;
       if (recommendationsOnly && !searchTeams.length) return [];
@@ -321,7 +336,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
         const part = homeSearchIntent(term, terms.length === 1 ? intent.scope : "all");
         const component = season.items.find(item => item.category === "component" && guideSearchKey(item.name) === guideSearchKey(part.text.replace(/^散件[：:]?\s*/, "")));
         const args: Parameters<typeof matchHomeGuide>[1] = {
-        section, data, catalog: season, teams: searchTeams, style: filterStyle, category: viewCategory, augment, itemAliases, scope: part.scope, families: entry.rows,
+        section, data, catalog: season, teams: searchTeams, style: filterStyle, category: viewCategory, augment, itemAliases, scope: part.scope, families: searchFamilies,
         isTransition: board => guideBoardKind(section, board, teams[0]) === "过渡",
         hasCarrySample: (board, id, stars) => guideCarryRows(data.id, section.id, board.id)
           .some(row => row.carryId === id && row.stars === stars && row.slots === 3 && row.games >= carryMinGames),
@@ -481,29 +496,37 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
     label: categoryDisplay(name).replace(/成型阵容$|阵容$/, ""), id: name === backupCategory ? "backup-guides" : "guide-group-" + index,
   })) : [];
 
-  const selectedRoutes = recommended && hasCurrentStats ? selectRecommendationRoutes(candidates.flatMap(entry => {
-    const { section, data } = entry;
-    if (entry.augment) return [];
-    return entry.rows.flatMap(({ stat, boards }) => {
-      const eligible = boards.filter(board => canShowBoard(section, board) && entry.rows.filter(row =>
-        row.boards.some(option => option.id === board.id)).length === 1 &&
-        ((!needle && !cost) || entry.matches.some(match => match.board.id === board.id)));
-      const editorial = eligible.find(board => {
-        const status = decisions.get(`${section.id}:${board.id}`)?.status;
-        return status === "recommended" || status === "conditional";
+  function homeRoutes(batch: GuideFamilySnapshot, entries: (typeof visible[number] & { matches?: Candidate["matches"] })[]) {
+    return selectRecommendationRoutes(entries.flatMap(entry => {
+      const { section, data } = entry;
+      if (entry.augment) return [];
+      const families = batch === homeFamilyStats ? entry.rows : guideFamilyRows(batch, data.id, section.id, entry.teams);
+      return families.flatMap(({ stat, boards }) => {
+        const eligible = boards.filter(board => canShowBoard(section, board) && families.filter(row =>
+          row.boards.some(option => option.id === board.id)).length === 1 &&
+          (!entry.matches || (!needle && !cost) || entry.matches.some(match => match.board.id === board.id)));
+        const editorial = eligible.find(board => {
+          const status = decisions.get(`${section.id}:${board.id}`)?.status;
+          return status === "recommended" || status === "conditional";
+        });
+        const team = editorial ?? eligible[0];
+        if (!team) return [];
+        const exact = entry.matches?.find(match => match.board.id === team.id);
+        const facet = guideFacets(section, team, data);
+        const strategy = guideStrategyLabel(section, team, data, entry.teams[0]);
+        const group = recommendationGroup(entry.playstyle ?? strategy ?? facet.style, facet.costs, guideRollLevel(section, team));
+        if (!group) return [];
+        const conditional = decisions.get(`${section.id}:${team.id}`)?.status === "conditional";
+        const rating = { ...stat, teamId: team.id, carryId: stat.carryIds[0], carryGames: stat.games };
+        return [{ entry, team, group, rating, strategy, exact, conditional, familyId: String(stat.clusterId) }];
       });
-      const team = editorial ?? eligible[0];
-      if (!team) return [];
-      const exact = entry.matches.find(match => match.board.id === team.id);
-      const facet = guideFacets(section, team, data);
-      const strategy = guideStrategyLabel(section, team, data, entry.teams[0]);
-      const group = recommendationGroup(entry.playstyle ?? strategy ?? facet.style, facet.costs, guideRollLevel(section, team));
-      if (!group) return [];
-      const conditional = decisions.get(`${section.id}:${team.id}`)?.status === "conditional";
-      const rating = { ...stat, teamId: team.id, carryId: stat.carryIds[0], carryGames: stat.games };
-      return [{ entry, team, group, rating, strategy, exact, conditional, familyId: String(stat.clusterId) }];
-    });
-  })) : [];
+    }));
+  }
+  const currentHomeEvidence = currentRecommendationEvidence(homeFamilyStats, season.id, patch);
+  // Decide when to switch data for the whole home, independently of a visitor's filters.
+  const currentHomeReady = recommended && currentHomeEvidence && homeRoutes(homeFamilyStats, visible).length > 0;
+  const recommendationSnapshot = currentHomeReady ? homeFamilyStats : previousDeadline !== undefined ? previousFamilyStats : undefined;
+  const selectedRoutes = recommended && recommendationSnapshot ? homeRoutes(recommendationSnapshot, candidates) : [];
   const recommendationCards: RecommendationCard[] = selectedRoutes.map(({ entry, exact, team, group, rating, strategy, conditional }) => {
     const { section, data } = entry;
     const notes = readingNotes(section, team, data);
@@ -530,7 +553,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
       const board = phase.team;
       if (!board || board.id === team.id || usedPopulation(board.pieces) >= population || stages.has(board.id)) continue;
       if (decisions.get(`${section.id}:${board.id}`)?.status === "avoid") continue;
-      if ((needle || cost) && !entry.matches.some(match => match.board.id === board.id)) continue;
+      if ((needle || cost) && !entry.matches?.some(match => match.board.id === board.id)) continue;
       stages.set(board.id, { team: board, label: phase.label });
     }
     return {
@@ -825,9 +848,10 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
     {searching && <p className="site-lookup-message" role="status">正在搜索…</p>}
 
     {recommended && <>
-      <PatchRecommendationList stats={familyStats} cards={recommendationCards} home={home} windowNote={familyWindowNote} />
+      {recommendationSnapshot && <PatchRecommendationList stats={recommendationSnapshot} cards={recommendationCards} home={home}
+        windowNote={currentHomeReady ? familyWindowNote : "上一版参考 · 本版样本待补"} />}
       {!displayedCount && !crossTab.length && needle && showLookup && !equipmentQuery && <div className="empty-inline">{archiveLink}</div>}
-      {!displayedCount && !crossTab.length && !showLookup && !searching && (needle || hasFilter ? emptyState : <div className="empty-inline"><p>{hasCurrentStats ? "暂无本版推荐" : "本版体系数据待更新"}</p>
+      {!displayedCount && !crossTab.length && !showLookup && !searching && (needle || hasFilter ? emptyState : <div className="empty-inline"><p>{currentHomeEvidence ? "暂无符合条件的本版推荐" : "本版体系数据待更新"}</p>
         {archiveLink}
       </div>)}
     </>}

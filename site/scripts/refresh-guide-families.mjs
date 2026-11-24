@@ -64,6 +64,8 @@ function histogram(row) {
 
 const bindings = await readJson(resolve(root,"data/guide-family-map.json"));
 const season = await readJson(resolve(root,"data/season.json"));
+const currentPatch = await readJson(resolve(root, "data/current-patch.json"));
+const published = await readJson(resolve(root, "data/guide-family-stats.json"));
 const prior = await readJson(out).catch(e=>{if(e.code==="ENOENT") return null; throw e});
 const { patch, stats, model, statsUrl } = await capture();
 if (stats.tft_set !== bindings.set || model.tft_set !== bindings.set ||
@@ -178,6 +180,11 @@ await writeJson(reviewPath,{...observation,...delta,review,queue,catalogPublishe
 await writeJson(historyPath,{latest:observation,previous:previous ?? null});
 if (modelChanged || !rows.length) throw Error("没有可沿用的体系映射。请查复核清单并校对新模型后重跑。");
 rows.sort((a,b)=>a.mean-b.mean || b.games-a.games || a.clusterId.localeCompare(b.clusterId));
+const patchStart = Date.parse(currentPatch.effectiveAt);
+const inGrace = Date.parse(updatedAt) >= patchStart && Date.parse(updatedAt) < patchStart + 12 * 60 * 60 * 1000;
+const previousBatch = inGrace && [published, published.previous].find(batch =>
+  batch?.seasonId === season.id && batch.queue === bindings.queue && Date.parse(batch.updatedAt) < patchStart);
+const { previous: _older, ...previousSnapshot } = previousBatch || {};
 await writeJson(out,{seasonId:season.id,set:bindings.set,queue:bindings.queue,patch,days:3,updatedAt,model:model.cluster_id,
-  source:"MetaTFT",sourceUrl,statsUrl,totalFinishes:total,rows,smallSamples});
+  source:"MetaTFT",sourceUrl,statsUrl,totalFinishes:total,rows,smallSamples,previous:previousBatch ? previousSnapshot : undefined});
 console.log(`${patch}，${updatedAt}，${rows.length} 个体系已对应攻略，${total} 次选手结算。复核清单 ${review.length} 项。`);
