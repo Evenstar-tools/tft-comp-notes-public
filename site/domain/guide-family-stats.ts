@@ -25,6 +25,7 @@ export interface GuideFamilyBatch {
   days: number;
   updatedAt: string;
   totalFinishes?: number;
+  build?: string;
   rows: GuideFamilyStat[];
 }
 
@@ -48,21 +49,47 @@ export function formatRecommendationMean(mean: number): string {
   return String(mean);
 }
 
-export function currentFamilyBatch(
-  batch: Pick<GuideFamilyBatch, "seasonId" | "queue" | "patch" | "days" | "updatedAt">,
-  seasonId: string, patch?: { seasonId?: string; label: string; effectiveAt: string },
-): boolean {
-  if (!patch || batch.seasonId !== seasonId || !Number.isInteger(batch.days) || batch.days < 1 ||
-      !(Date.parse(batch.updatedAt) >= Date.parse(patch.effectiveAt))) return false;
+export type GuideFamilySnapshot = GuideFamilyBatch & { sourceUrl: string };
+type FamilyBatchMetadata = Pick<GuideFamilyBatch, "seasonId" | "queue" | "patch" | "days" | "updatedAt" | "build">;
+type FamilyPatch = { seasonId?: string; build?: string; label: string; effectiveAt: string };
+const day = 24 * 60 * 60 * 1000;
+const recommendationGrace = day / 2;
+
+function matchesFamilyScope(batch: FamilyBatchMetadata, seasonId: string, patch: FamilyPatch) {
   const scope = editionScope(seasonId);
+  if (!scope || (patch.seasonId && editionScope(patch.seasonId) !== scope) ||
+      batch.seasonId !== seasonId || !Number.isInteger(batch.days) || batch.days < 1) return false;
   const queue = batch.queue?.toUpperCase();
-  if (!scope || (patch.seasonId && editionScope(patch.seasonId) !== scope)) return false;
-  if (scope.endsWith("-pbe") ? queue !== "PBE" : !["RANKED", "RANKED_TFT", "1100"].includes(queue)) return false;
-  // MetaTFT can label a PBE hotfix by date ("19.1 Nov-20") instead of a patch letter.
+  return scope.endsWith("-pbe") ? queue === "PBE" : ["RANKED", "RANKED_TFT", "1100"].includes(queue);
+}
+
+export function currentFamilyBatch(
+  batch: FamilyBatchMetadata, seasonId: string, patch?: FamilyPatch,
+): boolean {
+  if (!patch || !matchesFamilyScope(batch, seasonId, patch) ||
+      !(Date.parse(batch.updatedAt) >= Date.parse(patch.effectiveAt))) return false;
+  // MetaTFT can name the same build differently from the site's Riot patch label.
   const version = /\b(\d+\.\d+)([a-z]?)\b/i;
   const source = batch.patch?.match(version), current = patch.label.match(version);
   return Boolean(source && current && source[1] === current[1] &&
-    (!source[2] || !current[2] || source[2].toLowerCase() === current[2].toLowerCase()));
+    (batch.build && patch.build ? batch.build === patch.build :
+      !source[2] || !current[2] || source[2].toLowerCase() === current[2].toLowerCase()));
+}
+
+export function currentRecommendationEvidence(batch: FamilyBatchMetadata, seasonId: string, patch?: FamilyPatch) {
+  if (!patch || !currentFamilyBatch(batch, seasonId, patch)) return false;
+  return batch.build ? batch.build === patch.build :
+    Date.parse(batch.updatedAt) - batch.days * day >= Date.parse(patch.effectiveAt);
+}
+
+export function previousRecommendationDeadline(
+  batch: FamilyBatchMetadata, seasonId: string, patch: FamilyPatch | undefined, now: number,
+) {
+  if (!patch || !matchesFamilyScope(batch, seasonId, patch) || !batch.patch ||
+      (patch.build && batch.build === patch.build)) return;
+  const effectiveAt = Date.parse(patch.effectiveAt);
+  const expiresAt = effectiveAt + recommendationGrace;
+  if (Date.parse(batch.updatedAt) < effectiveAt && now >= effectiveAt && now < expiresAt) return expiresAt;
 }
 
 export type GuideFamilyMetric = "pickRate" | "mean" | "topFourRate" | "winRate";

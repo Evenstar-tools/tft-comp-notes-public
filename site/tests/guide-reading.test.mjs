@@ -5,7 +5,7 @@ import { primaryFirst, matchGuideTeams, sourceSummary, complementItems, guideFac
 import { displayGuideName } from "../domain/trait-names.mjs";
 import { comboStarMask, comboTierCounts } from "../domain/combo-tiers.ts";
 import { guideStyleKey, guideWearerQuery, homeGuideFilter, matchOpeningSearch, openingSearch, searchPhaseNote } from "../domain/guide-search.ts";
-import { canRankRecommendations, compareGuideFamilyPerformance, currentFamilyBatch, familyMetricValue, formatRecommendationMean, guideFamilyRows, recommendationGroup, recommendationTier, selectRecommendationRoutes } from "../domain/guide-family-stats.ts";
+import { canRankRecommendations, compareGuideFamilyPerformance, currentFamilyBatch, currentRecommendationEvidence, previousRecommendationDeadline, familyMetricValue, formatRecommendationMean, guideFamilyRows, recommendationGroup, recommendationTier, selectRecommendationRoutes } from "../domain/guide-family-stats.ts";
 import { posterShareLink, readPosterShare, validItemLibraryReturn } from "../domain/links.ts";
 import { compactGuideParagraph, compactUtilityCopy, rememberGuideCopy } from "../domain/guide-copy.ts";
 import { heroGuideIndex } from "../domain/hero-guides.ts";
@@ -371,6 +371,30 @@ test("a rolling family batch must match the live edition, queue and patch before
   const live = { ...batch, seasonId: "s19-live", queue: "RANKED", patch: "19.1" };
   assert.equal(currentFamilyBatch(live, live.seasonId, { ...patch, label: "19.1" }), true);
   assert.equal(currentFamilyBatch({ ...live, queue: "PBE" }, live.seasonId, patch), false);
+});
+
+test("home recommendations retain the previous verified batch only until 12 hours after rollout", () => {
+  const seasonId = "s19-pbe-19.1.0.5973071";
+  const patch = { seasonId: "s19-pbe", build: "6018196", label: "PBE 19.1a", effectiveAt: "2026-11-23T19:41:35Z" };
+  const previous = { seasonId, queue: "PBE", patch: "19.1 Nov-20", days: 3, updatedAt: "2026-11-23T09:31:13Z" };
+  const rollout = Date.parse(patch.effectiveAt);
+  const expires = Date.parse("2026-11-24T07:41:35Z");
+  assert.equal(previousRecommendationDeadline(previous, seasonId, patch, rollout - 1), undefined);
+  assert.equal(previousRecommendationDeadline(previous, seasonId, patch, rollout), expires);
+  assert.equal(previousRecommendationDeadline(previous, seasonId, patch, expires - 1), expires);
+  assert.equal(previousRecommendationDeadline(previous, seasonId, patch, expires), undefined);
+  assert.equal(previousRecommendationDeadline({ ...previous, queue: "RANKED" }, seasonId, patch, rollout), undefined);
+
+  const refreshed = { ...previous, updatedAt: "2026-11-24T01:05:32Z" };
+  assert.equal(currentFamilyBatch(refreshed, seasonId, patch), true);
+  assert.equal(currentRecommendationEvidence(refreshed, seasonId, patch), false);
+  assert.equal(previousRecommendationDeadline(refreshed, seasonId, patch, rollout), undefined);
+  const verified = { ...refreshed, build: "6018196", patch: "19.1b" };
+  assert.equal(currentRecommendationEvidence(verified, seasonId, patch), true);
+  assert.equal(currentRecommendationEvidence({ ...verified, build: "6014015" }, seasonId, patch), false);
+  assert.equal(currentRecommendationEvidence({ ...verified, updatedAt: previous.updatedAt }, seasonId, patch), false);
+  const fullWindow = { ...refreshed, updatedAt: "2026-11-27T01:05:32Z" };
+  assert.equal(currentRecommendationEvidence(fullWindow, seasonId, patch), true);
 });
 
 test("home shared filters keep the first usable text and ignore malformed option values", () => {

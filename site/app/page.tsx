@@ -34,7 +34,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
       {live && guides.length ? (
         <>
           <GuideList sections={regularGuides} heroSections={heroGuides} season={live.season} initial={filters} initialSearch={initialSearch}
-            recommendations={currentPatchRecommendations(live)} patch={patch} fromItem={fromItem} />
+            recommendations={currentPatchRecommendations(live)} patch={patch} fromItem={fromItem} checkedAt={Date.now()} />
           <HomeGuidePosition />
         </>
       ) : <>
