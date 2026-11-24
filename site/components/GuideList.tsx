@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useEffect, useLayoutEffect, useMemo, useRef, useState, type MouseEvent } from "react";
+import { Fragment, useEffect, useLayoutEffect, useMemo, useRef, useState, type MouseEvent, type ReactNode } from "react";
 import { ChevronRight, Search, X } from "lucide-react";
 import { guideRerollTargets } from "@/domain/reroll-targets";
 import familyStats from "@/data/guide-family-stats.json";
@@ -33,17 +33,30 @@ import { guideConditionName, guideConditionsAnchor, guideEquipmentConditions } f
 import { HomeGearSearch, isHomeGear } from "./HomeGearSearch";
 import { GuideCardBoard, GuideQuickView } from "./GuideCardBoard";
 import { GuideStatsTable, guideStatsMetricLabels, type GuideStatsTableRow } from "./GuideStatsTable";
+import { CompTrendPanel } from "./CompTrendPanel";
+import type { CompTrendModel } from "@/domain/comp-trends";
 
 const backupCategory = "次选";
 const tierLabels = { recommended: "推荐", secondary: backupCategory, review: "待复核" } as const;
 const tierOrder: string[] = [tierLabels.recommended, tierLabels.review, tierLabels.secondary];
-type View = "regular" | "hero-augments";
+type View = "regular" | "hero-augments" | "comp-trends";
 type ArchiveSort = Exclude<GuideSort, "recommended">;
 type Selections = { category: string; style: string; cost: number };
 type Choices = Partial<Record<View, Selections>>;
 type FamilySort = { metric: GuideFamilyMetric; direction: GuideFamilyDirection };
 const emptyFilters = { category: "", style: "", cost: 0 };
 const archiveViews = [["category", "攻略卡片"], ["mean", "战绩对照"]] as const;
+
+function filterView(view: GuideFilters["view"]): View {
+  return view === "hero-augments" || view === "comp-trends" ? view : "regular";
+}
+
+function guideFromTrends(href: string | undefined, home: string) {
+  if (!href?.startsWith("/guides/")) return href;
+  const url = new URL(href, "https://tft.local");
+  url.searchParams.set("from", home);
+  return url.pathname + url.search + url.hash;
+}
 
 function familySortFrom(filters: GuideFilters): FamilySort {
   const metric = filters.metric ?? "mean";
@@ -91,15 +104,17 @@ function homeOpening(text: string, title: string, augment?: ReturnType<typeof he
 
 const homeFamilyStats: GuideFamilySnapshot & { previous?: GuideFamilySnapshot } = familyStats;
 
-export function GuideList({ sections, heroSections, season, initial = {}, initialSearch, recommendations, patch, fromItem, checkedAt }: {
+export function GuideList({ sections, heroSections, season, initial = {}, initialSearch, recommendations, trends, artifactRanking, patch, fromItem, checkedAt }: {
   sections: Section[]; heroSections: Section[]; season: Season; initial?: GuideFilters;
   initialSearch?: SiteSearchResponse;
   recommendations?: PatchRecommendationBatch;
+  trends?: CompTrendModel;
+  artifactRanking?: ReactNode;
   patch?: { build: string; label: string; updateId: string; effectiveAt: string };
   fromItem?: string;
   checkedAt: number;
 }) {
-  const initialView: View = initial.view === "hero-augments" ? "hero-augments" : "regular";
+  const initialView = filterView(initial.view);
   const [view, setView] = useState<View>(initialView);
   const [query, setQuery] = useState(initial.q ?? "");
   const [choices, setChoices] = useState<Choices>({
@@ -115,13 +130,14 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
   const quickAnchor = useRef<{ card: HTMLElement; top: number } | null>(null);
   const searchInput = useRef<HTMLInputElement>(null);
   const filterPanel = useRef<HTMLDetailsElement>(null);
+  const showingTrends = view === "comp-trends";
   const recommended = view === "regular" && sort === "recommended";
   const selections = choices[view] ?? emptyFilters;
   const active = recommended && tierOrder.includes(selections.category) ? { ...selections, category: "" } : selections;
   const { category, style, cost } = active;
   const styleKey = guideStyleKey(style);
   const hasFilter = Boolean(category || style || cost);
-  const needle = query.trim();
+  const needle = showingTrends ? "" : query.trim();
   const inputIntent = homeSearchIntent(needle, scope);
   const hasUnitQuery = Boolean(inputIntent.text && searchUnitIds(inputIntent.text, season).size);
   const intent = hasUnitQuery || inputIntent.scope !== scope ? inputIntent : { ...inputIntent, scope: "all" as const };
@@ -134,6 +150,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
   const equipmentQuery = Boolean(selectedGear || (conditions.length === 1 && gearHits.length));
   const extraGearTerms = selectedGear ? query.trimStart().slice(lookupTerm.length).replace(/^\s*[+＋]\s?/, "") : "";
   function homeLink(target: View, { category, style, cost }: Selections, targetSort: GuideSort) {
+    if (target === "comp-trends") return guideNavigationHref("/", { view: target }, fromItem);
     const archiveCategory = target === "regular" && targetSort === "recommended" && tierOrder.includes(category) ? "" : category;
     const ranking = target === "regular" && targetSort === "mean";
     const metric = ranking && performance.metric !== "mean" ? performance.metric : undefined;
@@ -156,6 +173,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
 
   useEffect(() => {
     const hash = window.location.hash;
+    if (hash === "#comp-trends" && !showingTrends) return;
     if (homeUrl.current !== home && hash.startsWith("#guide-card-")) {
       window.history.replaceState(window.history.state, "", home);
     } else {
@@ -163,14 +181,16 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
     }
     homeUrl.current = home;
     window.dispatchEvent(new Event(guideNavigationChange));
-  }, [home]);
+  }, [home, showingTrends]);
 
   useEffect(() => {
     const restore = () => {
       if (window.location.pathname !== "/") return;
       const params = parseGuideFilters(Object.fromEntries(new URLSearchParams(window.location.search)));
-      const tab: View = params.view === "hero-augments" ? "hero-augments" : "regular";
+      const tab = filterView(params.view);
       setView(tab);
+      setFiltersOpen(false);
+      if (tab === "comp-trends") return;
       setQuery(params.q ?? "");
       setSort(defaultSort(tab, params));
       if (params.sort === "mean") setPerformance(familySortFrom(params));
@@ -180,11 +200,21 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
       setChoices(previous => ({ ...previous, [tab]: {
         category: params.category ?? "", style: params.style ?? "", cost: Number(params.cost) || 0,
       } }));
-      setFiltersOpen(false);
     };
+    const upgradeTrendAnchor = () => {
+      if (window.location.pathname !== "/" || window.location.hash !== "#comp-trends") return;
+      window.history.replaceState(window.history.state, "", guideNavigationHref("/", { view: "comp-trends" }, fromItem));
+      restore();
+    };
+    const frame = window.requestAnimationFrame(upgradeTrendAnchor);
     window.addEventListener("popstate", restore);
-    return () => window.removeEventListener("popstate", restore);
-  }, []);
+    window.addEventListener("hashchange", upgradeTrendAnchor);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("popstate", restore);
+      window.removeEventListener("hashchange", upgradeTrendAnchor);
+    };
+  }, [fromItem]);
 
   useEffect(() => {
     if (!filtersOpen) return;
@@ -248,7 +278,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
     return { regular: prepare(sections), "hero-augments": prepare(heroSections) };
   }, [sections, heroSections, season, patch?.build]);
 
-  const visible = library[view];
+  const visible = view === "comp-trends" ? [] : library[view];
   const hasCurrentStats = currentFamilyBatch(familyStats, season.id, patch);
   const familyDataEnd = Date.parse(familyStats.updatedAt);
   const patchStart = patch ? Date.parse(patch.effectiveAt) : NaN;
@@ -274,11 +304,12 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
   const costs = [...new Set([...availableFacets.flatMap(entry => entry.costOptions), ...(cost ? [cost] : [])])].sort((a,b) => a-b);
   const decisions = new Map((recommendations?.entries ?? []).map(record => [`${record.sectionId}:${record.teamId}`, record]));
   function canShowBoard(section: Section, team: Team) {
-    if (!recommended) return true;
+    if (!recommended && !showingTrends) return true;
     const status = decisions.get(`${section.id}:${team.id}`)?.status;
     return status !== "review" && status !== "avoid";
   }
   const nextSelections = (target: View) => {
+    if (target === "comp-trends") return emptyFilters;
     if (choices[target]) return choices[target]!;
     const entries = library[target];
     return {
@@ -364,7 +395,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
     });
   }) : [];
   const isHeroList = view === "hero-augments";
-  const ranked = sort === "mean" && !isHeroList;
+  const ranked = sort === "mean" && view === "regular";
   const candidates = equipmentQuery && !ranked ? [] : candidatesFor(visible);
   const seen = new Set<string>();
   type Candidate = (typeof candidates)[number];
@@ -511,7 +542,8 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
   }
   const currentHomeEvidence = currentRecommendationEvidence(homeFamilyStats, season.id, patch);
   // Decide when to switch data for the whole home, independently of a visitor's filters.
-  const currentHomeReady = recommended && currentHomeEvidence && homeRoutes(homeFamilyStats, visible).length > 0;
+  const currentHomeRoutes = (recommended || showingTrends) && currentHomeEvidence ? homeRoutes(homeFamilyStats, library.regular) : [];
+  const currentHomeReady = currentHomeRoutes.length > 0;
   const recommendationSnapshot = currentHomeReady ? homeFamilyStats : previousDeadline !== undefined ? previousFamilyStats : undefined;
   const selectedRoutes = recommended && recommendationSnapshot ? homeRoutes(recommendationSnapshot, candidates) : [];
   const recommendationCards: RecommendationCard[] = selectedRoutes.map(({ entry, exact, team, group, rating, strategy, conditional }) => {
@@ -761,7 +793,17 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
     filterPanel.current?.querySelector("summary")?.focus();
   };
 
-  return <div className="home-guide-library" data-archive={view === "regular" && !recommended || undefined}>
+  const trendModel = showingTrends && trends && {
+    ...trends,
+    tracks: trends.tracks.map(track => ({
+      ...track,
+      href: guideFromTrends(track.href, home),
+      recommended: track.recommended && currentHomeRoutes.some(route => track.recommendedKey === String(route.rating.clusterId)),
+    })),
+    discoveries: trends.discoveries.map(discovery => ({ ...discovery, href: guideFromTrends(discovery.href, home) })),
+  };
+
+  return <div className="home-guide-library" data-archive={view === "regular" && !recommended || undefined} data-trends={showingTrends || undefined}>
     <HomeGuideBanner patch={patch} />
     {fromItem && <a className="text-link guide-gear-return" href={fromItem}>返回装备图鉴</a>}
     <div className="home-browse-controls">
@@ -773,9 +815,11 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
             aria-current={view === "regular" && !recommended ? "page" : undefined} onClick={event => changeView(event, "regular", archiveSort)}>全部攻略</a>
           {heroSections.length > 0 && <a href={homeLink("hero-augments", nextSelections("hero-augments"), sort)}
             aria-current={view === "hero-augments" ? "page" : undefined} onClick={event => changeView(event, "hero-augments")}>英雄强化</a>}
+          <a href={homeLink("comp-trends", emptyFilters, sort)} aria-current={showingTrends ? "page" : undefined}
+            onClick={event => changeView(event, "comp-trends")}>阵容趋势</a>
         </nav>
       </div>
-      <div className="filters guide-filters" data-inline-style={styles.size ? true : undefined}>
+      {!showingTrends && <div className="filters guide-filters" data-inline-style={styles.size ? true : undefined}>
         <div className="guide-search-field" data-equipment={selectedGear ? true : undefined}>
           {!selectedGear && <Search className="home-search-icon" size={16} aria-hidden />}
           {selectedGear && <button className="home-gear-chip" type="button" aria-label={"移除" + selectedGear.name}
@@ -836,8 +880,13 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
           {!ranked && displayedCount > 0 && <span className="guide-result-count" aria-hidden="true">{displayedCount} 套阵容</span>}
           {filterChips.length + Number(Boolean(styleKey)) > 1 && <button type="button" className="guide-filter-clear" onClick={() => choose(emptyFilters)}>清除筛选</button>}
         </div>}
-      </div>
+      </div>}
     </div>
+    {showingTrends && <>
+      {trendModel ? <CompTrendPanel model={trendModel} /> : <p className="site-lookup-message">阵容趋势数据待更新</p>}
+      {artifactRanking}
+    </>}
+    {!showingTrends && <>
     {view === "regular" && !recommended && <div className="home-archive-tools">
       <nav className="home-archive-switch" aria-label="全部攻略视图">
         {archiveViews.map(([option, label]) =>
@@ -929,5 +978,6 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
       </section> : <Fragment key={name}>{cards}</Fragment>;
     })}</div>}
     {!recommended && !displayedCount && !searching && (ranked || (!crossTab.length && !showLookup)) && emptyState}
+    </>}
   </div>;
 }

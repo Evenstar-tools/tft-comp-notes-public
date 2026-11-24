@@ -42,6 +42,9 @@ export const itemReference = {
 };
 
 export interface WearerSnapshot {
+  updatedAt?: string;
+  rankedScope?: string;
+  queue?: string;
   source: string;
   version: string;
   window: string;

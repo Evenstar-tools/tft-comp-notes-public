@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "seasonId": "s19-pbe",
+  "set": "TFTSet19",
+  "queue": "PBE",
+  "scope": "PBE",
+  "source": "MetaTFT",
+  "sourceUrl": "https://www.metatft.com/pbe-comps",
+  "batches": [],
+  "series": [],
+  "discoveries": []
+}

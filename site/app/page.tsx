@@ -5,9 +5,12 @@ import { guideNavigationHref } from "@/domain/guide-navigation";
 import { guideWearerQuery, splitGuideConditions } from "@/domain/guide-search";
 import { validItemLibraryReturn } from "@/domain/links";
 import { heroAugmentCategory } from "@/domain/hero-augments";
-import { isVersionUpdate, sameEdition } from "@/domain/version-updates";
+import { editionScope, isOfficialEdition, isVersionUpdate, sameEdition } from "@/domain/version-updates";
 import { currentPatchRecommendations } from "@/server/patch-recommendations";
 import currentPatch from "@/data/current-patch.json";
+import compTrendHistory from "@/data/comp-trends.json";
+import { buildCompTrendModel } from "@/domain/comp-trends";
+import { ArtifactTrendRanking } from "@/components/ArtifactTrendRanking";
 import { GuideList } from "@/components/GuideList";
 import { HomeGuidePosition } from "@/components/HomeGuidePosition";
 import { HomeGuideBanner } from "@/components/GuideNavigation";
@@ -19,7 +22,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
   const [live, query] = await Promise.all([publicGuidePublication(), searchParams]);
   const filters = parseGuideFilters(query);
   const fromItem = validItemLibraryReturn(query.fromItem);
-  const term = splitGuideConditions(filters.q ?? "")[0];
+  const term = filters.view === "comp-trends" ? undefined : splitGuideConditions(filters.q ?? "")[0];
   const initialSearch = term && !filters.scope && !guideWearerQuery(term)
     ? await performSiteSearch(term, filters.exclude, live).catch(() => undefined) : undefined;
   const sections = live?.sections.filter(section => readableSection(section) && !isEditorialSection(section) && !isVersionUpdate(section)) ?? [];
@@ -29,12 +32,18 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
   const regularGuides = guides.filter(section => section.category !== heroAugmentCategory);
   const notes = sections.filter(section => !guides.includes(section));
   const patch = live && sameEdition(live.season.id, currentPatch.seasonId) ? currentPatch : undefined;
+  const trends = live && editionScope(live.season.id) && (buildCompTrendModel(compTrendHistory, live.season,
+    new Map(regularGuides.map(section => [section.id, new Set(sectionTeams(section).map(team => team.id))])), patch) ?? {
+    scope: isOfficialEdition(live.season.id) ? "国际服排位 · 数据待更新" : "PBE · 数据待更新",
+    days: [], tracks: [], patches: [], discoveries: [],
+  });
   return (
     <div className="home-library">
       {live && guides.length ? (
         <>
           <GuideList sections={regularGuides} heroSections={heroGuides} season={live.season} initial={filters} initialSearch={initialSearch}
-            recommendations={currentPatchRecommendations(live)} patch={patch} fromItem={fromItem} checkedAt={Date.now()} />
+            recommendations={currentPatchRecommendations(live)} trends={trends || undefined}
+            artifactRanking={<ArtifactTrendRanking edition={live.season.id} />} patch={patch} fromItem={fromItem} checkedAt={Date.now()} />
           <HomeGuidePosition />
         </>
       ) : <>

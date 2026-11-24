@@ -140,7 +140,7 @@ export function parseGuideFilters(values: Record<string, string | string[] | und
   const exclude = read("exclude");
   const metric = read("metric"), direction = read("direction");
   return {
-    view: hero ? "hero-augments" : undefined,
+    view: view === "comp-trends" ? view : hero ? "hero-augments" : undefined,
     sort: sort === "mean" || sort === "category" ? sort : oldCategory && !archiveTier && !hero ? "category" : undefined,
     ...(scope === "carry" || scope === "unit" ? { scope } : {}),
     ...(exclude === "rakan" || exclude === "none" ? { exclude } : {}),
