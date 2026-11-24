@@ -16,7 +16,14 @@
   flex-wrap: wrap;
   gap: .35rem .75rem;
 }
-.hero-profile-stat-period p { margin: 0; }
+.hero-stat-sources {
+  max-width: 100%;
+  color: var(--muted);
+  font-size: .78rem;
+}
+.hero-stat-sources summary { cursor: pointer; }
+.hero-stat-sources[open] summary { margin-bottom: 6px; }
+.hero-stat-sources p { margin: 4px 0 0; }
 .hero-profile-back, .hero-profile-build-link {
   display: inline-flex;
   align-items: center;
@@ -198,12 +205,9 @@
   margin-top: 3px;
   line-height: 1.25;
 }
-.hero-profile-performance :is(.hero-performance-window, .hero-performance-previous) {
+.hero-profile-performance .hero-performance-previous {
   color: var(--muted);
   font-size: 12px;
-}
-.hero-profile-performance .hero-performance-window { margin: 0 0 8px; }
-.hero-profile-performance .hero-performance-previous {
   display: flex;
   flex-wrap: wrap;
   column-gap: 9px;
@@ -236,12 +240,6 @@
 .hero-profile-build-link { justify-self: start; }
 @media (min-width: 941px) {
   .hero-profile-performance { padding-block: 11px; }
-  .hero-profile-performance .hero-performance-window {
-    position: absolute;
-    top: 2px;
-    right: 90px;
-    margin: 0;
-  }
 }
 @media (max-width: 940px) {
   .hero-profile-columns { grid-template-columns: minmax(0, 1fr); gap: 12px; }

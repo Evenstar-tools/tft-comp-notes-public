@@ -22,7 +22,6 @@
   font-weight: 700;
 }
 .hero-loadout-items > header { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 12px; }
-.hero-loadout-items > header span { color: var(--muted); font-size: .75rem; }
 .hero-loadout-all { display: inline-flex; align-items: center; gap: 3px; font-size: .8125rem; }
 .hero-loadout-lock {
   display: inline-flex;

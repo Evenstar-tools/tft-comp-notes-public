@@ -16,7 +16,7 @@ import {
   matchesUnitFilter,
   type BrowserFilters,
 } from "./UnitBrowser";
-import { HeroBattleSummary, HeroCommonItems, HeroResultsTable, type HeroSort, type HeroStats } from "./HeroPerformance";
+import { HeroBattleSummary, HeroCommonItems, HeroResultsTable, HeroStatSources, type HeroSort, type HeroStats } from "./HeroPerformance";
 import { HeroLoadout } from "./HeroLoadout";
 import { HeroProfile } from "./HeroProfile";
 import { StatPeriodSelect, useStatArchive, useStatPeriod } from "./StatPeriod";
@@ -70,7 +70,9 @@ export function HeroLibrary({ guides, commonItems, gearSource: liveGearSource }:
   const gearSource = period ? archivedGear : liveGearSource;
   const availableItems = period ? previousItems : commonItems;
   const selector = <StatPeriodSelect period={period} onChange={selectPeriod} />;
-  const archiveNote = period && <p className="stat-period-note">{period.description}</p>;
+  const dataControls = <div className="hero-profile-stat-period">
+    {selector}<HeroStatSources stats={stats} gearSource={gearSource} />
+  </div>;
   const library = useRef<HTMLDivElement>(null);
   const [sort, setSort] = usePageReturnView<HeroSort>("heroLibraryVisit", { field: "mean", order: "ascending" }, scrollPanels);
   const traitId = params.get("trait") ?? "";
@@ -134,7 +136,7 @@ export function HeroLibrary({ guides, commonItems, gearSource: liveGearSource }:
   if (unit && focused) return <HeroProfile key={unit.id} unit={unit}
     guides={guides === null ? null : related} returnHref={returnHref} editorHref={editorHref}
     statsContent={<>
-      <div className="hero-profile-stat-period">{selector}{archiveNote}</div>
+      {dataControls}
       <div className="hero-profile-performance">
         {stats ? <HeroBattleSummary unit={unit} stats={stats} /> : heroArchiveNotice}
       </div>
@@ -153,11 +155,10 @@ export function HeroLibrary({ guides, commonItems, gearSource: liveGearSource }:
   const dossier = unit && <>
     <UnitDetails unit={unit} jumpToTraits augmented={enhanced} onAugmentedChange={value => update({ augment: value ? augment?.id ?? "" : "" })}
       action={!enhanced && <>
-      {selector}
-      {archiveNote}
+      {dataControls}
       {stats ? <HeroBattleSummary unit={unit} stats={stats} /> : heroArchiveNotice}
-      {stats && gearSource && <HeroCommonItems unit={unit} items={availableItems?.[unit.id] ?? []}
-        gearSource={gearSource} stats={stats} period={period?.id} />}
+      {gearSource && <HeroCommonItems unit={unit} items={availableItems?.[unit.id] ?? []}
+        gearSource={gearSource} period={period?.id} />}
       {!gearSource && gearArchiveNotice}
       {(related.length > 0 || guides === null) && <section className="related-guides hero-guide-groups" aria-label="相关阵容">
         <h3>相关阵容</h3>
@@ -231,7 +232,6 @@ export function HeroLibrary({ guides, commonItems, gearSource: liveGearSource }:
             : <span>{lockedCount} 种需解锁</span>}
         </div>}
       </div>
-      {statistics && archiveNote}
       <div ref={library} className={`library-columns is-index${matrix ? " is-matrix" : ""}${statistics ? " is-statistics" : ""}`}>
         <UnitBrowser
           selectedId={unit?.id ?? null}

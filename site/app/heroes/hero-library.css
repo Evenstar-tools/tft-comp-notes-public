@@ -174,7 +174,6 @@
 }
 .hero-empty-results p { margin: 0 6px 0 0; }
 .hero-empty-results button { min-height: 38px; }
-.hero-results-source { display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: 2px 12px; }
 .hero-data-source { display: inline-flex; align-items: center; gap: 2px; color: var(--accent); }
 .hero-data-source:hover { text-decoration: underline; }
 .hero-results-scroll { min-height: 0; }

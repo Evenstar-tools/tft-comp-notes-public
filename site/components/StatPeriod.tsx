@@ -45,7 +45,6 @@ export function StatPeriodSelect({ period, onChange }: {
   onChange: (id: string) => void;
 }) {
   return <label className="stat-period">
-    <span>数据批次</span>
     <select aria-label="数据批次" value={period?.id ?? ""} onChange={event => onChange(event.target.value)}>
       <option value="">当前 · {current.label.split(" · ")[0]}</option>
       {statPeriods.map(entry => <option key={entry.id} value={entry.id}>{entry.label}</option>)}

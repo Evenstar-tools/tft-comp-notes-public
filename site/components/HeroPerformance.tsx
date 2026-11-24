@@ -33,10 +33,17 @@ const dataColumns = [
   { field: "games", label: "场数", order: "descending" },
 ] as const;
 
-function HeroStatsSource({ stats }: { stats: HeroStats }) {
-  return <a className="hero-data-source" href={stats.sourceUrl} target="_blank" rel="noreferrer">
-    {stats.source}<ArrowUpRight size={12} aria-hidden />
-  </a>;
+export function HeroStatSources({ stats, gearSource }: { stats?: HeroStats; gearSource?: HeroItemSource }) {
+  if (!stats && !gearSource) return null;
+  return <details className="hero-stat-sources">
+    <summary>数据来源</summary>
+    {stats ? <a className="hero-data-source" href={stats.sourceUrl} target="_blank" rel="noreferrer">
+      {stats.source}<ArrowUpRight size={12} aria-hidden />
+    </a> : gearSource?.source}
+    {stats && <p>实战 · {windowLabel(stats)}</p>}
+    {gearSource && <p>单件装备 · {gearSource.source !== stats?.source && stats && gearSource.source + " · "}
+      {gearSource.version} · {gearSource.window} · {gearSource.date}</p>}
+  </details>;
 }
 
 export type HeroSort = { field: typeof dataColumns[number]["field"]; order: "ascending" | "descending" };
@@ -61,11 +68,8 @@ export function HeroResultsTable({ stats, units, selectedId, onSelect, sort, set
 
   return <div className="hero-results">
     <div className="hero-results-note">
-      <span>{windowLabel(stats)}</span>
-      <span className="hero-results-source">
-        <span>按形态 · 满 {stats.minGames} 场排名</span>
-        <HeroStatsSource stats={stats} />
-      </span>
+      <span>满 {stats.minGames} 场排名</span>
+      <HeroStatSources stats={stats} />
     </div>
     {rows.length ? <div className="hero-results-scroll" ref={scroll}>
       <table className="hero-results-table" aria-label="英雄战绩">
@@ -127,8 +131,7 @@ export function HeroBattleSummary({ unit, stats }: { unit: Unit; stats: HeroStat
   const history = stats.previous;
   const previous = history?.rows[unit.id];
   return <section className="detail-section hero-performance" aria-label="实战数据">
-      <div className="hero-detail-heading"><h3>实战数据</h3><HeroStatsSource stats={stats} /></div>
-      <p className="hero-performance-window">{stats.version} · 近 {stats.days} 天 · {snapshotDate(stats.date)} 更新</p>
+      <div className="hero-detail-heading"><h3>实战数据</h3></div>
       {result && rank ? <dl className="hero-metric-strip">
         <div><dt>均名</dt><dd>{result.mean.toFixed(2)}<small>同费 {rank.place}/{rank.total}</small></dd></div>
         <div><dt>前四率</dt><dd>{percent(result.top4Rate)}</dd></div>
@@ -143,9 +146,9 @@ export function HeroBattleSummary({ unit, stats }: { unit: Unit; stats: HeroStat
   </section>;
 }
 
-export function HeroCommonItems({ unit, items, gearSource, stats, period }: {
+export function HeroCommonItems({ unit, items, gearSource, period }: {
   unit: Unit; items: HeroItemSample[]; gearSource: HeroItemSource;
-  stats: HeroStats; period?: string;
+  period?: string;
 }) {
   return <section className="detail-section hero-common-items" aria-label="常见成装">
       <div className="hero-detail-heading"><h3>常见成装</h3></div>
@@ -163,10 +166,5 @@ export function HeroCommonItems({ unit, items, gearSource, stats, period }: {
           </a>
         </li>;
       })}</ul> : <p className="hero-data-note">暂无达到 {gearSource.minGames} 场的成装样本。</p>}
-      <details className="hero-data-note">
-        <summary>数据来源</summary>
-        <p>战绩 · {windowLabel(stats)} · <HeroStatsSource stats={stats} /></p>
-        <p>成装 · {gearSource.source} · {gearSource.version} · {gearSource.window} · {gearSource.date}</p>
-      </details>
   </section>;
 }

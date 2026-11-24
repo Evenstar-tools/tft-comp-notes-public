@@ -1,12 +1,13 @@
 "use client";
 import { useEffect, useId, useState, type ReactNode } from "react";
-import { LockKeyhole } from "lucide-react";
+import { Info, LockKeyhole } from "lucide-react";
 import { itemMap, season, traitMap, unitMap } from "@/data";
 import { conditionalGearCohorts, conditionalGearItemNames, conditionalGearRows, conditionalGearSource } from "@/domain/conditional-gear";
 import { itemName } from "@/domain/gear-library";
 import { getStatPeriod } from "@/domain/stat-periods";
 import type { Item } from "@/domain/types";
 import { ItemIcon } from "./ItemIcon";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import "./conditional-gear.css";
 
 const number = new Intl.NumberFormat("zh-CN");
@@ -130,20 +131,26 @@ export function ConditionalGear({ lockedItems, wearer = "", wearerIds = defaultW
     {canUseGuide && <div className="conditional-gear-modes" role="group" aria-label="样本范围">
       <button type="button" aria-pressed={mode === "global"} onClick={() => changeMode("global")}>不限阵容</button>
       <button type="button" aria-pressed={mode === "guide"} onClick={() => changeMode("guide")}>攻略样本</button>
-    </div>}</div>}
-    {global && <div className="conditional-gear-scope">
-      <strong>{global.patch}</strong>
-      {period ? <span>旧构建 · 近 {global.windowDays} 天查询 · {queryDate.format(new Date(global.asOf))} 取数</span> :
-        <span>取数 {queryDate.format(new Date(global.asOf))} · 近 {global.windowDays} 天{!fixedWearer && ` · 无重复棋子 · 来源最多 ${global.limit} 组`}</span>}
-      <a href={global.sourceUrl} target="_blank" rel="noreferrer">MetaTFT 原始数据</a>
     </div>}
-    {mode === "guide" && scope && <>
-      <div className="conditional-gear-scope">
-        {forStars.length === 1 && <strong>{scopeLabel(scope)}</strong>}
-        <span>{conditionalGearSource.patch} · 截至 {conditionalGearSource.date} 的 {conditionalGearSource.windowDays} 天样本</span>
-        <a href={scope.url} target="_blank" rel="noreferrer">{conditionalGearSource.source} 样本</a>
-      </div>
-    </>}
+    {mode === "guide" && scope && forStars.length === 1 &&
+      <span className="conditional-gear-cohort">{scopeLabel(scope)}</span>}
+    {(global || (mode === "guide" && scope)) && <Popover>
+      <PopoverTrigger asChild>
+        <button className="conditional-gear-source-button" type="button" aria-label="三件套数据来源" title="三件套数据来源">
+          <Info size={15} aria-hidden />
+        </button>
+      </PopoverTrigger>
+      <PopoverContent className="conditional-gear-source" align="end">
+        {global ? <>
+          <p>{global.patch} · 近 {global.windowDays} 天 · {queryDate.format(new Date(global.asOf))} 查询</p>
+          {!fixedWearer && <p>无重复棋子 · 最多 {global.limit} 组</p>}
+          <a href={global.sourceUrl} target="_blank" rel="noreferrer">原始查询</a>
+        </> : scope && <>
+          <p>{conditionalGearSource.patch} · 近 {conditionalGearSource.windowDays} 天 · {conditionalGearSource.date}</p>
+          <a href={scope.url} target="_blank" rel="noreferrer">原始样本</a>
+        </>}
+      </PopoverContent>
+    </Popover>}</div>}
     {rows.length > 0 ? <>
       <table>
         <thead>

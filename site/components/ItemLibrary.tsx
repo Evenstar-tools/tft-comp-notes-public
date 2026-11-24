@@ -260,9 +260,6 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
     <option value="mean">均名最低</option><option value="games">场数最多</option>
     {(!reverse || hasWins) && <option value="wins">登顶率最高</option>}
   </select>;
-  const release = reverse && group === "completed" ? equipment?.standard : reverse || ranking ? specialStats
-    : period && (item && specialStats?.items[item.id] ? specialStats : equipment?.standard);
-
   return <>
     <div className={"page-heading gear-heading" + (ranking ? " gear-heading-ranked" : "")}>
       <h1>{group === "special" ? "神器与辅助装" : group === "radiant" ? "光明装" : "装备图鉴"}</h1>
@@ -271,8 +268,6 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
       <div className="gear-catalog-tabs"><GearCategoryNav {...categoryProps} /></div>
       <div className="gear-release-controls">
         <StatPeriodSelect period={period} onChange={selectPeriod} />
-        {release ? <span className="gear-release">{release.version} · {release.window} · {dateLabel(release.date)}</span>
-          : !period && <span className="gear-release">S19 PBE · {dateLabel(itemReference.date)}</span>}
       </div>
     </div>
     {reverse && reverseWearer ? <section className="gear-rank" id="gear-rankings" aria-label={reverseWearer.name + "的" + gearGroups[group]}>
@@ -433,6 +428,7 @@ function ItemReading({ item, wearer, filters, uses, onRecipe, onWearer, wearerHr
   const excluded = reverse ? "" : filters.excluded;
   const reference = itemReference.items[item.id];
   const referenceBuild = reference?.build ?? itemReference.build;
+  const effectSourceUrl = reference?.sourceUrl ?? itemReference.sources[0]?.url;
   const snapshot = equipment?.special.items[item.id] ? equipment.special : equipment?.standard;
   const sampled = snapshot?.items[item.id];
   const minGames = snapshot?.minGames ?? Infinity;
@@ -638,7 +634,9 @@ function ItemReading({ item, wearer, filters, uses, onRecipe, onWearer, wearerHr
         满 {snapshot.minGames} 场显示均名。{withRate && "携带率按该棋子的结算场数计算。"}
       </p>}
       {reference && <p>
-        <a href={reference.sourceUrl ?? itemReference.sources[0]?.url} target="_blank" rel="noreferrer">装备效果</a>{referenceBuild && " · " + referenceBuild}
+        {effectSourceUrl && effectSourceUrl !== sampled?.url
+          ? <a href={effectSourceUrl} target="_blank" rel="noreferrer">装备效果</a> : "装备效果"}
+        {referenceBuild && " · " + referenceBuild}
       </p>}
     </details>}
   </>;
