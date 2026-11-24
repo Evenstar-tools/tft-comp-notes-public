@@ -22,6 +22,7 @@ export interface PatchReference {
   source: { name: string; url: string; rolling?: boolean };
   highlights: string[];
   observation?: string;
+  observationStats?: { name: string; games: number; mean: number }[];
   groups: Partial<Record<PatchCategory, PatchObject[]>>;
 }
 

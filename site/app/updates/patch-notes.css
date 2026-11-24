@@ -25,6 +25,12 @@
 .patch-details>section+section {margin-top:20px}
 .patch-reading h3 {font-size:1.125rem;line-height:1.45;font-weight:650}
 .patch-observation p {margin-top:7px;line-height:1.65}
+.patch-environment-stats {width:100%;margin-top:6px;border-collapse:collapse;font-size:.875rem;font-variant-numeric:tabular-nums}
+.patch-environment-stats caption {color:var(--muted);text-align:left;padding-bottom:6px}
+.patch-environment-stats th,.patch-environment-stats td {padding:5px 0 5px 8px;border-bottom:1px solid var(--line);text-align:right}
+.patch-environment-stats tr > :first-child {padding-inline-start:0;text-align:left}
+.patch-environment-stats thead th {color:var(--muted);font-weight:500;white-space:nowrap}
+.patch-environment-stats tbody th {font-weight:500}
 .patch-board-observation,.patch-explorer,.patch-observation,#patch-announcement {scroll-margin-top:calc(var(--masthead-height) + 14px)}
 .patch-board-observation > p,.patch-board-roster,.patch-sample-links {color:var(--muted);font-size:.825rem}
 .patch-board-observation > p {margin-top:3px}
@@ -32,8 +38,8 @@
 .patch-board-observation li {padding:10px 0;border-bottom:1px solid var(--line)}
 .patch-board-heading {display:flex;align-items:baseline;gap:4px 9px;flex-wrap:wrap}
 .patch-board-heading h4 {font-size:1rem;line-height:1.4}
-.patch-board-heading h4 a {text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
-.patch-board-heading h4 a:hover {color:var(--accent);text-decoration-color:currentColor}
+.patch-board-heading h4 a,.patch-recommendation-title h4 a {text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
+.patch-board-heading h4 a:hover,.patch-recommendation-title h4 a:hover {color:var(--accent);text-decoration-color:currentColor}
 .patch-board-heading .guide-placement {max-width:none;gap:0 5px}
 .patch-board-heading .guide-placement strong {font-size:.95rem}
 .patch-board-heading .guide-placement small {flex-basis:auto}
@@ -76,19 +82,20 @@
 .patch-section-nav a:hover {text-decoration-color:currentColor}
 .patch-recommendations ul {display:grid;gap:8px;border-top:0}
 .patch-recommendations .patch-recommendation {
-  display:flex;align-items:flex-start;gap:10px;min-width:0;padding:11px 0;
+  min-width:0;padding:10px 0;
   border-bottom:1px solid var(--line)
 }
 .patch-recommendation-portrait {flex:none;object-fit:cover;border-radius:4px;border-bottom:3px solid var(--unit-cost,var(--line))}
-.patch-recommendation-body {flex:1;min-width:0}
-.patch-recommendation .patch-board-heading {
-  display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:3px 8px
-}
-.patch-recommendation-title {display:flex;align-items:baseline;flex-wrap:wrap;gap:2px 7px;min-width:0}
-.patch-recommendation-title h4 {text-wrap:pretty}
+.patch-recommendation-heading {display:flex;align-items:center;gap:8px}
+.patch-recommendation-title {flex:1;display:flex;align-items:baseline;flex-wrap:wrap;gap:2px 7px;min-width:0}
+.patch-recommendation-title h4 {font-size:1rem;line-height:1.4;overflow-wrap:anywhere;text-wrap:pretty}
 .patch-board-variant {flex-basis:100%;color:var(--muted);font-size:.825rem;line-height:1.45}
-.patch-recommendation .patch-sample-links {justify-content:end;margin:2px 0 0}
-.patch-recommendation-body p {max-width:68ch;font-size:.9375rem;color:var(--muted)}
+.patch-recommendation .patch-sample-links {display:grid;flex:none;gap:0;justify-items:end;margin:0}
+.patch-recommendation .patch-sample-links a {
+  display:inline-flex;align-items:center;gap:2px;min-height:28px;text-decoration-color:var(--line)
+}
+.patch-recommendation .patch-sample-links a:hover {text-decoration-color:currentColor}
+.patch-recommendation > p {max-width:68ch;margin-top:6px;font-size:.9375rem;line-height:1.55;color:var(--muted)}
 .patch-recommendation:focus-within {border-color:var(--accent)}
 .lobby-observation {margin:9px 0 14px;scroll-margin-top:84px}
 .lobby-observation>summary,.lobby-sources>summary {cursor:pointer;color:var(--accent)}
@@ -120,8 +127,10 @@
   .patch-copy-change:has(.lucide-check) {opacity:1}
 }
 @container patch-content (min-width:990px){
-  .patch-reading.has-sidebar {display:grid;grid-template-columns:minmax(0,2.25fr) minmax(0,1fr);align-items:start;gap:24px}
+  .patch-reading.has-sidebar {display:grid;grid-template-columns:minmax(0,2.1fr) minmax(0,1fr);align-items:start;gap:24px}
   .patch-reading.has-sidebar .patch-details {margin-top:0;border-inline-start:1px solid var(--line);padding-inline-start:20px}
+  .patch-reading.has-sidebar .patch-observation {padding:11px 12px;background:var(--raised);border-radius:6px}
+  .patch-reading.has-sidebar .patch-observation p {line-height:1.6}
   .patch-reading.has-sidebar .patch-recommendations ul {grid-template-columns:minmax(0,1fr)}
 }
 @container patch-changes (min-width:655px){
