@@ -9,7 +9,7 @@ import { GuidePoster } from "./GuidePoster";
 import { guideBoardKind, teamPlacement } from "./GuidePlacement";
 import { GuideMatchStats, type MatchStatsView } from "./GuideMatchStats";
 import { ItemIcon } from "./ItemIcon";
-import { MatrixDialog } from "./MatrixDetails";
+import { GuideBoardZoom } from "./GuideBoardZoom";
 import { UnitDetails } from "./UnitBrowser";
 import { useOwnerSession } from "./OwnerSession";
 import { sectionTeams } from "@/domain/document-flow";
@@ -463,17 +463,13 @@ export function GuideTeams({ section, data, initialTeam, initialStage, initialFl
         if (next && v.sectionId === section.id) pickTeam(next);
         else window.location.assign(posterShareLink(guideLink(v.sectionId, v.teamId, returnTo), format));
       }} close={() => setShowPoster(false)} />}
-    {zoomed && <MatrixDialog title={boardTitle} className="guide-board-dialog" closeLabel="关闭棋盘" onClose={() => setZoomed(false)}>
-      <p className="guide-swipe-hint">横滑查看两侧站位，点棋子看配装</p>
-      <div className="read-board read-board-large" tabIndex={0} aria-label="可横向滚动的放大棋盘" role="region">
-        <Board data={data} pieces={shownBoard.pieces} instrumentPositions={shownBoard.instrumentPositions} targeting={null} selectedId={selectedPiece}
-          onCell={(position, picked) => {
-            if (!picked) return;
-            setZoomed(false);
-            selectPiece(picked.instanceId, board.current?.querySelectorAll<HTMLButtonElement>(".board-hex")[position]);
-          }} />
-      </div>
-    </MatrixDialog>}
+    {zoomed && <GuideBoardZoom title={section.title} stage={boardTitle} team={shownBoard} data={data} roles={shownRoles}
+      initialPiece={selectedPiece} guideHref={guideHref} changedPositions={showFlex && flexPreview ? [flexPreview.position] : mainBoardActive ? changed : undefined}
+      onClose={() => setZoomed(false)} onInspect={picked => {
+        setZoomed(false);
+        selectPiece(picked.instanceId, board.current?.querySelectorAll<HTMLButtonElement>(".board-hex")[picked.position]);
+        if (picked.instanceId === selectedPiece) requestAnimationFrame(() => pieceTitle.current?.focus());
+      }} />}
   </section>
   </>;
 }
