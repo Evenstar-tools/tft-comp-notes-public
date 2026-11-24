@@ -63,6 +63,7 @@
 .patch-value:target {background:var(--panel);outline:1px solid var(--accent);outline-offset:3px;border-radius:3px}
 .patch-value span {color:var(--muted)}
 .patch-value-end {display:flex;align-items:center;gap:5px;margin-inline-start:auto;font-variant-numeric:tabular-nums}
+.patch-change-result strong {color:var(--text)}
 .patch-copy-change {display:grid;place-items:center;width:32px;height:32px;border:0;background:transparent;border-radius:5px;color:var(--muted);cursor:pointer}
 .patch-copy-change:hover,.patch-copy-change:focus-visible {color:var(--accent);background:var(--panel)}
 .patch-copy-fallback {flex-basis:100%;width:100%;min-width:0}
@@ -113,6 +114,13 @@
   .patch-reading.has-sidebar {display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);align-items:start;gap:24px}
   .patch-reading.has-sidebar .patch-details {min-width:0;border-inline-start:1px solid var(--line);padding-inline-start:20px}
   .patch-reading.has-sidebar .patch-recommendations ul {grid-template-columns:minmax(0,1fr)}
+  .patch-object {grid-template-columns:minmax(108px,18%) minmax(0,1fr)}
+  .patch-value {display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr);gap:0 10px}
+  .patch-value > span {text-wrap:balance}
+  .patch-value-end {width:100%;min-width:0;justify-content:space-between;margin-inline-start:0}
+  .patch-value-end p {display:flex;flex-wrap:wrap;gap:0 4px;min-width:0;overflow-wrap:anywhere}
+  .patch-copy-change {flex:none}
+  .patch-copy-fallback {grid-column:1/-1}
 }
 @media(max-width:1049px){
   .patch-explorer+.patch-details {margin-top:22px}

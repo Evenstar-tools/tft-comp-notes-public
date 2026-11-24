@@ -33,14 +33,19 @@ const dataColumns = [
 
 export function HeroStatSources({ stats, gearSource }: { stats?: HeroStats; gearSource?: HeroItemSource }) {
   if (!stats && !gearSource) return null;
+  const battleWindow = stats && windowLabel(stats);
+  const itemWindow = gearSource && `${gearSource.version} · ${gearSource.window.replace(/^最近(?=\s)/, "近")} · ${gearSource.date}`;
+  const sharedWindow = stats && gearSource && stats.source === gearSource.source && battleWindow === itemWindow;
+  const provider = stats && <a className="hero-data-source" href={stats.sourceUrl} target="_blank" rel="noreferrer">
+    {stats.source}<ArrowUpRight size={12} aria-hidden />
+  </a>;
   return <details className="hero-stat-sources">
     <summary>数据来源</summary>
-    {stats ? <a className="hero-data-source" href={stats.sourceUrl} target="_blank" rel="noreferrer">
-      {stats.source}<ArrowUpRight size={12} aria-hidden />
-    </a> : gearSource?.source}
-    {stats && <p>实战 · {windowLabel(stats)}</p>}
-    {gearSource && <p>单件装备 · {gearSource.source !== stats?.source && stats && gearSource.source + " · "}
-      {gearSource.version} · {gearSource.window} · {gearSource.date}</p>}
+    {sharedWindow ? <p>{provider} · {battleWindow}</p> : <>
+      {provider ?? gearSource?.source}
+      {battleWindow && <p>实战 · {battleWindow}</p>}
+      {gearSource && <p>单件装备 · {stats && gearSource.source !== stats.source && gearSource.source + " · "}{itemWindow}</p>}
+    </>}
   </details>;
 }
 

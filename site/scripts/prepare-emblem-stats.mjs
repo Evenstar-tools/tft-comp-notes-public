@@ -57,9 +57,13 @@ function statistics(places) {
   } : { games, mean: null, winRate: null };
 }
 
-const [season, references, lookup] = await Promise.all([
-  json("../data/season.json"), json("../data/trait-reference.json"), recordsFor(lookupUrl),
+const [season, references, lookup, current] = await Promise.all([
+  json("../data/season.json"), json("../data/trait-reference.json"), recordsFor(lookupUrl), json("../data/current-patch.json"),
 ]);
+const cohort = current.metaTftPatch;
+if (current.seasonId !== "s19-pbe" || !cohort?.patch || typeof cohort.bPatch !== "string" ||
+    lookup._metadata.set !== "TFTSet19" || lookup._metadata.patch !== "pbe")
+  throw new Error("Expected an S19 PBE cohort");
 const catalog = Object.entries(references).filter(([,entry]) => entry.emblem);
 const emblemIds = new Set(lookup.items.filter(item => item.associatedTraits?.length && item.name.endsWith(" Emblem")).map(item => item.apiName));
 if (catalog.length !== emblemIds.size || catalog.some(([id]) => !emblemIds.has(sourceIds[id])) ||
@@ -77,21 +81,23 @@ if (unitIds.size !== season.units.length) throw new Error("Source unit has dupli
 async function collect(traitId) {
   const sourceId = sourceIds[traitId];
   const params = new URLSearchParams({
-    queue: "PBE", patch: "current", days: String(days), permit_filter_adjustment: "true", itemName: sourceId,
+    queue: "PBE", patch: cohort.patch, b_patch: cohort.bPatch, days: String(days), permit_filter_adjustment: "false", itemName: sourceId,
   });
   const result = await recordsFor(api + "?" + params);
   if (result.queue_id !== "pbe" || result.tft_set !== "TFTSet19" || !Array.isArray(result.units) ||
       !Array.isArray(result.units_overall) || !Array.isArray(result.dates))
     throw new Error("Unexpected PBE cohort for " + traitId);
 
-  const { version, stats } = itemCohort(result, sourceId, "19.1", days);
+  const { version, stats } = itemCohort(result, sourceId, cohort.patch, days);
+  if (version !== cohort.patch + cohort.bPatch) throw new Error("Unexpected PBE hotfix for " + traitId);
   const overall = new Map(result.units_overall.map(row => [row.unit, statistics(row.places)]));
   const holders = [];
   for (const row of result.units) {
     const stats = statistics(row.places);
-    if (stats.games < minGames) continue;
+    if (!stats.games) continue;
     const unitId = unitIds.get(row.unit);
-    if (!unitId) throw new Error("Unmapped wearer " + row.unit + " · " + sourceId);
+    if (!unitId && stats.games >= minGames) throw new Error("Unmapped wearer " + row.unit + " · " + sourceId);
+    if (!unitId) continue;
     const baseline = overall.get(row.unit);
     const delta = baseline && baseline.games >= stats.games && baseline.mean !== null
       ? rounded(stats.mean - baseline.mean) : null;

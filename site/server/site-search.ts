@@ -9,6 +9,7 @@ import coreStats from "@/data/patch-recommendation-stats.json";
 import type { Publication, Section } from "@/domain/document";
 import { readableSection, sectionTeams } from "@/domain/document-flow";
 import { itemName, itemTerms } from "@/domain/gear-library";
+import { gearSampleMinimum } from "@/domain/gear-wearer";
 import { canRankRecommendations, currentFamilyBatch, guideFamilyRows, recommendationTier } from "@/domain/guide-family-stats";
 import { guideBoardName, guideLink, isEditorialSection, primaryFirst } from "@/domain/guide-reading";
 import { guideSearchKey, guideTraitNames, openingSearch } from "@/domain/guide-search";
@@ -170,6 +171,8 @@ function gearDetails(item: Item, context: Context): SearchGearDetail {
   const entry = item.traitId ? emblemRows[item.traitId] : undefined;
   const samples = specialItemWearers.items[item.id] ? specialItemWearers : itemWearers;
   const sampled = samples.items[item.id];
+  const minGames = entry ? emblemSnapshot.minGames : samples.minGames;
+  const pbe = entry ? emblemSnapshot.mode === "PBE" : /\bPBE\b/i.test(samples.version);
   const eligible = (row: { unitId: string }) => {
     const unit = unitMap.get(row.unitId);
     return unit && row.unitId !== excluded && (!context.extra.lowCosts || unit.cost <= 3);
@@ -183,7 +186,7 @@ function gearDetails(item: Item, context: Context): SearchGearDetail {
   } : undefined;
   return {
     type: item.traitId ? "emblem" : item.category === "artifact" ? "artifact" : "item",
-    holders: rankedWearers((entry?.holders ?? sampled?.rows ?? []).filter(eligible), entry ? emblemSnapshot.minGames : samples.minGames)
+    holders: rankedWearers((entry?.holders ?? sampled?.rows ?? []).filter(eligible), minGames, gearSampleMinimum(item.category, pbe, minGames))
       .flatMap(row => {
         const unit = unitMap.get(row.unitId);
         return unit ? [{ id:unit.id,name:unit.name,image:unit.image,games:row.games,mean:row.mean,

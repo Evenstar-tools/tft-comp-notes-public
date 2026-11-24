@@ -1,6 +1,6 @@
 import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
 import type { ReactNode } from "react";
-import { formatRecommendationMean } from "@/domain/guide-family-stats";
+import { formatRecommendationMean, type RecommendationTier } from "@/domain/guide-family-stats";
 import "../app/guide-stats-table.css";
 
 export type GuideStatsMetric = "pickRate" | "mean" | "topFourRate" | "winRate";
@@ -13,7 +13,8 @@ export const guideStatsMetricLabels = {
   winRate: "登顶率",
 } satisfies Record<GuideStatsMetric, string>;
 
-const metrics = ["pickRate", "mean", "topFourRate", "winRate"] as const;
+const metrics = ["mean", "pickRate", "topFourRate", "winRate"] as const;
+const tierLabels = { recommended: "推荐", secondary: "次选", review: "待复核" } satisfies Record<RecommendationTier, string>;
 const formats = {
   pickRate: new Intl.NumberFormat("zh-CN", { style: "percent", maximumFractionDigits: 2, minimumFractionDigits: 2 }),
   mean: new Intl.NumberFormat("zh-CN", { maximumFractionDigits: 2, minimumFractionDigits: 2 }),
@@ -25,7 +26,8 @@ const gameFormat = new Intl.NumberFormat("zh-CN");
 export type GuideStatsTableRow = {
   id: string;
   name: string;
-  note: string;
+  note?: string;
+  tier: RecommendationTier;
   style?: string;
   link: ReactNode;
   units: ReactNode;
@@ -53,7 +55,7 @@ export function GuideStatsTable({ rows, metric, direction, onSort }: {
     <thead role="rowgroup">
       <tr role="row">
         <th scope="col" role="columnheader">阵容</th>
-        <th scope="col" role="columnheader">主力棋子</th>
+        <th scope="col" role="columnheader">棋盘成员</th>
         {metrics.map(key => {
           const active = key === metric;
           const Icon = active ? (direction === "asc" ? ArrowUp : ArrowDown) : ArrowUpDown;
@@ -79,10 +81,10 @@ export function GuideStatsTable({ rows, metric, direction, onSort }: {
           const value = row[key];
           return <td key={key} className="guide-stats-metric" role="cell" data-active={key === metric ? "true" : undefined}>
             <span className="guide-stats-mobile-label">{guideStatsMetricLabels[key]}</span>
-            <strong className={key === "mean" && row.mean < 4 ? "guide-stats-low-mean" : undefined}>
+            <strong data-tier={key === "mean" ? row.tier : undefined}>
               {value === null || !Number.isFinite(value) ? "—" : key === "mean" ? formatRecommendationMean(value) : formats[key].format(value)}
             </strong>
-            {key === "pickRate" && <small>{gameFormat.format(row.games)} 场</small>}
+            {key === "mean" && <small className="guide-stats-sample"><span>{tierLabels[row.tier]}</span><span>{gameFormat.format(row.games)} 场</span></small>}
           </td>;
         })}
       </tr>)}

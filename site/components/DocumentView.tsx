@@ -6,7 +6,7 @@ import { boardTitle } from "@/domain/guide-families";
 import { allBlocks, boardLoadoutHeading, guideBoardName, guideBody, guidePlaystyle, guideTitleWithoutPlaystyle, isBoardLoadout, primaryFirst, type GuideRole } from "@/domain/guide-reading";
 import { compactGuideParagraph, guideCopyKey, hasGuideLinks, rememberGuideCopy } from "@/domain/guide-copy";
 import { rerollRoute } from "@/domain/reroll-stages";
-import { heroAugmentForGuide, heroAugmentLabel, heroAugmentLibrary } from "@/domain/hero-augments";
+import { heroAugmentCategory, heroAugmentForGuide, heroAugmentLabel, heroAugmentLibrary } from "@/domain/hero-augments";
 import { displayTraitNames } from "@/domain/trait-names.mjs";
 import type { BoardStage, Season, Team } from "@/domain/types";
 import type { ContentBlock, RichElement, Section } from "@/domain/document";
@@ -198,7 +198,7 @@ export function DocumentView({ section, gameData, publicationId, initialTeam, in
     if (block.type === "text" && /^(?:打法|运营类型)[：:]\s*(?:低费慢搜|三费慢搜|[五六七567]级慢搜|速[八九89]运营)[。.]?\s*$/.test(block.text?.trim() ?? "")) folded.add(block.id);
   }
   const Title = publicationId ? "h1" : "h2";
-  const category = showCategory && section.category.trim() !== section.title.trim() ? section.category.trim() : "";
+  const category = section.category.trim();
   function selectedText(team: Team, passages: GuidePassage[], roles: GuideRole[]) {
     const { current, remaining } = guideBody(section, team);
     const patchNote = patchAdvice?.find(entry => entry.teamId === team.id)?.note;
@@ -273,7 +273,9 @@ export function DocumentView({ section, gameData, publicationId, initialTeam, in
             : returnTo ? "返回阵容列表" : augment ? "英雄强化" : "全部阵容";
   const playstyle = guidePlaystyle(section);
   function header(title: string, guideName?: string, performance?: ReactNode) {
-    const context = guideName ? guideTitleWithoutPlaystyle(guideName, playstyle) : !augment || !publicationId ? category : "";
+    const showFolder = !publicationId || (!augment && category === heroAugmentCategory);
+    const context = guideName ? guideTitleWithoutPlaystyle(guideName, playstyle)
+      : showCategory && showFolder && category !== section.title.trim() ? category : "";
     return <>
       {(publicationId || context) && <div className="guide-header-meta">
         {publicationId && <a href={returnTo ?? (augment ? heroAugmentLibrary : "/")}>{returnLabel}</a>}

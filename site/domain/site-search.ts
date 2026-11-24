@@ -58,8 +58,8 @@ export function indexedEmblemTerms(itemNames: string[], traitNames: string[]) {
 }
 
 type Sample = { unitId: string; games: number; mean?: number | null };
-export function rankedWearers(rows: Sample[], minGames: number) {
-  // Prefer qualified averages. When the source is sparse, show the most common holders without publishing their averages.
+export function rankedWearers(rows: Sample[], minGames: number, displayMinimum = minGames) {
+  // Prefer qualified averages. When the source is sparse, prioritize carry counts.
   const available = rows.filter(row => row.games > 0);
   const qualified = available.filter(row => row.games >= minGames && typeof row.mean === "number");
   if (qualified.length) return qualified
@@ -67,5 +67,5 @@ export function rankedWearers(rows: Sample[], minGames: number) {
     .slice(0, 3).map(({unitId, games, mean}) => ({ unitId, games, mean: mean! }));
   return available
     .sort((a,b) => b.games - a.games)
-    .slice(0, 3).map(({unitId, games}) => ({ unitId, games, mean: undefined }));
+    .slice(0, 3).map(({unitId, games, mean}) => ({ unitId, games, mean: games >= displayMinimum ? mean ?? undefined : undefined }));
 }

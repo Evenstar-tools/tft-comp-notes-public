@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Info } from "lucide-react";
 import { itemMap, season } from "@/data";
 import buildSource from "@/data/conditional-gear-unit-ids.json";
 import { itemName } from "@/domain/gear-library";
@@ -9,6 +9,7 @@ import type { HeroItemSample, HeroItemSource } from "@/domain/hero-insights";
 import type { Item, Unit } from "@/domain/types";
 import { formatHeroItemDelta, HeroItemPlacementDelta, heroItemDeltaHint } from "./HeroItemPlacementDelta";
 import { ItemIcon } from "./ItemIcon";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import "./editor-gear-recommendations.css";
 
 const count = new Intl.NumberFormat("zh-CN");
@@ -72,9 +73,21 @@ export function EditorGearRecommendations({ unit, items, gearSource, onEquip, on
       <section aria-label="常用装备">
         <div className="editor-gear-heading">
           <h3>常用装备</h3>
-          <span title={hasPlacementDelta ? heroItemDeltaHint : `${gearSource.source} · ${gearSource.version} · ${gearSource.window} · ${gearSource.date}`}>
-            {hasPlacementDelta && "名次差 · "}{gearSource.source} · {gearSource.date.slice(5).replace("-", "/")}
-          </span>
+          <Popover>
+            <PopoverTrigger asChild>
+              <button type="button" className="editor-gear-source-button" aria-label="配装数据来源">
+                {hasPlacementDelta ? "名次差" : "数据来源"}<Info size={13} aria-hidden />
+              </button>
+            </PopoverTrigger>
+            <PopoverContent className="editor-gear-source" align="end" aria-label="配装数据来源"
+              onEscapeKeyDown={event => event.stopPropagation()}>
+              <p><strong>常用装备</strong><br />{gearSource.source} · {gearSource.version} · {gearSource.window} · {gearSource.date}</p>
+              {hasPlacementDelta && <p>{heroItemDeltaHint}</p>}
+              {sample && <p><a href={sample.sourceUrl} target="_blank" rel="noreferrer">
+                三件套原始数据<ArrowUpRight size={11} aria-hidden />
+              </a><br />{sample.patch} · 近 {sample.windowDays} 天 · {sample.asOf.slice(0, 10)}<br />{sample.minGames} 场起展示，按场数排序。</p>}
+            </PopoverContent>
+          </Popover>
         </div>
         {common.length ? (
           <div className="editor-common-gear-list">
@@ -102,7 +115,7 @@ export function EditorGearRecommendations({ unit, items, gearSource, onEquip, on
       </section>
       <section className="editor-build-recommendations" aria-label="三件套推荐">
         <div className="editor-gear-heading">
-          <h3>三件套推荐</h3>
+          <h3>三件套</h3>
           {supportsBuilds && <select aria-label="三件套样本星级" value={stars} onChange={event => setStars(Number(event.target.value))}>
             {starChoices.map(value => <option value={value} key={value}>{value} 星</option>)}
           </select>}
@@ -128,16 +141,12 @@ export function EditorGearRecommendations({ unit, items, gearSource, onEquip, on
           </>
         ) : (
           <div className="editor-gear-status" role="status">
-            {!supportsBuilds ? "暂无该英雄的三件套数据。" :
-              !current ? "正在加载三件套…" :
-                !sample ? <>三件套暂未加载。<button type="button" onClick={() => setAttempt(value => value + 1)}>重试</button></> :
-                  `暂无达到 ${sample.minGames} 场的三件套。`}
+            {!supportsBuilds ? "暂无数据" :
+              !current ? "加载中…" :
+                !sample ? <>加载失败<button type="button" onClick={() => setAttempt(value => value + 1)}>重试</button></> :
+                  `暂无满 ${sample.minGames} 场的组合`}
           </div>
         )}
-        {sample && <div className="editor-build-source">
-          <span title={`取数日期 ${sample.asOf.slice(0, 10)} · 按场数排序 · ${sample.minGames} 场起展示`}>{sample.patch} · 近 {sample.windowDays} 天</span>
-          <a href={sample.sourceUrl} target="_blank" rel="noreferrer">MetaTFT <ArrowUpRight size={11} aria-hidden /></a>
-        </div>}
       </section>
     </div>
   );
