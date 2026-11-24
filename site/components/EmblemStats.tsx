@@ -7,6 +7,7 @@ import { itemMap, unitMap } from "@/data";
 import snapshot from "@/data/emblem-stats.json";
 import { itemReference } from "@/data/item-library";
 import { compareGearWearerSamples, filterEmblems, gearFilters, gearHref, selectableWearers, type GearFilters, type GearOrder } from "@/domain/gear-library";
+import { gearSampleMinimum } from "@/domain/gear-wearer";
 import { guideLink } from "@/domain/guide-reading";
 import { emblemItemId } from "@/domain/links";
 import type { Item } from "@/domain/types";
@@ -36,11 +37,13 @@ const percent = new Intl.NumberFormat("zh-CN", { style: "percent", minimumFracti
 const time = new Intl.DateTimeFormat("zh-CN", {
   timeZone: "Asia/Shanghai", month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false,
 }).format(new Date(snapshot.updatedAt));
-const hasSample = (sample: Sample) => sample.games >= snapshot.minGames;
+const displayMinimum = gearSampleMinimum("emblem", snapshot.mode === "PBE", snapshot.minGames);
+const hasSample = (sample: Sample) => sample.games >= displayMinimum;
 
 function Mean({ sample }: { sample: Sample }) {
   const value = hasSample(sample) ? sample.mean : null;
-  const tone = value !== null && value < 4 ? "good" : value !== null && value >= 4.5 ? "weak" : undefined;
+  const qualified = value !== null && sample.games >= snapshot.minGames;
+  const tone = qualified && value < 4 ? "good" : qualified && value >= 4.5 ? "weak" : undefined;
   return <strong className={tone}>{value?.toFixed(2) ?? "—"}</strong>;
 }
 function Win({ sample }: { sample: Sample }) {
@@ -104,7 +107,7 @@ function Holders({ traitId, item, entry, highlight, guideHref, options, onOption
           <th scope="row"><Wearer id={row.unitId} /></th>
           <td><Mean sample={row} /></td><td><Win sample={row} /></td><td>{number.format(row.games)}</td><td>{deltaLabel(row.delta)}</td>
         </tr>)}</tbody>
-      </table> : <p className="emblem-empty">暂无达到 {snapshot.minGames} 场的使用者</p>}
+      </table> : <p className="emblem-empty">暂无符合条件的携带记录</p>}
       <div className="emblem-detail-bottom">
         {rows.length > count && <button type="button" aria-expanded={more} className="text-link" onClick={() => onOptions({ ...options, more: !more })}>{more ? "收起更多" : "全部 " + rows.length + " 名使用者"}</button>}
         <EmblemSourceLink entry={entry} />
@@ -177,7 +180,7 @@ export function EmblemStats({ traitId, holderId, initialFilters, guideHref, guid
     const sample = selectedUnit ? entry.holders.find(holder => holder.unitId === wearer) : entry;
     return sample ? [{ id, entry, sample }] : [];
   }).sort((a, b) => {
-    if (selectedUnit) return compareGearWearerSamples(a.sample, b.sample, order, snapshot.minGames);
+    if (selectedUnit) return compareGearWearerSamples(a.sample, b.sample, order, displayMinimum);
     if (order === "games") return b.sample.games - a.sample.games;
     if (hasSample(a.sample) !== hasSample(b.sample)) return Number(hasSample(b.sample)) - Number(hasSample(a.sample));
     return order === "wins" ? (b.sample.winRate ?? -1) - (a.sample.winRate ?? -1) : (a.sample.mean ?? 9) - (b.sample.mean ?? 9);
@@ -223,7 +226,7 @@ export function EmblemStats({ traitId, holderId, initialFilters, guideHref, guid
         if (!item) return null;
         const holders = entry.holders.filter(holder => holder.unitId !== excluded);
         const expanded = open === id;
-        const best = expanded || selectedUnit ? [] : holders.filter(holder => hasSample(holder) && unitMap.has(holder.unitId))
+        const best = expanded || selectedUnit ? [] : holders.filter(holder => holder.games >= snapshot.minGames && unitMap.has(holder.unitId))
           .sort((a, b) => a.mean - b.mean || b.games - a.games).slice(0, 3);
         return <li key={id} className="emblem-result">
           <Tooltip.Root>

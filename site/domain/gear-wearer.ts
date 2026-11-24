@@ -1,10 +1,14 @@
 import { guideSearchKey } from "./guide-search.ts";
 import { searchNameRank } from "./site-search.ts";
-import type { Unit } from "./types";
+import type { Item, Unit } from "./types";
 import { unitSearchNames } from "./unit-search.mjs";
 
 export type GearWearerSample = { games: number; mean?: number | null; winRate?: number | null };
 export type GearOrder = "mean" | "games" | "wins";
+
+export function gearSampleMinimum(category: Item["category"], pbe: boolean, minGames: number) {
+  return pbe && (category === "radiant" || category === "emblem" || category === "artifact") ? 1 : minGames;
+}
 
 export function gearWearerMatches(units: Unit[], query: string) {
   const term = guideSearchKey(query);
