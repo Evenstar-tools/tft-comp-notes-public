@@ -42,6 +42,8 @@ function Detail({ entry, guide, samples, results, returnTo }: {
   const hasBoards = battleSamples.length > 0;
   const hasResults = results.length > 0;
   const primaryCovered = battleSamples.some(sample => sample.teamId === guide?.primaryTeamId);
+  const guideEntry = panel === "picks" || !primaryCovered ? guide : undefined;
+  const bronze = isBronzeAugment(entry.apiName);
   const boardLinks = guide && Object.fromEntries(Object.entries(guide.boardNames).map(([teamId, label]) =>
     [teamId, { label, href: guideLink(guide.sectionId, teamId, returnTo) }],
   ));
@@ -51,10 +53,12 @@ function Detail({ entry, guide, samples, results, returnTo }: {
         <strong>{heroAugment.baseRole} → {heroAugment.role}</strong>
         <p>获得 1 个{augmentUnits.get(entry.apiName)?.name}，仅最强的一枚获得强化。</p>
         <p>{heroAugment.ability}</p>
-        <div className="aug-links"><a href={heroAugmentProfileLink(heroAugment)}>对照常规技能</a></div>
       </> : <p>{entry.effect}</p>}
-      {isBronzeAugment(entry.apiName) && <div className="aug-links"><a href="/combos?purpose=bronze">凑黄铜羁绊 →</a></div>}
-      {guide && (panel === "picks" || !primaryCovered) && <div className="aug-links"><a href={guideLink(guide.sectionId, guide.primaryTeamId, returnTo)}>{guide.title} →</a></div>}
+      {(heroAugment || bronze || guideEntry) && <nav className="aug-links" aria-label="相关资料">
+        {heroAugment && <a href={heroAugmentProfileLink(heroAugment)}>对照常规技能</a>}
+        {bronze && <a href="/combos?purpose=bronze">凑黄铜羁绊</a>}
+        {guideEntry && <a href={guideLink(guideEntry.sectionId, guideEntry.primaryTeamId, returnTo)}>{guideEntry.title}</a>}
+      </nav>}
     </div>
     {(heroAugment || hasBoards || hasResults) && <div className="aug-evidence">
       {heroAugment && <HeroAugmentGear augment={heroAugment} />}
@@ -150,19 +154,25 @@ function Catalog({guides,samples,currentPatch,initial}:Pick<Props,"guides"|"samp
       <div className="aug-list">{pairs.map(pair => <div className="aug-pair" key={pair[0].id}>{pair.map(e=>{
         const expanded=open===e.id, boards=samples[e.english] ?? [], sample=representative[e.english];
         const hero = heroAugmentsById.get(e.apiName);
-        const description = hero ? [augmentUnits.get(e.apiName)?.name, hero.role].filter(Boolean).join(" · ") : e.effect;
+        const results = selectionById.get(e.id) ?? [];
+        const effectOnly = !hero && !boards.length && !results.length;
+        const description = hero
+          ? [augmentUnits.get(e.apiName)?.name, !expanded && hero.role].filter(Boolean).join(" · ")
+          : expanded ? "" : e.effect;
         const cardId = augmentCardId(e.id);
+        const descriptionIds = [description && cardId + "-effect", e.rounds.length && cardId + "-rounds"].filter(Boolean).join(" ");
         return <Fragment key={e.id}><button id={cardId} type="button" className="aug-row" aria-expanded={expanded}
-          aria-label={e.name+" · "+e.rarity} aria-describedby={cardId+"-effect"+(e.rounds.length ? " "+cardId+"-rounds" : "")}
+          aria-label={e.name+" · "+e.rarity} aria-describedby={descriptionIds || undefined}
           aria-controls={expanded?"info-"+e.id:undefined} onClick={()=>choose(e.id)}>
           <Icon entry={e}/><span className="aug-identity"><strong>{e.name}</strong>
-            <small id={cardId+"-effect"}>{description}</small>
+            {description && <small id={cardId+"-effect"}>{description}</small>}
           </span>
           {sort==="board" && sample?.mean !== undefined && <span className="aug-mean">同装均名 {sample.mean.toFixed(2)}<small>{sample.games} 场</small></span>}
           <span className="aug-row-meta"><span className={"aug-tier "+rarityClass(e.rarity)}>{e.rarity}</span>
             {e.rounds.length > 0 && <small id={cardId+"-rounds"}>{e.rounds.join(" / ")}</small>}</span><ChevronDown className="aug-chevron" size={15}/></button>
-          {expanded && <div id={"info-"+e.id} className="aug-detail-panel"><Detail entry={e} guide={guides[e.apiName]} samples={boards}
-            results={selectionById.get(e.id) ?? []} returnTo={augmentUrl({...filters,id:e.id,limit:String(visibleLimit)}) + "#" + cardId} /></div>}</Fragment>;
+          {expanded && <div id={"info-"+e.id} className="aug-detail-panel" data-effect-only={effectOnly || undefined}>
+            <Detail entry={e} guide={guides[e.apiName]} samples={boards}
+              results={results} returnTo={augmentUrl({...filters,id:e.id,limit:String(visibleLimit)}) + "#" + cardId} /></div>}</Fragment>;
       })}</div>)}</div>
       {rows.length===0 && <p className="aug-empty">没有匹配的海克斯。<button type="button" onClick={reset}>重置筛选</button></p>}
       {rows.length>visibleLimit && <button className="aug-more" onClick={()=>change({limit:String(visibleLimit+pageSize)})}>显示更多（剩余 {rows.length-visibleLimit}）</button>}

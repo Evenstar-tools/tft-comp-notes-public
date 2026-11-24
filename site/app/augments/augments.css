@@ -51,12 +51,13 @@
 .aug-chevron { color: var(--muted); flex: none; }
 .aug-row[aria-expanded=true] .aug-chevron { transform: rotate(180deg); }
 .aug-detail-panel { min-width: 0; grid-column: 1 / -1; grid-row: 2; margin: 4px 0 7px; }
-.aug-detail { border-inline-start: 2px solid var(--accent); border-radius: 4px; padding: 12px 16px; background: var(--raised); overflow-wrap: anywhere; }
+.aug-detail { border: 1px solid var(--line); border-radius: 6px; padding: 12px 16px; background: var(--raised); overflow-wrap: anywhere; }
 .aug-detail-with-stats { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); gap: 20px; align-items: start; }
 .aug-evidence .hero-augment-gear { padding-top: 0; border-top: 0; }
 .aug-evidence .hero-augment-gear:not(:last-child) { padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid var(--line); }
-.aug-effect p { margin: 0; line-height: 1.6; }
-.aug-effect .aug-links { margin-top: 8px; }
+.aug-effect { display: grid; gap: 6px; align-content: start; }
+.aug-effect p { max-width: 66ch; margin: 0; line-height: 1.6; }
+.aug-effect .aug-links { gap: 4px 16px; margin-top: 2px; }
 .aug-evidence { min-width: 0; border-inline-start: 1px solid var(--line); padding-inline-start: 16px; }
 .aug-detail h3 { font-size: 15px; margin: 0 0 7px; }
 .aug-links { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -98,6 +99,9 @@
 @media (min-width:761px) {
  .aug-catalog-tools { display: grid; grid-template-columns: minmax(0,1fr) repeat(4, minmax(6.25rem, max-content)); }
  .aug-row .aug-identity small { margin-top:2px;font-size:.8125rem; }
+ .aug-pair > .aug-detail-panel[data-effect-only] { grid-column: 1; }
+ .aug-pair > .aug-row:nth-of-type(2) + .aug-detail-panel[data-effect-only] { grid-column: 2; }
+ .aug-list > .aug-pair:only-child > .aug-row:only-of-type + .aug-detail-panel[data-effect-only] { grid-column: 1 / -1; }
 }
 .aug-return,.aug-snapshot-meta a,.aug-stat-name a,.aug-pick-results a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
 .aug-stat-name { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px 9px; }
