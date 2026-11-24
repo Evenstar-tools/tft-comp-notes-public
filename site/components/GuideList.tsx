@@ -29,7 +29,7 @@ import { guideBoardKind } from "./GuidePlacement";
 import { formationCoreResult } from "./GuideFormationStats";
 import { PatchRecommendationList, type RecommendationCard } from "./PatchRecommendationList";
 import { GuideConditionIcon } from "./GuideEquipmentConditions";
-import { guideConditionsAnchor, guideEquipmentConditions } from "@/domain/guide-equipment-conditions";
+import { guideConditionTag, guideConditionsAnchor, guideEquipmentConditions } from "@/domain/guide-equipment-conditions";
 import { HomeGearSearch, isHomeGear } from "./HomeGearSearch";
 import { GuideCardBoard, GuideQuickView } from "./GuideCardBoard";
 import { GuideStatsTable, guideStatsMetricLabels, type GuideStatsTableRow } from "./GuideStatsTable";
@@ -262,7 +262,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
       const playstyle = guidePlaystyle(section);
       const filterStyle = playstyle ?? facet.style;
       const viewCategory = browseCategory(section, playstyle);
-      const curated = patch?.build ? guideEquipmentConditions(section.id, teams, data, patch.build) : undefined;
+      const curated = patch?.build ? guideEquipmentConditions(section, teams, data, patch.build) : undefined;
       return { section, data, teams, facet, family, rows, costsByBoard, rowCosts, costOptions, playstyle, filterStyle, viewCategory, curated, augment: heroAugmentForGuide(section) };
     });
     return { regular: prepare(sections), "hero-augments": prepare(heroSections) };
@@ -577,8 +577,9 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
     return record?.status === "review" ? record : undefined;
   };
   const featured = recommended ? candidates.flatMap(({ section, curated, matches }) => {
-    if (!curated || !canShowBoard(section, curated.board) || (needle && !matches.some(hit => hit.board.id === curated.board.id))) return [];
-    return curated.rows.filter(row => row.featured).map(condition => ({ section, board: curated.board, condition }));
+    const board = curated?.board;
+    if (!board || !canShowBoard(section, board) || (needle && !matches.some(hit => hit.board.id === board.id))) return [];
+    return curated.rows.filter(row => row.featured).map(condition => ({ section, board, condition }));
   }).slice(0, 4) : [];
   function conditionLink(sectionId: string, boardId: string, cardId: string) {
     return guideLink(sectionId, boardId, homeGuideReturn(home, cardId, boardId)) + "#" + guideConditionsAnchor;
@@ -671,6 +672,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
         : undefined;
       const detailsIds = [rating?.games ? ratingId : "", review ? reviewId : ""].filter(Boolean).join(" ") || undefined;
       const strategy = team && guideStrategyLabel(section, team, data, primary);
+      const heroCondition = augment && curated?.rows.find(row => row.id === augment.id);
       const description = augment ? [augment.round, augment.label || augment.name, strategy].filter(Boolean).join(" · ")
         : alternative && team?.id !== family?.lead.team.id && kind && !title.includes(kind)
           ? [kind, strategy].filter(Boolean).join(" · ") : strategy ?? (playstyle ? "" : facet.style);
@@ -694,7 +696,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
           {variantReview && <span className="guide-review-badge" title={variantReview.note}>待复核</span>}
         </a></li>;
       })}</ul>;
-      const conditionBoard = curated?.board.id;
+      const conditionBoard = curated?.board?.id;
       const cardConditions = curated && (team?.id === conditionBoard || routes?.some(board => board.id === conditionBoard))
         ? curated.rows.filter(row => row.featured) : [];
       return <article key={cardId} className={"guide-result" + (expanded ? " is-quick-open" : "")} id={"guide-card-" + cardId}>
@@ -711,7 +713,13 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
               <small>{rating.games.toLocaleString("zh-CN")} 场{core ? " · 核心样本" : formation ? " · 跨人口样本" : ""}</small>
             </span>}
           </div>
-          {description && <small className="guide-result-meta">{description}</small>}
+          {description && <small className="guide-result-meta">
+            {heroCondition ? <span className="guide-hero-condition">
+              <GuideConditionIcon condition={heroCondition} size={19} />
+              <span className="guide-hero-condition-tag">{guideConditionTag(heroCondition)}</span>
+              <span>{description}</span>
+            </span> : description}
+          </small>}
           {formation && <small className="guide-result-meta">
             {formation.label} <b>{formation.mean.toFixed(2)}</b> · {formation.games.toLocaleString("zh-CN")} 场
           </small>}

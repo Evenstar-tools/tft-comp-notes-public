@@ -298,7 +298,8 @@ export function GuideTeams({ section, data, initialTeam, initialStage, initialFl
       (kind === "主阵" && formation && shownPopulation > Number(formation)));
   const boardTitle = cap ? shownPopulation + "级上限棋盘" : shownPopulation + " 人口棋盘";
   const guideHref = publicationId ? boardViewLink(activeStage, showFlex ? flexPreview?.id : undefined) : undefined;
-  const equipmentConditions = guideEquipmentConditions(section.id, teams, data);
+  const equipmentConditions = guideEquipmentConditions(section, teams, data);
+  const conditionBoard = equipmentConditions?.board;
   const editorTitle = [...new Set([section.title, guideBoardName(team), !mainBoardActive ? stageLabels[activeStage] : "",
     showFlex && flexPreview ? flexPreview.incoming.name + "替" + flexPreview.outgoing.name : ""].filter(Boolean))].join(" · ");
   const intro = passages[0]?.source === openingText.trim() ? passages[0] : undefined;
@@ -374,7 +375,7 @@ export function GuideTeams({ section, data, initialTeam, initialStage, initialFl
           })}</ul>
         </div>
         {equipmentConditions && <GuideEquipmentConditions conditions={equipmentConditions} guideHref={guideHref}
-          onViewBoard={equipmentConditions.board.id !== team.id || !mainBoardActive ? () => pickTeam(equipmentConditions.board) : undefined} />}
+          onViewBoard={conditionBoard && (conditionBoard.id !== team.id || !mainBoardActive) ? () => pickTeam(conditionBoard) : undefined} />}
         {flexPreview && <div className="guide-flex-slot" aria-label="灵活位">
           <strong className="guide-flex-label">{showFlex ? "替换预览" : "灵活位"}</strong>
           <span className="guide-flex-swap">

@@ -2,21 +2,18 @@ import { itemMap } from "@/data";
 import { augmentArtPath } from "@/data/augment-art";
 import augmentCatalog from "@/data/augment-catalog.json";
 import currentPatch from "@/data/current-patch.json";
+import { augmentHref } from "./augment-library";
+import type { Section } from "./document";
+import { heroAugmentForGuide } from "./hero-augments";
 import { itemLink } from "./links";
 import { sameEdition } from "./version-updates";
-import type { Item, Season, Team } from "./types";
+import type { Item, Season, Team, Unit } from "./types";
 
 export const guideConditionsAnchor = "guide-equipment-conditions";
 
-export const equipmentConditionLabels = {
-  required: "有这件再玩",
-  upgrade: "拿到更强",
-  option: "可替换",
-};
-
 type ConditionRule = {
-  kind: keyof typeof equipmentConditionLabels;
-  action: string;
+  kind: "required" | "upgrade" | "option";
+  action?: string;
   games?: number;
   featured?: true;
 } & ({ itemId: string; replaces?: string } | { augmentId: string });
@@ -24,12 +21,27 @@ type ConditionRule = {
 export type GuideCondition = {
   id: string;
   name: string;
-  category: "神器" | "光明装" | "海克斯";
+  category: "神器" | "光明装" | "海克斯" | "转职";
   item?: Item;
   image?: string;
   replaced?: Item;
   href: string;
 } & Pick<ConditionRule, "kind" | "action" | "games" | "featured">;
+
+type GuideConditions = { rows: GuideCondition[]; board?: Team; label?: string; wearer?: Unit; source?: string };
+
+const equipmentCategories = { artifact: "神器", radiant: "光明装", emblem: "转职" } as const;
+const augmentById = new Map(augmentCatalog.rows.map(augment => [augment.id, augment]));
+
+export function guideConditionTag(row: GuideCondition) {
+  return row.kind === "required" ? (row.category === "光明装" ? "光装" : row.category) + "定阵" : undefined;
+}
+
+function augmentCondition(id: string, rule: Pick<ConditionRule, "kind" | "action" | "games" | "featured">): GuideCondition | undefined {
+  const augment = augmentById.get(id);
+  if (!augment) return;
+  return { ...rule, id, name: augment.name, category: "海克斯", image: augmentArtPath(augment), href: augmentHref(id) };
+}
 
 const guideConditions: Partial<Record<string, {
   boardId: string;
@@ -50,25 +62,27 @@ const guideConditions: Partial<Record<string, {
   ],
 } };
 
-export function guideEquipmentConditions(sectionId: string, teams: Team[], data: Season, build = currentPatch.build) {
-  const entry = guideConditions[sectionId];
-  if (!entry || !sameEdition(data.id, currentPatch.seasonId) || build !== entry.build) return;
+export function guideEquipmentConditions(section: Section, teams: Team[], data: Season, build = currentPatch.build): GuideConditions | undefined {
+  if (!teams.length || !sameEdition(data.id, currentPatch.seasonId)) return;
+  const augment = heroAugmentForGuide(section);
+  const hero = augment && augmentCondition(augment.id, { kind: "required" });
+  const heroRows = hero ? [hero] : [];
+  const entry = guideConditions[section.id];
+  if (!entry || build !== entry.build) return hero ? { rows: heroRows } : undefined;
   const board = teams.find(team => team.id === entry.boardId);
   const wearer = data.units.find(unit => unit.id === entry.wearerId);
-  if (!board || (entry.wearerId && (!wearer || !board.pieces.some(piece => piece.unitId === wearer.id)))) return;
+  if (!board || (entry.wearerId && (!wearer || !board.pieces.some(piece => piece.unitId === wearer.id)))) {
+    return hero ? { rows: heroRows } : undefined;
+  }
 
-  const rows = entry.conditions.flatMap<GuideCondition>(condition => {
-    if ("augmentId" in condition) {
-      const augment = augmentCatalog.rows.find(row => row.id === condition.augmentId);
-      if (!augment) return [];
-      return [{ ...condition, id: augment.id, name: augment.name, category: "海克斯",
-        image: augmentArtPath(augment), href: "/augments?" + new URLSearchParams({ q: augment.name }) }];
-    }
+  const equipment = entry.conditions.flatMap<GuideCondition>(condition => {
+    if ("augmentId" in condition) return augmentCondition(condition.augmentId, condition) ?? [];
     const item = itemMap.get(condition.itemId);
     const replaced = data.items.find(entry => entry.id === condition.replaces);
-    if (!item || (item.category !== "artifact" && item.category !== "radiant")) return [];
+    if (!item || (item.category !== "artifact" && item.category !== "radiant" && item.category !== "emblem")) return [];
     if (condition.replaces && (!replaced || !board.pieces.some(piece => piece.unitId === wearer?.id && piece.items.includes(replaced.id)))) return [];
-    return [{ ...condition, id: item.id, name: item.name, item, replaced, href: itemLink(item.id, wearer?.id), category: item.category === "artifact" ? "神器" : "光明装" }];
-  }).slice(0, 2);
-  if (rows.length) return { board, wearer, rows, label: entry.label, source: entry.source };
+    return [{ ...condition, id: item.id, name: item.name, item, replaced, href: itemLink(item.id, wearer?.id), category: equipmentCategories[item.category] }];
+  });
+  if (equipment.length) return { board, wearer, rows: [...heroRows, ...equipment].slice(0, 2), label: entry.label, source: entry.source };
+  if (hero) return { rows: heroRows };
 }
