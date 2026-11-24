@@ -318,11 +318,6 @@ html[data-theme="dark"] .guide-placement.weak {color:#ff9ba3;}
 @container (max-width:420px) {
   .read-cost {top:30%}
 }
-.guide-board-dialog.matrix-dialog {width:min(840px, calc(100% - 24px));}
-.guide-board-dialog .matrix-dialog-bar h2 {font-size:1.125rem;}
-.guide-board-dialog .read-board-large {margin:0;border:0;border-radius:0;padding:12px;overflow-x:auto;overscroll-behavior-x:contain;}
-.read-board-large .board {width:100%;min-width:660px;}
-.guide-swipe-hint {display:none;}
 .star-hint {margin:5px 0;color:var(--accent);font-size:1rem;font-weight:650;}
 .read-traits,.guide-actions,.read-items,.guide-part-options {display:flex;align-items:center;flex-wrap:wrap;gap:5px 12px;}
 .read-traits {list-style:none;padding:0;margin:5px 0;font-size:.875rem;color:var(--text);gap:5px;}
@@ -482,11 +477,9 @@ html[data-theme="dark"] .guide-placement.weak {color:#ff9ba3;}
   .guide-board-options--compact > nav.guide-route-choices {grid-template-columns:none;}
   .guide-reroll .guide-board-options--compact > :is(.guide-phases,.guide-route-choices) button {min-height:41px;}
   .read-board {padding:7px 4px;}
-  .guide-board-dialog.matrix-dialog {width:100%;}
   .guide-result .guide-avatars {gap:5px;}
 }
 @media (max-width:684px) {
-  .guide-swipe-hint {display:block;margin:6px 12px 0;color:var(--muted);font-size:.875rem;}
 }
 @media (max-width:360px) {
   .guide-filters select {padding-inline:7px;font-size:.875rem;}
