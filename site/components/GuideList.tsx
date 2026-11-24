@@ -736,13 +736,13 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
         </div>}
         {team && <>
           <GuideCardBoard team={team} data={data} roles={roles} chaseTargets={chaseTargets}
-            eager={eager && index === 0} title={title} controls={previewId} expanded={expanded} onToggle={() => {
+            eager={eager && index === 0} title={title} controls={previewId} expanded={expanded} strategy={strategy} onToggle={() => {
               const card = document.getElementById("guide-card-" + cardId);
               if (card) quickAnchor.current = { card, top: card.getBoundingClientRect().top };
               setQuickView(expanded ? undefined : { key: previewKey, home });
             }} />
           {expanded && <GuideQuickView id={previewId} team={team} data={data} roles={roles}
-            strategy={strategy} note={quickNote}
+            note={quickNote}
             href={guideLink(section.id, team.id, homeGuideReturn(home, cardId, team.id))} />}
         </>}
         {routes && routes.length > 1 && <nav className="guide-lineup-routes" aria-label={section.title + "的棋盘"}>
