@@ -3430,6 +3430,141 @@
     {
       "edition": "s19-pbe-19.1",
       "patch": "PBE 19.1b",
+      "build": "6018196",
+      "windowHours": 72,
+      "window": "仅当前构建",
+      "checkedAt": "2026-11-24T02:03:22.043856+00:00",
+      "population": 9,
+      "condition": "星级和装备不限",
+      "exclusions": "无人口装、无重复棋子，纹章不限",
+      "coreSummary": {
+        "label": "九级七核心",
+        "url": "https://api-hc.metatft.com/tft-explorer-api/exact_units_traits2?queue=PBE&patch=19.1&b_patch=b&days=3&level=9&compact=true&formatnoarray=true&permit_filter_adjustment=false&tactician_item_count=0&duplicate_unit_count=0&unit_unique=DA_DrMundo19-1&unit_unique=DA_Galio19-1&unit_unique=DA_Jax19-1&unit_unique=DA_Leona19-1&unit_unique=DA_Nunu19-1&unit_unique=DA_Vi19-1&unit_unique=DA_Zeri19-1",
+        "placementCounts": [
+          115,
+          75,
+          113,
+          102,
+          79,
+          75,
+          64,
+          41
+        ]
+      },
+      "boards": [
+        {
+          "name": "巴德＋古拉加斯",
+          "roster": [
+            "bard",
+            "dr-mundo",
+            "galio",
+            "gragas",
+            "jax",
+            "leona",
+            "nunu-willump",
+            "vi",
+            "zeri"
+          ],
+          "sample": {
+            "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&patch=19.1&b_patch=b&days=3&tactician_item_count=0&duplicate_unit_count=0&unit=DA_DrMundo19-1&unit=DA_Galio19-1&unit=DA_Jax19-1&unit=DA_Leona19-1&unit=DA_Nunu19-1&unit=DA_Vi19-1&unit=DA_Zeri19-1&unit=DA_Bard19-1&unit=DA_Gragas19-1",
+            "placementCounts": [
+              17,
+              18,
+              46,
+              35,
+              28,
+              27,
+              26,
+              17
+            ]
+          }
+        },
+        {
+          "name": "巴德＋约里克",
+          "roster": [
+            "bard",
+            "dr-mundo",
+            "galio",
+            "jax",
+            "leona",
+            "nunu-willump",
+            "vi",
+            "yorick",
+            "zeri"
+          ],
+          "sample": {
+            "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&patch=19.1&b_patch=b&days=3&tactician_item_count=0&duplicate_unit_count=0&unit=DA_DrMundo19-1&unit=DA_Galio19-1&unit=DA_Jax19-1&unit=DA_Leona19-1&unit=DA_Nunu19-1&unit=DA_Vi19-1&unit=DA_Zeri19-1&unit=DA_Bard19-1&unit=DA_Yorick19-1",
+            "placementCounts": [
+              28,
+              26,
+              26,
+              23,
+              17,
+              15,
+              14,
+              7
+            ]
+          }
+        },
+        {
+          "name": "巴德＋史密奇",
+          "roster": [
+            "bard",
+            "dr-mundo",
+            "galio",
+            "jax",
+            "leona",
+            "nunu-willump",
+            "smeech",
+            "vi",
+            "zeri"
+          ],
+          "sample": {
+            "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&patch=19.1&b_patch=b&days=3&tactician_item_count=0&duplicate_unit_count=0&unit=DA_DrMundo19-1&unit=DA_Galio19-1&unit=DA_Jax19-1&unit=DA_Leona19-1&unit=DA_Nunu19-1&unit=DA_Vi19-1&unit=DA_Zeri19-1&unit=DA_Bard19-1&unit=DA_Smeech19-1",
+            "placementCounts": [
+              41,
+              21,
+              18,
+              17,
+              8,
+              7,
+              4,
+              6
+            ]
+          }
+        },
+        {
+          "name": "古拉加斯＋史密奇",
+          "roster": [
+            "dr-mundo",
+            "galio",
+            "gragas",
+            "jax",
+            "leona",
+            "nunu-willump",
+            "smeech",
+            "vi",
+            "zeri"
+          ],
+          "sample": {
+            "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&patch=19.1&b_patch=b&days=3&tactician_item_count=0&duplicate_unit_count=0&unit=DA_DrMundo19-1&unit=DA_Galio19-1&unit=DA_Jax19-1&unit=DA_Leona19-1&unit=DA_Nunu19-1&unit=DA_Vi19-1&unit=DA_Zeri19-1&unit=DA_Gragas19-1&unit=DA_Smeech19-1",
+            "placementCounts": [
+              5,
+              2,
+              6,
+              5,
+              7,
+              4,
+              2,
+              1
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "edition": "s19-pbe-19.1",
+      "patch": "PBE 19.1b",
       "windowHours": 72,
       "checkedAt": "2026-11-24T01:21:12+00:00",
       "population": 9,

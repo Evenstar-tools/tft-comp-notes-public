@@ -68,7 +68,7 @@ export function GuideMatchStats({ id, stage, team, teams, section, edition, augm
     const formation = !heroGuide ? formationEvidence(board, edition) : undefined;
     const reference = !rows.length && !rare.length ? formation?.board.familyReference : undefined;
     const groups = {
-      board: rating ? [rating] : [],
+      board: rating?.games ? [rating] : formation ? [{ games: formation.board.sample.placementCounts.reduce((n, count) => n + count, 0) }] : [],
       carry: [...related, ...carry.rows, ...carry.builds],
       family: reference ? [{ games: reference.placementCounts.reduce((n, count) => n + count, 0) }]
         : [...rows.map(row => row.stat), ...rare],
