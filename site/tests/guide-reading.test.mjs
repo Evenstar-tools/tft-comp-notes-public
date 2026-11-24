@@ -406,6 +406,20 @@ test("home shared filters keep the first usable text and ignore malformed option
   assert.equal(parseGuideFilters({ sort:"unknown" }).sort, undefined);
 });
 
+test("archive filters migrate old links without assigning today's tier from a Feishu folder", () => {
+  assert.equal(parseGuideFilters({category:"次选成熟阵容"}).category, "次选");
+  assert.equal(parseGuideFilters({category:"高费阵容"}).style, "高费运营");
+  assert.equal(parseGuideFilters({category:"慢搜阵容",style:"95"}).style, "95");
+  assert.equal(parseGuideFilters({category:"纹章阵容",q:"芬妮"}).q, "芬妮 + 纹章");
+  assert.equal(parseGuideFilters({category:"英雄强化阵容"}).view, "hero-augments");
+  const fallback = parseGuideFilters({category:"连胜成型阵容",q:"霞",cost:"5"});
+  assert.equal(fallback.sort, "category");
+  assert.equal(fallback.q, "霞");
+  assert.equal(fallback.cost, "5");
+  assert.equal(fallback.category, undefined);
+  assert.equal(parseGuideFilters({category:"自定义旧目录"}).category, undefined);
+});
+
 test("home recommendations keep up to four viable, distinct routes and offer a less common carry", () => {
   function route(name, mean, games, carryGames, { group = "reroll", familyId = name, carryId = name } = {}) {
     return { group, familyId, rating: { name, mean, games, carryId, carryGames } };

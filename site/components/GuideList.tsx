@@ -12,7 +12,7 @@ import { sectionTeams } from "@/domain/document-flow";
 import { boardTitle, groupGuides, type GuideFamily } from "@/domain/guide-families";
 import { guideBoardName, guideFacets, guideLink, guidePlaystyle, guideRollLevel, guideRoster, guideRoute, guideStrategyLabel, guideTitleWithoutPlaystyle, matchingGear, parseGuideFilters, primaryFirst, readingNotes, repeatsFormationLabel, type GuideFilters, type GuideSearchScope, type GuideSort } from "@/domain/guide-reading";
 import { patchRecommendationLabels, type PatchRecommendationBatch } from "@/domain/patch-recommendations";
-import { homeGuideFilter, guideWearerQuery, searchPhaseNote, splitGuideConditions, guideSearchKey, guideStyleKey } from "@/domain/guide-search";
+import { homeGuideFilter, matchesGuideStyle, guideWearerQuery, searchPhaseNote, splitGuideConditions, guideSearchKey, guideStyleKey } from "@/domain/guide-search";
 import { equippedGuideRoutes, familyNameMatches, homeSearchIntent, matchHomeGuide, searchUnitIds } from "@/domain/home-guide-search";
 import { itemAliases } from "@/domain/roster-import";
 import { usedPopulation } from "@/domain/team";
@@ -37,7 +37,6 @@ import { GuideStatsTable, guideStatsMetricLabels, type GuideStatsTableRow } from
 const backupCategory = "次选";
 const tierLabels = { recommended: "推荐", secondary: backupCategory, review: "待复核" } as const;
 const tierOrder: string[] = [tierLabels.recommended, tierLabels.review, tierLabels.secondary];
-const categoryOrder = ["连胜成型", "连败", "条件阵容", "慢搜", "高费", "史密奇", "纹章"];
 type View = "regular" | "hero-augments";
 type ArchiveSort = Exclude<GuideSort, "recommended">;
 type Selections = { category: string; style: string; cost: number };
@@ -51,32 +50,8 @@ function familySortFrom(filters: GuideFilters): FamilySort {
   return { metric, direction: filters.direction ?? (metric === "mean" ? "asc" : "desc") };
 }
 
-function categoryLabel(category: string) {
-  if (category.startsWith("次选")) return backupCategory;
-  if (category === "条件定阵阵容" || category === "条件定阵") return "条件阵容";
-  return category;
-}
-
-function categoryDisplay(category: string) {
-  return category.startsWith("连胜成型") ? "连胜开局" : category;
-}
-
-function categoryPriority(category: string) {
-  if (category === backupCategory) return categoryOrder.length + 4;
-  if (/^PBE\s*试阵/.test(category)) return categoryOrder.length + 1;
-  const index = categoryOrder.findIndex(prefix => category.startsWith(prefix));
-  return index < 0 ? categoryOrder.length : index;
-}
-
-function browseCategory(section: Section, playstyle?: string) {
-  if (categoryLabel(section.category) === backupCategory) return playstyle ? "高费阵容" : "常规阵容";
-  if (section.category === "慢搜阵容" && playstyle) return "高费阵容";
-  return categoryLabel(section.category);
-}
-
 function defaultSort(view: View, filters: GuideFilters): GuideSort {
-  const backup = view === "regular" && tierOrder.includes(categoryLabel(filters.category ?? ""));
-  return filters.sort ?? (backup ? "category" : "recommended");
+  return filters.sort ?? (view === "regular" && filters.category ? "category" : "recommended");
 }
 
 // Compact forms of the current authored intros. Future source edits take precedence.
@@ -128,7 +103,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
   const [view, setView] = useState<View>(initialView);
   const [query, setQuery] = useState(initial.q ?? "");
   const [choices, setChoices] = useState<Choices>({
-    [initialView]: { category: categoryLabel(initial.category ?? ""), style: initial.style ?? "", cost: Number(initial.cost) || 0 },
+    [initialView]: { category: initial.category ?? "", style: initial.style ?? "", cost: Number(initial.cost) || 0 },
   });
   const [sort, setSort] = useState<GuideSort>(defaultSort(initialView, initial));
   const [archiveSort, setArchiveSort] = useState<ArchiveSort>(initial.sort === "mean" ? "mean" : "category");
@@ -203,7 +178,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
       setScope(params.scope ?? "all");
       setExclude(params.exclude);
       setChoices(previous => ({ ...previous, [tab]: {
-        category: categoryLabel(params.category ?? ""), style: params.style ?? "", cost: Number(params.cost) || 0,
+        category: params.category ?? "", style: params.style ?? "", cost: Number(params.cost) || 0,
       } }));
       setFiltersOpen(false);
     };
@@ -216,7 +191,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
     const panel = filterPanel.current;
     const sheet = panel?.querySelector(".guide-filter-sheet");
     const narrow = window.matchMedia("(max-width: 580px)");
-    sheet?.querySelector<HTMLSelectElement>("select")?.focus({ preventScroll: true });
+    sheet?.querySelector("select")?.focus({ preventScroll: true });
     const handlePointer = (event: PointerEvent) => {
       if (!panel?.contains(event.target as Node)) setFiltersOpen(false);
     };
@@ -266,9 +241,9 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
       const costOptions = [...costsByBoard.values()].flat().concat(rows.flatMap(({stat}) => rowCosts(stat)));
       const playstyle = guidePlaystyle(section);
       const filterStyle = playstyle ?? facet.style;
-      const viewCategory = browseCategory(section, playstyle);
+      const searchTopic = section.category === "纹章阵容" ? "纹章 转职" : "";
       const curated = patch?.build ? guideEquipmentConditions(section, teams, data, patch.build) : undefined;
-      return { section, data, teams, facet, family, rows, costsByBoard, rowCosts, costOptions, playstyle, filterStyle, viewCategory, curated, augment: heroAugmentForGuide(section) };
+      return { section, data, teams, facet, family, rows, costsByBoard, rowCosts, costOptions, playstyle, filterStyle, searchTopic, curated, augment: heroAugmentForGuide(section) };
     });
     return { regular: prepare(sections), "hero-augments": prepare(heroSections) };
   }, [sections, heroSections, season, patch?.build]);
@@ -291,10 +266,9 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
     return () => window.clearTimeout(timer);
   }, [previousDeadline]);
   const hasCurrentCore = !!patch && canRankRecommendations(coreStats, season.id, patch);
-  const tierFilter = view === "regular" && tierOrder.includes(category) ? category : "";
+  const showTiers = view === "regular" && !recommended;
+  const tierFilter = showTiers ? category : "";
   const availableFacets = view === "regular" ? [...visible, ...library["hero-augments"]] : visible;
-  const categories = [...new Set([...visible.map(section => section.viewCategory).filter(Boolean), ...(!recommended && view === "regular" ? tierOrder : []), ...(category ? [category] : [])])]
-    .sort((a, b) => categoryPriority(a) - categoryPriority(b));
   const styles = new Map([...availableFacets.map(entry => entry.filterStyle), style].filter(Boolean)
     .map(tag => [guideStyleKey(tag), tag.replace(/^([一二三])费/, (text, digit: string) => ("一二三".indexOf(digit) + 1) + "费")] as const));
   const costs = [...new Set([...availableFacets.flatMap(entry => entry.costOptions), ...(cost ? [cost] : [])])].sort((a,b) => a-b);
@@ -337,17 +311,17 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
 
   function candidatesFor(entries: typeof visible, terms = conditions, recommendationsOnly = recommended) {
     return entries.flatMap(entry => {
-      const { section, data, teams, filterStyle, augment, viewCategory } = entry;
+      const { section, data, teams, filterStyle, augment, searchTopic } = entry;
       const searchFamilies = recommendationsOnly && previousDeadline !== undefined && previousFamilyStats && previousFamilyStats !== homeFamilyStats
         ? [...entry.rows, ...guideFamilyRows(previousFamilyStats, data.id, section.id, teams)] : entry.rows;
-      if ((category && !tierFilter && viewCategory !== category) || (style && guideStyleKey(filterStyle) !== styleKey) || (cost && !entry.costOptions.includes(cost))) return [];
+      if ((style && !matchesGuideStyle(filterStyle, style)) || (cost && !entry.costOptions.includes(cost))) return [];
       const searchTeams = recommendationsOnly ? teams.filter(board => canShowBoard(section, board)) : teams;
       if (recommendationsOnly && !searchTeams.length) return [];
       const one = (term: string) => {
         const part = homeSearchIntent(term, terms.length === 1 ? intent.scope : "all");
         const component = season.items.find(item => item.category === "component" && guideSearchKey(item.name) === guideSearchKey(part.text.replace(/^散件[：:]?\s*/, "")));
         const args: Parameters<typeof matchHomeGuide>[1] = {
-        section, data, catalog: season, teams: searchTeams, style: filterStyle, category: viewCategory, augment, itemAliases, scope: part.scope, families: searchFamilies,
+        section, data, catalog: season, teams: searchTeams, style: filterStyle, category: searchTopic, augment, itemAliases, scope: part.scope, families: searchFamilies,
         isTransition: board => guideBoardKind(section, board, teams[0]) === "过渡",
         hasCarrySample: (board, id, stars) => guideCarryRows(data.id, section.id, board.id)
           .some(row => row.carryId === id && row.stars === stars && row.slots === 3 && row.games >= carryMinGames),
@@ -506,7 +480,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
   }
   const groups = [...categoryGroups].sort(([a], [b]) => tierOrder.indexOf(a) - tierOrder.indexOf(b));
   const groupLinks = byCategory && groups.length > 1 ? groups.map(([name], index) => ({
-    label: categoryDisplay(name).replace(/成型阵容$|阵容$/, ""), id: name === backupCategory ? "backup-guides" : "guide-group-" + index,
+    label: name, id: name === backupCategory ? "backup-guides" : "guide-group-" + index,
   })) : [];
 
   function homeRoutes(batch: GuideFamilySnapshot, entries: (typeof visible[number] & { matches?: Candidate["matches"] })[]) {
@@ -783,7 +757,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
   };
 
   const filterChips = [
-    ...(category ? [{ id: "category", text: categoryDisplay(category), remove: () => choose({ category: "" }) }] : []),
+    ...(category ? [{ id: "category", text: category, remove: () => choose({ category: "" }) }] : []),
     ...(cost ? [{ id: "cost", text: cost + " 费主C", remove: () => choose({ cost: 0 }) }] : []),
   ];
   const closeFilters = () => {
@@ -832,16 +806,16 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
             <option value="">全部</option>{Array.from(styles, ([key, tag]) => <option key={key} value={key}>{tag}</option>)}
           </select>
         </label>}
-        {(categories.length > 1 || costs.length > 0) && <details ref={filterPanel} className="guide-extra-filters" open={filtersOpen}>
+        {(showTiers || costs.length > 0) && <details ref={filterPanel} className="guide-extra-filters" open={filtersOpen}>
           <summary onClick={event => { event.preventDefault(); setFiltersOpen(!filtersOpen); }}>
             筛选{filterChips.length > 0 && <span className="guide-filter-number">{filterChips.length}</span>}
           </summary>
           <div className="guide-filter-sheet" role="region" aria-label="筛选阵容">
-            {categories.length > 1 && <label className="guide-filter-field">
-              <span>分类</span>
-              <select aria-label="阵容分类筛选" value={category} onChange={event => choose({ category: event.target.value })}>
+            {showTiers && <label className="guide-filter-field">
+              <span>推荐档位</span>
+              <select aria-label="按推荐档位筛选" value={category} onChange={event => choose({ category: event.target.value })}>
                 <option value="">全部</option>
-                {categories.map(value => <option key={value} value={value}>{categoryDisplay(value).replace(/阵容$/, "") || value}</option>)}
+                {tierOrder.map(value => <option key={value} value={value}>{value}</option>)}
               </select>
             </label>}
             {costs.length > 0 && <label className="guide-filter-field">
@@ -951,7 +925,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
       const headingId = "guide-group-" + index;
       return name ? <section key={name} id={name === backupCategory ? "backup-guides" : undefined} className="guide-section"
         aria-labelledby={headingId} data-hero-conditions={heroConditionGroup || undefined}>
-        <h2 id={headingId}>{categoryDisplay(name)}</h2>
+        <h2 id={headingId}>{name}</h2>
         {index === 0 && groupLinks.length > 0 && <details className="home-group-jump-mobile"><summary>跳到分组</summary><div>
           {groupLinks.map(group => <a key={group.id} href={"#" + group.id} onClick={event => { event.currentTarget.closest("details")!.open = false; }}>{group.label}</a>)}
         </div></details>}

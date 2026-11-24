@@ -55,6 +55,17 @@ test("bold Feishu category labels split sections and keep guide IDs and phase an
  assert.equal(sameGeneratedSection(raw,"root","next","text","image"),true);
 });
 
+test("empty directory separators stay out of the overview while old and renamed Feishu boundaries still bind", () => {
+ const bold = (id,title) => ({...entry(id,undefined,title),content:{id,type:"text",text:title,
+   elements:[{text_run:{content:title,text_element_style:{bold:true}}}]}});
+ for (const label of ["次选成熟阵容", "八级运营", "国风九五", "高能流行与天才慢搜", "芸阿娜慢搜"]) {
+   const sections = splitSections([bold("folder",label),entry("empty",undefined," "),
+     {id:"line",title:"",content:{id:"line",type:"divider"}},entry("guide",2,"四古典烬")]);
+   assert.deepEqual(sections.filter(readableSection).map(s=>s.id), ["guide"]);
+   assert.equal(sections[1].category, label);
+ }
+});
+
 test("legacy generated text can become its verified caption while preserving hand-edit protection", () => {
  const legacy = "【阵容构建器 · board】\n九级 · 补女枪\n9 人口\n烬 2星 · 第4排第1格";
  assert.equal(isBoardCaption("九级 · 补女枪",legacy,"board"),true);

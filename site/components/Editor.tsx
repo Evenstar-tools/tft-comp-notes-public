@@ -36,6 +36,7 @@ import {
 import { useSearchParams } from "next/navigation";
 import { equipItem, indexRecipes, wornCombinations, type EquipmentChoice } from "@/domain/equipment";
 import { feishuBoardIssue } from "@/domain/document-flow";
+import { draftCategoryLabel, draftCategoryValue, sourceSectionTitle } from "@/domain/source-category-display";
 import { guideLink } from "@/domain/guide-reading";
 import { moveBoardInstrument } from "@/domain/board-instruments";
 import type { HeroItemSample, HeroItemSource } from "@/domain/hero-insights";
@@ -398,6 +399,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
   const pendingTeam = incomingTeamId && handledTeam.current !== incomingTeamId;
   const writeIssue = feishuBoardIssue(draftTeam);
   const writableSections = sections?.filter((entry) => entry.level === 2 || entry.id === known?.sectionId) ?? [];
+  const draftCategory = draftCategoryValue(team.category);
   const selected = selectedId ? unitMap.get(selectedId) : undefined;
   const piece = team.pieces.find((entry) => entry.instanceId === pieceId);
   const pieceUnit = piece && unitMap.get(piece.unitId);
@@ -991,15 +993,16 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
           />
           <span className="select-field">
             <select
-              aria-label="阵容分类"
-              value={team.category}
+              aria-label="草稿分类"
+              value={draftCategory}
               onChange={(event) =>
                 commit((prev) => ({ ...prev, category: event.target.value }))
               }
             >
               {CATEGORIES.map((category) => (
-                <option key={category}>{category}</option>
+                <option key={category} value={category}>{draftCategoryLabel(category)}</option>
               ))}
+              {!CATEGORIES.includes(draftCategory) && <option value={draftCategory}>{draftCategoryLabel(draftCategory)}</option>}
             </select>
             <ChevronDown size={14} aria-hidden />
           </span>
@@ -1104,7 +1107,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
                           <span className="menu-text">
                             <strong>{entry.name}</strong>
                             <small>
-                              {entry.category} · {usedPopulation(entry.pieces)} 人口
+                              {draftCategoryLabel(entry.category)} · {usedPopulation(entry.pieces)} 人口
                             </small>
                           </span>
                           {entry.id === team.id && <Check size={14} aria-label="当前" />}
@@ -1210,7 +1213,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
                       </option>
                       {writableSections.map((section) => (
                         <option key={section.id} value={section.id}>
-                          {section.level !== 2 ? "原章节 · " : section.category + " / "}{section.title}
+                          {section.level !== 2 && "原章节 · "}{sourceSectionTitle(section)}
                         </option>
                       ))}
                     </select>

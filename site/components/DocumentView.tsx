@@ -7,6 +7,7 @@ import { boardTitle } from "@/domain/guide-families";
 import { allBlocks, boardLoadoutHeading, guideBoardName, guideBody, guidePlaystyle, guideTitleWithoutPlaystyle, isBoardLoadout, primaryFirst, type GuideRole } from "@/domain/guide-reading";
 import { compactGuideParagraph, guideCopyKey, hasGuideLinks, rememberGuideCopy } from "@/domain/guide-copy";
 import { rerollRoute } from "@/domain/reroll-stages";
+import { sourceSectionTitle } from "@/domain/source-category-display";
 import { heroAugmentCategory, heroAugmentForGuide, heroAugmentLabel, heroAugmentLibrary } from "@/domain/hero-augments";
 import { displayTraitNames } from "@/domain/trait-names.mjs";
 import type { BoardStage, Season, Team } from "@/domain/types";
@@ -276,9 +277,9 @@ export function DocumentView({ section, gameData, publicationId, initialTeam, in
             : returnTo ? "返回阵容列表" : augment ? "英雄强化" : "全部阵容";
   const playstyle = guidePlaystyle(section);
   function header(title: string, guideName?: string, performance?: ReactNode) {
-    const showFolder = !publicationId || (!augment && category === heroAugmentCategory);
+    const showFolder = !augment && category === heroAugmentCategory;
     const context = guideName ? guideTitleWithoutPlaystyle(guideName, playstyle)
-      : showCategory && showFolder && category !== section.title.trim() ? category : "";
+      : showCategory && showFolder && category !== section.title.trim() ? "英雄强化" : "";
     return <>
       {(publicationId || context) && <div className="guide-header-meta">
         {publicationId && <a href={returnTo ?? (augment ? heroAugmentLibrary : "/")}>{returnLabel}</a>}
@@ -307,7 +308,7 @@ export function DocumentView({ section, gameData, publicationId, initialTeam, in
     <article className={primary ? "document-view with-guide-board" : "document-view"}>
       {primary && gameData ? <GuideTeams key={section.id + (section.primaryTeamId ?? "")} section={section} data={gameData} initialTeam={initialTeam}
         initialStage={initialStage} initialFlex={initialFlex} publicationId={publicationId} returnTo={returnTo} renderHeader={teamHeader} renderNotes={selectedText}
-        variants={variants} openPoster={openPoster} initialPosterShare={initialPosterShare} patchAdvice={patchAdvice} /> : header(section.title)}
+        variants={variants} openPoster={openPoster} initialPosterShare={initialPosterShare} patchAdvice={patchAdvice} /> : header(sourceSectionTitle(section))}
       {!primary && section.blocks.map((block) => (
         <Block key={block.id} block={block} folded={folded} />
       ))}

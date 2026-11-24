@@ -10,6 +10,7 @@ import type { Publication, Section } from "@/domain/document";
 import { readableSection, sectionTeams } from "@/domain/document-flow";
 import { itemName, itemTerms } from "@/domain/gear-library";
 import { gearSampleMinimum } from "@/domain/gear-wearer";
+import { boardTitle } from "@/domain/guide-families";
 import { canRankRecommendations, currentFamilyBatch, guideFamilyRows, recommendationTier } from "@/domain/guide-family-stats";
 import { guideBoardName, guideLink, isEditorialSection, primaryFirst } from "@/domain/guide-reading";
 import { guideSearchKey, guideTraitNames, openingSearch } from "@/domain/guide-search";
@@ -109,10 +110,12 @@ function searchRows<T extends { hit: SiteSearchHit; terms: string[] }>(rows: T[]
 }
 
 function guideHit(guide: SearchGuide, team: Team, detail?: string, unit?: Unit): BoardHit {
-  const { section, boardLabels } = guide;
+  const { section, boardLabels, teams } = guide;
+  const name = guideBoardKind(section, team, teams[0]) === "过渡" ? section.title : boardTitle(section, team);
+  const note = detail ?? team.webTitle;
   return {
-    id:team.id, name:section.title, href:guideLink(section.id,team.id), image:unit?.image,
-    detail:detail ?? team.webTitle, category:boardLabels.get(team.id),
+    id:team.id, name, href:guideLink(section.id,team.id), image:unit?.image,
+    detail:note && !name.endsWith(note) ? note : undefined, category:boardLabels.get(team.id),
   };
 }
 
@@ -129,15 +132,15 @@ function namedGuides(context: Context, term: string, items: Item[]) {
       const name = guideBoardName(team);
       const titleScore = team.id === teams[0].id ? titleRank * 2 : 0;
       const familyNames = familiesByBoard.get(team.id)?.map(({stat}) => rankTitle(stat.name)) ?? [];
-      const boardScore = Math.max(rankTitle(name), searchNameRank(term, [augment?.name ?? ""]), ...familyNames);
+      const boardScore = Math.max(rankTitle(name), rankTitle(boardTitle(section, team)), searchNameRank(term, [augment?.name ?? ""]), ...familyNames);
       const rank = Math.max(titleScore, boardScore);
       if (!rank) return [];
       const entry = titleScore && titleScore >= boardScore ? teams.find(board => board.id === section.reroll?.entryTeamId) : undefined;
       const hit = guideHit(guide, team, entry ? guideBoardName(entry) : team.id === teams[0].id ? undefined : name);
-      return [{ rank, hit: entry ? { ...hit, href: guideLink(section.id, entry.id) } : hit }];
+      return [{ rank, sectionId: section.id, hit: entry ? { ...hit, href: guideLink(section.id, entry.id) } : hit }];
     });
   }).sort((a,b) => b.rank - a.rank)
-    .filter((entry,i,all) => all.findIndex(other => other.hit.name === entry.hit.name) === i)
+    .filter((entry,i,all) => all.findIndex(other => other.sectionId === entry.sectionId) === i)
     .slice(0,limit).map(row => row.hit);
 }
 

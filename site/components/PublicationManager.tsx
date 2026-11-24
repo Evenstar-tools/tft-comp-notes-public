@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { findSection, readableSection, reviewIssues, sectionChanges, sectionTeams } from "@/domain/document-flow";
+import { sourceSectionTitle } from "@/domain/source-category-display";
 import { editorLink, feishuSection } from "@/domain/links";
 import { authoredParagraphs, isEditorialSection } from "@/domain/guide-reading";
 import { orderPosterStages, posterStageTitle } from "@/domain/poster";
@@ -124,7 +125,7 @@ export function PublicationManager() {
     ? getPublishedPatchRecommendations(recommendedSections, currentPatch.seasonId, currentPatch.build, currentPatch.effectiveAt)
     : undefined;
   const recommendationBlocked = selected.includes("introduction") && !!recommendation?.issues.length;
-  const chapterTitle = (entry: Section) => entry.id === "introduction" && recommendation?.declared ? "环境观察与阵容推荐" : entry.title;
+  const chapterTitle = (entry: Section) => entry.id === "introduction" && recommendation?.declared ? "环境观察与阵容推荐" : sourceSectionTitle(entry);
   function chapter(entry: Section) {
     const changes = differences.get(entry.id) ?? [];
     const count = relevantIssues(entry.id).length;
@@ -136,9 +137,9 @@ export function PublicationManager() {
         if (window.matchMedia("(max-width: 760px)").matches) document.getElementById("draft-preview")?.scrollIntoView({ block: "start" });
       }}>
         <strong>{chapterTitle(entry)}</strong>
-        <small>{entry.category}{changes.length ? " · " + changes.join("、") : ""}
-          {count > 0 && <span className="publish-issue-count"> · {count} 项待核</span>}
-        </small>
+        {(changes.length > 0 || count > 0) && <small>{changes.join("、")}
+          {count > 0 && <span className="publish-issue-count">{changes.length > 0 && " · "}{count} 项待核</span>}
+        </small>}
       </button>
     </div>;
   }
@@ -187,7 +188,7 @@ export function PublicationManager() {
         <strong>{status}</strong>
         {published.map(id => {
           const entry = liveSections.find(section => section.id === id);
-          return <a key={id} href={entry && isVersionUpdate(entry) ? versionUpdateLink(id) : "/guides/" + id}>{entry?.title ?? "查看攻略"}</a>;
+          return <a key={id} href={entry && isVersionUpdate(entry) ? versionUpdateLink(id) : "/guides/" + id}>{entry ? chapterTitle(entry) : "查看攻略"}</a>;
         })}
       </div>}
       <div className="publication-columns">
@@ -218,7 +219,7 @@ export function PublicationManager() {
                   )
                 }
               />
-              从网站移除「{entry.title}」{isEditorialSection(entry) ? "（编辑资料）" : "（飞书已删除）"}
+              从网站移除「{chapterTitle(entry)}」{isEditorialSection(entry) ? "（编辑资料）" : "（飞书已删除）"}
             </label>
           ))}
           {!!issues?.general.length && <details className="publish-review"><summary>其他同步提醒</summary>
@@ -227,7 +228,7 @@ export function PublicationManager() {
           {!!(pending.length || removed.length) && <section className="publish-review" aria-label="本次发布范围">
             <h3>本次发布</h3>
             <ul>{pending.map(entry => <li key={entry.id}>{chapterTitle(entry)}</li>)}
-              {missing.filter(entry => removed.includes(entry.id)).map(entry => <li key={entry.id}>下线 {entry.title}</li>)}</ul>
+              {missing.filter(entry => removed.includes(entry.id)).map(entry => <li key={entry.id}>下线 {chapterTitle(entry)}</li>)}</ul>
           </section>}
           {recommendationBlocked && <p className="error" role="alert">{recommendation?.issues[0]}</p>}
           <button
@@ -275,7 +276,7 @@ export function PublicationManager() {
                       const target = recommendedSections.find(section => section.id === entry.sectionId)!;
                       const team = sectionTeams(target).find(team => team.id === entry.teamId)!;
                       return <li key={entry.sectionId + ":" + entry.teamId}>
-                        <strong>{patchRecommendationLabels[entry.status]} · {target.title} / {team.name}</strong>：{entry.note}
+                        <strong>{patchRecommendationLabels[entry.status]} · {chapterTitle(target)} / {team.name}</strong>：{entry.note}
                       </li>;
                     })}</ol>}
                   </>}
