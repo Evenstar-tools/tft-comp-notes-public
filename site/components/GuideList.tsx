@@ -216,9 +216,12 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
     const panel = filterPanel.current;
     const sheet = panel?.querySelector(".guide-filter-sheet");
     const narrow = window.matchMedia("(max-width: 580px)");
-    if (narrow.matches) sheet?.querySelector<HTMLElement>("select, button")?.focus();
+    sheet?.querySelector<HTMLSelectElement>("select")?.focus({ preventScroll: true });
     const handlePointer = (event: PointerEvent) => {
       if (!panel?.contains(event.target as Node)) setFiltersOpen(false);
+    };
+    const handleFocus = (event: FocusEvent) => {
+      if (!narrow.matches && !panel?.contains(event.target as Node)) setFiltersOpen(false);
     };
     const handleKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -237,9 +240,11 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
       }
     };
     document.addEventListener("pointerdown", handlePointer);
+    document.addEventListener("focusin", handleFocus);
     document.addEventListener("keydown", handleKey);
     return () => {
       document.removeEventListener("pointerdown", handlePointer);
+      document.removeEventListener("focusin", handleFocus);
       document.removeEventListener("keydown", handleKey);
     };
   }, [filtersOpen]);
@@ -816,28 +821,38 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
           </select>
         </label>}
         {(categories.length > 1 || costs.length > 0) && <details ref={filterPanel} className="guide-extra-filters" open={filtersOpen}>
-          <summary onClick={event => { event.preventDefault(); setFiltersOpen(!filtersOpen); }}>筛选{filterChips.length ? <span className="guide-filter-number">{filterChips.length}</span> : null}</summary>
+          <summary onClick={event => { event.preventDefault(); setFiltersOpen(!filtersOpen); }}>
+            筛选{filterChips.length > 0 && <span className="guide-filter-number">{filterChips.length}</span>}
+          </summary>
           <div className="guide-filter-sheet" role="region" aria-label="筛选阵容">
-            <div className="guide-filter-sheet-heading"><button type="button" onClick={closeFilters}>完成</button></div>
-            {categories.length > 1 && <select aria-label="阵容分类筛选" value={category} onChange={event => choose({ category: event.target.value })}>
-              <option value="">全部分类</option>
-              {categories.map(value => <option key={value} value={value}>{categoryDisplay(value).replace(/阵容$/, "") || value}</option>)}
-            </select>}
-            {costs.length > 0 && <select aria-label="按主C费用筛选" value={cost} onChange={event => choose({ cost: Number(event.target.value) })}>
-              <option value={0}>全部主C费用</option>{costs.map(gold => <option key={gold} value={gold}>{gold} 费主C</option>)}
-            </select>}
+            {categories.length > 1 && <label className="guide-filter-field">
+              <span>分类</span>
+              <select aria-label="阵容分类筛选" value={category} onChange={event => choose({ category: event.target.value })}>
+                <option value="">全部</option>
+                {categories.map(value => <option key={value} value={value}>{categoryDisplay(value).replace(/阵容$/, "") || value}</option>)}
+              </select>
+            </label>}
+            {costs.length > 0 && <label className="guide-filter-field">
+              <span>主C费用</span>
+              <select aria-label="按主C费用筛选" value={cost} onChange={event => choose({ cost: Number(event.target.value) })}>
+                <option value={0}>全部</option>{costs.map(gold => <option key={gold} value={gold}>{gold} 费</option>)}
+              </select>
+            </label>}
+            <footer className="guide-filter-sheet-actions">
+              <button type="button" onClick={closeFilters}>收起</button>
+            </footer>
           </div>
           <div className="guide-filter-backdrop" onClick={closeFilters} aria-hidden="true" />
         </details>}
-        {(hasUnitQuery || filterChips.length > 0 || (needle && displayedCount > 0) || (!selectedGear && conditions.length>1)) && <div className="guide-filter-chips">
+        {(hasUnitQuery || filterChips.length > 0 || (!ranked && needle && displayedCount > 0) || (!selectedGear && conditions.length>1)) && <div className="guide-filter-chips">
           {!selectedGear && conditions.length>1 && <div className="quick-conditions" aria-label="查询条件">{conditions.map(term=><button type="button" key={term} className="guide-filter-chip" aria-label={"移除"+term} onClick={()=>changeQuery(conditions.filter(t=>t!==term).join(" + "))}>{term} <span aria-hidden>×</span></button>)}</div>}
           {hasUnitQuery && <div className="guide-search-scope" role="group" aria-label="棋子检索范围">
             {(["all","carry","unit"] as const).map((option, index) => <button key={option} type="button" aria-pressed={intent.scope === option}
               onClick={() => { setQuery(intent.text); setScope(option); }}>{["全部","主C","含棋子"][index]}</button>)}
           </div>}
           {filterChips.map(chip => <button key={chip.id} type="button" className="guide-filter-chip" aria-label={"移除" + chip.text} onClick={chip.remove}>{chip.text} <span aria-hidden="true">×</span></button>)}
-          {displayedCount > 0 && <span className="guide-result-count" aria-hidden="true">{displayedCount} 套阵容</span>}
-          {filterChips.length > 0 && <button type="button" className="guide-filter-clear" onClick={() => choose(emptyFilters)}>清除筛选</button>}
+          {!ranked && displayedCount > 0 && <span className="guide-result-count" aria-hidden="true">{displayedCount} 套阵容</span>}
+          {filterChips.length + Number(Boolean(styleKey)) > 1 && <button type="button" className="guide-filter-clear" onClick={() => choose(emptyFilters)}>清除筛选</button>}
         </div>}
       </div>
     </div>
