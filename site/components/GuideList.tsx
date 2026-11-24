@@ -10,7 +10,7 @@ import { canRankRecommendations, compareGuideFamilyPerformance, currentFamilyBat
 import { carryMinGames, guideCarryRows } from "@/domain/guide-carry-stats";
 import { sectionTeams } from "@/domain/document-flow";
 import { boardTitle, groupGuides, type GuideFamily } from "@/domain/guide-families";
-import { guideBoardName, guideFacets, guideLink, guidePlaystyle, guideRollLevel, guideRoster, guideRoute, guideStrategyLabel, guideTitleWithoutPlaystyle, matchingGear, parseGuideFilters, primaryFirst, readingNotes, type GuideFilters, type GuideSearchScope, type GuideSort } from "@/domain/guide-reading";
+import { guideBoardName, guideFacets, guideLink, guidePlaystyle, guideRollLevel, guideRoster, guideRoute, guideStrategyLabel, guideTitleWithoutPlaystyle, matchingGear, parseGuideFilters, primaryFirst, readingNotes, repeatsFormationLabel, type GuideFilters, type GuideSearchScope, type GuideSort } from "@/domain/guide-reading";
 import { patchRecommendationLabels, type PatchRecommendationBatch } from "@/domain/patch-recommendations";
 import { homeGuideFilter, guideWearerQuery, searchPhaseNote, splitGuideConditions, guideSearchKey, guideStyleKey } from "@/domain/guide-search";
 import { equippedGuideRoutes, familyNameMatches, homeSearchIntent, matchHomeGuide, searchUnitIds } from "@/domain/home-guide-search";
@@ -28,6 +28,8 @@ import { sameEdition } from "@/domain/version-updates";
 import { guideBoardKind } from "./GuidePlacement";
 import { formationCoreResult } from "./GuideFormationStats";
 import { PatchRecommendationList, type RecommendationCard } from "./PatchRecommendationList";
+import { GuideConditionIcon } from "./GuideEquipmentConditions";
+import { guideConditionTag, guideConditionsAnchor, guideEquipmentConditions } from "@/domain/guide-equipment-conditions";
 import { HomeGearSearch, isHomeGear } from "./HomeGearSearch";
 import { GuideCardBoard, GuideQuickView } from "./GuideCardBoard";
 import { GuideStatsTable, guideStatsMetricLabels, type GuideStatsTableRow } from "./GuideStatsTable";
@@ -260,10 +262,11 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
       const playstyle = guidePlaystyle(section);
       const filterStyle = playstyle ?? facet.style;
       const viewCategory = browseCategory(section, playstyle);
-      return { section, data, teams, facet, family, rows, costsByBoard, rowCosts, costOptions, playstyle, filterStyle, viewCategory, augment: heroAugmentForGuide(section) };
+      const curated = patch?.build ? guideEquipmentConditions(section, teams, data, patch.build) : undefined;
+      return { section, data, teams, facet, family, rows, costsByBoard, rowCosts, costOptions, playstyle, filterStyle, viewCategory, curated, augment: heroAugmentForGuide(section) };
     });
     return { regular: prepare(sections), "hero-augments": prepare(heroSections) };
-  }, [sections, heroSections, season]);
+  }, [sections, heroSections, season, patch?.build]);
 
   const visible = library[view];
   const hasCurrentStats = currentFamilyBatch(familyStats, season.id, patch);
@@ -573,7 +576,29 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
     const record = showReview && teamId ? decisions.get(`${sectionId}:${teamId}`) : undefined;
     return record?.status === "review" ? record : undefined;
   };
-  const displayedCount = recommended ? recommendationCards.length : ranked ? statsRows.length : results.length;
+  const featured = recommended ? candidates.flatMap(({ section, curated, matches }) => {
+    const board = curated?.board;
+    if (!board || !canShowBoard(section, board) || (needle && !matches.some(hit => hit.board.id === board.id))) return [];
+    return curated.rows.filter(row => row.featured).map(condition => ({ section, board, condition }));
+  }).slice(0, 4) : [];
+  function conditionLink(sectionId: string, boardId: string, cardId: string) {
+    return guideLink(sectionId, boardId, homeGuideReturn(home, cardId, boardId)) + "#" + guideConditionsAnchor;
+  }
+  const featuredRail = featured.length > 0 && <section className="home-featured-conditions" aria-label="顶级条件">
+    <h2>顶级条件</h2>
+    <ul>{featured.map(({ section, board, condition }) => {
+      const id = `condition-${section.id}-${condition.id}`;
+      return <li key={id} id={"guide-card-" + id}>
+        <a href={conditionLink(section.id, board.id, id)} data-home-board={board.id}>
+          <GuideConditionIcon condition={condition} size={26} />
+          <strong>{condition.name}</strong><span className="home-condition-separator" aria-hidden>·</span><span>{section.title}</span>
+        </a>
+      </li>;
+    })}</ul>
+  </section>;
+  const additionalFeatured = new Set(featured.filter(({ section, board }) => !recommendationCards.some(card =>
+    card.rating.sectionId === section.id && card.team.id === board.id)).map(({ board }) => board.id)).size;
+  const displayedCount = recommended ? recommendationCards.length + additionalFeatured : ranked ? statsRows.length : results.length;
   const crossTab = needle && !displayedCount && !equipmentQuery && (!recommended || hasUnitQuery)
     ? candidatesFor(library[recommended || isHeroList ? "regular" : "hero-augments"], conditions, false)
       .sort((a,b) => b.rank - a.rank).slice(0, 8)
@@ -599,7 +624,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
 
   const renderCards = (group: Card[], groupName: string, eager: boolean) => {
     const CardTitle = groupName ? "h3" : "h2";
-    return <div className="guide-list reader-list">{group.map(({ section, data, team, teams, matches, augment, siblings, family, rating: matchedRating, core, routeName, clusterId, rows, routes, cardId, context: searchContext, unitLabel, facet, playstyle }, index) => {
+    return <div className="guide-list reader-list">{group.map(({ section, data, team, teams, matches, augment, siblings, family, rating: matchedRating, core, routeName, clusterId, rows, routes, cardId, context: searchContext, unitLabel, facet, playstyle, curated }, index) => {
       const primary = teams[0];
       const kind = team && guideBoardKind(section, team, primary);
       const alternative = team && team.id !== primary.id;
@@ -645,11 +670,14 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
       const quickNote = expanded && opening && fullOpening?.startsWith(opening)
         ? homeOpening(fullOpening.slice(opening.length).trim(), title)
         : undefined;
-      const detailsIds = [rating?.games ? ratingId : "", review ? reviewId : ""].filter(Boolean).join(" ") || undefined;
       const strategy = team && guideStrategyLabel(section, team, data, primary);
+      const heroCondition = augment && curated?.rows.find(row => row.id === augment.id);
+      const conditionId = heroCondition ? `${titleId}-condition` : undefined;
+      const detailsIds = [rating?.games ? ratingId : "", review ? reviewId : "", conditionId].filter(Boolean).join(" ") || undefined;
+      const repeatedFormation = !needle && !alternative && repeatsFormationLabel(playstyle, strategy);
       const description = augment ? [augment.round, augment.label || augment.name, strategy].filter(Boolean).join(" · ")
         : alternative && team?.id !== family?.lead.team.id && kind && !title.includes(kind)
-          ? [kind, strategy].filter(Boolean).join(" · ") : strategy ?? (playstyle ? "" : facet.style);
+          ? [kind, strategy].filter(Boolean).join(" · ") : repeatedFormation ? "" : strategy ?? (playstyle ? "" : facet.style);
       const variants = [...new Map([{ section, teams, matches, rows }, ...siblings].flatMap(entry => {
         const options = needle ? entry.matches.filter(match => match.kind === "board").map(match => match.board) : entry.teams;
         return options.filter(option => {
@@ -670,6 +698,9 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
           {variantReview && <span className="guide-review-badge" title={variantReview.note}>待复核</span>}
         </a></li>;
       })}</ul>;
+      const conditionBoard = curated?.board?.id;
+      const cardConditions = curated && (team?.id === conditionBoard || routes?.some(board => board.id === conditionBoard))
+        ? curated.rows.filter(row => row.featured) : [];
       return <article key={cardId} className={"guide-result" + (expanded ? " is-quick-open" : "")} id={"guide-card-" + cardId}>
         <a className="guide-result-main" href={link} data-home-board={team?.id} aria-labelledby={titleId} aria-describedby={detailsIds}>
           <div className="guide-title-row">
@@ -684,7 +715,12 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
               <small>{rating.games.toLocaleString("zh-CN")} 场{core ? " · 核心样本" : formation ? " · 跨人口样本" : ""}</small>
             </span>}
           </div>
-          {description && <small className="guide-result-meta">{description}</small>}
+          {description && <small className="guide-result-meta" id={conditionId}>
+            {heroCondition ? <span className="guide-hero-condition">
+              <span className="guide-condition-tag"><GuideConditionIcon condition={heroCondition} size={16} />{guideConditionTag(heroCondition)}</span>
+              <span>{description}</span>
+            </span> : description}
+          </small>}
           {formation && <small className="guide-result-meta">
             {formation.label} <b>{formation.mean.toFixed(2)}</b> · {formation.games.toLocaleString("zh-CN")} 场
           </small>}
@@ -692,15 +728,21 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
           {opening && <p>{opening}</p>}
           {needle && searchDetails && <small className="guide-result-meta">{searchDetails}</small>}
         </a>
+        {cardConditions.length > 0 && conditionBoard && <div className="guide-featured-conditions" aria-label="顶级条件">
+          <span>顶级条件</span>{cardConditions.map(condition => <a key={condition.id}
+            href={conditionLink(section.id, conditionBoard, cardId)} data-home-board={conditionBoard}>
+            <GuideConditionIcon condition={condition} size={19} />{condition.name}
+          </a>)}
+        </div>}
         {team && <>
           <GuideCardBoard team={team} data={data} roles={roles} chaseTargets={chaseTargets}
-            eager={eager && index === 0} title={title} controls={previewId} expanded={expanded} onToggle={() => {
+            eager={eager && index === 0} title={title} controls={previewId} expanded={expanded} strategy={strategy} onToggle={() => {
               const card = document.getElementById("guide-card-" + cardId);
               if (card) quickAnchor.current = { card, top: card.getBoundingClientRect().top };
               setQuickView(expanded ? undefined : { key: previewKey, home });
             }} />
           {expanded && <GuideQuickView id={previewId} team={team} data={data} roles={roles}
-            strategy={strategy} note={quickNote}
+            note={quickNote}
             href={guideLink(section.id, team.id, homeGuideReturn(home, cardId, team.id))} />}
         </>}
         {routes && routes.length > 1 && <nav className="guide-lineup-routes" aria-label={section.title + "的棋盘"}>
@@ -864,8 +906,8 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
     {searching && <p className="site-lookup-message" role="status">正在搜索…</p>}
 
     {recommended && <>
-      {recommendationSnapshot && <PatchRecommendationList stats={recommendationSnapshot} cards={recommendationCards} home={home}
-        previousBuild={!currentHomeReady} />}
+      {recommendationSnapshot ? <PatchRecommendationList stats={recommendationSnapshot} cards={recommendationCards} home={home}
+        previousBuild={!currentHomeReady} featured={featuredRail} /> : featuredRail}
       {!displayedCount && !crossTab.length && needle && showLookup && !equipmentQuery && <div className="empty-inline">{archiveLink}</div>}
       {!displayedCount && !crossTab.length && !showLookup && !searching && (needle || hasFilter ? emptyState : <div className="empty-inline"><p>{currentHomeEvidence ? "暂无符合条件的本版推荐" : "本版体系数据待更新"}</p>
         {archiveLink}

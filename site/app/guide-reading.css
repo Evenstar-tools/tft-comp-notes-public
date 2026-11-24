@@ -34,6 +34,7 @@
 .guide-title-row h2 {overflow-wrap:anywhere;}
 .guide-card-heading,.guide-page-heading {display:flex;align-items:center;flex-wrap:wrap;gap:3px 8px;min-width:0;}
 .guide-playstyle-tag {display:inline-block;padding:1px 7px;border:1px solid var(--line);border-radius:4px;background:var(--raised);color:var(--accent);font-size:.8125rem;font-weight:650;line-height:1.3;font-variant-numeric:tabular-nums;}
+.guide-condition-tag {display:inline-flex;align-items:center;gap:4px;padding:2px 6px;border-radius:4px;background:light-dark(#f3e7e6,#392a32);color:light-dark(#813f4c,#ffc3ce);font-size:.75rem;font-weight:650;line-height:1.35;white-space:nowrap;}
 .guide-review-badge {
   display:inline-block;padding:2px 7px;border-radius:4px;white-space:nowrap;
   background:light-dark(#ebecef,#292e35);color:light-dark(#4b5057,#c2c8d0);

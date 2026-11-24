@@ -3,6 +3,7 @@ import { Fragment, useCallback, useEffect, useId, useMemo, useRef, useState, typ
 import { ArrowRight, ImageDown, Maximize2, X } from "lucide-react";
 import { Board } from "./Board";
 import { GuideEquipment } from "./GuideEquipment";
+import { GuideEquipmentConditions } from "./GuideEquipmentConditions";
 import { GuideEditorLink } from "./GuideEditorLink";
 import { GuidePoster } from "./GuidePoster";
 import { guideBoardKind, teamPlacement } from "./GuidePlacement";
@@ -15,6 +16,7 @@ import { sectionTeams } from "@/domain/document-flow";
 import { allBlocks, guideBoardName, guideLink, guideRoute, guideStrategyLabel, oceanGravesUnlockBoardId, primaryFirst, readingNotes, type GuideRole } from "@/domain/guide-reading";
 import { compactGuideParagraph, compactUtilityCopy, hasGuideLinks, rememberGuideCopy } from "@/domain/guide-copy";
 import { guideFlexPreview, reviewedGuidePhases } from "@/domain/guide-execution";
+import { guideEquipmentConditions } from "@/domain/guide-equipment-conditions";
 import { rerollRoute } from "@/domain/reroll-stages";
 import { boardTraitLink } from "@/domain/trait-performance";
 import { editorLink, itemLink, ownerEditorPath, posterShareLink, readPosterShare, type PosterShare } from "@/domain/links";
@@ -22,7 +24,7 @@ import { posterStageTitle } from "@/domain/poster";
 import { boardStages, readTeamStage, stageLabels } from "@/domain/team-stages";
 import { traitCounts, traitGroup, usedPopulation } from "@/domain/team";
 import { displayTraitNames } from "@/domain/trait-names.mjs";
-import { heroAugmentForGuide, heroAugmentCategory } from "@/domain/hero-augments";
+import { heroAugmentForGuide, heroAugmentCategory, omitRepeatedHeroEntry } from "@/domain/hero-augments";
 import familyStats from "@/data/guide-family-stats.json";
 import { guideFamilyRows } from "@/domain/guide-family-stats";
 import type { Section } from "@/domain/document";
@@ -144,6 +146,10 @@ export function GuideTeams({ section, data, initialTeam, initialStage, initialFl
     ...(siblings ?? []),
   ].map(variant => [variant.teamId, variant])).values()];
   const augment = heroAugmentForGuide(section);
+  const equipmentConditions = guideEquipmentConditions(section, teams, data);
+  const conditionBoard = equipmentConditions?.board;
+  const inlineAugment = augment && equipmentConditions?.rows.some(row => row.id === augment.id);
+  const augmentUnitName = inlineAugment ? data.units.find(unit => unit.id === augment.unitId)?.name : undefined;
   const heroGuide = !!augment || section.category === heroAugmentCategory;
   const familyRows = heroGuide ? [] : guideFamilyRows(familyStats, data.id, section.id, teams);
   const matchingFamily = familyRows.filter(row => row.boards.some(board => board.id === team.id));
@@ -173,7 +179,8 @@ export function GuideTeams({ section, data, initialTeam, initialStage, initialFl
     const body = boardNames.includes(prefix) ? source.slice(separator < 0 ? source.length : separator + 1).trim() : source;
     const block = blocks.find(block => block.type === "text" && !block.label && block.text?.trim() === source);
     const linked = block && hasGuideLinks(block);
-    const text = linked ? body : compactGuideParagraph(body, team, data, seenCopy, advice?.note);
+    const visibleBody = inlineAugment ? omitRepeatedHeroEntry(body, augment, augmentUnitName) : body;
+    const text = linked ? body : compactGuideParagraph(visibleBody, team, data, seenCopy, advice?.note);
     if (!text) continue;
     rememberGuideCopy(text, seenCopy);
     passages.push({ source, text, brief: !linked && !text.includes("\n") && text.length <= 90, blockId: block?.id });
@@ -370,6 +377,8 @@ export function GuideTeams({ section, data, initialTeam, initialStage, initialFl
               : label}</li>;
           })}</ul>
         </div>
+        {equipmentConditions && <GuideEquipmentConditions conditions={equipmentConditions} guideHref={guideHref}
+          onViewBoard={conditionBoard && (conditionBoard.id !== team.id || !mainBoardActive) ? () => pickTeam(conditionBoard) : undefined} />}
         {flexPreview && <div className="guide-flex-slot" aria-label="灵活位">
           <strong className="guide-flex-label">{showFlex ? "替换预览" : "灵活位"}</strong>
           <span className="guide-flex-swap">

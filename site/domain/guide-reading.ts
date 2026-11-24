@@ -343,6 +343,10 @@ const reviewedFormation: Record<string, string> = {
   "00000000-0000-4000-8000-000000000078": "8级稳血",
 };
 
+export function repeatsFormationLabel(style: string | undefined, strategy: string | undefined) {
+  return (style === "84" && strategy === "8级成型") || (style === "95" && strategy === "9级成型");
+}
+
 export function guideStrategyLabel(section: Section, team: Team, data: Season, primary: Team) {
   const kind = guideBoardKind(section, team, primary);
   if (kind === "过渡") return;

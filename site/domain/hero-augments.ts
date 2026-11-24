@@ -23,3 +23,11 @@ export function heroAugmentForGuide(section: Section) {
   const name = label?.text?.slice(heroAugmentLabel.length).trim();
   return augments.find(augment => augment.name === name || augment.label === name);
 }
+
+export function omitRepeatedHeroEntry(text: string, augment: HeroAugment, unitName?: string) {
+  if (!text.startsWith(augment.round)) return text;
+  const selection = text.slice(augment.round.length).trimStart().match(/^拿(?:到)?\s*([\s\S]+)$/)?.[1];
+  const name = [augment.label, augment.name, unitName && `${unitName}专属`].find(label => label && selection?.startsWith(label));
+  if (!selection || !name) return text;
+  return selection.slice(name.length).match(/^\s*(?:才走。|[，。]|就)\s*([\s\S]+)$/)?.[1] ?? text;
+}

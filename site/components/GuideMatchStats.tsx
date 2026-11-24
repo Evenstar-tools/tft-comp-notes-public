@@ -125,7 +125,7 @@ export function GuideMatchStats({ id, stage, team, teams, section, edition, augm
     </div>
     <div className="guide-stat-body">
       {activeView === "board" && <>
-        {!heroGuide && <p className="muted guide-stat-scope">按结算等级和完整名单统计。</p>}
+        {!heroGuide && !rating?.games && <p className="muted guide-stat-scope">按结算等级和完整名单统计。</p>}
         {rating?.games ? <PlacementSummary rating={rating} stage={stage} />
           : !formation && <p className="muted">{heroGuide ? "本盘暂无强化样本。" : "本盘暂无固定名单样本。"}</p>}
         {formation && <GuideFormationStats evidence={formation} />}

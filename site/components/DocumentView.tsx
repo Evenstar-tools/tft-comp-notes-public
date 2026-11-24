@@ -1,5 +1,6 @@
 "use client";
 import { augmentHref } from "@/domain/augment-library";
+import { guideEquipmentConditions } from "@/domain/guide-equipment-conditions";
 import { GuideTeams, type GuidePassage, type GuidePatchAdvice } from "./GuideTeams";
 import { sectionTeams } from "@/domain/document-flow";
 import { boardTitle } from "@/domain/guide-families";
@@ -186,12 +187,14 @@ export function DocumentView({ section, gameData, publicationId, initialTeam, in
   const folded = new Set(gameData ? Object.values(section.generatedRegions ?? {}).flatMap(region => [region.textId, region.imageId]) : []);
   const augment = heroAugmentForGuide(section);
   const primary = gameData && primaryFirst(sectionTeams(section), section.primaryTeamId)[0];
+  const augmentAtBoard = augment && gameData && primary && guideEquipmentConditions(section, [primary], gameData)?.rows.some(row => row.id === augment.id);
   if (primary) for (const block of allBlocks(section.blocks)) {
     if (isBoardLoadout(block) || ((block.type === "heading" || block.label) && block.text === boardLoadoutHeading)) folded.add(block.id);
   }
   if (augment) for (const block of section.blocks) {
     if (block.type !== "text") continue;
     if (block.text === heroAugmentLabel + augment.name ||
+        block.text?.trim() === "棋盘按 S19 PBE 强化机制构筑。" ||
         (publicationId && legacyHeroAugmentPlacement.test(block.text?.trim() ?? ""))) folded.add(block.id);
   }
   if (primary) for (const block of allBlocks(section.blocks)) {
@@ -286,7 +289,7 @@ export function DocumentView({ section, gameData, publicationId, initialTeam, in
         {playstyle && <span className="guide-playstyle-tag" title="打法">{playstyle}</span>}
         {performance}
       </div>
-      {augment && <p className="guide-hero-augment"><strong><a href={augmentHref(augment.id)} title={augment.name}>{augment.label} ↗</a></strong> <span>{augment.round} {augment.rarity} · {augment.role}</span></p>}
+      {augment && !augmentAtBoard && <p className="guide-hero-augment"><strong><a href={augmentHref(augment.id)} title={augment.name}>{augment.label} ↗</a></strong> <span>{augment.round} {augment.rarity} · {augment.role}</span></p>}
     </>;
   }
   function teamHeader(team: Team, performance?: ReactNode) {

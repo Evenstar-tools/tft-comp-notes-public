@@ -1,4 +1,4 @@
-import { ChevronDown } from "lucide-react";
+import { ArrowUpRight, ChevronDown } from "lucide-react";
 import { equipmentLabel } from "@/domain/guide-equipment";
 import { guideRoster, type GuideRole } from "@/domain/guide-reading";
 import { traitCounts, traitGroup, usedPopulation } from "@/domain/team";
@@ -19,9 +19,9 @@ function shortName(member: RosterMember) {
   return member.unit.id === "renata-glasc" ? "烈娜塔" : member.unit.name.split(" · ")[0];
 }
 
-export function GuideCardBoard({ team, data, roles, chaseTargets, eager, title, controls, expanded, onToggle }: {
+export function GuideCardBoard({ team, data, roles, chaseTargets, eager, title, controls, expanded, strategy, onToggle }: {
   team: Team; data: Season; roles: GuideRole[]; chaseTargets: readonly string[]; eager: boolean;
-  title: string; controls: string; expanded: boolean; onToggle: () => void;
+  title: string; controls: string; expanded: boolean; strategy?: string; onToggle: () => void;
 }) {
   const members = guideRoster(team, data, roles);
   const roster = [...members.filter(member => coreRole(member.role)), ...members.filter(member => !coreRole(member.role))];
@@ -30,12 +30,16 @@ export function GuideCardBoard({ team, data, roles, chaseTargets, eager, title, 
   const itemMap = new Map(data.items.map(item => [item.id, item]));
   const lineupLabel = roster.map(({ unit, role }) => [unit.name, coreRole(role)].filter(Boolean).join(" ")).join("、");
   const action = expanded ? "收起快看" : "快看棋盘";
+  const level = usedPopulation(team.pieces);
 
   return <button className="guide-card-board-toggle" type="button" aria-label={action + " · " + title}
     aria-expanded={expanded} aria-controls={expanded ? controls : undefined}
     aria-describedby={expanded ? undefined : controls + "-roster"} onClick={onToggle}>
     <span className="guide-card-board-top">
-      {!expanded && <span className="guide-card-traits">
+      {expanded ? <span id={controls + "-title"} className="guide-quick-title">
+        <strong>{level} 人口棋盘</strong>
+        {strategy && strategy !== `${level}级成型` && <small>{strategy}</small>}
+      </span> : <span className="guide-card-traits">
         {traits.map(trait => <span key={trait.id} title={(trait.gameName ?? trait.name) + " " + trait.level + (trait.countMode === "stars" ? " 星" : "")}>
           <TraitBadge trait={trait} size={15} tone="active" /><b>{trait.level}</b>
         </span>)}
@@ -70,30 +74,29 @@ export function GuideCardBoard({ team, data, roles, chaseTargets, eager, title, 
   </button>;
 }
 
-export function GuideQuickView({ id, team, data, roles, strategy, note, href }: {
-  id: string; team: Team; data: Season; roles: GuideRole[]; strategy?: string; note?: string; href: string;
+export function GuideQuickView({ id, team, data, roles, note, href }: {
+  id: string; team: Team; data: Season; roles: GuideRole[]; note?: string; href: string;
 }) {
-  const roster = guideRoster(team, data, roles);
-  const core = roster.filter(member => coreRole(member.role));
-  const members = core.length ? core : roster.filter(member => member.piece.items.length).slice(0, 3);
+  const equipped = guideRoster(team, data, roles).filter(member => member.piece.items.length);
+  const core = equipped.filter(member => coreRole(member.role));
+  const members = core.length ? core : equipped.slice(0, 3);
   const items = new Map(data.items.map(item => [item.id, item]));
-  const level = usedPopulation(team.pieces);
 
   return <section id={id} className="guide-quick-view" aria-labelledby={id + "-title"}>
-    <div className="guide-quick-view-board">
-      <h4 id={id + "-title"}>{level} 人口{strategy ? " · " + strategy : ""}</h4>
-      <div className="read-board">
-        <Board data={data} pieces={team.pieces} instrumentPositions={team.instrumentPositions}
-          selectedId={null} targeting={null} onCell={() => {}} readOnly />
-      </div>
+    <div className="read-board">
+      <Board data={data} pieces={team.pieces} instrumentPositions={team.instrumentPositions}
+        selectedId={null} targeting={null} onCell={() => {}} readOnly />
     </div>
     <div className="guide-quick-view-gear">
-      {members.length > 0 && <>
-        <h4>核心配装</h4>
+      <header className="guide-quick-gear-head">
+        {members.length > 0 && <h4>{core.length ? "核心配装" : "配装"}</h4>}
+        <a className="guide-quick-full" href={href} data-home-board={team.id}>完整攻略 <ArrowUpRight size={14} aria-hidden /></a>
+      </header>
+      {members.length > 0 &&
         <ul>{members.map(member => {
           const { unit, piece, role } = member;
           return <li key={piece.instanceId}>
-            <img className={"guide-piece-portrait cost-" + unit.cost} src={unit.image} alt="" width={42} height={42} loading="lazy" decoding="async" />
+            <img className={"guide-piece-portrait cost-" + unit.cost} src={unit.image} alt="" width={38} height={38} loading="lazy" decoding="async" />
             <span className="guide-quick-view-owner">
               <strong>{shortName(member)}</strong>
               <small>{coreRole(role) ? coreRole(role) + " · " : ""}{piece.stars} 星</small>
@@ -107,10 +110,8 @@ export function GuideQuickView({ id, team, data, roles, strategy, note, href }: 
               })}
             </span>
           </li>;
-        })}</ul>
-      </>}
+        })}</ul>}
       {note && <p>{note}</p>}
-      <a className="guide-quick-full" href={href} data-home-board={team.id}>查看完整攻略</a>
     </div>
   </section>;
 }
