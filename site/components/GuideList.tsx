@@ -26,6 +26,7 @@ import { SiteSearchResults, useSiteSearch } from "./SiteSearchResults";
 import { siteSearchIntent, type SiteSearchResponse } from "@/domain/site-search";
 import { sameEdition } from "@/domain/version-updates";
 import { guideBoardKind } from "./GuidePlacement";
+import { formationCoreResult } from "./GuideFormationStats";
 import { PatchRecommendationList, type RecommendationCard } from "./PatchRecommendationList";
 import { HomeGearSearch, isHomeGear } from "./HomeGearSearch";
 import { GuideCardBoard, GuideQuickView } from "./GuideCardBoard";
@@ -604,13 +605,15 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
       const alternative = team && team.id !== primary.id;
       const review = reviewFor(section.id, team?.id);
       const rating = review ? undefined : matchedRating;
+      const formation = rating && !core && team ? formationCoreResult(team, data.id, patch?.build) : undefined;
       const useGuideEntry = team?.id === primary?.id && (!needle || matches.some(match => match.board.id === team?.id && match.namedFamily));
       const link = guideLink(section.id, (useGuideEntry ? section.reroll?.entryTeamId : undefined) ?? team?.id,
         homeGuideReturn(home, cardId, team?.id));
       const notes = team && readingNotes(section, team, data);
       const roles = notes?.roles ?? [];
       const decision = !needle && team ? decisions.get(`${section.id}:${team.id}`) : undefined;
-      const entryNote = decision?.status === "recommended" || decision?.status === "conditional" ? decision.note : undefined;
+      const entryNote = decision && (decision.status === "recommended" || decision.status === "conditional" ||
+        (formation && decision.status === "avoid")) ? decision.note : undefined;
       const intro = searchContext ?? entryNote ?? notes?.opening ?? "";
       const guideName = guideTitleWithoutPlaystyle(section.title, playstyle);
       const [sourceIntro, compactIntro] = shortOpenings[guideName] ?? [];
@@ -677,10 +680,13 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
             </div>
             {rating && <span id={ratingId} className={"guide-placement " + (rating.mean < 4.5 ? "strong" : rating.mean > 4.5 ? "weak" : "middle")}
               title={(core ? coreStats.patch + " · " + coreStats.hours + " 小时核心样本" : familyStats.patch + " · 近 " + familyStats.days + " 天体系样本") + " · 前四 " + (100 * rating.topFourRate).toFixed(1) + "% · 吃鸡 " + (100 * rating.winRate).toFixed(1) + "%"}>
-              {recommendationTier(rating) !== "review" && <><span>{core ? "核心均名" : "体系均名"}</span> <strong>{formatRecommendationMean(rating.mean)}</strong></>}<small>{rating.games.toLocaleString("zh-CN")} 场</small>
+              {recommendationTier(rating) !== "review" && <><span>{core ? "核心均名" : formation ? "跨人口均名" : "体系均名"}</span> <strong>{formatRecommendationMean(rating.mean)}</strong></>}<small>{rating.games.toLocaleString("zh-CN")} 场</small>
             </span>}
           </div>
           {description && <small className="guide-result-meta">{description}</small>}
+          {formation && <small className="guide-result-meta">
+            {formation.label} <b>{formation.mean.toFixed(2)}</b> · {formation.games.toLocaleString("zh-CN")} 场
+          </small>}
           {gearMatches.length > 0 && <small className="guide-result-meta">带 {gearMatches.map(item => item.name).join("、")}</small>}
           {opening && <p>{opening}</p>}
           {needle && searchDetails && <small className="guide-result-meta">{searchDetails}</small>}

@@ -16,6 +16,14 @@ export function formationEvidence(team: Team, edition: string) {
     team.pieces.map(piece => piece.unitId), usedPopulation(team.pieces));
 }
 
+export function formationCoreResult(team: Team, edition: string, build?: string) {
+  const evidence = formationEvidence(team, edition);
+  const core = evidence?.group.coreSummary;
+  if (!build || evidence?.group.build !== build || !core) return;
+  const result = tierPerformance(core.placementCounts);
+  if (result && result.games >= stats.minGames) return { label: core.label, ...result };
+}
+
 export function GuideFormationFamilyReference({ sample }: { sample: FormationFamilyReference }) {
   const result = tierPerformance(sample.placementCounts);
   if (!result || result.games < stats.minGames) return null;
@@ -53,11 +61,16 @@ function ComparisonTable({ rows, caption }: { rows: Row[]; caption: string }) {
 export function GuideFormationStats({ evidence }: { evidence: NonNullable<ReturnType<typeof formationEvidence>> }) {
   const { group, board } = evidence;
   const rows = group.boards.map(({ name, sample }) => ({ name, counts: sample.placementCounts, url: sample.url }));
+  const core = group.coreSummary;
+  const coreResult = core && tierPerformance(core.placementCounts);
   const subset = board.subset;
   const remaining = subset && remainingPlacements(board.sample.placementCounts, subset.sample.placementCounts);
   return <details className="guide-formation" open>
     <summary>同条件阵容对照</summary>
     <p>{group.population} 级结算 · 各自固定名单 · {group.condition} · {group.exclusions}</p>
+    {core && coreResult && coreResult.games >= stats.minGames && <p>
+      <a href={core.url} target="_blank" rel="noreferrer">{core.label} ↗</a> · 恰好九张不同棋子 · 均名 {coreResult.mean.toFixed(2)} · {number.format(coreResult.games)} 场
+    </p>}
     <ComparisonTable rows={rows} caption={group.condition} />
     {subset && remaining && <>
       <ComparisonTable caption={board.name + " · 同盘成型对照"} rows={[

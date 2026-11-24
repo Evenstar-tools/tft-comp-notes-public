@@ -61,12 +61,14 @@ export type FormationFamilyReference = FormationSample & { name: string; checked
 export type FormationComparison = {
   edition: string;
   patch: string;
+  build?: string;
   windowHours: number;
   window?: string;
   checkedAt: string;
   population: number;
   condition: string;
   exclusions: string;
+  coreSummary?: FormationSample & { label: string };
   boards: {
     name: string;
     roster: string[];
