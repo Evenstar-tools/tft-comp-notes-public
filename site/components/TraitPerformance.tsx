@@ -5,7 +5,6 @@ import type { Trait } from "@/domain/types";
 
 const pct = new Intl.NumberFormat("zh-CN", { style: "percent", maximumFractionDigits: 1 });
 const number = new Intl.NumberFormat("zh-CN");
-const compact = new Intl.NumberFormat("zh-CN", { notation: "compact", maximumFractionDigits: 1 });
 const toneLabels = { strong: "表现较好", middle: "表现居中", weak: "表现较弱", sparse: "小样本" };
 
 function meanTone(mean: number, games: number) {
@@ -75,7 +74,11 @@ export function TierResults({ trait, effects, overall, picked, onPick, links, co
   const tierName = (n: number) => n + (trait.countMode === "stars" ? "星" : "");
   const effectByTier = new Map(effects.map(effect => [effect.min, effect.description]));
   const tiers = [...new Set([...trait.thresholds, ...effectByTier.keys()])].sort((a, b) => a - b);
-  return <div className="trait-performance" data-count-mode={trait.countMode} role="group" aria-label={trait.name + "各档位战绩"}>
+  const single = tiers.length === 1 && !effectByTier.get(tiers[0]);
+  return <div className="trait-performance" data-single={single || undefined} role="group" aria-label={trait.name + "各档位战绩"}>
+    {!single && tiers.length > 0 && <div className="trait-tier-head" aria-hidden>
+      <span>档位</span><span>平均排名</span>{effects.length > 0 && <span>档位效果</span>}
+    </div>}
     {tiers.map(tier => {
       const effect = effectByTier.get(tier);
       const hasThreshold = trait.thresholds.includes(tier);
@@ -94,9 +97,10 @@ export function TierResults({ trait, effects, overall, picked, onPick, links, co
         {hasThreshold ? <button className="trait-tier-stat" type="button" aria-expanded={open} aria-controls={detailsId}
           aria-label={trait.name + " " + label} title={label}
           onClick={() => onPick(open ? undefined : tier)}>
-          <b>{tierName(tier)}</b><span className="tier-mean" data-tone={tone}>{mean ?? "—"}</span>
+          {single ? <span className="trait-stat-caption">平均排名</span> : <b>{tierName(tier)}</b>}
+          <span className="tier-mean" data-tone={tone}>{mean ?? "—"}</span>
+          {stat && <small>{number.format(stat.games)} 场</small>}
           <ChevronDown size={12} aria-hidden />
-          {stat && <small>{compact.format(stat.games)} 场</small>}
         </button> : <b className="trait-tier-label">{tierName(tier)}</b>}
         {effect && <p className="trait-tier-effect">{effect}</p>}
         <div className="tier-result" id={detailsId} hidden={!open} role="region" aria-label={trait.name + tierName(tier) + "详情"}>

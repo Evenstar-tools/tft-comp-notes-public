@@ -32,11 +32,10 @@ type TraitVisit = { url: string; view: TraitView; top: number; folds: string[]; 
 const entries = season.traits.map(trait => {
   const members = season.units.filter(unit => unit.traits.includes(trait.id))
     .sort((first, second) => first.cost - second.cost);
-  const searchNames = [
-    trait.name, trait.nameEn, trait.gameName, ...(trait.aliases ?? []),
-    ...members.flatMap(unitSearchNames),
-  ].flatMap(name => name ? [name.toLowerCase()] : []);
-  return { trait, members, searchNames };
+  const traitNames = [trait.name, trait.nameEn, trait.gameName, ...(trait.aliases ?? [])]
+    .flatMap(name => name ? [name.toLowerCase()] : []);
+  const searchNames = [...traitNames, ...members.flatMap(unitSearchNames).map(name => name.toLowerCase())];
+  return { trait, members, searchNames, traitNames };
 });
 
 function TraitEntry({ trait, members, memberQuery, overall, picked, onPick, links, comparison }: {
@@ -63,7 +62,7 @@ function TraitEntry({ trait, members, memberQuery, overall, picked, onPick, link
         <header className="trait-lookup-entry-heading">
           <div className="trait-lookup-title">
             <TraitBadge trait={trait} size={27} />
-            <h3 title={trait.nameEn}>{trait.name}</h3>
+            <h3 id={"lookup-" + trait.id} tabIndex={-1} title={trait.nameEn}>{trait.name}</h3>
           </div>
           <div className="trait-entry-actions">
             <a href={"/?" + new URLSearchParams({ q: (picked ?? "") + trait.name, sort: "category" })}
@@ -218,8 +217,20 @@ export function TraitsLibrary({ initialQuery, initialTrait, initialTier, meta, o
         {groups.map(group => (
           <section key={group.axis} id={`trait-column-${group.axis}`} hidden={!shown[group.axis] || group.entries.length === 0}
             aria-labelledby={`trait-group-${group.axis}`} className="trait-lookup-group">
-            <h2 id={`trait-group-${group.axis}`}>{group.label}</h2>
-            {group.entries.map(entry => <TraitEntry key={entry.trait.id} trait={entry.trait} members={entry.members} memberQuery={search}
+            <header className="trait-group-heading">
+              <h2 id={`trait-group-${group.axis}`}>{group.label}<span aria-hidden>{group.entries.length}</span></h2>
+              {group.entries.length > 1 && <select value="" aria-label={"在" + group.label + "栏定位"}
+                onChange={event => {
+                  const heading = document.getElementById("lookup-" + event.currentTarget.value);
+                  heading?.focus({ preventScroll: true });
+                  heading?.scrollIntoView({ block: "start" });
+                }}>
+                <option value="" disabled>定位羁绊</option>
+                {group.entries.map(({ trait }) => <option key={trait.id} value={trait.id}>{trait.name}</option>)}
+              </select>}
+            </header>
+            {group.entries.map(entry => <TraitEntry key={entry.trait.id} trait={entry.trait} members={entry.members}
+              memberQuery={entry.traitNames.includes(search) ? "" : search}
               overall={overall[entry.trait.id]} comparison={context ? {
                 scopeOn, board: context.compared[entry.trait.id] ?? context.stats, overallSource: meta.current ? meta.url : undefined, currentBoard: context.back,
               } : undefined} picked={view.tiers[entry.trait.id]}

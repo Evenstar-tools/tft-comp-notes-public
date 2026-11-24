@@ -26,9 +26,10 @@ function sampleForSort(boards: AugmentBoard[]) {
 }
 
 function Icon({entry}: {entry: AugmentEntry}) {
-  const src = augmentArtPath(entry);
+  const portrait = augmentUnits.get(entry.apiName)?.image;
+  const src = portrait || augmentArtPath(entry);
   return <span className={"aug-icon "+rarityClass(entry.rarity)} aria-hidden="true"><Hexagon size={19}/>
-    {src && <img key={src} loading="lazy" alt="" width={38} height={38} src={src}
+    {src && <img key={src} className={portrait ? "aug-portrait" : undefined} loading="lazy" alt="" width={38} height={38} src={src}
       onError={e=>{e.currentTarget.hidden=true;}}/>}</span>;
 }
 
@@ -129,6 +130,10 @@ function Catalog({guides,samples,currentPatch,initial}:Pick<Props,"guides"|"samp
     });
   },[query,rarity,round,kind,sort,guides,representative,initialId]);
   const visibleLimit = Math.max(limit, rows.findIndex(row => row.id === open) + 1);
+  const pairs: AugmentEntry[][] = [];
+  for (let i = 0; i < Math.min(visibleLimit, rows.length); i += 2) {
+    pairs.push(rows.slice(i, Math.min(i + 2, visibleLimit)));
+  }
   function reset() { change({q:undefined,tier:undefined,round:undefined,kind:undefined,sort:undefined,id:undefined}); }
   function choose(id:string) { change({id:open===id ? undefined : id, limit:filters.limit}); }
   const origin = validAugmentReturn(initial.from);
@@ -142,19 +147,23 @@ function Catalog({guides,samples,currentPatch,initial}:Pick<Props,"guides"|"samp
         <select aria-label="强化类型" value={kind} onChange={e=>{change({kind:e.target.value});}}><option value="">全部类型</option><option value="hero">英雄专属</option><option value="trait">羁绊强化</option><option value="regular">通用强化</option></select>
         <select aria-label="排序" value={sort} onChange={e=>{change({sort:e.target.value});}}><option value="default">默认排序</option><option value="board">按配装均名</option><option value="rarity">按品质</option><option value="name">按名称</option></select></div>
       <p className={query || rarity || round || kind || sort === "board" ? "aug-result-count" : "sr-only"} role="status">{rows.length} 个强化{sort==="board" && " · 取各强化场数最多的配装"}</p>
-      <div className="aug-list">{rows.slice(0,visibleLimit).map(e=>{
+      <div className="aug-list">{pairs.map(pair => <div className="aug-pair" key={pair[0].id}>{pair.map(e=>{
         const expanded=open===e.id, boards=samples[e.english] ?? [], sample=representative[e.english];
-        return <Fragment key={e.id}><button id={augmentCardId(e.id)} type="button" className="aug-row" aria-expanded={expanded}
-          aria-label={e.name+" · "+e.rarity} aria-controls={expanded?"info-"+e.id:undefined} onClick={()=>choose(e.id)}>
+        const hero = heroAugmentsById.get(e.apiName);
+        const description = hero ? [augmentUnits.get(e.apiName)?.name, hero.role].filter(Boolean).join(" · ") : e.effect;
+        const cardId = augmentCardId(e.id);
+        return <Fragment key={e.id}><button id={cardId} type="button" className="aug-row" aria-expanded={expanded}
+          aria-label={e.name+" · "+e.rarity} aria-describedby={cardId+"-effect"+(e.rounds.length ? " "+cardId+"-rounds" : "")}
+          aria-controls={expanded?"info-"+e.id:undefined} onClick={()=>choose(e.id)}>
           <Icon entry={e}/><span className="aug-identity"><strong>{e.name}</strong>
-            {(e.rounds.length > 0 || augmentUnits.has(e.apiName)) &&
-              <small>{[e.rounds.join(" / "), augmentUnits.get(e.apiName)?.name].filter(Boolean).join(" · ")}</small>}
+            <small id={cardId+"-effect"}>{description}</small>
           </span>
           {sort==="board" && sample?.mean !== undefined && <span className="aug-mean">同装均名 {sample.mean.toFixed(2)}<small>{sample.games} 场</small></span>}
-          <span className={"aug-tier "+rarityClass(e.rarity)}>{e.rarity}</span><ChevronDown className="aug-chevron" size={15}/></button>
+          <span className="aug-row-meta"><span className={"aug-tier "+rarityClass(e.rarity)}>{e.rarity}</span>
+            {e.rounds.length > 0 && <small id={cardId+"-rounds"}>{e.rounds.join(" / ")}</small>}</span><ChevronDown className="aug-chevron" size={15}/></button>
           {expanded && <div id={"info-"+e.id} className="aug-detail-panel"><Detail entry={e} guide={guides[e.apiName]} samples={boards}
-            results={selectionById.get(e.id) ?? []} returnTo={augmentUrl({...filters,id:e.id,limit:String(visibleLimit)}) + "#" + augmentCardId(e.id)} /></div>}</Fragment>;
-      })}</div>
+            results={selectionById.get(e.id) ?? []} returnTo={augmentUrl({...filters,id:e.id,limit:String(visibleLimit)}) + "#" + cardId} /></div>}</Fragment>;
+      })}</div>)}</div>
       {rows.length===0 && <p className="aug-empty">没有匹配的海克斯。<button type="button" onClick={reset}>重置筛选</button></p>}
       {rows.length>visibleLimit && <button className="aug-more" onClick={()=>change({limit:String(visibleLimit+pageSize)})}>显示更多（剩余 {rows.length-visibleLimit}）</button>}
   </>;
