@@ -158,14 +158,26 @@ export default async function VersionUpdates({ searchParams }: { searchParams: P
                 if (!guide || !team) return null;
                 const data = guide.gameData ?? season;
                 const lead = guideRoster(team, data, readingNotes(guide, team, data).roles)[0]?.unit;
+                const title = recommendationBoardTitle(guide, team, lead?.name);
+                const familyPrefix = guide.title + " · ";
+                const familyVariant = title.startsWith(familyPrefix);
+                const [formation, ...boardDetails] = familyVariant ? title.slice(familyPrefix.length).split(" · ") : [];
+                const population = formation?.match(/^([一二三四五六七八九十\d]+(?:级|人口))(.+)$/);
+                const boardLabel = [population && guide.title.startsWith(population[2]) ? population[1] : formation,
+                  ...boardDetails].filter(Boolean).join(" · ");
                 const from = versionUpdateLink(current.id, { query: q, category, anchor: "patch-recommendations" });
                 return <li className="patch-recommendation" key={team.id}>
                   {lead && <img className={"patch-recommendation-portrait cost-" + lead.cost}
                     src={lead.image} width={38} height={38} alt="" />}
                   <div className="patch-recommendation-body">
                     <div className="patch-board-heading">
-                      <h4><PatchReadingLink href={guideLink(guide.id, team.id, from)}>{recommendationBoardTitle(guide, team, lead?.name)}</PatchReadingLink></h4>
-                      <span className="patch-status" data-status={record.status}>{patchRecommendationLabels[record.status]}</span>
+                      <div className="patch-recommendation-title">
+                        <h4><PatchReadingLink href={guideLink(guide.id, team.id, from)} aria-label={boardLabel ? guide.title + " · " + boardLabel : undefined}>
+                          {familyVariant ? guide.title : title}
+                        </PatchReadingLink></h4>
+                        <span className="patch-status" data-status={record.status}>{patchRecommendationLabels[record.status]}</span>
+                        {boardLabel && <small className="patch-board-variant">{boardLabel}</small>}
+                      </div>
                       <div className="patch-sample-links">{sources.map((url, index) => <a key={url} className="patch-source" href={url} target="_blank" rel="noreferrer">{sources.length === 1 ? "样本" : `样本 ${index + 1}`}</a>)}</div>
                     </div>
                     <p>{record.note}</p>
