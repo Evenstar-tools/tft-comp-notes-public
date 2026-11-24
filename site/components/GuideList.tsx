@@ -680,7 +680,8 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
             </div>
             {rating && <span id={ratingId} className={"guide-placement " + (rating.mean < 4.5 ? "strong" : rating.mean > 4.5 ? "weak" : "middle")}
               title={(core ? coreStats.patch + " · " + coreStats.hours + " 小时核心样本" : familyStats.patch + " · 近 " + familyStats.days + " 天体系样本") + " · 前四 " + (100 * rating.topFourRate).toFixed(1) + "% · 吃鸡 " + (100 * rating.winRate).toFixed(1) + "%"}>
-              {recommendationTier(rating) !== "review" && <><span>{core ? "核心均名" : formation ? "跨人口均名" : "体系均名"}</span> <strong>{formatRecommendationMean(rating.mean)}</strong></>}<small>{rating.games.toLocaleString("zh-CN")} 场</small>
+              {recommendationTier(rating) !== "review" && <><span>平均排名</span> <strong>{formatRecommendationMean(rating.mean)}</strong></>}
+              <small>{rating.games.toLocaleString("zh-CN")} 场{core ? " · 核心样本" : formation ? " · 跨人口样本" : ""}</small>
             </span>}
           </div>
           {description && <small className="guide-result-meta">{description}</small>}
