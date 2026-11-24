@@ -21,7 +21,13 @@
   font-size: 1rem;
   font-weight: 700;
 }
-.hero-loadout-items > header { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 12px; }
+.hero-loadout-items > header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 12px;
+}
 .hero-loadout-all { display: inline-flex; align-items: center; gap: 3px; font-size: .8125rem; }
 .hero-loadout-lock {
   display: inline-flex;
@@ -143,6 +149,9 @@ button.hero-loadout-pick[aria-pressed=true] { background: var(--raised); border-
 }
 .hero-loadout-item a:hover { color: var(--accent); }
 .hero-loadout-empty { margin-top: 8px; color: var(--muted); font-size: .8125rem; }
+@media (min-width: 1101px) {
+  .hero-loadout-items > header { min-height: 36px; }
+}
 @container (min-width: 20rem) {
   .hero-loadout .conditional-gear-build { display: flex; }
   .hero-loadout .conditional-gear-filters select,

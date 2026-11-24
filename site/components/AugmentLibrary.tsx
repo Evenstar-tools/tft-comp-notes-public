@@ -92,7 +92,10 @@ export function AugmentLibrary({guides, samples, initialId, initialSeason, initi
       <nav aria-label="海克斯查询"><a href={stats ? augmentUrl({q:initialQuery, tier:initialFilters?.tier}) : "/augments"} aria-current={!stats ? "page" : undefined}>强化图鉴</a>
         {stats ? <span aria-current="page">选取战绩</span> :
           <a href={augmentUrl({view:"stats",...scope,q:initialQuery,tier:initialFilters?.tier})}>选取战绩</a>}</nav>
-      {!stats && <a className="aug-catalog-source" href={catalog.source} target="_blank" rel="noreferrer" aria-label={`PBE ${currentPatch} 海克斯来源`}>PBE {currentPatch}</a>}
+      {!stats && <details className="aug-catalog-source">
+        <summary>资料来源</summary>
+        <a href={catalog.source} target="_blank" rel="noreferrer" aria-label={`PBE ${currentPatch} 海克斯来源`}>PBE {currentPatch} ↗</a>
+      </details>}
     </header>
     {stats ? <AugmentStats snapshots={snapshots} currentPatch={currentPatch} initial={initial}/> :
       <Catalog guides={guides} samples={samples} currentPatch={currentPatch} initial={initial}/>}
@@ -133,7 +136,7 @@ function Catalog({guides,samples,currentPatch,initial}:Pick<Props,"guides"|"samp
   const returnTo = returnView === "stats" || returnView === "full" ? origin : undefined;
   return <>
       {returnTo && <a className="aug-return" href={returnTo}>← 返回选取战绩</a>}
-      <div className="aug-tools"><label className="aug-search"><Search size={16}/><input aria-label="搜索海克斯" type="search" value={query} placeholder="搜海克斯、英雄或效果" onChange={e=>{change({q:e.target.value});}}/></label>
+      <div className="aug-tools aug-catalog-tools"><label className="aug-search"><Search size={16}/><input aria-label="搜索海克斯" type="search" value={query} placeholder="搜海克斯、英雄或效果" onChange={e=>{change({q:e.target.value});}}/></label>
         <select aria-label="品质" value={rarity} onChange={e=>{change({tier:e.target.value});}}><option value="">全部品质</option>{tierOrder.map(t=><option key={t}>{t}</option>)}</select>
         <select aria-label="出现回合" value={round} onChange={e=>{change({round:e.target.value});}}><option value="">全部回合</option>{["2-1","3-2","4-2"].map(t=><option key={t}>{t}</option>)}</select>
         <select aria-label="强化类型" value={kind} onChange={e=>{change({kind:e.target.value});}}><option value="">全部类型</option><option value="hero">英雄专属</option><option value="trait">羁绊强化</option><option value="regular">通用强化</option></select>

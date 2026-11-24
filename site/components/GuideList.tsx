@@ -1,7 +1,7 @@
 "use client";
 
 import { Fragment, useEffect, useLayoutEffect, useMemo, useRef, useState, type MouseEvent } from "react";
-import { ChevronRight, X } from "lucide-react";
+import { ChevronRight, Search, X } from "lucide-react";
 import { guideRerollTargets } from "@/domain/reroll-targets";
 import familyStats from "@/data/guide-family-stats.json";
 import coreStats from "@/data/patch-recommendation-stats.json";
@@ -748,6 +748,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
       </div>
       <div className="filters guide-filters" data-inline-style={styles.size ? true : undefined}>
         <div className="guide-search-field" data-equipment={selectedGear ? true : undefined}>
+          {!selectedGear && <Search className="home-search-icon" size={16} aria-hidden />}
           {selectedGear && <button className="home-gear-chip" type="button" aria-label={"移除" + selectedGear.name}
             onClick={() => {
               changeQuery(extraGearTerms.trim());

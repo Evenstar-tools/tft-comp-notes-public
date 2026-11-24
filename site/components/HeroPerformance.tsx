@@ -1,4 +1,4 @@
-import { Fragment, useRef } from "react";
+import { Fragment, useRef, type ReactNode } from "react";
 import { ArrowDown, ArrowUp, ArrowUpRight, Lock } from "lucide-react";
 import { itemMap, season, traitMap, unitLabel } from "@/data";
 import { itemName } from "@/domain/gear-library";
@@ -123,12 +123,17 @@ export function HeroResultsTable({ stats, units, selectedId, onSelect, sort, set
   </div>;
 }
 
-export function HeroBattleSummary({ unit, stats }: { unit: Unit; stats: HeroStats }) {
-  const result = stats.rows[unit.id];
-  const rank = rankHeroes(season.units, stats.rows, stats.minGames).get(unit.id);
+export function HeroBattleSummary({ unit, stats, controls, unavailable }: {
+  unit: Unit;
+  stats?: HeroStats;
+  controls: ReactNode;
+  unavailable: ReactNode;
+}) {
+  const result = stats?.rows[unit.id];
+  const rank = stats && rankHeroes(season.units, stats.rows, stats.minGames).get(unit.id);
   return <section className="detail-section hero-performance" aria-label="实战数据">
-      <div className="hero-detail-heading"><h3>实战数据</h3></div>
-      {result && rank ? <dl className="hero-metric-strip">
+      <div className="hero-detail-heading"><h3>实战数据</h3>{controls}</div>
+      {!stats ? unavailable : result && rank ? <dl className="hero-metric-strip">
         <div><dt>均名</dt><dd>{result.mean.toFixed(2)}<small>同费 {rank.place}/{rank.total}</small></dd></div>
         <div><dt>前四率</dt><dd>{percent(result.top4Rate)}</dd></div>
         <div><dt>登顶率</dt><dd>{percent(result.winRate)}</dd></div>

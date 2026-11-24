@@ -1,5 +1,5 @@
-.page-heading.trait-lookup-heading { min-height: 0; margin-bottom: 12px; }
-.trait-lookup-intro { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 14px; }
+.page-heading.trait-lookup-heading { min-height: 0; align-items: center; margin-bottom: 16px; }
+.trait-lookup-intro { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 16px; }
 .trait-lookup-heading h1 { margin-bottom: 0; }
 .trait-lookup-controls {
   display: flex;
@@ -11,6 +11,23 @@
   width: clamp(12rem, 20vw, 16rem);
 }
 .trait-lookup-source { margin: 0; }
+.trait-lookup-source-details { position: relative; }
+.trait-lookup-source-details summary { cursor: pointer; }
+.trait-lookup-source-details summary:hover { color: var(--accent); }
+.trait-lookup-source-details > div {
+  position: absolute;
+  z-index: 2;
+  inset-block-start: calc(100% + 7px);
+  inset-inline-start: 0;
+  display: grid;
+  gap: 4px;
+  width: max-content;
+  max-width: min(16rem, 65vw);
+  padding: 9px 11px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--panel);
+}
 .trait-lookup-columns-control {
   display: flex;
   flex-wrap: wrap;
@@ -20,7 +37,7 @@
   display: flex;
   align-items: center;
   gap: 7px;
-  min-height: 36px;
+  min-height: 40px;
   padding: 4px 11px;
   border: 1px solid var(--line);
   border-radius: 5px;
@@ -45,6 +62,7 @@
   gap: clamp(16px, 2vw, 32px);
   align-items: start;
 }
+.trait-lookup-group { min-width: 0; }
 .trait-lookup-columns[data-visible-count="1"] { max-width: 48rem; }
 @media (min-width: 1000px) {
   .page-shell:has(.trait-lookup-heading) { padding-top: 16px; }
@@ -68,13 +86,15 @@
 }
 .trait-lookup-group h2 {
   margin: 0;
-  padding: 6px 4px;
+  padding: 7px 10px;
   border-bottom: 1px solid var(--line);
+  border-radius: 6px 6px 0 0;
+  background: var(--panel);
   font-size: 15px;
   font-weight: 650;
 }
 .trait-lookup-entry {
-  padding: 9px 4px 12px;
+  padding: 12px 9px 14px;
   border-bottom: 1px solid var(--line);
   overflow-wrap: anywhere;
 }
@@ -101,7 +121,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(66px, 1fr));
   gap: 5px 4px;
-  margin-top: 5px;
+  margin-top: 7px;
 }
 .trait-lookup-members a {
   display: grid;
@@ -154,7 +174,7 @@
   cursor: pointer;
 }
 @media (max-width: 640px) {
-  .trait-lookup-heading { flex-direction: column; align-items: stretch; }
+  .page-heading.trait-lookup-heading { flex-direction: column; align-items: stretch; }
   .trait-lookup-intro { flex-direction: column; align-items: start; }
   .trait-lookup-controls > input { width: 100%; }
   .trait-lookup-columns-control label { min-height: 44px; }

@@ -49,7 +49,7 @@ export default function RootLayout({
             <main id="main" className="page-shell">
               {children}
             </main>
-            <footer className="site-footer" aria-label="数据与历史笔记">
+            <footer className="site-footer" aria-label="数据来源">
               <a
                 href="https://www.metatft.com/new-set"
                 target="_blank"
@@ -66,13 +66,6 @@ export default function RootLayout({
               </a>
               <a href="https://noxutft.com/zh/tft-traits" target="_blank" rel="noreferrer">
                 NoxuTFT
-              </a>
-              <a
-                href="https://example.com/document"
-                target="_blank"
-                rel="noreferrer"
-              >
-                S16 笔记
               </a>
             </footer>
           </OwnerSession>

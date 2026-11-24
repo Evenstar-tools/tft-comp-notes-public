@@ -1,6 +1,6 @@
 .home-guide-library .home-patch-tabs { flex: 1; flex-wrap: nowrap; }
 .home-patch-tabs a { flex: none; white-space: nowrap; }
-.home-patch-recommendations { display: grid; gap: 16px; }
+.home-patch-recommendations { display: grid; gap: 18px; }
 .home-patch-meta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 12px; }
 .home-patch-jumps { display: flex; align-items: center; gap: 4px; }
 .home-patch-jumps a {
@@ -9,6 +9,7 @@
 }
 .home-patch-jumps a:is(:hover, :focus-visible) { background: var(--raised); text-decoration: underline; text-underline-offset: 3px; }
 .home-patch-sample { margin: 0; color: var(--muted); font-size: .875rem; }
+.home-patch-sample time { font-variant-numeric: tabular-nums; }
 .home-patch-group { min-width: 0; }
 .home-patch-group h2 { font-size: 1.125rem; margin: 0 0 8px; font-weight: 650; color: var(--accent); scroll-margin-block-start: 14px; }
 .home-patch-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
@@ -28,6 +29,7 @@
 .home-patch-card-link:is(:hover, :focus-visible) h3 { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
 .home-patch-title > span { padding: 1px 5px; border-radius: 4px; background: var(--raised); color: var(--accent); font-size: .75rem; white-space: nowrap; }
 .home-patch-card-link .home-patch-mean { display: grid; justify-items: end; gap: 1px; padding: 0; text-align: right; font-size: .8125rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.home-patch-mean-label { color: var(--muted); }
 .home-patch-mean small { color: var(--muted); font-size: .75rem; }
 .home-patch-mean b { font-size: 1rem; }
 .home-patch-card-copy p { margin: 3px 0 0; font-size: .9375rem; line-height: 1.45; color: var(--muted); }
@@ -36,9 +38,14 @@
 .home-patch-avatar img { display: block; width: 32px; height: 32px; object-fit: cover; border-bottom: 3px solid var(--unit-cost); border-radius: 4px; }
 .home-patch-avatar small { font-size: .75rem; line-height: 1.25; font-weight: 650; color: var(--accent); white-space: nowrap; }
 .home-patch-avatar[data-core="主坦"] small { color: var(--text); }
-.home-guide-library .home-patch-steps { margin-inline: 12px; padding: 4px 0; border-top: 1px solid var(--line); gap: 2px 5px; }
+.home-guide-library .home-patch-steps { margin-inline: 12px; padding: 0 0 6px; gap: 2px 5px; }
 .home-guide-library .home-patch-steps a { min-height: 32px; padding-inline: 7px; border-radius: 5px; text-decoration: none; font-weight: 550; }
 .home-guide-library .home-patch-steps a:is(:hover, :focus-visible) { background: var(--raised); text-decoration: underline; }
+.home-search-icon {
+  position: absolute; inset-inline-start: 11px; top: 50%; transform: translateY(-50%);
+  color: var(--muted); pointer-events: none;
+}
+.home-guide-library .guide-search-field:not([data-equipment]) input { padding-inline-start: 34px; }
 .home-archive-tools {
   display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 7px 12px; margin-block: 0 12px;
 }
@@ -91,14 +98,17 @@
   }
   .home-guide-library .home-browse-controls .guide-order-row { margin: 0; border-bottom: 0; }
   .home-guide-library .home-browse-controls .guide-filters { margin: 0 0 6px; }
-  .home-patch-card-link { padding: 13px 14px 10px; row-gap: 3px; }
+  .home-patch-card-link { padding: 12px 14px; row-gap: 3px; }
+  .home-patch-card:has(.home-patch-steps) .home-patch-card-link { padding-block-end: 4px; }
+  .home-guide-library .home-patch-steps { margin-inline: 14px; }
+  .home-guide-library .home-patch-steps a { min-height: 28px; }
   .home-patch-card-copy { display: contents; }
   .home-patch-title { grid-column: 2; grid-row: 1; }
   .home-patch-card-copy h3 { font-size: 1.125rem; }
   .home-patch-card-copy p { grid-column: 2; margin-top: 0; text-wrap: pretty; }
   .home-patch-mean { grid-column: 3; grid-row: 1 / span 2; }
   .home-patch-card-link .home-patch-avatars { grid-row: span 3; }
-  .home-patch-avatars img { width: 36px; height: 36px; }
+  .home-patch-avatars img { width: 38px; height: 38px; }
   .home-guide-library .home-archive-tools .home-group-jumps { gap: 3px; }
   .home-guide-library .home-group-jumps a { border-color: transparent; background: transparent; }
   .home-guide-library .home-group-jumps a:hover { background: var(--raised); color: var(--accent); }

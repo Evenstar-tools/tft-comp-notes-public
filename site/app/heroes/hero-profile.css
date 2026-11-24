@@ -13,8 +13,10 @@
 .hero-profile-stat-period {
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   flex-wrap: wrap;
   gap: .35rem .75rem;
+  min-width: 0;
 }
 .hero-stat-sources {
   max-width: 100%;
@@ -39,15 +41,12 @@
 .hero-profile-back:hover, .hero-profile-build-link:hover { text-decoration: underline; text-underline-offset: 4px; }
 .hero-profile-picker {
   position: relative;
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  color: var(--muted);
+  display: block;
   font-size: 13px;
 }
 .hero-profile-picker select {
   appearance: none;
-  width: clamp(126px, 18vw, 236px);
+  width: clamp(126px, 16vw, 208px);
   min-height: 38px;
   padding: 7px 30px 7px 12px;
   border: 1px solid var(--line);
@@ -59,6 +58,8 @@
 .hero-profile-picker svg {
   position: absolute;
   right: 10px;
+  top: 50%;
+  translate: 0 -50%;
   pointer-events: none;
 }
 .hero-profile-banner {
@@ -185,7 +186,7 @@
 .hero-profile-reference .hero-board-context .hero-board-position { margin-block: 0 2px; }
 .hero-profile-reference .hero-board-more { margin-top: 4px; padding-top: 4px; }
 .hero-profile-performance .hero-performance { position: relative; }
-.hero-profile-performance .hero-detail-heading { margin-bottom: 10px; }
+.hero-profile-performance .hero-detail-heading { align-items: center; gap: 7px 12px; margin-bottom: 10px; }
 .hero-profile-performance .hero-metric-strip {
   border: 0;
   border-radius: 5px;
@@ -228,7 +229,11 @@
 .hero-profile-reference .mana { color: var(--muted); font-size: 12px; }
 .hero-profile-build-link { justify-self: start; }
 @media (min-width: 941px) {
-  .hero-profile-performance { padding-block: 11px; }
+  .hero-profile-performance { padding-block: 12px; }
+  .hero-profile-performance .hero-stat-sources[open] {
+    flex-basis: 100%;
+    padding-block: 4px 6px;
+  }
 }
 @media (max-width: 940px) {
   .hero-profile-columns { grid-template-columns: minmax(0, 1fr); gap: 12px; }
@@ -269,7 +274,6 @@
   }
   .hero-profile-art { top: 7px; right: 7px; width: 32px; height: 32px; }
   .hero-profile-cost, .hero-profile-traits { font-size: 12px; }
-  .hero-profile-picker > span { display: none; }
   .hero-profile-picker select { width: clamp(144px, 43vw, 192px); min-height: 42px; }
   .hero-profile-back { min-height: 42px; padding-right: 0; }
   .hero-profile-performance, .hero-profile-reference { padding: 12px; }
