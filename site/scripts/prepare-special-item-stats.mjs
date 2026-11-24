@@ -23,13 +23,16 @@ async function getJson(url) {
   return response.json();
 }
 
-const [season, catalog, lookup] = await Promise.all([
+const [season, catalog, lookup, current] = await Promise.all([
   readFile(new URL("../data/season.json", import.meta.url), "utf8").then(JSON.parse),
   readFile(new URL("../data/special-equipment.json", import.meta.url), "utf8").then(JSON.parse),
   getJson(lookupUrl),
+  readFile(new URL("../data/current-patch.json", import.meta.url), "utf8").then(JSON.parse),
 ]);
 const patch = lookup._metadata?.release?.match(/^rls-(\d+\.\d+)\./)?.[1];
-if (!patch || lookup._metadata.set !== "TFTSet19" || lookup._metadata.patch !== "pbe")
+const cohort = current.metaTftPatch;
+if (!patch || current.seasonId !== "s19-pbe" || cohort?.patch !== patch || !cohort.bPatch ||
+    lookup._metadata.set !== "TFTSet19" || lookup._metadata.patch !== "pbe")
   throw new Error("Expected an S19 PBE lookup");
 const sourceIds = lookup.items
   .filter(row => row.tags.some(tag => itemTags.includes(tag)) && !row.tags.includes("Item.Equippable.Consumable"))
@@ -49,10 +52,11 @@ if (unitIds.size !== season.units.length) throw new Error("Duplicate unit mappin
 
 async function collect(itemId) {
   const params = new URLSearchParams({
-    itemName: itemId, queue: "PBE", patch: "current", days: String(days), permit_filter_adjustment: "false",
+    itemName: itemId, queue: "PBE", patch, b_patch: cohort.bPatch, days: String(days), permit_filter_adjustment: "false",
   });
   const data = await getJson(api + "?" + params);
   const { version, stats: { games: totalGames, mean, winRate } } = itemCohort(data, itemId, patch, days);
+  if (version !== patch + cohort.bPatch) throw new Error("Unexpected PBE hotfix for " + itemId);
   const overall = new Map(data.units_overall.map(row => [row.unit, placements(row.places).games]));
   const rows = data.units.flatMap(row => {
     const stats = placements(row.places);

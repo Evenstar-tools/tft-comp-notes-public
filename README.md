@@ -34,6 +34,12 @@ npm run build
 - 代码更新、阵容快照、验收和回退按[双站发布流程](site/docs/双站发布.md)执行。
 - 问题反馈请带上版本、入口和复现步骤。涉及安全漏洞时使用仓库的私密报告入口。
 
+## 归档战绩批次
+
+核验并更新 `site/data` 下的英雄、普通装备和特殊装备战绩后，在仓库根目录运行 `node site/scripts/archive-stat-period.mjs`。脚本写入 `site/public/stats-history/` 和批次清单，按北京时间数据日与 PBE 热补留档，同一键保留最后一次验收通过的快照。时间窗仍是近几天的滚动样本。PBE 历史三件套按对应补丁实时查询，场数可能随来源更新。
+
+正式服上线并取得同批次数据后，可运行 `node site/scripts/archive-stat-period.mjs --channel ranked --patch 19.1`，将示例补丁替换为实际版本。三份快照须统一标记 `S19 Ranked 19.1`，英雄来源链接须明确限定赛季、正式排位 `queue=1100`、补丁和窗口。正式服按赛季和补丁留一份。
+
 ## 素材说明
 
 云顶之弈阵容笔记是独立的社区项目，使用 Riot Games 的素材。Riot Games 未认可或赞助本项目。素材使用参见 [Riot Games 社区项目说明](https://www.riotgames.com/en/legal)。第三方代码和资源保留各自的声明。

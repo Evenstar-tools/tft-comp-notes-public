@@ -1,15 +1,13 @@
 "use client";
 
 import { ArrowLeft, ArrowUpRight, ChevronDown, SquarePen } from "lucide-react";
+import type { ReactNode } from "react";
 import { season, traitMap, unitLabel } from "@/data";
 import type { HeroGuideIndex } from "@/domain/hero-guides";
-import type { HeroItemSample, HeroItemSource } from "@/domain/hero-insights";
 import type { Unit } from "@/domain/types";
 import { heroAugmentForUnit } from "@/domain/hero-augments";
 import { TraitBadge } from "./Glyphs";
-import { HeroBattleSummary } from "./HeroPerformance";
 import { HeroBoardContext } from "./HeroBoardContext";
-import { HeroLoadout } from "./HeroLoadout";
 import { HeroAugmentGear } from "./HeroAugmentDetails";
 import { HeroArtwork } from "./HeroArtwork";
 import { UnitDetails } from "./UnitBrowser";
@@ -17,11 +15,10 @@ import "@/app/heroes/hero-profile.css";
 
 const costGroups = [...new Set(season.units.map(unit => unit.cost))].sort((a, b) => a - b);
 
-export function HeroProfile({ unit, guides, items, gearSource, returnHref, backLabel, onBack, onSelect, editorHref, augmentId, onAugmentChange }: {
+export function HeroProfile({ unit, guides, statsContent, returnHref, backLabel, onBack, onSelect, editorHref, augmentId, onAugmentChange }: {
   unit: Unit;
   guides: HeroGuideIndex[string] | null;
-  items: HeroItemSample[];
-  gearSource: HeroItemSource;
+  statsContent: ReactNode;
   returnHref: string;
   backLabel: string;
   onBack: () => void;
@@ -82,8 +79,7 @@ export function HeroProfile({ unit, guides, items, gearSource, returnHref, backL
           <div className="hero-profile-gear"><HeroAugmentGear augment={augment} /></div>
           {!!related?.length && <div className="hero-profile-support hero-profile-performance">{boardContext}</div>}
         </div> : <div className="hero-profile-evidence">
-          <div className="hero-profile-performance"><HeroBattleSummary unit={unit} /></div>
-          <HeroLoadout unit={unit} items={items} gearSource={gearSource} />
+          {statsContent}
         </div>}
       </div>
     </div>
