@@ -159,9 +159,16 @@ export function GuideTeams({ section, data, initialTeam, initialStage, initialFl
     onClick={() => setSampleView("family")} title={overall.sourceName + " · " + familyStats.patch + " · 近 " + familyStats.days + " 天"}>
     <span>平均排名</span><strong>{overall.mean.toFixed(2)}</strong><small>{overall.games.toLocaleString("zh-CN")} 场</small>
   </a>;
+  const routeBoardIds = new Set([...linkedPhases, ...linkedChoices].map(step => step.team?.id));
+  const otherStages = stageTeams.filter(option => !routeBoardIds.has(option.id) &&
+    !section.reroll?.stages.some(stage => stage.teamId === option.id));
+  const simpleStages = !oceanBoards && !linkedPhases.length && !linkedChoices.length &&
+    otherStages.length > 0 && otherStages.length < 3 && teams.length === otherStages.length + 1;
   const notes = readingNotes(section, team, data);
   const currentChoice = route?.choices?.find(choice => choice.team?.id === team.id);
   const openingText = currentChoice ? route?.opening || notes.opening : notes.opening;
+  const introTeam = simpleStages ? primary : team;
+  const introText = introTeam.id === team.id ? openingText : readingNotes(section, introTeam, data).opening;
   const boardPhaseIndex = phaseSteps?.findIndex(step => step.team?.id === team.id) ?? -1;
   const phaseIndex = routeNote ? (phaseSteps?.findIndex(step => step.label === routeNote) ?? -1) : boardPhaseIndex;
   const currentPhase = phaseIndex >= 0 ? phaseSteps?.[phaseIndex] : undefined;
@@ -169,31 +176,28 @@ export function GuideTeams({ section, data, initialTeam, initialStage, initialFl
   const nextBoard = nextPhase?.team;
   const advice = patchAdvice?.find(entry => entry.teamId === team.id);
   const blocks = allBlocks(section.blocks);
-  const boardNames = [team.name, guideBoardName(team), section.title];
   const passages: GuidePassage[] = [];
   const seenCopy = new Set<string>();
-  for (const raw of [openingText, currentPhase?.text ?? currentChoice?.text]) {
+  for (const [raw, copyBoard] of [[introText, introTeam], [openingText, team], [currentPhase?.text ?? currentChoice?.text, team]] as const) {
     const source = raw?.trim();
     if (!source || passages.some(passage => passage.source.includes(source))) continue;
     const separator = source.search(/[：:]/);
     const prefix = separator < 0 ? source : source.slice(0, separator).trim();
-    const body = boardNames.includes(prefix) ? source.slice(separator < 0 ? source.length : separator + 1).trim() : source;
+    const body = [copyBoard.name, guideBoardName(copyBoard), section.title].includes(prefix) ? source.slice(separator < 0 ? source.length : separator + 1).trim() : source;
     const block = blocks.find(block => block.type === "text" && !block.label && block.text?.trim() === source);
     const linked = block && hasGuideLinks(block);
     const visibleBody = inlineAugment ? omitRepeatedHeroEntry(body, augment, augmentUnitName) : body;
-    const text = linked ? body : compactGuideParagraph(visibleBody, team, data, seenCopy, advice?.note);
+    const copyAdvice = copyBoard.id === team.id ? advice : patchAdvice?.find(entry => entry.teamId === copyBoard.id);
+    const text = linked ? body : compactGuideParagraph(visibleBody, copyBoard, data, seenCopy, copyAdvice?.note);
     if (!text) continue;
     rememberGuideCopy(text, seenCopy);
     passages.push({ source, text, brief: !linked && !text.includes("\n") && text.length <= 90, blockId: block?.id });
   }
-  const routeBoardIds = new Set([...linkedPhases, ...linkedChoices].map(step => step.team?.id));
   const otherVariants = alternatives.filter(option => !routeBoardIds.has(option.id) && !siblings?.some(s => s.teamId === option.id));
   const stagedVariants = !!section.reroll && linkedPhases.length > 0 && !linkedChoices.length &&
     otherVariants.length > 0 && otherVariants.every(option => guideBoardKind(section, option, primary) === "变阵");
   const compactControls = compactChoices || stagedVariants;
   const otherSiblings = siblings?.filter(option => !routeBoardIds.has(option.teamId));
-  const otherStages = stageTeams.filter(option => !routeBoardIds.has(option.id) &&
-    !section.reroll?.stages.some(stage => stage.teamId === option.id));
   const stageOptions = (routeBoardIds.has(primary.id) || otherVariants.some(option => option.id === primary.id)
     ? otherStages : [primary, ...otherStages]).filter(option => option.id !== team.id);
   const active = (entry: Team) => traitCounts(entry.pieces, data.units, data.traits, data.items).filter(trait => traitGroup(trait) === "已开常规");
@@ -306,13 +310,13 @@ export function GuideTeams({ section, data, initialTeam, initialStage, initialFl
   const guideHref = publicationId ? boardViewLink(activeStage, showFlex ? flexPreview?.id : undefined) : undefined;
   const editorTitle = [...new Set([section.title, guideBoardName(team), !mainBoardActive ? stageLabels[activeStage] : "",
     showFlex && flexPreview ? flexPreview.incoming.name + "替" + flexPreview.outgoing.name : ""].filter(Boolean))].join(" · ");
-  const intro = passages[0]?.source === openingText.trim() ? passages[0] : undefined;
+  const intro = passages[0]?.source === introText.trim() ? passages[0] : undefined;
   const phaseAdvice = passages.find(passage => passage !== intro && passage.brief && passage.text);
   const opening = intro?.brief && intro.text ? intro : undefined;
   const inStage = kind === "过渡";
   const canEditPositions = session?.isOwner && publicationId && guideHref && mainBoardActive && !showFlex &&
     sameEdition(data.id, season.id) && !section.reroll?.added.includes(team.id);
-  const openingUnderBoard = section.reroll || inStage || !!currentChoice;
+  const openingUnderBoard = !simpleStages && (section.reroll || inStage || !!currentChoice);
   const stageCopy = [openingUnderBoard ? opening : undefined, phaseAdvice].filter(entry => entry !== undefined);
   const openingLine = mainBoardActive && !openingUnderBoard && opening && <p className="guide-opening" id={opening.blockId ? "note-" + opening.blockId : undefined}>{displayTraitNames(opening.text)}</p>;
   function phaseButton(step: (typeof linkedPhases)[number]) {
@@ -325,6 +329,10 @@ export function GuideTeams({ section, data, initialTeam, initialStage, initialFl
     </button>;
   }
   return <>{renderHeader?.(team, performance)}<section className={`guide-reader${section.reroll ? " guide-reroll" : ""}`} aria-label="阵容棋盘与运营">
+    {simpleStages && <nav className="stage-options guide-phases guide-simple-stages" aria-label="棋盘阶段">
+      {[...otherStages, primary].map(board => <button type="button" key={board.id}
+        aria-pressed={board.id === team.id} onClick={() => pickTeam(board)}>{guideBoardName(board)}</button>)}
+    </nav>}
     {openingLine}
     {oceanBoards ? <div className="guide-board-options" role="group" aria-label="阵容方案">
       <div className="guide-variants guide-ocean-choices">{oceanBoards.map(board => {
@@ -346,7 +354,7 @@ export function GuideTeams({ section, data, initialTeam, initialStage, initialFl
             <strong>{compactChoices ? label.replace(/^\d+级\s*·\s*/, "") : label}</strong>
           </button>)}
       </nav>}
-      {otherVariants.some(option => option.id !== team.id) && <nav className={stagedVariants ? "guide-variants guide-route-choices" : "guide-variants"} aria-label="选择阵容方案">{otherVariants.map(option =>
+      {!simpleStages && otherVariants.some(option => option.id !== team.id) && <nav className={stagedVariants ? "guide-variants guide-route-choices" : "guide-variants"} aria-label="选择阵容方案">{otherVariants.map(option =>
         <button key={option.id} type="button" aria-pressed={option.id === team.id} onClick={() => pickTeam(option)}>
           {!stagedVariants && <span className="guide-variant-kind">{guideBoardKind(section, option, primary)}</span>}
           <span className="guide-variant-name">{guideBoardName(option)}</span>
@@ -423,9 +431,9 @@ export function GuideTeams({ section, data, initialTeam, initialStage, initialFl
           </details>}
         </details>}
         {!route && notes.stage && !stageTeams.length && <button className="guide-stage-toggle" type="button" aria-expanded={showStage} onClick={() => setStage(!showStage)}>八人口过渡</button>}
-        {!oceanBoards && !!otherStages.length && stageOptions.length === 1 && <button type="button" className="guide-stage-toggle"
+        {!oceanBoards && !simpleStages && !!otherStages.length && stageOptions.length === 1 && <button type="button" className="guide-stage-toggle"
           onClick={() => pickTeam(stageOptions[0])}>{guideBoardName(stageOptions[0])}</button>}
-        {!oceanBoards && !!otherStages.length && stageOptions.length > 1 && <details className="guide-stage-list">
+        {!oceanBoards && !simpleStages && !!otherStages.length && stageOptions.length > 1 && <details className="guide-stage-list">
           <summary>其他过渡棋盘</summary>
           <div className="stage-options">{stageOptions.map(step => <button type="button" key={step.id} onClick={() => pickTeam(step)}>{step.id === primary.id ? "主阵" : guideBoardName(step)}</button>)}</div>
         </details>}

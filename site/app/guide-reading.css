@@ -97,6 +97,20 @@ html[data-theme="dark"] .guide-placement.weak {color:#ff9ba3;}
 .stage-options.guide-phases {gap:6px;padding:0;}
 .stage-options.guide-phases button {min-height:44px;font-size:.875rem;}
 .stage-options.guide-phases button[aria-pressed=true] {border-color:var(--accent);background:var(--raised);text-decoration:none;}
+.guide-reader .guide-simple-stages {
+  display:flex; flex-wrap:wrap; align-items:stretch; gap:3px; width:fit-content; max-width:100%;
+  margin:0 0 12px; padding:3px; border:1px solid var(--line); border-radius:8px; background:var(--raised);
+}
+.guide-simple-stages button {
+  min-width:0; min-height:38px; padding:5px 12px; border:1px solid transparent; border-radius:5px;
+  color:var(--muted); background:transparent; text-align:left; white-space:normal; line-height:1.3;
+}
+.guide-reader .guide-simple-stages button:is(:hover,[aria-pressed=true]) {background:var(--panel);color:var(--text);}
+.guide-simple-stages button[aria-pressed=true] {font-weight:650;}
+@media (max-width:580px) {
+  .guide-reader .guide-simple-stages {width:100%;}
+  .guide-simple-stages button {flex:1 1 9rem;min-height:44px;}
+}
 @media (max-width:360px) {
   .stage-options.guide-phases {column-gap:4px;}
   .stage-options.guide-phases button {min-width:44px;padding-inline:4px;}

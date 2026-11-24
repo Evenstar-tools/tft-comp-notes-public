@@ -199,7 +199,7 @@ export function DocumentView({ section, gameData, publicationId, initialTeam, in
         (publicationId && legacyHeroAugmentPlacement.test(block.text?.trim() ?? ""))) folded.add(block.id);
   }
   if (primary) for (const block of allBlocks(section.blocks)) {
-    if (block.type === "text" && /^(?:打法|运营类型)[：:]\s*(?:低费慢搜|三费慢搜|[五六七567]级慢搜|速[八九89]运营)[。.]?\s*$/.test(block.text?.trim() ?? "")) folded.add(block.id);
+    if (block.type === "text" && /^(?:打法|运营类型)[：:]\s*(?:低费慢搜|三费慢搜|[五六七567]级慢搜|速[八九89]运营|84|95)[。.]?\s*$/.test(block.text?.trim() ?? "")) folded.add(block.id);
   }
   const Title = publicationId ? "h1" : "h2";
   const category = section.category.trim();
@@ -282,7 +282,7 @@ export function DocumentView({ section, gameData, publicationId, initialTeam, in
       : showCategory && showFolder && category !== section.title.trim() ? "英雄强化" : "";
     return <>
       {(publicationId || context) && <div className="guide-header-meta">
-        {publicationId && <a href={returnTo ?? (augment ? heroAugmentLibrary : "/")}>{returnLabel}</a>}
+        {publicationId && <a href={returnTo ?? (augment ? heroAugmentLibrary : "/?sort=category")}>{returnLabel}</a>}
         {context && <span>{context}</span>}
       </div>}
       <div className="guide-page-heading">
@@ -296,6 +296,7 @@ export function DocumentView({ section, gameData, publicationId, initialTeam, in
   function teamHeader(team: Team, performance?: ReactNode) {
     const stage = section.reroll?.stages.find(entry => entry.teamId === team.id);
     const formation = stage && stage.boardRole !== "variant" ? rerollRoute(section, team)?.final ?? team : team;
+    if (section.stageTeamIds?.includes(team.id) && !section.reroll) return header(section.title, undefined, performance);
     const title = boardTitle(section, formation);
     if (formation.id !== primary?.id && title !== section.title && !title.startsWith(section.title + " · ")) return header(title, section.title, performance);
     const name = publicationId && formation.id !== primary?.id
