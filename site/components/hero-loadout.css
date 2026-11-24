@@ -28,6 +28,7 @@
   justify-content: space-between;
   gap: 4px 12px;
 }
+.hero-loadout-links { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; }
 .hero-loadout-all { display: inline-flex; align-items: center; gap: 3px; font-size: .8125rem; }
 .hero-loadout-lock {
   display: inline-flex;

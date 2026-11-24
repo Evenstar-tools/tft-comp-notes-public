@@ -15,6 +15,7 @@
   color: var(--muted);
 }
 .gear-groups a:hover { color: var(--accent); }
+.gear-groups a small { margin-inline-start: 4px; font-variant-numeric: tabular-nums; }
 .gear-groups a[aria-current="page"] {
   border-color: var(--accent);
   color: var(--accent);

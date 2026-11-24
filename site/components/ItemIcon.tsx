@@ -18,24 +18,25 @@ export function ItemIcon({
   const style = { width: size, height: size };
   const local = item && bundled.has(item.id) ? "/assets/items/" + item.id + ".webp" : undefined;
   const source = local && (!failedSource || (failedSource !== local && failedSource !== item?.image)) ? local : item?.image;
-  if (!source || failedSource === source)
-    return (
-      <span
-        className={`item-icon is-fallback ${className}`}
-        style={{ ...style, fontSize: Math.max(12, Math.round(size * 0.46)) }}
-        aria-hidden
-      >
-        {(item?.name ?? "?").slice(0, 1)}
-      </span>
-    );
-  return (
+  const radiant = item?.category === "radiant";
+  const iconClassName = radiant ? "item-icon" : `item-icon ${className}`;
+  const iconSize = radiant ? undefined : style;
+  const icon = !source || failedSource === source ? (
+    <span
+      className={`${iconClassName} is-fallback`}
+      style={{ ...iconSize, fontSize: Math.max(12, Math.round(size * 0.46)) }}
+      aria-hidden
+    >
+      {(item?.name ?? "?").slice(0, 1)}
+    </span>
+  ) : (
     <img
-      className={`item-icon ${className}`}
+      className={iconClassName}
       src={source}
       alt=""
       width={size}
       height={size}
-      style={style}
+      style={iconSize}
       loading="lazy"
       decoding="async"
       referrerPolicy="no-referrer"
@@ -43,4 +44,5 @@ export function ItemIcon({
       onError={() => setFailedSource(source)}
     />
   );
+  return radiant ? <span className={`item-icon item-icon-radiant ${className}`} style={style}>{icon}</span> : icon;
 }

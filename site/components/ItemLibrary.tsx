@@ -255,6 +255,7 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
 
   const search = <GearWearerSearch filters={filters} onChange={changeFilters} inputRef={searchBox} label="搜装备、散件或英雄" />;
   const categoryProps = { current: group, filters, hrefFor: groupLink, onNavigate: switchGroup };
+  const radiantCount = group === "all" ? reverseRows.filter(row => row.category === "radiant").length : 0;
   const rankOrders = <select aria-label="装备排行排序" value={shownOrder}
     onChange={event => changeFilters({ ...filters, order: event.target.value as GearOrder })}>
     <option value="mean">均名最低</option><option value="games">场数最多</option>
@@ -265,7 +266,7 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
       <h1>{group === "special" ? "神器与辅助装" : group === "radiant" ? "光明装" : "装备图鉴"}</h1>
       {origin && (ranking ? !visible.some(entry => entry.id === selected) : !item) &&
         <a className="text-link gear-origin-fallback" href={origin.href}>← 返回棋盘</a>}
-      <div className="gear-catalog-tabs"><GearCategoryNav {...categoryProps} /></div>
+      <div className="gear-catalog-tabs"><GearCategoryNav {...categoryProps} radiantCount={radiantCount} /></div>
       <div className="gear-release-controls">
         <StatPeriodSelect period={period} onChange={selectPeriod} />
       </div>
