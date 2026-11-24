@@ -30,8 +30,12 @@ export function traitScopeKey(url?: string, released: readonly string[] = []) {
 }
 
 export function compatibleTraitBatch(edition: string, set: number, queue: string, patch: string) {
-  const prefix = "s" + set + "-" + queue.toLowerCase() + "-" + patch;
-  return edition === prefix || edition.startsWith(prefix + ".");
+  const season = "s" + set + "-" + queue.toLowerCase() + "-";
+  if (!edition.startsWith(season)) return false;
+  const version = edition.slice(season.length);
+  // Game-data editions carry the numeric build; MetaTFT can append a hotfix letter to the patch.
+  const base = patch.replace(/^(\d+\.\d+)[a-z]$/, "$1");
+  return version === patch || version.startsWith(patch + ".") || version === base || version.startsWith(base + ".");
 }
 
 export function boardTraitLink(trait: string, tier: number, guide: string, team: string) {

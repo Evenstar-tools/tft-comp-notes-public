@@ -63,8 +63,12 @@ test("holding an item keeps conditional builds in their real hero, star and trai
   const kayle = cohorts.find(cohort => cohort.unitId === "kayle");
   assert.ok(kayle);
   assert.deepEqual([kayle.stars, kayle.level, kayle.traitId, kayle.tier], [2, 8, "pentakill", 7]);
+  const mostUsed = kayle.builds.filter(build => build.items.includes(rageblade))
+    .sort((a, b) => b.games - a.games)[0];
+  const remaining = [...mostUsed.items];
+  remaining.splice(remaining.indexOf(rageblade), 1);
   assert.deepEqual(conditionalGearRows(kayle, [rageblade])[0], {
-    items: ["TFT_Item_JeweledGauntlet", "TFT_Item_PowerGauntlet"], games: 792, mean: 4.89,
+    items: remaining, games: mostUsed.games, mean: mostUsed.games >= 100 ? mostUsed.mean : null,
   });
   assert.deepEqual(cohorts.filter(cohort => cohort.unitId === "jinx").map(cohort => cohort.level), [8, 9]);
   assert.deepEqual(conditionalGearCohorts("s19-live-19.1.0.5973071", [rageblade]), []);

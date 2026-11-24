@@ -1,4 +1,5 @@
 """Refresh S19 PBE guide placement counts from the same filters as the guide's mean."""
+import argparse
 import json
 import os
 import re
@@ -7,6 +8,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from urllib.parse import parse_qsl, urlsplit
+from guide_stats_window import current_window, scoped_url
 
 import requests
 from requests.adapters import HTTPAdapter
@@ -23,8 +25,10 @@ def fetch_counts(url):
     exact = ("tab", "comps") in pairs
     if ("set", "TFTSet19") not in pairs or not (exact or ("tab", "units") in pairs):
         raise ValueError(f"Unsupported season or query: {url}")
-    window = {"queue": "PBE", "patch": "current", "days": "3"}
-    params = [*window.items(), ("formatnoarray", "true"), ("compact", "true")]
+    window = {k: v for k, v in pairs if k in ("queue", "patch", "b_patch", "days")}
+    if len(window) != 4:
+        raise ValueError(f"Missing explicit patch window: {url}")
+    params = [*window.items(), ("formatnoarray", "true"), ("compact", "true"), ("permit_filter_adjustment", "false")]
     units, traits = set(), set()
     for key, value in pairs:
         if key in ("tab", "set") or window.get(key) == value:
@@ -46,7 +50,10 @@ def fetch_counts(url):
         session.mount("https://", HTTPAdapter(max_retries=Retry(total=2, backoff_factor=0.5, status_forcelist=[429, 502, 503, 504])))
         response = session.get(BASE + ("exact_units_traits2" if exact else "total"), params=params, timeout=(8, 25))
         response.raise_for_status()
-        rows = response.json()["data"]
+        payload = response.json()
+        if payload.get("filter_adjustment"):
+            raise ValueError(f"Source adjusted the requested filters: {url}")
+        rows = payload["data"]
     if not isinstance(rows, list) or (not exact and len(rows) > 1):
         raise ValueError(f"Invalid aggregate: {url}")
     counts = [0] * 8
@@ -65,25 +72,39 @@ def fetch_counts(url):
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--out", type=Path, default=BATCH)
+    args = parser.parse_args()
     batch = json.loads(BATCH.read_text(encoding="utf-8"))
-    patch = batch["patch"].removeprefix("PBE ")
+    build, window = current_window(DATA)
+    patch = window["patch"]
     edition = json.loads((DATA / "season.json").read_text(encoding="utf-8"))["id"]
-    if batch.get("edition") != "s19-pbe-" + patch or not edition.startswith(batch["edition"] + "."):
+    if (batch.get("edition") != "s19-pbe-" + patch or not edition.startswith(batch["edition"] + ".")
+            or batch.get("build") != build or batch["patch"] != "PBE " + patch + window["b_patch"]):
         raise ValueError("The guide snapshot and S19 PBE edition must match")
     # Curated short-window and hero-augment observations keep their own capture date.
     records = [
         row for row in batch["records"]
         if not row.get("boardObservation")
+        and not row.get("sourcePeriod")
         and not row.get("referencesAugment")
         and not row.get("conditions", {}).get("augmentId")
     ]
     comparisons = [sample for group in batch.get("boardComparisons", []) for sample in group["samples"]]
-    urls = list(dict.fromkeys([CORE, *(r["url"] for r in records + comparisons)]))
+    core = scoped_url(CORE, window)
+    for row in records + comparisons:
+        row["url"] = scoped_url(row["url"], window)
+    formation = [entry for group in batch.get("formationComparisons", []) if group["patch"] == batch["patch"]
+                 for board in group["boards"] for entry in [board["sample"], board.get("subset", {}).get("sample")] if entry]
+    for sample in formation:
+        sample["url"] = scoped_url(sample["url"], window)
+    urls = list(dict.fromkeys([core, *(r["url"] for r in records + comparisons + formation)]))
     with ThreadPoolExecutor(max_workers=4) as pool:
         snapshots = dict(zip(urls, pool.map(fetch_counts, urls)))
-    if not sum(snapshots[CORE]):
+    if not sum(snapshots[core]):
         raise ValueError("The S19 anchor sample is empty; keeping the previous snapshot")
-    observed = datetime.now(timezone.utc).date().isoformat()
+    now = datetime.now(timezone.utc)
+    observed = now.date().isoformat()
     for r in records:
         counts = snapshots[r["url"]]
         total = sum(counts)
@@ -95,13 +116,18 @@ def main():
             for field in ("mean", "winRate", "topFourRate"):
                 r.pop(field, None)
     batch["date"] = observed
-    batch["renataNasusReference"] = {"url": CORE, "observedOn": observed, "placementCounts": snapshots[CORE]}
+    batch["renataNasusReference"] = {"url": core, "observedOn": observed, "placementCounts": snapshots[core]}
     for sample in comparisons:
         sample.update(placementCounts=snapshots[sample["url"]], observedOn=observed)
-    with NamedTemporaryFile(mode="w", encoding="utf-8", dir=BATCH.parent, delete=False) as tmp:
+    for sample in formation:
+        sample["placementCounts"] = snapshots[sample["url"]]
+    for group in batch.get("formationComparisons", []):
+        if group["patch"] == batch["patch"]:
+            group["checkedAt"] = now.isoformat(timespec="seconds")
+    with NamedTemporaryFile(mode="w", encoding="utf-8", newline="\n", dir=args.out.parent, delete=False) as tmp:
         json.dump(batch, tmp, ensure_ascii=False, indent=2, allow_nan=False)
         tmp.write("\n")
-    os.replace(tmp.name, BATCH)
+    os.replace(tmp.name, args.out)
     print(f"Refreshed {len(records)} board filters and the level-eight Renata/Nasus reference, {observed}.")
 
 

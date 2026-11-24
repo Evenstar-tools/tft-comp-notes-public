@@ -25,7 +25,7 @@ export function GuideFormationFamilyReference({ sample }: { sample: FormationFam
       <div className="carry-sample-head"><strong>{sample.name}</strong><span>体系均名 <b>{result.mean.toFixed(2)}</b> · {number.format(result.games)} 场</span></div>
       <p>前四 {percent.format(result.top4)} · 登顶 {percent.format(result.win)}</p>
       <div className="carry-source"><a href={sample.url} target="_blank" rel="noreferrer">
-        PBE 阵容榜 · 近 {sample.windowHours} 小时 · {checkedDate.format(new Date(sample.checkedAt))} 北京时间 ↗
+        {sample.patch ?? "PBE"} 阵容榜 · {sample.window ?? `近 ${sample.windowHours} 小时`} · {checkedDate.format(new Date(sample.checkedAt))} 北京时间 ↗
       </a></div>
     </li></ul>
   </div>;
@@ -66,6 +66,6 @@ export function GuideFormationStats({ evidence }: { evidence: NonNullable<Return
       ]} />
       <p>同盘两组按八个名次拆分。血量、经济和来牌会同时影响成型与名次。</p>
     </>}
-    <small>MetaTFT · {group.patch} · 滚动 {group.windowHours} 小时 · {checkedDate.format(new Date(group.checkedAt))} 北京时间取数。少于 {stats.minGames} 场仅列场数。</small>
+    <small>MetaTFT · {group.patch} · {group.window ?? `滚动 ${group.windowHours} 小时`} · {checkedDate.format(new Date(group.checkedAt))} 北京时间取数。少于 {stats.minGames} 场仅列场数。</small>
   </details>;
 }

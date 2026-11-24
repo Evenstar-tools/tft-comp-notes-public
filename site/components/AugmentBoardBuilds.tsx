@@ -40,6 +40,7 @@ export function AugmentBoardBuilds({ boards, boardLinks }: {
             })}
           </div>
           <div className="augment-build-result">
+            {build.sourcePeriod && <span title={build.sourcePeriod.patch + " · " + build.sourcePeriod.window}>历史 · {build.date.slice(5)}</span>}
             {build.games > 0 && build.mean !== undefined ? <>
               <strong>均名 {build.mean.toFixed(2)}</strong><span>{number.format(build.games)} 场</span>
             </> : <span>暂无同装战绩</span>}
