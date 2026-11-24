@@ -272,8 +272,10 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
     : homeFamilyStats.build === patch?.build && patch?.build ? "仅当前构建"
     : familyDataEnd - familyStats.days * 86400000 < patchStart ? "采样窗口跨版本更新" : undefined;
   const [expiredAt, setExpiredAt] = useState(0);
-  const previousFamilyStats = homeFamilyStats.previous ?? homeFamilyStats;
-  const previousDeadline = previousRecommendationDeadline(previousFamilyStats, season.id, patch, Math.max(checkedAt, expiredAt));
+  const now = Math.max(checkedAt, expiredAt);
+  const latestDeadline = previousRecommendationDeadline(homeFamilyStats, season.id, patch, now);
+  const previousFamilyStats = latestDeadline !== undefined ? homeFamilyStats : homeFamilyStats.previous;
+  const previousDeadline = latestDeadline ?? (previousFamilyStats && previousRecommendationDeadline(previousFamilyStats, season.id, patch, now));
   useEffect(() => {
     if (previousDeadline === undefined) return;
     const timer = window.setTimeout(() => setExpiredAt(previousDeadline), Math.max(0, previousDeadline - Date.now()));
@@ -327,7 +329,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
   function candidatesFor(entries: typeof visible, terms = conditions, recommendationsOnly = recommended) {
     return entries.flatMap(entry => {
       const { section, data, teams, filterStyle, augment, viewCategory } = entry;
-      const searchFamilies = recommendationsOnly && previousDeadline !== undefined && previousFamilyStats !== homeFamilyStats
+      const searchFamilies = recommendationsOnly && previousDeadline !== undefined && previousFamilyStats && previousFamilyStats !== homeFamilyStats
         ? [...entry.rows, ...guideFamilyRows(previousFamilyStats, data.id, section.id, teams)] : entry.rows;
       if ((category && !tierFilter && viewCategory !== category) || (style && guideStyleKey(filterStyle) !== styleKey) || (cost && !entry.costOptions.includes(cost))) return [];
       const searchTeams = recommendationsOnly ? teams.filter(board => canShowBoard(section, board)) : teams;
