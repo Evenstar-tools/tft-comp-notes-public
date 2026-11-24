@@ -23,6 +23,7 @@ export interface PlacementRecord {
   sampleLabel?: string;
   detailOnly?: boolean;
   observedOn?: string;
+  sourcePeriod?: { patch: string; window: string };
   boardObservation?: {
     patchId: string;
     title: string;
@@ -55,12 +56,13 @@ export interface PlacementBatch {
 }
 
 type FormationSample = { url: string; placementCounts: number[] };
-export type FormationFamilyReference = FormationSample & { name: string; checkedAt: string; windowHours: number };
+export type FormationFamilyReference = FormationSample & { name: string; checkedAt: string; windowHours: number; patch?: string; window?: string };
 
 export type FormationComparison = {
   edition: string;
   patch: string;
   windowHours: number;
+  window?: string;
   checkedAt: string;
   population: number;
   condition: string;
@@ -110,6 +112,7 @@ export function augmentLoadout(record: PlacementRecord) {
 }
 
 export type AugmentBoard = NonNullable<PlacementRecord["augmentBuild"]> & {
+  sourcePeriod?: PlacementRecord["sourcePeriod"];
   games: number;
   mean?: number;
   url: string;
@@ -127,7 +130,7 @@ export function augmentBoardSamples(records: PlacementRecord[], defaultDate: str
     if (!name || !build || !gear || (!record.games && build.kind === "observed")) continue;
     (byName[name] ??= []).push({
       ...build, games: record.games, mean: record.mean, url: record.url, date: record.observedOn ?? defaultDate,
-      unitId: gear.unitId, itemIds: gear.itemIds,
+      unitId: gear.unitId, itemIds: gear.itemIds, sourcePeriod: record.sourcePeriod,
     });
   }
   return byName;
@@ -138,16 +141,16 @@ export function byBestMean<T extends { rating?: PlacementRating }>(first: T, can
   const scope = first.rating?.sampleScope ?? "";
   return candidates.reduce((best, board) => {
     const rating = board.rating;
-    if (!rating || rating.mean === undefined || (rating.sampleScope ?? "") !== scope) return best;
-    return best.rating?.mean === undefined || rating.mean < best.rating.mean ? board : best;
+    if (!rating || rating.sourcePeriod || rating.mean === undefined || (rating.sampleScope ?? "") !== scope) return best;
+    return best.rating?.mean === undefined || best.rating.sourcePeriod || rating.mean < best.rating.mean ? board : best;
   }, first);
 }
 
 export const heroAugmentSortingMinGames = 20;
-type PlacementSample = { mean?: number; games?: number };
+type PlacementSample = Pick<Partial<PlacementRecord>, "mean" | "games" | "sourcePeriod">;
 type PlacementSortTier = "ranked" | "low" | "missing";
 function hasSortMean(rating: PlacementSample | undefined): rating is PlacementSample & { mean: number } {
-  return rating?.mean !== undefined && Number.isFinite(rating.mean);
+  return !rating?.sourcePeriod && rating?.mean !== undefined && Number.isFinite(rating.mean);
 }
 
 export function placementSortTier(rating: PlacementSample | undefined, minimumGames = 100): PlacementSortTier {
@@ -167,7 +170,7 @@ export function orderByPlacement<T extends { rating?: PlacementSample }>(entries
 }
 
 export function isLowWinRate(rating?: PlacementRating) {
-  return rating?.tone === "weak" && rating.winRate !== undefined && rating.winRate < 0.05;
+  return !rating?.sourcePeriod && rating?.tone === "weak" && rating.winRate !== undefined && rating.winRate < 0.05;
 }
 
 export function findPlacement(batch: PlacementBatch, roster: string[], population: number, board?: SampleBoard): PlacementRating | undefined {
@@ -210,10 +213,13 @@ export function findPlacement(batch: PlacementBatch, roster: string[], populatio
     Number(!!a.referencesAugment) - Number(!!b.referencesAugment) ||
     preferredCore(b) - preferredCore(a) ||
     Number(a.conditions?.kind === "core") - Number(b.conditions?.kind === "core"));
-  const record = candidates.find(hasMean) ?? candidates.find(entry => entry.games > 0);
+  const fresh = candidates.filter(entry => !entry.sourcePeriod);
+  const period = fresh.length ? fresh : candidates;
+  const record = period.find(hasMean) ?? period.find(entry => entry.games > 0);
   if (!record) return;
   const mean = hasMean(record) ? record.mean : undefined;
-  const tone = mean === undefined || record.games < batch.minGames || record.referencesAugment ? "limited"
+  const tone = mean === undefined || record.games < batch.minGames || record.referencesAugment || record.sourcePeriod ? "limited"
     : mean <= batch.greenThrough ? "strong" : mean >= batch.redFrom ? "weak" : "middle";
-  return { ...record, mean, tone, patch: batch.patch, window: batch.window, date: record.observedOn ?? batch.date };
+  const { patch, window } = record.sourcePeriod ?? batch;
+  return { ...record, mean, tone, patch, window, date: record.observedOn ?? batch.date };
 }

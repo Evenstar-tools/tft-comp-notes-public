@@ -21,6 +21,8 @@ test("comparing a board's trait retains population, exact unit equipment and any
 
 test("a snapshot is visible only for the same queue, patch and season", () => {
   assert.equal(compatibleTraitBatch("s19-pbe-19.1.0.5973071", 19, "PBE", "19.1"), true);
+  assert.equal(compatibleTraitBatch("s19-pbe-19.1.0.6018196", 19, "PBE", "19.1b"), true);
+  assert.equal(compatibleTraitBatch("s19-pbe-19.1a", 19, "PBE", "19.1b"), false);
   for (const edition of ["s19-live-19.1", "s19-pbe-19.10.2", "s20-pbe-19.1"]) {
     assert.equal(compatibleTraitBatch(edition, 19, "PBE", "19.1"), false);
   }

@@ -10,7 +10,7 @@ const number = new Intl.NumberFormat("zh-CN");
 const percent = new Intl.NumberFormat("zh-CN", { style: "percent", maximumFractionDigits: 1 });
 const stats: Pick<PlacementBatch, "patch" | "window" | "edition" | "minGames" | "renataNasusReference" | "boardComparisons"> = batch;
 
-type Distribution = { label: string; counts: number[]; scope: string; date: string; url: string; recentGames?: boolean };
+type Distribution = { label: string; counts: number[]; scope: string; date: string; url: string; recentGames?: boolean; patch?: string; window?: string };
 
 function DistributionChart({ sample, recentGames, showCaption, ceiling }: { sample: Distribution; recentGames: boolean; showCaption: boolean; ceiling: number }) {
   const { counts, scope, date, url } = sample;
@@ -23,7 +23,7 @@ function DistributionChart({ sample, recentGames, showCaption, ceiling }: { samp
         <div className="distribution-track" aria-hidden="true"><b>{percent.format(n/games)}</b><i style={{height:(n/games/ceiling*58)+"px"}} /></div>
         <span aria-hidden="true">第{i+1}名</span>
       </li>)}</ol>
-    <a className="distribution-source" href={url} target="_blank" rel="noreferrer">MetaTFT · {stats.patch} · {recentGames ? "近期可核对对局" : stats.window} · {date}</a>
+    <a className="distribution-source" href={url} target="_blank" rel="noreferrer">MetaTFT · {sample.patch ?? stats.patch} · {recentGames ? "按主 C 出装识别" : (sample.window ?? stats.window)} · {date}</a>
   </>;
 }
 
@@ -37,7 +37,7 @@ export function GuideDistribution({ team, sectionId, ratings = [], edition, hero
     const kind = placementEvidenceKind(rating);
     const label = { core: "指定核心同场", lineup: "名单共现", fixed: `${rating.population} 级 · 固定名单`, augment: "英雄强化样本" }[kind];
     return [{ label, counts, scope: kind === "lineup" ? label : rating.sampleScope || label,
-      date: rating.date, url: rating.url, recentGames: !!rating.referencesAugment }];
+      date: rating.date, url: rating.url, recentGames: !!rating.referencesAugment, patch: rating.patch, window: rating.window }];
   });
   const ref = stats.renataNasusReference;
   const canCompare = !heroGuide && stats.edition && (edition === stats.edition || edition.startsWith(stats.edition + "."));

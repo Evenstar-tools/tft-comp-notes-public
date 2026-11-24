@@ -42,7 +42,7 @@ export function rankedOceanBoards(teams: Team[], section: Section) {
   if (section.id !== oceanGravesGuideId) return;
   return teams.filter(board => board.id !== oceanGravesUnlockBoardId).map(board => {
     const sample = teamPlacement(board, section, "fixed");
-    const exact = sample?.conditions?.kind === "full" && sample.conditions.teamId === board.id;
+    const exact = !sample?.sourcePeriod && sample?.conditions?.kind === "full" && sample.conditions.teamId === board.id;
     return { board, sample: exact ? sample : undefined };
   }).sort((a, b) => (a.sample?.mean ?? Infinity) - (b.sample?.mean ?? Infinity)
     || (b.sample?.games ?? 0) - (a.sample?.games ?? 0));
@@ -58,6 +58,7 @@ export function PlacementBadge({ rating, id }: { rating?: PlacementRating; id?: 
     : kind !== "fixed" || rating.sampleLabel ? [rating.patch, rating.window, rating.date, rating.sampleScope].filter(Boolean).join(" · ") : undefined;
   return <span id={id} className={"guide-placement " + rating.tone + (rating.referencesAugment ? " is-reference" : "")}
     title={description}>
+    {rating.sourcePeriod && <span>历史 · </span>}
     {rating.mean === undefined ? <span>{games}{kind === "augment" ? "" : " · 少量样本"}</span> : <><span>{rating.referencesAugment ? "同装均名" : kind === "lineup" ? label : rating.sampleLabel ?? label}</span> <strong>{rating.mean.toFixed(2)}</strong><small>{games}</small></>}
   </span>;
 }

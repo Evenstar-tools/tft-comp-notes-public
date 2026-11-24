@@ -1,11 +1,16 @@
 {
   "season": "s19-pbe-19.1.",
-  "patch": "PBE 19.1",
-  "date": "2026-11-19",
+  "patch": "PBE 19.1b",
+  "date": "2026-11-24",
   "windowDays": 3,
   "itemNames": {
+    "TFT_Item_AdaptiveHelm": "适应性头盔",
     "TFT_Item_ArchangelsStaff": "大天使之杖",
+    "TFT_Item_Bloodthirster": "饮血剑",
+    "TFT_Item_BlueBuff": "蓝霸符",
     "TFT_Item_Deathblade": "死亡之刃",
+    "TFT_Item_ForceOfNature": "金铲铲冠冕",
+    "TFT_Item_GuardianAngel": "夜之锋刃",
     "TFT_Item_GuinsoosRageblade": "鬼索的狂暴之刃",
     "TFT_Item_HextechGunblade": "海克斯科技枪刃",
     "TFT_Item_InfinityEdge": "无尽之刃",
@@ -13,12 +18,17 @@
     "TFT_Item_LastWhisper": "最后的轻语",
     "TFT_Item_Leviathan": "纳什之牙",
     "TFT_Item_MadredsBloodrazor": "巨人杀手",
+    "TFT_Item_Morellonomicon": "莫雷洛秘典",
     "TFT_Item_PowerGauntlet": "强袭者的链枷",
+    "TFT_Item_Quicksilver": "水银",
     "TFT_Item_RabadonsDeathcap": "灭世者的死亡之帽",
     "TFT_Item_RapidFireCannon": "红霸符",
     "TFT_Item_RunaansHurricane": "海妖之怒",
     "TFT_Item_SpearOfShojin": "朔极之矛",
-    "TFT_Item_StatikkShiv": "虚空之杖"
+    "TFT_Item_StatikkShiv": "虚空之杖",
+    "TFT_Item_TacticiansRing": "金锅铲冠冕",
+    "TFT_Item_TitansResolve": "泰坦的坚决",
+    "TFT_Item_UnstableConcoction": "正义之手"
   },
   "records": [
     {
@@ -28,7 +38,7 @@
       "tier": 7,
       "level": 8,
       "stars": 2,
-      "url": "https://www.metatft.com/explorer?tab=builds&unit=DA_Jinx19-1_2_3&level=8&trait=DA_IonicSpark19_3&set=TFTSet19",
+      "url": "https://www.metatft.com/explorer?tab=builds&unit=DA_Jinx19-1_2_3&level=8&trait=DA_IonicSpark19_3&set=TFTSet19&queue=PBE&patch=19.1&b_patch=b&days=3",
       "builds": [
         {
           "items": [
@@ -36,17 +46,8 @@
             "TFT_Item_InfinityEdge",
             "TFT_Item_LastWhisper"
           ],
-          "games": 942,
-          "mean": 4.84
-        },
-        {
-          "items": [
-            "TFT_Item_GuinsoosRageblade",
-            "TFT_Item_InfinityEdge",
-            "TFT_Item_RunaansHurricane"
-          ],
-          "games": 664,
-          "mean": 4.69
+          "games": 123,
+          "mean": 5.15
         },
         {
           "items": [
@@ -54,17 +55,17 @@
             "TFT_Item_GuinsoosRageblade",
             "TFT_Item_InfinityEdge"
           ],
-          "games": 444,
-          "mean": 4.81
+          "games": 38,
+          "mean": 5.18
         },
         {
           "items": [
             "TFT_Item_GuinsoosRageblade",
             "TFT_Item_InfinityEdge",
-            "TFT_Item_PowerGauntlet"
+            "TFT_Item_RunaansHurricane"
           ],
-          "games": 360,
-          "mean": 4.91
+          "games": 31,
+          "mean": 5.13
         },
         {
           "items": [
@@ -72,26 +73,17 @@
             "TFT_Item_InfinityEdge",
             "TFT_Item_MadredsBloodrazor"
           ],
-          "games": 312,
-          "mean": 4.89
+          "games": 30,
+          "mean": 5.33
         },
         {
           "items": [
-            "TFT_Item_Deathblade",
             "TFT_Item_GuinsoosRageblade",
-            "TFT_Item_RunaansHurricane"
-          ],
-          "games": 286,
-          "mean": 4.65
-        },
-        {
-          "items": [
             "TFT_Item_InfinityEdge",
-            "TFT_Item_PowerGauntlet",
-            "TFT_Item_SpearOfShojin"
+            "TFT_Item_PowerGauntlet"
           ],
-          "games": 218,
-          "mean": 5.22
+          "games": 26,
+          "mean": 5.42
         },
         {
           "items": [
@@ -99,8 +91,35 @@
             "TFT_Item_GuinsoosRageblade",
             "TFT_Item_LastWhisper"
           ],
-          "games": 170,
-          "mean": 4.74
+          "games": 16,
+          "mean": 5.94
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 16,
+          "mean": 5.12
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 7,
+          "mean": 5.57
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_InfinityEdge"
+          ],
+          "games": 7,
+          "mean": 6.0
         },
         {
           "items": [
@@ -108,8 +127,17 @@
             "TFT_Item_InfinityEdge",
             "TFT_Item_RapidFireCannon"
           ],
-          "games": 162,
-          "mean": 4.69
+          "games": 7,
+          "mean": 4.86
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_LastWhisper",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 7,
+          "mean": 6.14
         },
         {
           "items": [
@@ -117,8 +145,557 @@
             "TFT_Item_InfinityEdge",
             "TFT_Item_SpearOfShojin"
           ],
-          "games": 144,
-          "mean": 4.99
+          "games": 6,
+          "mean": 5.83
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_LastWhisper",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 6,
+          "mean": 5.33
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 6,
+          "mean": 5.33
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 5,
+          "mean": 5.4
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_LastWhisper",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 4,
+          "mean": 5.25
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 3,
+          "mean": 5.33
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_InfinityEdge"
+          ],
+          "games": 3,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_InfinityEdge"
+          ],
+          "games": 3,
+          "mean": 7.67
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 2,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_Quicksilver"
+          ],
+          "games": 2,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_UnstableConcoction"
+          ],
+          "games": 2,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_RapidFireCannon",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 2,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 2,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_PowerGauntlet",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 2,
+          "mean": 5.5
+        },
+        {
+          "items": [
+            "TFT_Item_AdaptiveHelm",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 1,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_Bloodthirster",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_InfinityEdge"
+          ],
+          "games": 1,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_BlueBuff",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_InfinityEdge"
+          ],
+          "games": 1,
+          "mean": 1.0
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_Deathblade",
+            "TFT_Item_GuinsoosRageblade"
+          ],
+          "games": 1,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_Deathblade",
+            "TFT_Item_InfinityEdge"
+          ],
+          "games": 1,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_Deathblade",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 1,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_HextechGunblade"
+          ],
+          "games": 1,
+          "mean": 2.0
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 1,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_TitansResolve"
+          ],
+          "games": 1,
+          "mean": 7.0
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_UnstableConcoction"
+          ],
+          "games": 1,
+          "mean": 7.0
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 1,
+          "mean": 1.0
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 1,
+          "mean": 2.0
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_Quicksilver"
+          ],
+          "games": 1,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_ForceOfNature",
+            "TFT_Item_LastWhisper",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 1,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_HextechGunblade"
+          ],
+          "games": 1,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_LastWhisper"
+          ],
+          "games": 1,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_LastWhisper"
+          ],
+          "games": 1,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_TitansResolve"
+          ],
+          "games": 1,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_LastWhisper",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 1,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_LastWhisper",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 1,
+          "mean": 1.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_LastWhisper",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 1,
+          "mean": 7.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 1,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_Quicksilver"
+          ],
+          "games": 1,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_PowerGauntlet",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 1,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_PowerGauntlet",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 1,
+          "mean": 7.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_RapidFireCannon",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 1,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_RunaansHurricane",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 1,
+          "mean": 7.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_RunaansHurricane",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 1,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_LastWhisper",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 1,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 1,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 1,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_LastWhisper",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 1,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_LastWhisper",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 1,
+          "mean": 8.0
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_LastWhisper",
+            "TFT_Item_Quicksilver"
+          ],
+          "games": 1,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_LastWhisper",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 1,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 1,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_PowerGauntlet",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 1,
+          "mean": 7.0
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_RapidFireCannon",
+            "TFT_Item_UnstableConcoction"
+          ],
+          "games": 1,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_RunaansHurricane",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 1,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_LastWhisper",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 1,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_LastWhisper",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 1,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_LastWhisper",
+            "TFT_Item_RunaansHurricane",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 1,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_Morellonomicon",
+            "TFT_Item_StatikkShiv"
+          ],
+          "games": 1,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_PowerGauntlet",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 1,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_Quicksilver",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 1,
+          "mean": 7.0
+        },
+        {
+          "items": [
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_RunaansHurricane",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 1,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_RunaansHurricane",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 1,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_RunaansHurricane",
+            "TFT_Item_RunaansHurricane",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 1,
+          "mean": 5.0
         }
       ]
     },
@@ -129,7 +706,7 @@
       "tier": 7,
       "level": 9,
       "stars": 2,
-      "url": "https://www.metatft.com/explorer?tab=builds&unit=DA_Jinx19-1_2_3&level=9&trait=DA_IonicSpark19_3&set=TFTSet19",
+      "url": "https://www.metatft.com/explorer?tab=builds&unit=DA_Jinx19-1_2_3&level=9&trait=DA_IonicSpark19_3&set=TFTSet19&queue=PBE&patch=19.1&b_patch=b&days=3",
       "builds": [
         {
           "items": [
@@ -137,8 +714,8 @@
             "TFT_Item_InfinityEdge",
             "TFT_Item_LastWhisper"
           ],
-          "games": 2808,
-          "mean": 3.16
+          "games": 285,
+          "mean": 3.56
         },
         {
           "items": [
@@ -146,17 +723,8 @@
             "TFT_Item_InfinityEdge",
             "TFT_Item_RunaansHurricane"
           ],
-          "games": 1996,
-          "mean": 3.27
-        },
-        {
-          "items": [
-            "TFT_Item_Deathblade",
-            "TFT_Item_GuinsoosRageblade",
-            "TFT_Item_InfinityEdge"
-          ],
-          "games": 1218,
-          "mean": 3.23
+          "games": 102,
+          "mean": 3.49
         },
         {
           "items": [
@@ -164,8 +732,17 @@
             "TFT_Item_InfinityEdge",
             "TFT_Item_PowerGauntlet"
           ],
-          "games": 1061,
-          "mean": 3.08
+          "games": 65,
+          "mean": 3.82
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_InfinityEdge"
+          ],
+          "games": 64,
+          "mean": 3.8
         },
         {
           "items": [
@@ -173,26 +750,8 @@
             "TFT_Item_InfinityEdge",
             "TFT_Item_MadredsBloodrazor"
           ],
-          "games": 979,
-          "mean": 3.11
-        },
-        {
-          "items": [
-            "TFT_Item_Deathblade",
-            "TFT_Item_GuinsoosRageblade",
-            "TFT_Item_RunaansHurricane"
-          ],
-          "games": 833,
-          "mean": 3.19
-        },
-        {
-          "items": [
-            "TFT_Item_InfinityEdge",
-            "TFT_Item_PowerGauntlet",
-            "TFT_Item_SpearOfShojin"
-          ],
-          "games": 558,
-          "mean": 3.08
+          "games": 45,
+          "mean": 3.91
         },
         {
           "items": [
@@ -200,8 +759,818 @@
             "TFT_Item_GuinsoosRageblade",
             "TFT_Item_LastWhisper"
           ],
-          "games": 451,
-          "mean": 3.17
+          "games": 32,
+          "mean": 3.31
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_LastWhisper",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 26,
+          "mean": 4.35
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 24,
+          "mean": 3.58
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 19,
+          "mean": 3.05
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_LastWhisper",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 14,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 13,
+          "mean": 3.85
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 12,
+          "mean": 4.5
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 11,
+          "mean": 3.45
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_InfinityEdge"
+          ],
+          "games": 10,
+          "mean": 3.9
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 8,
+          "mean": 3.62
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_LastWhisper",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 8,
+          "mean": 3.5
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 7,
+          "mean": 3.57
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_InfinityEdge"
+          ],
+          "games": 6,
+          "mean": 3.67
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_HextechGunblade"
+          ],
+          "games": 5,
+          "mean": 4.6
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 5,
+          "mean": 3.2
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_LastWhisper"
+          ],
+          "games": 5,
+          "mean": 3.6
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_RapidFireCannon",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 5,
+          "mean": 2.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_RunaansHurricane",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 5,
+          "mean": 4.2
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_LastWhisper",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 5,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_LastWhisper",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 5,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_LastWhisper",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 4,
+          "mean": 2.5
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_LastWhisper",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 4,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 4,
+          "mean": 2.75
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 3,
+          "mean": 2.33
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 3,
+          "mean": 4.33
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_LastWhisper"
+          ],
+          "games": 3,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_LastWhisper",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 3,
+          "mean": 1.67
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 3,
+          "mean": 5.33
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 3,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_LastWhisper",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 3,
+          "mean": 4.33
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_RapidFireCannon",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 3,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_Deathblade",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 2,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_GuinsoosRageblade"
+          ],
+          "games": 2,
+          "mean": 4.5
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_LastWhisper",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 2,
+          "mean": 2.5
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_RunaansHurricane",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 2,
+          "mean": 4.5
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 2,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 2,
+          "mean": 4.5
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_LastWhisper"
+          ],
+          "games": 2,
+          "mean": 3.5
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_InfinityEdge"
+          ],
+          "games": 2,
+          "mean": 3.5
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_Quicksilver"
+          ],
+          "games": 2,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_UnstableConcoction"
+          ],
+          "games": 2,
+          "mean": 2.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_LastWhisper",
+            "TFT_Item_Quicksilver"
+          ],
+          "games": 2,
+          "mean": 3.5
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 2,
+          "mean": 4.5
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_PowerGauntlet",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 2,
+          "mean": 4.5
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_Leviathan",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 2,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_PowerGauntlet",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 2,
+          "mean": 3.5
+        },
+        {
+          "items": [
+            "TFT_Item_RapidFireCannon",
+            "TFT_Item_RunaansHurricane",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 2,
+          "mean": 2.5
+        },
+        {
+          "items": [
+            "TFT_Item_AdaptiveHelm",
+            "TFT_Item_BlueBuff",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 1,
+          "mean": 7.0
+        },
+        {
+          "items": [
+            "TFT_Item_AdaptiveHelm",
+            "TFT_Item_Deathblade",
+            "TFT_Item_GuinsoosRageblade"
+          ],
+          "games": 1,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_AdaptiveHelm",
+            "TFT_Item_LastWhisper",
+            "TFT_Item_Morellonomicon"
+          ],
+          "games": 1,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_Deathblade",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 1,
+          "mean": 1.0
+        },
+        {
+          "items": [
+            "TFT_Item_Bloodthirster",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_InfinityEdge"
+          ],
+          "games": 1,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_BlueBuff",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_InfinityEdge"
+          ],
+          "games": 1,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_BlueBuff",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 1,
+          "mean": 1.0
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_Deathblade",
+            "TFT_Item_GuinsoosRageblade"
+          ],
+          "games": 1,
+          "mean": 2.0
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_GuardianAngel",
+            "TFT_Item_GuinsoosRageblade"
+          ],
+          "games": 1,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 1,
+          "mean": 7.0
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 1,
+          "mean": 2.0
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 1,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_LastWhisper",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 1,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 1,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_Quicksilver"
+          ],
+          "games": 1,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 1,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_Quicksilver",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 1,
+          "mean": 2.0
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_RapidFireCannon",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 1,
+          "mean": 1.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuardianAngel",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_InfinityEdge"
+          ],
+          "games": 1,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuardianAngel",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 1,
+          "mean": 2.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 1,
+          "mean": 7.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 1,
+          "mean": 2.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_Leviathan"
+          ],
+          "games": 1,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_TitansResolve"
+          ],
+          "games": 1,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_UnstableConcoction"
+          ],
+          "games": 1,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_LastWhisper",
+            "TFT_Item_Leviathan"
+          ],
+          "games": 1,
+          "mean": 1.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_LastWhisper",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 1,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 1,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_Quicksilver"
+          ],
+          "games": 1,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_UnstableConcoction"
+          ],
+          "games": 1,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_RapidFireCannon",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 1,
+          "mean": 1.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_RunaansHurricane",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 1,
+          "mean": 1.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_RunaansHurricane",
+            "TFT_Item_StatikkShiv"
+          ],
+          "games": 1,
+          "mean": 2.0
+        },
+        {
+          "items": [
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 1,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_RapidFireCannon",
+            "TFT_Item_StatikkShiv"
+          ],
+          "games": 1,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_LastWhisper",
+            "TFT_Item_TacticiansRing"
+          ],
+          "games": 1,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 1,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 1,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_RunaansHurricane",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 1,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_RunaansHurricane",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 1,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_LastWhisper",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 1,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_LastWhisper",
+            "TFT_Item_RapidFireCannon",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 1,
+          "mean": 2.0
+        },
+        {
+          "items": [
+            "TFT_Item_LastWhisper",
+            "TFT_Item_RunaansHurricane",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 1,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_PowerGauntlet",
+            "TFT_Item_Quicksilver",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 1,
+          "mean": 6.0
         }
       ]
     },
@@ -212,7 +1581,7 @@
       "tier": 4,
       "level": 9,
       "stars": 2,
-      "url": "https://www.metatft.com/explorer?tab=builds&unit=DA_Xayah19-1_2_3&level=9&trait=DA_Heavenscale19_3&set=TFTSet19",
+      "url": "https://www.metatft.com/explorer?tab=builds&unit=DA_Xayah19-1_2_3&level=9&trait=DA_Heavenscale19_3&set=TFTSet19&queue=PBE&patch=19.1&b_patch=b&days=3",
       "builds": [
         {
           "items": [
@@ -220,8 +1589,8 @@
             "TFT_Item_LastWhisper",
             "TFT_Item_SpearOfShojin"
           ],
-          "games": 908,
-          "mean": 3.94
+          "games": 57,
+          "mean": 3.88
         },
         {
           "items": [
@@ -229,8 +1598,17 @@
             "TFT_Item_PowerGauntlet",
             "TFT_Item_SpearOfShojin"
           ],
-          "games": 413,
-          "mean": 3.96
+          "games": 27,
+          "mean": 3.74
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 18,
+          "mean": 4.06
         },
         {
           "items": [
@@ -238,8 +1616,8 @@
             "TFT_Item_InfinityEdge",
             "TFT_Item_SpearOfShojin"
           ],
-          "games": 368,
-          "mean": 4.03
+          "games": 17,
+          "mean": 3.94
         },
         {
           "items": [
@@ -247,17 +1625,8 @@
             "TFT_Item_InfinityEdge",
             "TFT_Item_LastWhisper"
           ],
-          "games": 360,
-          "mean": 4.07
-        },
-        {
-          "items": [
-            "TFT_Item_GuinsoosRageblade",
-            "TFT_Item_InfinityEdge",
-            "TFT_Item_SpearOfShojin"
-          ],
-          "games": 346,
-          "mean": 4.26
+          "games": 12,
+          "mean": 4.08
         },
         {
           "items": [
@@ -265,17 +1634,8 @@
             "TFT_Item_MadredsBloodrazor",
             "TFT_Item_SpearOfShojin"
           ],
-          "games": 345,
-          "mean": 3.88
-        },
-        {
-          "items": [
-            "TFT_Item_GuinsoosRageblade",
-            "TFT_Item_InfinityEdge",
-            "TFT_Item_RunaansHurricane"
-          ],
-          "games": 240,
-          "mean": 4.1
+          "games": 12,
+          "mean": 4.33
         },
         {
           "items": [
@@ -283,8 +1643,719 @@
             "TFT_Item_RapidFireCannon",
             "TFT_Item_SpearOfShojin"
           ],
-          "games": 222,
-          "mean": 4.32
+          "games": 10,
+          "mean": 3.2
+        },
+        {
+          "items": [
+            "TFT_Item_BlueBuff",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 6,
+          "mean": 3.17
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_LastWhisper",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 6,
+          "mean": 4.5
+        },
+        {
+          "items": [
+            "TFT_Item_BlueBuff",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_LastWhisper"
+          ],
+          "games": 5,
+          "mean": 3.6
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_InfinityEdge"
+          ],
+          "games": 5,
+          "mean": 3.8
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_LastWhisper",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 5,
+          "mean": 3.4
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_LastWhisper",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 5,
+          "mean": 3.6
+        },
+        {
+          "items": [
+            "TFT_Item_BlueBuff",
+            "TFT_Item_Deathblade",
+            "TFT_Item_InfinityEdge"
+          ],
+          "games": 4,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_BlueBuff",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 4,
+          "mean": 3.5
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_LastWhisper"
+          ],
+          "games": 4,
+          "mean": 3.25
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 4,
+          "mean": 5.25
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 4,
+          "mean": 4.5
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 4,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_LastWhisper",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 4,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_LastWhisper",
+            "TFT_Item_PowerGauntlet",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 4,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_BlueBuff",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 3,
+          "mean": 3.33
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 3,
+          "mean": 4.33
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_RapidFireCannon",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 3,
+          "mean": 4.33
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 3,
+          "mean": 2.67
+        },
+        {
+          "items": [
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 3,
+          "mean": 2.33
+        },
+        {
+          "items": [
+            "TFT_Item_BlueBuff",
+            "TFT_Item_Deathblade",
+            "TFT_Item_GuinsoosRageblade"
+          ],
+          "games": 2,
+          "mean": 5.5
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_Deathblade",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 2,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 2,
+          "mean": 3.5
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 2,
+          "mean": 6.5
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_InfinityEdge"
+          ],
+          "games": 2,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_InfinityEdge"
+          ],
+          "games": 2,
+          "mean": 6.5
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 2,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_LastWhisper",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 2,
+          "mean": 4.5
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_LastWhisper",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 2,
+          "mean": 3.5
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_LastWhisper",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 2,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 2,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_RapidFireCannon",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 2,
+          "mean": 3.5
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_SpearOfShojin",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 2,
+          "mean": 4.5
+        },
+        {
+          "items": [
+            "TFT_Item_LastWhisper",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 2,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_LastWhisper",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 2,
+          "mean": 2.5
+        },
+        {
+          "items": [
+            "TFT_Item_AdaptiveHelm",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 1,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_AdaptiveHelm",
+            "TFT_Item_LastWhisper",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 1,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_BlueBuff",
+            "TFT_Item_Deathblade",
+            "TFT_Item_HextechGunblade"
+          ],
+          "games": 1,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_BlueBuff",
+            "TFT_Item_Deathblade",
+            "TFT_Item_LastWhisper"
+          ],
+          "games": 1,
+          "mean": 2.0
+        },
+        {
+          "items": [
+            "TFT_Item_BlueBuff",
+            "TFT_Item_Deathblade",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 1,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_BlueBuff",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_InfinityEdge"
+          ],
+          "games": 1,
+          "mean": 2.0
+        },
+        {
+          "items": [
+            "TFT_Item_BlueBuff",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 1,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_BlueBuff",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_TacticiansRing"
+          ],
+          "games": 1,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_BlueBuff",
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 1,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_BlueBuff",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_InfinityEdge"
+          ],
+          "games": 1,
+          "mean": 1.0
+        },
+        {
+          "items": [
+            "TFT_Item_BlueBuff",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 1,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_GuardianAngel",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 1,
+          "mean": 1.0
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 1,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_LastWhisper"
+          ],
+          "games": 1,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 1,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 1,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_LastWhisper",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 1,
+          "mean": 2.0
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_PowerGauntlet",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 1,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_SpearOfShojin",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 1,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_SpearOfShojin",
+            "TFT_Item_UnstableConcoction"
+          ],
+          "games": 1,
+          "mean": 7.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_Leviathan"
+          ],
+          "games": 1,
+          "mean": 2.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 1,
+          "mean": 7.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 1,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_Morellonomicon",
+            "TFT_Item_StatikkShiv"
+          ],
+          "games": 1,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_PowerGauntlet",
+            "TFT_Item_UnstableConcoction"
+          ],
+          "games": 1,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_RapidFireCannon",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 1,
+          "mean": 2.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_RapidFireCannon",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 1,
+          "mean": 2.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_SpearOfShojin",
+            "TFT_Item_UnstableConcoction"
+          ],
+          "games": 1,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_LastWhisper"
+          ],
+          "games": 1,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_Leviathan"
+          ],
+          "games": 1,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_LastWhisper",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 1,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_Morellonomicon",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 1,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_LastWhisper",
+            "TFT_Item_Quicksilver"
+          ],
+          "games": 1,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_LastWhisper",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 1,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_Leviathan",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 1,
+          "mean": 1.0
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 1,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_Quicksilver"
+          ],
+          "games": 1,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_PowerGauntlet",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 1,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_Quicksilver",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 1,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_RapidFireCannon",
+            "TFT_Item_UnstableConcoction"
+          ],
+          "games": 1,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_RunaansHurricane",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 1,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_LastWhisper",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 1,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_LastWhisper",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 1,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_LastWhisper",
+            "TFT_Item_SpearOfShojin",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 1,
+          "mean": 2.0
+        },
+        {
+          "items": [
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_RapidFireCannon",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 1,
+          "mean": 3.0
         }
       ]
     },
@@ -295,7 +2366,7 @@
       "tier": 5,
       "level": 7,
       "stars": 3,
-      "url": "https://www.metatft.com/explorer?tab=builds&unit=DA_Malzahar19-1_3_3&level=7&trait=DA_Prodigy19_4&set=TFTSet19",
+      "url": "https://www.metatft.com/explorer?tab=builds&unit=DA_Malzahar19-1_3_3&level=7&trait=DA_Prodigy19_4&set=TFTSet19&queue=PBE&patch=19.1&b_patch=b&days=3",
       "builds": [
         {
           "items": [
@@ -303,8 +2374,17 @@
             "TFT_Item_PowerGauntlet",
             "TFT_Item_RabadonsDeathcap"
           ],
-          "games": 328,
-          "mean": 3.31
+          "games": 48,
+          "mean": 4.27
+        },
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_PowerGauntlet",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 10,
+          "mean": 5.5
         },
         {
           "items": [
@@ -312,8 +2392,179 @@
             "TFT_Item_JeweledGauntlet",
             "TFT_Item_PowerGauntlet"
           ],
-          "games": 61,
-          "mean": 2.64
+          "games": 9,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 8,
+          "mean": 4.75
+        },
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 8,
+          "mean": 5.38
+        },
+        {
+          "items": [
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 7,
+          "mean": 5.14
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 4,
+          "mean": 4.25
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 4,
+          "mean": 4.5
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 4,
+          "mean": 4.5
+        },
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_RabadonsDeathcap",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 4,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_RabadonsDeathcap",
+            "TFT_Item_StatikkShiv"
+          ],
+          "games": 4,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 3,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_PowerGauntlet",
+            "TFT_Item_StatikkShiv"
+          ],
+          "games": 3,
+          "mean": 4.33
+        },
+        {
+          "items": [
+            "TFT_Item_AdaptiveHelm",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 2,
+          "mean": 3.5
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_JeweledGauntlet"
+          ],
+          "games": 2,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_BlueBuff",
+            "TFT_Item_JeweledGauntlet"
+          ],
+          "games": 2,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 2,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_PowerGauntlet",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 2,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_BlueBuff",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_Morellonomicon"
+          ],
+          "games": 2,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_StatikkShiv"
+          ],
+          "games": 2,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_RabadonsDeathcap",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 2,
+          "mean": 4.5
+        },
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_Leviathan",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 2,
+          "mean": 3.0
         },
         {
           "items": [
@@ -321,8 +2572,359 @@
             "TFT_Item_MadredsBloodrazor",
             "TFT_Item_PowerGauntlet"
           ],
-          "games": 56,
-          "mean": 3.36
+          "games": 2,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_AdaptiveHelm",
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_HextechGunblade"
+          ],
+          "games": 1,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_AdaptiveHelm",
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_JeweledGauntlet"
+          ],
+          "games": 1,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_AdaptiveHelm",
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 1,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_AdaptiveHelm",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_Morellonomicon"
+          ],
+          "games": 1,
+          "mean": 7.0
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_ArchangelsStaff"
+          ],
+          "games": 1,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_HextechGunblade"
+          ],
+          "games": 1,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 1,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_StatikkShiv"
+          ],
+          "games": 1,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_BlueBuff",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 1,
+          "mean": 2.0
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_JeweledGauntlet"
+          ],
+          "games": 1,
+          "mean": 2.0
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 1,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 1,
+          "mean": 8.0
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_Leviathan"
+          ],
+          "games": 1,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_Morellonomicon"
+          ],
+          "games": 1,
+          "mean": 8.0
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 1,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 1,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_RabadonsDeathcap",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 1,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_BlueBuff",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_Leviathan"
+          ],
+          "games": 1,
+          "mean": 8.0
+        },
+        {
+          "items": [
+            "TFT_Item_BlueBuff",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 1,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_BlueBuff",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 1,
+          "mean": 2.0
+        },
+        {
+          "items": [
+            "TFT_Item_BlueBuff",
+            "TFT_Item_PowerGauntlet",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 1,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 1,
+          "mean": 7.0
+        },
+        {
+          "items": [
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_JeweledGauntlet"
+          ],
+          "games": 1,
+          "mean": 7.0
+        },
+        {
+          "items": [
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 1,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_StatikkShiv"
+          ],
+          "games": 1,
+          "mean": 7.0
+        },
+        {
+          "items": [
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_PowerGauntlet",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 1,
+          "mean": 7.0
+        },
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_Leviathan",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 1,
+          "mean": 7.0
+        },
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 1,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_StatikkShiv"
+          ],
+          "games": 1,
+          "mean": 7.0
+        },
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_Morellonomicon",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 1,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_PowerGauntlet",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 1,
+          "mean": 7.0
+        },
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_PowerGauntlet",
+            "TFT_Item_UnstableConcoction"
+          ],
+          "games": 1,
+          "mean": 1.0
+        },
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_RabadonsDeathcap",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 1,
+          "mean": 7.0
+        },
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_RabadonsDeathcap",
+            "TFT_Item_UnstableConcoction"
+          ],
+          "games": 1,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_RapidFireCannon",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 1,
+          "mean": 7.0
+        },
+        {
+          "items": [
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_PowerGauntlet",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 1,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_RabadonsDeathcap",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 1,
+          "mean": 7.0
+        },
+        {
+          "items": [
+            "TFT_Item_PowerGauntlet",
+            "TFT_Item_RabadonsDeathcap",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 1,
+          "mean": 7.0
+        },
+        {
+          "items": [
+            "TFT_Item_RabadonsDeathcap",
+            "TFT_Item_RabadonsDeathcap",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 1,
+          "mean": 1.0
         }
       ]
     },
@@ -333,7 +2935,7 @@
       "tier": 5,
       "level": 9,
       "stars": 3,
-      "url": "https://www.metatft.com/explorer?tab=builds&unit=DA_Malzahar19-1_3_3&level=9&trait=DA_Prodigy19_4&set=TFTSet19",
+      "url": "https://www.metatft.com/explorer?tab=builds&unit=DA_Malzahar19-1_3_3&level=9&trait=DA_Prodigy19_4&set=TFTSet19&queue=PBE&patch=19.1&b_patch=b&days=3",
       "builds": [
         {
           "items": [
@@ -341,26 +2943,8 @@
             "TFT_Item_PowerGauntlet",
             "TFT_Item_RabadonsDeathcap"
           ],
-          "games": 1088,
-          "mean": 1.5
-        },
-        {
-          "items": [
-            "TFT_Item_JeweledGauntlet",
-            "TFT_Item_MadredsBloodrazor",
-            "TFT_Item_PowerGauntlet"
-          ],
-          "games": 245,
-          "mean": 1.52
-        },
-        {
-          "items": [
-            "TFT_Item_JeweledGauntlet",
-            "TFT_Item_MadredsBloodrazor",
-            "TFT_Item_RabadonsDeathcap"
-          ],
-          "games": 240,
-          "mean": 1.47
+          "games": 68,
+          "mean": 1.87
         },
         {
           "items": [
@@ -368,17 +2952,26 @@
             "TFT_Item_JeweledGauntlet",
             "TFT_Item_PowerGauntlet"
           ],
-          "games": 238,
-          "mean": 1.54
+          "games": 10,
+          "mean": 1.9
         },
         {
           "items": [
-            "TFT_Item_HextechGunblade",
             "TFT_Item_JeweledGauntlet",
+            "TFT_Item_MadredsBloodrazor",
             "TFT_Item_PowerGauntlet"
           ],
-          "games": 209,
-          "mean": 1.43
+          "games": 10,
+          "mean": 2.5
+        },
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 10,
+          "mean": 1.7
         },
         {
           "items": [
@@ -386,8 +2979,8 @@
             "TFT_Item_HextechGunblade",
             "TFT_Item_JeweledGauntlet"
           ],
-          "games": 139,
-          "mean": 1.42
+          "games": 8,
+          "mean": 1.88
         },
         {
           "items": [
@@ -395,17 +2988,17 @@
             "TFT_Item_JeweledGauntlet",
             "TFT_Item_RabadonsDeathcap"
           ],
-          "games": 139,
-          "mean": 1.67
+          "games": 6,
+          "mean": 1.83
         },
         {
           "items": [
-            "TFT_Item_HextechGunblade",
+            "TFT_Item_BlueBuff",
             "TFT_Item_JeweledGauntlet",
             "TFT_Item_RabadonsDeathcap"
           ],
-          "games": 129,
-          "mean": 1.37
+          "games": 6,
+          "mean": 2.0
         },
         {
           "items": [
@@ -413,8 +3006,557 @@
             "TFT_Item_JeweledGauntlet",
             "TFT_Item_MadredsBloodrazor"
           ],
-          "games": 123,
-          "mean": 1.55
+          "games": 5,
+          "mean": 1.2
+        },
+        {
+          "items": [
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 5,
+          "mean": 1.8
+        },
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_RabadonsDeathcap",
+            "TFT_Item_StatikkShiv"
+          ],
+          "games": 5,
+          "mean": 1.8
+        },
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_Leviathan",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 4,
+          "mean": 1.25
+        },
+        {
+          "items": [
+            "TFT_Item_AdaptiveHelm",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 3,
+          "mean": 2.0
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_JeweledGauntlet"
+          ],
+          "games": 3,
+          "mean": 2.0
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 3,
+          "mean": 2.33
+        },
+        {
+          "items": [
+            "TFT_Item_BlueBuff",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 3,
+          "mean": 2.67
+        },
+        {
+          "items": [
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 3,
+          "mean": 1.0
+        },
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_RabadonsDeathcap",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 3,
+          "mean": 1.67
+        },
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_RabadonsDeathcap",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 3,
+          "mean": 1.0
+        },
+        {
+          "items": [
+            "TFT_Item_AdaptiveHelm",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 2,
+          "mean": 1.0
+        },
+        {
+          "items": [
+            "TFT_Item_AdaptiveHelm",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 2,
+          "mean": 2.5
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_ArchangelsStaff"
+          ],
+          "games": 2,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_HextechGunblade"
+          ],
+          "games": 2,
+          "mean": 2.0
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 2,
+          "mean": 1.0
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 2,
+          "mean": 2.0
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_RabadonsDeathcap",
+            "TFT_Item_StatikkShiv"
+          ],
+          "games": 2,
+          "mean": 2.0
+        },
+        {
+          "items": [
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_StatikkShiv"
+          ],
+          "games": 2,
+          "mean": 4.5
+        },
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 2,
+          "mean": 2.5
+        },
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_Leviathan",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 2,
+          "mean": 1.5
+        },
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_PowerGauntlet",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 2,
+          "mean": 1.0
+        },
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_PowerGauntlet",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 2,
+          "mean": 3.5
+        },
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_PowerGauntlet",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 2,
+          "mean": 2.0
+        },
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_PowerGauntlet",
+            "TFT_Item_StatikkShiv"
+          ],
+          "games": 2,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_AdaptiveHelm",
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_HextechGunblade"
+          ],
+          "games": 1,
+          "mean": 2.0
+        },
+        {
+          "items": [
+            "TFT_Item_AdaptiveHelm",
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 1,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_AdaptiveHelm",
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 1,
+          "mean": 1.0
+        },
+        {
+          "items": [
+            "TFT_Item_AdaptiveHelm",
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 1,
+          "mean": 1.0
+        },
+        {
+          "items": [
+            "TFT_Item_AdaptiveHelm",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_StatikkShiv"
+          ],
+          "games": 1,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_Leviathan"
+          ],
+          "games": 1,
+          "mean": 2.0
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_BlueBuff",
+            "TFT_Item_JeweledGauntlet"
+          ],
+          "games": 1,
+          "mean": 2.0
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_Leviathan"
+          ],
+          "games": 1,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_StatikkShiv"
+          ],
+          "games": 1,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_Morellonomicon"
+          ],
+          "games": 1,
+          "mean": 1.0
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_RabadonsDeathcap",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 1,
+          "mean": 1.0
+        },
+        {
+          "items": [
+            "TFT_Item_BlueBuff",
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_JeweledGauntlet"
+          ],
+          "games": 1,
+          "mean": 1.0
+        },
+        {
+          "items": [
+            "TFT_Item_BlueBuff",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_Leviathan"
+          ],
+          "games": 1,
+          "mean": 1.0
+        },
+        {
+          "items": [
+            "TFT_Item_BlueBuff",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 1,
+          "mean": 2.0
+        },
+        {
+          "items": [
+            "TFT_Item_BlueBuff",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_StatikkShiv"
+          ],
+          "games": 1,
+          "mean": 2.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 1,
+          "mean": 1.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_StatikkShiv"
+          ],
+          "games": 1,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_Morellonomicon",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 1,
+          "mean": 1.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_PowerGauntlet",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 1,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_JeweledGauntlet"
+          ],
+          "games": 1,
+          "mean": 1.0
+        },
+        {
+          "items": [
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 1,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 1,
+          "mean": 1.0
+        },
+        {
+          "items": [
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_Leviathan",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 1,
+          "mean": 1.0
+        },
+        {
+          "items": [
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 1,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_Morellonomicon",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 1,
+          "mean": 1.0
+        },
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 1,
+          "mean": 2.0
+        },
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_StatikkShiv"
+          ],
+          "games": 1,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_Leviathan",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 1,
+          "mean": 2.0
+        },
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_Leviathan",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 1,
+          "mean": 1.0
+        },
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 1,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_Morellonomicon",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 1,
+          "mean": 2.0
+        },
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_Morellonomicon",
+            "TFT_Item_StatikkShiv"
+          ],
+          "games": 1,
+          "mean": 1.0
+        },
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_SpearOfShojin",
+            "TFT_Item_StatikkShiv"
+          ],
+          "games": 1,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_Leviathan",
+            "TFT_Item_RabadonsDeathcap",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 1,
+          "mean": 1.0
+        },
+        {
+          "items": [
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 1,
+          "mean": 2.0
+        },
+        {
+          "items": [
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_PowerGauntlet",
+            "TFT_Item_StatikkShiv"
+          ],
+          "games": 1,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_RabadonsDeathcap",
+            "TFT_Item_RabadonsDeathcap",
+            "TFT_Item_StatikkShiv"
+          ],
+          "games": 1,
+          "mean": 3.0
         }
       ]
     },
@@ -425,7 +3567,7 @@
       "tier": 7,
       "level": 8,
       "stars": 2,
-      "url": "https://www.metatft.com/explorer?tab=builds&unit=DA_Kayle19-1_2_3&level=8&trait=DA_Pentakill19_3&set=TFTSet19",
+      "url": "https://www.metatft.com/explorer?tab=builds&unit=DA_Kayle19-1_2_3&level=8&trait=DA_Pentakill19_3&set=TFTSet19&queue=PBE&patch=19.1&b_patch=b&days=3",
       "builds": [
         {
           "items": [
@@ -433,17 +3575,17 @@
             "TFT_Item_JeweledGauntlet",
             "TFT_Item_PowerGauntlet"
           ],
-          "games": 792,
-          "mean": 4.89
+          "games": 33,
+          "mean": 5.76
         },
         {
           "items": [
+            "TFT_Item_ArchangelsStaff",
             "TFT_Item_GuinsoosRageblade",
-            "TFT_Item_HextechGunblade",
-            "TFT_Item_JeweledGauntlet"
+            "TFT_Item_StatikkShiv"
           ],
-          "games": 582,
-          "mean": 5.04
+          "games": 20,
+          "mean": 5.4
         },
         {
           "items": [
@@ -451,8 +3593,8 @@
             "TFT_Item_JeweledGauntlet",
             "TFT_Item_MadredsBloodrazor"
           ],
-          "games": 408,
-          "mean": 5.05
+          "games": 11,
+          "mean": 5.45
         },
         {
           "items": [
@@ -460,26 +3602,8 @@
             "TFT_Item_JeweledGauntlet",
             "TFT_Item_StatikkShiv"
           ],
-          "games": 316,
-          "mean": 4.93
-        },
-        {
-          "items": [
-            "TFT_Item_GuinsoosRageblade",
-            "TFT_Item_HextechGunblade",
-            "TFT_Item_RabadonsDeathcap"
-          ],
-          "games": 292,
-          "mean": 5.04
-        },
-        {
-          "items": [
-            "TFT_Item_GuinsoosRageblade",
-            "TFT_Item_JeweledGauntlet",
-            "TFT_Item_RabadonsDeathcap"
-          ],
-          "games": 243,
-          "mean": 5.03
+          "games": 10,
+          "mean": 4.7
         },
         {
           "items": [
@@ -487,17 +3611,80 @@
             "TFT_Item_GuinsoosRageblade",
             "TFT_Item_JeweledGauntlet"
           ],
-          "games": 193,
-          "mean": 4.9
+          "games": 9,
+          "mean": 5.0
         },
         {
           "items": [
             "TFT_Item_GuinsoosRageblade",
             "TFT_Item_HextechGunblade",
-            "TFT_Item_MadredsBloodrazor"
+            "TFT_Item_JeweledGauntlet"
           ],
-          "games": 184,
-          "mean": 4.65
+          "games": 9,
+          "mean": 4.67
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 8,
+          "mean": 5.25
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 6,
+          "mean": 5.5
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 5,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_JeweledGauntlet"
+          ],
+          "games": 5,
+          "mean": 4.8
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 5,
+          "mean": 4.4
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_RapidFireCannon",
+            "TFT_Item_StatikkShiv"
+          ],
+          "games": 5,
+          "mean": 5.8
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_StatikkShiv"
+          ],
+          "games": 3,
+          "mean": 4.67
         },
         {
           "items": [
@@ -505,8 +3692,521 @@
             "TFT_Item_JeweledGauntlet",
             "TFT_Item_Leviathan"
           ],
-          "games": 176,
+          "games": 3,
+          "mean": 4.67
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_StatikkShiv"
+          ],
+          "games": 3,
+          "mean": 5.33
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_HextechGunblade"
+          ],
+          "games": 2,
+          "mean": 3.5
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 2,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 2,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_Leviathan"
+          ],
+          "games": 2,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 2,
           "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 2,
+          "mean": 3.5
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_RabadonsDeathcap",
+            "TFT_Item_StatikkShiv"
+          ],
+          "games": 2,
+          "mean": 3.5
+        },
+        {
+          "items": [
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_RapidFireCannon",
+            "TFT_Item_StatikkShiv"
+          ],
+          "games": 2,
+          "mean": 5.5
+        },
+        {
+          "items": [
+            "TFT_Item_AdaptiveHelm",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_GuinsoosRageblade"
+          ],
+          "games": 1,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_AdaptiveHelm",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_StatikkShiv"
+          ],
+          "games": 1,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_AdaptiveHelm",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_UnstableConcoction"
+          ],
+          "games": 1,
+          "mean": 8.0
+        },
+        {
+          "items": [
+            "TFT_Item_AdaptiveHelm",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 1,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_AdaptiveHelm",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_UnstableConcoction"
+          ],
+          "games": 1,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_AdaptiveHelm",
+            "TFT_Item_LastWhisper",
+            "TFT_Item_Quicksilver"
+          ],
+          "games": 1,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_GuinsoosRageblade"
+          ],
+          "games": 1,
+          "mean": 2.0
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_GuinsoosRageblade"
+          ],
+          "games": 1,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_Leviathan"
+          ],
+          "games": 1,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_Quicksilver"
+          ],
+          "games": 1,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 1,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_Leviathan"
+          ],
+          "games": 1,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_ArchangelsStaff",
+            "TFT_Item_RabadonsDeathcap",
+            "TFT_Item_StatikkShiv"
+          ],
+          "games": 1,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_Bloodthirster",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_StatikkShiv"
+          ],
+          "games": 1,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_BlueBuff",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_HextechGunblade"
+          ],
+          "games": 1,
+          "mean": 7.0
+        },
+        {
+          "items": [
+            "TFT_Item_BlueBuff",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 1,
+          "mean": 7.0
+        },
+        {
+          "items": [
+            "TFT_Item_Deathblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_JeweledGauntlet"
+          ],
+          "games": 1,
+          "mean": 7.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_HextechGunblade"
+          ],
+          "games": 1,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 1,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_StatikkShiv"
+          ],
+          "games": 1,
+          "mean": 7.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_HextechGunblade"
+          ],
+          "games": 1,
+          "mean": 2.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_Morellonomicon"
+          ],
+          "games": 1,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_PowerGauntlet"
+          ],
+          "games": 1,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_UnstableConcoction"
+          ],
+          "games": 1,
+          "mean": 7.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_MadredsBloodrazor"
+          ],
+          "games": 1,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 1,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_UnstableConcoction"
+          ],
+          "games": 1,
+          "mean": 8.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_PowerGauntlet",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 1,
+          "mean": 8.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_PowerGauntlet",
+            "TFT_Item_RunaansHurricane"
+          ],
+          "games": 1,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_PowerGauntlet",
+            "TFT_Item_StatikkShiv"
+          ],
+          "games": 1,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_Quicksilver",
+            "TFT_Item_StatikkShiv"
+          ],
+          "games": 1,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_RabadonsDeathcap",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 1,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_RabadonsDeathcap",
+            "TFT_Item_UnstableConcoction"
+          ],
+          "games": 1,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_SpearOfShojin",
+            "TFT_Item_StatikkShiv"
+          ],
+          "games": 1,
+          "mean": 2.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_StatikkShiv",
+            "TFT_Item_TacticiansRing"
+          ],
+          "games": 1,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_GuinsoosRageblade",
+            "TFT_Item_StatikkShiv",
+            "TFT_Item_TitansResolve"
+          ],
+          "games": 1,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_Leviathan",
+            "TFT_Item_Quicksilver"
+          ],
+          "games": 1,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_Quicksilver"
+          ],
+          "games": 1,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 1,
+          "mean": 3.0
+        },
+        {
+          "items": [
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_StatikkShiv"
+          ],
+          "games": 1,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_HextechGunblade",
+            "TFT_Item_RabadonsDeathcap",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 1,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_InfinityEdge",
+            "TFT_Item_RapidFireCannon",
+            "TFT_Item_StatikkShiv"
+          ],
+          "games": 1,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_RabadonsDeathcap"
+          ],
+          "games": 1,
+          "mean": 5.0
+        },
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_PowerGauntlet",
+            "TFT_Item_Quicksilver"
+          ],
+          "games": 1,
+          "mean": 4.0
+        },
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_PowerGauntlet",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 1,
+          "mean": 6.0
+        },
+        {
+          "items": [
+            "TFT_Item_JeweledGauntlet",
+            "TFT_Item_RapidFireCannon",
+            "TFT_Item_SpearOfShojin"
+          ],
+          "games": 1,
+          "mean": 7.0
+        },
+        {
+          "items": [
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_RapidFireCannon",
+            "TFT_Item_RapidFireCannon"
+          ],
+          "games": 1,
+          "mean": 7.0
+        },
+        {
+          "items": [
+            "TFT_Item_MadredsBloodrazor",
+            "TFT_Item_SpearOfShojin",
+            "TFT_Item_StatikkShiv"
+          ],
+          "games": 1,
+          "mean": 7.0
         }
       ]
     }

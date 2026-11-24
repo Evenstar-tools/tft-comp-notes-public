@@ -72,6 +72,21 @@ test("edition and explicit core conditions prevent attaching the reroll sample t
   assert.equal(findPlacement(batch,heroes,2,{...option,pieces:[piece("lillia",3,["a","b"]),piece("nasus")]}),undefined);
 });
 
+test("pre-hotfix observations preserve their date and never displace a fresh board in current rankings", () => {
+  const historical = { population: 1, roster: ["jhin"], games: 210, mean: 2.4, url: "old",
+    observedOn: "2026-11-20", sourcePeriod: { patch: "PBE 19.1", window: "最近三天" } };
+  const current = { population: 1, roster: ["jhin"], games: 22, mean: 3, url: "new" };
+  const batch = { patch: "PBE 19.1b", window: "热补后", date: "2026-11-24", minGames: 100, greenThrough: 3.4, redFrom: 4.5,
+    records: [historical, current] };
+  const lookup = records => findPlacement({ ...batch, records }, ["jhin"], 1);
+  assert.equal(lookup(batch.records).url, "new");
+  assert.equal(lookup(batch.records).mean, undefined);
+  assert.equal(lookup([historical, { ...current, games: 0 }]), undefined);
+  const archive = lookup([historical]);
+  assert.deepEqual([archive.patch, archive.date, archive.tone], ["PBE 19.1", "2026-11-20", "limited"]);
+  assert.equal(orderByPlacement([{rating: archive}, {rating: { mean: 4.8, games: 122 }}])[1].rating, archive);
+});
+
 test("an exact-board comparison keeps every requested trait breakpoint", () => {
   const sample = {population:2,roster:["graves","zac"],games:140,mean:3.9,url:"exact",
     conditions:{kind:"full",traits:{"beach-pop":5,"ionic-spark":3}}};

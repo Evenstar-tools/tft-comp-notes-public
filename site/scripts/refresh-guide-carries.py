@@ -9,6 +9,7 @@ from tempfile import NamedTemporaryFile
 from urllib.error import HTTPError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
+from guide_stats_window import current_window, scoped_url
 
 DATA = Path(__file__).resolve().parents[1] / "data"
 EXPLORER = "https://www.metatft.com/explorer?"
@@ -29,7 +30,10 @@ def fetch(url):
     for attempt in range(2):
         try:
             with urlopen(request, timeout=28) as response:
-                return json.load(response)
+                payload = json.load(response)
+                if payload.get("filter_adjustment"):
+                    raise ValueError("Source adjusted the requested filters")
+                return payload
         except HTTPError as err:
             if attempt or err.code not in (502, 503, 504):
                 raise
@@ -45,7 +49,7 @@ def key(name):
     return re.sub("[^a-z0-9]", "", name.lower())
 
 
-def audit_games(records, plan, patch, units, required, traits, full_gear, item_ids, augment_id):
+def audit_games(records, plan, window, units, required, traits, full_gear, item_ids, augment_id):
     carry = units[plan["carryId"]]
     tank = units[plan["tankId"]]
     emblem = plan.get("emblem")
@@ -56,7 +60,8 @@ def audit_games(records, plan, patch, units, required, traits, full_gear, item_i
     for record in records:
         placement = record["placement"]
         identity = (record["match_id"], placement)
-        if (record["set"] != "TFTSet19" or record["patch"] != patch or str(record["queue"]) != "1090"
+        if (record["set"] != "TFTSet19" or record["patch"] != window["patch"]
+                or record.get("b_patch_version") != window["b_patch"] or str(record["queue"]) != "1090"
                 or not re.fullmatch(r"PBE1_\d+", str(identity[0])) or type(placement) is not int or not 1 <= placement <= 8):
             raise ValueError("Unexpected recent match cohort")
         if identity in seen:
@@ -94,8 +99,11 @@ def main():
     parser.add_argument("--out", type=Path, default=DATA / "guide-carry-stats.json")
     args = parser.parse_args()
     plans, season, source = read("guide-carry-queries.json"), read("season.json"), fetch(LOOKUP)
-    patch = re.fullmatch(r"rls-(19\.\d+)\.\d+\.\d+\.Set19\.Shipping\.pbe", source["_metadata"]["release"])[1]
-    if source["_metadata"]["set"] != "TFTSet19" or not season["id"].startswith(f"s19-pbe-{patch}."):
+    build, window = current_window(DATA)
+    patch = window["patch"]
+    release = re.fullmatch(r"rls-(19\.\d+)\.\d+\.(\d+)\.Set19\.Shipping\.pbe", source["_metadata"]["release"])
+    if (source["_metadata"]["set"] != "TFTSet19" or not season["id"].startswith(f"s19-pbe-{patch}.")
+            or not release or release.groups() != (patch, build)):
         raise ValueError("S19 PBE season and lookup do not match")
     known = {unit["id"]: unit for unit in season["units"]}
     used = {unit for plan in plans for unit in [plan["carryId"], *plan["anchorIds"]]}
@@ -113,7 +121,7 @@ def main():
             and not i.get("associatedTraits") and "thiefsgloves" not in i["apiName"].lower()
             and not any(t.endswith((".Emblem", ".Component")) for t in i.get("tags", []))}
     item_ids = {k: v["pbeId"] for k, v in read("item-reference.json")["items"].items() if v.get("pbeId")}
-    base = [("queue","PBE"),("patch","current"),("days",3),("compact","true"),("formatnoarray","true")]
+    base = [*window.items(), ("compact", "true"), ("formatnoarray", "true"), ("permit_filter_adjustment", "false")]
 
     def query(plan):
         carry_id = plan["carryId"]
@@ -149,7 +157,7 @@ def main():
                 params.append(("unit_tier_numitems_unique", value if value.rpartition("-")[2].count("_") == 2 else value + "_.*"))
         suffix = "?" + urlencode([*base, *params])
         records = fetch(API + "recent_matches" + suffix)["data"]
-        audit, verified = audit_games(records, plan, patch, units, required, thresholds, full, item_ids,
+        audit, verified = audit_games(records, plan, window, units, required, thresholds, full, item_ids,
                                       augments[carry_id] if plan.get("augment") else None)
         special = "augment" if plan.get("augment") else "emblem" if plan.get("emblem") else None
         if special:
@@ -168,13 +176,14 @@ def main():
                 "scope":"九人口 · 同九张棋子" if plan.get("sameNine") else "、".join(descriptions),
                 "games":sum(counts), "placementCounts":counts, "kind":special or "slots", **audit,
                 "gearComparable":bool(plan["carryItems"] and plan["tankItems"]),
-                "url":EXPLORER + urlencode([("tab","games" if special else "units"), *args])}
+                "url":scoped_url(EXPLORER + urlencode([("tab","games" if special else "units"), *args]), window)}
 
     with ThreadPoolExecutor(max_workers=4) as pool:
         rows = list(pool.map(query, plans))
     if not any(r["games"] >= 100 and r["completedGames"] > 0 for r in rows):
         raise ValueError("No usable anchor sample. Keeping previous file.")
-    out = {"seasonId":season["id"],"queue":"PBE","patch":patch,"days":3,"minGames":100,
+    out = {"seasonId":season["id"],"queue":"PBE","patch":patch + window["b_patch"],"build":build,
+           "window":"热补后","days":3,"minGames":100,
            "updatedAt":datetime.now(timezone.utc).isoformat(timespec="seconds"),"rows":rows}
     with NamedTemporaryFile(mode="w", encoding="utf-8", newline="\n", dir=args.out.parent, delete=False) as f:
         json.dump(out, f, ensure_ascii=False, separators=(",",":"), allow_nan=False)

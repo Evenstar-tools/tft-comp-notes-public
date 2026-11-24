@@ -23,7 +23,8 @@ export interface CarrySample {
 }
 
 export const carryMinGames = snapshot.minGames;
-export const carryPeriod = `PBE ${snapshot.patch} · 近 ${snapshot.days} 天 · ${snapshot.updatedAt.slice(0, 10)} UTC`;
+const editionPatch = /^(\d+\.\d+)[a-z]?$/i.exec(snapshot.patch)?.[1];
+export const carryPeriod = `PBE ${snapshot.patch} · ${snapshot.window ?? `近 ${snapshot.days} 天`} · ${snapshot.updatedAt.slice(0, 10)} UTC`;
 
 const byBoard = new Map<string, CarrySample[]>();
 for (const sample of snapshot.rows as CarrySample[]) {
@@ -34,7 +35,7 @@ for (const sample of snapshot.rows as CarrySample[]) {
 }
 
 export function guideCarryRows(seasonId: string, sectionId: string, teamId: string, includeComparisons = false) {
-  if (seasonId !== snapshot.seasonId || !seasonId.startsWith(`s19-pbe-${snapshot.patch}.`)) return [];
+  if (seasonId !== snapshot.seasonId || !editionPatch || !seasonId.startsWith(`s19-pbe-${editionPatch}.`)) return [];
   const rows = byBoard.get(sectionId + "/" + teamId) ?? [];
   return includeComparisons ? rows : rows.filter(row => !row.sameNine);
 }
