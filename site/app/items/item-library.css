@@ -1,7 +1,6 @@
 .gear-heading {align-items:baseline;justify-content:flex-start;gap:6px 16px;}
 .gear-heading h1 {margin:0;}
-.gear-release {font-size:.875rem;color:var(--muted);}
-.gear-release-controls {display:flex;flex-wrap:wrap;align-items:baseline;gap:5px 10px;min-width:0;}
+.gear-release-controls {min-width:0;}
 .gear-catalog-tabs {order:3;flex:1 0 100%;min-width:0;}
 .gear-catalog-tabs .gear-groups {margin:0;}
 @media (min-width:761px) {.gear-release-controls {margin-inline-start:auto;}}

@@ -69,7 +69,6 @@ export function HeroLoadout({ unit, items, gearSource, period }: {
       <header>
         <h3>单件装备</h3>
         <a className="hero-loadout-all text-link" href={withStatPeriod(gearHref("all", undefined, { wearer: unit.id }), period)}>查看全部装备<ArrowUpRight size={13} aria-hidden="true" /></a>
-        <span>{gearSource.source} · {gearSource.version} · {gearSource.window} · {gearSource.date.slice(5).replace("-", "/")}</span>
       </header>
       {sampledItems.length ? <table>
         <thead><tr>

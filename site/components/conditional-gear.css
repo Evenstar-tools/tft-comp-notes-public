@@ -25,9 +25,15 @@
 }
 .conditional-gear-modes button:is(:hover,[aria-pressed=true]) {color:var(--accent);background:var(--raised);}
 .conditional-gear-modes button[aria-pressed=true] {border-color:var(--accent);font-weight:650;}
-.conditional-gear-scope {display:flex;align-items:baseline;flex-wrap:wrap;gap:3px 10px;margin:0 0 5px;font-size:.8125rem;color:var(--muted);}
-.conditional-gear-scope strong {font-weight:650;color:var(--text);}
-.conditional-gear-scope a {color:var(--accent);text-decoration:underline;text-underline-offset:3px;}
+.conditional-gear-cohort,.conditional-gear-source {color:var(--muted);font-size:.8125rem;}
+.conditional-gear-source-button {
+  display:inline-grid;place-items:center;min-width:32px;min-height:32px;
+  padding:0;border:0;background:transparent;color:var(--muted);margin-inline-start:auto;
+}
+.conditional-gear-source-button:hover {color:var(--accent);}
+.conditional-gear-source {width:auto;max-width:min(22rem,calc(100vw - 24px));}
+.conditional-gear-source p {margin:0 0 6px;}
+.conditional-gear-source a {color:var(--accent);text-decoration:underline;text-underline-offset:3px;}
 .conditional-gear table {width:100%;border-collapse:collapse;font-size:.875rem;font-variant-numeric:tabular-nums;}
 .conditional-gear :is(th,td) {padding:6px 6px;border-bottom:1px solid var(--line);text-align:end;line-height:1.45;}
 .conditional-gear tr > :first-child {width:100%;padding-inline-start:0;text-align:start;}
@@ -52,6 +58,7 @@
 .conditional-gear-more {margin-top:3px;font-size:.875rem;}
 @container (max-width:27rem) {
   .conditional-gear-filters select,.conditional-gear-modes button,.conditional-gear th button,.conditional-gear-more {min-height:44px;}
+  .conditional-gear-source-button {min-width:44px;min-height:44px;}
   .conditional-gear th {padding-block:1px;}
   .conditional-gear-build {display:grid;grid-template-columns:minmax(0,1fr);}
 }
