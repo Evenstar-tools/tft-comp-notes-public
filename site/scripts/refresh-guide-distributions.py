@@ -94,8 +94,13 @@ def main():
     core = scoped_url(CORE, window)
     for row in records + comparisons:
         row["url"] = scoped_url(row["url"], window)
-    formation = [entry for group in batch.get("formationComparisons", []) if group["patch"] == batch["patch"]
-                 for board in group["boards"] for entry in [board["sample"], board.get("subset", {}).get("sample")] if entry]
+    # Comparisons with a separately sampled core stay together as one observation.
+    formation_groups = [
+        group for group in batch.get("formationComparisons", [])
+        if group["patch"] == batch["patch"] and not group.get("coreSummary")
+    ]
+    formation = [entry for group in formation_groups for board in group["boards"]
+                 for entry in [board["sample"], board.get("subset", {}).get("sample")] if entry]
     for sample in formation:
         sample["url"] = scoped_url(sample["url"], window)
     urls = list(dict.fromkeys([core, *(r["url"] for r in records + comparisons + formation)]))
@@ -121,9 +126,8 @@ def main():
         sample.update(placementCounts=snapshots[sample["url"]], observedOn=observed)
     for sample in formation:
         sample["placementCounts"] = snapshots[sample["url"]]
-    for group in batch.get("formationComparisons", []):
-        if group["patch"] == batch["patch"]:
-            group["checkedAt"] = now.isoformat(timespec="seconds")
+    for group in formation_groups:
+        group["checkedAt"] = now.isoformat(timespec="seconds")
     with NamedTemporaryFile(mode="w", encoding="utf-8", newline="\n", dir=args.out.parent, delete=False) as tmp:
         json.dump(batch, tmp, ensure_ascii=False, indent=2, allow_nan=False)
         tmp.write("\n")
