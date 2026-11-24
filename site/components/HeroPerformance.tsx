@@ -18,14 +18,12 @@ export type HeroStats = {
   date: string;
   minGames: number;
   rows: Record<string, HeroResult>;
-  previous?: { date: string; rows: Record<string, { mean: number; games: number }> };
 };
 
 const shortGames = new Intl.NumberFormat("zh-CN", { notation: "compact", maximumFractionDigits: 1 });
 const exactGames = new Intl.NumberFormat("zh-CN");
 const percent = (rate: number) => `${(rate * 100).toFixed(1)}%`;
 const windowLabel = (stats: HeroStats) => `${stats.version} · 近 ${stats.days} 天 · ${stats.date}`;
-const snapshotDate = (date: string) => date.slice(5).replace("-", "/");
 const dataColumns = [
   { field: "mean", label: "均名", order: "ascending" },
   { field: "top4Rate", label: "前四率", order: "descending" },
@@ -128,8 +126,6 @@ export function HeroResultsTable({ stats, units, selectedId, onSelect, sort, set
 export function HeroBattleSummary({ unit, stats }: { unit: Unit; stats: HeroStats }) {
   const result = stats.rows[unit.id];
   const rank = rankHeroes(season.units, stats.rows, stats.minGames).get(unit.id);
-  const history = stats.previous;
-  const previous = history?.rows[unit.id];
   return <section className="detail-section hero-performance" aria-label="实战数据">
       <div className="hero-detail-heading"><h3>实战数据</h3></div>
       {result && rank ? <dl className="hero-metric-strip">
@@ -139,9 +135,6 @@ export function HeroBattleSummary({ unit, stats }: { unit: Unit; stats: HeroStat
         <div><dt>场数</dt><dd>{exactGames.format(result.games)}</dd></div>
       </dl> : <p className="hero-data-note">
         {result ? `仅有 ${exactGames.format(result.games)} 场结算样本，达到 ${stats.minGames} 场后显示战绩。` : "这段时间暂无该形态的结算样本。"}
-      </p>}
-      {result && rank && history && previous && <p className="hero-performance-previous">
-        {snapshotDate(history.date)} · 均名 {previous.mean.toFixed(2)} · {exactGames.format(previous.games)} 场
       </p>}
   </section>;
 }
