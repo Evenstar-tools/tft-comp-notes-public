@@ -4,7 +4,11 @@ import { Search, X } from "lucide-react";
 import { useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent, type MouseEvent } from "react";
 import { SiteSearchResults, useSiteSearch } from "./SiteSearchResults";
 
-const examples = ["鱼骨头给谁？", "五杀转能玩什么？", "K/DA 转能玩什么？"];
+const examples = [
+  { label: "鱼骨头给谁", query: "鱼骨头给谁？" },
+  { label: "五杀转阵容", query: "五杀转能玩什么？" },
+  { label: "K/DA 转阵容", query: "K/DA 转能玩什么？" },
+];
 type SearchVisit = { query: string; exclude?: string; top: number; resultTop?: number; href?: string };
 
 export function SiteSearchOverlay() {
@@ -145,10 +149,10 @@ export function SiteSearchOverlay() {
           </div>
           <div ref={results} className="site-search-dialog-results" onClickCapture={rememberResult}>
             {search.phase === "idle" ? <div className="site-search-examples" aria-label="搜索示例">
-              {examples.map(query => <button key={query} type="button" onClick={() => {
+              {examples.map(({ label, query }) => <button key={query} type="button" onClick={() => {
                 refine({ query, exclude: undefined });
                 input.current?.focus({ preventScroll: true });
-              }}>{query}</button>)}
+              }}>{label}</button>)}
             </div> : <SiteSearchResults search={search} onToggleExclusion={exclude => refine({ exclude })} />}
           </div>
         </div>

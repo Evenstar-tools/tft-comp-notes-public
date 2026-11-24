@@ -45,17 +45,17 @@ export function useSiteSearch(query: string, exclude?: string, initial?: SiteSea
 
 type LinkResult = Pick<SiteSearchHit, "id" | "name" | "href" | "image" | "detail" | "category"> & { games?: number; mean?: number };
 
-function ResultLink({ hit, primary }: { hit: LinkResult; primary?: boolean }) {
+function ResultLink({ hit, primary, numericColumns = false }: { hit: LinkResult; primary?: boolean; numericColumns?: boolean }) {
   return <a href={hit.href} className="site-lookup-result" data-search-result data-search-primary={primary || undefined}>
     {hit.image && <img src={hit.image} alt="" width={30} height={30} decoding="async" />}
     <span className="site-lookup-label">
       <strong>{hit.name}</strong>
       {hit.detail && <small>{hit.detail}</small>}
     </span>
-    {(typeof hit.games === "number" || hit.category) && <span className="site-lookup-metrics">
+    {(typeof hit.games === "number" || typeof hit.mean === "number" || hit.category) && <span className="site-lookup-metrics" data-numeric={numericColumns || undefined}>
       {hit.category && <small>{hit.category}</small>}
-      {typeof hit.mean === "number" && <strong>均名 {hit.mean.toFixed(2)}</strong>}
-      {typeof hit.games === "number" && <small>{hit.games.toLocaleString("zh-CN")} 场</small>}
+      {typeof hit.mean === "number" && <strong>{numericColumns ? <span className="sr-only">平均排名 </span> : "平均排名 "}{hit.mean.toFixed(2)}</strong>}
+      {typeof hit.games === "number" && <small>{hit.games.toLocaleString("zh-CN")}{numericColumns ? <span className="sr-only"> 场</span> : " 场"}</small>}
     </span>}
   </a>;
 }
@@ -65,28 +65,37 @@ function GearResult({ hit, intent, onToggleExclusion }: {
 }) {
   const gear = hit.gear;
   if (!gear) return <ResultLink hit={hit} />;
-
-  const holders = <div className="site-lookup-evidence site-lookup-holders">
+  const hasHolders = gear.holders.length > 0;
+  const hasExamples = gear.examples.length > 0;
+  const canExclude = gear.type === "emblem" && onToggleExclusion;
+  const missingExamples = hasExamples ? null : <p>{gear.examplesAvailable ? "暂无实戴棋盘" : "暂时读不到阵容笔记"}</p>;
+  const holders = (hasHolders || canExclude) && <div className="site-lookup-evidence site-lookup-holders">
     <header>
-      <h3>谁带</h3>
-      {gear.type === "emblem" && onToggleExclusion && <button aria-pressed={gear.exclude === "rakan"}
-        type="button" onClick={() => onToggleExclusion(gear.exclude === "rakan" ? "none" : "rakan")}>剔除洛</button>}
+      <h3>携带者</h3>
+      {canExclude && <button aria-pressed={gear.exclude === "rakan"}
+        type="button" onClick={() => canExclude(gear.exclude === "rakan" ? "none" : "rakan")}>剔除洛</button>}
+      {hasHolders && <span className="site-lookup-column-names" aria-hidden="true"><span>平均排名</span><span>场数</span></span>}
     </header>
-    {gear.holders.length > 0 ? gear.holders.slice(0, 3).map((holder, i) => <ResultLink key={holder.id} hit={holder}
-      primary={i === 0 && (intent === "holders" || (intent === "comps" && gear.examples.length === 0))} />)
-      : <p>暂无携带者战绩</p>}
+    {gear.holders.slice(0, 3).map((holder, i) => <ResultLink key={holder.id} hit={holder} numericColumns
+      primary={i === 0 && (intent === "holders" || (intent === "comps" && !hasExamples))} />)}
   </div>;
-  const examples = <div className="site-lookup-evidence">
-    <header><h3>阵容</h3></header>
-    {gear.examples.length ? gear.examples.slice(0, 3).map((example, i) => <ResultLink key={example.id} hit={example} primary={i === 0 && intent === "comps"} />)
-      : <p>{gear.examplesAvailable ? "暂无实戴棋盘" : "暂时读不到阵容笔记"}</p>}
+  const examples = hasExamples && <div className="site-lookup-evidence">
+    <header><h3>实戴阵容</h3></header>
+    {gear.examples.slice(0, 3).map((example, i) => <ResultLink key={example.id} hit={example} primary={i === 0 && intent === "comps"} />)}
   </div>;
+  const prioritizeExamples = intent === "comps";
+  const hasFooter = (!prioritizeExamples && missingExamples) || !hasHolders || gear.snapshot;
   return <div className="site-lookup-gear">
     <ResultLink hit={{ ...hit, games: gear.totalGames }} />
-    <div className="site-lookup-evidence-grid">
-      {intent === "comps" ? <>{examples}{holders}</> : <>{holders}{examples}</>}
-    </div>
-    {gear.snapshot && <a className="site-lookup-source" href={gear.snapshot.href}>{gear.snapshot.label}</a>}
+    {prioritizeExamples && missingExamples && <div className="site-lookup-evidence-note">{missingExamples}</div>}
+    {(examples || holders) && <div className="site-lookup-evidence-grid" data-single={!(examples && holders) || undefined}>
+      {prioritizeExamples ? <>{examples}{holders}</> : <>{holders}{examples}</>}
+    </div>}
+    {hasFooter && <footer className="site-lookup-evidence-foot">
+      {!prioritizeExamples && missingExamples}
+      {!hasHolders && <p>暂无携带者战绩</p>}
+      {gear.snapshot && <a className="site-lookup-source" href={gear.snapshot.href}>{gear.snapshot.label}</a>}
+    </footer>}
   </div>;
 }
 
@@ -102,11 +111,18 @@ export function SiteSearchResults({ search, onToggleExclusion, filter, quiet = f
   const { groups: allGroups, intent } = search.result;
   const groups = filter ? allGroups.filter(filter) : allGroups;
   if (!groups.length) return quiet ? null : <p className="site-lookup-message" role="status">暂无匹配结果</p>;
+  const hero = groups.find(group => group.kind === "heroes" && group.hits.length === 1)?.hits[0];
 
   return <div className="site-lookup-results">
-    {groups.map(group => <section className="site-lookup-group" key={group.kind} aria-label={group.title}>
+    {groups.map(group => <section className="site-lookup-group" key={group.kind} aria-label={group.title} data-search-kind={group.kind}>
       <h2>{group.title}</h2>
-      {group.hits.map(hit => <GearResult key={hit.id} hit={hit} intent={intent} onToggleExclusion={onToggleExclusion} />)}
+      {group.hits.map(hit => {
+        const detail = hit.detail;
+        const shown = group.kind === "guides" && hero && detail && detail.startsWith(hero.name + " ")
+          ? { ...hit, detail: detail.slice(hero.name.length + 1), image: hit.image === hero.image ? undefined : hit.image }
+          : hit;
+        return <GearResult key={hit.id} hit={shown} intent={intent} onToggleExclusion={onToggleExclusion} />;
+      })}
     </section>)}
   </div>;
 }
