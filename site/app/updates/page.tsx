@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { ArrowUpRight } from "lucide-react";
 import { DocumentView } from "@/components/DocumentView";
 import { PatchExplorer } from "@/components/PatchExplorer";
 import { PatchReadingLink } from "@/components/PatchReadingLink";
@@ -97,7 +98,8 @@ export default async function VersionUpdates({ searchParams }: { searchParams: P
     .filter(section => section.kind !== "category" && !isVersionUpdate(section) && (section.team || section.teams?.length))
     .map(section => [section.id, section.title]));
   const hasChanges = patch && Object.keys(patch.groups).length > 0;
-  const showObservation = !current?.chapter && observations.length > 0;
+  const observationStats = patch?.observationStats;
+  const showObservation = !current?.chapter && (observations.length > 0 || !!observationStats?.length);
   const hasDetails = showObservation || evidence.length > 0 || sampledBoards.length > 0;
   const sections = [
     ...(hasChanges ? [{ anchor: "patch-changes", label: "改动明细" }] : []),
@@ -149,6 +151,13 @@ export default async function VersionUpdates({ searchParams }: { searchParams: P
           {hasDetails && <div className="patch-details">
             {showObservation && <section className="patch-observation" id="patch-environment">
               <h3>环境观察</h3>
+              {!!observationStats?.length && <table className="patch-environment-stats">
+                <caption>热补后首批体系战绩</caption>
+                <thead><tr><th scope="col">阵容</th><th scope="col">场数</th><th scope="col">均名</th></tr></thead>
+                <tbody>{observationStats.map(({ name, games, mean }) => <tr key={name}>
+                  <th scope="row">{name}</th><td>{games.toLocaleString("zh-CN")}</td><td>{mean.toFixed(2)}</td>
+                </tr>)}</tbody>
+              </table>}
               {observations.map(line => <p key={line}>{line}</p>)}</section>}
             {!!evidence.length && <section className="patch-board-observation patch-recommendations" id="patch-recommendations">
               <h3>阵容观察</h3>
@@ -158,18 +167,35 @@ export default async function VersionUpdates({ searchParams }: { searchParams: P
                 if (!guide || !team) return null;
                 const data = guide.gameData ?? season;
                 const lead = guideRoster(team, data, readingNotes(guide, team, data).roles)[0]?.unit;
+                const title = recommendationBoardTitle(guide, team, lead?.name);
+                const familyPrefix = guide.title + " · ";
+                const familyVariant = title.startsWith(familyPrefix);
+                const [formation, ...boardDetails] = familyVariant ? title.slice(familyPrefix.length).split(" · ") : [];
+                const population = formation?.match(/^([一二三四五六七八九十\d]+(?:级|人口))(.+)$/);
+                const boardLabel = [population && guide.title.startsWith(population[2]) ? population[1] : formation,
+                  ...boardDetails].filter(Boolean).join(" · ");
+                const titleLabel = familyVariant ? guide.title : title;
                 const from = versionUpdateLink(current.id, { query: q, category, anchor: "patch-recommendations" });
                 return <li className="patch-recommendation" key={team.id}>
-                  {lead && <img className={"patch-recommendation-portrait cost-" + lead.cost}
-                    src={lead.image} width={38} height={38} alt="" />}
-                  <div className="patch-recommendation-body">
-                    <div className="patch-board-heading">
-                      <h4><PatchReadingLink href={guideLink(guide.id, team.id, from)}>{recommendationBoardTitle(guide, team, lead?.name)}</PatchReadingLink></h4>
+                  <div className="patch-recommendation-heading">
+                    {lead && <img className={"patch-recommendation-portrait cost-" + lead.cost}
+                      src={lead.image} width={34} height={34} alt="" />}
+                    <div className="patch-recommendation-title">
+                      <h4><PatchReadingLink href={guideLink(guide.id, team.id, from)} aria-label={boardLabel ? titleLabel + " · " + boardLabel : undefined}>
+                        {titleLabel}
+                      </PatchReadingLink></h4>
                       <span className="patch-status" data-status={record.status}>{patchRecommendationLabels[record.status]}</span>
-                      <div className="patch-sample-links">{sources.map((url, index) => <a key={url} className="patch-source" href={url} target="_blank" rel="noreferrer">{sources.length === 1 ? "样本" : `样本 ${index + 1}`}</a>)}</div>
+                      {boardLabel && <small className="patch-board-variant">{boardLabel}</small>}
                     </div>
-                    <p>{record.note}</p>
+                    <div className="patch-sample-links">{sources.map((url, index) => {
+                      const label = sources.length === 1 ? "战绩" : `战绩 ${index + 1}`;
+                      return <a key={url} className="patch-source" href={url} target="_blank" rel="noreferrer"
+                        aria-label={titleLabel + (boardLabel ? " · " + boardLabel : "") + " · " + label}>
+                        {label}<ArrowUpRight size={12} aria-hidden />
+                      </a>;
+                    })}</div>
                   </div>
+                  <p>{record.note}</p>
                 </li>;
               })}</ul>
             </section>}

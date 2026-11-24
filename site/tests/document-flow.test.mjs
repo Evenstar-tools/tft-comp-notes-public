@@ -1,9 +1,35 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { attachBoundRegions, duplicatePublishedTeam, reviewIssues, sectionChanges, sameGeneratedSection, isBoardCaption, feishuBoardIssue, attachSectionTeam, findSection, readableSection, sectionTeams, splitSections } from "../domain/document-flow.ts";
+import { applyPublishedBoardLayouts, boardLayout, publishedBoardLayouts } from "../domain/published-board-layout.ts";
 
 const entry = (id, level, title) => ({ id, level, title, content: { id, type: level ? "heading" : "text", text: title } });
 const team = (id, unit) => ({ id, name:id, pieces:[{unitId:unit}], revision:1 });
+
+test("published positions win over reading corrections for one board and yield to new source positions", () => {
+  const sourceTeam = { id: "board", pieces: [
+    { instanceId: "one", unitId: "ezreal", position: 23, stars: 3, items: ["blue"] },
+    { instanceId: "two", unitId: "nasus", position: 2, stars: 3, items: ["stoneplate"] },
+  ] };
+  const other = { id: "another-guide", blocks: [] };
+  const section = { id: "guide", blocks: [{ id: "body", type: "text", text: "正文" }],
+    team: sourceTeam, teams: [sourceTeam, { id: "variant", pieces: [] }] };
+  const renderedTeam = { ...sourceTeam, pieces: sourceTeam.pieces.map(piece => ({ ...piece, position: piece.position - 1 })) };
+  const editedTeam = { ...renderedTeam,
+    pieces: renderedTeam.pieces.map(piece => ({ ...piece, position: piece.position + 2 })),
+    instrumentPositions: { maracas: 8 } };
+  const boardLayouts = [{ sectionId: section.id, teamId: sourceTeam.id, source: boardLayout(sourceTeam), layout: boardLayout(editedTeam) }];
+  const publication = { sections: [section, other], boardLayouts };
+  const renderedSection = { ...section, team: renderedTeam, teams: [renderedTeam, section.teams[1]] };
+  const rendered = { ...publication, sections: [renderedSection, other] };
+  const updated = applyPublishedBoardLayouts(publication, rendered);
+  assert.deepEqual(updated.sections[0].team, editedTeam);
+  assert.deepEqual(updated.sections[0].teams, [editedTeam, section.teams[1]]);
+  assert.equal(updated.sections[0].blocks, section.blocks);
+  assert.equal(updated.sections[1], other);
+  assert.deepEqual(publishedBoardLayouts(publication.sections, boardLayouts), boardLayouts);
+  assert.deepEqual(publishedBoardLayouts([renderedSection, other], boardLayouts), []);
+});
 
 test("category headings keep stable identities but only real content can be published", () => {
  const sections = splitSections([entry("intro",undefined,"说明"),entry("c1",1,"连胜"),entry("g1",2,"阵容A"),entry("p1",undefined,"过渡"),entry("c2",1,"次选")]);
@@ -27,6 +53,17 @@ test("bold Feishu category labels split sections and keep guide IDs and phase an
  ];
  assert.equal(sameGeneratedSection(raw,"root","guide","text","image"),false);
  assert.equal(sameGeneratedSection(raw,"root","next","text","image"),true);
+});
+
+test("empty directory separators stay out of the overview while old and renamed Feishu boundaries still bind", () => {
+ const bold = (id,title) => ({...entry(id,undefined,title),content:{id,type:"text",text:title,
+   elements:[{text_run:{content:title,text_element_style:{bold:true}}}]}});
+ for (const label of ["次选成熟阵容", "八级运营", "国风九五", "高能流行与天才慢搜", "芸阿娜慢搜"]) {
+   const sections = splitSections([bold("folder",label),entry("empty",undefined," "),
+     {id:"line",title:"",content:{id:"line",type:"divider"}},entry("guide",2,"四古典烬")]);
+   assert.deepEqual(sections.filter(readableSection).map(s=>s.id), ["guide"]);
+   assert.equal(sections[1].category, label);
+ }
 });
 
 test("legacy generated text can become its verified caption while preserving hand-edit protection", () => {

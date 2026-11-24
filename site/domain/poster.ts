@@ -1,7 +1,6 @@
 import type { Section } from "./document";
 import { sectionTeams } from "./document-flow";
 import { allBlocks, authoredParagraphs, guideBoardName, guideBody, guideRoster, legacyHyperpopFinalAdvice, oceanGravesGuideId, oceanGravesUnlockBoardId, primaryFirst, readingNotes } from "./guide-reading";
-import { heroAugmentForGuide } from "./hero-augments";
 import { unlockText } from "./unlocks";
 import { traitCounts, usedPopulation } from "./team";
 import { rerollRoute } from "./reroll-stages";
@@ -128,15 +127,12 @@ export function posterGear(section: Section | undefined, team: Team, data: Seaso
 
 export function posterRequirements(section: Section | undefined, team: Team, data: Season) {
   const notes = section && readingNotes(section, team, data);
-  const augment = section && heroAugmentForGuide(section);
-  const requiredUnit = augment && data.units.find(unit => unit.id === augment.unitId);
   const emblem = team.pieces.flatMap(piece => piece.items
     .filter(id => id.startsWith("emblem-")).map(id => ({
       unit: data.units.find(unit => unit.id === piece.unitId),
       item: data.items.find(item => item.id === id),
     }))).find(entry => entry.unit && entry.item);
   return [
-    requiredUnit && augment && augment.round + " 拿到" + requiredUnit.name + "专属强化",
     notes && notes.starHint.replace(/。$/, ""),
     emblem && emblem.unit && emblem.item && emblem.unit.name + "带" + emblem.item.name,
   ].filter((text): text is string => !!text);

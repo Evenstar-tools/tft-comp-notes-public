@@ -9,8 +9,11 @@ export function currentPatchRecommendations(publication: Publication | null): Pa
   const patch = currentPatch;
   if (!publication || !sameEdition(publication.season.id, patch.seasonId)) return;
   const published = getPublishedPatchRecommendations(publication.sections, patch.seasonId, patch.build, patch.effectiveAt);
-  if (published.declared) return published.batch;
   const initial = initialRecommendations as PatchRecommendationBatch | null;
+  if (published.declared) {
+    const displayOrder = initial?.seasonId === patch.seasonId && initial.build === patch.build ? initial.displayOrder : undefined;
+    return published.batch && { ...published.batch, displayOrder };
+  }
   if (!initial || initial.seasonId !== patch.seasonId || initial.build !== patch.build ||
     !(Date.parse(initial.reviewedAt) >= Date.parse(patch.effectiveAt))) return;
   const boardsByGuide = new Map(publication.sections.map(guide => [guide.id, new Set(sectionTeams(guide).map(team => team.id))]));

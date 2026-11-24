@@ -35,20 +35,33 @@
   grid-template-columns: repeat(5, minmax(0, 1fr));
   width: 100%;
 }
-.guide-reroll .guide-ocean-choices button {
-  grid-template-columns: minmax(0, 1fr) auto;
-  padding-inline: 10px;
-  border-color: var(--line);
-  background: var(--panel);
+.guide-reader .guide-ocean-choices button {
+  grid-template-columns: minmax(0, 1fr);
+  align-content: center;
+  gap: 2px;
+  padding: 7px 12px;
+  text-align: start;
+  line-height: 1.35;
 }
-.guide-reroll .guide-ocean-choices button[aria-pressed="true"] {
+.guide-reader .guide-ocean-choices button:not([aria-pressed="true"]) {
+  background: transparent;
+  border-color: var(--line);
+}
+.guide-reader .guide-ocean-choices button:hover {
+  background: var(--raised);
+}
+.guide-reader .guide-ocean-choices button[aria-pressed="true"] {
   border-color: var(--accent);
   background: var(--raised);
+  box-shadow: inset 3px 0 var(--accent);
 }
 .guide-ocean-choices small {
   font-variant-numeric: tabular-nums;
-  color: var(--accent);
+  color: var(--muted);
+  font-size: .8125rem;
+  font-weight: 500;
 }
+.guide-ocean-choices .guide-variant-name { text-wrap: balance; }
 @media (max-width: 1000px) {
   .guide-variants.guide-ocean-choices { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
@@ -214,9 +227,9 @@
 }
 .guide-equipment-conditions-item:is(:hover, :focus-visible) { background: var(--raised); }
 .guide-equipment-conditions-arrow { flex: none; color: var(--muted); }
-.guide-equipment-conditions li[data-augment] { max-width: 100%; flex-wrap: wrap; gap: 3px 8px; }
-.guide-equipment-conditions-item[data-augment] { display: flex; align-items: center; gap: 7px; padding-inline: 4px; font-size: .875rem; }
-.guide-equipment-conditions-item[data-augment] > img { flex: none; }
+.guide-equipment-conditions li[data-named] { max-width: 100%; flex-wrap: wrap; gap: 3px 8px; }
+.guide-equipment-conditions-item[data-named] { display: flex; align-items: center; gap: 7px; padding-inline: 4px; font-size: .875rem; }
+.guide-equipment-conditions-item[data-named] > img { flex: none; }
 .guide-equipment-condition-detail { color: var(--muted); font-size: .8125rem; }
 @media (min-width: 1100px) {
   .guide-equipment-conditions:not([data-standalone-augment]) { grid-template-columns: auto minmax(0, 1fr) auto; }

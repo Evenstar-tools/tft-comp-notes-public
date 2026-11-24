@@ -4,13 +4,16 @@ import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
 import { changeSignals, makeReviewQueue, sourceProfile } from "./family-review.mjs";
 import { crossCheck } from "./family-evidence.mjs";
+import { saveCompTrendBatch } from "./refresh-comp-trends.mjs";
 
 // The public filters identify the hotfix. The stats response by itself only says "current".
 const root = fileURLToPath(new URL("../", import.meta.url));
 const sourceUrl = "https://www.metatft.com/pbe-comps";
 const args = process.argv.slice(2);
 const arg = (key) => args.includes(key) ? args[args.indexOf(key) + 1] : undefined;
-const out = resolve(arg("--output") || resolve(root, "data/guide-family-stats.json"));
+const siteSnapshot = resolve(root, "data/guide-family-stats.json");
+const out = resolve(arg("--output") || siteSnapshot);
+const trendOutput = arg("--trends") || (out === siteSnapshot ? resolve(root, "data/comp-trends.json") : undefined);
 const reviewPath = resolve(arg("--review") || resolve(root, "outputs/family-review/review.json"));
 const historyPath = resolve(arg("--history") || resolve(dirname(reviewPath), "family-history.json"));
 const catalogUrl = "https://tft.example.com/api/guides/catalog";
@@ -175,8 +178,9 @@ const delta = changeSignals(previous,observation);
 for (const entry of evidence) if (entry.set === observation.set && entry.queue === observation.queue && entry.patch === patch && entry.model === model.cluster_id && distributions.has(String(entry.id)) && !review.some(r=>r.id===String(entry.id))) review.push({id:String(entry.id),reason:"本轮人工核对"});
 const queue = makeReviewQueue(observation,publicBoards,groups,unitIds,bindings.rows,delta.signals,review);
 for (const entry of queue.normal) entry.verification = crossCheck(evidence,entry,observation);
-await writeJson(reviewPath,{...observation,...delta,review,queue,catalogPublishedAt:catalog.publishedAt,
-  catalogBoards:publicBoards.length,sourceUrl,statsUrl});
+const reviewSnapshot={...observation,...delta,review,queue,matchQueue:observation.queue,catalogPublishedAt:catalog.publishedAt,
+  catalogBoards:publicBoards.length,sourceUrl,statsUrl};
+await writeJson(reviewPath,reviewSnapshot);
 await writeJson(historyPath,{latest:observation,previous:previous ?? null});
 if (modelChanged || !rows.length) throw Error("没有可沿用的体系映射。请查复核清单并校对新模型后重跑。");
 rows.sort((a,b)=>a.mean-b.mean || b.games-a.games || a.clusterId.localeCompare(b.clusterId));
@@ -185,6 +189,15 @@ const inGrace = Date.parse(updatedAt) >= patchStart && Date.parse(updatedAt) < p
 const previousBatch = inGrace && [published, published.previous].find(batch =>
   batch?.seasonId === season.id && batch.queue === bindings.queue && Date.parse(batch.updatedAt) < patchStart);
 const { previous: _older, ...previousSnapshot } = previousBatch || {};
-await writeJson(out,{seasonId:season.id,set:bindings.set,queue:bindings.queue,patch,days:3,updatedAt,model:model.cluster_id,
-  source:"MetaTFT",sourceUrl,statsUrl,totalFinishes:total,rows,smallSamples,previous:previousBatch ? previousSnapshot : undefined});
+const accepted={seasonId:season.id,set:bindings.set,queue:bindings.queue,patch,days:3,updatedAt,model:model.cluster_id,
+  source:"MetaTFT",sourceUrl,statsUrl,totalFinishes:total,rows,smallSamples,previous:previousBatch ? previousSnapshot : undefined};
+await writeJson(out,accepted);
+if (trendOutput) {
+  try {
+    const unitNames = new Map(season.units.map(unit => [unit.id, unit.name]));
+    await saveCompTrendBatch(resolve(trendOutput), accepted, { review: reviewSnapshot, patch: currentPatch, unitNames });
+  } catch (error) {
+    console.warn("体系已刷新，趋势保留上一批。", error.message);
+  }
+}
 console.log(`${patch}，${updatedAt}，${rows.length} 个体系已对应攻略，${total} 次选手结算。复核清单 ${review.length} 项。`);

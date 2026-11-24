@@ -1,6 +1,8 @@
 import { BOARD_HEIGHT, BOARD_WIDTH, HEX_HEIGHT, HEX_WIDTH, hexPosition } from "@/domain/board-layout";
 import { boardInstruments, boardMarkerNote } from "@/domain/board-instruments";
 import type { Section } from "@/domain/document";
+import { sectionTeams } from "@/domain/document-flow";
+import { guideConditionName, guideConditionTag, guideEquipmentConditions } from "@/domain/guide-equipment-conditions";
 import { guideRoster, readingNotes } from "@/domain/guide-reading";
 import { heroArtworkFocus } from "@/domain/hero-artwork";
 import { defaultPosterFormat, posterGear, posterLayout, posterOperationTitle, posterRequirements, posterStageTitle, posterTitle, type PosterFormat } from "@/domain/poster";
@@ -69,6 +71,8 @@ export async function guidePoster({ section, team, data, format = defaultPosterF
   const { stages, boards, operations } = posterLayout(section, team, data, format, stageIds);
   const { title, subtitle } = posterTitle(section, team);
   const requirements = posterRequirements(section, team, data);
+  const conditions = section && guideEquipmentConditions(section, sectionTeams(section), data);
+  const namedConditions = conditions?.rows.filter(row => row.category === "海克斯" || row.recipient) ?? [];
   const teams = [team, ...stages];
   const instrumentsByBoard = new Map(teams.map(board => [board.id, boardInstruments(board.pieces, data, board.instrumentPositions)]));
   const teamMembers = new Map(teams.map(board => [board.id, guideRoster(board, data, section ? readingNotes(section, board, data).roles : [])]));
@@ -79,6 +83,7 @@ export async function guidePoster({ section, team, data, format = defaultPosterF
   const coverFocus = coverUnit && heroArtworkFocus(coverUnit);
   const urls = new Set([
     coverUrl,
+    ...namedConditions.map(row => row.image ?? row.item?.image),
     ...[...teamMembers.values()].flatMap(members => members.map(member => member.unit.image)),
     ...teams.flatMap(board => board.pieces.flatMap(piece => piece.items.map(id => items.get(id)?.image))),
     ...[...instrumentsByBoard.values()].flatMap(entries => [...entries.values()].map(entry => entry.image)),
@@ -248,6 +253,18 @@ export async function guidePoster({ section, team, data, format = defaultPosterF
     const titleEnd = block(c, title, pad, 14, inner, 26, "#fff", 32, 750);
     if (boards.length === 1) block(c, subtitle, pad, titleEnd + 6, inner, 15, "#eee4fb", 19, 650);
     let y = headerHeight + 10;
+    for (const row of namedConditions) {
+      const image = row.image ?? row.item?.image;
+      const icon = image && images.get(image);
+      const x = pad + (icon ? 29 : 0);
+      if (icon) c.drawImage(icon, pad, y, 23, 23);
+      const label = row.category === "海克斯" ? (row.kind === "required" ? "必选海克斯" : "可选海克斯") : guideConditionTag(row);
+      const detail = row.category === "海克斯" && row.kind === "required" ? row.detail?.split(" · ", 1)[0] : row.detail;
+      const top = y;
+      y = block(c, [label, guideConditionName(row)].filter(Boolean).join(" · "), x, y + 2, W - pad - x, 15.5, accent, 21, 650);
+      if (detail) y = block(c, detail, x, y, W - pad - x, 13.5, muted, 18);
+      y = Math.max(y, top + 25) + 4;
+    }
     for (const condition of requirements) y = block(c, condition, pad, y, inner, 15.5, accent, 21, 650);
     const alreadyShown = new Set<string>();
     for (const board of boards) {

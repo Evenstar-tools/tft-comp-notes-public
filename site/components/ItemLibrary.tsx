@@ -269,6 +269,23 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
   const search = <GearWearerSearch filters={filters} onChange={changeFilters} inputRef={searchBox} label="搜装备、散件或英雄" />;
   const categoryProps = { current: group, filters, hrefFor: groupLink, onNavigate: switchGroup };
   const radiantCount = group === "all" ? reverseRows.filter(row => row.category === "radiant").length : 0;
+  const rankedEntries = ranking && !reverse && specialStats ? visible.map(entry => {
+    const stats = specialStats.items[entry.id];
+    const holders = stats?.rows.filter(row => row.unitId !== excluded && unitMap.has(row.unitId)) ?? [];
+    const qualified = holders.filter(row => row.games >= specialStats.minGames && row.mean !== undefined);
+    const commonOnly = !qualified.length;
+    const best = (commonOnly ? holders.sort((a, b) => b.games - a.games) :
+      qualified.sort((a, b) => a.mean! - b.mean! || b.games - a.games)).slice(0, 3);
+    return { entry, stats, commonOnly, best, performance: itemPerformance(entry, specialStats) };
+  }).sort((a, b) => {
+    const games = (b.stats?.totalGames ?? 0) - (a.stats?.totalGames ?? 0);
+    if (order === "games") return games;
+    if (order === "wins") return (b.performance?.winRate ?? -1) - (a.performance?.winRate ?? -1) || games;
+    return (a.performance?.mean ?? Infinity) - (b.performance?.mean ?? Infinity) || games;
+  }) : [];
+  const holderModes = new Set(rankedEntries.filter(row => row.best.length).map(row => row.commonOnly ? "usual" : "best"));
+  const holderMode = holderModes.size === 1 ? [...holderModes][0] : undefined;
+  const holderHeading = holderMode === "usual" ? "常用使用者" : holderMode === "best" ? "最佳使用者" : "使用者";
   const rankOrders = <select aria-label="装备排行排序" value={shownOrder}
     onChange={event => changeFilters({ ...filters, order: event.target.value as GearOrder })}>
     <option value="mean">均名最低</option><option value="games">场数最多</option>
@@ -332,7 +349,7 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
           </Fragment>;
         })}</ul>
       </div> : <GearCategoryEmpty {...categoryProps} onClear={clearSearch} />)}
-    </section> : ranking ? <section className="gear-rank" id="gear-rankings" aria-label={gearGroups[group] + "排行"}>
+    </section> : ranking ? <section className="gear-rank" id="gear-rankings" aria-label={gearGroups[group] + "排行"} data-holder-mode={holderMode}>
       <div className="gear-rank-controls">
         <div className="gear-rank-tools">{search}
           {rankOrders}
@@ -340,23 +357,13 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
             onChange={excluded => changeFilters({ ...filters, excluded })} />
         </div>
       </div>
-      {archiveMessage || (visible.length && specialStats ? <>
-        <div className="gear-rank-head" aria-hidden="true"><span>装备</span><span>均名</span><span>登顶率</span><span>场数</span><span>使用者 <small>均名 / 场数</small></span></div>
-        <ul className="gear-rank-list">{visible.sort((a, b) => {
-          const aStats = specialStats.items[a.id], bStats = specialStats.items[b.id];
-          const games = (bStats?.totalGames ?? 0) - (aStats?.totalGames ?? 0);
-          if (order === "games") return games;
-          const aPerformance = itemPerformance(a, specialStats), bPerformance = itemPerformance(b, specialStats);
-          if (order === "wins") return (bPerformance?.winRate ?? -1) - (aPerformance?.winRate ?? -1) || games;
-          return (aPerformance?.mean ?? Infinity) - (bPerformance?.mean ?? Infinity) || games;
-        }).map(entry => {
-          const stats = specialStats.items[entry.id];
-          const holders = stats?.rows.filter(row => row.unitId !== excluded && unitMap.has(row.unitId)) ?? [];
-          const qualified = holders.filter(row => row.games >= specialStats.minGames && row.mean !== undefined);
-          const commonOnly = !qualified.length;
-          const best = (commonOnly ? holders.sort((a, b) => b.games - a.games) :
-            qualified.sort((a, b) => a.mean! - b.mean! || b.games - a.games)).slice(0, 3);
-          const performance = itemPerformance(entry, specialStats);
+      {archiveMessage || (rankedEntries.length && specialStats ? <>
+        <div className="gear-rank-head" aria-hidden="true"><span>装备</span><span>均名</span><span>登顶率</span><span>场数</span>
+          <span title={holderMode === "usual" ? `未满 ${specialStats.minGames} 场，按携带场数排序` : holderMode === "best" ? `满 ${specialStats.minGames} 场，按均名排序` : undefined}>
+            {holderHeading} <small>均名 / 场数</small>
+          </span>
+        </div>
+        <ul className="gear-rank-list">{rankedEntries.map(({ entry, stats, commonOnly, best, performance }) => {
           const mean = performance?.mean;
           const minGames = itemSampleMinimum(entry, specialStats);
           const open = selected === entry.id;

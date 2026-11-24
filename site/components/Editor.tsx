@@ -34,8 +34,9 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { equipItem, indexRecipes, wornCombinations, type EquipmentChoice } from "@/domain/equipment";
+import { equipItem, indexRecipes, transferEquipment, wornCombinations, type EquipmentChoice } from "@/domain/equipment";
 import { feishuBoardIssue } from "@/domain/document-flow";
+import { draftCategoryLabel, draftCategoryValue, sourceSectionTitle } from "@/domain/source-category-display";
 import { guideLink } from "@/domain/guide-reading";
 import { moveBoardInstrument } from "@/domain/board-instruments";
 import type { HeroItemSample, HeroItemSource } from "@/domain/hero-insights";
@@ -62,12 +63,16 @@ import { SelectionSheet, UnitBrowser, UnitDetails, type BrowserFilters } from ".
 import { request } from "./api";
 import { downloadBlob, exportTeamImage } from "./export-team";
 import { GuidePoster } from "./GuidePoster";
-import { readGuideBoardTransfer } from "./guide-board-transfer";
+import { clearGuideBoardTransfer, readGuideBoardTransfer } from "./guide-board-transfer";
 import { exportPlayerTeams, importPlayerTeams, isPlayerTeamStorageKey, readPlayerTeams, savePlayerTeam } from "./player-team-storage";
 import "./editor-workspace.css";
 
 const LOCAL_KEY = "tft-s19-unsynced-team-v1";
 const equipmentRecipes = indexRecipes(season.items);
+const canReceiveEquipment = (id: string, piece: Piece) => {
+  const item = itemMap.get(id);
+  return !!item && !!equipItem(piece.items, item, equipmentRecipes);
+};
 const CATEGORIES = ["待分类", "连胜", "连败", "次选", "条件定阵", "非常规构筑"];
 const ITEM_GROUPS: { id: string; label: string }[] = [
   { id: "component", label: "基础散件" },
@@ -147,13 +152,27 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
   }, [copyQuery, retryCopy]);
   const incomingCombo = params.get("combo");
   const comboDraft = useMemo(() => incomingCombo ? teamFromCombo(incomingCombo, season.units, season.traits) : null, [incomingCombo]);
-  const importKey = copyQuery || incomingCombo;
-  const incomingDraft = copyQuery ? (sourceCopy?.query === copyQuery ? sourceCopy.team : null) : comboDraft;
-  const handledCombo = useRef<string | null>(null);
+  const guideBoardId = params.get("guideBoard");
+  const [guideTransfer, setGuideTransfer] = useState<{
+    id: string;
+    source: ReturnType<typeof readGuideBoardTransfer>;
+    draft: Team | null;
+  }>();
+  useEffect(() => {
+    if (!guideBoardId) return;
+    const source = readGuideBoardTransfer(guideBoardId);
+    const board = source && readTeamStage(source.team, source.team.mainStage ?? "late");
+    setGuideTransfer({
+      id: guideBoardId, source,
+      draft: source && board ? independentDraft({ ...board, name: source.title.slice(0, 80) }, emptyTeam()) : null,
+    });
+  }, [guideBoardId]);
+  const pendingGuide = guideBoardId && guideTransfer?.id === guideBoardId ? guideTransfer : undefined;
+  const importKey = guideBoardId || copyQuery || incomingCombo;
+  const incomingDraft = guideBoardId ? pendingGuide?.draft : copyQuery ? (sourceCopy?.query === copyQuery ? sourceCopy.team : null) : comboDraft;
+  const handledImport = useRef<string | null>(null);
   const [comboOrigin, setComboOrigin] = useState("");
-  const guideBoardId = ownerMode ? null : params.get("guideBoard");
   const [guideBoardSource, setGuideBoardSource] = useState<{ title: string; href: string } | null>(null);
-  const handledGuideBoard = useRef<string | null>(null);
   const [wantedForm, setWantedForm] = useState<string | null>(null);
   const incomingTeamId = ownerMode ? params.get("team") : null;
   const incomingUnitId = params.get("unit");
@@ -167,6 +186,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
   const team = useMemo(() => readTeamStage(draftTeam, stage), [draftTeam, stage]);
   const [showPoster, setShowPoster] = useState(false);
   const [saved, setSaved] = useState<Team[] | null>(initialTeams ?? null);
+  const [localTeams, setLocalTeams] = useState<Team[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [pieceSelection, setPieceSelection] = useState<{ id: string; highlightRelated?: boolean } | null>(null);
   const pieceId = pieceSelection?.id ?? null;
@@ -349,58 +369,41 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
       setPieceSelection(null);
     }
   }, [incomingTeamId, incomingTeam, saved, draftChecked, restore, dirty, showDraft]);
-  const finishCombo = useCallback((draft: Team | null) => {
-    handledCombo.current = importKey;
+  const finishImport = useCallback((draft: Team | null) => {
+    handledImport.current = importKey;
     const url = new URL(window.location.href);
-    for (const key of ["combo", "copy", "publication", "section"]) url.searchParams.delete(key);
+    for (const key of ["guideBoard", "combo", "copy", "publication", "section"]) url.searchParams.delete(key);
     const origin = url.searchParams.get("from");
     url.searchParams.delete("from");
     window.history.replaceState(window.history.state, "", url.pathname + url.search);
+    if (guideBoardId) clearGuideBoardTransfer(guideBoardId);
     if (!draft) return;
-    setComboOrigin(copyQuery && sectionId && copyId ? guideLink(sectionId, copyId) : origin?.startsWith("/combos?") ? origin : "/combos");
-    setGuideBoardSource(null);
+    const guide = pendingGuide?.source;
+    setGuideBoardSource(guide ? { title: guide.title, href: guide.href } : null);
+    setComboOrigin(guide ? "" : copyQuery && sectionId && copyId ? guideLink(sectionId, copyId) : origin?.startsWith("/combos?") ? origin : "/combos");
     setRestore(null);
     showDraft(draft);
     setReplacement(null); setMobileReplace(false);
     setHistory([]); setFuture([]); setWantedForm(null);
-    const focus = draft.pieces.find(p => p.stars === 2) ?? draft.pieces[0];
+    const focus = (guide ? draft.pieces.find(piece => piece.unitId === guide.focusUnit) ??
+      draft.pieces.find(piece => piece.items.length === 3) : draft.pieces.find(piece => piece.stars === 2)) ?? draft.pieces[0];
     setSelectedId(focus?.unitId ?? null);
     setPieceSelection(focus ? { id: focus.instanceId } : null);
-    notify({ kind: "ok", text: copyQuery ? "棋盘已复制到新草稿" : "八人口组合已带入新草稿" });
-  }, [importKey, copyQuery, sectionId, copyId, notify, showDraft]);
+    if (!guide) notify({ kind: "ok", text: copyQuery ? "棋盘已复制到新草稿" : "八人口组合已带入新草稿" });
+  }, [importKey, guideBoardId, pendingGuide, copyQuery, sectionId, copyId, notify, showDraft]);
   useEffect(() => {
-    if (!importKey || handledCombo.current === importKey || !draftChecked || !saved) return;
-    if (copyQuery && !incomingDraft) return;
+    if (!importKey || handledImport.current === importKey || !draftChecked || !saved) return;
+    if (guideBoardId ? !pendingGuide : copyQuery && !incomingDraft) return;
     if (!incomingDraft) {
-      finishCombo(null);
-      notify({ kind: "error", text: "组合链接无效或与当前赛季不符，请从八人口组合重新选择。" });
-    } else if (!restore && !dirty) finishCombo(incomingDraft);
-  }, [importKey, copyQuery, incomingDraft, draftChecked, saved, restore, dirty, finishCombo, notify]);
-  useEffect(() => {
-    if (!guideBoardId || handledGuideBoard.current === guideBoardId || !saved) return;
-    handledGuideBoard.current = guideBoardId;
-    const transfer = readGuideBoardTransfer(guideBoardId);
-    const url = new URL(window.location.href);
-    url.searchParams.delete("guideBoard");
-    window.history.replaceState(window.history.state, "", url.pathname + url.search);
-    if (!transfer) {
-      notify({ kind: "error", text: "棋盘没有带过来，请回到攻略重新点击「带入编辑器」。" });
-      return;
-    }
-    const source = readTeamStage(transfer.team, transfer.team.mainStage ?? "late");
-    const draft = independentDraft({ ...source, name: transfer.title.slice(0, 80) }, emptyTeam());
-    setGuideBoardSource({ title: transfer.title, href: transfer.href });
-    showDraft(draft);
-    setReplacement(null); setMobileReplace(false);
-    setHistory([]); setFuture([]); setWantedForm(null);
-    const focus = draft.pieces.find(piece => piece.unitId === transfer.focusUnit) ??
-      draft.pieces.find(piece => piece.items.length === 3) ?? draft.pieces[0];
-    setSelectedId(focus?.unitId ?? null);
-    setPieceSelection(focus ? { id: focus.instanceId } : null);
-  }, [guideBoardId, saved, notify, showDraft]);
+      finishImport(null);
+      notify({ kind: "error", text: guideBoardId ? "棋盘没有带过来，请回到攻略重新带入。" :
+        "组合链接无效或与当前赛季不符，请从八人口组合重新选择。" });
+    } else if (!restore && !dirty) finishImport(incomingDraft);
+  }, [importKey, guideBoardId, pendingGuide, copyQuery, incomingDraft, draftChecked, saved, restore, dirty, finishImport, notify]);
   const pendingTeam = incomingTeamId && handledTeam.current !== incomingTeamId;
   const writeIssue = feishuBoardIssue(draftTeam);
   const writableSections = sections?.filter((entry) => entry.level === 2 || entry.id === known?.sectionId) ?? [];
+  const draftCategory = draftCategoryValue(team.category);
   const selected = selectedId ? unitMap.get(selectedId) : undefined;
   const piece = team.pieces.find((entry) => entry.instanceId === pieceId);
   const pieceUnit = piece && unitMap.get(piece.unitId);
@@ -559,6 +562,16 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
     }),
     [commit],
   );
+  const moveEquipmentTo = useCallback((fromId: string, index: number, itemId: string, position: number) => {
+    const item = itemMap.get(itemId);
+    if (!item || busyRef.current) return;
+    commit(current => {
+      const target = current.pieces.find(piece => piece.position === position);
+      if (!target) return current;
+      const pieces = transferEquipment(current.pieces, fromId, index, item, target.instanceId, equipmentRecipes);
+      return pieces === current.pieces ? current : { ...current, pieces };
+    });
+  }, [commit]);
   const switchBoardAlternate = useCallback((instanceId: string) => {
     const pieces = teamRef.current.pieces;
     const alternate = pieces.find(piece => piece.instanceId === instanceId)?.alternate;
@@ -693,7 +706,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
       if (!teamRef.current.name.trim())
         throw new Error("先给阵容起个名字再保存。");
       await save();
-      notify({ kind: "ok", text: ownerMode ? "本次修改已保存" : "已保存到此浏览器" });
+      notify({ kind: "ok", text: ownerMode ? "已保存到云端" : "已保存到此浏览器" });
     });
   function activate(next: Team, message: string) {
     setPendingOpen(null);
@@ -714,7 +727,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
     notify({ kind: "info", text: message });
   }
   function open(next: Team, message: string) {
-    if (dirty) {
+    if (dirty || (restore && restore !== next)) {
       setPendingOpen({ team: next, message });
       return false;
     }
@@ -910,23 +923,23 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
         setDefault={posterFormat => commit(prev => ({...prev, posterFormat}))} />}
       <h1 className="sr-only">阵容构建器</h1>
       {guideBoardSource && <div className="editor-guide-source">
-        <div><strong>来自{guideBoardSource.title}</strong><small>{known ? "已保存在本机" : "本地草稿"}</small></div>
+        <div><strong>来自{guideBoardSource.title}</strong><small>{ownerMode ? known && !dirty ? "已保存到云端" : "待保存到云端" : known && !dirty ? "已保存在本机" : "本地草稿"}</small></div>
         <a href={guideBoardSource.href}>返回原棋盘</a>
       </div>}
       {copyQuery && copyError && <div className="banner" role="alert">{copyError}<button onClick={() => setRetryCopy(v => v + 1)}>重新读取棋盘</button></div>}
       {copyQuery && !incomingDraft && !copyError && <p role="status">正在读取所选发布棋盘…</p>}
-      {importKey && incomingDraft && handledCombo.current !== importKey && draftChecked && (restore || dirty) && (
+      {importKey && incomingDraft && handledImport.current !== importKey && draftChecked && (restore || dirty) && (
         <div className="banner flow-banner" role="status">
           <span>有未保存的阵容「{(restore ?? team).name}」。带入后会另建一份草稿。</span>
-          <button type="button" className="btn secondary sm" disabled={!!busy} onClick={() => run("save", async () => { await save(restore ?? draftTeam); finishCombo(incomingDraft); })}>保存当前并带入{copyQuery ? "棋盘" : "组合"}</button>
-          <button type="button" className="btn ghost sm" disabled={!!busy} onClick={() => finishCombo(null)}>留在当前阵容</button>
+          <button type="button" className="btn secondary sm" disabled={!!busy} onClick={() => run("save", async () => { await save(restore ?? draftTeam); finishImport(incomingDraft); })}>保存当前并带入{guideBoardId || copyQuery ? "棋盘" : "组合"}</button>
+          <button type="button" className="btn ghost sm" disabled={!!busy} onClick={() => finishImport(null)}>留在当前阵容</button>
         </div>
       )}
       {comboOrigin && <div className="flow-actions editor-entry"><a href={comboOrigin}>{comboOrigin.startsWith("/guides/") ? "返回所读棋盘" : "返回凑羁绊"}</a></div>}
       {pendingOpen && <div className="banner flow-banner" role="status">
-        <span>「{team.name}」尚未保存。要切换到「{pendingOpen.team.name}」吗？</span>
+        <span>「{(restore ?? team).name}」尚未保存。要切换到「{pendingOpen.team.name}」吗？</span>
         <button type="button" className="btn secondary sm" disabled={!!busy} onClick={() => run("save", async () => {
-          await save(); activate(pendingOpen.team, pendingOpen.message);
+          await save(restore ?? draftRef.current); activate(pendingOpen.team, pendingOpen.message);
         })}>保存当前并切换</button>
         <button type="button" className="btn ghost sm" disabled={!!busy} onClick={() => activate(pendingOpen.team, pendingOpen.message)}>放弃当前修改并切换</button>
         <button type="button" className="btn ghost sm" disabled={!!busy} onClick={() => setPendingOpen(null)}>继续编辑当前阵容</button>
@@ -994,15 +1007,16 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
           />
           <span className="select-field">
             <select
-              aria-label="阵容分类"
-              value={team.category}
+              aria-label="草稿分类"
+              value={draftCategory}
               onChange={(event) =>
                 commit((prev) => ({ ...prev, category: event.target.value }))
               }
             >
               {CATEGORIES.map((category) => (
-                <option key={category}>{category}</option>
+                <option key={category} value={category}>{draftCategoryLabel(category)}</option>
               ))}
+              {!CATEGORIES.includes(draftCategory) && <option value={draftCategory}>{draftCategoryLabel(draftCategory)}</option>}
             </select>
             <ChevronDown size={14} aria-hidden />
           </span>
@@ -1025,7 +1039,11 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
           {clearAction}
         </div>
         <div className="tb-group tb-menus">
-          <Popover label={ownerMode ? "阵容库" : "我的阵容"} icon={<Library size={15} aria-hidden />}>
+          <Popover label={ownerMode ? "阵容库" : "我的阵容"} icon={<Library size={15} aria-hidden />}
+            onOpen={ownerMode ? () => {
+              try { setLocalTeams(readPlayerTeams()); }
+              catch (error) { notify({ kind: "error", text: error instanceof Error ? error.message : "暂时无法读取本机阵容。" }); }
+            } : undefined}>
             {(close) => (
               <div className="menu">
                 <div className="menu-actions">
@@ -1068,6 +1086,15 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
                     导入备份
                   </button>
                 </div>}
+                {ownerMode && localTeams.length > 0 && <details className="editor-local-teams">
+                  <summary>本机阵容 {localTeams.length}</summary>
+                  <ul className="menu-list">
+                    {localTeams.map(entry => <li key={entry.id}><button type="button" onClick={() => {
+                      close();
+                      open({ ...independentDraft(entry, emptyTeam()), webTitle: entry.webTitle }, "已带入本机阵容，点「保存到云端」转存");
+                    }}>{entry.name}</button></li>)}
+                  </ul>
+                </details>}
                 <p className="menu-label">{ownerMode ? "云端阵容" : "此浏览器的阵容"} {saved ? saved.length : "…"}</p>
                 {saved === null ? (
                   <p className="menu-empty">正在读取…</p>
@@ -1094,7 +1121,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
                           <span className="menu-text">
                             <strong>{entry.name}</strong>
                             <small>
-                              {entry.category} · {usedPopulation(entry.pieces)} 人口
+                              {draftCategoryLabel(entry.category)} · {usedPopulation(entry.pieces)} 人口
                             </small>
                           </span>
                           {entry.id === team.id && <Check size={14} aria-label="当前" />}
@@ -1200,7 +1227,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
                       </option>
                       {writableSections.map((section) => (
                         <option key={section.id} value={section.id}>
-                          {section.level !== 2 ? "原章节 · " : section.category + " / "}{section.title}
+                          {section.level !== 2 && "原章节 · "}{sourceSectionTitle(section)}
                         </option>
                       ))}
                     </select>
@@ -1277,7 +1304,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
           ) : (
             <Save size={16} aria-hidden />
           )}
-          保存
+          {ownerMode ? "保存到云端" : "保存"}
         </button>
       </div>
 
@@ -1353,6 +1380,8 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
                     targeting={targeting}
                     onCell={onCell}
                     onMove={movePieceTo}
+                    onMoveEquipment={mobileReplace ? undefined : moveEquipmentTo}
+                    canReceiveEquipment={canReceiveEquipment}
                     onSwitchAlternate={switchBoardAlternate}
                     onSplitAlternate={splitBoardAlternate}
                     onMoveInstrument={moveInstrumentTo}

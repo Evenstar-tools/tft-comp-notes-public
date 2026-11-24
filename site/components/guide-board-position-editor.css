@@ -1,0 +1,10 @@
+.guide-board-actions .guide-position-trigger {padding-inline:10px;border-color:var(--accent);background:var(--accent);color:var(--panel);white-space:nowrap;}
+.guide-position-dialog {width:min(700px,calc(100% - 24px));max-height:calc(100dvh - 24px);padding:clamp(12px,3vw,22px);margin:auto;border:1px solid var(--line);border-radius:12px;color:var(--text);background:var(--panel);}
+.guide-position-dialog::backdrop {background:#111017b0;}
+.guide-position-dialog :is(header,footer) {display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.guide-position-dialog header {margin-bottom:12px;}
+.guide-position-dialog h2 {font-size:1.125rem;margin:0 0 3px;}
+.guide-position-dialog header p,.guide-position-hint {color:var(--muted);font-size:.875rem;margin:0;}
+.guide-position-dialog .read-board {margin:0 0 10px;}
+.guide-position-dialog footer {justify-content:flex-end;flex-wrap:wrap;margin-top:12px;}
+.guide-position-dialog footer .btn {min-height:44px;}

@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Download, Link2, Share2 } from "lucide-react";
+import { Download, Link2, LocateFixed, Maximize2, Minimize2, Share2 } from "lucide-react";
 import type { Section } from "@/domain/document";
 import type { PosterVariant } from "@/domain/guide-families";
 import { posterShareLink, type PosterShare } from "@/domain/links";
 import { defaultPosterFormat, maxPosterStages, posterFormats, posterLayout, posterOperationTitle, posterStageOptions, posterStages, posterStageTitle, posterTitle, type PosterFormat } from "@/domain/poster";
 import type { Season, Team } from "@/domain/types";
 import { MatrixDialog } from "./MatrixDetails";
+import "./guide-poster-view.css";
 
 export function GuidePoster({ section, team, data, variants, pickVariant, setDefault, initialShare, boardLink, close }: {
   section?: Section; team: Team; data: Season; variants?: PosterVariant[];
@@ -18,6 +19,7 @@ export function GuidePoster({ section, team, data, variants, pickVariant, setDef
   const [selection, setSelection] = useState<{ teamId: string; ids: string[] } | undefined>(() =>
     initialShare?.stageIds ? { teamId: team.id, ids: initialShare.stageIds } : undefined);
   const [attempt, retry] = useState(0);
+  const [fitQuick, setFitQuick] = useState(false);
   const options = useMemo(() => posterStageOptions(section, team), [section, team]);
   const stageIds = selection?.teamId === team.id ? selection.ids : undefined;
   const { stages: chosen, boards, operations, filename } = useMemo(
@@ -90,6 +92,7 @@ export function GuidePoster({ section, team, data, variants, pickVariant, setDef
   const downloadLabel = <><Download size={16} aria-hidden />下载图片</>;
   const canSetDefault = setDefault && format !== defaultPosterFormat(team, section);
   const hasBoardChoice = !!pickVariant && variants?.some(variant => variant.teamId !== team.id);
+  const stageRows = team.stages || team.mainStage ? [...options, team] : [team, ...options];
   const boardNavigation = previewBoards.length > 1 && <div className="poster-preview-nav" role="group" aria-label="跳到预览棋盘">
     <span aria-hidden="true">跳到棋盘</span>
     {previewBoards.map(({ id, name, level }) => <button key={id} type="button" title={name}
@@ -109,7 +112,7 @@ export function GuidePoster({ section, team, data, variants, pickVariant, setDef
         <button type="button" className="poster-original" aria-label="打开原图" disabled>原图</button>
       </>}
     </div>}>
-    <div className="poster-workspace">
+    <div className={`poster-workspace poster-workspace-${format}`}>
       <section className="poster-options" aria-label="一图流选项">
         {hasBoardChoice ? <label className="poster-board-select">
           <span>当前棋盘</span>
@@ -129,23 +132,30 @@ export function GuidePoster({ section, team, data, variants, pickVariant, setDef
               onClick={() => setFormat(key)}>{posterFormats[key]}</button>)}
           </div>
         </fieldset>
-        {format === "full" && !!options.length && <fieldset className="poster-stage-options">
-          <legend>附加棋盘</legend>
-          {options.map(board => {
-            const checked = chosen.some(stage => stage.id === board.id);
-            return <label key={board.id}>
-              <input type="checkbox" value={board.id} checked={checked}
+        {format === "full" && !!options.length && <fieldset className="poster-stage-options" aria-label="过渡棋盘">
+          <legend>导出棋盘</legend>
+          {stageRows.map(board => {
+            const main = board.id === team.id;
+            const checked = main || chosen.some(stage => stage.id === board.id);
+            const name = posterStageTitle(board);
+            return <div key={board.id} className="poster-stage-line">
+              {main ? <span className="poster-main-stage"><small>主图</small>{name}</span> : <label>
+                <input type="checkbox" value={board.id} checked={checked}
                 disabled={!checked && chosen.length >= maxPosterStages}
                 onChange={event => {
                   const visibleStageIds = chosen.map(stage => stage.id);
                   setSelection({ teamId: team.id,
                     ids: event.target.checked ? [...visibleStageIds, board.id] : visibleStageIds.filter(id => id !== board.id) });
                 }} />
-              <span>{posterStageTitle(board)}</span>
-            </label>;
+                <span>{name}</span>
+              </label>}
+              {checked && <button type="button" className="poster-stage-locate" title={"在预览中查看" + name}
+                aria-label={"预览 " + name} disabled={!ready?.positions?.has(board.id)} onClick={() => jumpToBoard(board.id)}>
+                <LocateFixed size={16} aria-hidden />
+              </button>}
+            </div>;
           })}
         </fieldset>}
-        {boardNavigation && <div className="poster-sidebar-nav">{boardNavigation}</div>}
         {(canSetDefault || shareLink || canShare || !!operations.length) && <div className="poster-side-tools">
           {(canSetDefault || shareLink || canShare) && <div className="poster-secondary">
             {shareLink && <button type="button" className="poster-default" onClick={copyPosterLink}>
@@ -161,12 +171,17 @@ export function GuidePoster({ section, team, data, variants, pickVariant, setDef
             <p className="poster-step-order">{operations.map(posterOperationTitle).join(" → ")}</p>
           </details>}
         </div>}
+        {format === "quick" && <button type="button" className="poster-quick-fit" aria-pressed={fitQuick}
+          onClick={() => { setFitQuick(!fitQuick); preview.current?.scrollTo(0, 0); }}>
+          {fitQuick ? <Maximize2 size={15} aria-hidden /> : <Minimize2 size={15} aria-hidden />}
+          {fitQuick ? "放大看" : "看全图"}
+        </button>}
         {copiedShare && copiedShare.link === shareLink && (copiedShare.fallback
           ? <input className="poster-board-link" aria-label="一图流分享链接" value={copiedShare.fallback} readOnly onFocus={event => event.currentTarget.select()} />
           : <small className="poster-copy-status" role="status">已复制一图流链接</small>)}
         {shareError?.job === job && <p className="poster-share-error" role="alert">{shareError.message}</p>}
       </section>
-      <div ref={preview} className={`poster-preview poster-preview-${format}`} role="region" aria-label="一图流预览" tabIndex={0}>
+      <div ref={preview} className={`poster-preview poster-preview-${format}${format === "quick" && fitQuick ? " poster-preview-fit" : ""}`} role="region" aria-label="一图流预览" tabIndex={0}>
         {boardNavigation && <div className="poster-reader-nav">{boardNavigation}</div>}
         {ready?.url ? <img className="guide-poster-image" src={ready.url}
           alt={[title, posterFormats[format], ...(boards.length > 1 ? boards.map(posterStageTitle)

@@ -95,12 +95,14 @@ export function previousRecommendationDeadline(
 export type GuideFamilyMetric = "pickRate" | "mean" | "topFourRate" | "winRate";
 export type GuideFamilyDirection = "asc" | "desc";
 
+export function familyPickRate(games: number, totalFinishes?: number | null): number | null {
+  if (totalFinishes == null || !Number.isSafeInteger(totalFinishes) || totalFinishes <= 0 ||
+      !Number.isSafeInteger(games) || games < 0 || games > totalFinishes) return null;
+  return games / totalFinishes;
+}
+
 export function familyMetricValue(row: GuideFamilyStat, metric: GuideFamilyMetric, totalFinishes?: number): number | null {
-  if (metric === "pickRate") {
-    if (totalFinishes === undefined || !Number.isSafeInteger(totalFinishes) || totalFinishes <= 0 ||
-        !Number.isSafeInteger(row.games) || row.games < 0 || row.games > totalFinishes) return null;
-    return row.games / totalFinishes;
-  }
+  if (metric === "pickRate") return familyPickRate(row.games, totalFinishes);
 
   const value = row[metric];
   const [minimum, maximum] = metric === "mean" ? [1, 8] : [0, 1];

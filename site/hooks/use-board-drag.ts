@@ -7,11 +7,17 @@ type BoardDrag = {
   accepts?: (slot: HTMLElement) => boolean;
   x: number;
   y: number;
+  clientX: number;
+  clientY: number;
   source: HTMLButtonElement;
+  visual: HTMLElement;
+  dragging: boolean;
   ghost: HTMLElement | null;
 };
 
-export type BoardDragPreview = { source: number | null; destination: number | null; blocked: boolean; alternate: boolean };
+export type BoardDragPreview = {
+  source: number | null; destination: number | null; blocked: boolean; alternate: boolean; equipment: boolean;
+};
 
 export function useBoardDrag(
   onDropUnit?: (position: number, id: string) => void,
@@ -27,11 +33,13 @@ export function useBoardDrag(
   function showTarget(slot: HTMLElement | null, blocked = false, first = false, fromTray = false) {
     if (slot === target.current && !first) return;
     target.current?.removeAttribute("data-drop-target");
-    const source = drag.current?.source;
+    const active = drag.current;
+    const source = active?.source;
+    const equipment = !!active && active.visual !== source;
     const sourcePosition = source?.dataset.boardSlot ?? source?.dataset.boardAlternateSlot;
     const destination = slot && slot.dataset.boardSlot !== sourcePosition ? slot : null;
     if (destination) {
-      const kind = !destination.classList.contains("is-filled") ? "move" : fromTray ? "stack" : "swap";
+      const kind = equipment ? "equipment" : !destination.classList.contains("is-filled") ? "move" : fromTray ? "stack" : "swap";
       destination.dataset.dropTarget = blocked ? "blocked" : kind;
     }
     target.current = slot;
@@ -40,6 +48,7 @@ export function useBoardDrag(
       destination: destination ? Number(destination.dataset.boardSlot) : null,
       blocked: !!destination && blocked,
       alternate: source?.dataset.boardAlternateSlot !== undefined,
+      equipment,
     } : null);
   }
 
@@ -52,7 +61,7 @@ export function useBoardDrag(
     const active = drag.current;
     drag.current = null;
     if (!active) return;
-    active.source.removeAttribute("data-drag-source");
+    active.visual.removeAttribute("data-drag-source");
     active.ghost?.remove();
     if (active.source.hasPointerCapture(active.pointerId)) {
       active.source.releasePointerCapture(active.pointerId);
@@ -88,10 +97,12 @@ export function useBoardDrag(
   }
 
   return {
-    start(event: PointerEvent<HTMLButtonElement>, move: BoardDrag["move"], accepts?: BoardDrag["accepts"]) {
+    start(event: PointerEvent<HTMLButtonElement>, move: BoardDrag["move"], accepts?: BoardDrag["accepts"], visual = event.currentTarget as HTMLElement) {
       if (!event.isPrimary || event.button !== 0) return;
       const source = event.currentTarget;
-      drag.current = { pointerId: event.pointerId, move, accepts, x: event.clientX, y: event.clientY, source, ghost: null };
+      const { clientX, clientY } = event;
+      drag.current = { pointerId: event.pointerId, move, accepts, x: clientX, y: clientY,
+        clientX, clientY, source, visual, dragging: false, ghost: null };
       source.setPointerCapture(event.pointerId);
     },
     onPointerDownCapture() {
@@ -106,38 +117,50 @@ export function useBoardDrag(
       const active = drag.current;
       if (!active || active.pointerId !== event.pointerId) return;
       const board = event.currentTarget;
-      const { clientX, clientY } = event;
-      const dx = clientX - active.x;
-      const dy = clientY - active.y;
-      if (!active.ghost && Math.hypot(dx, dy) < 5) return;
-      const paint = (ghost: HTMLElement, first = false) => {
-        const slot = slotAt(board, document.elementFromPoint(clientX, clientY));
-        ghost.style.transform = `translate3d(${dx}px, ${dy}px, 0)`;
-        showTarget(slot, !!slot && !!active.accepts && !active.accepts(slot), first);
-      };
-      if (!active.ghost) {
-        const ghost = active.source.cloneNode(true) as HTMLElement;
-        ghost.classList.remove("is-selected");
-        ghost.classList.add("board-drag-ghost");
-        ghost.removeAttribute("data-board-slot");
-        ghost.removeAttribute("data-board-alternate-slot");
-        ghost.setAttribute("aria-hidden", "true");
-        ghost.inert = true;
-        active.ghost = ghost;
-        active.source.setAttribute("data-drag-source", "");
-        board.appendChild(ghost);
+      active.clientX = event.clientX;
+      active.clientY = event.clientY;
+      if (!active.dragging) {
+        if (Math.hypot(active.clientX - active.x, active.clientY - active.y) < 5) return;
+        active.dragging = true;
         suppressClick.current = true;
-        paint(ghost, true);
-        return;
       }
-      const ghost = active.ghost;
-      cancelAnimationFrame(frame.current);
-      frame.current = requestAnimationFrame(() => paint(ghost));
+      if (frame.current) return;
+      frame.current = requestAnimationFrame(() => {
+        frame.current = 0;
+        if (drag.current !== active) return;
+        const { clientX, clientY, visual, source } = active;
+        const slot = slotAt(board, document.elementFromPoint(clientX, clientY));
+        const first = !active.ghost;
+        if (!active.ghost) {
+          const ghost = visual.cloneNode(true) as HTMLElement;
+          ghost.classList.remove("is-selected");
+          ghost.classList.add("board-drag-ghost");
+          ghost.removeAttribute("data-board-slot");
+          ghost.removeAttribute("data-board-alternate-slot");
+          ghost.removeAttribute("data-board-item-index");
+          ghost.setAttribute("aria-hidden", "true");
+          ghost.inert = true;
+          if (visual !== source) {
+            const itemBox = visual.getBoundingClientRect();
+            const boardBox = board.getBoundingClientRect();
+            ghost.classList.add("board-equipment-ghost");
+            Object.assign(ghost.style, {
+              left: `${itemBox.left - boardBox.left}px`, top: `${itemBox.top - boardBox.top}px`,
+              width: `${itemBox.width}px`, height: `${itemBox.height}px`,
+            });
+          }
+          active.ghost = ghost;
+          visual.setAttribute("data-drag-source", "");
+          board.appendChild(ghost);
+        }
+        active.ghost.style.transform = `translate3d(${clientX - active.x}px, ${clientY - active.y}px, 0)`;
+        if (first || slot !== target.current) showTarget(slot, !!slot && !!active.accepts && !active.accepts(slot), first);
+      });
     },
     onPointerUp(event: PointerEvent<HTMLDivElement>) {
       const active = drag.current;
       if (!active || active.pointerId !== event.pointerId) return;
-      const slot = active.ghost
+      const slot = active.dragging
         ? dropSlot(event.currentTarget, active, event.clientX, event.clientY)
         : null;
       reset();

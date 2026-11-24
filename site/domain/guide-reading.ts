@@ -3,6 +3,7 @@ import type { Piece, Season, Team, Unit } from "./types";
 import { unitSearchNames } from "./unit-search.mjs";
 import { rerollRoute } from "./reroll-stages.ts";
 import { guideBoardKind, usedPopulation } from "./team.ts";
+import { sourceSectionTitle } from "./source-category-display.ts";
 import { displayGuideName } from "./trait-names.mjs";
 
 export function allBlocks(blocks: ContentBlock[]): ContentBlock[] {
@@ -30,7 +31,8 @@ export function guideSectionWithCurrentNames(section: Section): Section {
   });
   return {
     ...section,
-    title: displayGuideName(section.title),
+    title: displayGuideName(sourceSectionTitle(section)),
+    ...(section.title === section.category ? { category: sourceSectionTitle(section) } : {}),
     blocks: renameHeadings(section.blocks),
     ...(section.team && { team: renameTeam(section.team) }),
     ...(section.teams && { teams: section.teams.map(renameTeam) }),
@@ -127,18 +129,26 @@ export function parseGuideFilters(values: Record<string, string | string[] | und
     return text?.trim().slice(0, 60) || undefined;
   };
   const view = read("view"), sort = read("sort"), cost = read("cost"), scope = read("scope"), style = read("style");
+  const oldCategory = read("category");
+  const category = oldCategory === "次选成熟阵容" || oldCategory === "次选阵容" || oldCategory === "暂不推荐"
+    ? "次选" : oldCategory;
+  const archiveTier = category && ["推荐", "次选", "待复核"].includes(category) ? category : undefined;
+  const hero = view === "hero-augments" || oldCategory === "英雄强化阵容";
+  const legacyStyle = oldCategory === "慢搜阵容" ? "慢搜" : oldCategory === "高费阵容" ? "高费运营" : undefined;
+  const topic = oldCategory === "史密奇阵容" ? "史密奇" : oldCategory === "纹章阵容" ? "纹章" : undefined;
+  const query = read("q");
   const exclude = read("exclude");
   const metric = read("metric"), direction = read("direction");
   return {
-    view: view === "hero-augments" ? view : undefined,
-    sort: sort === "mean" || sort === "category" ? sort : undefined,
+    view: view === "comp-trends" ? view : hero ? "hero-augments" : undefined,
+    sort: sort === "mean" || sort === "category" ? sort : oldCategory && !archiveTier && !hero ? "category" : undefined,
     ...(scope === "carry" || scope === "unit" ? { scope } : {}),
     ...(exclude === "rakan" || exclude === "none" ? { exclude } : {}),
     ...(sort === "mean" && (metric === "pickRate" || metric === "mean" || metric === "topFourRate" || metric === "winRate") ? { metric } : {}),
     ...(sort === "mean" && (direction === "asc" || direction === "desc") ? { direction } : {}),
-    q: read("q"),
-    category: read("category"),
-    style: playstyleCode(style) ?? style,
+    q: topic && query !== topic ? [query, topic].filter(Boolean).join(" + ") : query,
+    category: hero ? undefined : archiveTier,
+    style: playstyleCode(style) ?? style ?? legacyStyle,
     cost: cost && /^[1-9]$/.test(cost) ? cost : undefined,
   };
 }

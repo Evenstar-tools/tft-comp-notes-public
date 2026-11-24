@@ -977,6 +977,8 @@
     "edits": [
       {
         "teamId": "00000000-0000-4000-8000-000000000044",
+        "originalPositions": {"tibbers": 1, "garen": 2, "nasus": 3, "k-sante": 4, "leona": 5, "lillia": 6, "jax": 14, "renata-glasc": 21},
+        "positions": {"nasus": 2, "garen": 3, "tibbers": 6, "lillia": 27},
         "notes": "烈娜塔和狗头六级追三。贾克斯来得多一起追三，三件套齐了打双 C。",
         "wording": {
           "before": "优先烈娜塔三星、狗头三星；贾克斯有饮血和泰坦再留牌追三。",

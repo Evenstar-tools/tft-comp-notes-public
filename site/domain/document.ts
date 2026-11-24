@@ -1,3 +1,4 @@
+import type { PublishedBoardLayout } from "./published-board-layout";
 import type { Season, Team } from "./types";
 export interface RichElement {
   text_run?: {
@@ -74,4 +75,5 @@ export interface DocumentDraft {
 export interface Publication extends DocumentDraft {
   publishedAt: string;
   previousId?: string;
+  boardLayouts?: PublishedBoardLayout[];
 }

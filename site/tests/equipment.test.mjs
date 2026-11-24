@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { equipItem, indexRecipes, wornCombinations } from "../domain/equipment.ts";
+import { equipItem, indexRecipes, transferEquipment, wornCombinations } from "../domain/equipment.ts";
 import { planCarousel, thirdItems } from "../domain/guide-equipment.ts";
 import { conditionalGearCohorts, conditionalGearRows } from "../domain/conditional-gear.ts";
 import { compareGearWearerSamples, gearSampleMinimum, gearWearerMatches, gearWearerStats } from "../domain/gear-wearer.ts";
@@ -16,6 +16,20 @@ const spatula = "TFT_Item_Spatula";
 const slayer = "TFT_Item_MadredsBloodrazor";
 const blade = "TFT_Item_Deathblade";
 const pick = (worn, id) => equipItem(worn, catalog.get(id), recipes);
+
+test("equipment transfers between same-name pieces without losing the source on a failed drop", () => {
+  const from = { instanceId: "first", unitId: "elise", position: 0, stars: 1, items: [sword, sword, blade] };
+  const to = { instanceId: "second", unitId: "elise", position: 1, stars: 1, items: [bow, blade, slayer] };
+  const board = [from, to];
+  const transfer = (index, id, target) => transferEquipment(board, from.instanceId, index, catalog.get(id), target, recipes);
+  assert.equal(transfer(2, blade, to.instanceId), board, "full target without a recipe");
+  assert.equal(transfer(1, sword, from.instanceId), board, "same piece");
+  assert.equal(transfer(2, sword, to.instanceId), board, "stale item slot");
+  assert.equal(transfer(0, sword, "missing"), board, "empty or removed target");
+  const crafted = transfer(1, sword, to.instanceId);
+  assert.deepEqual(crafted.map(piece => piece.items), [[sword, blade], [slayer, blade, slayer]]);
+  assert.deepEqual(board.map(piece => piece.items), [[sword, sword, blade], [bow, blade, slayer]]);
+});
 
 test("wearer search finds aliases and pinyin and preserves ambiguous champion forms", () => {
   const matches = query => gearWearerMatches(units, query).map(({ unit, rank }) => [unit.id, rank]);
@@ -80,7 +94,7 @@ test("holding an item keeps conditional builds in their real hero, star and trai
   const remaining = [...mostUsed.items];
   remaining.splice(remaining.indexOf(rageblade), 1);
   assert.deepEqual(conditionalGearRows(kayle, [rageblade])[0], {
-    items: remaining, games: mostUsed.games, mean: mostUsed.games >= 100 ? mostUsed.mean : null,
+    items: remaining, games: mostUsed.games, mean: mostUsed.mean,
   });
   assert.deepEqual(cohorts.filter(cohort => cohort.unitId === "jinx").map(cohort => cohort.level), [8, 9]);
   assert.deepEqual(conditionalGearCohorts("s19-live-19.1.0.5973071", [rageblade]), []);
@@ -88,7 +102,7 @@ test("holding an item keeps conditional builds in their real hero, star and trai
   assert.deepEqual(conditionalGearCohorts("s19-pbe-19.1.0.5973071", [rageblade, "unknown"]), []);
 });
 
-test("conditional builds consume one held copy, suppress low-volume means, and skip other builds", () => {
+test("conditional builds consume one held copy, retain small-sample means, and skip other builds", () => {
   const cohort = { builds: [
     { items: ["a", "b", "a"], games: 99, mean: 4.39 },
     { items: ["b", "a", "c"], games: 320, mean: 4.16 },
@@ -97,11 +111,11 @@ test("conditional builds consume one held copy, suppress low-volume means, and s
   ] };
   assert.deepEqual(conditionalGearRows(cohort, ["a"]), [
     { items: ["b", "c"], games: 320, mean: 4.16 },
-    { items: ["b", "a"], games: 99, mean: null },
+    { items: ["b", "a"], games: 99, mean: 4.39 },
   ]);
   const thirdPieces = [
     { items: ["c"], games: 320, mean: 4.16 },
-    { items: ["a"], games: 99, mean: null },
+    { items: ["a"], games: 99, mean: 4.39 },
   ];
   assert.deepEqual(conditionalGearRows(cohort, ["a", "b"]), thirdPieces);
   assert.deepEqual(conditionalGearRows(cohort, ["b", "a"]), thirdPieces);

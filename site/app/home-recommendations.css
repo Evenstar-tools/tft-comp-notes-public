@@ -1,5 +1,6 @@
 .home-guide-library .home-patch-tabs { flex: 1; flex-wrap: nowrap; }
 .home-patch-tabs a { flex: none; white-space: nowrap; }
+.home-library:has(.home-guide-library[data-trends]) > .home-notes { display: none; }
 .home-patch-recommendations { display: grid; gap: 18px; }
 .home-patch-overview { display: grid; gap: 7px; }
 .home-patch-meta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 12px; }
@@ -31,6 +32,11 @@
 .guide-featured-conditions a { min-height: 28px; padding: 2px 6px; background: var(--raised); }
 .guide-hero-condition { display: flex; flex-wrap: wrap; align-items: center; gap: 3px 6px; }
 .guide-hero-condition img { flex: none; object-fit: contain; }
+.guide-hero-condition-name { color: var(--text); font-size: .875rem; font-weight: 650; overflow-wrap: anywhere; }
+.guide-hero-condition-round {
+  padding: 1px 5px; border-radius: 4px; background: var(--raised); color: var(--accent);
+  font-size: .75rem; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap;
+}
 .home-patch-group { min-width: 0; }
 .home-patch-group h2 { font-size: 1.125rem; margin: 0 0 8px; font-weight: 650; color: var(--accent); scroll-margin-block-start: 14px; }
 .home-patch-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
@@ -124,6 +130,7 @@
     border-block-end: 1px solid var(--line);
   }
   .home-guide-library .home-browse-controls .guide-order-row { margin: 0; border-bottom: 0; }
+  .home-guide-library[data-trends] .home-browse-controls { display: block; }
   .home-guide-library .home-browse-controls .guide-filters { margin: 0 0 6px; }
   .home-patch-card-link { padding: 12px 14px; row-gap: 3px; }
   .home-patch-card:has(.home-patch-steps) .home-patch-card-link { padding-block-end: 4px; }
@@ -139,6 +146,8 @@
   .home-guide-library .home-archive-tools .home-group-jumps { gap: 3px; }
   .home-guide-library .home-group-jumps a { border-color: transparent; background: transparent; }
   .home-guide-library .home-group-jumps a:hover { background: var(--raised); color: var(--accent); }
+  .guide-section[data-hero-conditions] > .reader-list:not(:has(.is-quick-open)) { align-items: stretch; }
+  .guide-section[data-hero-conditions] .guide-result-main { flex: 0 0 auto; }
   .home-guide-library .guide-section > .reader-list > article:only-child .guide-result-main > .guide-title-row { grid-column: 1 / -1; }
   .home-guide-library .guide-section > .reader-list > article:only-child .guide-avatars { grid-area: 2 / 2 / span 3; align-self: start; justify-content: end; }
   .home-guide-library .guide-title-row > .guide-placement { max-width: none; min-height: 27px; align-self: start; }
@@ -154,7 +163,7 @@
 }
 @media (max-width: 400px) {
   .home-guide-library .home-patch-tabs { gap: 0; justify-content: space-between; }
-  .home-patch-tabs a { padding-inline: 5px; }
+  .home-guide-library .home-patch-tabs a { padding-inline: 5px; }
   .home-patch-card-link { gap: 8px; padding: 8px 10px; }
   .home-patch-avatars img { width: 28px; height: 28px; }
   .home-patch-avatar:nth-child(3):not([data-core]) { display: none; }

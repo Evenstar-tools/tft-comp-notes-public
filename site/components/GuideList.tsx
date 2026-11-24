@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useEffect, useLayoutEffect, useMemo, useRef, useState, type MouseEvent } from "react";
+import { Fragment, useEffect, useLayoutEffect, useMemo, useRef, useState, type MouseEvent, type ReactNode } from "react";
 import { ChevronRight, Search, X } from "lucide-react";
 import { guideRerollTargets } from "@/domain/reroll-targets";
 import familyStats from "@/data/guide-family-stats.json";
@@ -12,7 +12,7 @@ import { sectionTeams } from "@/domain/document-flow";
 import { boardTitle, groupGuides, type GuideFamily } from "@/domain/guide-families";
 import { guideBoardName, guideFacets, guideLink, guidePlaystyle, guideRollLevel, guideRoster, guideRoute, guideStrategyLabel, guideTitleWithoutPlaystyle, matchingGear, parseGuideFilters, primaryFirst, readingNotes, repeatsFormationLabel, type GuideFilters, type GuideSearchScope, type GuideSort } from "@/domain/guide-reading";
 import { patchRecommendationLabels, type PatchRecommendationBatch } from "@/domain/patch-recommendations";
-import { homeGuideFilter, guideWearerQuery, searchPhaseNote, splitGuideConditions, guideSearchKey, guideStyleKey } from "@/domain/guide-search";
+import { homeGuideFilter, matchesGuideStyle, guideWearerQuery, searchPhaseNote, splitGuideConditions, guideSearchKey, guideStyleKey } from "@/domain/guide-search";
 import { equippedGuideRoutes, familyNameMatches, homeSearchIntent, matchHomeGuide, searchUnitIds } from "@/domain/home-guide-search";
 import { itemAliases } from "@/domain/roster-import";
 import { usedPopulation } from "@/domain/team";
@@ -29,16 +29,17 @@ import { guideBoardKind } from "./GuidePlacement";
 import { formationCoreResult } from "./GuideFormationStats";
 import { PatchRecommendationList, type RecommendationCard } from "./PatchRecommendationList";
 import { GuideConditionIcon } from "./GuideEquipmentConditions";
-import { guideConditionTag, guideConditionsAnchor, guideEquipmentConditions } from "@/domain/guide-equipment-conditions";
+import { guideConditionName, guideConditionsAnchor, guideEquipmentConditions } from "@/domain/guide-equipment-conditions";
 import { HomeGearSearch, isHomeGear } from "./HomeGearSearch";
 import { GuideCardBoard, GuideQuickView } from "./GuideCardBoard";
 import { GuideStatsTable, guideStatsMetricLabels, type GuideStatsTableRow } from "./GuideStatsTable";
+import { CompTrendPanel } from "./CompTrendPanel";
+import type { CompTrendModel } from "@/domain/comp-trends";
 
 const backupCategory = "次选";
 const tierLabels = { recommended: "推荐", secondary: backupCategory, review: "待复核" } as const;
 const tierOrder: string[] = [tierLabels.recommended, tierLabels.review, tierLabels.secondary];
-const categoryOrder = ["连胜成型", "连败", "条件阵容", "慢搜", "高费", "史密奇", "纹章"];
-type View = "regular" | "hero-augments";
+type View = "regular" | "hero-augments" | "comp-trends";
 type ArchiveSort = Exclude<GuideSort, "recommended">;
 type Selections = { category: string; style: string; cost: number };
 type Choices = Partial<Record<View, Selections>>;
@@ -46,37 +47,24 @@ type FamilySort = { metric: GuideFamilyMetric; direction: GuideFamilyDirection }
 const emptyFilters = { category: "", style: "", cost: 0 };
 const archiveViews = [["category", "攻略卡片"], ["mean", "战绩对照"]] as const;
 
+function filterView(view: GuideFilters["view"]): View {
+  return view === "hero-augments" || view === "comp-trends" ? view : "regular";
+}
+
+function guideFromTrends(href: string | undefined, home: string) {
+  if (!href?.startsWith("/guides/")) return href;
+  const url = new URL(href, "https://tft.local");
+  url.searchParams.set("from", home);
+  return url.pathname + url.search + url.hash;
+}
+
 function familySortFrom(filters: GuideFilters): FamilySort {
   const metric = filters.metric ?? "mean";
   return { metric, direction: filters.direction ?? (metric === "mean" ? "asc" : "desc") };
 }
 
-function categoryLabel(category: string) {
-  if (category.startsWith("次选")) return backupCategory;
-  if (category === "条件定阵阵容" || category === "条件定阵") return "条件阵容";
-  return category;
-}
-
-function categoryDisplay(category: string) {
-  return category.startsWith("连胜成型") ? "连胜开局" : category;
-}
-
-function categoryPriority(category: string) {
-  if (category === backupCategory) return categoryOrder.length + 4;
-  if (/^PBE\s*试阵/.test(category)) return categoryOrder.length + 1;
-  const index = categoryOrder.findIndex(prefix => category.startsWith(prefix));
-  return index < 0 ? categoryOrder.length : index;
-}
-
-function browseCategory(section: Section, playstyle?: string) {
-  if (categoryLabel(section.category) === backupCategory) return playstyle ? "高费阵容" : "常规阵容";
-  if (section.category === "慢搜阵容" && playstyle) return "高费阵容";
-  return categoryLabel(section.category);
-}
-
 function defaultSort(view: View, filters: GuideFilters): GuideSort {
-  const backup = view === "regular" && tierOrder.includes(categoryLabel(filters.category ?? ""));
-  return filters.sort ?? (backup ? "category" : "recommended");
+  return filters.sort ?? (view === "regular" && filters.category ? "category" : "recommended");
 }
 
 // Compact forms of the current authored intros. Future source edits take precedence.
@@ -116,19 +104,21 @@ function homeOpening(text: string, title: string, augment?: ReturnType<typeof he
 
 const homeFamilyStats: GuideFamilySnapshot & { previous?: GuideFamilySnapshot } = familyStats;
 
-export function GuideList({ sections, heroSections, season, initial = {}, initialSearch, recommendations, patch, fromItem, checkedAt }: {
+export function GuideList({ sections, heroSections, season, initial = {}, initialSearch, recommendations, trends, artifactRanking, patch, fromItem, checkedAt }: {
   sections: Section[]; heroSections: Section[]; season: Season; initial?: GuideFilters;
   initialSearch?: SiteSearchResponse;
   recommendations?: PatchRecommendationBatch;
+  trends?: CompTrendModel;
+  artifactRanking?: ReactNode;
   patch?: { build: string; label: string; updateId: string; effectiveAt: string };
   fromItem?: string;
   checkedAt: number;
 }) {
-  const initialView: View = initial.view === "hero-augments" ? "hero-augments" : "regular";
+  const initialView = filterView(initial.view);
   const [view, setView] = useState<View>(initialView);
   const [query, setQuery] = useState(initial.q ?? "");
   const [choices, setChoices] = useState<Choices>({
-    [initialView]: { category: categoryLabel(initial.category ?? ""), style: initial.style ?? "", cost: Number(initial.cost) || 0 },
+    [initialView]: { category: initial.category ?? "", style: initial.style ?? "", cost: Number(initial.cost) || 0 },
   });
   const [sort, setSort] = useState<GuideSort>(defaultSort(initialView, initial));
   const [archiveSort, setArchiveSort] = useState<ArchiveSort>(initial.sort === "mean" ? "mean" : "category");
@@ -140,13 +130,14 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
   const quickAnchor = useRef<{ card: HTMLElement; top: number } | null>(null);
   const searchInput = useRef<HTMLInputElement>(null);
   const filterPanel = useRef<HTMLDetailsElement>(null);
+  const showingTrends = view === "comp-trends";
   const recommended = view === "regular" && sort === "recommended";
   const selections = choices[view] ?? emptyFilters;
   const active = recommended && tierOrder.includes(selections.category) ? { ...selections, category: "" } : selections;
   const { category, style, cost } = active;
   const styleKey = guideStyleKey(style);
   const hasFilter = Boolean(category || style || cost);
-  const needle = query.trim();
+  const needle = showingTrends ? "" : query.trim();
   const inputIntent = homeSearchIntent(needle, scope);
   const hasUnitQuery = Boolean(inputIntent.text && searchUnitIds(inputIntent.text, season).size);
   const intent = hasUnitQuery || inputIntent.scope !== scope ? inputIntent : { ...inputIntent, scope: "all" as const };
@@ -159,6 +150,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
   const equipmentQuery = Boolean(selectedGear || (conditions.length === 1 && gearHits.length));
   const extraGearTerms = selectedGear ? query.trimStart().slice(lookupTerm.length).replace(/^\s*[+＋]\s?/, "") : "";
   function homeLink(target: View, { category, style, cost }: Selections, targetSort: GuideSort) {
+    if (target === "comp-trends") return guideNavigationHref("/", { view: target }, fromItem);
     const archiveCategory = target === "regular" && targetSort === "recommended" && tierOrder.includes(category) ? "" : category;
     const ranking = target === "regular" && targetSort === "mean";
     const metric = ranking && performance.metric !== "mean" ? performance.metric : undefined;
@@ -181,6 +173,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
 
   useEffect(() => {
     const hash = window.location.hash;
+    if (hash === "#comp-trends" && !showingTrends) return;
     if (homeUrl.current !== home && hash.startsWith("#guide-card-")) {
       window.history.replaceState(window.history.state, "", home);
     } else {
@@ -188,14 +181,16 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
     }
     homeUrl.current = home;
     window.dispatchEvent(new Event(guideNavigationChange));
-  }, [home]);
+  }, [home, showingTrends]);
 
   useEffect(() => {
     const restore = () => {
       if (window.location.pathname !== "/") return;
       const params = parseGuideFilters(Object.fromEntries(new URLSearchParams(window.location.search)));
-      const tab: View = params.view === "hero-augments" ? "hero-augments" : "regular";
+      const tab = filterView(params.view);
       setView(tab);
+      setFiltersOpen(false);
+      if (tab === "comp-trends") return;
       setQuery(params.q ?? "");
       setSort(defaultSort(tab, params));
       if (params.sort === "mean") setPerformance(familySortFrom(params));
@@ -203,22 +198,35 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
       setScope(params.scope ?? "all");
       setExclude(params.exclude);
       setChoices(previous => ({ ...previous, [tab]: {
-        category: categoryLabel(params.category ?? ""), style: params.style ?? "", cost: Number(params.cost) || 0,
+        category: params.category ?? "", style: params.style ?? "", cost: Number(params.cost) || 0,
       } }));
-      setFiltersOpen(false);
     };
+    const upgradeTrendAnchor = () => {
+      if (window.location.pathname !== "/" || window.location.hash !== "#comp-trends") return;
+      window.history.replaceState(window.history.state, "", guideNavigationHref("/", { view: "comp-trends" }, fromItem));
+      restore();
+    };
+    const frame = window.requestAnimationFrame(upgradeTrendAnchor);
     window.addEventListener("popstate", restore);
-    return () => window.removeEventListener("popstate", restore);
-  }, []);
+    window.addEventListener("hashchange", upgradeTrendAnchor);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("popstate", restore);
+      window.removeEventListener("hashchange", upgradeTrendAnchor);
+    };
+  }, [fromItem]);
 
   useEffect(() => {
     if (!filtersOpen) return;
     const panel = filterPanel.current;
     const sheet = panel?.querySelector(".guide-filter-sheet");
     const narrow = window.matchMedia("(max-width: 580px)");
-    if (narrow.matches) sheet?.querySelector<HTMLElement>("select, button")?.focus();
+    sheet?.querySelector("select")?.focus({ preventScroll: true });
     const handlePointer = (event: PointerEvent) => {
       if (!panel?.contains(event.target as Node)) setFiltersOpen(false);
+    };
+    const handleFocus = (event: FocusEvent) => {
+      if (!narrow.matches && !panel?.contains(event.target as Node)) setFiltersOpen(false);
     };
     const handleKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -237,9 +245,11 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
       }
     };
     document.addEventListener("pointerdown", handlePointer);
+    document.addEventListener("focusin", handleFocus);
     document.addEventListener("keydown", handleKey);
     return () => {
       document.removeEventListener("pointerdown", handlePointer);
+      document.removeEventListener("focusin", handleFocus);
       document.removeEventListener("keydown", handleKey);
     };
   }, [filtersOpen]);
@@ -261,14 +271,14 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
       const costOptions = [...costsByBoard.values()].flat().concat(rows.flatMap(({stat}) => rowCosts(stat)));
       const playstyle = guidePlaystyle(section);
       const filterStyle = playstyle ?? facet.style;
-      const viewCategory = browseCategory(section, playstyle);
+      const searchTopic = section.category === "纹章阵容" ? "纹章 转职" : "";
       const curated = patch?.build ? guideEquipmentConditions(section, teams, data, patch.build) : undefined;
-      return { section, data, teams, facet, family, rows, costsByBoard, rowCosts, costOptions, playstyle, filterStyle, viewCategory, curated, augment: heroAugmentForGuide(section) };
+      return { section, data, teams, facet, family, rows, costsByBoard, rowCosts, costOptions, playstyle, filterStyle, searchTopic, curated, augment: heroAugmentForGuide(section) };
     });
     return { regular: prepare(sections), "hero-augments": prepare(heroSections) };
   }, [sections, heroSections, season, patch?.build]);
 
-  const visible = library[view];
+  const visible = view === "comp-trends" ? [] : library[view];
   const hasCurrentStats = currentFamilyBatch(familyStats, season.id, patch);
   const familyDataEnd = Date.parse(familyStats.updatedAt);
   const patchStart = patch ? Date.parse(patch.effectiveAt) : NaN;
@@ -286,20 +296,20 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
     return () => window.clearTimeout(timer);
   }, [previousDeadline]);
   const hasCurrentCore = !!patch && canRankRecommendations(coreStats, season.id, patch);
-  const tierFilter = view === "regular" && tierOrder.includes(category) ? category : "";
+  const showTiers = view === "regular" && !recommended;
+  const tierFilter = showTiers ? category : "";
   const availableFacets = view === "regular" ? [...visible, ...library["hero-augments"]] : visible;
-  const categories = [...new Set([...visible.map(section => section.viewCategory).filter(Boolean), ...(!recommended && view === "regular" ? tierOrder : []), ...(category ? [category] : [])])]
-    .sort((a, b) => categoryPriority(a) - categoryPriority(b));
   const styles = new Map([...availableFacets.map(entry => entry.filterStyle), style].filter(Boolean)
     .map(tag => [guideStyleKey(tag), tag.replace(/^([一二三])费/, (text, digit: string) => ("一二三".indexOf(digit) + 1) + "费")] as const));
   const costs = [...new Set([...availableFacets.flatMap(entry => entry.costOptions), ...(cost ? [cost] : [])])].sort((a,b) => a-b);
   const decisions = new Map((recommendations?.entries ?? []).map(record => [`${record.sectionId}:${record.teamId}`, record]));
   function canShowBoard(section: Section, team: Team) {
-    if (!recommended) return true;
+    if (!recommended && !showingTrends) return true;
     const status = decisions.get(`${section.id}:${team.id}`)?.status;
     return status !== "review" && status !== "avoid";
   }
   const nextSelections = (target: View) => {
+    if (target === "comp-trends") return emptyFilters;
     if (choices[target]) return choices[target]!;
     const entries = library[target];
     return {
@@ -332,17 +342,17 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
 
   function candidatesFor(entries: typeof visible, terms = conditions, recommendationsOnly = recommended) {
     return entries.flatMap(entry => {
-      const { section, data, teams, filterStyle, augment, viewCategory } = entry;
+      const { section, data, teams, filterStyle, augment, searchTopic } = entry;
       const searchFamilies = recommendationsOnly && previousDeadline !== undefined && previousFamilyStats && previousFamilyStats !== homeFamilyStats
         ? [...entry.rows, ...guideFamilyRows(previousFamilyStats, data.id, section.id, teams)] : entry.rows;
-      if ((category && !tierFilter && viewCategory !== category) || (style && guideStyleKey(filterStyle) !== styleKey) || (cost && !entry.costOptions.includes(cost))) return [];
+      if ((style && !matchesGuideStyle(filterStyle, style)) || (cost && !entry.costOptions.includes(cost))) return [];
       const searchTeams = recommendationsOnly ? teams.filter(board => canShowBoard(section, board)) : teams;
       if (recommendationsOnly && !searchTeams.length) return [];
       const one = (term: string) => {
         const part = homeSearchIntent(term, terms.length === 1 ? intent.scope : "all");
         const component = season.items.find(item => item.category === "component" && guideSearchKey(item.name) === guideSearchKey(part.text.replace(/^散件[：:]?\s*/, "")));
         const args: Parameters<typeof matchHomeGuide>[1] = {
-        section, data, catalog: season, teams: searchTeams, style: filterStyle, category: viewCategory, augment, itemAliases, scope: part.scope, families: searchFamilies,
+        section, data, catalog: season, teams: searchTeams, style: filterStyle, category: searchTopic, augment, itemAliases, scope: part.scope, families: searchFamilies,
         isTransition: board => guideBoardKind(section, board, teams[0]) === "过渡",
         hasCarrySample: (board, id, stars) => guideCarryRows(data.id, section.id, board.id)
           .some(row => row.carryId === id && row.stars === stars && row.slots === 3 && row.games >= carryMinGames),
@@ -385,7 +395,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
     });
   }) : [];
   const isHeroList = view === "hero-augments";
-  const ranked = sort === "mean" && !isHeroList;
+  const ranked = sort === "mean" && view === "regular";
   const candidates = equipmentQuery && !ranked ? [] : candidatesFor(visible);
   const seen = new Set<string>();
   type Candidate = (typeof candidates)[number];
@@ -490,16 +500,18 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
   });
   else if (needle) results.sort((a, b) => b.rank - a.rank);
   const byCategory = !needle && sort === "category" && !isHeroList;
+  const heroConditionGroup = isHeroList && results.length > 0 && results.every(({ augment, curated }) =>
+    augment && curated?.rows.some(row => row.id === augment.id));
   const categoryGroups = new Map<string, Card[]>();
   for (const entry of results) {
-    const categoryName = byCategory ? tierLabels[entry.tier] : "";
+    const categoryName = byCategory ? tierLabels[entry.tier] : heroConditionGroup ? "海克斯定阵" : "";
     const group = categoryGroups.get(categoryName);
     if (group) group.push(entry);
     else categoryGroups.set(categoryName, [entry]);
   }
   const groups = [...categoryGroups].sort(([a], [b]) => tierOrder.indexOf(a) - tierOrder.indexOf(b));
   const groupLinks = byCategory && groups.length > 1 ? groups.map(([name], index) => ({
-    label: categoryDisplay(name).replace(/成型阵容$|阵容$/, ""), id: name === backupCategory ? "backup-guides" : "guide-group-" + index,
+    label: name, id: name === backupCategory ? "backup-guides" : "guide-group-" + index,
   })) : [];
 
   function homeRoutes(batch: GuideFamilySnapshot, entries: (typeof visible[number] & { matches?: Candidate["matches"] })[]) {
@@ -530,9 +542,14 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
   }
   const currentHomeEvidence = currentRecommendationEvidence(homeFamilyStats, season.id, patch);
   // Decide when to switch data for the whole home, independently of a visitor's filters.
-  const currentHomeReady = recommended && currentHomeEvidence && homeRoutes(homeFamilyStats, visible).length > 0;
+  const currentHomeRoutes = (recommended || showingTrends) && currentHomeEvidence ? homeRoutes(homeFamilyStats, library.regular) : [];
+  const currentHomeReady = currentHomeRoutes.length > 0;
   const recommendationSnapshot = currentHomeReady ? homeFamilyStats : previousDeadline !== undefined ? previousFamilyStats : undefined;
   const selectedRoutes = recommended && recommendationSnapshot ? homeRoutes(recommendationSnapshot, candidates) : [];
+  if (currentHomeReady && recommendations?.displayOrder) {
+    const positions = new Map(recommendations.displayOrder.map((id, index) => [id, index]));
+    selectedRoutes.sort((a, b) => (positions.get(a.team.id) ?? positions.size) - (positions.get(b.team.id) ?? positions.size));
+  }
   const recommendationCards: RecommendationCard[] = selectedRoutes.map(({ entry, exact, team, group, rating, strategy, conditional }) => {
     const { section, data } = entry;
     const notes = readingNotes(section, team, data);
@@ -675,9 +692,12 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
       const conditionId = heroCondition ? `${titleId}-condition` : undefined;
       const detailsIds = [rating?.games ? ratingId : "", review ? reviewId : "", conditionId].filter(Boolean).join(" ") || undefined;
       const repeatedFormation = !needle && !alternative && repeatsFormationLabel(playstyle, strategy);
-      const description = augment ? [augment.round, augment.label || augment.name, strategy].filter(Boolean).join(" · ")
+      const rollStyle = !augment && strategy && /^[1-5](?:\/[1-5])?费慢搜$/.test(strategy) ? strategy : undefined;
+      const styleTag = playstyle ?? rollStyle;
+      const strategyDetail = strategy && (!styleTag || guideStyleKey(strategy) !== guideStyleKey(styleTag)) ? strategy : undefined;
+      const description = augment ? [augment.round, augment.label || augment.name, strategyDetail].filter(Boolean).join(" · ")
         : alternative && team?.id !== family?.lead.team.id && kind && !title.includes(kind)
-          ? [kind, strategy].filter(Boolean).join(" · ") : repeatedFormation ? "" : strategy ?? (playstyle ? "" : facet.style);
+          ? [kind, strategyDetail].filter(Boolean).join(" · ") : repeatedFormation ? "" : strategyDetail ?? (styleTag ? "" : facet.style);
       const variants = [...new Map([{ section, teams, matches, rows }, ...siblings].flatMap(entry => {
         const options = needle ? entry.matches.filter(match => match.kind === "board").map(match => match.board) : entry.teams;
         return options.filter(option => {
@@ -700,13 +720,14 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
       })}</ul>;
       const conditionBoard = curated?.board?.id;
       const cardConditions = curated && (team?.id === conditionBoard || routes?.some(board => board.id === conditionBoard))
-        ? curated.rows.filter(row => row.featured) : [];
+        ? curated.rows.filter(row => row.featured || row.recipient) : [];
+      const conditionHeading = cardConditions.some(row => row.recipient) ? "定阵条件" : "顶级条件";
       return <article key={cardId} className={"guide-result" + (expanded ? " is-quick-open" : "")} id={"guide-card-" + cardId}>
         <a className="guide-result-main" href={link} data-home-board={team?.id} aria-labelledby={titleId} aria-describedby={detailsIds}>
           <div className="guide-title-row">
             <div className="guide-card-heading">
               <CardTitle className="guide-result-title" id={titleId}>{title}</CardTitle>
-              {playstyle && <span className="guide-playstyle-tag" title="打法">{playstyle}</span>}
+              {styleTag && <span className="guide-playstyle-tag" title="打法">{styleTag}</span>}
               {review && <span className="guide-review-badge" id={reviewId} title={review.note}>待复核</span>}
             </div>
             {rating && <span id={ratingId} className={"guide-placement " + (rating.mean < 4.5 ? "strong" : rating.mean > 4.5 ? "weak" : "middle")}
@@ -716,9 +737,11 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
             </span>}
           </div>
           {description && <small className="guide-result-meta" id={conditionId}>
-            {heroCondition ? <span className="guide-hero-condition">
-              <span className="guide-condition-tag"><GuideConditionIcon condition={heroCondition} size={16} />{guideConditionTag(heroCondition)}</span>
-              <span>{description}</span>
+            {heroCondition && augment ? <span className="guide-hero-condition">
+              <GuideConditionIcon condition={heroCondition} size={22} />
+              <strong className="guide-hero-condition-name">{heroCondition.name}</strong>
+              <span className="guide-hero-condition-round">{augment.round}</span>
+              {strategyDetail && <span>{strategyDetail}</span>}
             </span> : description}
           </small>}
           {formation && <small className="guide-result-meta">
@@ -728,10 +751,10 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
           {opening && <p>{opening}</p>}
           {needle && searchDetails && <small className="guide-result-meta">{searchDetails}</small>}
         </a>
-        {cardConditions.length > 0 && conditionBoard && <div className="guide-featured-conditions" aria-label="顶级条件">
-          <span>顶级条件</span>{cardConditions.map(condition => <a key={condition.id}
+        {cardConditions.length > 0 && conditionBoard && <div className="guide-featured-conditions" aria-label={conditionHeading}>
+          <span>{conditionHeading}</span>{cardConditions.map(condition => <a key={condition.id}
             href={conditionLink(section.id, conditionBoard, cardId)} data-home-board={conditionBoard}>
-            <GuideConditionIcon condition={condition} size={19} />{condition.name}
+            <GuideConditionIcon condition={condition} size={19} />{guideConditionName(condition)}
           </a>)}
         </div>}
         {team && <>
@@ -766,7 +789,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
   };
 
   const filterChips = [
-    ...(category ? [{ id: "category", text: categoryDisplay(category), remove: () => choose({ category: "" }) }] : []),
+    ...(category ? [{ id: "category", text: category, remove: () => choose({ category: "" }) }] : []),
     ...(cost ? [{ id: "cost", text: cost + " 费主C", remove: () => choose({ cost: 0 }) }] : []),
   ];
   const closeFilters = () => {
@@ -774,7 +797,17 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
     filterPanel.current?.querySelector("summary")?.focus();
   };
 
-  return <div className="home-guide-library" data-archive={view === "regular" && !recommended || undefined}>
+  const trendModel = showingTrends && trends && {
+    ...trends,
+    tracks: trends.tracks.map(track => ({
+      ...track,
+      href: guideFromTrends(track.href, home),
+      recommended: track.recommended && currentHomeRoutes.some(route => track.recommendedKey === String(route.rating.clusterId)),
+    })),
+    discoveries: trends.discoveries.map(discovery => ({ ...discovery, href: guideFromTrends(discovery.href, home) })),
+  };
+
+  return <div className="home-guide-library" data-archive={view === "regular" && !recommended || undefined} data-trends={showingTrends || undefined}>
     <HomeGuideBanner patch={patch} />
     {fromItem && <a className="text-link guide-gear-return" href={fromItem}>返回装备图鉴</a>}
     <div className="home-browse-controls">
@@ -786,9 +819,11 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
             aria-current={view === "regular" && !recommended ? "page" : undefined} onClick={event => changeView(event, "regular", archiveSort)}>全部攻略</a>
           {heroSections.length > 0 && <a href={homeLink("hero-augments", nextSelections("hero-augments"), sort)}
             aria-current={view === "hero-augments" ? "page" : undefined} onClick={event => changeView(event, "hero-augments")}>英雄强化</a>}
+          <a href={homeLink("comp-trends", emptyFilters, sort)} aria-current={showingTrends ? "page" : undefined}
+            onClick={event => changeView(event, "comp-trends")}>阵容趋势</a>
         </nav>
       </div>
-      <div className="filters guide-filters" data-inline-style={styles.size ? true : undefined}>
+      {!showingTrends && <div className="filters guide-filters" data-inline-style={styles.size ? true : undefined}>
         <div className="guide-search-field" data-equipment={selectedGear ? true : undefined}>
           {!selectedGear && <Search className="home-search-icon" size={16} aria-hidden />}
           {selectedGear && <button className="home-gear-chip" type="button" aria-label={"移除" + selectedGear.name}
@@ -815,32 +850,47 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
             <option value="">全部</option>{Array.from(styles, ([key, tag]) => <option key={key} value={key}>{tag}</option>)}
           </select>
         </label>}
-        {(categories.length > 1 || costs.length > 0) && <details ref={filterPanel} className="guide-extra-filters" open={filtersOpen}>
-          <summary onClick={event => { event.preventDefault(); setFiltersOpen(!filtersOpen); }}>筛选{filterChips.length ? <span className="guide-filter-number">{filterChips.length}</span> : null}</summary>
+        {(showTiers || costs.length > 0) && <details ref={filterPanel} className="guide-extra-filters" open={filtersOpen}>
+          <summary onClick={event => { event.preventDefault(); setFiltersOpen(!filtersOpen); }}>
+            筛选{filterChips.length > 0 && <span className="guide-filter-number">{filterChips.length}</span>}
+          </summary>
           <div className="guide-filter-sheet" role="region" aria-label="筛选阵容">
-            <div className="guide-filter-sheet-heading"><button type="button" onClick={closeFilters}>完成</button></div>
-            {categories.length > 1 && <select aria-label="阵容分类筛选" value={category} onChange={event => choose({ category: event.target.value })}>
-              <option value="">全部分类</option>
-              {categories.map(value => <option key={value} value={value}>{categoryDisplay(value).replace(/阵容$/, "") || value}</option>)}
-            </select>}
-            {costs.length > 0 && <select aria-label="按主C费用筛选" value={cost} onChange={event => choose({ cost: Number(event.target.value) })}>
-              <option value={0}>全部主C费用</option>{costs.map(gold => <option key={gold} value={gold}>{gold} 费主C</option>)}
-            </select>}
+            {showTiers && <label className="guide-filter-field">
+              <span>推荐档位</span>
+              <select aria-label="按推荐档位筛选" value={category} onChange={event => choose({ category: event.target.value })}>
+                <option value="">全部</option>
+                {tierOrder.map(value => <option key={value} value={value}>{value}</option>)}
+              </select>
+            </label>}
+            {costs.length > 0 && <label className="guide-filter-field">
+              <span>主C费用</span>
+              <select aria-label="按主C费用筛选" value={cost} onChange={event => choose({ cost: Number(event.target.value) })}>
+                <option value={0}>全部</option>{costs.map(gold => <option key={gold} value={gold}>{gold} 费</option>)}
+              </select>
+            </label>}
+            <footer className="guide-filter-sheet-actions">
+              <button type="button" onClick={closeFilters}>收起</button>
+            </footer>
           </div>
           <div className="guide-filter-backdrop" onClick={closeFilters} aria-hidden="true" />
         </details>}
-        {(hasUnitQuery || filterChips.length > 0 || (needle && displayedCount > 0) || (!selectedGear && conditions.length>1)) && <div className="guide-filter-chips">
+        {(hasUnitQuery || filterChips.length > 0 || (!ranked && needle && displayedCount > 0) || (!selectedGear && conditions.length>1)) && <div className="guide-filter-chips">
           {!selectedGear && conditions.length>1 && <div className="quick-conditions" aria-label="查询条件">{conditions.map(term=><button type="button" key={term} className="guide-filter-chip" aria-label={"移除"+term} onClick={()=>changeQuery(conditions.filter(t=>t!==term).join(" + "))}>{term} <span aria-hidden>×</span></button>)}</div>}
           {hasUnitQuery && <div className="guide-search-scope" role="group" aria-label="棋子检索范围">
             {(["all","carry","unit"] as const).map((option, index) => <button key={option} type="button" aria-pressed={intent.scope === option}
               onClick={() => { setQuery(intent.text); setScope(option); }}>{["全部","主C","含棋子"][index]}</button>)}
           </div>}
           {filterChips.map(chip => <button key={chip.id} type="button" className="guide-filter-chip" aria-label={"移除" + chip.text} onClick={chip.remove}>{chip.text} <span aria-hidden="true">×</span></button>)}
-          {displayedCount > 0 && <span className="guide-result-count" aria-hidden="true">{displayedCount} 套阵容</span>}
-          {filterChips.length > 0 && <button type="button" className="guide-filter-clear" onClick={() => choose(emptyFilters)}>清除筛选</button>}
+          {!ranked && displayedCount > 0 && <span className="guide-result-count" aria-hidden="true">{displayedCount} 套阵容</span>}
+          {filterChips.length + Number(Boolean(styleKey)) > 1 && <button type="button" className="guide-filter-clear" onClick={() => choose(emptyFilters)}>清除筛选</button>}
         </div>}
-      </div>
+      </div>}
     </div>
+    {showingTrends && <>
+      {trendModel ? <CompTrendPanel model={trendModel} /> : <p className="site-lookup-message">阵容趋势数据待更新</p>}
+      {artifactRanking}
+    </>}
+    {!showingTrends && <>
     {view === "regular" && !recommended && <div className="home-archive-tools">
       <nav className="home-archive-switch" aria-label="全部攻略视图">
         {archiveViews.map(([option, label]) =>
@@ -922,8 +972,9 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
     {!recommended && groups.length > 0 && <div className="guide-sections">{groups.map(([name, entries], index) => {
       const cards = renderCards(entries, name, index === 0);
       const headingId = "guide-group-" + index;
-      return name ? <section key={name} id={name === backupCategory ? "backup-guides" : undefined} className="guide-section" aria-labelledby={headingId}>
-        <h2 id={headingId}>{categoryDisplay(name)}</h2>
+      return name ? <section key={name} id={name === backupCategory ? "backup-guides" : undefined} className="guide-section"
+        aria-labelledby={headingId} data-hero-conditions={heroConditionGroup || undefined}>
+        <h2 id={headingId}>{name}</h2>
         {index === 0 && groupLinks.length > 0 && <details className="home-group-jump-mobile"><summary>跳到分组</summary><div>
           {groupLinks.map(group => <a key={group.id} href={"#" + group.id} onClick={event => { event.currentTarget.closest("details")!.open = false; }}>{group.label}</a>)}
         </div></details>}
@@ -931,5 +982,6 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
       </section> : <Fragment key={name}>{cards}</Fragment>;
     })}</div>}
     {!recommended && !displayedCount && !searching && (ranked || (!crossTab.length && !showLookup)) && emptyState}
+    </>}
   </div>;
 }

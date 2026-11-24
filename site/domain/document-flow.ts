@@ -5,8 +5,14 @@ import type { Team } from "./types";
 export function sectionTeams(section: Section): Team[] {
   return [...new Map([...(section.team ? [section.team] : []), ...(section.teams ?? [])].map(team => [team.id, team])).values()];
 }
+function hasContent(blocks: ContentBlock[]): boolean {
+  return blocks.some(block => block.type === "image" || !!block.text?.trim() ||
+    block.elements?.some(element => element.mention_doc || element.text_run?.content.trim()) ||
+    (block.children && hasContent(block.children)));
+}
 export function readableSection(section: Section) {
-  return section.kind !== "category" && !(section.title === section.category && !section.blocks.length && !sectionTeams(section).length);
+  return section.kind !== "category" && (section.title !== section.category ||
+    sectionTeams(section).length > 0 || hasContent(section.blocks));
 }
 export function findSection(sections: Section[], headingId: string) {
   return sections.find(section => section.id === headingId || section.sourceHeadingIds?.includes(headingId));
@@ -14,7 +20,7 @@ export function findSection(sections: Section[], headingId: string) {
 const documentCategories = new Set([
   "连胜成型阵容", "连败成型阵容", "次选成熟阵容", "条件定阵阵容", "非常规构筑",
   "个人理解", "更新记录", "慢搜阵容", "高费阵容", "史密奇阵容", "PBE试阵", "纹章阵容", "英雄强化阵容",
-  "版本更新",
+  "版本更新", "八级运营", "国风九五", "高能流行与天才慢搜", "芸阿娜慢搜",
 ]);
 
 function boldLabel(elements?: RichElement[]) {
@@ -36,7 +42,7 @@ export function splitSections(entries: { id: string; level?: number; title: stri
   let current: Section = { id: "introduction", title: category, category, blocks: [], kind: "note", sourceHeadingIds: [] };
   const flush = () => {
     if (current.id === "introduction" && !current.blocks.length) return;
-    if (current.kind === "category" && current.blocks.length) current.kind = "note";
+    if (current.kind === "category" && hasContent(current.blocks)) current.kind = "note";
     sections.push(current);
   };
   for (const entry of entries) {

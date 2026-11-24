@@ -18,8 +18,7 @@ export function EmblemEntryPosition({ traitId, holderId }: { traitId?: string; h
     const frame = requestAnimationFrame(() => {
       const wearer = holder ? detail.querySelector("tr[data-highlight]")?.getBoundingClientRect() : undefined;
       const headerHeight = document.querySelector(".emblem-column-head")?.getBoundingClientRect().height ?? 0;
-      const mastheadBottom = document.querySelector(".site-header")?.getBoundingClientRect().bottom ?? 0;
-      const top = mastheadBottom + headerHeight + 8;
+      const top = headerHeight + 8;
       const bottom = innerHeight - 16;
       const rowBounds = row.getBoundingClientRect();
       const targetBottom = wearer?.bottom ?? rowBounds.bottom;

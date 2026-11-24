@@ -41,6 +41,14 @@ export function guideStyleKey(value: string) {
     .replace(/慢d$/, "慢搜").replace(/运营$/, "");
 }
 
+export function matchesGuideStyle(actual: string, requested: string) {
+  const key = guideStyleKey(actual);
+  const filter = guideStyleKey(requested);
+  if (filter === "慢搜") return key.includes("慢搜") || key.includes("追三");
+  if (filter === "高费") return key === "速八" || key === "速九";
+  return key === filter;
+}
+
 export function guideTraitNames(trait: Season["traits"][number]) {
   return [trait.gameName ?? "", trait.name, trait.nameEn, ...(trait.aliases ?? [])].map(key).filter(Boolean);
 }

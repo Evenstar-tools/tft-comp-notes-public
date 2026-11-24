@@ -61,7 +61,7 @@ function ComboResult({
   from: string;
   allOne: boolean;
 }) {
-  const [indices, , , , , cost, , unlockFive, upgrades] = row;
+  const [indices, , , , , cost, , , upgrades] = row;
   const { mask, pending } = comboStarMask(indices, allOne ? 0 : upgrades, heldAtTwo, heroes);
   const currentTier = comboTierCounts(indices, mask, heroes, tiers.traits);
   const jazzCount = purpose === "jazz" ? indices.filter(id => heroes[id].siteTraits.includes("jazz")).length : 0;
@@ -76,11 +76,15 @@ function ComboResult({
   );
   const siteOnly = activeSite.filter((t) => !common.includes(t));
   const dataOnly = activeData.filter((t) => !common.includes(t));
-  const previewTraits = (purpose === "bronze" ? currentTier.bronze : common.map(trait => trait.id))
+  const bronzeMode = purpose === "bronze";
+  const previewTraits = (bronzeMode ? currentTier.bronze : common.map(trait => trait.id))
     .flatMap(id => {
       const trait = traitMap.get(id);
       return trait ? [trait] : [];
     });
+  const listedTraits = bronzeMode
+    ? common.filter(trait => !previewTraits.some(preview => preview.id === trait.id))
+    : common;
   const code = indices
     .map((id, i) => heroes[id].id + (mask & (1 << i) ? ":2" : ""))
     .join(".");
@@ -88,13 +92,13 @@ function ComboResult({
     <article className="combo-result">
       <header>
         <h2>
-          {purpose === "jazz" ? <><strong>{jazzCount}</strong> 爵士乐 <small>{currentTier.activeCount} 个常规羁绊</small></> :
-            purpose === "bronze" ? <><strong>{currentTier.bronze.length}</strong> 个铜色羁绊</> :
-              <><strong>{Math.min(site, data)}</strong> 个常规羁绊</>}
+          {purpose === "jazz" ? <><strong>{jazzCount}</strong> 爵士乐 <small>{currentTier.activeCount} 羁绊</small></> :
+            bronzeMode ? <><strong>{currentTier.bronze.length}</strong> 铜档</> :
+              <><strong>{Math.min(site, data)}</strong> 羁绊</>}
         </h2>
         <div className="combo-result-actions">
           {hand.length > 0 && <strong className="combo-missing">{needed.length ? "缺 " + needed.length + " 张" : "手牌已齐"}</strong>}
-          <span title="每名棋子按一张计价">{cost} 金{unlockFive ? " · 含解锁五费" : ""}</span>
+          <span title="每名棋子按一张计价">{cost} 金</span>
           <a
             className="button combo-import"
             aria-label="带入编辑器"
@@ -145,23 +149,23 @@ function ComboResult({
       <footer>
         <details>
           <summary>
-            <span>{purpose === "bronze" ? "铜色羁绊" : "羁绊明细"}</span>
+            <span>羁绊明细</span>
             {!!previewTraits.length && <span className="combo-trait-preview" aria-hidden="true">
               {previewTraits.map(trait => <span key={trait.id} title={trait.name}><TraitBadge trait={trait} size={19} tone="active" /></span>)}
             </span>}
           </summary>
-          {purpose === "bronze" && !!previewTraits.length && <p>铜档 · {previewTraits.map(trait => trait.name).join("、")}</p>}
-          {(siteOnly.length > 0 || dataOnly.length > 0) && <p>本站 {site} · DataTFT {data}</p>}
-          <p>{common.map((t) => t.siteName).join("、")}</p>
+          {bronzeMode && !!previewTraits.length && <p><b>铜档</b> {previewTraits.map(trait => trait.name).join("、")}</p>}
+          {!!listedTraits.length && <p>{bronzeMode && <b>其他羁绊</b>} {listedTraits.map(trait => trait.siteName).join("、")}</p>}
+          {(siteOnly.length > 0 || dataOnly.length > 0) && <p><b>口径差异</b> 本站 {site} · DataTFT {data}</p>}
           {!!siteOnly.length && (
-            <p>仅站内计入 · {siteOnly.map((t) => t.siteName).join("、")}</p>
+            <p><b>仅本站</b> {siteOnly.map((t) => t.siteName).join("、")}</p>
           )}
           {!!dataOnly.length && (
-            <p>仅 DataTFT 计入 · {dataOnly.map((t) => t.name).join("、")}</p>
+            <p><b>仅 DataTFT</b> {dataOnly.map((t) => t.name).join("、")}</p>
           )}
           {common.some((t) => t.name !== t.siteName) && (
             <p>
-              名称对照（站内 / DataTFT） ·{" "}
+              <b>名称对照</b>{" "}
               {common
                 .filter((t) => t.name !== t.siteName)
                 .map((t) => t.siteName + " / " + t.name)
@@ -291,7 +295,7 @@ export function ComboLibrary() {
     setAllOne(false);
   }
   return (
-    <>
+    <div className="combo-library">
       <div className="page-heading combo-heading">
         <h1>八人口羁绊组合</h1>
         <div className="combo-purpose" role="group" aria-label="组合用途">
@@ -356,15 +360,15 @@ export function ComboLibrary() {
             >
               {[8, 9, 10].map((n) => (
                 <option key={n} value={n}>
-                  至少 {n} 个常规羁绊
+                  {n} 个常规羁绊起
                 </option>
               ))}
             </select>
           </label>
           {purpose === "bronze" && <label className="combo-select"><select aria-label="最低铜色羁绊数" value={minimumBronze} onChange={e => { setMinimumBronze(Number(e.target.value)); setPage(1); }}>
-            <option value={0}>不限铜色数量</option>{[1,2,3,4,5,6,7,8,9,10,11].map(n => <option key={n} value={n}>至少 {n} 个铜色</option>)}
+            <option value={0}>铜档不限</option>{[1,2,3,4,5,6,7,8,9,10,11].map(n => <option key={n} value={n}>{n} 个铜档起</option>)}
           </select></label>}
-          <label className="check">
+          <label className="check" title={heldAtTwo.size ? "手牌已有二星棋子" : undefined}>
             <input
               type="checkbox"
               checked={allOne}
@@ -414,8 +418,11 @@ export function ComboLibrary() {
         </strong>
         <details className="combo-rules">
           <summary>计算规则</summary>
-          <p>{purpose === "bronze" ? "按当前棋盘星级计铜档，当局合奏和额外纹章另计。" : "专属和动态羁绊不计，K/DA 每人最多两星。"}</p>
-          <p>费用按每人一张计算。8–9 羁绊收录已验证的部分组合。<a href={tiers.localizedLookupUrl} target="_blank" rel="noreferrer" title={tiers.build}>档位来源</a></p>
+          <div className="combo-rule-content">
+            <p>{purpose === "bronze" ? "按当前棋盘星级计铜档，当局合奏和额外纹章另计。" : "专属和动态羁绊不计，K/DA 每人最多两星。"}</p>
+            <p>费用按每人一张计算。8–9 羁绊收录已验证的部分组合。</p>
+            <a href={tiers.localizedLookupUrl} target="_blank" rel="noreferrer" title={tiers.build}>档位来源</a>
+          </div>
         </details>
       </div>
       {failure && !rows ? (
@@ -478,6 +485,6 @@ export function ComboLibrary() {
           </button>
         </nav>
       )}
-    </>
+    </div>
   );
 }

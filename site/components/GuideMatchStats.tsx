@@ -116,7 +116,7 @@ export function GuideMatchStats({ id, stage, team, teams, section, edition, augm
   return <section id={id} className="guide-match-stats" aria-label="阵容战绩">
     <div className="guide-stat-switch" role="group" aria-label="战绩范围">
       {views.map(([value]) => {
-        const total = countLabel(groups[value]);
+        const total = value === "board" && rating?.games ? "" : countLabel(groups[value]);
         return <button key={value} type="button" aria-pressed={activeView === value} onClick={() => onSelectView(value)}>
           <span>{viewLabel(value)}</span>
           {total && <small>{total}</small>}
@@ -125,7 +125,6 @@ export function GuideMatchStats({ id, stage, team, teams, section, edition, augm
     </div>
     <div className="guide-stat-body">
       {activeView === "board" && <>
-        {!heroGuide && !rating?.games && <p className="muted guide-stat-scope">按结算等级和完整名单统计。</p>}
         {rating?.games ? <PlacementSummary rating={rating} stage={stage} />
           : !formation && <p className="muted">{heroGuide ? "本盘暂无强化样本。" : "本盘暂无固定名单样本。"}</p>}
         {formation && <GuideFormationStats evidence={formation} />}

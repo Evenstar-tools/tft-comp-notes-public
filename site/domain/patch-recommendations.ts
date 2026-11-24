@@ -17,6 +17,7 @@ export type PatchRecommendationBatch = {
   reviewedAt: string;
   window?: { start: string; end: string };
   summary?: string;
+  displayOrder?: string[];
   entries: PatchRecommendation[];
 };
 

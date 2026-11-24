@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { complementItems, guideRoster, type GuideRole } from "@/domain/guide-reading";
 import { compactUtilityCopy } from "@/domain/guide-copy";
@@ -21,6 +21,11 @@ export function GuideEquipment({ team, data, roles, selectedPiece, onSelectPiece
   sectionId?: string; guideStats?: boolean;
 }) {
   const [partId, setPartId] = useState("");
+  const [showNames, setShowNames] = useState(false);
+  const loadoutsId = useId();
+  useEffect(() => {
+    try { setShowNames(sessionStorage.getItem("tft.guide.showGearNames") === "true"); } catch { /* Storage is optional. */ }
+  }, []);
   const items = new Map(data.items.map(item => [item.id, item]));
   const units = new Map(data.units.map(unit => [unit.id, unit]));
   const members = guideRoster(team, data, roles);
@@ -52,7 +57,7 @@ export function GuideEquipment({ team, data, roles, selectedPiece, onSelectPiece
   function memberButton({ piece, unit, role }: { piece: Piece; unit: Unit; role?: string }) {
     const repeated = members.some(member => member.unit.id === unit.id && member.piece.instanceId !== piece.instanceId);
     const label = unit.name + (repeated ? " · 第 " + (Math.floor(piece.position / 7) + 1) + " 排第 " + (piece.position % 7 + 1) + " 格" : "");
-    return <button className="guide-member-button" type="button" aria-label={label}
+    return <button className="guide-member-button" type="button" aria-label={label} aria-description={[role, piece.stars + " 星"].filter(Boolean).join(" · ")}
       aria-pressed={selectedPiece === piece.instanceId} onClick={event => onSelectPiece(piece.instanceId, event.currentTarget)}>
       <img src={unit.image} width={42} height={42} alt="" loading="lazy" className={"guide-piece-portrait cost-" + unit.cost} />
       <span><strong title={unit.name}>{unitShortNames[unit.id] ?? unit.name}</strong><small>{role && <>{role} · </>}{piece.stars} 星</small></span>
@@ -81,7 +86,16 @@ export function GuideEquipment({ team, data, roles, selectedPiece, onSelectPiece
   </div> : undefined;
 
   return <section className="guide-gear" aria-label="当前棋盘配装">
-    <h3>{equipped.length ? "配装" : "阵容棋子"}</h3>
+    <div className="guide-gear-heading">
+      <h3>{equipped.length ? "配装" : "阵容棋子"}</h3>
+      {!!equipped.length && <label className="guide-gear-name-toggle">
+        <input type="checkbox" checked={showNames} aria-controls={loadoutsId} onChange={event => {
+          const checked = event.currentTarget.checked;
+          setShowNames(checked);
+          try { sessionStorage.setItem("tft.guide.showGearNames", String(checked)); } catch { /* Keep the selection in this view. */ }
+        }} />装备名
+      </label>}
+    </div>
     {opening && <section className="guide-opening-gear" aria-label="开装与接装">
       <h4>开装与接装</h4>
       <ul>{opening.rows.map(row => <li key={row.to.id} className="guide-gear-handoff">
@@ -100,28 +114,30 @@ export function GuideEquipment({ team, data, roles, selectedPiece, onSelectPiece
       </li>)}</ul>
       <p>{opening.note}</p>
     </section>}
-    {!!equipped.length && <ul className="guide-loadouts">{equipped.map(member => {
+    {!!equipped.length && <ul className="guide-loadouts" id={loadoutsId} data-item-names={showNames || undefined}>{equipped.map(member => {
       const utility = utilityNote(member.unit.id);
       return <li className="guide-loadout" key={member.piece.instanceId}>
         {memberButton(member)}
         <ul className="guide-loadout-gear">{member.piece.items.map((id, index) => {
           const item = items.get(id);
           return <li key={id + index}>{item
-            ? <a className="guide-loadout-slot" href={itemLink(id, member.unit.id, guideHref)} title={item.name} aria-label={item.name}>
-                <ItemIcon item={item} size={30} />
-                <span className="guide-item-label">{equipmentLabel(item)}</span>
+            ? <a className="guide-loadout-slot" href={itemLink(id, member.unit.id, guideHref)} aria-label={item.name} data-item-name={item.name}>
+                <ItemIcon item={item} size={36} />
+                {showNames && <span className="guide-item-label">{equipmentLabel(item)}</span>}
               </a>
-            : <span className="guide-loadout-slot" role="img" title={id} aria-label={"未知装备 " + id}><ItemIcon size={30} /></span>}</li>;
+            : <span className="guide-loadout-slot" role="img" title={id} aria-label={"未知装备 " + id}><ItemIcon size={36} /></span>}</li>;
         })}</ul>
         {utility && <p className="guide-loadout-note">{utility}</p>}
         {sample?.unitId === member.unit.id && sample.stars === member.piece.stars &&
           <ThirdGear sample={sample} piece={member.piece} items={items} traitName={data.traits.find(trait => trait.id === sample.traitId)?.name ?? ""} />}
       </li>;
     })}</ul>}
-    <CarouselGear targets={targets} items={items} seasonId={data.id} recipes={recipes} />
-    {!!others.length && (equipped.length ? <details className="guide-unequipped">
-      <summary>其余棋子 <span>{others.length}</span></summary>
-      {roster}
-    </details> : roster)}
+    {equipped.length ? <div className="guide-gear-tools">
+      <CarouselGear targets={targets} items={items} seasonId={data.id} recipes={recipes} />
+      {!!others.length && <details className="guide-unequipped">
+        <summary>其余棋子 <span>{others.length}</span></summary>
+        {roster}
+      </details>}
+    </div> : roster}
   </section>;
 }

@@ -1,4 +1,4 @@
-import type { Item } from "./types";
+import type { Item, Piece } from "./types";
 
 type RecipeBook = ReadonlyMap<string, Item | null>;
 export type EquipmentChoice = { items: string[]; result?: Item };
@@ -31,6 +31,22 @@ export function equipItem(worn: string[], item: Item, recipes: RecipeBook): Equi
     }
   }
   return worn.length < 3 ? { items: [...worn, item.id] } : null;
+}
+
+export function transferEquipment(
+  pieces: Piece[], fromId: string, itemIndex: number, item: Item, toId: string, recipes: RecipeBook,
+): Piece[] {
+  if (fromId === toId) return pieces;
+  const from = pieces.find(piece => piece.instanceId === fromId);
+  const to = pieces.find(piece => piece.instanceId === toId);
+  if (!from || !to || from.items[itemIndex] !== item.id) return pieces;
+  const equipped = equipItem(to.items, item, recipes);
+  if (!equipped) return pieces;
+  return pieces.map(piece => {
+    if (piece === from) return { ...piece, items: from.items.filter((_, index) => index !== itemIndex) };
+    if (piece === to) return { ...piece, items: equipped.items };
+    return piece;
+  });
 }
 
 // Older drafts and imported boards can already hold both ingredients.

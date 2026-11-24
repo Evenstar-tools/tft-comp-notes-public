@@ -65,6 +65,15 @@ body:has(.editor) .site-footer {display:none}
 .editor .board [data-drag-source] {opacity:.35}
 .editor .board .board-drag-ghost {z-index:4;pointer-events:none;will-change:transform}
 .editor .board-drag-ghost * {pointer-events:none}
+.editor .board-item-grip {display:inline-flex;position:relative;cursor:grab;touch-action:none}
+.editor .board-item-grip > .board-item {pointer-events:none;transition:transform 100ms ease-out}
+.editor .board-item-grip:not([data-drag-source]):hover {z-index:3}
+.editor .board-item-grip:not([data-drag-source]):hover > .board-item {transform:scale(1.24)}
+.editor .board .board-equipment-ghost {position:absolute;cursor:grabbing}
+.editor .board-equipment-ghost > .board-item {width:100%!important;height:100%!important;transition:none}
+@media (prefers-reduced-motion:reduce) {
+  .editor .board-item-grip > .board-item {transition:none}
+}
 .editor .board-alternate {
   position:absolute;z-index:2;display:grid;place-items:center;
   width:clamp(22px,5.7cqw,34px);height:auto;aspect-ratio:1;min-height:0;padding:0;

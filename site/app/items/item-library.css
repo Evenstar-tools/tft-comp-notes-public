@@ -167,10 +167,12 @@
 .gear-rank-head {color:var(--muted);font-size:.8125rem;}
 @media (min-width:861px) {
   .gear-rank-head {position:sticky;top:0;z-index:3;background:var(--bg);}
-  .gear-pick-kind[data-kind="best"] {visibility:hidden;}
+  .gear-rank[data-holder-mode] .gear-rank-holders {grid-template-columns:repeat(3,minmax(0,1fr));}
+  .gear-rank[data-holder-mode] .gear-pick-kind {display:none;}
+  .gear-rank-head>:last-child,.gear-rank-holders {border-inline-start:1px solid var(--line);}
 }
 .gear-rank-head>:is(:nth-child(2),:nth-child(3),:nth-child(4)) {text-align:end;}
-.gear-rank-head small {font-size:inherit;}
+.gear-rank-head small {margin-inline-start:5px;font-size:inherit;}
 .gear-rank-head>:last-child,.gear-rank-holders {padding-inline-start:8px;}
 .gear-rank-list {margin:0;padding:0;list-style:none;border:1px solid var(--line);border-radius:8px;background:var(--panel);}
 .gear-rank-entry+.gear-rank-entry {border-block-start:1px solid var(--line);}

@@ -62,7 +62,7 @@ export function ConditionalGear({ lockedItems, wearer = "", wearerIds = defaultW
   const [visibleCount, setVisibleCount] = useState(initialResultCount);
   const [attempt, setAttempt] = useState(0);
   const [globalResult, setGlobalResult] = useState<{ key: string; data: GlobalSample | null }>();
-  const query = new URLSearchParams({ unit: unitId, stars: String(stars) });
+  const query = new URLSearchParams({ unit: unitId, stars: String(stars), view: "table" });
   for (const id of lockedIds) query.append("item", id);
   if (period) query.set("stats", period);
   const requestUrl = "/api/gear-builds?" + query;
@@ -92,7 +92,8 @@ export function ConditionalGear({ lockedItems, wearer = "", wearerIds = defaultW
     [level ? level + " 人口" : "", tier && traitId ? tier + " " + (traitMap.get(traitId)?.name ?? traitId) : ""].filter(Boolean).join(" · ") || "全部结算盘";
   const singleItem = lockedItems[0];
   const resultLabel = lockedIds.length === 2 ? "第三件装备" : lockedIds.length === 1 ? "剩余两件" : "装备组合";
-  const meanHint = `少于 ${number.format(global?.minGames ?? conditionalGearSource.minGames)} 场时，均名显示为「—」。`;
+  const minGames = global?.minGames ?? conditionalGearSource.minGames;
+  const meanHint = `少于 ${number.format(minGames)} 场标为「少样本」。`;
   function changeUnit(id: string) {
     setUnitChoice({ wearer, unitId: id });
     setStarChoice(undefined);
@@ -174,7 +175,9 @@ export function ConditionalGear({ lockedItems, wearer = "", wearerIds = defaultW
               return <span key={index}><ItemIcon item={gear} size={24} />{itemName(gear)}</span>;
             })}</div></td>
             <td>{number.format(row.games)}</td>
-            <td>{row.mean === null ? <span className="conditional-gear-small">—</span> : row.mean.toFixed(2)}</td>
+            <td>{row.mean === null ? <span className="conditional-gear-small">—</span> : row.games < minGames
+              ? <span className="conditional-gear-small"><small>少样本</small>{row.mean.toFixed(2)}</span>
+              : row.mean.toFixed(2)}</td>
           </tr>)}
         </tbody>
       </table>
