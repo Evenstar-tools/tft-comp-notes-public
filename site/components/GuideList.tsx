@@ -29,7 +29,7 @@ import { guideBoardKind } from "./GuidePlacement";
 import { formationCoreResult } from "./GuideFormationStats";
 import { PatchRecommendationList, type RecommendationCard } from "./PatchRecommendationList";
 import { GuideConditionIcon } from "./GuideEquipmentConditions";
-import { guideConditionTag, guideConditionsAnchor, guideEquipmentConditions } from "@/domain/guide-equipment-conditions";
+import { guideConditionName, guideConditionsAnchor, guideEquipmentConditions } from "@/domain/guide-equipment-conditions";
 import { HomeGearSearch, isHomeGear } from "./HomeGearSearch";
 import { GuideCardBoard, GuideQuickView } from "./GuideCardBoard";
 import { GuideStatsTable, guideStatsMetricLabels, type GuideStatsTableRow } from "./GuideStatsTable";
@@ -684,7 +684,8 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
       })}</ul>;
       const conditionBoard = curated?.board?.id;
       const cardConditions = curated && (team?.id === conditionBoard || routes?.some(board => board.id === conditionBoard))
-        ? curated.rows.filter(row => row.featured) : [];
+        ? curated.rows.filter(row => row.featured || row.recipient) : [];
+      const conditionHeading = cardConditions.some(row => row.recipient) ? "定阵条件" : "顶级条件";
       return <article key={cardId} className={"guide-result" + (expanded ? " is-quick-open" : "")} id={"guide-card-" + cardId}>
         <a className="guide-result-main" href={link} data-home-board={team?.id} aria-labelledby={titleId} aria-describedby={detailsIds}>
           <div className="guide-title-row">
@@ -701,15 +702,10 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
           </div>
           {description && <small className="guide-result-meta" id={conditionId}>
             {heroCondition && augment ? <span className="guide-hero-condition">
-              {heroConditionGroup ? <>
-                <GuideConditionIcon condition={heroCondition} size={22} />
-                <strong className="guide-hero-condition-name">{augment.label || augment.name}</strong>
-                <span className="guide-hero-condition-round">{augment.round}</span>
-                {strategyDetail && <span>{strategyDetail}</span>}
-              </> : <>
-                <span className="guide-condition-tag"><GuideConditionIcon condition={heroCondition} size={16} />{guideConditionTag(heroCondition)}</span>
-                <span>{description}</span>
-              </>}
+              <GuideConditionIcon condition={heroCondition} size={22} />
+              <strong className="guide-hero-condition-name">{heroCondition.name}</strong>
+              <span className="guide-hero-condition-round">{augment.round}</span>
+              {strategyDetail && <span>{strategyDetail}</span>}
             </span> : description}
           </small>}
           {formation && <small className="guide-result-meta">
@@ -719,10 +715,10 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
           {opening && <p>{opening}</p>}
           {needle && searchDetails && <small className="guide-result-meta">{searchDetails}</small>}
         </a>
-        {cardConditions.length > 0 && conditionBoard && <div className="guide-featured-conditions" aria-label="顶级条件">
-          <span>顶级条件</span>{cardConditions.map(condition => <a key={condition.id}
+        {cardConditions.length > 0 && conditionBoard && <div className="guide-featured-conditions" aria-label={conditionHeading}>
+          <span>{conditionHeading}</span>{cardConditions.map(condition => <a key={condition.id}
             href={conditionLink(section.id, conditionBoard, cardId)} data-home-board={conditionBoard}>
-            <GuideConditionIcon condition={condition} size={19} />{condition.name}
+            <GuideConditionIcon condition={condition} size={19} />{guideConditionName(condition)}
           </a>)}
         </div>}
         {team && <>
