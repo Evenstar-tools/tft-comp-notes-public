@@ -1,4 +1,5 @@
 import source from "@/data/conditional-gear-unit-ids.json";
+import currentPatch from "@/data/current-patch.json";
 import references from "@/data/item-reference.json";
 import season from "@/data/season.json";
 import { conditionalGearSource, maxLockedGearItems, remainingGearRows } from "@/domain/conditional-gear";
@@ -13,6 +14,10 @@ const cacheMilliseconds = 5 * 60 * 1000;
 const cacheEntries = 40;
 
 export const conditionalGearAvailable = season.id.startsWith(`s19-pbe-${source.patch}.`);
+const { metaTftPatch }: { metaTftPatch?: { patch: string; bPatch?: string }; seasonId: string } = currentPatch;
+const bPatch = currentPatch.seasonId === "s19-pbe" && metaTftPatch?.patch === source.patch ? metaTftPatch.bPatch : undefined;
+const cohortFilters: Record<string, string> = { queue: "PBE", patch: source.patch, days: String(windowDays), duplicate_unit_count: "0" };
+if (bPatch) cohortFilters.b_patch = bPatch;
 
 const sourceUnits: Readonly<Record<string, string>> = source.units;
 const referenceItems: Readonly<Record<string, { pbeId?: string }>> = references.items;
@@ -107,8 +112,7 @@ async function loadCohort(unitApi: string, stars: GearQuery["stars"]): Promise<C
   if (existing && existing.expires > now) return existing;
   cache.delete(key);
   const filter = new URLSearchParams({
-    queue: "PBE", patch: source.patch, days: String(windowDays), compact: "true", formatnoarray: "true",
-    duplicate_unit_count: "0",
+    ...cohortFilters, compact: "true", formatnoarray: "true",
     unit_tier_numitems_unique: `${unitApi}-1_${stars}_3`,
     item_holder_unit: `${unitApi}-1`,
   });
@@ -134,8 +138,8 @@ export async function conditionalGearBuilds({ unitApi, stars, lockedItems }: Gea
     ? remainingGearRows(builds, lockedItems)
     : builds.filter(build => build.games >= minGames).slice(0, 3);
   const sourceQuery = new URLSearchParams({
-    tab: "builds", set: source.set, queue: "PBE", patch: source.patch, days: String(windowDays),
-    unit: `${unitApi}-1_${stars}_3`, item_holder_unit: `${unitApi}-1`, duplicate_unit_count: "0",
+    ...cohortFilters, tab: "builds", set: source.set,
+    unit: `${unitApi}-1_${stars}_3`, item_holder_unit: `${unitApi}-1`,
   });
-  return { rows, patch: `PBE ${source.patch}`, windowDays, minGames, asOf, sourceUrl: `${explorer}?${sourceQuery}`, limit };
+  return { rows, patch: `PBE ${source.patch}${bPatch ?? ""}`, windowDays, minGames, asOf, sourceUrl: `${explorer}?${sourceQuery}`, limit };
 }
