@@ -18,11 +18,11 @@ export type RecommendationCard = {
   hit?: string;
 };
 
-export function PatchRecommendationList({ stats, cards, home, windowNote }: {
-  stats: Pick<GuideFamilyBatch, "patch" | "queue" | "days" | "updatedAt"> & { sourceUrl: string };
+export function PatchRecommendationList({ stats, cards, home, previousBuild }: {
+  stats: Pick<GuideFamilyBatch, "patch" | "queue" | "updatedAt">;
   cards: RecommendationCard[];
   home: string;
-  windowNote?: string;
+  previousBuild?: boolean;
 }) {
   if (!cards.length) return null;
   const date = stats.updatedAt.slice(5, 10).replace("-", "/");
@@ -34,12 +34,13 @@ export function PatchRecommendationList({ stats, cards, home, windowNote }: {
   return <div className="home-patch-recommendations">
     <div className="home-patch-meta">
       <p className="home-patch-sample">
-        {windowNote && <>{windowNote} · </>}{stats.queue} {stats.patch} · 近 {stats.days} 天 · <time dateTime={stats.updatedAt}>{date} {time} UTC</time> · <a href={stats.sourceUrl} target="_blank" rel="noreferrer">MetaTFT</a>
+        {stats.queue} {stats.patch} · 更新于 <time dateTime={stats.updatedAt}>{date} {time} UTC</time>
       </p>
       {groups.length > 1 && <nav className="home-patch-jumps" aria-label="跳到推荐分组">
         {groups.map(({ id, label }) => <a key={id} href={"#home-patch-" + id}>{id === "reroll" ? "赌狗" : label}</a>)}
       </nav>}
     </div>
+    {previousBuild && <p className="home-patch-sample">上一版参考 · 本版样本待补</p>}
     {groups.map(({ id: group, label, entries }) => {
       const heading = "home-patch-" + group;
       return <section key={group} className="home-patch-group" aria-labelledby={heading}>

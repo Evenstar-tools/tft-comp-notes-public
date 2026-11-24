@@ -9,7 +9,6 @@
 }
 .home-patch-jumps a:is(:hover, :focus-visible) { background: var(--raised); text-decoration: underline; text-underline-offset: 3px; }
 .home-patch-sample { margin: 0; color: var(--muted); font-size: .875rem; }
-.home-patch-sample a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
 .home-patch-group { min-width: 0; }
 .home-patch-group h2 { font-size: 1.125rem; margin: 0 0 8px; font-weight: 650; color: var(--accent); scroll-margin-block-start: 14px; }
 .home-patch-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }

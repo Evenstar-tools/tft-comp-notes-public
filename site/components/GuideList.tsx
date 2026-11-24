@@ -857,7 +857,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
 
     {recommended && <>
       {recommendationSnapshot && <PatchRecommendationList stats={recommendationSnapshot} cards={recommendationCards} home={home}
-        windowNote={currentHomeReady ? familyWindowNote : "上一版参考 · 本版样本待补"} />}
+        previousBuild={!currentHomeReady} />}
       {!displayedCount && !crossTab.length && needle && showLookup && !equipmentQuery && <div className="empty-inline">{archiveLink}</div>}
       {!displayedCount && !crossTab.length && !showLookup && !searching && (needle || hasFilter ? emptyState : <div className="empty-inline"><p>{currentHomeEvidence ? "暂无符合条件的本版推荐" : "本版体系数据待更新"}</p>
         {archiveLink}
