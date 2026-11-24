@@ -1,5 +1,5 @@
 "use client";
-import { Fragment, memo, useMemo, useState } from "react";
+import { Fragment, memo, useCallback, useMemo, useRef, useState } from "react";
 import { useBoardDrag, type BoardDragPreview } from "@/hooks/use-board-drag";
 import { Plus } from "lucide-react";
 import type { BoardInstrumentId, Piece, Season, Team } from "@/domain/types";
@@ -37,6 +37,8 @@ export const Board = memo(function Board({
   targeting,
   onCell,
   onMove,
+  onMoveEquipment,
+  canReceiveEquipment,
   onSwitchAlternate,
   onSplitAlternate,
   instrumentPositions,
@@ -60,6 +62,8 @@ export const Board = memo(function Board({
   /** 点击任意格子；由编辑器决定是选中、放置还是移动。 */
   onCell: (position: number, piece: Piece | undefined, trigger: HTMLButtonElement) => void;
   onMove?: (instanceId: string, position: number) => void;
+  onMoveEquipment?: (instanceId: string, index: number, itemId: string, position: number) => void;
+  canReceiveEquipment?: (itemId: string, piece: Piece) => boolean;
   onSwitchAlternate?: (instanceId: string) => void;
   onSplitAlternate?: (instanceId: string, position: number) => void;
   instrumentPositions?: Team["instrumentPositions"];
@@ -69,7 +73,9 @@ export const Board = memo(function Board({
   onRemove?: (instanceId: string) => void;
 }) {
   const [dragPreview, setDragPreview] = useState<BoardDragPreview | null>(null);
-  const { start, ...dragHandlers } = useBoardDrag(onDropUnit, !!onMove || !!onMoveInstrument, setDragPreview, !!onSwitchAlternate);
+  const draggingInstrument = useRef(false);
+  const dragNote = useRef<HTMLSpanElement>(null);
+  const restingNote = useRef<HTMLSpanElement>(null);
   const units = useMemo(() => data ? new Map(data.units.map(unit => [unit.id, unit])) : unitMap, [data]);
   const itemsById = useMemo(() => data ? new Map(data.items.map(item => [item.id, item])) : itemMap, [data]);
   const instruments = useMemo(() => boardInstruments(pieces, data ?? season, instrumentPositions), [pieces, data, instrumentPositions]);
@@ -78,7 +84,7 @@ export const Board = memo(function Board({
     ? [...instruments].find(([, instrument]) => instrument.id === instrumentId)
     : undefined;
   const selectedInstrument = currentInstrument?.[1];
-  const byPosition = new Map(pieces.map((piece) => [piece.position, piece]));
+  const byPosition = useMemo(() => new Map(pieces.map(piece => [piece.position, piece])), [pieces]);
   const selectedPiece = pieces.find((entry) => entry.instanceId === selectedId);
   const selectedUnit = selectedPiece && units.get(selectedPiece.unitId);
   const origin = dragPreview?.source;
@@ -87,20 +93,32 @@ export const Board = memo(function Board({
   const previewOrigin = movingInstrument ? (!dragPreview?.blocked ? destination : null) : currentInstrument?.[0];
   const coverage = previewOrigin == null || (movingInstrument || selectedInstrument)?.id === "infernalIdol"
     ? [] : boardNeighbors(previewOrigin);
-  const sourcePiece = origin == null ? undefined : byPosition.get(origin);
-  const targetPiece = destination == null ? undefined : byPosition.get(destination);
-  const draggedPiece = dragPreview?.alternate ? sourcePiece?.alternate : sourcePiece;
-  const sourceName = draggedPiece && units.get(draggedPiece.unitId)?.name;
-  const targetName = targetPiece && units.get(targetPiece.unitId)?.name;
-  let activeDragText = "";
-  if (dragPreview?.blocked) activeDragText = movingInstrument || dragPreview.alternate
-    ? "拖到空格放置" : "每格可叠放一个替补棋子";
-  else if (dragPreview && destination == null) activeDragText = "拖到棋盘格内放置";
-  else if (movingInstrument) activeDragText = movingInstrument.id === "infernalIdol"
-    ? `移动${movingInstrument.name}` : `${movingInstrument.name} · 相邻格预览`;
-  else if (targetName) activeDragText = sourceName ? `${sourceName}与${targetName}互换` : `松手叠放到${targetName}左上角`;
-  else if (origin === null) activeDragText = "松手放置棋子";
-  else if (sourceName) activeDragText = `移动${sourceName}`;
+  const previewDrag = useCallback((preview: BoardDragPreview | null) => {
+    const source = preview?.source;
+    const target = preview?.destination;
+    const instrument = source == null ? undefined : instruments.get(source);
+    if (instrument || draggingInstrument.current) setDragPreview(instrument ? preview : null);
+    draggingInstrument.current = !!instrument;
+    if (!dragNote.current || !restingNote.current) return;
+    const sourcePiece = source == null ? undefined : byPosition.get(source);
+    const draggedPiece = preview?.alternate ? sourcePiece?.alternate : sourcePiece;
+    const targetPiece = target == null ? undefined : byPosition.get(target);
+    const sourceName = draggedPiece && units.get(draggedPiece.unitId)?.name;
+    const targetName = targetPiece && units.get(targetPiece.unitId)?.name;
+    let text = "";
+    if (preview?.equipment) {
+      text = targetName ? (preview.blocked ? `${targetName}的装备栏已满` : `松手转移装备给${targetName}`) : "拖到另一名棋子身上";
+    } else if (preview?.blocked) text = instrument || preview.alternate ? "拖到空格放置" : "每格可叠放一个替补棋子";
+    else if (preview && target == null) text = "拖到棋盘格内放置";
+    else if (instrument) text = instrument.id === "infernalIdol" ? `移动${instrument.name}` : `${instrument.name} · 相邻格预览`;
+    else if (targetName) text = sourceName ? `${sourceName}与${targetName}互换` : `松手叠放到${targetName}左上角`;
+    else if (source === null) text = "松手放置棋子";
+    else if (sourceName) text = `移动${sourceName}`;
+    dragNote.current.textContent = text;
+    dragNote.current.hidden = !text;
+    restingNote.current.hidden = !!text;
+  }, [byPosition, instruments, units]);
+  const { start, ...dragHandlers } = useBoardDrag(onDropUnit, !!onMove || !!onMoveInstrument || !!onMoveEquipment, previewDrag, !!onSwitchAlternate);
 
   function clickCell(position: number, piece: Piece | undefined, trigger: HTMLButtonElement, instrument?: BoardInstrumentId) {
     if (instrument && onSelectInstrument && targeting === "move") {
@@ -157,6 +175,16 @@ export const Board = memo(function Board({
                   data-has-alternate={!data && alternate ? "true" : undefined}
                   data-trait-focus={piece && relatedPieceIds ? (relatedPieceIds.has(piece.instanceId) ? "related" : "dimmed") : undefined}
                   onPointerDown={data ? undefined : event => {
+                    const grip = (event.target as HTMLElement).closest<HTMLElement>("[data-board-item-index]");
+                    if (piece && grip && onMoveEquipment) {
+                      const index = Number(grip.dataset.boardItemIndex);
+                      const itemId = piece.items[index];
+                      if (itemId) start(event, target => onMoveEquipment(piece.instanceId, index, itemId, target), slot => {
+                        const target = byPosition.get(Number(slot.dataset.boardSlot));
+                        return !!target && target !== piece && (canReceiveEquipment?.(itemId, target) ?? true);
+                      }, grip);
+                      return;
+                    }
                     if (piece && onMove) start(event, target => onMove(piece.instanceId, target));
                     if (instrument && onMoveInstrument) start(event, target => {
                       selectInstrument(null);
@@ -210,13 +238,12 @@ export const Board = memo(function Board({
                       </span>
                       {!!items.length && (
                         <span className="board-items">
-                          {items.map((item, index) => (
-                            <ItemIcon
-                              key={`${item?.id}-${index}`}
-                              item={item}
-                              className="board-item"
-                            />
-                          ))}
+                          {items.map((item, index) => onMoveEquipment && !data && !readOnly && item ? (
+                            <span className="board-item-grip" key={`${item.id}-${index}`} data-board-item-index={index}
+                              title={`${item.name} · 拖到其他棋子`}>
+                              <ItemIcon item={item} className="board-item" />
+                            </span>
+                          ) : <ItemIcon key={`${item?.id}-${index}`} item={item} className="board-item" />)}
                         </span>
                       )}
                     </>
@@ -254,8 +281,9 @@ export const Board = memo(function Board({
           </div>
         ))}
       </div>
-      {(instruments.size > 0 || onMoveInstrument) && <p className="board-instrument-note" role={onMoveInstrument ? "status" : undefined}>
-        {activeDragText || (!!instruments.size && `${boardMarkerNote(instruments)}${onMoveInstrument && selectedInstrument ? ` · 选空格移动${selectedInstrument.name}` : onMoveInstrument ? " · 可拖动" : ""}`)}
+      {(instruments.size > 0 || onMoveInstrument || onMoveEquipment) && <p className="board-instrument-note" role={onMoveInstrument || onMoveEquipment ? "status" : undefined}>
+        <span ref={restingNote}>{!!instruments.size && `${boardMarkerNote(instruments)}${onMoveInstrument && selectedInstrument ? ` · 选空格移动${selectedInstrument.name}` : onMoveInstrument ? " · 可拖动" : ""}`}</span>
+        <span ref={dragNote} hidden />
       </p>}
       {!data && selectedPiece && selectedUnit && (
         <div className="board-mobile-detail" aria-label="所选棋子详情">

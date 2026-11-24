@@ -34,7 +34,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { equipItem, indexRecipes, wornCombinations, type EquipmentChoice } from "@/domain/equipment";
+import { equipItem, indexRecipes, transferEquipment, wornCombinations, type EquipmentChoice } from "@/domain/equipment";
 import { feishuBoardIssue } from "@/domain/document-flow";
 import { draftCategoryLabel, draftCategoryValue, sourceSectionTitle } from "@/domain/source-category-display";
 import { guideLink } from "@/domain/guide-reading";
@@ -69,6 +69,10 @@ import "./editor-workspace.css";
 
 const LOCAL_KEY = "tft-s19-unsynced-team-v1";
 const equipmentRecipes = indexRecipes(season.items);
+const canReceiveEquipment = (id: string, piece: Piece) => {
+  const item = itemMap.get(id);
+  return !!item && !!equipItem(piece.items, item, equipmentRecipes);
+};
 const CATEGORIES = ["待分类", "连胜", "连败", "次选", "条件定阵", "非常规构筑"];
 const ITEM_GROUPS: { id: string; label: string }[] = [
   { id: "component", label: "基础散件" },
@@ -558,6 +562,16 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
     }),
     [commit],
   );
+  const moveEquipmentTo = useCallback((fromId: string, index: number, itemId: string, position: number) => {
+    const item = itemMap.get(itemId);
+    if (!item || busyRef.current) return;
+    commit(current => {
+      const target = current.pieces.find(piece => piece.position === position);
+      if (!target) return current;
+      const pieces = transferEquipment(current.pieces, fromId, index, item, target.instanceId, equipmentRecipes);
+      return pieces === current.pieces ? current : { ...current, pieces };
+    });
+  }, [commit]);
   const switchBoardAlternate = useCallback((instanceId: string) => {
     const pieces = teamRef.current.pieces;
     const alternate = pieces.find(piece => piece.instanceId === instanceId)?.alternate;
@@ -1366,6 +1380,8 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
                     targeting={targeting}
                     onCell={onCell}
                     onMove={movePieceTo}
+                    onMoveEquipment={mobileReplace ? undefined : moveEquipmentTo}
+                    canReceiveEquipment={canReceiveEquipment}
                     onSwitchAlternate={switchBoardAlternate}
                     onSplitAlternate={splitBoardAlternate}
                     onMoveInstrument={moveInstrumentTo}
