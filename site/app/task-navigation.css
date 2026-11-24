@@ -62,7 +62,7 @@
 }
 .site-search-dialog {
   position:fixed;inset:var(--site-search-top,74px) 0 auto;margin:0 auto;
-  width:min(768px,calc(100% - 32px));max-width:none;max-height:calc(100dvh - var(--site-search-top,74px) - 24px);
+  width:min(736px,calc(100% - 32px));max-width:none;max-height:calc(100dvh - var(--site-search-top,74px) - 24px);
   padding:0;overflow:hidden;color:var(--text);background:var(--panel);border:1px solid var(--line);border-radius:12px;
   box-shadow:0 16px 52px light-dark(#28203135,#0009);
 }
@@ -75,10 +75,10 @@
   flex:1;min-width:0;min-height:44px;padding:6px 2px;font-size:1rem;border:0;background:transparent;color:var(--text);
 }
 .site-search-bar input:focus {outline:0}
-.site-search-dialog-results {overflow:auto;overscroll-behavior:contain;min-height:0;padding:15px 17px 17px}
+.site-search-dialog-results {overflow:auto;overscroll-behavior:contain;min-height:0;padding:12px 17px 14px}
 .site-search-dialog-results a[data-search-result]:focus-visible {outline:2px solid var(--accent);outline-offset:-2px}
 .site-search-examples {display:flex;flex-wrap:wrap;gap:7px}
-.site-search-examples button {padding:4px 10px;min-height:35px;background:var(--raised);text-align:left}
+.site-search-examples button {padding:4px 10px;min-height:35px;background:var(--raised);text-align:left;font-size:.875rem}
 .site-search-examples button:hover {border-color:var(--accent)}
 body:has(.site-search-dialog[open]) {overflow:hidden}
 .task-page {max-width:1180px;margin:0 auto;padding-block:26px 40px}
