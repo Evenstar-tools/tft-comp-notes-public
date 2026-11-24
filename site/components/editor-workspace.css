@@ -15,6 +15,17 @@
 }
 .editor .workspace:not(.matrix-workspace) .workspace-main { gap: 8px; }
 .editor .workspace:not(.matrix-workspace) .board-panel { padding: 8px 12px; }
+@media (min-width: 921px) {
+  .editor .workspace:not(.matrix-workspace) .workspace-side {
+    align-self: start;
+    max-block-size: 100%;
+  }
+  .editor .workspace:not(.matrix-workspace) .selection-empty {
+    min-height: 124px;
+    padding-block: 20px;
+    gap: 8px;
+  }
+}
 .editor .workspace .panel-head { gap: 7px; margin-bottom: 4px; }
 .editor .workspace .panel-head h2 { gap: 7px; }
 .editor .editor-stages {

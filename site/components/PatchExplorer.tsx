@@ -82,7 +82,7 @@ export function PatchExplorer({ patch, guides, icons, initialQuery, initialCateg
               return <div className="patch-value" key={anchor} id={anchor}>
                 <span>{label}</span>
                 <div className="patch-value-end">
-                  <p><span>{before}</span><span aria-label="改为"> → </span><strong>{after}</strong></p>
+                  <p><span>{before}</span><span className="patch-change-result"><span aria-label="改为"> → </span><strong>{after}</strong></span></p>
                   <button type="button" className="patch-copy-change" title="复制此条改动的链接"
                     aria-label={`复制${object.name} · ${label}的链接`} onClick={() => void copyChange(anchor, group)}>
                     {copiedHere && !copied.fallback ? <Check size={15} aria-hidden /> : <Link size={15} aria-hidden />}

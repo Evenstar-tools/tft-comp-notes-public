@@ -27,8 +27,12 @@ import "./patch-notes.css";
 export const metadata = { title: "版本更新" };
 export const dynamic = "force-dynamic";
 
-function patchTitle(title: string) {
-  return title.replace(/\s*·\s*\d{7,}\s*$/, "").trim();
+function patchTitle(title: string, date?: string) {
+  const cleaned = title.replace(/\s*·\s*\d{7,}\s*$/, "").trim();
+  const dated = /^PBE (\d{1,2})\/(\d{1,2}) 更新\s*·\s*(.+)$/.exec(cleaned);
+  if (!dated || !date) return cleaned;
+  const [, month, day, subject] = dated;
+  return date.slice(5) === `${month.padStart(2, "0")}-${day.padStart(2, "0")}` ? subject : cleaned;
 }
 
 function patchImages(patch: PatchReference) {
@@ -119,7 +123,7 @@ export default async function VersionUpdates({ searchParams }: { searchParams: P
         <nav className="patch-editions" aria-label="版本列表">{versions.map(version => <PatchReadingLink key={version.id}
           href={versionUpdateLink(version.id, { query: q, category })} aria-current={version.id === current.id ? "page" : undefined}>
           {version.reference && <time dateTime={version.reference.date}>{version.reference.date.slice(5).replace("-", ".")}</time>}
-          <span>{patchTitle(version.title)}</span>
+          <span>{patchTitle(version.title, version.reference?.date)}</span>
         </PatchReadingLink>)}</nav>
       </aside>
       <div className="patch-content">
@@ -127,11 +131,11 @@ export default async function VersionUpdates({ searchParams }: { searchParams: P
           {current.chapter ? <>
             <DocumentView section={{
               ...(current.chapter === intro ? readablePatchIntroduction(current.chapter, recommendation?.summary) : current.chapter),
-              title: patchTitle(current.title),
+              title: patchTitle(current.title, patch?.date),
             }} showCategory={false} />
             {leadTools}
           </> : <>
-            <h2>{patchTitle(current.title)}</h2>
+            <h2>{patchTitle(current.title, patch?.date)}</h2>
             {leadTools}
             {!!highlights?.length && <ul className="patch-summary">{highlights.map(line => <li key={line}>{line}</li>)}</ul>}
             {currentSummary && <p className="patch-current-summary">{currentSummary}</p>}

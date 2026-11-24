@@ -16,11 +16,34 @@
   font-size: 13px;
   font-weight: 650;
 }
-.editor-gear-heading > span,
-.editor-build-source {
+.editor-gear-source-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 26px;
+  padding: 2px 4px;
+  border: 0;
+  background: transparent;
   color: var(--muted);
-  font-size: 11px;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
 }
+.editor-gear-source-button:is(:hover,[aria-expanded=true]) { color: var(--accent); }
+.editor-gear-source {
+  width: min(17rem, calc(100vw - 28px));
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  box-shadow: 0 6px 20px light-dark(#24251a29, #0008);
+  color: var(--muted);
+  font-size: .8125rem;
+}
+.editor-gear-source p { margin: 0; }
+.editor-gear-source p + p { margin-block-start: 8px; }
+.editor-gear-source strong { color: var(--text); }
+.editor-gear-source a { display: inline-flex; align-items: center; gap: 4px; color: var(--accent); }
 .editor-gear-heading select {
   min-height: 24px;
   border: 1px solid var(--line);
@@ -97,8 +120,7 @@
   gap: 3px;
   min-width: 0;
 }
-.editor-build-apply,
-.editor-build-source a { color: var(--gold); }
+.editor-build-apply { color: var(--gold); }
 .editor-common-gear-list button:hover,
 .editor-build-choice:hover {
   border-color: var(--accent);
@@ -106,19 +128,6 @@
 }
 .editor-common-gear-list button:focus-visible,
 .editor-build-choice:focus-visible { outline: 2px solid var(--accent); }
-.editor-build-source {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 4px 8px;
-  flex-wrap: wrap;
-  padding-top: 4px;
-}
-.editor-build-source a {
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
-}
 .editor-gear-status {
   margin: 4px 0 0;
   color: var(--muted);
