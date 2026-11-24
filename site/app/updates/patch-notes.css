@@ -8,7 +8,7 @@
 .patch-editions time {color:var(--muted);font-size:.775rem;font-variant-numeric:tabular-nums;white-space:nowrap}
 .patch-editions a[aria-current="page"] {color:var(--text);border-color:var(--accent);background:var(--raised);font-weight:650}
 .patch-editions a:hover {background:var(--surface-hover)}
-.patch-content {min-width:0}
+.patch-content {min-width:0;container:patch-content / inline-size}
 .patch-lead-tools {display:flex;gap:2px 20px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:5px 0 12px}
 .patch-edition-line {display:flex;gap:4px 12px;align-items:baseline;flex-wrap:wrap;color:var(--muted);font-size:.875rem}
 .patch-page a.patch-source,.patch-guides a {color:var(--accent);text-decoration:underline;text-underline-offset:3px}
@@ -19,7 +19,9 @@
 .patch-summary li::before {content:"";width:4px;height:4px;border-radius:50%;position:absolute;inset-inline-start:0;top:.68em;background:var(--accent)}
 .patch-summary li+li {margin-top:4px}
 .patch-reading {margin-top:18px}
+.patch-explorer {container:patch-changes / inline-size}
 .patch-details {min-width:0}
+.patch-explorer+.patch-details {margin-top:22px}
 .patch-details>section+section {margin-top:20px}
 .patch-reading h3 {font-size:1.125rem;line-height:1.45;font-weight:650}
 .patch-observation p {margin-top:7px;line-height:1.65}
@@ -79,6 +81,13 @@
 }
 .patch-recommendation-portrait {flex:none;object-fit:cover;border-radius:4px;border-bottom:3px solid var(--unit-cost,var(--line))}
 .patch-recommendation-body {flex:1;min-width:0}
+.patch-recommendation .patch-board-heading {
+  display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:3px 8px
+}
+.patch-recommendation-title {display:flex;align-items:baseline;flex-wrap:wrap;gap:2px 7px;min-width:0}
+.patch-recommendation-title h4 {text-wrap:pretty}
+.patch-board-variant {flex-basis:100%;color:var(--muted);font-size:.825rem;line-height:1.45}
+.patch-recommendation .patch-sample-links {justify-content:end;margin:2px 0 0}
 .patch-recommendation-body p {max-width:68ch;font-size:.9375rem;color:var(--muted)}
 .patch-recommendation:focus-within {border-color:var(--accent)}
 .lobby-observation {margin:9px 0 14px;scroll-margin-top:84px}
@@ -110,10 +119,12 @@
   .patch-value:hover .patch-copy-change,.patch-copy-change:focus-visible,.patch-value:target .patch-copy-change,
   .patch-copy-change:has(.lucide-check) {opacity:1}
 }
-@media(min-width:1050px){
-  .patch-reading.has-sidebar {display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);align-items:start;gap:24px}
-  .patch-reading.has-sidebar .patch-details {min-width:0;border-inline-start:1px solid var(--line);padding-inline-start:20px}
+@container patch-content (min-width:990px){
+  .patch-reading.has-sidebar {display:grid;grid-template-columns:minmax(0,2.25fr) minmax(0,1fr);align-items:start;gap:24px}
+  .patch-reading.has-sidebar .patch-details {margin-top:0;border-inline-start:1px solid var(--line);padding-inline-start:20px}
   .patch-reading.has-sidebar .patch-recommendations ul {grid-template-columns:minmax(0,1fr)}
+}
+@container patch-changes (min-width:655px){
   .patch-object {grid-template-columns:minmax(108px,18%) minmax(0,1fr)}
   .patch-value {display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr);gap:0 10px}
   .patch-value > span {text-wrap:balance}
@@ -121,9 +132,6 @@
   .patch-value-end p {display:flex;flex-wrap:wrap;gap:0 4px;min-width:0;overflow-wrap:anywhere}
   .patch-copy-change {flex:none}
   .patch-copy-fallback {grid-column:1/-1}
-}
-@media(max-width:1049px){
-  .patch-explorer+.patch-details {margin-top:22px}
 }
 @media(max-width:720px){
   .patch-layout {grid-template-columns:minmax(0,1fr);gap:13px}
