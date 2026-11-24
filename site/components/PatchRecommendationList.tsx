@@ -72,7 +72,7 @@ export function PatchRecommendationList({ stats, cards, home, previousBuild }: {
                   {hit && <p className="home-patch-hit">{hit}</p>}
                 </div>
                 <span id={id + "-mean"} className={"home-patch-mean guide-placement " + tone}>
-                  <span>体系均名 <b>{formatRecommendationMean(rating.mean)}</b></span>
+                  <span>平均排名 <b>{formatRecommendationMean(rating.mean)}</b></span>
                   <small>{rating.games.toLocaleString("zh-CN")} 场</small>
                 </span>
               </a>

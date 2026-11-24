@@ -25,7 +25,7 @@ function FamilyStats({ rows, rare }: {
   return <div className="guide-carry-samples">
     <p>同类阵容的玩家结算，包含不同等级、挂件和成型质量。</p>
     {!!rows.length && <ul>{rows.map(({ stat }) => <li key={stat.clusterId}>
-      <div className="carry-sample-head"><strong>{displayGuideName(stat.name)}</strong><span>体系均名 <b>{stat.mean.toFixed(2)}</b> · {number.format(stat.games)} 场</span></div>
+      <div className="carry-sample-head"><strong>{displayGuideName(stat.name)}</strong><span>平均排名 <b>{stat.mean.toFixed(2)}</b> · {number.format(stat.games)} 场</span></div>
       <p>前四 {percent.format(stat.topFourRate)} · 登顶 {percent.format(stat.winRate)}</p>
       <div className="carry-source"><a href={stat.url} target="_blank" rel="noreferrer">{stat.sourceName} · {family.patch} · 近 {family.days} 天 ↗</a></div>
     </li>)}</ul>}

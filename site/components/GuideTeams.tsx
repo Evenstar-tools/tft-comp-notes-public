@@ -150,7 +150,7 @@ export function GuideTeams({ section, data, initialTeam, initialStage, initialFl
   const overall = matchingFamily.length === 1 ? matchingFamily[0].stat : undefined;
   const performance = overall && <a className="guide-family-rating" href={mainBoardActive && !showFlex ? "#" + sampleId : overall.url}
     onClick={() => setSampleView("family")} title={overall.sourceName + " · " + familyStats.patch + " · 近 " + familyStats.days + " 天"}>
-    <span>体系均名</span><strong>{overall.mean.toFixed(2)}</strong><small>{overall.games.toLocaleString("zh-CN")} 场</small>
+    <span>平均排名</span><strong>{overall.mean.toFixed(2)}</strong><small>{overall.games.toLocaleString("zh-CN")} 场</small>
   </a>;
   const notes = readingNotes(section, team, data);
   const currentChoice = route?.choices?.find(choice => choice.team?.id === team.id);
