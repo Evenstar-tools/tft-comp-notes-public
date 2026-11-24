@@ -39,6 +39,7 @@ const time = new Intl.DateTimeFormat("zh-CN", {
 }).format(new Date(snapshot.updatedAt));
 const displayMinimum = gearSampleMinimum("emblem", snapshot.mode === "PBE", snapshot.minGames);
 const hasSample = (sample: Sample) => sample.games >= displayMinimum;
+const isSmallSample = (sample: Sample) => hasSample(sample) && sample.games < snapshot.minGames;
 
 function Mean({ sample }: { sample: Sample }) {
   const value = hasSample(sample) ? sample.mean : null;
@@ -103,13 +104,16 @@ function Holders({ traitId, item, entry, highlight, guideHref, options, onOption
       </div>
       {tableRows.length ? <table aria-label="纹章使用者统计" className="emblem-holders">
         <thead><tr><th scope="col">棋子</th><th scope="col">均名</th><th scope="col">登顶率</th><th scope="col">场数</th><th scope="col" title="携带纹章的均名减该棋子总体均名">均名变化</th></tr></thead>
-        <tbody>{tableRows.map(row => <tr key={row.unitId} data-highlight={row.unitId === highlight || undefined}>
+        <tbody>{tableRows.map(row => <tr key={row.unitId} data-highlight={row.unitId === highlight || undefined}
+          data-small-sample={isSmallSample(row) || undefined}>
           <th scope="row"><Wearer id={row.unitId} /></th>
-          <td><Mean sample={row} /></td><td><Win sample={row} /></td><td>{number.format(row.games)}</td><td>{deltaLabel(row.delta)}</td>
+          <td><Mean sample={row} /></td><td><Win sample={row} /></td>
+          <td>{number.format(row.games)}{isSmallSample(row) && <span className="emblem-small-sample">少样本</span>}</td>
+          <td>{deltaLabel(row.delta)}</td>
         </tr>)}</tbody>
       </table> : <p className="emblem-empty">暂无符合条件的携带记录</p>}
       <div className="emblem-detail-bottom">
-        {rows.length > count && <button type="button" aria-expanded={more} className="text-link" onClick={() => onOptions({ ...options, more: !more })}>{more ? "收起更多" : "全部 " + rows.length + " 名使用者"}</button>}
+        {rows.length > count && <button type="button" aria-expanded={more} className="text-link" onClick={() => onOptions({ ...options, more: !more })}>{more ? "收起更多" : "展开全部 " + rows.length + " 人"}</button>}
         <EmblemSourceLink entry={entry} />
       </div>
     </div>
@@ -234,11 +238,12 @@ export function EmblemStats({ traitId, holderId, initialFilters, guideHref, guid
         if (!item) return null;
         const holders = entry.holders.filter(holder => holder.unitId !== excluded);
         const expanded = open === id;
+        const smallSample = isSmallSample(sample);
         const best = expanded || selectedUnit ? [] : holders.filter(holder => holder.games >= snapshot.minGames && unitMap.has(holder.unitId))
           .sort((a, b) => a.mean - b.mean || b.games - a.games).slice(0, 3);
         return <li key={id} className="emblem-result">
           <Tooltip.Root>
-            <button type="button" className="emblem-row" data-trait={id} aria-expanded={expanded}
+            <button type="button" className="emblem-row" data-trait={id} data-small-sample={smallSample || undefined} aria-expanded={expanded}
               aria-controls={expanded ? "wearers-" + id : undefined} onClick={event => {
                 const element = event.currentTarget;
                 clickedRow.current = { element, top: element.getBoundingClientRect().top, pushed: !!selectedUnit };
@@ -260,7 +265,9 @@ export function EmblemStats({ traitId, holderId, initialFilters, guideHref, guid
               </span>
               <span className="emblem-metric"><Mean sample={sample} /><small>均名</small></span>
               <span className="emblem-metric"><Win sample={sample} /><small>登顶率</small></span>
-              <span className="emblem-count">{number.format(sample.games)}<small>场数</small></span>
+              <span className="emblem-count">{number.format(sample.games)}<small className={smallSample ? "sr-only" : undefined}>场数</small>
+                {smallSample && <span className="emblem-small-sample">少样本</span>}
+              </span>
               {!expanded && !selectedUnit && <span className="emblem-best">
                 <small className="sr-only">最佳使用者</small>
                 {best.length ? best.map(holder => <span key={holder.unitId} className="emblem-best-entry">
