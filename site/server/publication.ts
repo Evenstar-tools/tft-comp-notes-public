@@ -4,6 +4,7 @@ import { allBlocks, authoredParagraphs, guideSectionWithCurrentNames, isEditoria
 import { guideExecutionUnitIds } from "@/domain/guide-execution";
 import { isVersionUpdate, sameEdition } from "@/domain/version-updates";
 import { getPublishedPatchRecommendations, sectionsAfterPartialPublish } from "@/domain/patch-recommendations";
+import { publishedBoardLayouts } from "@/domain/published-board-layout";
 import currentPatch from "@/data/current-patch.json";
 import type {
   ContentBlock,
@@ -333,12 +334,19 @@ export async function publishSections(
     publishedAt: new Date().toISOString(),
     previousId: previous?.id,
   };
+  const boardLayouts = publishedBoardLayouts(combined, previous?.boardLayouts);
+  if (boardLayouts.length) publication.boardLayouts = boardLayouts;
+  await installPublication(publication, draftId);
+  return publication;
+}
+
+export async function installPublication(publication: Publication, draftId?: string) {
   const db = database();
+  const previousId = publication.previousId ?? null;
   const [inserted] = await db.batch([
-    db.prepare("INSERT INTO snapshots (id,body,created_at) SELECT ?,?,? WHERE json_extract((SELECT value FROM settings WHERE key='document_draft'),'$.id')=? AND (SELECT value FROM settings WHERE key='published_id') IS ?")
-      .bind(publication.id, JSON.stringify(publication), publication.publishedAt, draftId, previous?.id ?? null),
+    db.prepare("INSERT INTO snapshots (id,body,created_at) SELECT ?,?,? WHERE (SELECT value FROM settings WHERE key='published_id') IS ? AND (? IS NULL OR json_extract((SELECT value FROM settings WHERE key='document_draft'),'$.id')=?)")
+      .bind(publication.id, JSON.stringify(publication), publication.publishedAt, previousId, draftId ?? null, draftId ?? null),
     db.prepare("INSERT INTO settings (key,value) SELECT 'published_id',id FROM snapshots WHERE id=? ON CONFLICT(key) DO UPDATE SET value=excluded.value").bind(publication.id),
   ]);
   if (!inserted.meta.changes) throw new ApiError(409, "发布内容已更新，请刷新预览后再发布");
-  return publication;
 }

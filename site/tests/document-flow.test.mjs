@@ -1,9 +1,35 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { attachBoundRegions, duplicatePublishedTeam, reviewIssues, sectionChanges, sameGeneratedSection, isBoardCaption, feishuBoardIssue, attachSectionTeam, findSection, readableSection, sectionTeams, splitSections } from "../domain/document-flow.ts";
+import { applyPublishedBoardLayouts, boardLayout, publishedBoardLayouts } from "../domain/published-board-layout.ts";
 
 const entry = (id, level, title) => ({ id, level, title, content: { id, type: level ? "heading" : "text", text: title } });
 const team = (id, unit) => ({ id, name:id, pieces:[{unitId:unit}], revision:1 });
+
+test("published positions win over reading corrections for one board and yield to new source positions", () => {
+  const sourceTeam = { id: "board", pieces: [
+    { instanceId: "one", unitId: "ezreal", position: 23, stars: 3, items: ["blue"] },
+    { instanceId: "two", unitId: "nasus", position: 2, stars: 3, items: ["stoneplate"] },
+  ] };
+  const other = { id: "another-guide", blocks: [] };
+  const section = { id: "guide", blocks: [{ id: "body", type: "text", text: "正文" }],
+    team: sourceTeam, teams: [sourceTeam, { id: "variant", pieces: [] }] };
+  const renderedTeam = { ...sourceTeam, pieces: sourceTeam.pieces.map(piece => ({ ...piece, position: piece.position - 1 })) };
+  const editedTeam = { ...renderedTeam,
+    pieces: renderedTeam.pieces.map(piece => ({ ...piece, position: piece.position + 2 })),
+    instrumentPositions: { maracas: 8 } };
+  const boardLayouts = [{ sectionId: section.id, teamId: sourceTeam.id, source: boardLayout(sourceTeam), layout: boardLayout(editedTeam) }];
+  const publication = { sections: [section, other], boardLayouts };
+  const renderedSection = { ...section, team: renderedTeam, teams: [renderedTeam, section.teams[1]] };
+  const rendered = { ...publication, sections: [renderedSection, other] };
+  const updated = applyPublishedBoardLayouts(publication, rendered);
+  assert.deepEqual(updated.sections[0].team, editedTeam);
+  assert.deepEqual(updated.sections[0].teams, [editedTeam, section.teams[1]]);
+  assert.equal(updated.sections[0].blocks, section.blocks);
+  assert.equal(updated.sections[1], other);
+  assert.deepEqual(publishedBoardLayouts(publication.sections, boardLayouts), boardLayouts);
+  assert.deepEqual(publishedBoardLayouts([renderedSection, other], boardLayouts), []);
+});
 
 test("category headings keep stable identities but only real content can be published", () => {
  const sections = splitSections([entry("intro",undefined,"说明"),entry("c1",1,"连胜"),entry("g1",2,"阵容A"),entry("p1",undefined,"过渡"),entry("c2",1,"次选")]);

@@ -5,6 +5,7 @@ import { Board } from "./Board";
 import { GuideEquipment } from "./GuideEquipment";
 import { GuideEquipmentConditions } from "./GuideEquipmentConditions";
 import { GuideEditorLink } from "./GuideEditorLink";
+import { GuideBoardPositionEditor } from "./GuideBoardPositionEditor";
 import { GuidePoster } from "./GuidePoster";
 import { guideBoardKind, teamPlacement } from "./GuidePlacement";
 import { GuideMatchStats, type MatchStatsView } from "./GuideMatchStats";
@@ -309,6 +310,8 @@ export function GuideTeams({ section, data, initialTeam, initialStage, initialFl
   const phaseAdvice = passages.find(passage => passage !== intro && passage.brief && passage.text);
   const opening = intro?.brief && intro.text ? intro : undefined;
   const inStage = kind === "过渡";
+  const canEditPositions = session?.isOwner && publicationId && guideHref && mainBoardActive && !showFlex &&
+    sameEdition(data.id, season.id) && !section.reroll?.added.includes(team.id);
   const openingUnderBoard = section.reroll || inStage || !!currentChoice;
   const stageCopy = [openingUnderBoard ? opening : undefined, phaseAdvice].filter(entry => entry !== undefined);
   const openingLine = mainBoardActive && !openingUnderBoard && opening && <p className="guide-opening" id={opening.blockId ? "note-" + opening.blockId : undefined}>{displayTraitNames(opening.text)}</p>;
@@ -368,7 +371,9 @@ export function GuideTeams({ section, data, initialTeam, initialStage, initialFl
               <ImageDown size={16} aria-hidden /><span>一图流</span>
             </button>
             {guideHref && sameEdition(data.id, season.id) && <GuideEditorLink team={shownBoard} title={editorTitle} href={guideHref}
-              focusUnit={shownRoles.find(role => role.label === "主C")?.units[0]} />}
+              secondary={!!canEditPositions} focusUnit={shownRoles.find(role => role.label === "主C")?.units[0]} />}
+            {canEditPositions && <GuideBoardPositionEditor key={team.id} publicationId={publicationId!}
+              sectionId={section.id} teamId={team.id} title={editorTitle} href={guideHref!} />}
           </div>
         </div>
         <div className="read-board" ref={board}><Board data={data} pieces={shownBoard.pieces} instrumentPositions={shownBoard.instrumentPositions} targeting={null} selectedId={selectedPiece} changedPositions={showFlex && flexPreview ? [flexPreview.position] : mainBoardActive ? changed : undefined}

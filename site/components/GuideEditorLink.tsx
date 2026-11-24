@@ -5,7 +5,7 @@ import { SquarePen } from "lucide-react";
 import type { Team } from "@/domain/types";
 import { guideBoardTransferKey } from "./guide-board-transfer";
 
-export function GuideEditorLink({ team, title, href, focusUnit }: { team: Team; title: string; href: string; focusUnit?: string }) {
+export function GuideEditorLink({ team, title, href, focusUnit, secondary = false }: { team: Team; title: string; href: string; focusUnit?: string; secondary?: boolean }) {
   const [error, setError] = useState("");
   const [ready, setReady] = useState(false);
   useEffect(() => setReady(true), []);
@@ -22,9 +22,9 @@ export function GuideEditorLink({ team, title, href, focusUnit }: { team: Team; 
   }
 
   return <div className="guide-editor-action">
-    <button type="button" className="guide-zoom-trigger guide-editor-link" onClick={openEditor} disabled={!ready}
-      aria-label="带入编辑器" title="带入编辑器">
-      <SquarePen size={16} aria-hidden /><span>带入编辑器</span>
+    <button type="button" className={secondary ? "guide-zoom-trigger" : "guide-zoom-trigger guide-editor-link"} onClick={openEditor} disabled={!ready}
+      aria-label={secondary ? "编辑副本" : "带入编辑器"} title="带入编辑器，在此浏览器保存副本">
+      <SquarePen size={16} aria-hidden /><span>{secondary ? "编辑副本" : "带入编辑器"}</span>
     </button>
     {error && <span className="guide-editor-error" role="alert">{error}</span>}
   </div>;
