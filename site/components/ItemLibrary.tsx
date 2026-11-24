@@ -478,7 +478,7 @@ function ItemReading({ item, wearer, filters, uses, onRecipe, onWearer, wearerHr
     boardUses.set(href, board);
   }
   const guideExamples = new Map<string, { title: string; boards: ItemBoardUse[] }>();
-  for (const board of [...boardUses.values()].slice(0, 5)) {
+  for (const board of boardUses.values()) {
     const guide = guideExamples.get(board.sectionId) ?? { title: board.title, boards: [] };
     guide.boards.push(board);
     guideExamples.set(board.sectionId, guide);
@@ -501,6 +501,15 @@ function ItemReading({ item, wearer, filters, uses, onRecipe, onWearer, wearerHr
       item: entry.id, unit: wearer, from: origin?.href,
     })} onClick={event => onRecipe(event, entry, group)}>
       <ItemIcon item={entry} size={26} />{itemName(entry)}
+    </a>;
+  }
+
+  function boardLink(board: ItemBoardUse, title?: string) {
+    return <a key={board.href} href={board.href}>
+      <span className="gear-use-name">{title ?? board.label}
+        {title && !board.isPrimary && title !== board.label && <small>{board.label}</small>}
+      </span>
+      <span className="gear-use-holders">{[...board.holders].map(id => unitMap.get(id)?.name).join("、")}</span>
     </a>;
   }
 
@@ -616,16 +625,16 @@ function ItemReading({ item, wearer, filters, uses, onRecipe, onWearer, wearerHr
           <h3 id="gear-guide-title">实戴阵容</h3>
           {!reverse && <a href={withStatPeriod("/?" + new URLSearchParams({ q: itemName(item) + "能玩什么", sort: "category", fromItem: returnHref }), period)}>找阵容</a>}
         </header>
-        <ul>{[...guideExamples].map(([sectionId, { title, boards }]) => <li key={sectionId}
-          className={boards.length > 1 ? "gear-guide-variants" : undefined}>
-          {boards.length > 1 && <strong>{title}</strong>}
-          {boards.map(({ href, label, isPrimary, holders }) => <a key={href} href={href}>
-            <span className="gear-use-name">{boards.length > 1 ? label : title}
-              {boards.length === 1 && !isPrimary && label !== title && <small>{label}</small>}
-            </span>
-            <span className="gear-use-holders">{[...holders].map(unitId => unitMap.get(unitId)?.name).join("、")}</span>
-          </a>)}
-        </li>)}</ul>
+        <ul>{[...guideExamples].slice(0, 5).map(([sectionId, { title, boards }]) => {
+          const [first, ...others] = boards;
+          return <li key={sectionId}>
+            {boardLink(first, title)}
+            {others.length > 0 && <details className="gear-guide-variants">
+              <summary aria-label={title + "的其他棋盘（" + others.length + "）"}>其他棋盘（{others.length}）</summary>
+              <div>{others.map(board => boardLink(board))}</div>
+            </details>}
+          </li>;
+        })}</ul>
       </section>}
     </div>
     {cookComponent && !!builds.length && <section className="gear-cook-results" aria-labelledby="gear-cook-title">

@@ -22,12 +22,18 @@ function FamilyStats({ rows, rare }: {
   rows: ReturnType<typeof guideFamilyRows>; rare: GuideFamilyStat[];
 }) {
   if (!rows.length && !rare.length) return <p className="muted">这张棋盘暂无对应的体系战绩。</p>;
-  return <div className="guide-carry-samples">
-    <p>同类阵容的玩家结算，包含不同等级、挂件和成型质量。</p>
+  return <div className="guide-carry-samples guide-family-results">
+    <p>含不同等级和变阵。</p>
     {!!rows.length && <ul>{rows.map(({ stat }) => <li key={stat.clusterId}>
-      <div className="carry-sample-head"><strong>{displayGuideName(stat.name)}</strong><span>平均排名 <b>{stat.mean.toFixed(2)}</b> · {number.format(stat.games)} 场</span></div>
-      <p>前四 {percent.format(stat.topFourRate)} · 登顶 {percent.format(stat.winRate)}</p>
-      <div className="carry-source"><a href={stat.url} target="_blank" rel="noreferrer">{stat.sourceName} · {family.patch} · 近 {family.days} 天 ↗</a></div>
+      <div className="guide-family-result-head"><strong>{displayGuideName(stat.name)}</strong>
+        <a href={stat.url} target="_blank" rel="noreferrer" title={stat.sourceName}>MetaTFT · {family.patch} · 近 {family.days} 天 ↗</a>
+      </div>
+      <dl className="guide-family-metrics">
+        <div><dt>平均排名</dt><dd>{stat.mean.toFixed(2)}</dd></div>
+        <div><dt>前四率</dt><dd>{percent.format(stat.topFourRate)}</dd></div>
+        <div><dt>登顶率</dt><dd>{percent.format(stat.winRate)}</dd></div>
+        <div><dt>场数</dt><dd>{number.format(stat.games)}</dd></div>
+      </dl>
     </li>)}</ul>}
     {rare.map(stat => <p key={stat.clusterId}><a href={stat.url} target="_blank" rel="noreferrer">{displayGuideName(stat.name)} · {number.format(stat.games)} 场
       {stat.games === 1 && Number.isInteger(stat.mean) && stat.mean >= 1 && stat.mean <= 8 ? ` · 第 ${stat.mean} 名` : ""} ↗</a></p>)}
@@ -119,14 +125,14 @@ export function GuideMatchStats({ id, stage, team, teams, section, edition, augm
     </div>
     <div className="guide-stat-body">
       {activeView === "board" && <>
-        {!heroGuide && <p className="muted guide-stat-scope">固定结算等级和棋子名单，只统计已经摆出这套盘的对局。</p>}
+        {!heroGuide && <p className="muted guide-stat-scope">按结算等级和完整名单统计。</p>}
         {rating?.games ? <PlacementSummary rating={rating} stage={stage} />
           : !formation && <p className="muted">{heroGuide ? "本盘暂无强化样本。" : "本盘暂无固定名单样本。"}</p>}
         {formation && <GuideFormationStats evidence={formation} />}
         <GuideDistribution team={team} sectionId={section.id} ratings={rating ? [rating] : []} edition={edition} heroGuide={heroGuide} view="board" />
       </>}
       {activeView === "carry" && <>
-        <p className="muted guide-stat-scope">按指定棋子、星级或装备条件统计。不同筛选可能命中同一场。</p>
+        <p className="muted guide-stat-scope">按棋子、星级或装备筛选，各组场数可能重叠。</p>
         {related.map(sample => <PlacementSummary key={sample.url} rating={sample} />)}
         {(carry.rows.length > 0 || carry.builds.length > 0 || !related.length) && <GuideCarryStats {...carry} />}
         <GuideDistribution team={team} sectionId={section.id} ratings={related} edition={edition} heroGuide={heroGuide} view="carry" />

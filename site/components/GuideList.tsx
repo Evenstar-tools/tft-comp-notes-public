@@ -421,10 +421,8 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
       const { section, data, playstyle } = entry;
       const notes = readingNotes(section, team, data);
       const name = guideTitleWithoutPlaystyle(displayGuideName(stat.name), playstyle);
-      const [original, short] = shortOpenings[guideTitleWithoutPlaystyle(section.title, playstyle)] ?? [];
       const decision = decisions.get(`${section.id}:${team.id}`);
-      const opening = decision?.status === "recommended" || decision?.status === "conditional" ? decision.note
-        : team.id === entry.teams[0]?.id && notes.opening.trim() === original ? short : homeOpening(notes.opening, name);
+      const advice = decision?.status === "recommended" || decision?.status === "conditional" ? decision.note : notes.opening;
       const context = entry.matches.find(match => match.board.id === team.id)?.context;
       const roster = guideRoster(team, data, notes.roles);
       const cores = roster.filter(({ role }) => role === "主C" || role === "主输出" || role === "主坦");
@@ -435,11 +433,13 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
       const cardId = section.id + "-stats-" + stat.clusterId;
       const href = guideLink(section.id, team.id, homeGuideReturn(home, cardId, team.id));
       return {
-        id: "guide-card-" + cardId, name, note: context || opening || guideBoardName(team),
+        id: "guide-card-" + cardId, name, note: context || homeOpening(advice, name), tier: boardTier(section, team, hasCurrentStats ? stat : undefined),
         style: playstyle ?? (entry.filterStyle?.includes("慢搜") ? "慢搜" : undefined),
         link: <a className="guide-stats-link" href={href} data-home-board={team.id}>{name}</a>,
-        units: portraits.map(unit => <img className={"cost-" + unit.cost} key={unit.id} src={unit.image}
-          alt={unit.name} title={unit.name} width={38} height={38} loading="lazy" />),
+        units: portraits.map(unit => <span className="guide-stats-unit" key={unit.id} title={unit.name}>
+          <img className={"cost-" + unit.cost} src={unit.image} alt={unit.name} width={38} height={38} loading="lazy" />
+          <span aria-hidden="true">{unit.id === "renata-glasc" ? "烈娜塔" : unit.name.split(" · ")[0]}</span>
+        </span>),
         games: stat.games, mean: stat.mean,
         pickRate: familyMetricValue(stat, "pickRate", familyStats.totalFinishes),
         topFourRate: familyMetricValue(stat, "topFourRate"), winRate: familyMetricValue(stat, "winRate"),
@@ -818,9 +818,15 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
           )}
         </select>
       </label>}
-      {ranked && statsRows.length > 0 && <p className="guide-rank-note home-stats-source">
-        {statsRows.length} 套 · {familyWindowNote && <>{familyWindowNote} · </>}{familyStats.queue} {familyStats.patch} · 近 {familyStats.days} 天 · <time dateTime={familyStats.updatedAt} title={familyStats.updatedAt}>{familyStats.updatedAt.slice(5,10).replace("-", "/")} {familyStats.updatedAt.slice(11,16)} UTC</time> · <a href={familyStats.sourceUrl} target="_blank" rel="noreferrer">MetaTFT</a>
-      </p>}
+      {ranked && statsRows.length > 0 && <div className="guide-rank-meta">
+        <span>{statsRows.length} 套{familyWindowNote && <> · {familyWindowNote}</>}</span>
+        <details className="guide-rank-source"><summary>数据来源</summary>
+          <div><a href={familyStats.sourceUrl} target="_blank" rel="noreferrer">MetaTFT</a> · {familyStats.queue} {familyStats.patch} · 近 {familyStats.days} 天
+            <p>更新于 <time dateTime={familyStats.updatedAt}>{familyStats.updatedAt.slice(5,10).replace("-", "/")} {familyStats.updatedAt.slice(11,16)} UTC</time></p>
+            <p>出场率按同批全部玩家结算统计。</p>
+          </div>
+        </details>
+      </div>}
       {groupLinks.length > 0 && <nav className="home-group-jumps" aria-label="跳到阵容分组">
         {groupLinks.map(group => <a key={group.id} href={"#" + group.id}>{group.label}</a>)}
       </nav>}
@@ -870,7 +876,6 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
       <GuideStatsTable rows={statsRows} metric={performance.metric} direction={performance.direction} onSort={metric => setPerformance(previous => ({
         metric, direction: previous.metric === metric ? (previous.direction === "asc" ? "desc" : "asc") : metric === "mean" ? "asc" : "desc",
       }))} />
-      <p className="guide-rank-note home-stats-definition">出场率为该体系占同批全榜玩家结算的比例。</p>
     </>}
     {!recommended && groups.length > 0 && <div className="guide-sections">{groups.map(([name, entries], index) => {
       const cards = renderCards(entries, name, index === 0);
