@@ -28,6 +28,8 @@ import { sameEdition } from "@/domain/version-updates";
 import { guideBoardKind } from "./GuidePlacement";
 import { formationCoreResult } from "./GuideFormationStats";
 import { PatchRecommendationList, type RecommendationCard } from "./PatchRecommendationList";
+import { GuideConditionIcon } from "./GuideEquipmentConditions";
+import { guideConditionsAnchor, guideEquipmentConditions } from "@/domain/guide-equipment-conditions";
 import { HomeGearSearch, isHomeGear } from "./HomeGearSearch";
 import { GuideCardBoard, GuideQuickView } from "./GuideCardBoard";
 import { GuideStatsTable, guideStatsMetricLabels, type GuideStatsTableRow } from "./GuideStatsTable";
@@ -260,10 +262,11 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
       const playstyle = guidePlaystyle(section);
       const filterStyle = playstyle ?? facet.style;
       const viewCategory = browseCategory(section, playstyle);
-      return { section, data, teams, facet, family, rows, costsByBoard, rowCosts, costOptions, playstyle, filterStyle, viewCategory, augment: heroAugmentForGuide(section) };
+      const curated = patch?.build ? guideEquipmentConditions(section.id, teams, data, patch.build) : undefined;
+      return { section, data, teams, facet, family, rows, costsByBoard, rowCosts, costOptions, playstyle, filterStyle, viewCategory, curated, augment: heroAugmentForGuide(section) };
     });
     return { regular: prepare(sections), "hero-augments": prepare(heroSections) };
-  }, [sections, heroSections, season]);
+  }, [sections, heroSections, season, patch?.build]);
 
   const visible = library[view];
   const hasCurrentStats = currentFamilyBatch(familyStats, season.id, patch);
@@ -573,7 +576,28 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
     const record = showReview && teamId ? decisions.get(`${sectionId}:${teamId}`) : undefined;
     return record?.status === "review" ? record : undefined;
   };
-  const displayedCount = recommended ? recommendationCards.length : ranked ? statsRows.length : results.length;
+  const featured = recommended ? candidates.flatMap(({ section, curated, matches }) => {
+    if (!curated || !canShowBoard(section, curated.board) || (needle && !matches.some(hit => hit.board.id === curated.board.id))) return [];
+    return curated.rows.filter(row => row.featured).map(condition => ({ section, board: curated.board, condition }));
+  }).slice(0, 4) : [];
+  function conditionLink(sectionId: string, boardId: string, cardId: string) {
+    return guideLink(sectionId, boardId, homeGuideReturn(home, cardId, boardId)) + "#" + guideConditionsAnchor;
+  }
+  const featuredRail = featured.length > 0 && <section className="home-featured-conditions" aria-label="顶级条件">
+    <h2>顶级条件</h2>
+    <ul>{featured.map(({ section, board, condition }) => {
+      const id = `condition-${section.id}-${condition.id}`;
+      return <li key={id} id={"guide-card-" + id}>
+        <a href={conditionLink(section.id, board.id, id)} data-home-board={board.id}>
+          <GuideConditionIcon condition={condition} size={26} />
+          <strong>{condition.name}</strong><span className="home-condition-separator" aria-hidden>·</span><span>{section.title}</span>
+        </a>
+      </li>;
+    })}</ul>
+  </section>;
+  const additionalFeatured = new Set(featured.filter(({ section, board }) => !recommendationCards.some(card =>
+    card.rating.sectionId === section.id && card.team.id === board.id)).map(({ board }) => board.id)).size;
+  const displayedCount = recommended ? recommendationCards.length + additionalFeatured : ranked ? statsRows.length : results.length;
   const crossTab = needle && !displayedCount && !equipmentQuery && (!recommended || hasUnitQuery)
     ? candidatesFor(library[recommended || isHeroList ? "regular" : "hero-augments"], conditions, false)
       .sort((a,b) => b.rank - a.rank).slice(0, 8)
@@ -599,7 +623,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
 
   const renderCards = (group: Card[], groupName: string, eager: boolean) => {
     const CardTitle = groupName ? "h3" : "h2";
-    return <div className="guide-list reader-list">{group.map(({ section, data, team, teams, matches, augment, siblings, family, rating: matchedRating, core, routeName, clusterId, rows, routes, cardId, context: searchContext, unitLabel, facet, playstyle }, index) => {
+    return <div className="guide-list reader-list">{group.map(({ section, data, team, teams, matches, augment, siblings, family, rating: matchedRating, core, routeName, clusterId, rows, routes, cardId, context: searchContext, unitLabel, facet, playstyle, curated }, index) => {
       const primary = teams[0];
       const kind = team && guideBoardKind(section, team, primary);
       const alternative = team && team.id !== primary.id;
@@ -670,6 +694,9 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
           {variantReview && <span className="guide-review-badge" title={variantReview.note}>待复核</span>}
         </a></li>;
       })}</ul>;
+      const conditionBoard = curated?.board.id;
+      const cardConditions = curated && (team?.id === conditionBoard || routes?.some(board => board.id === conditionBoard))
+        ? curated.rows.filter(row => row.featured) : [];
       return <article key={cardId} className={"guide-result" + (expanded ? " is-quick-open" : "")} id={"guide-card-" + cardId}>
         <a className="guide-result-main" href={link} data-home-board={team?.id} aria-labelledby={titleId} aria-describedby={detailsIds}>
           <div className="guide-title-row">
@@ -692,6 +719,12 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
           {opening && <p>{opening}</p>}
           {needle && searchDetails && <small className="guide-result-meta">{searchDetails}</small>}
         </a>
+        {cardConditions.length > 0 && conditionBoard && <div className="guide-featured-conditions" aria-label="顶级条件">
+          <span>顶级条件</span>{cardConditions.map(condition => <a key={condition.id}
+            href={conditionLink(section.id, conditionBoard, cardId)} data-home-board={conditionBoard}>
+            <GuideConditionIcon condition={condition} size={19} />{condition.name}
+          </a>)}
+        </div>}
         {team && <>
           <GuideCardBoard team={team} data={data} roles={roles} chaseTargets={chaseTargets}
             eager={eager && index === 0} title={title} controls={previewId} expanded={expanded} onToggle={() => {
@@ -858,8 +891,8 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
     {searching && <p className="site-lookup-message" role="status">正在搜索…</p>}
 
     {recommended && <>
-      {recommendationSnapshot && <PatchRecommendationList stats={recommendationSnapshot} cards={recommendationCards} home={home}
-        previousBuild={!currentHomeReady} />}
+      {recommendationSnapshot ? <PatchRecommendationList stats={recommendationSnapshot} cards={recommendationCards} home={home}
+        previousBuild={!currentHomeReady} featured={featuredRail} /> : featuredRail}
       {!displayedCount && !crossTab.length && needle && showLookup && !equipmentQuery && <div className="empty-inline">{archiveLink}</div>}
       {!displayedCount && !crossTab.length && !showLookup && !searching && (needle || hasFilter ? emptyState : <div className="empty-inline"><p>{currentHomeEvidence ? "暂无符合条件的本版推荐" : "本版体系数据待更新"}</p>
         {archiveLink}

@@ -351,8 +351,6 @@ export function GuideTeams({ section, data, initialTeam, initialStage, initialFl
           {authoredStages.map(stage => <button key={stage} type="button" aria-pressed={activeStage === stage}
             onClick={() => pickStage(stage)}>{stageLabels[stage]}</button>)}
         </div>}
-        {equipmentConditions && <GuideEquipmentConditions conditions={equipmentConditions} guideHref={guideHref}
-          onViewBoard={equipmentConditions.board.id !== team.id || !mainBoardActive ? () => pickTeam(equipmentConditions.board) : undefined} />}
         <div className="reader-board-title guide-board-head"><h3>{boardTitle}</h3>
           <div className="guide-board-actions">
             <button type="button" className="guide-zoom-trigger guide-board-zoom" aria-label="放大棋盘" title="放大棋盘" aria-haspopup="dialog" onClick={() => setZoomed(true)}>
@@ -375,6 +373,8 @@ export function GuideTeams({ section, data, initialTeam, initialStage, initialFl
               : label}</li>;
           })}</ul>
         </div>
+        {equipmentConditions && <GuideEquipmentConditions conditions={equipmentConditions} guideHref={guideHref}
+          onViewBoard={equipmentConditions.board.id !== team.id || !mainBoardActive ? () => pickTeam(equipmentConditions.board) : undefined} />}
         {flexPreview && <div className="guide-flex-slot" aria-label="灵活位">
           <strong className="guide-flex-label">{showFlex ? "替换预览" : "灵活位"}</strong>
           <span className="guide-flex-swap">

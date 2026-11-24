@@ -1,4 +1,5 @@
 import { guideLink } from "@/domain/guide-reading";
+import type { ReactNode } from "react";
 import { formatRecommendationMean, recommendationGroups, type GuideFamilyBatch, type RecommendationGroup, type RecommendationStat } from "@/domain/guide-family-stats";
 import type { Team, Unit } from "@/domain/types";
 import { homeGuideReturn } from "@/lib/home-position";
@@ -18,13 +19,14 @@ export type RecommendationCard = {
   hit?: string;
 };
 
-export function PatchRecommendationList({ stats, cards, home, previousBuild }: {
+export function PatchRecommendationList({ stats, cards, home, previousBuild, featured }: {
   stats: Pick<GuideFamilyBatch, "patch" | "queue" | "updatedAt">;
   cards: RecommendationCard[];
   home: string;
   previousBuild?: boolean;
+  featured?: ReactNode;
 }) {
-  if (!cards.length) return null;
+  if (!cards.length) return featured;
   const date = stats.updatedAt.slice(5, 10).replace("-", "/");
   const time = stats.updatedAt.slice(11, 16);
   const groups = recommendationGroups.map(group => ({
@@ -41,6 +43,7 @@ export function PatchRecommendationList({ stats, cards, home, previousBuild }: {
         {groups.map(({ id, label }) => <a key={id} href={"#home-patch-" + id}>{id === "reroll" ? "赌狗" : label}</a>)}
       </nav>}
     </div>
+    {featured}
     {groups.map(({ id: group, label, entries }) => {
       const heading = "home-patch-" + group;
       return <section key={group} className="home-patch-group" aria-labelledby={heading}>
