@@ -92,6 +92,7 @@ export function ConditionalGear({ lockedItems, wearer = "", wearerIds = defaultW
     [level ? level + " 人口" : "", tier && traitId ? tier + " " + (traitMap.get(traitId)?.name ?? traitId) : ""].filter(Boolean).join(" · ") || "全部结算盘";
   const singleItem = lockedItems[0];
   const resultLabel = lockedIds.length === 2 ? "第三件装备" : lockedIds.length === 1 ? "剩余两件" : "装备组合";
+  const meanHint = `少于 ${number.format(global?.minGames ?? conditionalGearSource.minGames)} 场时，均名显示为「—」。`;
   function changeUnit(id: string) {
     setUnitChoice({ wearer, unitId: id });
     setStarChoice(undefined);
@@ -141,6 +142,7 @@ export function ConditionalGear({ lockedItems, wearer = "", wearerIds = defaultW
         </button>
       </PopoverTrigger>
       <PopoverContent className="conditional-gear-source" align="end">
+        <p>{meanHint}</p>
         {global ? <>
           <p>{global.patch} · 近 {global.windowDays} 天 · {queryDate.format(new Date(global.asOf))} 查询</p>
           {!fixedWearer && <p>无重复棋子 · 最多 {global.limit} 组</p>}
@@ -159,7 +161,9 @@ export function ConditionalGear({ lockedItems, wearer = "", wearerIds = defaultW
               <button type="button" onClick={() => setOrder("games")} title="按场数从高到低">场数</button>
             </th>
             <th scope="col" aria-sort={order === "mean" ? "ascending" : "none"}>
-              <button type="button" onClick={() => setOrder("mean")} title="按均名从低到高">均名</button>
+              <button type="button" onClick={() => setOrder("mean")} title={"按均名从低到高。" + meanHint}
+                aria-describedby={title + "-mean"}>均名</button>
+              <span className="sr-only" id={title + "-mean"}>{meanHint}</span>
             </th>
           </tr>
         </thead>
@@ -170,7 +174,7 @@ export function ConditionalGear({ lockedItems, wearer = "", wearerIds = defaultW
               return <span key={index}><ItemIcon item={gear} size={24} />{itemName(gear)}</span>;
             })}</div></td>
             <td>{number.format(row.games)}</td>
-            <td>{row.mean === null ? <span className="conditional-gear-small">样本少</span> : row.mean.toFixed(2)}</td>
+            <td>{row.mean === null ? <span className="conditional-gear-small">—</span> : row.mean.toFixed(2)}</td>
           </tr>)}
         </tbody>
       </table>

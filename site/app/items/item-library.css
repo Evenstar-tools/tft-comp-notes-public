@@ -18,7 +18,8 @@
     background:var(--panel);
     scrollbar-gutter:stable;
   }
-  .gear-reverse .gear-reverse-toggle {min-height:47px;padding-block:6px;}
+  .gear-reverse .gear-reverse-toggle {min-height:44px;padding-block:5px;}
+  .gear-reverse .gear-reverse-head {min-height:34px;padding-block:6px;}
 }
 .gear-library {display:grid;grid-template-columns:minmax(300px,0.92fr) minmax(0,1.55fr);gap:clamp(16px,2.4vw,36px);align-items:start;}
 .gear-index {position:sticky;top:calc(var(--masthead-height) + 12px);min-width:0;}

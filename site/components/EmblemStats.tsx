@@ -119,20 +119,20 @@ function Holders({ traitId, item, entry, highlight, guideHref, options, onOption
 function WearerEmblemDetails({ traitId, item, entry, uses, returnHref }: {
   traitId: string; item: Item; entry: Emblem; uses: EmblemGuideUse[]; returnHref: string;
 }) {
-  return <div className="emblem-detail" id={"wearers-" + traitId}>
+  const hasGuides = uses.length > 0;
+  return <div className="emblem-detail" data-attributes-only={!hasGuides || undefined} id={"wearers-" + traitId}>
     <section className="emblem-equipment-summary" aria-label={item.name + "装备属性"}>
       <EmblemAttributes item={item} />
+      {!hasGuides && <div className="emblem-detail-bottom"><EmblemSourceLink entry={entry} /></div>}
     </section>
-    <div className="emblem-holder-list">
-      {!!uses.length && <>
-        <div className="emblem-detail-tools"><h2>配装攻略</h2></div>
-        <ul className="emblem-wearer-guides">{uses.map(use => <li key={use.sectionId + "/" + use.teamId}>
-          <a className="text-link" href={guideLink(use.sectionId, use.teamId, returnHref)}>{use.title}</a>
-          {use.board && use.title !== use.board && <span>{use.board}</span>}
-        </li>)}</ul>
-      </>}
+    {hasGuides && <div className="emblem-holder-list">
+      <div className="emblem-detail-tools"><h2>配装攻略</h2></div>
+      <ul className="emblem-wearer-guides">{uses.map(use => <li key={use.sectionId + "/" + use.teamId}>
+        <a className="text-link" href={guideLink(use.sectionId, use.teamId, returnHref)}>{use.title}</a>
+        {use.board && use.title !== use.board && <span>{use.board}</span>}
+      </li>)}</ul>
       <div className="emblem-detail-bottom"><EmblemSourceLink entry={entry} /></div>
-    </div>
+    </div>}
   </div>;
 }
 
@@ -204,9 +204,17 @@ export function EmblemStats({ traitId, holderId, initialFilters, guideHref, guid
     <EmblemEntryPosition traitId={traitId} holderId={holderId} />
     <header className="emblem-heading">
       <h1>转职数据</h1>
-      <p>{snapshot.set} {snapshot.mode} {snapshot.patch} · 近 {snapshot.days} 天 · <time dateTime={snapshot.updatedAt} title="北京时间更新">{time}</time></p>
+      <div className="emblem-catalog-tabs"><GearCategoryNav current="emblems" filters={filters} /></div>
+      <details className="emblem-method">
+        <summary><span className="sr-only">数据来源 </span>{snapshot.mode} {snapshot.patch}</summary>
+        <div className="emblem-method-panel">
+          <p>{snapshot.set} · 近 {snapshot.days} 天 · <time dateTime={snapshot.updatedAt}>{time}</time>（北京时间）</p>
+          <p>最佳使用者至少携带 {snapshot.minGames} 场。均名变化为携带均名减去棋子总体均名。</p>
+          <a href="https://www.metatft.com/items?set=TFTSet19" target="_blank" rel="noreferrer">MetaTFT 数据</a>
+          <a href="https://www.datatft.com/explorerForPBE" target="_blank" rel="noreferrer">DataTFT 检索</a>
+        </div>
+      </details>
     </header>
-    <GearCategoryNav current="emblems" filters={filters} />
     <div className="emblem-toolbar">
       <GearWearerSearch filters={filters} onChange={changeFilters} label="搜索羁绊、纹章或英雄" inputRef={searchInput} />
       <label className="emblem-select"><span className="sr-only">转职排行排序</span><select aria-label="转职排行排序" value={order}
@@ -216,7 +224,7 @@ export function EmblemStats({ traitId, holderId, initialFilters, guideHref, guid
       {!selectedUnit && <WearerExclusion units={selectableWearers} excluded={excluded} onChange={excluded => changeFilters({ ...filters, excluded })} />}
     </div>
     {visible.length > 0 && <div className="emblem-column-head" aria-hidden="true">
-      <span>纹章</span><span>{selectedUnit ? selectedUnit.name + "均名" : "均名"}</span><span>登顶率</span><span>{selectedUnit ? "携带场数" : "场数"}</span>
+      <span>纹章</span><span>均名</span><span>登顶率</span><span>场数</span>
       {!selectedUnit && (visible.some(({ id }) => id !== open) ? <span className="emblem-best-heading">最佳使用者</span> : <span />)}
       <span />
     </div>}
@@ -252,12 +260,12 @@ export function EmblemStats({ traitId, holderId, initialFilters, guideHref, guid
               </span>
               <span className="emblem-metric"><Mean sample={sample} /><small>均名</small></span>
               <span className="emblem-metric"><Win sample={sample} /><small>登顶率</small></span>
-              <span className="emblem-count">{number.format(sample.games)}<small>{selectedUnit ? "携带场数" : "场数"}</small></span>
+              <span className="emblem-count">{number.format(sample.games)}<small>场数</small></span>
               {!expanded && !selectedUnit && <span className="emblem-best">
                 <small className="sr-only">最佳使用者</small>
                 {best.length ? best.map(holder => <span key={holder.unitId} className="emblem-best-entry">
                   <Wearer id={holder.unitId} /><span className="emblem-best-mean"><b>{holder.mean.toFixed(2)}</b><small>{number.format(holder.games)} 场</small></span>
-                </span>) : <span className="emblem-best-empty">样本不足</span>}
+                </span>) : <span className="emblem-best-empty" title={`暂无满 ${snapshot.minGames} 场的使用者`} aria-label={`暂无满 ${snapshot.minGames} 场的使用者`}>—</span>}
               </span>}
               <ChevronDown size={15} className="emblem-chevron" aria-hidden />
             </button>
@@ -282,12 +290,6 @@ export function EmblemStats({ traitId, holderId, initialFilters, guideHref, guid
           changeFilters({ ...filters, query: "" });
           searchInput.current?.focus();
         }} />)}
-    {visible.length > 0 && <details className="emblem-method">
-      <summary>统计口径</summary>
-      <p>最佳使用者至少携带 {snapshot.minGames} 场。均名变化为携带纹章的均名减该棋子总体均名。</p>
-      <a href="https://www.metatft.com/items?set=TFTSet19" target="_blank" rel="noreferrer">MetaTFT 数据</a>
-      <a href="https://www.datatft.com/explorerForPBE" target="_blank" rel="noreferrer">DataTFT 检索</a>
-    </details>}
   </div>;
 }
 

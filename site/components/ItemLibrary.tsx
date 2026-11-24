@@ -1,6 +1,7 @@
 "use client";
 import { Fragment, useEffect, useId, useLayoutEffect, useRef, useState, type MouseEvent } from "react";
 import { itemMap, season, unitMap, unitLabel } from "@/data";
+import emblemSnapshot from "@/data/emblem-stats.json";
 import { itemReference, itemWearers, specialItemWearers, type WearerSnapshot } from "@/data/item-library";
 import { guideLink } from "@/domain/guide-reading";
 import { gearSampleMinimum } from "@/domain/gear-wearer";
@@ -21,7 +22,7 @@ import { StatPeriodSelect, useStatArchive, useStatPeriod } from "./StatPeriod";
 export type ItemGuideUse = { sectionId: string; teamId: string; title: string; boardName: string; isPrimary: boolean; unitId: string };
 type GuideOrigin = NonNullable<ReturnType<typeof itemGuideOrigin>>;
 type ItemBoardUse = { href: string; label: string; isPrimary: boolean; holders: Set<string>; sectionId: string; title: string };
-type ReverseGearRow = { entry: Item; category: GearGroup; sample: ReturnType<typeof gearWearerStats>; rate?: number; trait: string };
+type ReverseGearRow = { entry: Item; category: GearGroup; sample: ReturnType<typeof gearWearerStats>; rankedMinimum: number; rate?: number; trait: string };
 type EquipmentStats = { standard: WearerSnapshot; special: WearerSnapshot };
 
 const defaultItem = "TFT_Item_RapidFireCannon";
@@ -35,6 +36,7 @@ const categoryNames: Record<string, string> = {
 };
 const number = new Intl.NumberFormat("zh-CN");
 const percent = new Intl.NumberFormat("zh-CN", { style: "percent", maximumFractionDigits: 1 });
+const carryRateLabel = (rate: number) => rate > 0 && rate < 0.0005 ? "<0.1%" : percent.format(rate);
 const dateLabel = (date: string) => date.replaceAll("-", ".");
 const isGlossary = (line: string) => /^(?:灼烧|重伤|技能暴击|魔抗击碎|护甲击碎)[：:]/.test(line);
 const currentEquipment: EquipmentStats = { standard: itemWearers, special: specialItemWearers };
@@ -46,6 +48,11 @@ function itemSampleMinimum(item: Item, snapshot: WearerSnapshot) {
 function itemPerformance(item: Item, snapshot: WearerSnapshot) {
   const entry = snapshot.items[item.id];
   return entry && (entry.totalGames ?? 0) >= itemSampleMinimum(item, snapshot) ? entry : undefined;
+}
+
+function placementTone(mean: number | null | undefined, games: number, rankedMinimum: number) {
+  if (mean == null || games < rankedMinimum) return;
+  return mean < 4 ? "good" : mean >= 4.5 ? "weak" : undefined;
 }
 
 function periodGearHref(period: string | undefined, ...args: Parameters<typeof gearHref>) {
@@ -107,14 +114,14 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
     if (!row || entry.category === "component" || entry.category === "emblem") return [];
     const category = snapshot === equipment.standard ? "completed" : entry.category === "radiant" ? "radiant" : "special";
     const minGames = itemSampleMinimum(entry, snapshot);
-    return [{ entry, category, sample: gearWearerStats(row, minGames),
+    return [{ entry, category, sample: gearWearerStats(row, minGames), rankedMinimum: snapshot.minGames,
       rate: row.games >= minGames ? row.rate : undefined, trait: "" }];
   }) : [];
   if (reverse && group === "all" && !period) {
     for (const [trait, stats] of filterEmblems(query)) {
       const entry = itemMap.get(emblemItemId(trait));
       const holder = stats.holders.find(row => row.unitId === filters.wearer);
-      if (entry && holder) reverseRows.push({ entry, category: "emblems", sample: holder, rate: undefined, trait });
+      if (entry && holder) reverseRows.push({ entry, category: "emblems", sample: holder, rankedMinimum: emblemSnapshot.minGames, trait });
     }
   }
   const hasWins = reverseRows.some(({ sample }) => sample.winRate != null);
@@ -282,7 +289,7 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
       {archiveMessage || (reverseRows.length ? <div className="gear-reverse" data-wins={hasWins || undefined} data-rate={hasRate || undefined}>
         <div className="gear-reverse-head" aria-hidden="true">
           <span>装备 <small>{reverseRows.length} 件</small></span>
-          <span>{reverseWearer.name}均名</span>{hasWins && <span>登顶率</span>}
+          <span>均名</span>{hasWins && <span>登顶率</span>}
           {hasRate && <span className="gear-wearer-rate">携带率</span>}<span>场数</span>
         </div>
         <ul className="gear-rank-list">{reverseGroups.map(category => {
@@ -290,9 +297,10 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
           if (!rows.length) return null;
           return <Fragment key={category}>
           {group === "all" && <li className="gear-reverse-group">{gearGroups[category]}</li>}
-          {rows.map(({ entry, sample, rate, trait }) => {
+          {rows.map(({ entry, sample, rankedMinimum, rate, trait }) => {
           const open = selected === entry.id;
           const name = itemName(entry);
+          const displayName = category === "radiant" ? name.replace(/^光明版/, "") : name;
           const href = trait ? itemHref("emblems", filters, { trait })
             : itemHref(group, filters, { item: open ? "" : entry.id, unit: wearer, from: origin?.href });
           return <li className="gear-rank-entry gear-reverse-entry" key={entry.id} data-open={open || undefined}>
@@ -305,12 +313,12 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
               }}>
               <span className="gear-rank-identity">
                 <ItemIcon item={entry} size={34} />
-                <span>{name}{entry.category === "support" && <small>辅助装</small>}</span>
+                <span title={name}>{name !== displayName && <span className="sr-only">光明版</span>}{displayName}{entry.category === "support" && <small>辅助装</small>}</span>
                 {trait ? <ArrowUpRight aria-hidden="true" size={14} /> : <ChevronDown aria-hidden="true" size={14} />}
               </span>
-              <span className="gear-rank-number" data-tone={sample.mean == null ? undefined : sample.mean < 4 ? "good" : sample.mean >= 4.5 ? "weak" : undefined}>{sample.mean?.toFixed(2)}</span>
+              <span className="gear-rank-number" data-tone={placementTone(sample.mean, sample.games, rankedMinimum)}>{sample.mean?.toFixed(2)}</span>
               {hasWins && <span className="gear-rank-number">{sample.winRate != null && percent.format(sample.winRate)}</span>}
-              {hasRate && <span className="gear-rank-number gear-wearer-rate">{rate != null && percent.format(rate)}</span>}
+              {hasRate && <span className="gear-rank-number gear-wearer-rate">{rate != null && carryRateLabel(rate)}</span>}
               <span className="gear-rank-number">{number.format(sample.games)}</span>
             </a>
             {open && <div className="gear-rank-detail">
@@ -371,7 +379,7 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
                   </span>
                   <ChevronDown aria-hidden="true" size={14} />
                 </span>
-                <span className="gear-rank-number" data-tone={mean === undefined ? undefined : mean < 4 ? "good" : mean >= 4.5 ? "weak" : undefined}><small>均名</small><strong>{mean?.toFixed(2) ?? "—"}</strong></span>
+                <span className="gear-rank-number" data-tone={placementTone(mean, stats?.totalGames ?? 0, specialStats.minGames)}><small>均名</small><strong>{mean?.toFixed(2) ?? "—"}</strong></span>
                 <span className="gear-rank-number"><small>登顶率</small>{performance?.winRate != null ? percent.format(performance.winRate) : "—"}</span>
                 <span className="gear-rank-number"><small>场数</small>{stats?.totalGames !== undefined ? number.format(stats.totalGames) : "—"}</span>
               </a>
@@ -580,7 +588,7 @@ function ItemReading({ item, wearer, filters, uses, onRecipe, onWearer, wearerHr
                     </div>
                   </th>
                   <td>{number.format(row.games)}</td>
-                  {withRate && <td>{row.rate === undefined ? "—" : percent.format(row.rate)}</td>}
+                  {withRate && <td>{row.rate === undefined ? "—" : carryRateLabel(row.rate)}</td>}
                   <td>{row.games >= minGames && row.mean !== undefined
                     ? row.mean.toFixed(2) : <span title={row.games < minGames ? "满 " + minGames + " 场显示均名" : undefined}>—</span>}</td>
                 </tr>{active && <tr className="gear-wearer-action" data-selected>
