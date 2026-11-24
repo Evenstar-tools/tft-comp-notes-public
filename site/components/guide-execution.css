@@ -227,9 +227,9 @@
 }
 .guide-equipment-conditions-item:is(:hover, :focus-visible) { background: var(--raised); }
 .guide-equipment-conditions-arrow { flex: none; color: var(--muted); }
-.guide-equipment-conditions li[data-augment] { max-width: 100%; flex-wrap: wrap; gap: 3px 8px; }
-.guide-equipment-conditions-item[data-augment] { display: flex; align-items: center; gap: 7px; padding-inline: 4px; font-size: .875rem; }
-.guide-equipment-conditions-item[data-augment] > img { flex: none; }
+.guide-equipment-conditions li[data-named] { max-width: 100%; flex-wrap: wrap; gap: 3px 8px; }
+.guide-equipment-conditions-item[data-named] { display: flex; align-items: center; gap: 7px; padding-inline: 4px; font-size: .875rem; }
+.guide-equipment-conditions-item[data-named] > img { flex: none; }
 .guide-equipment-condition-detail { color: var(--muted); font-size: .8125rem; }
 @media (min-width: 1100px) {
   .guide-equipment-conditions:not([data-standalone-augment]) { grid-template-columns: auto minmax(0, 1fr) auto; }

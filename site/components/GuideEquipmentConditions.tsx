@@ -1,6 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import { ItemIcon } from "./ItemIcon";
-import { guideConditionTag, guideConditionsAnchor, type GuideCondition, type guideEquipmentConditions } from "@/domain/guide-equipment-conditions";
+import { guideConditionName, guideConditionTag, guideConditionsAnchor, type GuideCondition, type guideEquipmentConditions } from "@/domain/guide-equipment-conditions";
 import { itemLink } from "@/domain/links";
 
 export function GuideConditionIcon({ condition, size }: { condition: GuideCondition; size: number }) {
@@ -15,7 +15,7 @@ export function GuideEquipmentConditions({ conditions, guideHref, onViewBoard }:
   onViewBoard?: () => void;
 }) {
   const { label, rows, source, wearer } = conditions;
-  const title = rows.some(row => row.category === "海克斯") ? "阵容条件" : "装备条件";
+  const title = rows.some(row => row.category === "海克斯" || row.recipient) ? "阵容条件" : "装备条件";
   const singleAugment = rows.length === 1 && rows[0].category === "海克斯" && !label && !source;
   return <section id={guideConditionsAnchor} className="guide-equipment-conditions" aria-label={title} data-standalone-augment={singleAugment || undefined}>
     {!singleAugment && <div className="guide-equipment-conditions-head">
@@ -25,14 +25,16 @@ export function GuideEquipmentConditions({ conditions, guideHref, onViewBoard }:
       </span>}
     </div>}
     <ul>{rows.map(row => {
-      const swapLabel = row.replaced ? `${row.name}替换${row.replaced.name}` : row.name;
+      const name = guideConditionName(row);
+      const swapLabel = row.replaced ? `${row.name}替换${row.replaced.name}` : name;
       const tag = guideConditionTag(row);
       const augment = row.category === "海克斯";
-      return <li key={row.id} data-augment={augment || undefined}>
-        <a className="guide-equipment-conditions-item" data-augment={augment || undefined} href={row.item ? itemLink(row.id, wearer?.id, guideHref) : row.href}
+      const showName = augment || !!row.recipient;
+      return <li key={row.id} data-augment={augment || undefined} data-named={showName || undefined}>
+        <a className="guide-equipment-conditions-item" data-named={showName || undefined} href={row.item ? itemLink(row.id, row.recipient?.id ?? wearer?.id, guideHref) : row.href}
           aria-label={swapLabel} title={swapLabel}>
           <GuideConditionIcon condition={row} size={34} />
-          {augment && <strong>{row.name}</strong>}
+          {showName && <strong>{name}</strong>}
         </a>
         {row.replaced && <>
           <ArrowRight className="guide-equipment-conditions-arrow" size={16} aria-hidden />
@@ -42,9 +44,10 @@ export function GuideEquipmentConditions({ conditions, guideHref, onViewBoard }:
           </a>
         </>}
         {tag && <span className="guide-condition-tag">{tag}</span>}
+        {augment && row.kind === "option" && <span className="guide-equipment-condition-detail">可选</span>}
         {row.detail && <span className="guide-equipment-condition-detail">{row.detail}</span>}
       </li>;
     })}</ul>
-    {source && <a className="guide-equipment-conditions-source" href={source} target="_blank" rel="noreferrer">条件样本</a>}
+    {source && <a className="guide-equipment-conditions-source" href={source} target="_blank" rel="noreferrer">装备样本</a>}
   </section>;
 }
