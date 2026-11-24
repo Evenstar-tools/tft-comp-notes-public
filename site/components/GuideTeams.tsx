@@ -371,7 +371,7 @@ export function GuideTeams({ section, data, initialTeam, initialStage, initialFl
               <ImageDown size={16} aria-hidden /><span>一图流</span>
             </button>
             {guideHref && sameEdition(data.id, season.id) && <GuideEditorLink team={shownBoard} title={editorTitle} href={guideHref}
-              secondary={!!canEditPositions} focusUnit={shownRoles.find(role => role.label === "主C")?.units[0]} />}
+              owner={session?.isOwner} secondary={!!canEditPositions} focusUnit={shownRoles.find(role => role.label === "主C")?.units[0]} />}
             {canEditPositions && <GuideBoardPositionEditor key={team.id} publicationId={publicationId!}
               sectionId={section.id} teamId={team.id} title={editorTitle} href={guideHref!} />}
           </div>

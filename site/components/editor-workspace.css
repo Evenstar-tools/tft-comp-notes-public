@@ -468,6 +468,9 @@
   .editor .editor-unit-tray .unit-lock-action { width: 21px; min-height: 21px; }
   .editor .workspace .item-groups { max-height: min(34dvh, 200px); }
 }
+.editor-local-teams {padding:6px 8px;color:var(--muted);}
+.editor-local-teams > summary {cursor:pointer;font-size:.875rem;}
+.editor-local-teams .menu-list {margin-top:6px;}
 .editor-guide-source {
   display:flex;align-items:center;justify-content:space-between;gap:12px;
   margin:10px 0;padding:8px 12px;border:1px solid var(--line);
