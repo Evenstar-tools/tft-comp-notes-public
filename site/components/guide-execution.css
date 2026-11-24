@@ -180,48 +180,35 @@
   text-underline-offset: 3px;
 }
 .guide-equipment-conditions ul {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 7px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 .guide-equipment-conditions li {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: start;
-  gap: 4px 8px;
-  padding: 7px 9px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 6px;
   border: 1px solid var(--line);
   border-radius: 7px;
   background: var(--panel);
 }
-.guide-equipment-conditions-item { display: flex; align-items: center; gap: 7px; line-height: 1.25; }
-.guide-equipment-conditions-item img { flex: none; }
-.guide-equipment-conditions-item strong { font-size: .875rem; }
-.guide-equipment-conditions-item:hover strong { text-decoration: underline; text-underline-offset: 3px; }
-.guide-equipment-conditions-item small,
-.guide-equipment-conditions-sample { display: block; color: var(--muted); font-size: .75rem; }
+.guide-equipment-conditions-item {
+  display: inline-grid;
+  min-width: 40px;
+  min-height: 40px;
+  place-items: center;
+  border-radius: 5px;
+}
+.guide-equipment-conditions-item:is(:hover, :focus-visible) { background: var(--raised); }
+.guide-equipment-conditions-arrow { flex: none; color: var(--muted); }
 .guide-equipment-conditions-kind {
-  align-self: center;
   padding: 2px 5px;
   border-radius: 4px;
   background: var(--raised);
-  color: var(--muted);
+  color: light-dark(#8a3240, #ffc0c6);
   font-size: .75rem;
-}
-.guide-equipment-conditions-kind[data-kind="upgrade"] { color: var(--accent); }
-.guide-equipment-conditions-kind[data-kind="required"] { color: light-dark(#8a3240, #ffc0c6); }
-.guide-equipment-conditions p {
-  grid-column: 1 / -1;
-  margin: 0;
-  color: var(--muted);
-  font-size: .8125rem;
-  line-height: 1.45;
-}
-.guide-equipment-conditions p strong { color: var(--text); }
-.guide-equipment-conditions-sample { grid-column: 1 / -1; }
-@media (max-width: 600px) {
-  .guide-equipment-conditions ul { grid-template-columns: 1fr; }
 }
