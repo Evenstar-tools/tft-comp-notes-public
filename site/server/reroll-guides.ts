@@ -41,6 +41,7 @@ function replaceWording(block: ContentBlock, edits: NonNullable<BoardEdit["wordi
   if (block.type !== "text" || !block.text) return children ? { ...block, children } : block;
   let { text, elements } = block;
   for (const { before, after } of edits) {
+    if (after.includes(before) && text.includes(after)) continue;
     if (!text.includes(before) || (elements?.length && !elements.some(element => element.text_run?.content.includes(before)))) continue;
     text = text.replace(before, after);
     elements = elements?.map(element => element.text_run?.content.includes(before)
