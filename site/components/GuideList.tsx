@@ -10,7 +10,7 @@ import { canRankRecommendations, compareGuideFamilyPerformance, currentFamilyBat
 import { carryMinGames, guideCarryRows } from "@/domain/guide-carry-stats";
 import { sectionTeams } from "@/domain/document-flow";
 import { boardTitle, groupGuides, type GuideFamily } from "@/domain/guide-families";
-import { guideBoardName, guideFacets, guideLink, guidePlaystyle, guideRollLevel, guideRoster, guideRoute, guideStrategyLabel, guideTitleWithoutPlaystyle, matchingGear, parseGuideFilters, primaryFirst, readingNotes, type GuideFilters, type GuideSearchScope, type GuideSort } from "@/domain/guide-reading";
+import { guideBoardName, guideFacets, guideLink, guidePlaystyle, guideRollLevel, guideRoster, guideRoute, guideStrategyLabel, guideTitleWithoutPlaystyle, matchingGear, parseGuideFilters, primaryFirst, readingNotes, repeatsFormationLabel, type GuideFilters, type GuideSearchScope, type GuideSort } from "@/domain/guide-reading";
 import { patchRecommendationLabels, type PatchRecommendationBatch } from "@/domain/patch-recommendations";
 import { homeGuideFilter, guideWearerQuery, searchPhaseNote, splitGuideConditions, guideSearchKey, guideStyleKey } from "@/domain/guide-search";
 import { equippedGuideRoutes, familyNameMatches, homeSearchIntent, matchHomeGuide, searchUnitIds } from "@/domain/home-guide-search";
@@ -670,12 +670,14 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
       const quickNote = expanded && opening && fullOpening?.startsWith(opening)
         ? homeOpening(fullOpening.slice(opening.length).trim(), title)
         : undefined;
-      const detailsIds = [rating?.games ? ratingId : "", review ? reviewId : ""].filter(Boolean).join(" ") || undefined;
       const strategy = team && guideStrategyLabel(section, team, data, primary);
       const heroCondition = augment && curated?.rows.find(row => row.id === augment.id);
+      const conditionId = heroCondition ? `${titleId}-condition` : undefined;
+      const detailsIds = [rating?.games ? ratingId : "", review ? reviewId : "", conditionId].filter(Boolean).join(" ") || undefined;
+      const repeatedFormation = !needle && !alternative && repeatsFormationLabel(playstyle, strategy);
       const description = augment ? [augment.round, augment.label || augment.name, strategy].filter(Boolean).join(" · ")
         : alternative && team?.id !== family?.lead.team.id && kind && !title.includes(kind)
-          ? [kind, strategy].filter(Boolean).join(" · ") : strategy ?? (playstyle ? "" : facet.style);
+          ? [kind, strategy].filter(Boolean).join(" · ") : repeatedFormation ? "" : strategy ?? (playstyle ? "" : facet.style);
       const variants = [...new Map([{ section, teams, matches, rows }, ...siblings].flatMap(entry => {
         const options = needle ? entry.matches.filter(match => match.kind === "board").map(match => match.board) : entry.teams;
         return options.filter(option => {
@@ -713,10 +715,9 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
               <small>{rating.games.toLocaleString("zh-CN")} 场{core ? " · 核心样本" : formation ? " · 跨人口样本" : ""}</small>
             </span>}
           </div>
-          {description && <small className="guide-result-meta">
+          {description && <small className="guide-result-meta" id={conditionId}>
             {heroCondition ? <span className="guide-hero-condition">
-              <GuideConditionIcon condition={heroCondition} size={19} />
-              <span className="guide-hero-condition-tag">{guideConditionTag(heroCondition)}</span>
+              <span className="guide-condition-tag"><GuideConditionIcon condition={heroCondition} size={16} />{guideConditionTag(heroCondition)}</span>
               <span>{description}</span>
             </span> : description}
           </small>}

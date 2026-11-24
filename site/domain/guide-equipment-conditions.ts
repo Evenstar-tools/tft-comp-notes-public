@@ -26,6 +26,7 @@ export type GuideCondition = {
   image?: string;
   replaced?: Item;
   href: string;
+  detail?: string;
 } & Pick<ConditionRule, "kind" | "action" | "games" | "featured">;
 
 type GuideConditions = { rows: GuideCondition[]; board?: Team; label?: string; wearer?: Unit; source?: string };
@@ -66,7 +67,7 @@ export function guideEquipmentConditions(section: Section, teams: Team[], data: 
   if (!teams.length || !sameEdition(data.id, currentPatch.seasonId)) return;
   const augment = heroAugmentForGuide(section);
   const hero = augment && augmentCondition(augment.id, { kind: "required" });
-  const heroRows = hero ? [hero] : [];
+  const heroRows = hero && augment ? [{ ...hero, detail: [augment.round, augment.rarity, augment.role].filter(Boolean).join(" · ") }] : [];
   const entry = guideConditions[section.id];
   if (!entry || build !== entry.build) return hero ? { rows: heroRows } : undefined;
   const board = teams.find(team => team.id === entry.boardId);

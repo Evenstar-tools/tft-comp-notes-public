@@ -16,19 +16,23 @@ export function GuideEquipmentConditions({ conditions, guideHref, onViewBoard }:
 }) {
   const { label, rows, source, wearer } = conditions;
   const title = rows.some(row => row.category === "海克斯") ? "阵容条件" : "装备条件";
-  return <section id={guideConditionsAnchor} className="guide-equipment-conditions" aria-label={title}>
-    <div className="guide-equipment-conditions-head">
+  const singleAugment = rows.length === 1 && rows[0].category === "海克斯" && !label && !source;
+  return <section id={guideConditionsAnchor} className="guide-equipment-conditions" aria-label={title} data-standalone-augment={singleAugment || undefined}>
+    {!singleAugment && <div className="guide-equipment-conditions-head">
       <h3>{title}</h3>
-      {label && <span className="guide-equipment-conditions-context">{onViewBoard ? <button type="button" onClick={onViewBoard} aria-label={`查看${label}棋盘`}>{label}</button> : label}{wearer && " · " + wearer.name}</span>}
-      {source && <a className="guide-equipment-conditions-source" href={source} target="_blank" rel="noreferrer">条件样本</a>}
-    </div>
+      {(wearer || (onViewBoard && label)) && <span className="guide-equipment-conditions-context">
+        {onViewBoard && label && <><button type="button" onClick={onViewBoard} aria-label={`查看${label}棋盘`}>{label}</button>{wearer && " · "}</>}{wearer?.name}
+      </span>}
+    </div>}
     <ul>{rows.map(row => {
       const swapLabel = row.replaced ? `${row.name}替换${row.replaced.name}` : row.name;
       const tag = guideConditionTag(row);
-      return <li key={row.id}>
-        <a className="guide-equipment-conditions-item" href={row.item ? itemLink(row.id, wearer?.id, guideHref) : row.href}
+      const augment = row.category === "海克斯";
+      return <li key={row.id} data-augment={augment || undefined}>
+        <a className="guide-equipment-conditions-item" data-augment={augment || undefined} href={row.item ? itemLink(row.id, wearer?.id, guideHref) : row.href}
           aria-label={swapLabel} title={swapLabel}>
           <GuideConditionIcon condition={row} size={34} />
+          {augment && <strong>{row.name}</strong>}
         </a>
         {row.replaced && <>
           <ArrowRight className="guide-equipment-conditions-arrow" size={16} aria-hidden />
@@ -37,8 +41,10 @@ export function GuideEquipmentConditions({ conditions, guideHref, onViewBoard }:
             <ItemIcon item={row.replaced} size={34} />
           </a>
         </>}
-        {tag && <span className="guide-equipment-conditions-kind">{tag}</span>}
+        {tag && <span className="guide-condition-tag">{tag}</span>}
+        {row.detail && <span className="guide-equipment-condition-detail">{row.detail}</span>}
       </li>;
     })}</ul>
+    {source && <a className="guide-equipment-conditions-source" href={source} target="_blank" rel="noreferrer">条件样本</a>}
   </section>;
 }

@@ -1,4 +1,4 @@
-import { guideLink } from "@/domain/guide-reading";
+import { guideLink, repeatsFormationLabel } from "@/domain/guide-reading";
 import type { ReactNode } from "react";
 import { formatRecommendationMean, recommendationGroups, type GuideFamilyBatch, type RecommendationGroup, type RecommendationStat } from "@/domain/guide-family-stats";
 import type { Team, Unit } from "@/domain/types";
@@ -34,16 +34,18 @@ export function PatchRecommendationList({ stats, cards, home, previousBuild, fea
   })).filter(group => group.entries.length > 0);
 
   return <div className="home-patch-recommendations">
-    <div className="home-patch-meta">
-      <p className="home-patch-sample">
-        {previousBuild ? <>上一版参考 · {stats.queue} {stats.patch} · </> : "数据更新 "}
-        <time dateTime={stats.updatedAt}>{date} {time} UTC</time>
-      </p>
-      {groups.length > 1 && <nav className="home-patch-jumps" aria-label="跳到推荐分组">
-        {groups.map(({ id, label }) => <a key={id} href={"#home-patch-" + id}>{id === "reroll" ? "赌狗" : label}</a>)}
-      </nav>}
+    <div className="home-patch-overview">
+      <div className="home-patch-meta">
+        <p className="home-patch-sample">
+          {previousBuild ? <>上一版参考 · {stats.queue} {stats.patch} · </> : "数据更新 "}
+          <time dateTime={stats.updatedAt}>{date} {time} UTC</time>
+        </p>
+        {groups.length > 1 && <nav className="home-patch-jumps" aria-label="跳到推荐分组">
+          {groups.map(({ id, label }) => <a key={id} href={"#home-patch-" + id}>{id === "reroll" ? "赌狗" : label}</a>)}
+        </nav>}
+      </div>
+      {featured}
     </div>
-    {featured}
     {groups.map(({ id: group, label, entries }) => {
       const heading = "home-patch-" + group;
       return <section key={group} className="home-patch-group" aria-labelledby={heading}>
@@ -55,9 +57,10 @@ export function PatchRecommendationList({ stats, cards, home, previousBuild, fea
             const href = guideLink(rating.sectionId, entryTeamId ?? team.id, homeGuideReturn(home, cardId, team.id));
             const tone = rating.mean < 4.5 ? "strong" : rating.mean > 4.5 ? "weak" : "middle";
             const note = opening || (!strategy ? badgeLabel : "");
+            const shownStrategy = repeatsFormationLabel(label, strategy) ? undefined : strategy;
             return <article key={id} id={id} className="home-patch-card">
               <a href={href} data-home-board={team.id} className="home-patch-card-link"
-                aria-labelledby={id + "-title"} aria-describedby={[id + "-roles", strategy && id + "-strategy", note && id + "-note", id + "-mean"].filter(Boolean).join(" ")}>
+                aria-labelledby={id + "-title"} aria-describedby={[id + "-roles", shownStrategy && id + "-strategy", note && id + "-note", id + "-mean"].filter(Boolean).join(" ")}>
                 <div className="home-patch-avatars" id={id + "-roles"}>
                   {avatars.map(({ unit, role }) => <span key={unit.id} className="home-patch-avatar" data-core={role}>
                     <img className={"cost-" + unit.cost} src={unit.image} alt="" title={unit.name}
@@ -68,7 +71,7 @@ export function PatchRecommendationList({ stats, cards, home, previousBuild, fea
                 <div className="home-patch-card-copy">
                   <div className="home-patch-title">
                     <h3 id={id + "-title"}>{title}</h3>
-                    {strategy && <span id={id + "-strategy"} className="home-patch-strategy">{strategy}</span>}
+                    {shownStrategy && <span id={id + "-strategy"} className="home-patch-strategy">{shownStrategy}</span>}
                     {conditional && <span>有条件</span>}
                   </div>
                   {note && <p id={id + "-note"}>{note}</p>}

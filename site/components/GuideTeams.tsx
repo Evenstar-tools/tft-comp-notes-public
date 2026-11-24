@@ -24,7 +24,7 @@ import { posterStageTitle } from "@/domain/poster";
 import { boardStages, readTeamStage, stageLabels } from "@/domain/team-stages";
 import { traitCounts, traitGroup, usedPopulation } from "@/domain/team";
 import { displayTraitNames } from "@/domain/trait-names.mjs";
-import { heroAugmentForGuide, heroAugmentCategory } from "@/domain/hero-augments";
+import { heroAugmentForGuide, heroAugmentCategory, omitRepeatedHeroEntry } from "@/domain/hero-augments";
 import familyStats from "@/data/guide-family-stats.json";
 import { guideFamilyRows } from "@/domain/guide-family-stats";
 import type { Section } from "@/domain/document";
@@ -146,6 +146,10 @@ export function GuideTeams({ section, data, initialTeam, initialStage, initialFl
     ...(siblings ?? []),
   ].map(variant => [variant.teamId, variant])).values()];
   const augment = heroAugmentForGuide(section);
+  const equipmentConditions = guideEquipmentConditions(section, teams, data);
+  const conditionBoard = equipmentConditions?.board;
+  const inlineAugment = augment && equipmentConditions?.rows.some(row => row.id === augment.id);
+  const augmentUnitName = inlineAugment ? data.units.find(unit => unit.id === augment.unitId)?.name : undefined;
   const heroGuide = !!augment || section.category === heroAugmentCategory;
   const familyRows = heroGuide ? [] : guideFamilyRows(familyStats, data.id, section.id, teams);
   const matchingFamily = familyRows.filter(row => row.boards.some(board => board.id === team.id));
@@ -175,7 +179,8 @@ export function GuideTeams({ section, data, initialTeam, initialStage, initialFl
     const body = boardNames.includes(prefix) ? source.slice(separator < 0 ? source.length : separator + 1).trim() : source;
     const block = blocks.find(block => block.type === "text" && !block.label && block.text?.trim() === source);
     const linked = block && hasGuideLinks(block);
-    const text = linked ? body : compactGuideParagraph(body, team, data, seenCopy, advice?.note);
+    const visibleBody = inlineAugment ? omitRepeatedHeroEntry(body, augment, augmentUnitName) : body;
+    const text = linked ? body : compactGuideParagraph(visibleBody, team, data, seenCopy, advice?.note);
     if (!text) continue;
     rememberGuideCopy(text, seenCopy);
     passages.push({ source, text, brief: !linked && !text.includes("\n") && text.length <= 90, blockId: block?.id });
@@ -298,8 +303,6 @@ export function GuideTeams({ section, data, initialTeam, initialStage, initialFl
       (kind === "主阵" && formation && shownPopulation > Number(formation)));
   const boardTitle = cap ? shownPopulation + "级上限棋盘" : shownPopulation + " 人口棋盘";
   const guideHref = publicationId ? boardViewLink(activeStage, showFlex ? flexPreview?.id : undefined) : undefined;
-  const equipmentConditions = guideEquipmentConditions(section, teams, data);
-  const conditionBoard = equipmentConditions?.board;
   const editorTitle = [...new Set([section.title, guideBoardName(team), !mainBoardActive ? stageLabels[activeStage] : "",
     showFlex && flexPreview ? flexPreview.incoming.name + "替" + flexPreview.outgoing.name : ""].filter(Boolean))].join(" · ");
   const intro = passages[0]?.source === openingText.trim() ? passages[0] : undefined;
