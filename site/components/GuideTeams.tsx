@@ -324,10 +324,14 @@ export function GuideTeams({ section, data, initialTeam, initialStage, initialFl
   return <>{renderHeader?.(team, performance)}<section className={`guide-reader${section.reroll ? " guide-reroll" : ""}`} aria-label="阵容棋盘与运营">
     {openingLine}
     {oceanBoards ? <div className="guide-board-options" role="group" aria-label="阵容方案">
-      <div className="guide-variants guide-ocean-choices">{oceanBoards.map(board =>
-        <button key={board.id} type="button" aria-pressed={board.id === team.id} onClick={() => pickTeam(board)}>
-          <span className="guide-variant-name">{guideBoardName(board)}</span>
-        </button>)}</div>
+      <div className="guide-variants guide-ocean-choices">{oceanBoards.map(board => {
+        const name = guideBoardName(board);
+        const stage = name.match(/^(\d+级[^·]*?)\s*·\s*(.+)$/);
+        return <button key={board.id} type="button" aria-label={name} aria-pressed={board.id === team.id} onClick={() => pickTeam(board)}>
+          {stage && <small>{stage[1].trim()}</small>}
+          <span className="guide-variant-name">{stage?.[2] ?? name}</span>
+        </button>;
+      })}</div>
     </div> : <div className={`guide-board-options${compactControls ? " guide-board-options--compact" : ""}${reviewedPhases ? " guide-board-options--reviewed" : ""}`}>
       {!!firstPhases.length && <div className="stage-options guide-phases" role="group" aria-label="运营阶段">{firstPhases.map(phaseButton)}</div>}
       {!!remainingPhases.length && <details className="guide-extra-phases"><summary>其他运营阶段</summary>
