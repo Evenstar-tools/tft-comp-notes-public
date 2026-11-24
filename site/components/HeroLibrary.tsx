@@ -6,7 +6,8 @@ import { itemMap, season, unitMap, traitMap } from "@/data";
 import liveStats from "@/data/hero-stats.json";
 import type { WearerSnapshot } from "@/data/item-library";
 import { commonHeroItems, type HeroItemSample, type HeroItemSource } from "@/domain/hero-insights";
-import { hasUnlockCondition } from "@/domain/unlocks";
+import type { Unit } from "@/domain/types";
+import { hasUnlockCondition, unlockText } from "@/domain/unlocks";
 import { guideLink } from "@/domain/guide-reading";
 import { heroGuideGroups, type HeroGuideIndex } from "@/domain/hero-guides";
 import { heroAugmentForUnit } from "@/domain/hero-augments";
@@ -48,6 +49,24 @@ const browserQuery = () => window.location.search.slice(1);
 
 function libraryHref(params: URLSearchParams) {
   return "/heroes" + (params.size ? "?" + params.toString() : "");
+}
+
+function HeroUnlockList({ units, onSelect }: { units: Unit[]; onSelect: (id: string) => void }) {
+  const costs = [...new Set(units.map(unit => unit.cost))].sort((a, b) => a - b);
+  return <div className="unit-list-scroll hero-unlock-list" aria-label="英雄解锁条件">
+    {costs.map(cost => <section key={cost} className={`hero-unlock-group cost-${cost}`}>
+      <h2>{cost} 费</h2>
+      <ul>
+        {units.filter(unit => unit.cost === cost).map(unit => <li key={unit.id}>
+          <button type="button" onClick={() => onSelect(unit.id)}
+            aria-label={unit.name} aria-describedby={`unlock-${unit.id}`}>
+            {unit.image && <img src={unit.image} alt="" width={42} height={42} loading="lazy" />}
+            <span><strong>{unit.name}</strong><span id={`unlock-${unit.id}`}>{unlockText(unit)}</span></span>
+          </button>
+        </li>)}
+      </ul>
+    </section>)}
+  </div>;
 }
 
 export function HeroLibrary({ guides, commonItems, gearSource: liveGearSource }: {
@@ -241,7 +260,7 @@ export function HeroLibrary({ guides, commonItems, gearSource: liveGearSource }:
           matrixReading={{ trait: traitIds[0], tier: Number(params.get("tier")) || undefined, profileAction }}
           renderList={statistics ? units => stats ?
             <HeroResultsTable stats={stats} units={units} selectedId={unit?.id} onSelect={select} sort={sort} setSort={setSort} /> :
-            heroArchiveNotice : undefined}
+            heroArchiveNotice : filters.unlock && !matrix ? units => <HeroUnlockList units={units} onSelect={select} /> : undefined}
           onFiltersChange={value => update({
             ...(unit && value.view === "cards" && !matchesUnitFilter(value)(unit) && { unit: "" }),
             q: value.query,
