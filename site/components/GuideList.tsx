@@ -490,9 +490,11 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
   });
   else if (needle) results.sort((a, b) => b.rank - a.rank);
   const byCategory = !needle && sort === "category" && !isHeroList;
+  const heroConditionGroup = isHeroList && results.length > 0 && results.every(({ augment, curated }) =>
+    augment && curated?.rows.some(row => row.id === augment.id));
   const categoryGroups = new Map<string, Card[]>();
   for (const entry of results) {
-    const categoryName = byCategory ? tierLabels[entry.tier] : "";
+    const categoryName = byCategory ? tierLabels[entry.tier] : heroConditionGroup ? "海克斯定阵" : "";
     const group = categoryGroups.get(categoryName);
     if (group) group.push(entry);
     else categoryGroups.set(categoryName, [entry]);
@@ -675,9 +677,12 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
       const conditionId = heroCondition ? `${titleId}-condition` : undefined;
       const detailsIds = [rating?.games ? ratingId : "", review ? reviewId : "", conditionId].filter(Boolean).join(" ") || undefined;
       const repeatedFormation = !needle && !alternative && repeatsFormationLabel(playstyle, strategy);
-      const description = augment ? [augment.round, augment.label || augment.name, strategy].filter(Boolean).join(" · ")
+      const rollStyle = !augment && strategy && /^[1-5](?:\/[1-5])?费慢搜$/.test(strategy) ? strategy : undefined;
+      const styleTag = playstyle ?? rollStyle;
+      const strategyDetail = strategy && (!styleTag || guideStyleKey(strategy) !== guideStyleKey(styleTag)) ? strategy : undefined;
+      const description = augment ? [augment.round, augment.label || augment.name, strategyDetail].filter(Boolean).join(" · ")
         : alternative && team?.id !== family?.lead.team.id && kind && !title.includes(kind)
-          ? [kind, strategy].filter(Boolean).join(" · ") : repeatedFormation ? "" : strategy ?? (playstyle ? "" : facet.style);
+          ? [kind, strategyDetail].filter(Boolean).join(" · ") : repeatedFormation ? "" : strategyDetail ?? (styleTag ? "" : facet.style);
       const variants = [...new Map([{ section, teams, matches, rows }, ...siblings].flatMap(entry => {
         const options = needle ? entry.matches.filter(match => match.kind === "board").map(match => match.board) : entry.teams;
         return options.filter(option => {
@@ -706,7 +711,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
           <div className="guide-title-row">
             <div className="guide-card-heading">
               <CardTitle className="guide-result-title" id={titleId}>{title}</CardTitle>
-              {playstyle && <span className="guide-playstyle-tag" title="打法">{playstyle}</span>}
+              {styleTag && <span className="guide-playstyle-tag" title="打法">{styleTag}</span>}
               {review && <span className="guide-review-badge" id={reviewId} title={review.note}>待复核</span>}
             </div>
             {rating && <span id={ratingId} className={"guide-placement " + (rating.mean < 4.5 ? "strong" : rating.mean > 4.5 ? "weak" : "middle")}
@@ -716,9 +721,16 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
             </span>}
           </div>
           {description && <small className="guide-result-meta" id={conditionId}>
-            {heroCondition ? <span className="guide-hero-condition">
-              <span className="guide-condition-tag"><GuideConditionIcon condition={heroCondition} size={16} />{guideConditionTag(heroCondition)}</span>
-              <span>{description}</span>
+            {heroCondition && augment ? <span className="guide-hero-condition">
+              {heroConditionGroup ? <>
+                <GuideConditionIcon condition={heroCondition} size={22} />
+                <strong className="guide-hero-condition-name">{augment.label || augment.name}</strong>
+                <span className="guide-hero-condition-round">{augment.round}</span>
+                {strategyDetail && <span>{strategyDetail}</span>}
+              </> : <>
+                <span className="guide-condition-tag"><GuideConditionIcon condition={heroCondition} size={16} />{guideConditionTag(heroCondition)}</span>
+                <span>{description}</span>
+              </>}
             </span> : description}
           </small>}
           {formation && <small className="guide-result-meta">
@@ -922,7 +934,8 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
     {!recommended && groups.length > 0 && <div className="guide-sections">{groups.map(([name, entries], index) => {
       const cards = renderCards(entries, name, index === 0);
       const headingId = "guide-group-" + index;
-      return name ? <section key={name} id={name === backupCategory ? "backup-guides" : undefined} className="guide-section" aria-labelledby={headingId}>
+      return name ? <section key={name} id={name === backupCategory ? "backup-guides" : undefined} className="guide-section"
+        aria-labelledby={headingId} data-hero-conditions={heroConditionGroup || undefined}>
         <h2 id={headingId}>{categoryDisplay(name)}</h2>
         {index === 0 && groupLinks.length > 0 && <details className="home-group-jump-mobile"><summary>跳到分组</summary><div>
           {groupLinks.map(group => <a key={group.id} href={"#" + group.id} onClick={event => { event.currentTarget.closest("details")!.open = false; }}>{group.label}</a>)}
