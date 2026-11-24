@@ -154,3 +154,74 @@
   .guide-gear-first { flex-wrap: wrap; gap: 2px 5px; }
   .guide-gear-handoff { min-height: 42px; padding-block: 3px; }
 }
+.guide-equipment-conditions { margin-block: 0 12px; }
+.guide-equipment-conditions-head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  margin-bottom: 6px;
+}
+.guide-equipment-conditions-head h3 { margin: 0; font-size: .94rem; }
+.guide-equipment-conditions-context,
+.guide-equipment-conditions-source { font-size: .8125rem; color: var(--muted); }
+.guide-equipment-conditions-context button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.guide-equipment-conditions-source {
+  margin-inline-start: auto;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.guide-equipment-conditions ul {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.guide-equipment-conditions li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 4px 8px;
+  padding: 7px 9px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--panel);
+}
+.guide-equipment-conditions-item { display: flex; align-items: center; gap: 7px; line-height: 1.25; }
+.guide-equipment-conditions-item img { flex: none; }
+.guide-equipment-conditions-item strong { font-size: .875rem; }
+.guide-equipment-conditions-item:hover strong { text-decoration: underline; text-underline-offset: 3px; }
+.guide-equipment-conditions-item small,
+.guide-equipment-conditions-sample { display: block; color: var(--muted); font-size: .75rem; }
+.guide-equipment-conditions-kind {
+  align-self: center;
+  padding: 2px 5px;
+  border-radius: 4px;
+  background: var(--raised);
+  color: var(--muted);
+  font-size: .75rem;
+}
+.guide-equipment-conditions-kind[data-kind="upgrade"] { color: var(--accent); }
+.guide-equipment-conditions-kind[data-kind="required"] { color: light-dark(#8a3240, #ffc0c6); }
+.guide-equipment-conditions p {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--muted);
+  font-size: .8125rem;
+  line-height: 1.45;
+}
+.guide-equipment-conditions p strong { color: var(--text); }
+.guide-equipment-conditions-sample { grid-column: 1 / -1; }
+@media (max-width: 600px) {
+  .guide-equipment-conditions ul { grid-template-columns: 1fr; }
+}

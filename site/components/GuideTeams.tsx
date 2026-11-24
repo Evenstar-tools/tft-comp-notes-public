@@ -3,6 +3,7 @@ import { Fragment, useCallback, useEffect, useId, useMemo, useRef, useState, typ
 import { ArrowRight, ImageDown, Maximize2, X } from "lucide-react";
 import { Board } from "./Board";
 import { GuideEquipment } from "./GuideEquipment";
+import { GuideEquipmentConditions } from "./GuideEquipmentConditions";
 import { GuideEditorLink } from "./GuideEditorLink";
 import { GuidePoster } from "./GuidePoster";
 import { guideBoardKind, teamPlacement } from "./GuidePlacement";
@@ -15,6 +16,7 @@ import { sectionTeams } from "@/domain/document-flow";
 import { allBlocks, guideBoardName, guideLink, guideRoute, guideStrategyLabel, oceanGravesUnlockBoardId, primaryFirst, readingNotes, type GuideRole } from "@/domain/guide-reading";
 import { compactGuideParagraph, compactUtilityCopy, hasGuideLinks, rememberGuideCopy } from "@/domain/guide-copy";
 import { guideFlexPreview, reviewedGuidePhases } from "@/domain/guide-execution";
+import { guideEquipmentConditions } from "@/domain/guide-equipment-conditions";
 import { rerollRoute } from "@/domain/reroll-stages";
 import { boardTraitLink } from "@/domain/trait-performance";
 import { editorLink, itemLink, ownerEditorPath, posterShareLink, readPosterShare, type PosterShare } from "@/domain/links";
@@ -296,6 +298,7 @@ export function GuideTeams({ section, data, initialTeam, initialStage, initialFl
       (kind === "主阵" && formation && shownPopulation > Number(formation)));
   const boardTitle = cap ? shownPopulation + "级上限棋盘" : shownPopulation + " 人口棋盘";
   const guideHref = publicationId ? boardViewLink(activeStage, showFlex ? flexPreview?.id : undefined) : undefined;
+  const equipmentConditions = guideEquipmentConditions(section.id, teams, data);
   const editorTitle = [...new Set([section.title, guideBoardName(team), !mainBoardActive ? stageLabels[activeStage] : "",
     showFlex && flexPreview ? flexPreview.incoming.name + "替" + flexPreview.outgoing.name : ""].filter(Boolean))].join(" · ");
   const intro = passages[0]?.source === openingText.trim() ? passages[0] : undefined;
@@ -348,6 +351,8 @@ export function GuideTeams({ section, data, initialTeam, initialStage, initialFl
           {authoredStages.map(stage => <button key={stage} type="button" aria-pressed={activeStage === stage}
             onClick={() => pickStage(stage)}>{stageLabels[stage]}</button>)}
         </div>}
+        {equipmentConditions && <GuideEquipmentConditions conditions={equipmentConditions} guideHref={guideHref}
+          onViewBoard={equipmentConditions.board.id !== team.id || !mainBoardActive ? () => pickTeam(equipmentConditions.board) : undefined} />}
         <div className="reader-board-title guide-board-head"><h3>{boardTitle}</h3>
           <div className="guide-board-actions">
             <button type="button" className="guide-zoom-trigger guide-board-zoom" aria-label="放大棋盘" title="放大棋盘" aria-haspopup="dialog" onClick={() => setZoomed(true)}>
