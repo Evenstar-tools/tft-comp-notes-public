@@ -40,16 +40,18 @@ for (const item of season.items) {
 }
 const sourceItems = new Map([...gameItems].map(([sourceId, itemId]) => [itemId, sourceId]));
 
-type GearQuery = { unitApi: string; stars: "1" | "2" | "3"; lockedItems: string[]; cohort: CohortPatch };
-type GearBuild = { items: [string, string, string]; games: number; mean: number | null };
+type GearQuery = { unitApi: string; stars: "1" | "2" | "3"; lockedItems: string[]; cohort: CohortPatch; showSmallSamples?: boolean };
+type GearBuild = { items: [string, string, string]; games: number; mean: number };
 type Cohort = { builds: GearBuild[]; asOf: string };
 const cache = new Map<string, Cohort & { expires: number }>();
 
 export function readGearQuery(params: URLSearchParams): GearQuery | undefined {
   const lockedItems = params.getAll("item");
   const periodIds = params.getAll("stats");
+  const views = params.getAll("view");
   if (params.getAll("unit").length !== 1 || params.getAll("stars").length !== 1 ||
-      periodIds.length > 1 || params.size !== 2 + lockedItems.length + periodIds.length ||
+      periodIds.length > 1 || views.length > 1 || (views.length === 1 && views[0] !== "table") ||
+      params.size !== 2 + lockedItems.length + periodIds.length + views.length ||
       lockedItems.length > maxLockedGearItems ||
       new Set(lockedItems).size !== lockedItems.length) return;
   const unit = params.get("unit") ?? "";
@@ -58,7 +60,7 @@ export function readGearQuery(params: URLSearchParams): GearQuery | undefined {
       || (stars !== "1" && stars !== "2" && stars !== "3")) return;
   const period = periodIds.length ? getStatPeriod(periodIds[0]) : undefined;
   if (periodIds.length && (period?.channel !== "pbe" || !period.metaTft)) return;
-  return { unitApi: sourceUnits[unit], stars, lockedItems, cohort: period?.metaTft ?? defaultCohort };
+  return { unitApi: sourceUnits[unit], stars, lockedItems, cohort: period?.metaTft ?? defaultCohort, showSmallSamples: views[0] === "table" };
 }
 
 async function readBuildPayload(response: Response): Promise<unknown> {
@@ -111,7 +113,7 @@ function buildRows(payload: unknown, unitApi: string): GearBuild[] {
     seen.add(signature);
     const games = counts.reduce((sum, count) => sum + count, 0);
     if (!games) continue;
-    const mean = games >= minGames ? counts.reduce((sum, count, index) => sum + count * (index + 1), 0) / games : null;
+    const mean = counts.reduce((sum, count, index) => sum + count * (index + 1), 0) / games;
     builds.push({ items, games, mean });
   }
   return builds.sort((a, b) => b.games - a.games);
@@ -145,11 +147,11 @@ async function loadCohort(unitApi: string, stars: GearQuery["stars"], cohort: Co
   return entry;
 }
 
-export async function conditionalGearBuilds({ unitApi, stars, lockedItems, cohort }: GearQuery) {
+export async function conditionalGearBuilds({ unitApi, stars, lockedItems, cohort, showSmallSamples }: GearQuery) {
   const { builds, asOf } = await loadCohort(unitApi, stars, cohort);
   const rows = lockedItems.length
     ? remainingGearRows(builds, lockedItems)
-    : builds.filter(build => build.games >= minGames).slice(0, 3);
+    : builds.filter(build => showSmallSamples || build.games >= minGames).slice(0, 3);
   const sourceQuery = new URLSearchParams({
     ...cohortFilters(cohort), tab: "builds", set: source.set,
     unit: `${unitApi}-1_${stars}_3`, item_holder_unit: `${unitApi}-1`,

@@ -28,7 +28,7 @@ export function remainingGearRows(builds: readonly (Omit<GuideBuild, "mean"> & {
   return builds.filter(build => includesLockedItems(build, itemIds)).map(build => ({
     items: missingIngredients(build.items, held),
     games: build.games,
-    mean: build.games >= conditionalGearSource.minGames ? build.mean : null,
+    mean: build.mean,
   }));
 }
 

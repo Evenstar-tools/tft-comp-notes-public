@@ -80,7 +80,7 @@ test("holding an item keeps conditional builds in their real hero, star and trai
   const remaining = [...mostUsed.items];
   remaining.splice(remaining.indexOf(rageblade), 1);
   assert.deepEqual(conditionalGearRows(kayle, [rageblade])[0], {
-    items: remaining, games: mostUsed.games, mean: mostUsed.games >= 100 ? mostUsed.mean : null,
+    items: remaining, games: mostUsed.games, mean: mostUsed.mean,
   });
   assert.deepEqual(cohorts.filter(cohort => cohort.unitId === "jinx").map(cohort => cohort.level), [8, 9]);
   assert.deepEqual(conditionalGearCohorts("s19-live-19.1.0.5973071", [rageblade]), []);
@@ -88,7 +88,7 @@ test("holding an item keeps conditional builds in their real hero, star and trai
   assert.deepEqual(conditionalGearCohorts("s19-pbe-19.1.0.5973071", [rageblade, "unknown"]), []);
 });
 
-test("conditional builds consume one held copy, suppress low-volume means, and skip other builds", () => {
+test("conditional builds consume one held copy, retain small-sample means, and skip other builds", () => {
   const cohort = { builds: [
     { items: ["a", "b", "a"], games: 99, mean: 4.39 },
     { items: ["b", "a", "c"], games: 320, mean: 4.16 },
@@ -97,11 +97,11 @@ test("conditional builds consume one held copy, suppress low-volume means, and s
   ] };
   assert.deepEqual(conditionalGearRows(cohort, ["a"]), [
     { items: ["b", "c"], games: 320, mean: 4.16 },
-    { items: ["b", "a"], games: 99, mean: null },
+    { items: ["b", "a"], games: 99, mean: 4.39 },
   ]);
   const thirdPieces = [
     { items: ["c"], games: 320, mean: 4.16 },
-    { items: ["a"], games: 99, mean: null },
+    { items: ["a"], games: 99, mean: 4.39 },
   ];
   assert.deepEqual(conditionalGearRows(cohort, ["a", "b"]), thirdPieces);
   assert.deepEqual(conditionalGearRows(cohort, ["b", "a"]), thirdPieces);
