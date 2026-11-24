@@ -7,15 +7,17 @@ const categories = Object.keys(gearGroups) as GearGroup[];
 type CategoryProps = {
   current: GearGroup;
   filters: GearFilters;
+  radiantCount?: number;
   hrefFor?: (group: GearGroup) => string;
   onNavigate?: (event: MouseEvent<HTMLAnchorElement>, group: GearGroup) => void;
 };
 
-export function GearCategoryNav({ current, filters, hrefFor, onNavigate }: CategoryProps) {
+export function GearCategoryNav({ current, filters, radiantCount, hrefFor, onNavigate }: CategoryProps) {
   return <nav className="gear-groups" aria-label="装备类别">
     {categories.map(group => <a key={group} data-gear-group={group} href={hrefFor?.(group) ?? gearHref(group, filters)}
       aria-current={current === group ? "page" : undefined} onClick={onNavigate && (event => onNavigate(event, group))}>
       {gearGroups[group]}
+      {group === "radiant" && !!radiantCount && <> <small>{radiantCount}</small></>}
     </a>)}
   </nav>;
 }

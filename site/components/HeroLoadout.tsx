@@ -68,7 +68,10 @@ export function HeroLoadout({ unit, items, gearSource, period }: {
     <section className="hero-loadout-items" aria-label="单件装备">
       <header>
         <h3>单件装备</h3>
-        <a className="hero-loadout-all text-link" href={withStatPeriod(gearHref("all", undefined, { wearer: unit.id }), period)}>查看全部装备<ArrowUpRight size={13} aria-hidden="true" /></a>
+        <div className="hero-loadout-links">
+          <a className="hero-loadout-all text-link" href={withStatPeriod(gearHref("radiant", undefined, { wearer: unit.id }), period)}>光明装</a>
+          <a className="hero-loadout-all text-link" href={withStatPeriod(gearHref("all", undefined, { wearer: unit.id }), period)}>查看全部装备<ArrowUpRight size={13} aria-hidden="true" /></a>
+        </div>
       </header>
       {sampledItems.length ? <table>
         <thead><tr>

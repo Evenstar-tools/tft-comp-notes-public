@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import { equipItem, indexRecipes, wornCombinations } from "../domain/equipment.ts";
 import { planCarousel, thirdItems } from "../domain/guide-equipment.ts";
 import { conditionalGearCohorts, conditionalGearRows } from "../domain/conditional-gear.ts";
-import { compareGearWearerSamples, gearWearerMatches, gearWearerStats } from "../domain/gear-wearer.ts";
+import { compareGearWearerSamples, gearSampleMinimum, gearWearerMatches, gearWearerStats } from "../domain/gear-wearer.ts";
 import { itemGuideOrigin, itemLink } from "../domain/links.ts";
 
 const { items, units } = JSON.parse(readFileSync(new URL("../data/season.json", import.meta.url), "utf8"));
@@ -37,6 +37,18 @@ test("wearer comparisons use the individual sample and hide both rates under 100
   assert.deepEqual(order("mean"), [strong, common, rare]);
   assert.deepEqual(order("wins"), [strong, common, rare]);
   assert.deepEqual(order("games"), [common, strong, rare]);
+});
+
+test("PBE shows sparse radiant, emblem and artifact results without changing other data", () => {
+  const sparse = { games: 18, mean: 3.44, winRate: 0.11 };
+  for (const category of ["radiant", "emblem", "artifact"]) {
+    const minGames = gearSampleMinimum(category, true, 100);
+    assert.deepEqual(gearWearerStats(sparse, minGames), sparse);
+    assert.deepEqual(gearWearerStats({ games: 0 }, minGames), { games: 0 });
+    assert.equal(gearSampleMinimum(category, false, 100), 100);
+  }
+  assert.equal(gearSampleMinimum("completed", true, 100), 100);
+  assert.equal(gearSampleMinimum("support", true, 100), 100);
 });
 
 test("carousel counts duplicate parts and carries an inherited item only once on the next board", () => {
