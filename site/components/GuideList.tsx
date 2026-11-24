@@ -546,6 +546,10 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
   const currentHomeReady = currentHomeRoutes.length > 0;
   const recommendationSnapshot = currentHomeReady ? homeFamilyStats : previousDeadline !== undefined ? previousFamilyStats : undefined;
   const selectedRoutes = recommended && recommendationSnapshot ? homeRoutes(recommendationSnapshot, candidates) : [];
+  if (currentHomeReady && recommendations?.displayOrder) {
+    const positions = new Map(recommendations.displayOrder.map((id, index) => [id, index]));
+    selectedRoutes.sort((a, b) => (positions.get(a.team.id) ?? positions.size) - (positions.get(b.team.id) ?? positions.size));
+  }
   const recommendationCards: RecommendationCard[] = selectedRoutes.map(({ entry, exact, team, group, rating, strategy, conditional }) => {
     const { section, data } = entry;
     const notes = readingNotes(section, team, data);
