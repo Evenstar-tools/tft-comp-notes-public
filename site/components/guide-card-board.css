@@ -253,23 +253,33 @@
 }
 
 @media (min-width: 1000px) {
-  .home-guide-library .guide-section > .reader-list > .guide-result:only-child:not(.is-quick-open) {
+  .guide-sections .reader-list > .guide-result:only-child {
+    grid-column: 1 / -1;
+  }
+
+  .guide-sections .reader-list > .guide-result:only-child:not(.is-quick-open):has(> .guide-card-board-toggle) {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(430px, 1.12fr);
     align-items: start;
   }
 
-  .home-guide-library .guide-section > .reader-list > .guide-result:only-child .guide-result-main {
+  .guide-sections .reader-list > .guide-result:only-child:not(.is-quick-open) > .guide-result-main {
     display: flex;
     min-height: 0;
+    grid-area: 1 / 1;
   }
 
-  .guide-section > .reader-list > .guide-result:only-child:not(.is-quick-open) > .guide-card-board-toggle {
+  .guide-sections .reader-list > .guide-result:only-child:not(.is-quick-open) > .guide-featured-conditions {
+    grid-area: 2 / 1;
+  }
+
+  .guide-sections .reader-list > .guide-result:only-child:not(.is-quick-open) > .guide-card-board-toggle {
+    grid-area: 1 / 2 / span 2;
     align-self: center;
     margin-block: 9px;
   }
 
-  .guide-section > .reader-list > .guide-result:only-child > :is(.guide-lineup-routes, .guide-family-fold, .guide-variant-links) {
+  .guide-sections .reader-list > .guide-result:only-child > :is(.guide-lineup-routes, .guide-family-fold, .guide-variant-links) {
     grid-column: 1 / -1;
   }
 }
