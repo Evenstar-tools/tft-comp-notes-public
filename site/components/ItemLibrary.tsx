@@ -81,7 +81,7 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
   const equipment = period ? archive.status === "ready" ? archive.data : undefined : currentEquipment;
   const specialStats = equipment?.special;
   const archiveMessage = period && !equipment && <p className="gear-empty gear-archive-status" role="status">
-    {archive.status === "loading" ? "正在读取装备战绩……" : "无法读取这个数据期的装备战绩"}
+    {archive.status === "loading" ? "读取历史战绩…" : "历史战绩读取失败。"}
   </p>;
   const itemHref = (...args: Parameters<typeof gearHref>) => periodGearHref(period?.id, ...args);
   const { query, order, excluded } = filters;
@@ -261,7 +261,7 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
     {(!reverse || hasWins) && <option value="wins">登顶率最高</option>}
   </select>;
   return <>
-    <div className={"page-heading gear-heading" + (ranking ? " gear-heading-ranked" : "")}>
+    <div className={"page-heading gear-heading" + (ranking ? " gear-heading-ranked" : "")} data-wearer={reverse || undefined}>
       <h1>{group === "special" ? "神器与辅助装" : group === "radiant" ? "光明装" : "装备图鉴"}</h1>
       {origin && (ranking ? !visible.some(entry => entry.id === selected) : !item) &&
         <a className="text-link gear-origin-fallback" href={origin.href}>← 返回棋盘</a>}
@@ -270,7 +270,7 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
         <StatPeriodSelect period={period} onChange={selectPeriod} />
       </div>
     </div>
-    {reverse && reverseWearer ? <section className="gear-rank" id="gear-rankings" aria-label={reverseWearer.name + "的" + gearGroups[group]}>
+    {reverse && reverseWearer ? <section className="gear-rank" data-wearer id="gear-rankings" aria-label={reverseWearer.name + "的" + gearGroups[group]}>
       <div className="gear-rank-tools" data-reverse>{search}{rankOrders}</div>
       {archiveMessage || (reverseRows.length ? <div className="gear-reverse" data-wins={hasWins || undefined} data-rate={hasRate || undefined}>
         <div className="gear-reverse-head" aria-hidden="true">

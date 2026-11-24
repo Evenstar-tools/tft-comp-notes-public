@@ -18,7 +18,7 @@ export function HeroBoardContext({ unit, guides, returnHref, hideGear = false }:
   const items = first?.example.items.flatMap(id => itemMap.get(id) ?? []) ?? [];
   function metadata(guide: HeroGuideIndex[string][number]) {
     const { role, group, board, title } = guide;
-    return [board !== title && board, group === "过渡" && group, role, guide.example.stars + " 星"]
+    return [board !== title && "棋盘 " + board, group === "过渡" && group, role, guide.example.stars + " 星"]
       .filter(Boolean).join(" · ");
   }
   return (

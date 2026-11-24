@@ -136,9 +136,8 @@ export function HeroLibrary({ guides, commonItems, gearSource: liveGearSource }:
   if (unit && focused) return <HeroProfile key={unit.id} unit={unit}
     guides={guides === null ? null : related} returnHref={returnHref} editorHref={editorHref}
     statsContent={<>
-      {dataControls}
       <div className="hero-profile-performance">
-        {stats ? <HeroBattleSummary unit={unit} stats={stats} /> : heroArchiveNotice}
+        <HeroBattleSummary unit={unit} stats={stats} controls={dataControls} unavailable={heroArchiveNotice} />
       </div>
       {gearSource ? <HeroLoadout key={period?.id ?? "current"} unit={unit} items={availableItems?.[unit.id] ?? []}
         gearSource={gearSource} period={period?.id} /> : gearArchiveNotice}
@@ -155,8 +154,7 @@ export function HeroLibrary({ guides, commonItems, gearSource: liveGearSource }:
   const dossier = unit && <>
     <UnitDetails unit={unit} jumpToTraits augmented={enhanced} onAugmentedChange={value => update({ augment: value ? augment?.id ?? "" : "" })}
       action={!enhanced && <>
-      {dataControls}
-      {stats ? <HeroBattleSummary unit={unit} stats={stats} /> : heroArchiveNotice}
+      <HeroBattleSummary unit={unit} stats={stats} controls={dataControls} unavailable={heroArchiveNotice} />
       {gearSource && <HeroCommonItems unit={unit} items={availableItems?.[unit.id] ?? []}
         gearSource={gearSource} period={period?.id} />}
       {!gearSource && gearArchiveNotice}

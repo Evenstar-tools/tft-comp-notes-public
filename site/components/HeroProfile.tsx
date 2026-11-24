@@ -37,7 +37,6 @@ export function HeroProfile({ unit, guides, statsContent, returnHref, backLabel,
       <div className="hero-profile-bar">
         <button type="button" className="hero-profile-back" onClick={onBack}><ArrowLeft size={17} aria-hidden />{backLabel}</button>
         <label className="hero-profile-picker">
-          <span>切换英雄</span>
           <select aria-label="切换英雄" value={unit.id} onChange={event => onSelect(event.target.value)}>
             {costGroups.map(cost => <optgroup key={cost} label={cost + " 费"}>
               {season.units.filter(option => option.cost === cost).map(option =>

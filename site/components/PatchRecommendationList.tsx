@@ -34,13 +34,13 @@ export function PatchRecommendationList({ stats, cards, home, previousBuild }: {
   return <div className="home-patch-recommendations">
     <div className="home-patch-meta">
       <p className="home-patch-sample">
-        {stats.queue} {stats.patch} · 更新于 <time dateTime={stats.updatedAt}>{date} {time} UTC</time>
+        {previousBuild ? <>上一版参考 · {stats.queue} {stats.patch} · </> : "数据更新 "}
+        <time dateTime={stats.updatedAt}>{date} {time} UTC</time>
       </p>
       {groups.length > 1 && <nav className="home-patch-jumps" aria-label="跳到推荐分组">
         {groups.map(({ id, label }) => <a key={id} href={"#home-patch-" + id}>{id === "reroll" ? "赌狗" : label}</a>)}
       </nav>}
     </div>
-    {previousBuild && <p className="home-patch-sample">上一版参考 · 本版样本待补</p>}
     {groups.map(({ id: group, label, entries }) => {
       const heading = "home-patch-" + group;
       return <section key={group} className="home-patch-group" aria-labelledby={heading}>
@@ -72,7 +72,7 @@ export function PatchRecommendationList({ stats, cards, home, previousBuild }: {
                   {hit && <p className="home-patch-hit">{hit}</p>}
                 </div>
                 <span id={id + "-mean"} className={"home-patch-mean guide-placement " + tone}>
-                  <span>平均排名 <b>{formatRecommendationMean(rating.mean)}</b></span>
+                  <span><span className="home-patch-mean-label">平均排名</span> <b>{formatRecommendationMean(rating.mean)}</b></span>
                   <small>{rating.games.toLocaleString("zh-CN")} 场</small>
                 </span>
               </a>

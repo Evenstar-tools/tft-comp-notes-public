@@ -36,7 +36,7 @@ function FamilyStats({ rows, rare }: {
 
 function countLabel(groups: { games: number }[]) {
   const samples = groups.filter(sample => sample.games > 0);
-  if (!samples.length) return "暂无";
+  if (!samples.length) return "";
   return samples.length === 1 ? number.format(samples[0].games) + " 场" : samples.length + " 组";
 }
 
@@ -109,10 +109,13 @@ export function GuideMatchStats({ id, stage, team, teams, section, edition, augm
   }
   return <section id={id} className="guide-match-stats" aria-label="阵容战绩">
     <div className="guide-stat-switch" role="group" aria-label="战绩范围">
-      {views.map(([value]) => <button key={value} type="button" aria-pressed={activeView === value} onClick={() => onSelectView(value)}>
-        <span>{viewLabel(value)}</span>
-        <small>{countLabel(groups[value])}</small>
-      </button>)}
+      {views.map(([value]) => {
+        const total = countLabel(groups[value]);
+        return <button key={value} type="button" aria-pressed={activeView === value} onClick={() => onSelectView(value)}>
+          <span>{viewLabel(value)}</span>
+          {total && <small>{total}</small>}
+        </button>;
+      })}
     </div>
     <div className="guide-stat-body">
       {activeView === "board" && <>

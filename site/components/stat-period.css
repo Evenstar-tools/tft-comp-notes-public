@@ -16,6 +16,13 @@
   max-width: 100%;
 }
 
+@media (min-width: 761px) {
+  .stat-period select {
+    min-height: 34px;
+    font-size: .8125rem;
+  }
+}
+
 .stat-period-note {
   color: var(--muted);
   font-size: .78rem;

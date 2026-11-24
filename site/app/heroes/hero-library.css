@@ -28,6 +28,7 @@
   font-size: .8125rem;
   line-height: 1.6;
 }
+.hero-catalog-heading > .stat-period { margin-inline-start: auto; }
 .hero-catalog-meta a {
   display: inline-flex;
   align-items: center;
@@ -113,8 +114,8 @@
   .library-columns:not(.is-matrix) .filters-spacer { display: none; }
 }
 @media (min-width: 1180px) {
-  .library-columns.is-index:not(.is-matrix, .is-statistics) .cost-heading { margin-bottom: 4px !important; }
-  .library-columns.is-index:not(.is-matrix, .is-statistics) .cost-group + .cost-group { margin-top: 5px; }
+  .library-columns.is-index:not(.is-matrix, .is-statistics) .cost-heading { margin-bottom: 4px !important; line-height: 1.4; }
+  .library-columns.is-index:not(.is-matrix, .is-statistics) .cost-group + .cost-group { margin-top: 6px; }
   .library-columns.is-index:not(.is-matrix, .is-statistics) .unit-card .unit-visual { gap: 3px; }
   .library-columns.is-index:not(.is-matrix, .is-statistics) .unit-list {
     grid-template-columns: repeat(auto-fill, minmax(56px, 1fr));
