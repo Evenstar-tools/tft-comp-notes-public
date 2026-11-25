@@ -6,7 +6,6 @@ import { changeSignals, makeReviewQueue, sourceProfile } from "./family-review.m
 import { crossCheck } from "./family-evidence.mjs";
 import { saveCompTrendBatch } from "./refresh-comp-trends.mjs";
 
-// The public filters identify the hotfix. The stats response by itself only says "current".
 const root = fileURLToPath(new URL("../", import.meta.url));
 const sourceUrl = "https://www.metatft.com/pbe-comps";
 const args = process.argv.slice(2);
@@ -26,7 +25,7 @@ async function writeJson(file, value) {
   await rename(temp, file);
 }
 
-async function capture() {
+async function capture({ patch, bPatch }) {
   const channel = arg("--browser") || (process.platform === "win32" ? "msedge" : "chromium");
   const browser = await chromium.launch({ channel });
   try {
@@ -36,19 +35,15 @@ async function capture() {
       return res.ok() && url.hostname === "api-hc.metatft.com" && url.pathname === "/tft-comps-api/" + path &&
         Object.entries(filters).every(([k, v]) => url.searchParams.get(k) === v);
     }, { timeout: 45000 });
-    const [statsRes, modelRes] = await Promise.all([
-      response("comps_stats", { queue:"PBE", patch:"current", days:"3" }),
+    const [modelRes] = await Promise.all([
       response("comps_data", { queue:"PBE" }),
       page.goto(sourceUrl, {waitUntil:"domcontentloaded", timeout:45000}),
     ]);
-    const filter = page.locator(".FilterElement");
-    await filter.filter({hasText:/^Last 3 Days$/}).first().waitFor({ timeout:30000 });
-    const versionLabel = /^\d+\.\d+(?:[a-z]|\s+[A-Za-z]{3}-\d{1,2})?$/i;
-    await filter.filter({hasText:versionLabel}).first().waitFor({ timeout:30000 });
-    const labels = (await filter.allInnerTexts()).map(t => t.trim());
-    const patch = labels.find(l => versionLabel.test(l));
-    if (!patch || !labels.includes("PBE")) throw Error("未能从 PBE 榜核实补丁与队列：" + labels.join(" / "));
-    return { patch, stats:await statsRes.json(), model:await modelRes.json(), statsUrl:statsRes.url() };
+    const query = new URLSearchParams({ queue: "PBE", patch, b_patch: bPatch, days: "3", permit_filter_adjustment: "false" });
+    const statsUrl = new URL("comps_stats?" + query, modelRes.url()).href;
+    const statsRes = await page.request.get(statsUrl, { timeout: 30000 });
+    if (!statsRes.ok()) throw Error("体系战绩请求失败：" + statsRes.status());
+    return { stats:await statsRes.json(), model:await modelRes.json(), statsUrl };
   } finally {
     await browser.close();
   }
@@ -70,11 +65,20 @@ const season = await readJson(resolve(root,"data/season.json"));
 const currentPatch = await readJson(resolve(root, "data/current-patch.json"));
 const published = await readJson(resolve(root, "data/guide-family-stats.json"));
 const prior = await readJson(out).catch(e=>{if(e.code==="ENOENT") return null; throw e});
-const { patch, stats, model, statsUrl } = await capture();
-if (stats.tft_set !== bindings.set || model.tft_set !== bindings.set ||
+const cohort = currentPatch.metaTftPatch;
+const patchStart = Date.parse(currentPatch.effectiveAt);
+if (currentPatch.seasonId !== "s19-pbe" || !/^\d+$/.test(currentPatch.build) ||
+    !/^19\.\d+$/.test(cohort?.patch) || typeof cohort.bPatch !== "string" ||
+    !/^[a-z]?$/.test(cohort.bPatch) || !Number.isFinite(patchStart)) {
+  throw Error("请先核实当前 PBE 构建、补丁和生效时间。");
+}
+const patch = cohort.patch + cohort.bPatch;
+const { stats, model, statsUrl } = await capture(cohort);
+if (stats.filter_adjustment || stats.tft_set !== bindings.set || model.tft_set !== bindings.set ||
     [stats.queue_id,model.queue_id].some(q=>q?.toUpperCase()!==bindings.queue) ||
     stats.cluster_id !== model.cluster_id || model.results.data.cluster_id !== model.cluster_id ||
-    !season.id.startsWith("s19-pbe-"+patch.match(/^\d+\.\d+/)[0]+".")) {
+    !season.id.startsWith("s19-pbe-" + cohort.patch + ".") ||
+    !Number.isFinite(stats.updated) || stats.updated < patchStart) {
   throw Error("队列、赛季、补丁或模型不一致，保留原批次。");
 }
 const groups = model.results.data.cluster_details;
@@ -184,12 +188,11 @@ await writeJson(reviewPath,reviewSnapshot);
 await writeJson(historyPath,{latest:observation,previous:previous ?? null});
 if (modelChanged || !rows.length) throw Error("没有可沿用的体系映射。请查复核清单并校对新模型后重跑。");
 rows.sort((a,b)=>a.mean-b.mean || b.games-a.games || a.clusterId.localeCompare(b.clusterId));
-const patchStart = Date.parse(currentPatch.effectiveAt);
 const inGrace = Date.parse(updatedAt) >= patchStart && Date.parse(updatedAt) < patchStart + 12 * 60 * 60 * 1000;
 const previousBatch = inGrace && [published, published.previous].find(batch =>
   batch?.seasonId === season.id && batch.queue === bindings.queue && Date.parse(batch.updatedAt) < patchStart);
 const { previous: _older, ...previousSnapshot } = previousBatch || {};
-const accepted={seasonId:season.id,set:bindings.set,queue:bindings.queue,patch,days:3,updatedAt,model:model.cluster_id,
+const accepted={seasonId:season.id,set:bindings.set,queue:bindings.queue,patch,build:currentPatch.build,days:3,updatedAt,model:model.cluster_id,
   source:"MetaTFT",sourceUrl,statsUrl,totalFinishes:total,rows,smallSamples,previous:previousBatch ? previousSnapshot : undefined};
 await writeJson(out,accepted);
 if (trendOutput) {
@@ -197,6 +200,7 @@ if (trendOutput) {
     const unitNames = new Map(season.units.map(unit => [unit.id, unit.name]));
     await saveCompTrendBatch(resolve(trendOutput), accepted, { review: reviewSnapshot, patch: currentPatch, unitNames });
   } catch (error) {
+    if (arg("--trends")) throw error;
     console.warn("体系已刷新，趋势保留上一批。", error.message);
   }
 }

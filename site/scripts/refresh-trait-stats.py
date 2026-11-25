@@ -14,6 +14,7 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 from urllib.parse import parse_qsl, urlencode, urlsplit
 
+from guide_stats_window import current_window
 import requests
 from bs4 import BeautifulSoup
 from requests.adapters import HTTPAdapter
@@ -46,10 +47,9 @@ def fetch(url, params=None):
 
 def published_scopes(mapping):
     groups = {}
-    source_window = {"queue": "PBE", "patch": "current", "days": str(DAYS)}
     for url in [RENATA, *(row["url"] for row in load(DATA / "guide-placement.json")["records"])]:
         parts = [(key, value) for key, value in parse_qsl(urlsplit(url).query)
-                 if source_window.get(key) != value]
+                 if key not in {"queue", "patch", "b_patch", "days"}]
         if ("set", "TFTSet19") not in parts:
             continue
         units = sorted(set(v for k, v in parts if k == "unit"))
@@ -71,11 +71,12 @@ def published_scopes(mapping):
     return groups
 
 
-def placements(queue, patch, filters=()):
-    params = [("queue", queue), ("patch", patch), ("days", DAYS), ("formatnoarray", "true"), ("compact", "true"), *filters]
+def placements(window, filters=()):
+    params = [*window.items(), ("formatnoarray", "true"), ("compact", "true"),
+              ("permit_filter_adjustment", "false"), *filters]
     body = fetch(ENDPOINT, params).json()
     rows = body.get("data")
-    if not isinstance(rows, list):
+    if body.get("filter_adjustment") or not isinstance(rows, list):
         raise ValueError(f"Invalid MetaTFT response for {filters}")
     result = {}
     for row in rows:
@@ -124,7 +125,7 @@ def summarize(rows, mapping):
     return result
 
 
-def guide_scope(job, mapping, names, patch, trait_names):
+def guide_scope(job, mapping, names, window, trait_names):
     key, (levels, units, fixed, restrictions) = job
     params = [("level", level) for level in levels] + restrictions
     labels = [level + "级结算" for level in levels]
@@ -143,8 +144,8 @@ def guide_scope(job, mapping, names, patch, trait_names):
     for pin in fixed:
         trait, tier = mapping[pin]
         labels.append(tier + trait_names[trait])
-    url = "https://www.metatft.com/explorer?" + urlencode([("set", "TFTSet19"), ("tab", "traits"), *(("level", n) for n in levels), *(("unit", u) for u in units), *(("trait", pin) for pin in fixed), *restrictions])
-    stats = summarize(placements("PBE", patch, params), mapping)
+    url = "https://www.metatft.com/explorer?" + urlencode([("set", "TFTSet19"), ("tab", "traits"), *(("level", n) for n in levels), *(("unit", u) for u in units), *(("trait", pin) for pin in fixed), *restrictions, *window.items()])
+    stats = summarize(placements(window, params), mapping)
     return key, {"labels": labels, "url": url, "rows": stats}
 
 
@@ -162,7 +163,7 @@ def crosscheck():
     patch = ranked["region_patch_adjustment"]["global_patch"]["patch"]
     if not re.fullmatch(r"\d+\.\d+", patch):
         raise ValueError("Missing explicit ranked patch")
-    meta = placements("1100", patch)
+    meta = placements({"queue": "1100", "patch": patch, "days": str(DAYS)})
     rows = []
     for card in page.select("article.trait"):
         icon = card.select_one(".trait__icon")
@@ -197,12 +198,13 @@ def main():
     args.add_argument("--output", type=Path, default=DATA / "trait-stats.json")
     opts = args.parse_args()
     season = load(DATA / "season.json")
+    _, window = current_window(DATA)
     lookup = fetch(S19_LOOKUP).json()
     mapping, sources = lookup_mapping(lookup, season)
     patch = ".".join(lookup["_metadata"]["release"].split("-", 1)[1].split(".")[:2])
-    if not season["id"].startswith(f"s19-pbe-{patch}."):
+    if patch != window["patch"] or not season["id"].startswith(f"s19-pbe-{patch}."):
         raise ValueError("Local season and MetaTFT PBE patch differ")
-    overall = summarize(placements("PBE", "current"), mapping)
+    overall = summarize(placements(window), mapping)
     required = {row["id"] for row in season["traits"] if row["axis"] != "special" and not row["dynamic"]}
     if required - overall.keys():
         raise ValueError(f"Incomplete S19 snapshot, missing {required - overall.keys()}")
@@ -210,14 +212,15 @@ def main():
     jobs = published_scopes(mapping).items()
     trait_names = {row["id"]: row["name"] for row in season["traits"]}
     with ThreadPoolExecutor(max_workers=3) as pool:
-        scopes = dict(pool.map(lambda job: guide_scope(job, mapping, names, "current", trait_names), jobs))
+        scopes = dict(pool.map(lambda job: guide_scope(job, mapping, names, window, trait_names), jobs))
     try:
         comparison = crosscheck()
     except (requests.RequestException, ValueError, KeyError, AttributeError) as exc:
         print(f"NoxuTFT comparison unavailable: {exc}", file=sys.stderr)
         comparison = load(opts.output).get("comparison") if opts.output.exists() else None
-    snapshot = {"season": 19, "queue": "PBE", "patch": patch, "sourcePatch": "current", "days": DAYS, "asOf": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-                "metaUrl": "https://www.metatft.com/explorer?set=TFTSet19&tab=traits", "sources": sources,
+    patch += window["b_patch"]
+    snapshot = {"season": 19, "queue": "PBE", "patch": patch, "sourcePatch": patch, "days": DAYS, "asOf": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                "metaUrl": "https://www.metatft.com/explorer?" + urlencode({"set": "TFTSet19", "tab": "traits", **window}), "sources": sources,
                 "rows": overall, "scopes": scopes, "comparison": comparison}
     with NamedTemporaryFile("w", dir=opts.output.parent, encoding="utf-8", delete=False) as file:
         json.dump(snapshot, file, ensure_ascii=False, separators=(",", ":"), allow_nan=False)

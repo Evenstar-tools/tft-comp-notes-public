@@ -30,5 +30,7 @@ jobs:
         run: node --experimental-strip-types --test tests/*.test.mjs
       - name: Run public release hygiene gate
         run: python3 scripts/verify-public-release.py
+      - name: Run data integrity gate
+        run: python3 scripts/verify-data-integrity.py
       - name: Verify production build
         run: npx next build --webpack
