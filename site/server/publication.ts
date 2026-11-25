@@ -26,9 +26,24 @@ import {
   type FeishuBlock,
 } from "./feishu";
 
+let previewLiveCache: Promise<Publication> | null = null;
+let previewPublicGuideCache: Promise<Publication> | null = null;
+let dbPublicGuideCache: { id: string; value: Promise<Publication | null> } | null = null;
+
+function hasDatabase() {
+  return Boolean(process.env.DATABASE_URL?.trim());
+}
+
+async function publishedSnapshotId(): Promise<string | null> {
+  const row = await database()
+    .prepare("SELECT value FROM settings WHERE key='published_id'")
+    .first<{ value: string }>();
+  return row?.value ?? null;
+}
+
 // Index pages only need the published chapters and boards. Reading the full guide also restores legacy media bindings.
 export async function publishedSnapshot(): Promise<Publication | null> {
-  if (!process.env.DATABASE_URL?.trim()) {
+  if (!hasDatabase()) {
     const { default: preview } = await import("@/data/public-preview.json");
     return structuredClone(preview) as Publication;
   }
@@ -38,10 +53,14 @@ export async function publishedSnapshot(): Promise<Publication | null> {
   return row ? JSON.parse(row.body) as Publication : null;
 }
 export async function livePublication(): Promise<Publication | null> {
+  if (!hasDatabase()) {
+    previewLiveCache ??= publishedSnapshot().then(pub => prepareForReading(pub!));
+    return previewLiveCache;
+  }
   const publication = await publishedSnapshot();
   return publication ? prepareForReading(publication) : null;
 }
-export async function publicGuidePublication(): Promise<Publication | null> {
+async function buildPublicGuidePublication(): Promise<Publication | null> {
   const publication = await publishedSnapshot();
   if (!publication) return null;
   const prepared = await prepareForReading(mergeClassicalJhin(includeRerollBoards(publication, season)));
@@ -50,6 +69,24 @@ export async function publicGuidePublication(): Promise<Publication | null> {
     sections: prepared.sections.map(section => (section.gameData?.id ?? prepared.season.id).startsWith("s19-") &&
       (section.kind === "guide" || sectionTeams(section).length) ? guideSectionWithCurrentNames(section) : section),
   };
+}
+export async function publicGuidePublication(): Promise<Publication | null> {
+  if (!hasDatabase()) {
+    previewPublicGuideCache ??= buildPublicGuidePublication().then(pub => pub!);
+    return previewPublicGuideCache;
+  }
+  const id = await publishedSnapshotId();
+  if (!id) {
+    dbPublicGuideCache = null;
+    return null;
+  }
+  if (dbPublicGuideCache?.id === id) return dbPublicGuideCache.value;
+  const value = buildPublicGuidePublication().catch(error => {
+    if (dbPublicGuideCache?.id === id) dbPublicGuideCache = null;
+    throw error;
+  });
+  dbPublicGuideCache = { id, value };
+  return value;
 }
 async function prepareForReading<T extends DocumentDraft>(publication: T): Promise<T> {
   const legacyKeys = process.env.DATABASE_URL?.trim()
@@ -363,4 +400,5 @@ export async function installPublication(publication: Publication, draftId?: str
     db.prepare("INSERT INTO settings (key,value) SELECT 'published_id',id FROM snapshots WHERE id=? ON CONFLICT(key) DO UPDATE SET value=excluded.value").bind(publication.id),
   ]);
   if (!inserted.meta.changes) throw new ApiError(409, "发布内容已更新，请刷新预览后再发布");
+  dbPublicGuideCache = null;
 }
