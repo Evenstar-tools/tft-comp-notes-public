@@ -144,7 +144,7 @@ export function HeroBattleSummary({ unit, stats, controls, unavailable }: {
         <div><dt>登顶率</dt><dd>{percent(result.winRate)}</dd></div>
         <div><dt>场数</dt><dd>{exactGames.format(result.games)}</dd></div>
       </dl> : <p className="hero-data-note">
-        {result ? `仅有 ${exactGames.format(result.games)} 场结算样本，达到 ${stats.minGames} 场后显示战绩。` : "这段时间暂无该形态的结算样本。"}
+        {result ? `当前 ${exactGames.format(result.games)} 场（满 ${stats.minGames} 场显示战绩）` : "暂无当期样本"}
       </p>}
   </section>;
 }

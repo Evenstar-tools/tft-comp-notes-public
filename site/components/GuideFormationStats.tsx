@@ -28,7 +28,6 @@ export function GuideFormationFamilyReference({ sample }: { sample: FormationFam
   const result = tierPerformance(sample.placementCounts);
   if (!result || result.games < stats.minGames) return null;
   return <div className="guide-carry-samples">
-    <p>MetaTFT 阵容榜参考 · 同类棋盘的玩家结算，包含不同等级和成型质量。</p>
     <ul><li>
       <div className="carry-sample-head"><strong>{sample.name}</strong><span>均名 <b>{result.mean.toFixed(2)}</b> · {number.format(result.games)} 场</span></div>
       <p>前四 {percent.format(result.top4)} · 登顶 {percent.format(result.win)}</p>
@@ -67,7 +66,7 @@ export function GuideFormationStats({ evidence }: { evidence: NonNullable<Return
   const remaining = subset && remainingPlacements(board.sample.placementCounts, subset.sample.placementCounts);
   return <details className="guide-formation" open>
     <summary>同条件阵容对照</summary>
-    <p>{group.population} 级结算 · 各自固定名单 · {group.condition} · {group.exclusions}</p>
+    <p>{group.population} 级结算 · {group.condition} · {group.exclusions}</p>
     {core && coreResult && coreResult.games >= stats.minGames && <p>
       <a href={core.url} target="_blank" rel="noreferrer">{core.label} ↗</a> · 恰好九张不同棋子 · 均名 {coreResult.mean.toFixed(2)} · {number.format(coreResult.games)} 场
     </p>}
@@ -76,6 +75,6 @@ export function GuideFormationStats({ evidence }: { evidence: NonNullable<Return
       { name: subset.remainder, counts: remaining },
       { name: subset.condition, counts: subset.sample.placementCounts, url: subset.sample.url },
     ]} />}
-    <small>MetaTFT · {group.patch} · {group.window ?? `滚动 ${group.windowHours} 小时`} · {checkedDate.format(new Date(group.checkedAt))} 北京时间取数。少于 {stats.minGames} 场仅列场数。</small>
+    <small>MetaTFT · {group.patch} · {group.window ?? `滚动 ${group.windowHours} 小时`} · {checkedDate.format(new Date(group.checkedAt))} 北京时间取数</small>
   </details>;
 }

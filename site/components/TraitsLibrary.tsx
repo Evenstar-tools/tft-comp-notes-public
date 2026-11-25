@@ -11,6 +11,8 @@ import { TierResults, SourceComparison } from "./TraitPerformance";
 import type { TierCounts, TraitBoardIndex, TraitBoardLink, TraitScope, TraitContext, TraitCrosscheck } from "@/domain/trait-performance";
 import "@/app/traits/performance.css";
 
+const collectionDate = new Intl.DateTimeFormat("en-CA", { dateStyle: "short", timeZone: "Asia/Shanghai" });
+
 const traitGroups = [
   { axis: "column", label: "职业" },
   { axis: "row", label: "阵营" },
@@ -159,7 +161,7 @@ export function TraitsLibrary({ initialQuery, initialTrait, initialTier, meta, o
               <summary>数据来源</summary>
               <div>
                 <a href={scopeOn && contextScope ? contextScope.url : meta.url} target="_blank" rel="noreferrer">MetaTFT ↗</a>
-                <span>PBE {meta.patch} · 近 {meta.days} 天 · {meta.on.slice(0, 10)} UTC</span>
+                <span>PBE {meta.patch} · 近 {meta.days} 天 · <time dateTime={meta.on} title="北京时间">{collectionDate.format(new Date(meta.on))}</time></span>
               </div>
             </details> : <span>本版本战绩待更新</span>}
             <a href="/traits/medley">合奏组合</a>

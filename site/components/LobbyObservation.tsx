@@ -5,6 +5,7 @@ import families from "@/data/lobby-families.json";
 import { observeLobbies, type LobbyRecord } from "@/domain/lobby-observation";
 
 const familyNames = new Map(families.map(family => [family.id, family.name]));
+const lobbyScope = "纳入普通对局及同局玩家的近期战绩，均名按整局结算。";
 
 export function LobbyObservation({ lobbies, initialTarget }: { lobbies: LobbyRecord[]; initialTarget?: string }) {
   const direct = initialTarget && familyNames.has(initialTarget) ? initialTarget : undefined;
@@ -35,7 +36,7 @@ export function LobbyObservation({ lobbies, initialTarget }: { lobbies: LobbyRec
             <ul>{result.examples.map((game, index) => <li key={game.id}><a href={"https://matches3.metatft.com/" + game.id + ".json"} target="_blank" rel="noreferrer" title={game.id}>第 {index + 1} 局</a><span>第 {game.placements.join("、")} 名</span></li>)}</ul>
           </details>
         </>}
-        <p className="lobby-rule">取 MetaTFT 最近 PBE 普通对局及同局玩家的近期战绩，按对局去重。均名按整局结算统计。</p>
+        <p className="lobby-rule" title={lobbyScope}>MetaTFT 近期 PBE 对局去重统计<span className="sr-only">。{lobbyScope}</span></p>
       </>}
     </div>
   </details>;

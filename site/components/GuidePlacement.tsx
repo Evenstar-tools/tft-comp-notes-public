@@ -78,8 +78,8 @@ export function PlacementRates({ rating, stage }: { rating?: PlacementRating; st
 export function PlacementMethod({ rating }: { rating?: PlacementRating }) {
   if (!rating?.games) return null;
   const kind = placementEvidenceKind(rating);
-  const scope = kind === "lineup" ? "结算时包含这张棋盘的名单，可能有额外棋子。"
-    : rating.sampleScope || (kind === "core" ? "只筛指定核心和查询条件，其余棋子可变。" : `${rating.population} 级结算 · 固定本盘名单`);
+  const scope = kind === "lineup" ? "含本盘名单"
+    : rating.sampleScope || (kind === "core" ? "仅限核心与条件" : `${rating.population} 级结算 · 固定本盘名单`);
   return <div className="placement-method">
     <p>{scope}</p>
     <a href={rating.url} target="_blank" rel="noreferrer">MetaTFT ↗</a>
