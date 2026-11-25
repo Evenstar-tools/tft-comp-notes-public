@@ -16,7 +16,7 @@
       }
     ],
     "emblem": {
-      "name": "海洋之歌纹章",
+      "name": "海之歌纹章",
       "image": "/assets/traits/emblem-beach-pop.webp",
       "components": [
         "TFT_Item_Spatula",
@@ -128,7 +128,7 @@
       }
     ],
     "emblem": {
-      "name": "超流行乐纹章",
+      "name": "高能流行纹章",
       "image": "/assets/traits/emblem-hyperpop.webp"
     }
   },
@@ -149,7 +149,7 @@
       }
     ],
     "emblem": {
-      "name": "酷炫节拍纹章",
+      "name": "大触打击乐纹章",
       "image": "/assets/traits/emblem-illbeats.webp",
       "components": [
         "TFT_Item_Spatula",
@@ -267,7 +267,7 @@
       }
     ],
     "emblem": {
-      "name": "五杀摇滚纹章",
+      "name": "五杀乐队纹章",
       "image": "/assets/traits/emblem-pentakill.webp",
       "components": [
         "TFT_Item_Spatula",
@@ -311,7 +311,7 @@
       }
     ],
     "emblem": {
-      "name": "摇滚乐纹章",
+      "name": "摇滚恶魔纹章",
       "image": "/assets/traits/emblem-rock.webp",
       "components": [
         "TFT_Item_Spatula",
@@ -354,7 +354,7 @@
       }
     ],
     "emblem": {
-      "name": "黑魔法师纹章",
+      "name": "法师纹章",
       "image": "/assets/traits/emblem-arcanist.webp",
       "components": [
         "TFT_Item_FryingPan",
@@ -379,7 +379,7 @@
       }
     ],
     "emblem": {
-      "name": "保镖纹章",
+      "name": "护卫纹章",
       "image": "/assets/traits/emblem-bodyguard.webp",
       "components": [
         "TFT_Item_FryingPan",
@@ -457,7 +457,7 @@
       }
     ],
     "emblem": {
-      "name": "泰坦纹章",
+      "name": "主唱纹章",
       "image": "/assets/traits/emblem-frontman.webp",
       "components": [
         "TFT_Item_FryingPan",
@@ -479,7 +479,7 @@
       }
     ],
     "emblem": {
-      "name": "金曲制作人纹章",
+      "name": "音乐制作人纹章",
       "image": "/assets/traits/emblem-hitmaker.webp",
       "components": [
         "TFT_Item_FryingPan",
@@ -505,7 +505,7 @@
       }
     ],
     "emblem": {
-      "name": "主唱纹章",
+      "name": "主宰纹章",
       "image": "/assets/traits/emblem-juggernaut.webp"
     },
     "gameName": "主宰"
@@ -527,7 +527,7 @@
       }
     ],
     "emblem": {
-      "name": "经理纹章",
+      "name": "经纪人纹章",
       "image": "/assets/traits/emblem-manager.webp"
     }
   },
@@ -607,7 +607,7 @@
       }
     ],
     "emblem": {
-      "name": "裁决战士纹章",
+      "name": "舞者纹章",
       "image": "/assets/traits/emblem-slayer.webp",
       "components": [
         "TFT_Item_FryingPan",
@@ -637,7 +637,7 @@
       }
     ],
     "emblem": {
-      "name": "迅捷攻手纹章",
+      "name": "迅击鼓手纹章",
       "image": "/assets/traits/emblem-swiftstriker.webp",
       "components": [
         "TFT_Item_FryingPan",

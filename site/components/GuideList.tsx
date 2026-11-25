@@ -5,7 +5,7 @@ import { ChevronRight, Search, X } from "lucide-react";
 import { guideRerollTargets } from "@/domain/reroll-targets";
 import familyStats from "@/data/guide-family-stats.json";
 import coreStats from "@/data/patch-recommendation-stats.json";
-import { displayGuideName } from "@/domain/trait-names.mjs";
+import { displayGuideName, displayTraitNames } from "@/domain/trait-names.mjs";
 import { canRankRecommendations, compareGuideFamilyPerformance, currentFamilyBatch, currentRecommendationEvidence, familyMetricValue, formatRecommendationMean, guideFamilyRows, previousRecommendationDeadline, recommendationGroup, recommendationTier, selectRecommendationRoutes, type GuideFamilyDirection, type GuideFamilyMetric, type GuideFamilySnapshot, type GuideFamilyStat } from "@/domain/guide-family-stats";
 import { carryMinGames, guideCarryRows } from "@/domain/guide-carry-stats";
 import { sectionTeams } from "@/domain/document-flow";
@@ -46,6 +46,11 @@ type Choices = Partial<Record<View, Selections>>;
 type FamilySort = { metric: GuideFamilyMetric; direction: GuideFamilyDirection };
 const emptyFilters = { category: "", style: "", cost: 0 };
 const archiveViews = [["category", "攻略卡片"], ["mean", "战绩对照"]] as const;
+const recommendationSecondaryCarries = new Map([
+  ["sample-block-0251", { unitId: "taliyah", boardId: "00000000-0000-4000-8000-000000000076" }],
+  ["sample-block-0464", { unitId: "akali-kda", boardId: "00000000-0000-4000-8000-000000000039" }],
+  ["sample-block-0338", { unitId: "pyke", boardId: "00000000-0000-4000-8000-000000000068" }],
+]);
 
 function filterView(view: GuideFilters["view"]): View {
   return view === "hero-augments" || view === "comp-trends" ? view : "regular";
@@ -446,7 +451,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
       const cardId = section.id + "-stats-" + stat.clusterId;
       const href = guideLink(section.id, team.id, homeGuideReturn(home, cardId, team.id));
       return {
-        id: "guide-card-" + cardId, name, note: context || homeOpening(advice, name), tier: boardTier(section, team, hasCurrentStats ? stat : undefined),
+        id: "guide-card-" + cardId, name, note: displayTraitNames(context || homeOpening(advice, name)), tier: boardTier(section, team, hasCurrentStats ? stat : undefined),
         style: playstyle ?? (entry.filterStyle?.includes("慢搜") ? "慢搜" : undefined),
         link: <a className="guide-stats-link" href={href} data-home-board={team.id}>{name}</a>,
         units: portraits.map(unit => <span className="guide-stats-unit" key={unit.id} title={unit.name}>
@@ -563,14 +568,28 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
     const lineup: RecommendationCard["avatars"] = roster.map(({ unit, role }) => ({
       unit, role: role === "主输出" || role === "主C" ? "主C" : role === "主坦" ? "主坦" : undefined,
     }));
-    const leads = lineup.filter(({ role }) => role);
-    const tank = leads.find(({ role }) => role === "主坦");
-    const ordered = [...leads.slice(0, 2), ...(tank ? [tank] : []), ...leads, ...lineup];
+    const population = usedPopulation(team.pieces);
+    const preferred = recommendationSecondaryCarries.get(section.id);
+    const currentSecondary = roster.find(({ unit, role }) => preferred ? unit.id === preferred.unitId : role === "副C")?.unit;
+    const laterBoard = preferred && !currentSecondary ? entry.teams.find(board =>
+      board.id === preferred.boardId && board.pieces.some(piece => piece.unitId === preferred.unitId)) : undefined;
+    const secondaryUnit = currentSecondary ?? (laterBoard ? data.units.find(unit => unit.id === preferred?.unitId) : undefined);
+    const laterPopulation = laterBoard && usedPopulation(laterBoard.pieces);
+    const secondary: RecommendationCard["avatars"][number] | undefined = secondaryUnit && {
+      unit: secondaryUnit,
+      role: "副C",
+      context: laterBoard && {
+        label: laterPopulation && laterPopulation > population ? laterPopulation + "人口" : "变阵",
+        title: guideBoardName(laterBoard),
+      },
+    };
+    const carry = lineup.find(({ role }) => role === "主C");
+    const tank = lineup.find(({ role }) => role === "主坦");
+    const ordered = [carry, tank, secondary, ...lineup].filter(avatar => avatar !== undefined);
     const avatars = ordered.filter(({ unit }, index) =>
       ordered.findIndex(entry => entry.unit.id === unit.id) === index
     ).slice(0, 3);
     const route = guideRoute(section, entry.teams, team)?.phases ?? [];
-    const population = usedPopulation(team.pieces);
     const stages = new Map<string, { team: Team; label: string }>();
     for (const phase of route) {
       const board = phase.team;
@@ -580,7 +599,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
       stages.set(board.id, { team: board, label: phase.label });
     }
     return {
-      group, rating, team, title: guideTitleWithoutPlaystyle(displayGuideName(rating.name), entry.playstyle), avatars, opening, conditional,
+      group, rating, team, title: guideTitleWithoutPlaystyle(displayGuideName(rating.name), entry.playstyle), avatars, opening: displayTraitNames(opening), conditional,
       entryTeamId: primary && (!needle || exact?.namedFamily) ? section.reroll?.entryTeamId : undefined,
       stages: [...stages.values()],
       strategy,
@@ -601,8 +620,8 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
   function conditionLink(sectionId: string, boardId: string, cardId: string) {
     return guideLink(sectionId, boardId, homeGuideReturn(home, cardId, boardId)) + "#" + guideConditionsAnchor;
   }
-  const featuredRail = featured.length > 0 && <section className="home-featured-conditions" aria-label="顶级条件">
-    <h2>顶级条件</h2>
+  const featuredRail = featured.length > 0 && <section className="home-featured-conditions" aria-labelledby="home-featured-heading">
+    <h2 id="home-featured-heading">特殊配装</h2>
     <ul>{featured.map(({ section, board, condition }) => {
       const id = `condition-${section.id}-${condition.id}`;
       return <li key={id} id={"guide-card-" + id}>
@@ -748,8 +767,8 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
             {formation.label} <b>{formation.mean.toFixed(2)}</b> · {formation.games.toLocaleString("zh-CN")} 场
           </small>}
           {gearMatches.length > 0 && <small className="guide-result-meta">带 {gearMatches.map(item => item.name).join("、")}</small>}
-          {opening && <p>{opening}</p>}
-          {needle && searchDetails && <small className="guide-result-meta">{searchDetails}</small>}
+          {opening && <p>{displayTraitNames(opening)}</p>}
+          {needle && searchDetails && <small className="guide-result-meta">{displayTraitNames(searchDetails)}</small>}
         </a>
         {cardConditions.length > 0 && conditionBoard && <div className="guide-featured-conditions" aria-label={conditionHeading}>
           <span>{conditionHeading}</span>{cardConditions.map(condition => <a key={condition.id}
@@ -765,7 +784,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
               setQuickView(expanded ? undefined : { key: previewKey, home });
             }} />
           {expanded && <GuideQuickView id={previewId} team={team} data={data} roles={roles}
-            note={quickNote}
+            note={quickNote && displayTraitNames(quickNote)}
             href={guideLink(section.id, team.id, homeGuideReturn(home, cardId, team.id))} />}
         </>}
         {routes && routes.length > 1 && <nav className="guide-lineup-routes" aria-label={section.title + "的棋盘"}>

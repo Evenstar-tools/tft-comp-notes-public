@@ -45,7 +45,7 @@ function TraitEntry({ trait, members, memberQuery, overall, picked, onPick, link
   comparison?: { scopeOn: boolean; board?: TraitScope; overallSource?: string; currentBoard: string };
 }) {
   const inlineMembers = trait.axis === "special" && members.length <= 2;
-  const lineupsLabel = (picked ? picked + (trait.countMode === "stars" ? "星" : "档") : "") + "阵容";
+  const lineupName = (picked ? picked + (trait.countMode === "stars" ? "星" : "") : "") + trait.name;
   const roster = members.length > 0 && <div className="trait-lookup-members">
     {members.map(unit => {
       const matches = memberQuery && unitSearchNames(unit).some(name => name.toLowerCase().includes(memberQuery));
@@ -66,7 +66,7 @@ function TraitEntry({ trait, members, memberQuery, overall, picked, onPick, link
           </div>
           <div className="trait-entry-actions">
             <a href={"/?" + new URLSearchParams({ q: (picked ?? "") + trait.name, sort: "category" })}
-              aria-label={"找" + trait.name + lineupsLabel}>{lineupsLabel}</a>
+              aria-label={"查" + lineupName + "阵容"}>阵容</a>
             <a href={traitLibraryLink(trait.id, picked, true)} aria-label="在羁绊网看搭配">羁绊网</a>
           </div>
           {inlineMembers && roster}
@@ -218,14 +218,14 @@ export function TraitsLibrary({ initialQuery, initialTrait, initialTier, meta, o
           <section key={group.axis} id={`trait-column-${group.axis}`} hidden={!shown[group.axis] || group.entries.length === 0}
             aria-labelledby={`trait-group-${group.axis}`} className="trait-lookup-group">
             <header className="trait-group-heading">
-              <h2 id={`trait-group-${group.axis}`}>{group.label}<span aria-hidden>{group.entries.length}</span></h2>
+              <h2 id={`trait-group-${group.axis}`}>{group.label}{search && <span aria-hidden>{group.entries.length}</span>}</h2>
               {group.entries.length > 1 && <select value="" aria-label={"在" + group.label + "栏定位"}
                 onChange={event => {
                   const heading = document.getElementById("lookup-" + event.currentTarget.value);
                   heading?.focus({ preventScroll: true });
                   heading?.scrollIntoView({ block: "start" });
                 }}>
-                <option value="" disabled>定位羁绊</option>
+                <option value="" disabled>跳到…</option>
                 {group.entries.map(({ trait }) => <option key={trait.id} value={trait.id}>{trait.name}</option>)}
               </select>}
             </header>

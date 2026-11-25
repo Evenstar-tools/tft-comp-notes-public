@@ -66,7 +66,11 @@
 .trait-lookup-columns[data-visible-count="1"] { max-width: 48rem; }
 @media (min-width: 1000px) {
   .page-shell:has(.trait-lookup-heading) { padding-top: 16px; }
-  .trait-lookup-columns[data-single-trait="true"] { max-width: 960px; }
+  .trait-lookup-columns[data-single-trait="true"],
+  .trait-lookup-columns[data-single-trait="true"] + .trait-crosscheck {
+    max-width: 1080px;
+    margin-inline: auto;
+  }
   .trait-lookup-columns[data-single-trait="true"] .trait-lookup-entry {
     display: grid;
     grid-template-columns: minmax(185px, 26%) minmax(0, 1fr);
@@ -79,9 +83,9 @@
     margin-top: 0;
   }
 }
-@media (min-width: 1260px) {
+@media (min-width: 1120px) {
   .trait-lookup-columns[data-visible-count="3"] {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) minmax(17rem, 24%);
+    grid-template-columns: repeat(2, minmax(0, 1fr)) minmax(16rem, 23%);
   }
 }
 .trait-group-heading {
@@ -163,10 +167,11 @@
 }
 @media (min-width: 1000px) {
   .trait-lookup-members {
-    grid-template-columns: repeat(auto-fill, minmax(51px, 1fr));
+    grid-template-columns: repeat(auto-fill, 56px);
     column-gap: 3px;
   }
-  .trait-lookup-members a { font-size: 12.5px; }
+  .trait-lookup-entry .matrix-emblem { gap: 7px; padding-block-start: 8px; }
+  .trait-lookup-entry .matrix-emblem > div { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; }
 }
 .trait-lookup-empty { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; margin: 0; padding: 12px 0; color: var(--muted); }
 .trait-lookup-empty button {

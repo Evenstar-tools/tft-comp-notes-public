@@ -4074,28 +4074,28 @@
         "vayne",
         "yuumi"
       ],
-      "games": 82,
-      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Illaoi19-1&unit=DA_Braum19-1&unit=DA_Swain19-1&unit=DA_Olaf19-1&unit=DA_Vayne19-1&unit=DA_Draven19-1&unit=DA_Yuumi19-1&unit=DA_Kaisa19-1&queue=PBE&patch=19.1&b_patch=b&days=3",
+      "games": 107,
+      "url": "https://www.metatft.com/explorer?queue=PBE&patch=19.1&b_patch=b&days=3&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&tab=comps&set=TFTSet19&unit=DA_Braum19-1&unit=DA_Draven19-1&unit=DA_Illaoi19-1&unit=DA_Kaisa19-1&unit=DA_Olaf19-1&unit=DA_Swain19-1&unit=DA_Vayne19-1&unit=DA_Yuumi19-1",
       "conditions": {
         "kind": "full",
         "teamId": "00000000-0000-4000-8000-000000000029",
         "population": 8
       },
-      "sampleScope": "固定名单 · 不限星级与装备 · 无纹章、人口装或重复棋子",
-      "observedOn": "2026-11-24",
+      "sampleScope": "PBE 19.1b 滚动窗口 · 固定名单 · 无纹章、人口装或重复弈子",
+      "observedOn": "2026-11-25",
       "placementCounts": [
-        17,
-        28,
-        13,
+        23,
+        36,
+        18,
+        11,
         10,
-        7,
+        5,
         4,
-        3,
         0
       ],
-      "mean": 2.83,
-      "topFourRate": 0.8292682926829268,
-      "winRate": 0.2073170731707317
+      "mean": 2.81,
+      "topFourRate": 0.822429906542056,
+      "winRate": 0.21495327102803738
     },
     {
       "population": 6,
@@ -5094,6 +5094,40 @@
       "mean": 2.0,
       "topFourRate": 1.0,
       "winRate": 0.3333333333333333
+    },
+    {
+      "population": 7,
+      "roster": [
+        "braum",
+        "draven",
+        "garen",
+        "gnar",
+        "viego",
+        "yone",
+        "yorick"
+      ],
+      "conditions": {
+        "kind": "full",
+        "teamId": "00000000-0000-4000-8000-000000001177",
+        "population": 7
+      },
+      "games": 24,
+      "mean": 6.42,
+      "url": "https://www.metatft.com/explorer?queue=PBE&patch=19.1&b_patch=b&days=3&level=7&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&tab=comps&set=TFTSet19&unit=DA_Braum19-1&unit=DA_Draven19-1&unit=DA_Garen19-1&unit=DA_Gnar19-1&unit=DA_Viego19-1&unit=DA_Yone19-1&unit=DA_Yorick19-1",
+      "sampleScope": "PBE 19.1b 滚动窗口 · 固定名单 · 无纹章、人口装或重复弈子",
+      "observedOn": "2026-11-25",
+      "placementCounts": [
+        0,
+        0,
+        1,
+        1,
+        3,
+        6,
+        8,
+        5
+      ],
+      "topFourRate": 0.08333333333333333,
+      "winRate": 0.0
     }
   ],
   "edition": "s19-pbe-19.1",

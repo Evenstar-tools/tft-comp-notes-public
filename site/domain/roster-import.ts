@@ -1,5 +1,6 @@
 import type { Item, Piece, Team, Unit } from "./types";
 import { unitSearchNames } from "./unit-search.mjs";
+import { legacyEmblemNames } from "./trait-names.mjs";
 
 type Placement = Omit<Piece, "instanceId">;
 export type RosterPreview = { name: string; notes: string; pieces: Placement[]; errors: string[] };
@@ -10,7 +11,7 @@ export const itemAliases: Record<string, string> = {
   轻语: "最后的轻语", 帽子: "灭世者的死亡之帽", 狂徒: "狂徒铠甲", 板甲: "石像鬼石板甲",
   龙牙: "巨龙之爪", 饮血: "饮血剑", 日炎: "日炎斗篷",
   科技枪: "海克斯科技枪刃", 鬼书: "莫雷洛秘典", 血手: "斯特拉克的挑战护手",
-  链枷: "强袭者的链枷", 光明链枷: "光明版强袭者的链枷", 摇滚转: "摇滚乐纹章",
+  链枷: "强袭者的链枷", 光明链枷: "光明版强袭者的链枷", 摇滚转: "摇滚恶魔纹章",
   混沌战士纹章: "非主流纹章",
 };
 
@@ -28,9 +29,9 @@ export function parseRoster(input: string, units: Unit[], items: Item[]): Roster
     }
   }
   const itemIds = new Map(items.flatMap(item => [[normalized(item.name),item.id], [normalized(item.id),item.id]] as [string,string][]));
-  for (const [alias,name] of Object.entries(itemAliases)) {
+  for (const [alias,name] of Object.entries({ ...legacyEmblemNames, ...itemAliases })) {
     const id = itemIds.get(normalized(name));
-    if (id) itemIds.set(normalized(alias), id);
+    if (id && !itemIds.has(normalized(alias))) itemIds.set(normalized(alias), id);
   }
   const rows = input.trim().split(/\r?\n/).map(line => line.trim()).filter(Boolean);
   const countLine = rows.findIndex(line => /^\d+\s*人口$/.test(line));
@@ -119,10 +120,11 @@ function copyBoard(board: { pieces: Placement[]; instrumentPositions?: Team["ins
 }
 
 export function independentDraft(
-  source: Pick<Team, "name" | "category" | "notes" | "instrumentPositions" | "mainStage" | "stages" | "posterFormat"> & { pieces: Placement[] },
+  source: Pick<Team, "name" | "category" | "notes" | "instrumentPositions" | "mainStage" | "stages" | "posterFormat" | "conditions"> & { pieces: Placement[] },
   empty: Team,
 ): Team {
   const draft: Team = { ...empty, name: source.name, category: source.category, notes: source.notes, ...copyBoard(source) };
+  if (source.conditions) draft.conditions = source.conditions.map(condition => ({ ...condition }));
   if (source.mainStage) draft.mainStage = source.mainStage;
   if (source.posterFormat) draft.posterFormat = source.posterFormat;
   for (const stage of ["early", "mid"] as const) {

@@ -62,6 +62,8 @@ export interface Piece extends PieceLoadout {
 }
 export type BoardInstrumentId = "maracas" | "rainstick" | "infernalIdol";
 export type BoardStage = "early" | "mid" | "late";
+export type TeamCondition = { kind: "required" | "option" } &
+  ({ augmentId: string } | { itemId: string; recipientId: string; replaces?: string });
 export interface BoardSetup {
   pieces: Piece[];
   instrumentPositions?: Partial<Record<BoardInstrumentId, number>>;
@@ -79,6 +81,7 @@ export interface Team extends BoardSetup {
   sectionId?: string;
   posterFormat?: "full" | "quick";
   boardRole?: "variant" | "stage";
+  conditions?: TeamCondition[];
 }
 export interface Season {
   id: string;

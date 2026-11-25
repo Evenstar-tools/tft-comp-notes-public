@@ -37,7 +37,6 @@ const categoryNames: Record<string, string> = {
 const number = new Intl.NumberFormat("zh-CN");
 const percent = new Intl.NumberFormat("zh-CN", { style: "percent", maximumFractionDigits: 1 });
 const carryRateLabel = (rate: number) => rate > 0 && rate < 0.0005 ? "<0.1%" : percent.format(rate);
-const dateLabel = (date: string) => date.replaceAll("-", ".");
 const isGlossary = (line: string) => /^(?:灼烧|重伤|技能暴击|魔抗击碎|护甲击碎)[：:]/.test(line);
 const currentEquipment: EquipmentStats = { standard: itemWearers, special: specialItemWearers };
 
@@ -97,7 +96,6 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
   </p>;
   const itemHref = (...args: Parameters<typeof gearHref>) => periodGearHref(period?.id, ...args);
   const { query, order, excluded } = filters;
-  const [wearersOpen, setWearersOpen] = useState("");
   const reverseWearer = unitMap.get(filters.wearer);
   const reverse = isReverseView(group, filters.wearer);
   const ranking = rankedGroup(group) || reverse;
@@ -131,9 +129,6 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
   const reverseGroups: GearGroup[] = group === "all" ? ["completed", "special", "radiant", "emblems"] : [group];
   const item = visible.find(entry => entry.id === selected) ?? visible[0];
   useLayoutEffect(() => {
-    setWearersOpen(history.state?.gearWearersOpen ?? "");
-  }, []);
-  useLayoutEffect(() => {
     const row = clicked.current;
     clicked.current = null;
     if (row?.element.isConnected) window.scrollBy({ top: row.element.getBoundingClientRect().top - row.top, behavior: "instant" });
@@ -160,7 +155,6 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
       setSelected(itemMap.has(id) ? id : defaultSelection(next, restored));
       setWearer(unitMap.has(unit) ? unit : "");
       setGroup(next);
-      setWearersOpen(history.state?.gearWearersOpen ?? "");
       setFilters(restored);
     }
     window.addEventListener("popstate", restore);
@@ -199,11 +193,6 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
     searchBox.current?.focus();
   }
 
-  function rememberWearers(id: string) {
-    history.replaceState({ ...history.state, gearWearersOpen: id }, "");
-    setWearersOpen(id);
-  }
-
   function openItem(event: MouseEvent<HTMLAnchorElement>, entry: Item, targetGroup?: ItemGroup, showDetail = true) {
     if (event.metaKey || event.ctrlKey || event.altKey || event.shiftKey || event.button !== 0) return;
     event.preventDefault();
@@ -239,10 +228,8 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
   function openWearer(event: MouseEvent<HTMLAnchorElement>, id: string, unit: string) {
     if (event.metaKey || event.ctrlKey || event.altKey || event.shiftKey || event.button !== 0) return;
     event.preventDefault();
-    if (ranking) {
-      rememberWearers(id);
-      if (selected !== id)
-        clicked.current = { element: event.currentTarget, top: event.currentTarget.getBoundingClientRect().top };
+    if (ranking && selected !== id) {
+      clicked.current = { element: event.currentTarget, top: event.currentTarget.getBoundingClientRect().top };
     }
     navigate(id, group, filters, unit);
   }
@@ -293,7 +280,7 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
   </select>;
   return <>
     <div className={"page-heading gear-heading" + (ranking ? " gear-heading-ranked" : "")} data-wearer={reverse || undefined}>
-      <h1>{group === "special" ? "神器与辅助装" : group === "radiant" ? "光明装" : "装备图鉴"}</h1>
+      <h1>装备图鉴</h1>
       {origin && (ranking ? !visible.some(entry => entry.id === selected) : !item) &&
         <a className="text-link gear-origin-fallback" href={origin.href}>← 返回棋盘</a>}
       <div className="gear-catalog-tabs"><GearCategoryNav {...categoryProps} radiantCount={radiantCount} /></div>
@@ -330,7 +317,7 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
               }}>
               <span className="gear-rank-identity">
                 <ItemIcon item={entry} size={34} />
-                <span title={name}>{name !== displayName && <span className="sr-only">光明版</span>}{displayName}{entry.category === "support" && <small>辅助装</small>}</span>
+                <span className="gear-rank-title" title={name}>{name !== displayName && <span className="sr-only">光明版</span>}{displayName}{entry.category === "support" && <small>辅助装</small>}</span>
                 {trait ? <ArrowUpRight aria-hidden="true" size={14} /> : <ChevronDown aria-hidden="true" size={14} />}
               </span>
               <span className="gear-rank-number" data-tone={placementTone(sample.mean, sample.games, rankedMinimum)}>{sample.mean?.toFixed(2)}</span>
@@ -359,8 +346,8 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
       </div>
       {archiveMessage || (rankedEntries.length && specialStats ? <>
         <div className="gear-rank-head" aria-hidden="true"><span>装备</span><span>均名</span><span>登顶率</span><span>场数</span>
-          <span title={holderMode === "usual" ? `未满 ${specialStats.minGames} 场，按携带场数排序` : holderMode === "best" ? `满 ${specialStats.minGames} 场，按均名排序` : undefined}>
-            {holderHeading} <small>均名 / 场数</small>
+          <span className="gear-holder-heading" title={holderMode === "usual" ? `未满 ${specialStats.minGames} 场，按携带场数排序` : holderMode === "best" ? `满 ${specialStats.minGames} 场，按均名排序` : undefined}>
+            {holderHeading}<small>均名 · 场数</small>
           </span>
         </div>
         <ul className="gear-rank-list">{rankedEntries.map(({ entry, stats, commonOnly, best, performance }) => {
@@ -381,7 +368,7 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
                 }}>
                 <span className="gear-rank-identity">
                   <ItemIcon item={entry} size={34} />
-                  <span title={name}>{group === "radiant" ? name.replace(/^光明版/, "") : name}
+                  <span className="gear-rank-title" title={name}>{group === "radiant" ? name.replace(/^光明版/, "") : name}
                     {entry.category === "support" && <small>辅助装</small>}
                   </span>
                   <ChevronDown aria-hidden="true" size={14} />
@@ -408,7 +395,7 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
               <ItemReading item={entry} wearer={wearer} filters={filters} uses={examples[entry.id] ?? []} onRecipe={openItem} equipment={equipment} period={period?.id}
                 onWearer={(event, unit) => openWearer(event, entry.id, unit)} wearerHref={unit => wearerLink(entry.id, unit)}
                 returnHref={itemHref(group, filters, { item: entry.id, unit: wearer })}
-                inRanking origin={origin} wearersOpen={wearersOpen === entry.id} onWearersToggle={() => rememberWearers(wearersOpen === entry.id ? "" : entry.id)} />
+                inRanking origin={origin} />
             </div>}
           </li>;
         })}</ul>
@@ -434,9 +421,8 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
   </>;
 }
 
-function ItemReading({ item, wearer, filters, uses, onRecipe, onWearer, wearerHref, equipment, period, inRanking = false, wearersOpen, onWearersToggle, showCategory = true, origin, returnHref, openBuilds = false }: {
+function ItemReading({ item, wearer, filters, uses, onRecipe, onWearer, wearerHref, equipment, period, inRanking = false, showCategory = true, origin, returnHref, openBuilds = false }: {
   inRanking?: boolean;
-  wearersOpen?: boolean; onWearersToggle?: () => void;
   showCategory?: boolean;
   openBuilds?: boolean;
   origin?: GuideOrigin;
@@ -449,8 +435,6 @@ function ItemReading({ item, wearer, filters, uses, onRecipe, onWearer, wearerHr
   const reverse = inRanking && !!filters.wearer;
   const excluded = reverse ? "" : filters.excluded;
   const reference = itemReference.items[item.id];
-  const referenceBuild = reference?.build ?? itemReference.build;
-  const effectSourceUrl = reference?.sourceUrl ?? itemReference.sources[0]?.url;
   const snapshot = equipment?.special.items[item.id] ? equipment.special : equipment?.standard;
   const sampled = snapshot?.items[item.id];
   const minGames = snapshot ? itemSampleMinimum(item, snapshot) : Infinity;
@@ -498,7 +482,6 @@ function ItemReading({ item, wearer, filters, uses, onRecipe, onWearer, wearerHr
   const effect = lines.filter(line => !isGlossary(line)).join("\n");
   const glossary = lines.filter(isGlossary);
   const placement = (special || radiant) && snapshot ? itemPerformance(item, snapshot)?.mean : undefined;
-  const WearerDetails = inRanking ? "details" : "section";
   const showWearers = snapshot && !reverse && (!!sampled?.rows.some(row => row.unitId !== excluded && unitMap.has(row.unitId)) ||
     !inRanking && (item.category === "completed" || item.category === "team-size" || special || radiant));
 
@@ -557,7 +540,7 @@ function ItemReading({ item, wearer, filters, uses, onRecipe, onWearer, wearerHr
           <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>}
         {effect && <p className="gear-effect">{effect}</p>}
         {!!glossary.length && <details className="gear-glossary"><summary>效果术语</summary><p>{glossary.join("\n")}</p></details>}
-        {!reference && <p className="gear-empty">暂无可核对的当期效果</p>}
+        {!reference && <p className="gear-empty">暂无效果资料</p>}
         {!!parts.length && <section className="gear-recipe gear-visible-recipe" aria-label="合成配方">
           <span className="gear-recipe-label">合成</span>
           <div>{parts.map((entry, index) => <span key={entry.id + index}>
@@ -570,11 +553,8 @@ function ItemReading({ item, wearer, filters, uses, onRecipe, onWearer, wearerHr
         </section>}
       </div>
       {showWearers && <div className="gear-reading-users">
-        <WearerDetails className="gear-wearers" aria-labelledby="gear-wearer-title" open={wearersOpen}>
-          {inRanking && <summary id="gear-wearer-title" onClick={event => {
-            event.preventDefault();
-            onWearersToggle?.();
-          }}>全部使用者</summary>}
+        <section className="gear-wearers" aria-label={inRanking ? "实战使用者" : undefined}
+          aria-labelledby={inRanking ? undefined : "gear-wearer-title"}>
           <header className="gear-section-heading">
             {!inRanking && <h3 id="gear-wearer-title">实战使用者</h3>}
             {!!sampled?.rows.length && <select aria-label="实战使用者排序" value={order} onChange={event => setOrder(event.target.value as typeof order)}>
@@ -583,6 +563,8 @@ function ItemReading({ item, wearer, filters, uses, onRecipe, onWearer, wearerHr
             </select>}
           </header>
           {shown.length ? <>
+            <div className="gear-wearer-table-scroll" role={inRanking ? "region" : undefined}
+              aria-label={inRanking ? "使用者战绩" : undefined} tabIndex={inRanking ? 0 : undefined}>
             <table className="gear-wearers-table">
               <thead><tr><th scope="col">棋子</th><th scope="col">场数</th>{withRate && <th scope="col">携带率</th>}<th scope="col">均名</th></tr></thead>
               <tbody>{shown.map(row => {
@@ -620,11 +602,12 @@ function ItemReading({ item, wearer, filters, uses, onRecipe, onWearer, wearerHr
                 </tr>}</Fragment>;
               })}</tbody>
             </table>
+            </div>
             {!inRanking && known.length > limit && <button type="button" className="gear-more" onClick={() => setAllUsers(!allUsers)} aria-expanded={allUsers}>
               {allUsers ? "收起使用者" : "更多使用者"}
             </button>}
-          </> : <p className="gear-empty">{sampled?.totalGames && minGames > 1 ? `暂无达到 ${minGames} 场的使用者` : "暂无可核对的携带样本"}</p>}
-        </WearerDetails>
+          </> : <p className="gear-empty">{sampled?.totalGames && minGames > 1 ? `暂无达到 ${minGames} 场的使用者` : "暂无携带数据"}</p>}
+        </section>
       </div>}
 
       {!!guideExamples.size && <section className="gear-board-uses" aria-labelledby="gear-guide-title">
@@ -657,18 +640,6 @@ function ItemReading({ item, wearer, filters, uses, onRecipe, onWearer, wearerHr
     {!cookComponent && !!builds.length && <details className="gear-recipe">
       <summary>可合成装备</summary>
       <div>{builds.map(recipeLink)}</div>
-    </details>}
-    {(sampled || reference) && <details className="gear-sample-method">
-      <summary>数据来源</summary>
-      {sampled && snapshot && <p>
-        <a href={sampled.url} target="_blank" rel="noreferrer">{snapshot.source} 携带战绩</a> · {snapshot.version} · {snapshot.window} · {dateLabel(snapshot.date)}。
-        {minGames > 1 && `满 ${minGames} 场显示均名。`}{withRate && "携带率按该棋子的结算场数计算。"}
-      </p>}
-      {reference && <p>
-        {effectSourceUrl && effectSourceUrl !== sampled?.url
-          ? <a href={effectSourceUrl} target="_blank" rel="noreferrer">装备效果</a> : "装备效果"}
-        {referenceBuild && " · " + referenceBuild}
-      </p>}
     </details>}
   </>;
 }

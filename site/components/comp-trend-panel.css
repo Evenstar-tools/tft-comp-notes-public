@@ -23,17 +23,34 @@
 .comp-trend-panel ul { padding: 0; list-style: none; }
 .comp-trend-header,
 .comp-trend-controls,
+.comp-trend-sources,
 .comp-trend-legend-heading,
-.comp-trend-focused,
-.comp-trend-discovery-meta {
+.comp-trend-focused {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: 8px 12px;
 }
-.comp-trend-header { align-items: flex-start; justify-content: space-between; }
-.comp-trend-header h2 { font-size: 1.22rem; font-weight: 700; line-height: 1.25; }
-.comp-trend-header p { margin-block-start: 4px; font-size: .81rem; color: var(--muted); }
+.comp-trend-header { margin-block-end: 14px; gap: 8px 16px; }
+.comp-trend-header h2 { font-size: 1.25rem; font-weight: 700; line-height: 1.25; white-space: nowrap; }
+.comp-trend-sources { margin-inline-start: auto; color: var(--muted); font-size: .81rem; }
+.comp-trend-method { position: relative; }
+.comp-trend-method summary { cursor: pointer; padding-block: 6px; }
+.comp-trend-method[open] > summary { color: var(--accent); }
+.comp-trend-method > div {
+  position: absolute;
+  z-index: 5;
+  inset-block-start: calc(100% + 8px);
+  inset-inline-end: 0;
+  width: max-content;
+  max-width: min(20rem, 75vw);
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--panel);
+  line-height: 1.5;
+}
+.comp-trend-method p + p { margin-block-start: 5px; }
 .comp-trend-credit,
 .comp-trend-focused a,
 .comp-trend-discovery h4 a {
@@ -43,9 +60,8 @@
   color: var(--accent);
   text-decoration: none;
 }
-.comp-trend-credit { align-self: start; padding-block: 3px; font-size: .84rem; font-weight: 650; }
+.comp-trend-credit { padding-block-start: 3px; font-weight: 600; }
 .comp-trend-panel a:is(:hover, :focus-visible) { text-decoration: underline; text-underline-offset: 3px; }
-.comp-trend-controls { justify-content: space-between; margin-block: 12px 7px; }
 .comp-trend-metrics { display: flex; gap: 2px; padding: 3px; border-radius: 7px; background: var(--raised); }
 .comp-trend-metrics button,
 .comp-trend-filter,
@@ -61,81 +77,159 @@
 .comp-trend-filter,
 .comp-trend-date { max-width: min(100%, 15rem); min-height: 34px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); padding-inline: 8px; font-size: .82rem; }
 .comp-trend-body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(14rem, 23%); gap: 16px; min-width: 0; }
-.comp-trend-plot { min-width: 0; position: relative; }
-.comp-trend-panel .comp-trend-axis { margin-inline-start: 5px; color: var(--muted); font-size: .75rem; }
-.comp-trend-canvas { height: clamp(500px, 62vh, 680px); min-width: 0; }
+.comp-trend-plot {
+  min-width: 0;
+  align-self: start;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 6px 2px;
+  background: color-mix(in srgb, var(--raised) 35%, var(--panel));
+}
+.comp-trend-canvas { height: clamp(320px, 45dvh, 480px); min-width: 0; }
+.comp-trend-hit .recharts-line-curve { pointer-events: stroke; cursor: crosshair; }
 .comp-trend-legend { min-width: 0; padding: 1px 0 4px 12px; border-inline-start: 1px solid var(--line); }
-.comp-trend-legend-heading { justify-content: space-between; min-height: 34px; margin-block-end: 4px; color: var(--muted); font-size: .8rem; }
+.comp-trend-legend-heading {
+  justify-content: space-between;
+  min-height: 34px;
+  padding: 0 7px 7px;
+  margin-block-end: 3px;
+  border-bottom: 1px solid var(--line);
+  color: var(--text);
+  font-size: .84rem;
+  font-weight: 650;
+}
+.comp-trend-legend-heading > span { color: var(--muted); font-weight: 550; }
 .comp-trend-date { min-height: 32px; color: var(--text); font-variant-numeric: tabular-nums; }
+.comp-trend-readings {
+  --reading-columns: 12px 24px minmax(0, 1fr) 2.1rem 3.15rem;
+}
+.comp-trend-readings[data-delta] {
+  --reading-columns: 12px 24px minmax(0, 1fr) 2.1rem 2.6rem 3.15rem;
+}
 .comp-trend-legend li button {
-  display: flex;
+  display: grid;
+  grid-template-columns: var(--reading-columns);
   align-items: center;
   gap: 6px;
   width: 100%;
-  min-height: 31px;
-  padding: 4px 5px;
+  min-height: 36px;
+  padding: 4px 7px;
   border: 0;
   border-radius: 5px;
   background: transparent;
   text-align: start;
   font-size: .84rem;
 }
-.comp-trend-legend li button:is(:hover, :focus-visible, [aria-pressed="true"]) { background: var(--raised); }
+.comp-trend-legend li button:is(:hover, :focus-visible, [aria-pressed="true"], [data-highlighted]) {
+  background: color-mix(in srgb, var(--trend-track) 9%, var(--panel));
+}
 .comp-trend-legend li button[aria-pressed="true"] { box-shadow: inset 2px 0 var(--trend-track); }
-.comp-trend-track-mark { width: 12px; height: 2px; flex: none; border-radius: 2px; background: var(--trend-track); }
-.comp-trend-legend img { flex: none; border-radius: 4px; object-fit: cover; }
-.comp-trend-track-name { flex: 1; min-width: 0; white-space: normal; overflow-wrap: anywhere; line-height: 1.25; }
-.comp-trend-legend li b { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.comp-trend-track-mark { width: 12px; height: 3px; border-radius: 2px; background: var(--trend-track); }
+.comp-trend-track-avatar { width: 24px; height: 24px; }
+.comp-trend-legend img { display: block; width: 100%; height: 100%; border-radius: 5px; object-fit: cover; }
+.comp-trend-track-name { color: var(--trend-track); min-width: 0; white-space: normal; overflow-wrap: anywhere; line-height: 1.35; font-weight: 550; }
+.comp-trend-legend li button[data-highlighted] .comp-trend-track-name { font-weight: 700; }
+.comp-trend-track-cost { color: var(--muted); text-align: end; font-size: .75rem; white-space: nowrap; }
+.comp-trend-legend li b { text-align: end; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .comp-trend-delta { display: inline-flex; align-items: center; gap: 1px; min-width: 3.2em; justify-content: flex-end; flex: none; font-variant-numeric: tabular-nums; font-size: .7rem; }
 .comp-trend-delta[data-direction="up"] { color: var(--trend-up); }
 .comp-trend-delta[data-direction="down"] { color: var(--trend-down); }
-.comp-trend-focused { margin-block: 6px 3px; padding: 6px 5px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: .75rem; }
-.comp-trend-focused span { flex-basis: 100%; }
+.comp-trend-focused {
+  margin-block: 8px 4px;
+  padding: 8px 10px;
+  border-inline-start: 2px solid var(--trend-track);
+  border-radius: 5px;
+  background: var(--raised);
+  color: var(--muted);
+  font-size: .78rem;
+  gap: 4px 12px;
+}
+.comp-trend-focused :is(strong, span) { flex-basis: 100%; }
+.comp-trend-focused strong { color: var(--text); font-size: .84rem; }
 .comp-trend-tooltip {
-  max-width: min(275px, 72vw);
+  width: min(17rem, calc(100vw - 76px));
   padding: 8px 10px;
   border: 1px solid var(--line);
-  border-radius: 6px;
-  box-shadow: 0 3px 14px #1c19171a;
+  border-radius: 8px;
+  box-shadow: 0 5px 16px #14151b29;
   background: var(--panel);
   color: var(--text);
-  font-size: .75rem;
+  font-size: .79rem;
 }
-.comp-trend-tooltip-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0 8px; margin-block-start: 5px; }
-.comp-trend-tooltip-row small { grid-column: 1 / -1; color: var(--muted); font-size: .7rem; }
-.comp-trend-tooltip > small { display: block; margin-block-start: 5px; color: var(--muted); }
-.comp-trend-caption { display: flex; flex-wrap: wrap; gap: 5px 14px; align-items: baseline; padding-block: 3px 10px; color: var(--muted); font-size: .75rem; }
+.comp-trend-tooltip > strong {
+  display: block;
+  padding-block-end: 5px;
+  border-bottom: 1px solid var(--line);
+  font-variant-numeric: tabular-nums;
+}
+.comp-trend-tooltip > ul { margin-block-start: 3px; }
+.comp-trend-tooltip-row {
+  display: grid;
+  grid-template-columns: 10px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 6px;
+  min-height: 23px;
+  padding: 2px 0;
+  line-height: 1.25;
+}
+.comp-trend-tooltip-row .comp-trend-track-mark { width: 8px; height: 8px; border-radius: 50%; }
+.comp-trend-tooltip-row b { font-variant-numeric: tabular-nums; }
+.comp-trend-tooltip-row[data-focused] { font-weight: 650; }
+.comp-trend-caption { display: flex; flex-wrap: wrap; gap: 5px 14px; align-items: baseline; padding-block: 8px 10px; color: var(--muted); font-size: .75rem; }
 .comp-trend-patches { display: flex; flex-wrap: wrap; gap: 4px 9px; font-variant-numeric: tabular-nums; }
 .comp-trend-patches > span { display: inline-flex; align-items: baseline; gap: 4px; }
-.comp-trend-patches > span:first-child::before { content: ""; align-self: center; width: 13px; border-top: 1px dashed var(--gold); margin-inline-end: 1px; }
+.comp-trend-patches::before { content: ""; align-self: center; width: 12px; border-top: 1px dashed var(--gold); }
+.comp-trend-patches > span { padding: 2px 7px; border-radius: 4px; background: var(--raised); }
 .comp-trend-patches a { color: var(--accent); }
-.comp-trend-watch { margin-block-start: 4px; padding-block: 11px 13px; border-top: 1px solid var(--line); }
-.comp-trend-watch h3 { font-size: .94rem; font-weight: 700; }
-.comp-trend-watch > ul,
-.comp-trend-watch details ul { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px 14px; margin-block-start: 8px; }
+.comp-trend-watch { margin-block-start: 2px; padding-block: 9px 11px; border-top: 1px solid var(--line); }
+.comp-trend-watch summary { cursor: pointer; color: var(--text); font-size: .86rem; font-weight: 650; }
+.comp-trend-watch summary span + span { margin-inline-start: 7px; color: var(--muted); font-size: .78rem; font-weight: 500; }
+.comp-trend-discovery-group { margin-block-start: 12px; }
+.comp-trend-discovery-group h3 {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding-block: 5px;
+  margin-block-end: 7px;
+  border-bottom: 1px solid var(--line);
+  font-size: .81rem;
+  font-variant-numeric: tabular-nums;
+}
+.comp-trend-discovery-group h3 span { color: var(--muted); font-weight: 500; }
+.comp-trend-discovery-group ul { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px 16px; }
 .comp-trend-discovery { min-width: 0; padding-inline-start: 9px; border-inline-start: 2px solid var(--line); }
-.comp-trend-discovery-meta { font-size: .72rem; color: var(--muted); }
-.comp-trend-discovery-meta span { font-weight: 650; color: var(--accent); }
-.comp-trend-discovery-meta span[data-kind="新阵容"] { color: var(--trend-up); }
 .comp-trend-discovery h4 { font-size: .86rem; line-height: 1.35; font-weight: 650; overflow-wrap: anywhere; }
 .comp-trend-discovery p { color: var(--muted); font-size: .77rem; line-height: 1.45; overflow-wrap: anywhere; }
 .comp-trend-discovery small { color: var(--muted); font-size: .72rem; }
-.comp-trend-watch details { margin-block-start: 6px; color: var(--muted); font-size: .77rem; }
-.comp-trend-watch summary { color: var(--accent); cursor: pointer; }
 .comp-trend-panel .comp-trend-empty { padding-block: 10px; color: var(--muted); font-size: .84rem; }
-.comp-trend-watch .comp-trend-empty { padding-block: 5px 0; }
 
+@media (min-width: 701px) {
+  .comp-trend-body {
+    grid-template-columns: minmax(0, 1fr) minmax(16rem, 25%);
+    gap: 0;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+  }
+  .comp-trend-plot { align-self: stretch; border: 0; border-radius: 7px 0 0 7px; padding: 8px 7px 2px 5px; }
+  .comp-trend-legend { padding: 10px 12px 8px; }
+  .comp-trend-legend-heading[data-preview="true"] .comp-trend-date { border-color: var(--gold); }
+  .comp-trend-tooltip { display: none; }
+}
 @media (max-width: 700px) {
   .comp-trend-panel { padding: 13px 12px 0; }
+  .comp-trend-header h2 { flex-basis: 100%; }
+  .comp-trend-sources { margin-inline-start: 0; }
+  .comp-trend-method > div { inset-inline-start: 0; inset-inline-end: auto; }
   .comp-trend-body { grid-template-columns: minmax(0, 1fr); gap: 5px; }
   .comp-trend-canvas { height: clamp(300px, 42svh, 380px); }
   .comp-trend-legend { padding: 6px 0 5px; border-inline-start: 0; border-top: 1px solid var(--line); }
   .comp-trend-legend ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2px 5px; }
-  .comp-trend-legend li button { min-height: 36px; }
-  .comp-trend-watch > ul, .comp-trend-watch details ul { grid-template-columns: minmax(0, 1fr); }
+  .comp-trend-discovery-group ul { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 460px) {
+  .comp-trend-legend ul { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 374px) {
   .comp-trend-metrics button { padding-inline: 7px; }
   .comp-trend-legend li button { gap: 4px; }
-  .comp-trend-legend img { width: 18px; height: 18px; }
 }

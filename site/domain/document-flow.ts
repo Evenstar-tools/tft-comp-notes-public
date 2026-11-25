@@ -161,6 +161,7 @@ function sectionParts(section: Section) {
       board.instrumentPositions?.maracas, board.instrumentPositions?.rainstick, board.instrumentPositions?.infernalIdol])],
     ["配装", boards.map(({ team, pieces }) => [team.id, pieces
       .map(piece => [piece.position, piece.items])])],
+    ["定阵条件", teams.map(team => [team.id, team.conditions])],
     ["主阵与阶段", [section.primaryTeamId, section.stageTeamIds ?? [], section.team?.id, boards.map(({ team, stage }) => [team.id, stage])]],
     ["首页摘要", section.summaryBlockId],
     ["图片", images],

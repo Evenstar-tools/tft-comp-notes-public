@@ -17,7 +17,7 @@ import { sectionTeams } from "@/domain/document-flow";
 import { allBlocks, guideBoardName, guideLink, guideRoute, guideStrategyLabel, oceanGravesUnlockBoardId, primaryFirst, readingNotes, type GuideRole } from "@/domain/guide-reading";
 import { compactGuideParagraph, compactUtilityCopy, hasGuideLinks, rememberGuideCopy } from "@/domain/guide-copy";
 import { guideFlexPreview, reviewedGuidePhases } from "@/domain/guide-execution";
-import { guideEquipmentConditions } from "@/domain/guide-equipment-conditions";
+import { guideEquipmentConditions, guideReferenceConditions, sharedGuideEditorConditions } from "@/domain/guide-equipment-conditions";
 import { rerollRoute } from "@/domain/reroll-stages";
 import { boardTraitLink } from "@/domain/trait-performance";
 import { editorLink, itemLink, ownerEditorPath, posterShareLink, readPosterShare, type PosterShare } from "@/domain/links";
@@ -147,8 +147,8 @@ export function GuideTeams({ section, data, initialTeam, initialStage, initialFl
     ...(siblings ?? []),
   ].map(variant => [variant.teamId, variant])).values()];
   const augment = heroAugmentForGuide(section);
-  const equipmentConditions = guideEquipmentConditions(section, teams, data);
-  const conditionBoard = equipmentConditions?.board;
+  const equipmentConditions = guideEquipmentConditions(section, teams, data, undefined, team);
+  const referenceConditions = guideReferenceConditions(section, teams, data, team);
   const inlineAugment = augment && equipmentConditions?.rows.some(row => row.id === augment.id);
   const augmentUnitName = inlineAugment ? data.units.find(unit => unit.id === augment.unitId)?.name : undefined;
   const heroGuide = !!augment || section.category === heroAugmentCategory;
@@ -379,7 +379,9 @@ export function GuideTeams({ section, data, initialTeam, initialStage, initialFl
               <ImageDown size={16} aria-hidden /><span>一图流</span>
             </button>
             {guideHref && sameEdition(data.id, season.id) && <GuideEditorLink team={shownBoard} title={editorTitle} href={guideHref}
-              owner={session?.isOwner} secondary={!!canEditPositions} focusUnit={shownRoles.find(role => role.label === "主C")?.units[0]} />}
+              owner={session?.isOwner} secondary={!!canEditPositions} focusUnit={shownRoles.find(role => role.label === "主C")?.units[0]}
+              sharedConditions={sharedGuideEditorConditions(teams, section.id, canEditPositions || shownBoard.conditions ? team.id : undefined)}
+              target={canEditPositions ? { publicationId, sectionId: section.id, teamId: team.id } : undefined} />}
             {canEditPositions && <GuideBoardPositionEditor key={team.id} publicationId={publicationId!}
               sectionId={section.id} teamId={team.id} title={editorTitle} href={guideHref!} />}
           </div>
@@ -394,8 +396,6 @@ export function GuideTeams({ section, data, initialTeam, initialStage, initialFl
               : label}</li>;
           })}</ul>
         </div>
-        {equipmentConditions && <GuideEquipmentConditions conditions={equipmentConditions} guideHref={guideHref}
-          onViewBoard={conditionBoard && (conditionBoard.id !== team.id || !mainBoardActive) ? () => pickTeam(conditionBoard) : undefined} />}
         {flexPreview && <div className="guide-flex-slot" aria-label="灵活位">
           <strong className="guide-flex-label">{showFlex ? "替换预览" : "灵活位"}</strong>
           <span className="guide-flex-swap">
@@ -458,8 +458,13 @@ export function GuideTeams({ section, data, initialTeam, initialStage, initialFl
             defaultAugmented={augment?.unitId === unit.id} wornItems={piece.items} />
         </section>}
       </div>
-      <GuideEquipment key={team.id + activeStage} team={shownBoard} data={data} roles={shownRoles} selectedPiece={selectedPiece}
-        onSelectPiece={selectPiece} guideHref={guideHref} sectionId={section.id} guideStats={!showFlex} />
+      <aside className="guide-sidebar" aria-label="配装与进场条件">
+        <GuideEquipment key={team.id + activeStage} team={shownBoard} data={data} roles={shownRoles} selectedPiece={selectedPiece}
+          onSelectPiece={selectPiece} guideHref={guideHref} sectionId={section.id} guideStats={!showFlex} />
+        {equipmentConditions && <GuideEquipmentConditions conditions={equipmentConditions} guideHref={guideHref} />}
+        {referenceConditions && <GuideEquipmentConditions conditions={referenceConditions} guideHref={guideHref}
+          anchored={!equipmentConditions} onViewBoard={() => pickTeam(referenceConditions.board)} />}
+      </aside>
       <div className="reader-support">
         {mainBoardActive && renderNotes?.(team, passages, notes.roles)}
         {mainBoardActive && !showFlex && <GuideMatchStats key={team.id} id={sampleId} team={team} teams={teams} section={section}

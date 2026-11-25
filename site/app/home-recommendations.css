@@ -44,7 +44,10 @@
   min-width: 0; border: 1px solid var(--line); border-radius: 10px;
   background: var(--panel); scroll-margin-block-start: 18px;
 }
-.home-patch-card:is(:hover, :focus-within) { border-color: var(--accent); }
+.home-patch-card:is(:hover, :focus-within) {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--raised) 38%, var(--panel));
+}
 .home-patch-card-link {
   display: grid; grid-template-columns: auto minmax(0, 1fr) auto; min-height: 56px;
   align-items: start; gap: 4px 12px; padding: 10px 12px; border-radius: inherit;
@@ -65,6 +68,7 @@
 .home-patch-avatar img { display: block; width: 32px; height: 32px; object-fit: cover; border-bottom: 3px solid var(--unit-cost); border-radius: 4px; }
 .home-patch-avatar small { font-size: .75rem; line-height: 1.25; font-weight: 650; color: var(--accent); white-space: nowrap; }
 .home-patch-avatar[data-core="主坦"] small { color: var(--text); }
+.home-patch-avatar-context { color: var(--muted); font-weight: 500; }
 .home-guide-library .home-patch-steps { margin-inline: 12px; padding: 0 0 6px; gap: 2px 5px; }
 .home-guide-library .home-patch-steps a { min-height: 32px; padding-inline: 7px; border-radius: 5px; text-decoration: none; font-weight: 550; }
 .home-guide-library .home-patch-steps a:is(:hover, :focus-visible) { background: var(--raised); text-decoration: underline; }
@@ -152,6 +156,17 @@
   .home-guide-library .guide-section > .reader-list > article:only-child .guide-avatars { grid-area: 2 / 2 / span 3; align-self: start; justify-content: end; }
   .home-guide-library .guide-title-row > .guide-placement { max-width: none; min-height: 27px; align-self: start; }
   .home-guide-library .guide-title-row > .guide-placement small { flex-basis: auto; margin-inline-start: 4px; }
+}
+@media (min-width: 1220px) {
+  .home-patch-cards:has(> :nth-child(3):last-child) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .home-patch-cards:has(> :nth-child(3):last-child) .home-patch-card-link {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 4px 10px;
+  }
+  .home-patch-cards:has(> :nth-child(3):last-child) .home-patch-avatars { grid-area: 1 / 1; }
+  .home-patch-cards:has(> :nth-child(3):last-child) .home-patch-mean { grid-area: 1 / 2; max-width: none; }
+  .home-patch-cards:has(> :nth-child(3):last-child) .home-patch-title { grid-area: 2 / 1 / auto / -1; }
+  .home-patch-cards:has(> :nth-child(3):last-child) .home-patch-card-copy p { grid-column: 1 / -1; }
 }
 @media (max-width: 760px) {
   .home-patch-cards { grid-template-columns: minmax(0, 1fr); gap: 5px; }

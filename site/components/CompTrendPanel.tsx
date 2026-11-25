@@ -1,21 +1,21 @@
 "use client";
 
-import { useId, useMemo, useState, type CSSProperties } from "react";
+import { useEffect, useId, useMemo, useState, type CSSProperties } from "react";
 import { ArrowDownRight, ArrowUpRight, ChevronRight } from "lucide-react";
 import { CartesianGrid, Line, LineChart, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import type { CompTrendModel, TrendDiscovery, TrendPoint, TrendTrack } from "@/domain/comp-trends";
+import { selectTrendWindow, type CompTrendModel, type TrendDiscovery, type TrendPoint, type TrendTrack } from "@/domain/comp-trends";
 import "./comp-trend-panel.css";
 
 const tftableUrl = "https://tftable.cc/meta";
 const metrics = [
-  ["mean", "平均排名"],
+  ["mean", "均名"],
   ["pickRate", "出场率"],
   ["topFourRate", "前四率"],
   ["winRate", "登顶率"],
 ] as const;
 type Metric = (typeof metrics)[number][0];
 type Observation = { time: number; day: number; points: Map<string, TrendPoint>; values: Record<string, number> };
-type PlotLine = { key: string; trackId: string; name: string; color: string; dash?: string };
+type PlotLine = { key: string; trackId: string; name: string; color: string };
 const number = new Intl.NumberFormat("zh-CN");
 const date = new Intl.DateTimeFormat("zh-CN", { month: "numeric", day: "numeric", timeZone: "UTC" });
 const dateTime = new Intl.DateTimeFormat("zh-CN", {
@@ -43,16 +43,6 @@ function pointSampleLabel(point: TrendPoint, metric: Metric) {
   return number.format(point.games) + " / " + number.format(point.totalFinishes) + " 条玩家结算";
 }
 
-function selectTracks(tracks: TrendTrack[], filter: string, latest?: string) {
-  if (filter === "up") return tracks.filter(track => (track.delta ?? 0) < 0)
-    .sort((a, b) => a.delta! - b.delta!).slice(0, 10);
-  if (filter === "down") return tracks.filter(track => (track.delta ?? 0) > 0)
-    .sort((a, b) => b.delta! - a.delta!).slice(0, 10);
-  if (filter === "recommended") return tracks.filter(track => track.recommended).slice(0, 6);
-  const cost = filter.startsWith("cost:") ? Number(filter.slice(5)) : undefined;
-  return tracks.filter(track => track.points.at(-1)?.at === latest && (cost === undefined || track.cost === cost)).slice(0, 10);
-}
-
 function makePlot(days: string[], tracks: TrendTrack[], metric: Metric) {
   const observations = new Map<number, Observation>(days.map(at => {
     const time = Date.parse(at);
@@ -60,41 +50,34 @@ function makePlot(days: string[], tracks: TrendTrack[], metric: Metric) {
     return [time, { time, day, points: new Map(), values: {} }];
   }));
   const lines: PlotLine[] = [];
+  const colors = new Map<string, string>();
   for (const [index, track] of tracks.entries()) {
-    const segmentKeys = new Map<string, string>();
+    const key = "s" + index;
     const color = trackColors[index % trackColors.length];
+    colors.set(track.id, color);
+    let hasValue = false;
     for (const point of track.points) {
-      const row = observations.get(Date.parse(point.at))!;
+      const row = observations.get(Date.parse(point.at));
+      if (!row) continue;
       row.points.set(track.id, point);
       const value = pointValue(point, metric);
       if (value === null) continue;
-      const segment = point.segment ?? "";
-      let key = segmentKeys.get(segment);
-      if (!key) {
-        key = "s" + index + "_" + segmentKeys.size;
-        segmentKeys.set(segment, key);
-        lines.push({ key, trackId: track.id, color, name: track.name, dash: index >= 8 ? "5 3" : undefined });
-      }
       row.values[key] = value;
+      hasValue = true;
     }
+    if (hasValue) lines.push({ key, trackId: track.id, color, name: track.name });
   }
-  return { rows: [...observations.values()].sort((a, b) => a.time - b.time), lines };
+  return { rows: [...observations.values()].sort((a, b) => a.time - b.time), lines, colors };
 }
 
 function sampledTicks(rows: Observation[]) {
-  const count = Math.min(5, rows.length);
+  const count = Math.min(7, rows.length);
   if (count < 2) return rows.map(row => row.day);
   return Array.from({ length: count }, (_, index) => rows[Math.round(index * (rows.length - 1) / (count - 1))].day);
 }
 
-function plotScale(rows: Observation[], metric: Metric, focused?: string): { domain: [number, number]; ticks: number[] } {
-  const values = rows.flatMap(row => {
-    if (!focused) return Object.values(row.values);
-    const point = row.points.get(focused);
-    const value = point && pointValue(point, metric);
-    return value == null ? [] : [value];
-  });
-  if (focused && !values.length) return plotScale(rows, metric);
+function plotScale(rows: Observation[], metric: Metric): { domain: [number, number]; ticks: number[] } {
+  const values = rows.flatMap(row => Object.values(row.values));
   if (!values.length) return { domain: [0, 1], ticks: [0, 1] };
   const low = Math.min(...values), high = Math.max(...values);
   const limit = metric === "mean" ? [1, 8] : [0, 100];
@@ -130,32 +113,36 @@ function Delta({ value }: { value?: number }) {
   </span>;
 }
 
-function TrendTooltip({ row, tracks, metric, focused }: {
-  row?: Observation; tracks: TrendTrack[]; metric: Metric; focused?: string;
-}) {
-  if (!row?.points.size) return null;
-  const present = tracks.filter(track => {
-    const point = row.points.get(track.id);
-    return point && pointValue(point, metric) !== null;
+function trendReadout(tracks: TrendTrack[], row: Observation | undefined, metric: Metric) {
+  const direction = metric === "mean" ? 1 : -1;
+  return tracks.map(track => {
+    const point = row?.points.get(track.id);
+    return { track, point, value: point ? pointValue(point, metric) : null };
+  }).sort((a, b) => {
+    if (a.value === null) return b.value === null ? 0 : 1;
+    return b.value === null ? -1 : direction * (a.value - b.value);
   });
-  const picked = present.find(track => track.id === focused);
-  const shown = picked ? [picked] : present.slice(0, 4);
-  const sample = shown.length ? row.points.get(shown[0].id) : undefined;
+}
+
+function TrendTooltip({ row, tracks, metric, colors, focused, onPreview }: {
+  row?: Observation; tracks: TrendTrack[]; metric: Metric; colors: Map<string, string>; focused?: string;
+  onPreview: (time: number | undefined) => void;
+}) {
+  const time = row?.time;
+  useEffect(() => {
+    onPreview(time);
+    return () => onPreview(undefined);
+  }, [time, onPreview]);
+
+  if (!row) return null;
   return <div className="comp-trend-tooltip">
-    <strong>{dateTime.format(row.time)} UTC</strong>
-    {metric === "pickRate" && sample?.totalFinishes != null && <small>
-      {sample.patch} · {number.format(sample.totalFinishes)} 条玩家结算
-    </small>}
-    {!present.length && <small>这批缺少可核对的出场率</small>}
-    {shown.map(track => {
-      const point = row.points.get(track.id)!;
-      return <div key={track.id} className="comp-trend-tooltip-row">
+    <strong>{date.format(row.time)}</strong>
+    <ul>{trendReadout(tracks, row, metric).map(({ track, value }) =>
+      <li key={track.id} className="comp-trend-tooltip-row" data-focused={track.id === focused || undefined}>
+        <span className="comp-trend-track-mark" style={{ "--trend-track": colors.get(track.id) } as CSSProperties} aria-hidden="true" />
         <span>{track.name}</span>
-        <b>{valueLabel(pointValue(point, metric), metric)}</b>
-        <small>{metric === "pickRate" ? number.format(point.games) + " 条" : point.patch + " · " + pointSampleLabel(point, metric)}</small>
-      </div>;
-    })}
-    {!picked && present.length > shown.length && <small>另有 {present.length - shown.length} 套</small>}
+        <b>{valueLabel(value, metric)}</b>
+      </li>)}</ul>
   </div>;
 }
 
@@ -163,12 +150,8 @@ function DiscoveryCard({ item }: { item: TrendDiscovery }) {
   const external = item.href?.startsWith("https://");
   const Icon = external ? ArrowUpRight : ChevronRight;
   return <li className="comp-trend-discovery">
-    <div className="comp-trend-discovery-meta">
-      <span data-kind={item.kind}>{item.kind === "新阵容" ? "新阵容线索" : item.kind}</span>
-      <time dateTime={item.at} title={dateTime.format(new Date(item.at)) + " UTC"}>{date.format(new Date(item.at))}</time>
-    </div>
     <h4>{item.href ? <a href={item.href} target={external ? "_blank" : undefined} rel={external ? "noopener" : undefined}>{item.name}<Icon size={13} aria-hidden="true" /></a> : item.name}</h4>
-    <p>{item.note.replace("尚未关联攻略，核对是否补变阵", "未关联攻略")}</p>
+    <p>{[item.reason, item.status].filter(Boolean).join(" · ")}</p>
     {(typeof item.games === "number" || typeof item.mean === "number") && <small>
       {typeof item.mean === "number" && "均名 " + item.mean.toFixed(2)}
       {typeof item.mean === "number" && typeof item.games === "number" && " · "}
@@ -182,18 +165,28 @@ export function CompTrendPanel({ model }: { model: CompTrendModel }) {
   const [metric, setMetric] = useState<Metric>("mean");
   const [filter, setFilter] = useState("top");
   const [focused, setFocused] = useState<string>();
+  const [hovered, setHovered] = useState<string>();
   const [selectedTime, setSelectedTime] = useState<number>();
+  const [previewTime, setPreviewTime] = useState<number>();
   const ranked = model.tracks;
+  const discoveryGroups = new Map<string, TrendDiscovery[]>();
+  for (const item of model.discoveries) {
+    const key = item.at.slice(0, 10) + "|" + item.patch;
+    const items = discoveryGroups.get(key);
+    if (items) items.push(item);
+    else discoveryGroups.set(key, [item]);
+  }
   const hasRecommendations = ranked.some(track => track.recommended);
   const activeFilter = filter === "recommended" && !hasRecommendations ? "top" : filter;
-  const latest = model.days.at(-1);
-  const visible = useMemo(() => selectTracks(ranked, activeFilter, latest), [ranked, activeFilter, latest]);
+  const { tracks: visible, days } = useMemo(() => selectTrendWindow(ranked, activeFilter, model.days, metric), [ranked, activeFilter, model.days, metric]);
   const pinned = visible.find(track => track.id === focused);
   const waitingForComparison = (activeFilter === "up" || activeFilter === "down") &&
-    !ranked.some(track => track.delta !== undefined);
-  const { rows, lines } = useMemo(() => makePlot(model.days, visible, metric), [model.days, visible, metric]);
-  const scale = useMemo(() => plotScale(rows, metric, pinned?.id), [rows, metric, pinned?.id]);
+    !ranked.some(track => track.points.length > 1);
+  const { rows, lines, colors } = useMemo(() => makePlot(days, visible, metric), [days, visible, metric]);
+  const scale = useMemo(() => plotScale(rows, metric), [rows, metric]);
+  const highlighted = hovered ?? pinned?.id;
   const activeRow = rows.find(row => row.time === selectedTime) ?? rows.at(-1);
+  const readoutRow = rows.find(row => row.time === previewTime) ?? activeRow;
   const start = rows[0]?.time;
   const end = rows.at(-1)?.time;
   const timing: [number, number] = start === end && start !== undefined
@@ -202,42 +195,48 @@ export function CompTrendPanel({ model }: { model: CompTrendModel }) {
     const time = Date.parse(patch.at);
     return start !== undefined && end !== undefined && time >= start && time <= end;
   });
-  const pinnedPoint = pinned && activeRow?.points.get(pinned.id);
-  const costs = [...new Set(ranked.flatMap(track => track.cost ? [track.cost] : []))].sort((a, b) => a - b);
+  const pinnedPoint = pinned && readoutRow?.points.get(pinned.id);
+  const metricLabel = metrics.find(([key]) => key === metric)?.[1];
+  const showDelta = metric === "mean" && readoutRow === rows.at(-1) && visible.some(track => Number(track.delta?.toFixed(2)));
+  const costs = [...new Set(ranked.flatMap(track => track.cost ? [Math.min(5, track.cost)] : []))].sort((a, b) => a - b);
   function onFilter(value: string) {
     setFilter(value);
     setFocused(undefined);
+    setHovered(undefined);
   }
 
   return <section className="comp-trend-panel" id="comp-trends" aria-labelledby={id + "-title"}>
     <header className="comp-trend-header">
-      <div>
-        <h2 id={id + "-title"}>阵容强度趋势</h2>
-        <p>{model.scope} · UTC</p>
+      <h2 id={id + "-title"}>阵容趋势</h2>
+      {ranked.length > 0 && <div className="comp-trend-controls">
+        <div role="group" aria-label="趋势指标" className="comp-trend-metrics">
+          {metrics.map(([key, label]) => <button type="button" key={key} aria-pressed={metric === key} onClick={() => setMetric(key)}>{label}</button>)}
+        </div>
+        <select className="comp-trend-filter" aria-label="筛选趋势阵容" value={activeFilter}
+          onChange={event => onFilter(event.target.value)}>
+          <option value="top">最新均名前十</option>
+          {hasRecommendations && <option value="recommended">本版推荐</option>}
+          <option value="up">均名走强</option>
+          <option value="down">均名走弱</option>
+          {costs.length > 0 && <optgroup label="主 C 费用">{costs.map(cost => <option key={cost} value={"cost:" + cost}>{cost === 5 ? "5 费及以上" : cost + " 费"}主 C</option>)}</optgroup>}
+        </select>
+      </div>}
+      <div className="comp-trend-sources">
+        <details className="comp-trend-method">
+          <summary>口径与来源</summary>
+          <div>
+            <p>{model.scope} · UTC</p>
+            {model.note && <p>{model.note}</p>}
+            <p><a className="comp-trend-credit" href={tftableUrl} target="_blank" rel="noopener">
+              TFTable 环境对照 <ArrowUpRight size={13} aria-hidden="true" />
+            </a></p>
+          </div>
+        </details>
       </div>
-      <a className="comp-trend-credit" href={tftableUrl} target="_blank" rel="noopener">
-        去 TFTable 看版本环境 <ArrowUpRight size={15} aria-hidden="true" />
-      </a>
     </header>
-    {ranked.length > 0 && <div className="comp-trend-controls">
-      <div role="group" aria-label="趋势指标" className="comp-trend-metrics">
-        {metrics.map(([key, label]) => <button type="button" key={key} aria-pressed={metric === key} onClick={() => setMetric(key)}>{label}</button>)}
-      </div>
-      <select className="comp-trend-filter" aria-label="趋势阵容范围" value={activeFilter}
-        onChange={event => onFilter(event.target.value)}>
-        <option value="top">Top 10（最新均名）</option>
-        {hasRecommendations && <option value="recommended">本版推荐</option>}
-        <option value="up">均名走强</option>
-        <option value="down">均名走弱</option>
-        {costs.length > 0 && <optgroup label="主 C 费用">{costs.map(cost => <option key={cost} value={"cost:" + cost}>{cost} 费主 C</option>)}</optgroup>}
-      </select>
-    </div>}
     {lines.length > 0 ?
       <div className="comp-trend-body">
         <div className="comp-trend-plot">
-          <p className="comp-trend-axis">{metric === "mean" ? "平均排名 · 越靠上越强" : metric === "pickRate" ? "占同批全部玩家结算的比例" : "比率越高越好"}
-            {pinned && <span> · 纵轴按{pinned.name}缩放</span>}
-          </p>
           <div className="comp-trend-canvas">
             <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 320, height: 320 }}>
               <LineChart data={rows} margin={{ top: 12, right: 22, bottom: 4, left: 0 }} accessibilityLayer
@@ -251,74 +250,91 @@ export function CompTrendPanel({ model }: { model: CompTrendModel }) {
                 <YAxis reversed={metric === "mean"} domain={scale.domain} ticks={scale.ticks} allowDataOverflow width={45}
                   tickFormatter={value => metric === "mean" ? Number(value).toFixed(2) : value + "%"} tickLine={false} axisLine={false}
                   tick={{ fontSize: 12, fill: "var(--muted)" }} />
-                {activeRow && <ReferenceLine x={activeRow.day} stroke="var(--line)" />}
+                {activeRow && previewTime === undefined && <ReferenceLine x={activeRow.day} stroke="var(--line)" />}
                 {patchMarks.map(patch => <ReferenceLine key={patch.at + patch.label} x={patchPosition(Date.parse(patch.at), rows)}
                   stroke="var(--gold)" strokeOpacity={0.7} strokeDasharray="4 4"
                   label={{ value: patch.label.split(" ")[0], position: "insideTopLeft", fill: "var(--muted)", fontSize: 11 }} />)}
-                {lines.map(line => <Line key={line.key} type="bumpX" dataKey={"values." + line.key} name={line.name} stroke={line.color}
-                  strokeWidth={pinned?.id === line.trackId ? 3 : 2} opacity={pinned && pinned.id !== line.trackId ? 0.24 : 1}
-                  strokeDasharray={line.dash} dot={{ r: 3, strokeWidth: 1.5, fill: "var(--panel)" }} activeDot={{ r: 4.5 }}
-                  connectNulls={false} isAnimationActive={false} />)}
-                <Tooltip cursor={{ stroke: "var(--line)" }} isAnimationActive={false}
-                  content={({ active, label }) => active && label !== undefined
-                    ? <TrendTooltip row={rows.find(row => row.day === Number(label))} tracks={visible} metric={metric} focused={pinned?.id} />
-                    : null} />
+                {lines.map(line => {
+                  const emphasized = highlighted === line.trackId;
+                  const opacity = highlighted && !emphasized ? 0.28 : 1;
+                  return <Line key={line.trackId} type={rows.length === 2 ? "bumpX" : "monotoneX"} dataKey={"values." + line.key} name={line.name} stroke={line.color}
+                    strokeWidth={emphasized ? 3.25 : 2} strokeLinecap="round" opacity={opacity}
+                    dot={rows.length === 1 ? { r: 3 } : false}
+                    activeDot={{ r: emphasized ? 4.5 : 3.5, opacity }}
+                    connectNulls isAnimationActive={false} />;
+                })}
+                {rows.length > 1 && lines.map(line => <Line key={line.trackId + "-hit"} type={rows.length === 2 ? "bumpX" : "monotoneX"}
+                  dataKey={"values." + line.key} stroke="transparent" strokeWidth={12} className="comp-trend-hit"
+                  tooltipType="none" legendType="none" dot={false} activeDot={false} connectNulls isAnimationActive={false}
+                  onMouseEnter={() => setHovered(line.trackId)} onMouseLeave={() => setHovered(undefined)} />)}
+                <Tooltip cursor={{ stroke: "var(--muted)", strokeOpacity: 0.6, strokeDasharray: "3 3" }} isAnimationActive={false}
+                  content={({ active, label }) => <TrendTooltip
+                    row={active ? rows.find(row => row.day === Number(label)) : undefined}
+                    tracks={visible} metric={metric} colors={colors} focused={highlighted} onPreview={setPreviewTime} />} />
               </LineChart>
             </ResponsiveContainer>
           </div>
         </div>
         <div className="comp-trend-legend">
-          <div className="comp-trend-legend-heading">
-            <span>点选高亮</span>
-            <select className="comp-trend-date" aria-label="趋势日期" value={activeRow?.time}
+          <div className="comp-trend-legend-heading" data-preview={previewTime !== undefined || undefined}>
+            <select className="comp-trend-date" aria-label="趋势日期" value={readoutRow?.time}
               onChange={event => setSelectedTime(Number(event.target.value))}>
-              {rows.map(row => <option key={row.time} value={row.time}>{date.format(row.time)} 快照</option>)}
+              {rows.map(row => <option key={row.time} value={row.time}>{date.format(row.time)}</option>)}
             </select>
+            <span>{metricLabel}</span>
           </div>
-          <ul>
-            {visible.map((track, index) => {
-              const point = activeRow?.points.get(track.id);
-              const color = lines.find(line => line.trackId === track.id)?.color ?? trackColors[index % trackColors.length];
-              return <li key={track.id} style={{ "--trend-track": color } as CSSProperties}>
-                <button type="button" onClick={() => setFocused(pinned?.id === track.id ? undefined : track.id)} aria-pressed={pinned?.id === track.id}>
+          <ul className="comp-trend-readings" data-delta={showDelta || undefined}>
+            {trendReadout(visible, readoutRow, metric).map(({ track, point, value }) => {
+              return <li key={track.id} style={{ "--trend-track": colors.get(track.id) } as CSSProperties}>
+                <button type="button" onClick={() => setFocused(pinned?.id === track.id ? undefined : track.id)}
+                  onPointerEnter={event => { if (event.pointerType === "mouse") setHovered(track.id); }}
+                  onPointerLeave={() => setHovered(undefined)}
+                  onFocus={event => { if (event.currentTarget.matches(":focus-visible")) setHovered(track.id); }}
+                  onBlur={() => setHovered(undefined)}
+                  aria-pressed={pinned?.id === track.id} data-highlighted={highlighted === track.id || undefined}>
                   <span className="comp-trend-track-mark" aria-hidden="true" />
-                  {track.image && <img src={track.image} width={22} height={22} alt="" loading="lazy" />}
-                  <span className="comp-trend-track-name">{track.name}</span>
+                  <span className="comp-trend-track-avatar" aria-hidden="true">
+                    {track.image && <img src={track.image} width={24} height={24} alt="" loading="lazy" />}
+                  </span>
+                  <span className="comp-trend-track-name" title={point?.board?.name ?? track.name}>{track.name}</span>
+                  <small className="comp-trend-track-cost">{track.cost !== undefined && track.cost + "费"}</small>
+                  {showDelta && <span className="comp-trend-track-change"><Delta value={track.delta} /></span>}
                   <b title={point ? pointSampleLabel(point, metric) + " · " + point.patch : "当天无样本"}>
-                    {point ? valueLabel(pointValue(point, metric), metric) : "—"}
+                    {valueLabel(value, metric)}
                   </b>
-                  {metric === "mean" && activeRow === rows.at(-1) && <Delta value={track.delta} />}
                 </button>
               </li>;
             })}
           </ul>
-          {pinned && <div className="comp-trend-focused">
-            <span>{pinnedPoint ? pinnedPoint.patch + " · " + pointSampleLabel(pinnedPoint, metric) : "当天无样本"}</span>
-            {pinned.href && <a href={pinned.href}>查看阵容 <ChevronRight size={13} aria-hidden="true" /></a>}
+          {pinned && <div className="comp-trend-focused" style={{ "--trend-track": colors.get(pinned.id) } as CSSProperties}>
+            <strong>{pinnedPoint?.board?.name ?? pinned.name}</strong>
+            <span>{pinnedPoint ? pinnedPoint.patch + " · " + pointSampleLabel(pinnedPoint, metric)
+              : "当天无样本"}</span>
+            {pinned.href && <a href={pinnedPoint?.board?.href ?? pinned.href}>查看阵容 <ChevronRight size={13} aria-hidden="true" /></a>}
             {pinnedPoint?.sourceUrl && <a href={pinnedPoint.sourceUrl} target="_blank" rel="noopener">查看数据 <ArrowUpRight size={13} aria-hidden="true" /></a>}
           </div>}
         </div>
       </div>
-      : <p className="comp-trend-empty">{waitingForComparison ? "当前补丁还没有两批可比记录。"
+      : <p className="comp-trend-empty">{waitingForComparison ? "当前还没有两天可比较的记录。"
         : ranked.length ? metric === "pickRate" ? "当前筛选暂无可核对的出场率。" : "当前筛选暂无可比趋势。"
         : "等待可比较的阵容样本。"}</p>}
-      {(patchMarks.length > 0 || model.note) && <div className="comp-trend-caption">
-        {patchMarks.length > 0 && <div className="comp-trend-patches"><span>补丁节点</span>
+      {patchMarks.length > 0 && <div className="comp-trend-caption">
+        <div className="comp-trend-patches" aria-label="补丁节点">
           {patchMarks.map(patch => <span key={patch.at + patch.label}>
             <time dateTime={patch.at} title={dateTime.format(new Date(patch.at)) + " UTC"}>{date.format(new Date(patch.at))}</time>
-            {patch.href ? <a href={patch.href}>{patch.label}</a> : patch.label}
+            {patch.href ? <a href={patch.href}>{patch.label.split(" ")[0]}</a> : patch.label.split(" ")[0]}
           </span>)}
-        </div>}
-        {model.note && <p>{model.note}</p>}
+        </div>
       </div>}
-    <section className="comp-trend-watch" aria-labelledby={id + "-watch"}>
-      <h3 id={id + "-watch"}>新阵容与打法变化</h3>
-      {model.discoveries.length ? <>
-        <ul>{model.discoveries.slice(0, 3).map(item => <DiscoveryCard key={item.id} item={item} />)}</ul>
-        {model.discoveries.length > 3 && <details><summary>其余 {model.discoveries.length - 3} 条</summary>
-          <ul>{model.discoveries.slice(3).map(item => <DiscoveryCard key={item.id} item={item} />)}</ul>
-        </details>}
-      </> : <p className="comp-trend-empty">本期暂无已核查的新阵容或打法变化。</p>}
-    </section>
+    {model.discoveries.length > 0 && <details className="comp-trend-watch">
+      <summary><span>阵容线索</span><span>{model.discoveries.length} 条</span></summary>
+      {[...discoveryGroups].map(([key, items]) => {
+        const { at, patch } = items[0];
+        return <section key={key} className="comp-trend-discovery-group">
+          <h3><time dateTime={at.slice(0, 10)}>{date.format(new Date(at))}</time><span>{patch}</span></h3>
+          <ul>{items.map(item => <DiscoveryCard key={item.id} item={item} />)}</ul>
+        </section>;
+      })}
+    </details>}
   </section>;
 }

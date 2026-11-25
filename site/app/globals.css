@@ -666,7 +666,7 @@ body:has(.editor) .site-header {
 .board-hex > .board-unit-name {pointer-events:none}
 .board-items {
   position: absolute;
-  bottom: 2.5%;
+  bottom: calc(2.5% - var(--board-item-size-offset, 0px));
   left: 0;
   width: 100%;
   display: flex;
@@ -674,10 +674,12 @@ body:has(.editor) .site-header {
   gap: 1px;
   pointer-events: auto;
 }
+.editor .board-items { --board-item-size-offset: 2px; }
 .board-items .board-item {
+  --board-item-size: calc(clamp(10px, 2.45cqw, 18px) + var(--board-item-size-offset, 0px));
   display: block;
-  width: clamp(10px,2.45cqw,18px)!important;
-  height: clamp(10px,2.45cqw,18px)!important;
+  width: var(--board-item-size)!important;
+  height: var(--board-item-size)!important;
   border: 0;
   border-radius: 2px;
   box-shadow: 0 0 0 1px #171a214d;

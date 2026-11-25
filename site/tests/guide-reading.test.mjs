@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { primaryFirst, matchGuideTeams, sourceSummary, complementItems, guideFacets, guidePlaystyle, guideRoster, guideBody, guideRoute, guideRollLevel, guideStrategyLabel, guideTitleWithoutPlaystyle, guideUnitMatch, readingNotes, isAuthoringIntroduction, isEditorialSection, parseGuideFilters, guideSectionWithCurrentNames } from "../domain/guide-reading.ts";
-import { displayGuideName } from "../domain/trait-names.mjs";
+import { displayGuideName, displayTraitNames } from "../domain/trait-names.mjs";
 import { comboStarMask, comboTierCounts } from "../domain/combo-tiers.ts";
 import { guideStyleKey, guideWearerQuery, homeGuideFilter, matchOpeningSearch, openingSearch, searchPhaseNote } from "../domain/guide-search.ts";
 import { canRankRecommendations, compareGuideFamilyPerformance, currentFamilyBatch, currentRecommendationEvidence, previousRecommendationDeadline, familyMetricValue, formatRecommendationMean, guideFamilyRows, recommendationGroup, recommendationTier, selectRecommendationRoutes } from "../domain/guide-family-stats.ts";
@@ -35,6 +35,8 @@ test("S19 guide titles and stage labels use current trait names with the origina
   assert.equal(display.blocks[0].elements[0].text_run.content, "六护卫");
   assert.equal(display.blocks[1].text, guide.blocks[1].text);
   assert.equal(guide.title, "四酷炫德莱文");
+  assert.equal(displayGuideName("四炫酷德莱文 · 双保镖"), "四大触打击乐德莱文 · 双护卫");
+  assert.equal(displayTraitNames("海洋之歌纹章、金曲制作人纹章，泰坦的坚决"), "海之歌纹章、音乐制作人纹章，泰坦的坚决");
   assert.equal(displayGuideName("七海洋扎克男枪"), "七海之歌扎克男枪");
   assert.equal(displayGuideName("8级 · 三海三杀三摇滚"), "8级 · 三海之歌三杀三摇滚恶魔");
   assert.equal(displayGuideName("花式射手 · 情绪摇滚 · 五杀天使 · 七离子金克丝"), "花式射手 · 情绪摇滚 · 五杀天使 · 七离子金克丝");

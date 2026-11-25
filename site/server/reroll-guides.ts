@@ -2,7 +2,7 @@ import data from "@/data/s19-reroll-boards.json";
 import { sectionTeams } from "@/domain/document-flow";
 import { guideBoardName } from "@/domain/guide-reading";
 import { boardInstruments } from "@/domain/board-instruments";
-import { applyPublishedBoardLayouts } from "@/domain/published-board-layout";
+import { applyPublishedBoardEdits, applyPublishedBoardLayouts } from "@/domain/published-board-layout";
 import { editionScope } from "@/domain/version-updates";
 import { correctRerollStars } from "./reroll-stars";
 import type { ContentBlock, Publication } from "@/domain/document";
@@ -88,7 +88,7 @@ function editBoard(team: Team, edit: BoardEdit, data: Season) {
 
 // Keep these site-authored boards out of the synchronized document and stored snapshots.
 export function includeRerollBoards(snapshot: Publication, current: Season): Publication {
-  if (editionScope(current.id) !== "s19-pbe") return applyPublishedBoardLayouts(snapshot, snapshot);
+  if (editionScope(current.id) !== "s19-pbe") return applyPublishedBoardLayouts(snapshot, applyPublishedBoardEdits(snapshot, snapshot));
   const sections = snapshot.sections.map(section => {
     const guide = guides.get(section.id);
     const base = section.gameData ?? snapshot.season;
@@ -154,5 +154,5 @@ export function includeRerollBoards(snapshot: Publication, current: Season): Pub
       },
     };
   });
-  return applyPublishedBoardLayouts(snapshot, { ...snapshot, sections });
+  return applyPublishedBoardLayouts(snapshot, applyPublishedBoardEdits(snapshot, { ...snapshot, sections }));
 }

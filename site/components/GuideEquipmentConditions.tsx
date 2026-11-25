@@ -9,42 +9,46 @@ export function GuideConditionIcon({ condition, size }: { condition: GuideCondit
     : <span className="item-icon is-fallback" aria-hidden style={{ width: size, height: size }}>{condition.name.slice(0, 1)}</span>;
 }
 
-export function GuideEquipmentConditions({ conditions, guideHref, onViewBoard }: {
+export function GuideEquipmentConditions({ conditions, guideHref, onViewBoard, anchored = true }: {
   conditions: NonNullable<ReturnType<typeof guideEquipmentConditions>>;
   guideHref?: string;
   onViewBoard?: () => void;
+  anchored?: boolean;
 }) {
-  const { label, rows, source, wearer } = conditions;
-  const title = rows.some(row => row.category === "海克斯" || row.recipient) ? "阵容条件" : "装备条件";
-  const singleAugment = rows.length === 1 && rows[0].category === "海克斯" && !label && !source;
-  return <section id={guideConditionsAnchor} className="guide-equipment-conditions" aria-label={title} data-standalone-augment={singleAugment || undefined}>
+  const { board, label, rows, source, wearer } = conditions;
+  const title = rows.some(row => row.featured) ? "顶级条件"
+    : rows.some(row => row.category === "海克斯" || row.recipient) ? "阵容条件" : "装备条件";
+  const singleAugment = rows.length === 1 && rows[0].category === "海克斯" && !label && !source && !board?.conditions;
+  return <section id={anchored ? guideConditionsAnchor : undefined} className="guide-equipment-conditions" aria-label={title}>
     {!singleAugment && <div className="guide-equipment-conditions-head">
       <h3>{title}</h3>
-      {(wearer || (onViewBoard && label)) && <span className="guide-equipment-conditions-context">
-        {onViewBoard && label && <><button type="button" onClick={onViewBoard} aria-label={`查看${label}棋盘`}>{label}</button>{wearer && " · "}</>}{wearer?.name}
+      {(label || wearer) && <span className="guide-equipment-conditions-context">
+        {label && (onViewBoard ? <button type="button" onClick={onViewBoard} aria-label={`查看${label}棋盘`}>{label}</button> : label)}
+        {wearer && (label ? " · " : "") + wearer.name}
       </span>}
     </div>}
     <ul>{rows.map(row => {
       const name = guideConditionName(row);
-      const swapLabel = row.replaced ? `${row.name}替换${row.replaced.name}` : name;
+      const swapLabel = row.replaced ? `${name}，替换${row.replaced.name}` : name;
       const tag = guideConditionTag(row);
       const augment = row.category === "海克斯";
       const showName = augment || !!row.recipient;
-      return <li key={row.id} data-augment={augment || undefined} data-named={showName || undefined}>
+      return <li key={row.id + ":" + (row.recipient?.id ?? "")} data-augment={augment || undefined} data-named={showName || undefined}>
         <a className="guide-equipment-conditions-item" data-named={showName || undefined} href={row.item ? itemLink(row.id, row.recipient?.id ?? wearer?.id, guideHref) : row.href}
           aria-label={swapLabel} title={swapLabel}>
           <GuideConditionIcon condition={row} size={34} />
           {showName && <strong>{name}</strong>}
         </a>
         {row.replaced && <>
-          <ArrowRight className="guide-equipment-conditions-arrow" size={16} aria-hidden />
-          <a className="guide-equipment-conditions-item" href={itemLink(row.replaced.id, wearer?.id, guideHref)}
-            aria-label={row.replaced.name} title={row.replaced.name}>
+          {row.recipient ? <span className="guide-equipment-condition-detail">替换</span>
+            : <ArrowRight className="guide-equipment-conditions-arrow" size={16} aria-hidden />}
+          <a className="guide-equipment-conditions-item" href={itemLink(row.replaced.id, row.recipient?.id ?? wearer?.id, guideHref)}
+            aria-label={`替换${row.replaced.name}`} title={`替换${row.replaced.name}`}>
             <ItemIcon item={row.replaced} size={34} />
           </a>
         </>}
         {tag && <span className="guide-condition-tag">{tag}</span>}
-        {augment && row.kind === "option" && <span className="guide-equipment-condition-detail">可选</span>}
+        {row.kind === "option" && <span className="guide-equipment-condition-detail">可选</span>}
         {row.detail && <span className="guide-equipment-condition-detail">{row.detail}</span>}
       </li>;
     })}</ul>

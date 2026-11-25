@@ -11,7 +11,7 @@ export type RecommendationCard = {
   title: string;
   opening: string;
   conditional: boolean;
-  avatars: { unit: Unit; role?: "主C" | "主坦" }[];
+  avatars: { unit: Unit; role?: "主C" | "主坦" | "副C"; context?: { label: string; title: string } }[];
   entryTeamId?: string;
   stages: { team: Team; label: string }[];
   strategy?: string;
@@ -62,10 +62,12 @@ export function PatchRecommendationList({ stats, cards, home, previousBuild, fea
               <a href={href} data-home-board={team.id} className="home-patch-card-link"
                 aria-labelledby={id + "-title"} aria-describedby={[id + "-roles", shownStrategy && id + "-strategy", note && id + "-note", id + "-mean"].filter(Boolean).join(" ")}>
                 <div className="home-patch-avatars" id={id + "-roles"}>
-                  {avatars.map(({ unit, role }) => <span key={unit.id} className="home-patch-avatar" data-core={role}>
+                  {avatars.map(({ unit, role, context }) => <span key={unit.id} className="home-patch-avatar" data-core={role}>
                     <img className={"cost-" + unit.cost} src={unit.image} alt="" title={unit.name}
                       width={32} height={32} decoding="async" />
-                    {role && <small><span className="sr-only">{unit.name} </span>{role}</small>}
+                    {role && <small><span className="sr-only">{unit.name} </span>{role}
+                      {context && <span className="home-patch-avatar-context" title={context.title}> · {context.label}</span>}
+                    </small>}
                   </span>)}
                 </div>
                 <div className="home-patch-card-copy">
@@ -78,7 +80,7 @@ export function PatchRecommendationList({ stats, cards, home, previousBuild, fea
                   {hit && <p className="home-patch-hit">{hit}</p>}
                 </div>
                 <span id={id + "-mean"} className={"home-patch-mean guide-placement " + tone}>
-                  <span><span className="home-patch-mean-label">平均排名</span> <b>{formatRecommendationMean(rating.mean)}</b></span>
+                  <span><span className="home-patch-mean-label" aria-hidden="true">均名</span><span className="sr-only">平均排名</span> <b>{formatRecommendationMean(rating.mean)}</b></span>
                   <small>{rating.games.toLocaleString("zh-CN")} 场</small>
                 </span>
               </a>

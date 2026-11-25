@@ -1,10 +1,28 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { attachBoundRegions, duplicatePublishedTeam, reviewIssues, sectionChanges, sameGeneratedSection, isBoardCaption, feishuBoardIssue, attachSectionTeam, findSection, readableSection, sectionTeams, splitSections } from "../domain/document-flow.ts";
-import { applyPublishedBoardLayouts, boardLayout, publishedBoardLayouts } from "../domain/published-board-layout.ts";
+import { applyPublishedBoardEdits, applyPublishedBoardLayouts, boardLayout, publishedBoardContent, publishedBoardEdits, publishedBoardLayouts } from "../domain/published-board-layout.ts";
 
 const entry = (id, level, title) => ({ id, level, title, content: { id, type: level ? "heading" : "text", text: title } });
 const team = (id, unit) => ({ id, name:id, pieces:[{unitId:unit}], revision:1 });
+
+test("a published workspace edit updates only its source board and survives an unchanged chapter refresh", () => {
+  const primary = { id: "main", pieces: [{instanceId:"one",unitId:"ezreal",position:23,stars:2,items:[]}] };
+  const reroll = { id: "reroll", pieces: [{instanceId:"two",unitId:"lucian",position:24,stars:1,items:[]}],
+    instrumentPositions: { maracas: 5 } };
+  const section = { id: "guide", team: primary, teams: [primary, reroll], blocks: [] };
+  const updated = { ...reroll, instrumentPositions: undefined,
+    pieces: [{...reroll.pieces[0], position:26, stars:2, items:["red"]}],
+    conditions:[{kind:"option",augmentId:"small-squad"}] };
+  const edit = {sectionId:section.id, teamId:reroll.id, source:publishedBoardContent(reroll), content:publishedBoardContent(updated)};
+  const publication = {sections:[section], boardEdits:JSON.parse(JSON.stringify([edit]))};
+  const display = applyPublishedBoardEdits(publication,publication).sections[0];
+  assert.equal(display.team, primary);
+  assert.equal(display.teams[0], primary);
+  assert.deepEqual(publishedBoardContent(display.teams[1]),publishedBoardContent(updated));
+  assert.deepEqual(publishedBoardEdits([{...section,blocks:[{id:"note",type:"text",text:"更新正文"}]}],publication.boardEdits),publication.boardEdits);
+  assert.deepEqual(publishedBoardEdits([{...section,teams:[primary,{...reroll,pieces:[{...reroll.pieces[0],items:["blue"]}]}]}],publication.boardEdits),[]);
+});
 
 test("published positions win over reading corrections for one board and yield to new source positions", () => {
   const sourceTeam = { id: "board", pieces: [
@@ -126,6 +144,9 @@ test("publishing reconciles body and lineup edits separately and attaches moved 
   assert.deepEqual(sectionChanges({...original,team:{...board,pieces:[{...board.pieces[0], stars:3}]}},original),["站位星级"]);
   assert.deepEqual(sectionChanges({...original,team:{...board,instrumentPositions:{maracas:5}}},original),["站位星级"]);
   assert.deepEqual(sectionChanges({...original,team:{...board,pieces:[{...board.pieces[0], items:["b"]}]}},original),["配装"]);
+  const withCondition = {...original, team:{...board, conditions:[{kind:"option", augmentId:"augment"}]}};
+  assert.deepEqual(sectionChanges(withCondition,original),["定阵条件"]);
+  assert.deepEqual(sectionChanges({...withCondition, team:{...withCondition.team, conditions:[]}},withCondition),["定阵条件"]);
   const early = { pieces: [{unitId:"varus", position:20, stars:1, items:["a"]}] };
   const withStage = {...original, team:{...board, stages:{early}}};
   const movedInstrument = {...early, instrumentPositions:{maracas:4}};

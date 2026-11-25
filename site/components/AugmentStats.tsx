@@ -118,14 +118,15 @@ function SelectionTable({ snapshot, current, filters, change, limit, picker }: {
       {rounds.length > 1 && <label className="aug-select-label">选取回合
         <select aria-label="选取回合" value={round} onChange={event => change({round:event.target.value})}>{rounds.map(option => <option key={option} value={option}>{option === "all" ? "全回合汇总" : option}</option>)}</select>
       </label>}
+      {hasEnglish && detailed && <label className="aug-check aug-english-toggle"><input type="checkbox" aria-label="显示英文名" checked={filters.english === "1"}
+        onChange={event => change({english:event.target.checked ? "1" : undefined})}/>英文名</label>}
       <button className="aug-sort-reset aug-layout-toggle" type="button" aria-expanded={detailed} onClick={() =>
         change({view:detailed ? "stats" : "full", dir:selectedSort ? descending ? "desc" : "asc" : undefined, limit:filters.limit})
-      }>{detailed ? "收起明细" : "展开明细"} <ChevronDown size={15} aria-hidden="true"/></button>
+      }>{detailed ? "精简列" : "更多列"} <ChevronDown size={15} aria-hidden="true"/></button>
     </div>
-    {(hasGames || hasEnglish && detailed || countWithMetrics > 0 && countWithMetrics < all.length || selectedSort || !defaultShown) && <div className="aug-secondary-tools">
+    {(hasGames || countWithMetrics > 0 && countWithMetrics < all.length || selectedSort || !defaultShown) && <div className="aug-secondary-tools">
       {hasGames && <label className="aug-minimum">最少选取数<input aria-label="最少选取数" type="number" min="0" step="1" inputMode="numeric" placeholder="不限"
         value={filters.minGames || ""} onChange={event => change({minGames:event.target.value})}/></label>}
-      {hasEnglish && detailed && <label className="aug-check"><input type="checkbox" checked={filters.english === "1"} onChange={event => change({english:event.target.checked ? "1" : undefined})}/>显示英文名</label>}
       {countWithMetrics > 0 && countWithMetrics < all.length && <label className="aug-check"><input type="checkbox" checked={onlyMetrics} onChange={event => change({metrics:event.target.checked ? "1" : undefined})}/>只看有战绩</label>}
       {!defaultShown && <span className="aug-hidden-sort">按{available.find(column => column.key === key)?.label}排序</span>}
       {selectedSort && <button className="aug-text-button" type="button" onClick={() => change({sort:undefined, dir:undefined})}>恢复默认排序</button>}

@@ -26,7 +26,7 @@ function TierSample({ title, stat, labels, source }: {
       ? <p className="tier-sample-metrics">{number.format(stat.games)} 场 <span>前四 {pct.format(stat.top4)}</span><span>登顶 {pct.format(stat.win)}</span></p>
       : <p className="tier-sample-metrics">暂无该档样本</p>}
     {!!labels?.length && <p className="tier-scope-note">{labels.join(" · ")}</p>}
-    {stat && source && <a href={source} target="_blank" rel="noreferrer" aria-label={title + "样本来源 MetaTFT"}>MetaTFT 筛选 ↗</a>}
+    {stat && source && <a href={source} target="_blank" rel="noreferrer" aria-label={title + "的 MetaTFT 查询"}>原查询 ↗</a>}
   </section>;
 }
 
@@ -77,7 +77,7 @@ export function TierResults({ trait, effects, overall, picked, onPick, links, co
   const single = tiers.length === 1 && !effectByTier.get(tiers[0]);
   return <div className="trait-performance" data-single={single || undefined} role="group" aria-label={trait.name + "各档位战绩"}>
     {!single && tiers.length > 0 && <div className="trait-tier-head" aria-hidden>
-      <span>档位</span><span>平均排名</span>{effects.length > 0 && <span>档位效果</span>}
+      <span>档位</span><span>均名</span>{effects.length > 0 && <span>效果</span>}
     </div>}
     {tiers.map(tier => {
       const effect = effectByTier.get(tier);
@@ -97,7 +97,7 @@ export function TierResults({ trait, effects, overall, picked, onPick, links, co
         {hasThreshold ? <button className="trait-tier-stat" type="button" aria-expanded={open} aria-controls={detailsId}
           aria-label={trait.name + " " + label} title={label}
           onClick={() => onPick(open ? undefined : tier)}>
-          {single ? <span className="trait-stat-caption">平均排名</span> : <b>{tierName(tier)}</b>}
+          {single ? <span className="trait-stat-caption">均名</span> : <b>{tierName(tier)}</b>}
           <span className="tier-mean" data-tone={tone}>{mean ?? "—"}</span>
           {stat && <small>{number.format(stat.games)} 场</small>}
           <ChevronDown size={12} aria-hidden />

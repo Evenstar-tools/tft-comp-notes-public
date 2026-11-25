@@ -4,6 +4,7 @@ import emblemSnapshot from "@/data/emblem-stats.json";
 import { emblemItemId } from "./links";
 import { gearWearerMatches, type GearOrder } from "./gear-wearer";
 import { itemAliases } from "./roster-import";
+import { legacyEmblemNames } from "./trait-names.mjs";
 import type { Item } from "./types";
 
 export { compareGearWearerSamples, gearWearerStats, type GearOrder, type GearWearerSample } from "./gear-wearer";
@@ -79,7 +80,7 @@ const normalize = (text: string) => text.normalize("NFKC").trim().toLowerCase();
 const normalizeEmblem = (text: string) => normalize(text).replace(/[\s/|]/g, "").replace(/纹章|转职|转/g, "");
 
 const aliases = new Map<string, string[]>();
-for (const [alias, name] of Object.entries(itemAliases)) {
+for (const [alias, name] of Object.entries({ ...legacyEmblemNames, ...itemAliases })) {
   const entries = aliases.get(name) ?? [];
   entries.push(alias);
   aliases.set(name, entries);

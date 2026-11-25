@@ -7,7 +7,7 @@ import type { Section } from "./document";
 import { heroAugmentForGuide } from "./hero-augments";
 import { itemLink } from "./links";
 import { sameEdition } from "./version-updates";
-import type { Item, Season, Team, Unit } from "./types";
+import type { Item, Season, Team, TeamCondition, Unit } from "./types";
 
 export const guideConditionsAnchor = "guide-equipment-conditions";
 
@@ -32,8 +32,17 @@ export type GuideCondition = {
 
 type GuideConditions = { rows: GuideCondition[]; board?: Team; label?: string; wearer?: Unit; source?: string };
 
-const equipmentCategories = { artifact: "神器", radiant: "光明装", emblem: "转职" } as const;
+export const conditionEquipmentCategories = { artifact: "神器", radiant: "光明装", emblem: "转职" } as const;
 const augmentById = new Map(augmentCatalog.rows.map(augment => [augment.id, augment]));
+
+export function conditionItemCategory(item?: Item) {
+  const category = item?.category;
+  if (category === "artifact" || category === "radiant" || category === "emblem") return category;
+}
+
+export function conditionKey(condition: TeamCondition) {
+  return "augmentId" in condition ? condition.augmentId : `${condition.itemId}:${condition.recipientId}`;
+}
 
 export function guideConditionTag(row: GuideCondition) {
   return row.kind === "required" ? (row.category === "光明装" ? "光装" : row.category) + "定阵" : undefined;
@@ -53,6 +62,7 @@ const guideConditions: Partial<Record<string, {
   boardId: string;
   build?: string;
   label: string;
+  sharedInEditor?: true;
   wearerId?: string;
   source?: string;
   conditions: ConditionRule[];
@@ -60,6 +70,7 @@ const guideConditions: Partial<Record<string, {
   boardId: "00000000-0000-4000-8000-000000000050",
   build: "6018196",
   label: "8级四安可",
+  sharedInEditor: true,
   wearerId: "ezreal",
   source: "https://api-hc.metatft.com/tft-explorer-api/unit_builds/DA_Ezreal19?queue=PBE&patch=19.1&b_patch=b&days=3&permit_filter_adjustment=false&compact=true&formatnoarray=true&duplicate_unit_count=0&unit_tier_numitems_unique=DA_Ezreal19-1_3_3&level=8&trait=DA_Encore19_2&trait=DA_Heartsteel19_2&unit_unique=DA_Nasus19-1&unit_unique=DA_Lucian19-1&item_holder_unit=DA_Ezreal19-1",
   conditions: [
@@ -76,34 +87,85 @@ const guideConditions: Partial<Record<string, {
   ],
 } };
 
-export function guideEquipmentConditions(section: Section, teams: Team[], data: Season, build = currentPatch.build): GuideConditions | undefined {
-  if (!teams.length || !sameEdition(data.id, currentPatch.seasonId)) return;
-  const augment = heroAugmentForGuide(section);
-  const hero = augment && augmentCondition(augment.id, { kind: "required" });
-  const heroRows = hero && augment ? [{ ...hero, name: augment.label || hero.name, detail: [augment.round, augment.rarity, augment.role].filter(Boolean).join(" · ") }] : [];
-  const entry = guideConditions[section.id];
-  if (!entry) return hero ? { rows: heroRows } : undefined;
-  const board = teams.find(team => team.id === entry.boardId);
-  const wearer = data.units.find(unit => unit.id === entry.wearerId);
-  if (!board || (entry.wearerId && (!wearer || !board.pieces.some(piece => piece.unitId === wearer.id)))) {
-    return hero ? { rows: heroRows } : undefined;
-  }
+export function editableTeamConditions(team: Pick<Team, "id" | "sectionId" | "conditions">): TeamCondition[] {
+  if (team.conditions) return team.conditions;
+  const entry = team.sectionId && guideConditions[team.sectionId];
+  if (!entry || entry.boardId !== team.id) return [];
+  return entry.conditions.flatMap<TeamCondition>(rule => {
+    const kind = rule.kind === "required" ? "required" : "option";
+    if ("augmentId" in rule) return [{ augmentId: rule.augmentId, kind }];
+    const recipientId = rule.recipientId ?? entry.wearerId;
+    return recipientId ? [{ itemId: rule.itemId, recipientId, replaces: rule.replaces, kind }] : [];
+  });
+}
 
-  const rules = entry.conditions.flatMap<GuideCondition>(condition => {
+export function sharedGuideEditorConditions(boards: Team[], sectionId: string | undefined, teamId?: string): TeamCondition[] {
+  const entry = sectionId && guideConditions[sectionId];
+  if (!entry || !entry.sharedInEditor || entry.boardId === teamId) return [];
+  const main = boards.find(board => board.id === entry.boardId);
+  return main ? editableTeamConditions({ id: main.id, sectionId, conditions: main.conditions }) : [];
+}
+
+function authoredCondition(rule: TeamCondition, data: Season): GuideCondition | undefined {
+  if ("augmentId" in rule) return augmentCondition(rule.augmentId, rule);
+  const item = data.items.find(item => item.id === rule.itemId);
+  const category = conditionItemCategory(item);
+  const recipient = data.units.find(unit => unit.id === rule.recipientId);
+  if (!item || !category || !recipient) return;
+  const replaced = data.items.find(item => item.id === rule.replaces);
+  return { ...rule, id: item.id, name: item.name, category: conditionEquipmentCategories[category],
+    item, replaced, recipient, href: itemLink(item.id, recipient.id) };
+}
+
+export function guideEquipmentConditions(section: Section, teams: Team[], data: Season,
+  build = currentPatch.build, selectedBoard?: Team): GuideConditions | undefined {
+  if (!teams.length) return;
+  const currentEdition = sameEdition(data.id, currentPatch.seasonId);
+  const augment = heroAugmentForGuide(section);
+  const hero = currentEdition && augment && augmentCondition(augment.id, { kind: "required" });
+  const heroRows = hero && augment ? [{ ...hero, name: augment.label || hero.name, detail: [augment.round, augment.rarity, augment.role].filter(Boolean).join(" · ") }] : [];
+  const entry = currentEdition ? guideConditions[section.id] : undefined;
+  const board = selectedBoard ?? teams.find(team => team.id === entry?.boardId) ?? teams.find(team => team.conditions?.length);
+  const reference = board && entry && board.id === entry.boardId ? entry : undefined;
+  const wearer = data.units.find(unit => unit.id === reference?.wearerId);
+  const referenceApplies = reference && board &&
+    (!reference.wearerId || (wearer && board.pieces.some(piece => piece.unitId === wearer.id)));
+  const legacyRows = referenceApplies ? reference.conditions.flatMap<GuideCondition>(condition => {
     if ("augmentId" in condition) return augmentCondition(condition.augmentId, condition) ?? [];
-    if (entry.build && build !== entry.build) return [];
+    if (reference.build && build !== reference.build) return [];
     const item = itemMap.get(condition.itemId);
     const replaced = data.items.find(entry => entry.id === condition.replaces);
-    if (!item || (item.category !== "artifact" && item.category !== "radiant" && item.category !== "emblem")) return [];
+    const category = conditionItemCategory(item);
+    if (!item || !category) return [];
     if (condition.replaces && (!replaced || !board.pieces.some(piece => piece.unitId === wearer?.id && piece.items.includes(replaced.id)))) return [];
     const recipient = condition.recipientId ? unitMap.get(condition.recipientId) : undefined;
     if (condition.recipientId && !recipient) return [];
     return [{ ...condition, id: item.id, name: item.name, item, recipient, replaced, detail: recipient ? condition.action : undefined,
-      href: itemLink(item.id, recipient?.id ?? wearer?.id), category: equipmentCategories[item.category] }];
-  });
-  if (rules.length) return {
-    board, wearer, rows: [...heroRows, ...rules], label: entry.label,
-    source: rules.some(rule => rule.item) ? entry.source : undefined,
+      href: itemLink(item.id, recipient?.id ?? wearer?.id), category: conditionEquipmentCategories[category] }];
+  }) : [];
+  const rows = board?.conditions?.flatMap(rule => {
+    const row = authoredCondition(rule, data);
+    if (!row) return [];
+    const previous = legacyRows.find(legacy => legacy.id === row.id && legacy.category === row.category &&
+      (!row.item || ((legacy.recipient?.id ?? wearer?.id) === row.recipient?.id && legacy.replaced?.id === row.replaced?.id)));
+    return previous ? [{ ...row, action: previous.action, detail: previous.action, games: previous.games, featured: previous.featured }] : [row];
+  }) ?? legacyRows;
+  if (rows.length) return {
+    board, wearer: board?.conditions ? undefined : wearer,
+    rows: [...heroRows.filter(row => !rows.some(other => other.id === row.id)), ...rows], label: reference?.label,
+    source: rows.some(rule => rule.item && rule.games) ? reference?.source : undefined,
   };
   if (hero) return { rows: heroRows };
+}
+
+export function guideReferenceConditions(section: Section, teams: Team[], data: Season, selectedBoard: Team) {
+  const boardId = guideConditions[section.id]?.boardId;
+  if (!boardId || boardId === selectedBoard.id) return;
+  const board = teams.find(team => team.id === boardId);
+  if (!board) return;
+  const conditions = guideEquipmentConditions(section, teams, data, undefined, board);
+  if (!conditions?.label) return;
+  const hero = heroAugmentForGuide(section);
+  const rows = conditions.rows.filter(row => row.id !== hero?.id);
+  return rows.length ? { ...conditions, board, label: conditions.label, rows } : undefined;
 }
