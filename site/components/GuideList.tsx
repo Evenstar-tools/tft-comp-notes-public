@@ -33,6 +33,7 @@ import { guideConditionName, guideConditionsAnchor, guideEquipmentConditions } f
 import { HomeGearSearch, isHomeGear } from "./HomeGearSearch";
 import { GuideCardBoard, GuideQuickView } from "./GuideCardBoard";
 import { GuideStatsTable, guideStatsMetricLabels, type GuideStatsTableRow } from "./GuideStatsTable";
+import { GUIDE_SECTION_IDS } from "@/domain/guide-identities";
 import { CompTrendPanel } from "./CompTrendPanel";
 import type { CompTrendModel } from "@/domain/comp-trends";
 
@@ -46,10 +47,10 @@ type Choices = Partial<Record<View, Selections>>;
 type FamilySort = { metric: GuideFamilyMetric; direction: GuideFamilyDirection };
 const emptyFilters = { category: "", style: "", cost: 0 };
 const archiveViews = [["category", "攻略卡片"], ["mean", "战绩对照"]] as const;
-const recommendationSecondaryCarries = new Map([
-  ["sample-block-0251", { unitId: "taliyah", boardId: "00000000-0000-4000-8000-000000000076" }],
-  ["sample-block-0464", { unitId: "akali-kda", boardId: "00000000-0000-4000-8000-000000000039" }],
-  ["sample-block-0338", { unitId: "pyke", boardId: "00000000-0000-4000-8000-000000000068" }],
+const recommendationSecondaryCarries = new Map<string, { unitId: string; boardId: string }>([
+  [GUIDE_SECTION_IDS.oceanGraves, { unitId: "taliyah", boardId: "00000000-0000-4000-8000-000000000076" }],
+  [GUIDE_SECTION_IDS.kdaNeeko, { unitId: "akali-kda", boardId: "00000000-0000-4000-8000-000000000039" }],
+  [GUIDE_SECTION_IDS.rockVayne, { unitId: "pyke", boardId: "00000000-0000-4000-8000-000000000068" }],
 ]);
 
 function filterView(view: GuideFilters["view"]): View {

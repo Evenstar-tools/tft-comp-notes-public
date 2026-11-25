@@ -1,4 +1,5 @@
 import { publicGuidePublication } from "@/server/publication";
+import { GUIDE_SECTION_IDS } from "@/domain/guide-identities";
 import { sectionTeams, readableSection } from "@/domain/document-flow";
 import { guideLink, guideBoardName, primaryFirst, isEditorialSection } from "@/domain/guide-reading";
 import { traitCounts, usedPopulation } from "@/domain/team";
@@ -52,7 +53,7 @@ export default async function Traits({ searchParams }: { searchParams: Promise<Q
         }
       }
       // Both eight-unit Renata branches share the guide's documented tank/carry comparison.
-      if (section.id === "sample-block-0122" && level === 8 && roster.includes("renata-glasc") && roster.includes("nasus")) {
+      if (section.id === GUIDE_SECTION_IDS.bodyguardRenata && level === 8 && roster.includes("renata-glasc") && roster.includes("nasus")) {
         compared.bodyguard = allScopes["8,DA_Nasus19-1,DA_RenataGlasc19-1_3_3"];
       }
       context = { title: section.title + " · " + boardName, back: url, stats: key ? allScopes[key] : undefined, pins, compared, heroAugment };

@@ -1,4 +1,5 @@
 import { itemMap, unitMap } from "@/data";
+import { GUIDE_SECTION_IDS } from "./guide-identities.ts";
 import { augmentArtPath } from "@/data/augment-art";
 import augmentCatalog from "@/data/augment-catalog.json";
 import currentPatch from "@/data/current-patch.json";
@@ -66,7 +67,7 @@ const guideConditions: Partial<Record<string, {
   wearerId?: string;
   source?: string;
   conditions: ConditionRule[];
-}>> = { "sample-block-0254": {
+}>> = { [GUIDE_SECTION_IDS.encoreEzreal]: {
   boardId: "00000000-0000-4000-8000-000000000050",
   build: "6018196",
   label: "8级四安可",
@@ -79,7 +80,7 @@ const guideConditions: Partial<Record<string, {
     { itemId: "DA_Artifact_GoldCollector", replaces: "TFT_Item_PowerGauntlet", kind: "option", action: "处决残血，有机会掉金币。", games: 27 },
     { augmentId: "DA_Augment19_Heartsteel_SmallSquad", kind: "option", action: "保留瑟提、奎桑提，开 3 心之钢。" },
   ],
-}, "sample-block-0229": {
+}, [GUIDE_SECTION_IDS.prodigyMalzahar]: {
   boardId: "00000000-0000-4000-8000-000000000017",
   label: "七级五天才",
   conditions: [

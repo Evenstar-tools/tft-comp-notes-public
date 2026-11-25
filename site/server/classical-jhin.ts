@@ -1,11 +1,12 @@
 import { season } from "@/data";
 import type { ContentBlock, Publication } from "@/domain/document";
 import { sectionTeams } from "@/domain/document-flow";
+import { CLASSICAL_JHIN_BLOCK_IDS, GUIDE_SECTION_IDS } from "@/domain/guide-identities";
 import { sameEdition } from "@/domain/version-updates";
 import type { Team } from "@/domain/types";
 
-export const classicalJhinId = "sample-block-0051";
-export const formerJazzJhinId = "sample-block-1055";
+export const classicalJhinId = GUIDE_SECTION_IDS.classicalJhin;
+export const formerJazzJhinId = GUIDE_SECTION_IDS.formerJazzJhin;
 export const jazzJhinTeamId = "00000000-0000-4000-8000-000000001138";
 export const classicalJhinMainId = "00000000-0000-4000-8000-000000000059";
 export const formerJazzEarlyId = "00000000-0000-4000-8000-000000001091";
@@ -23,7 +24,7 @@ const textBlock = (id: string, text: string): ContentBlock => ({ id, type: "text
 
 function markFirstBatch(block: ContentBlock) {
   const label = "19.1b。";
-  if (block.id !== "sample-block-1006" || !block.text?.startsWith(label)) return block;
+  if (block.id !== CLASSICAL_JHIN_BLOCK_IDS.firstBatchEvidence || !block.text?.startsWith(label)) return block;
   const firstBatch = "19.1b 首批。";
   return {
     ...block,
@@ -73,12 +74,12 @@ export function mergeClassicalJhin(publication: Publication): Publication {
   if (imported) {
     const boardMedia = oldJazz?.blocks.filter(block => block.id === region?.textId || block.id === region?.imageId) ?? [];
     const evidence = oldJazz?.blocks.filter(block =>
-      block.id === "sample-block-1006" || block.id === "sample-block-0980") ?? [];
+      block.id === CLASSICAL_JHIN_BLOCK_IDS.firstBatchEvidence || block.id === CLASSICAL_JHIN_BLOCK_IDS.secondaryEvidence) ?? [];
     blocks.push(
       { ...textBlock("classical-jhin-jazz-heading", jazzName), type: "heading", level: 3 },
       ...boardMedia,
       textBlock("classical-jhin-jazz-notes", variantNotes + handoff),
-      textBlock("sample-block-0872", [
+      textBlock(CLASSICAL_JHIN_BLOCK_IDS.jazzLoadout, [
         "棋盘配装 · " + jazzName, "主C：烬。无尽、轻语、死亡之刃。",
         "主坦：锤石。石像鬼石板甲、振奋、冕卫。", loadout, "副C：史密奇。剩余战士装。",
       ].join("\n")),

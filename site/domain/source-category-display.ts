@@ -1,3 +1,5 @@
+import { LEGACY_FOLDER_IDS } from "./guide-identities.ts";
+
 const storedDraftCategories = new Map([
   ["次选成熟阵容", "次选"],
   ["连胜成型阵容", "连胜"],
@@ -19,10 +21,10 @@ export function draftCategoryLabel(category: string) {
 
 // Keep original Feishu block IDs reachable when reading an older S19 snapshot.
 const renamedFolders = new Map<string, readonly [string, string]>([
-  ["sample-block-1067", ["次选成熟阵容", "八级运营"]],
-  ["sample-block-1064", ["连胜成型阵容", "国风九五"]],
-  ["sample-block-1065", ["条件定阵阵容", "高能流行与天才慢搜"]],
-  ["sample-block-1066", ["PBE试阵", "芸阿娜慢搜"]],
+  [LEGACY_FOLDER_IDS.levelEight, ["次选成熟阵容", "八级运营"]],
+  [LEGACY_FOLDER_IDS.guofeng95, ["连胜成型阵容", "国风九五"]],
+  [LEGACY_FOLDER_IDS.hyperpopProdigyReroll, ["条件定阵阵容", "高能流行与天才慢搜"]],
+  [LEGACY_FOLDER_IDS.yunaraReroll, ["PBE试阵", "芸阿娜慢搜"]],
 ]);
 export function sourceSectionTitle({ id, title, level, kind, category: folder }: {
   id: string; title: string; level?: number; kind?: string; category?: string;

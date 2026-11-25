@@ -3,6 +3,7 @@ import type { Piece, Season, Team, Unit } from "./types";
 import { unitSearchNames } from "./unit-search.mjs";
 import { rerollRoute } from "./reroll-stages.ts";
 import { guideBoardKind, usedPopulation } from "./team.ts";
+import { GUIDE_SECTION_IDS, HYPERPOP_BLOCK_IDS } from "./guide-identities.ts";
 import { sourceSectionTitle } from "./source-category-display.ts";
 import { displayGuideName } from "./trait-names.mjs";
 
@@ -169,13 +170,10 @@ export function validVersionReturn(value: unknown) {
 // Editorial references to the author's published paragraphs. The words and numbers come
 // from the section being read, so a later Feishu edit or a rollback uses its own text.
 const hyperpop = {
-  section: "sample-block-0420",
+  section: GUIDE_SECTION_IDS.hyperpopSeraphine,
   main: "00000000-0000-4000-8000-000000000042",
   jazz: "00000000-0000-4000-8000-000000000098",
-  opening: "sample-block-0101", rolling: "sample-block-0365",
-  heat: "sample-block-0102", transition: "sample-block-0071",
-  damage: "sample-block-0418", tank: "sample-block-0378", teemo: "sample-block-0040",
-  jazzWhen: "sample-block-0255", jazzItems: "sample-block-0169",
+  ...HYPERPOP_BLOCK_IDS,
 };
 
 function isHyperpopMain(section: Section, team: Team) {
@@ -191,7 +189,7 @@ export function legacyHyperpopFinalAdvice(section: Section, team: Team) {
 
 type RouteStep = { label: string; text: string; team?: Team };
 
-export const oceanGravesGuideId = "sample-block-0251";
+export const oceanGravesGuideId = GUIDE_SECTION_IDS.oceanGraves;
 export const oceanGravesUnlockBoardId = "00000000-0000-4000-8000-000000000062";
 
 export function guideRoute(section: Section, teams: Team[], current: Team): { phases: RouteStep[]; choices?: RouteStep[]; opening?: string } | undefined {
@@ -227,7 +225,7 @@ export function guideRoute(section: Section, teams: Team[], current: Team): { ph
         legacyHyperpopFinalAdvice(section, current)),
     ].filter(step => step.team || step.text) };
   }
-  if (section.id === "sample-block-0051") {
+  if (section.id === GUIDE_SECTION_IDS.classicalJhin) {
     return { phases: [
       phase("七级过渡", board("七级"), line("两星莎弥拉带烬装") || board("七级")?.notes),
       phase("八级主阵", board("八级"), [line("通常 4-2"), line("锤石锁着")].filter(Boolean).join("") || board("八级")?.notes),
@@ -245,7 +243,7 @@ export function guideRoute(section: Section, teams: Team[], current: Team): { ph
       ].filter(entry => entry.team),
     };
   }
-  if (section.id === "sample-block-0368") {
+  if (section.id === GUIDE_SECTION_IDS.smeech95) {
     return {
       opening: line("八级先稳血"),
       phases: [
@@ -332,7 +330,7 @@ export function guidePlaystyle(section: Section): "84" | "95" | undefined {
   const style = authoredStrategy(section);
   if (style === "84" || style === "95") return style;
   // These Pyke routes search for their five-cost carry at level nine.
-  if (["sample-block-0290", "sample-block-0452"].includes(section.id)) return "95";
+  if (section.id === GUIDE_SECTION_IDS.jazzPyke || section.id === GUIDE_SECTION_IDS.altPykeGraves) return "95";
   return playstyleCode(style);
 }
 

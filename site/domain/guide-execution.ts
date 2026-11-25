@@ -1,13 +1,14 @@
+import { GUIDE_SECTION_IDS } from "./guide-identities.ts";
 import { traitCounts } from "./team.ts";
 import type { Piece, Season, Team } from "./types";
 
-const eveGuide = "sample-block-0764";
+const eveGuide = GUIDE_SECTION_IDS.kdaEvelynn;
 const eveSeven = "00000000-0000-4000-8000-000000000043";
 const eveEight = "00000000-0000-4000-8000-000000000057";
 const eveNine = "00000000-0000-4000-8000-000000000025";
-const asheGuide = "sample-block-0327";
+const asheGuide = GUIDE_SECTION_IDS.oceanAshe;
 const asheEight = "00000000-0000-4000-8000-000000000122";
-const gravesGuide = "sample-block-0251";
+const gravesGuide = GUIDE_SECTION_IDS.oceanGraves;
 const gravesEight = "00000000-0000-4000-8000-000000000075";
 
 export function reviewedGuidePhases(sectionId: string, teams: Team[], data: Season) {
