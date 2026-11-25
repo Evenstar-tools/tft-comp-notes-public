@@ -46,6 +46,7 @@ function ThemeToggle() {
 
 export function SiteNav() {
   const { session } = useOwnerSession();
+  const showOwnerAccess = Boolean(session?.isOwner || session?.loginConfigured);
   const ownerAccessLabel = session && !session.signedIn ? "站主登录" : "站主工作区";
   const pathname = usePathname() ?? "/";
   const search = useSyncExternalStore(subscribeToGuideNavigation, guideQuery, initialGuideQuery);
@@ -101,7 +102,7 @@ export function SiteNav() {
             ))}</div>)}
             <div className="task-mobile-tools">
               <a href="/updates" aria-current={isCurrent("/updates") ? "page" : undefined}>版本更新</a>
-              <a href={ownerEditorPath} aria-current={isCurrent(ownerEditorPath) ? "page" : undefined}>{ownerAccessLabel}</a>
+              {showOwnerAccess && <a href={ownerEditorPath} aria-current={isCurrent(ownerEditorPath) ? "page" : undefined}>{ownerAccessLabel}</a>}
               {session?.isOwner && <>
                 <a href="/manage">发布管理</a>
                 <button type="button" className="theme-toggle" disabled={signingOut} onClick={() => void signOut()}>退出站主</button>
@@ -119,10 +120,10 @@ export function SiteNav() {
           <a className="studio-primary" href="/editor" aria-label="阵容编辑器" aria-current={pathname === "/editor" ? "page" : undefined}>
             <SquarePen size={16} aria-hidden /><span className="studio-action-label">编辑器</span>
           </a>
-          <a href={ownerEditorPath} aria-label={ownerAccessLabel} title={ownerAccessLabel}
+          {showOwnerAccess && <a href={ownerEditorPath} aria-label={ownerAccessLabel} title={ownerAccessLabel}
             aria-current={isCurrent(ownerEditorPath) ? "page" : undefined}>
             <PanelsTopLeft size={16} aria-hidden />
-          </a>
+          </a>}
           {session?.isOwner && <a href="/manage" aria-label="发布管理" title="发布管理" aria-current={isCurrent("/manage") ? "page" : undefined}>
             <ClipboardList size={16} aria-hidden />
           </a>}

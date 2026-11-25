@@ -34,21 +34,27 @@ export function PatchRecommendationList({ stats, cards, home, previousBuild }: {
   const groups = recommendationGroups.map(group => ({
     ...group, entries: cards.filter(card => card.group === group.id),
   })).filter(group => group.entries.length > 0);
+  const showJumps = groups.length > 1 && cards.length > 10;
+  const showMeta = previousBuild || showJumps;
+  const updatedSample = <p className="home-patch-sample">
+    {previousBuild ? <>上一版参考 · {stats.queue} {stats.patch} · </> : "数据更新 "}
+    <time dateTime={stats.updatedAt}>{date} {time} UTC</time>
+  </p>;
 
   return <div className="home-patch-recommendations">
-    <div className="home-patch-meta">
-      <p className="home-patch-sample">
-        {previousBuild ? <>上一版参考 · {stats.queue} {stats.patch} · </> : "数据更新 "}
-        <time dateTime={stats.updatedAt}>{date} {time} UTC</time>
-      </p>
-      {groups.length > 1 && <nav className="home-patch-jumps" aria-label="跳到推荐分组">
+    {showMeta && <div className="home-patch-meta">
+      {updatedSample}
+      {showJumps && <nav className="home-patch-jumps" aria-label="跳到推荐分组">
         {groups.map(({ id, label }) => <a key={id} href={"#home-patch-" + id}>{id === "reroll" ? "赌狗" : label}</a>)}
       </nav>}
-    </div>
-    {groups.map(({ id: group, label, entries }) => {
+    </div>}
+    {groups.map(({ id: group, label, entries }, index) => {
       const heading = "home-patch-" + group;
       return <section key={group} className="home-patch-group" aria-labelledby={heading}>
-        <h2 id={heading}>{label}</h2>
+        <div className="home-patch-group-head">
+          <h2 id={heading}>{label}</h2>
+          {!showMeta && index === 0 && updatedSample}
+        </div>
         <div className="home-patch-cards">
           {entries.map(({ rating, team, title, opening, conditional, sampleLabel, avatars, entryTeamId, stages, conditions, strategy, badgeLabel, hit }) => {
             const cardId = "patch-" + rating.sectionId + "-" + team.id;

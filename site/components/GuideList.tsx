@@ -758,7 +758,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
             </div>
             {rating && <span id={ratingId} className={"guide-placement " + (rating.mean < 4.5 ? "strong" : rating.mean > 4.5 ? "weak" : "middle")}
               title={(fixedSample ?? (core ? coreStats.patch + " · " + coreStats.hours + " 小时核心样本" : familyStats.patch + " · 近 " + familyStats.days + " 天体系样本")) + " · 前四 " + (100 * rating.topFourRate).toFixed(1) + "% · 吃鸡 " + (100 * rating.winRate).toFixed(1) + "%"}>
-              {recommendationTier(rating) !== "review" && <><span>平均排名</span> <strong>{formatRecommendationMean(rating.mean)}</strong></>}
+              {recommendationTier(rating) !== "review" && <><span>均名</span> <strong>{formatRecommendationMean(rating.mean)}</strong></>}
               <small>{rating.games.toLocaleString("zh-CN")} 场{fixedSample ? " · " + fixedSample : core ? " · 核心样本" : formation ? " · 跨人口样本" : ""}</small>
             </span>}
           </div>
@@ -941,7 +941,6 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
         <details className="guide-rank-source"><summary>数据来源</summary>
           <div><a href={familyStats.sourceUrl} target="_blank" rel="noreferrer">MetaTFT</a> · {familyStats.queue} {familyStats.patch} · 近 {familyStats.days} 天
             <p>更新于 <time dateTime={familyStats.updatedAt}>{familyStats.updatedAt.slice(5,10).replace("-", "/")} {familyStats.updatedAt.slice(11,16)} UTC</time></p>
-            <p>出场率按同批全部玩家结算统计。</p>
           </div>
         </details>
       </div>}

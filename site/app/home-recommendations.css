@@ -31,7 +31,8 @@
   font-size: .75rem; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap;
 }
 .home-patch-group { min-width: 0; }
-.home-patch-group h2 { font-size: 1.125rem; margin: 0 0 8px; font-weight: 650; color: var(--accent); scroll-margin-block-start: 14px; }
+.home-patch-group-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 12px; margin: 0 0 8px; }
+.home-patch-group h2 { font-size: 1.125rem; margin: 0; font-weight: 650; color: var(--accent); scroll-margin-block-start: 14px; }
 .home-patch-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
 .home-patch-card {
   min-width: 0; border: 1px solid var(--line); border-radius: 10px;
