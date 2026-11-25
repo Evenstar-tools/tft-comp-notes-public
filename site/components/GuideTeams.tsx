@@ -407,9 +407,12 @@ export function GuideTeams({ section, data, initialTeam, initialStage, initialFl
           <button type="button" aria-pressed={showFlex} onClick={toggleFlex}>{showFlex ? "恢复原阵容" : "预览替换"}</button>
         </div>}
         {mainBoardActive && (stageCopy.length > 0 || advice || nextPhase || notes.starHint) && <div className="guide-phase-workflow">
-          {stageCopy.map(passage => <p key={passage.source} id={passage.blockId ? "note-" + passage.blockId : undefined}>{displayTraitNames(passage.text)}</p>)}
+          {stageCopy.map((passage, index) => <p key={passage.source} id={passage.blockId ? "note-" + passage.blockId : undefined}>
+            {index === 0 && advice && <a className="guide-patch-advice-chip" href={advice.href} title={displayTraitNames(advice.note)}>{advice.label}</a>}
+            {displayTraitNames(passage.text)}
+          </p>)}
           {notes.starHint && <p className="star-hint">{notes.starHint}</p>}
-          {advice && <p className="guide-patch-advice"><a href={advice.href}>{advice.label}</a> {displayTraitNames(advice.note)}</p>}
+          {advice && !stageCopy.length && <p className="guide-patch-advice"><a href={advice.href}>{advice.label}</a> {displayTraitNames(advice.note)}</p>}
           {nextPhase && <div className="guide-next-phase">
             {nextRoster && <details className="guide-next-changes" key={nextBoard?.id ?? nextPhase.label}><summary>下一阶段换人</summary>{nextRoster}</details>}
             <button type="button" onClick={() => nextBoard ? pickTeam(nextBoard) : setRouteNote(nextPhase.label)}>

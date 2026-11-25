@@ -23,13 +23,12 @@ function FamilyStats({ rows, rare }: {
 }) {
   if (!rows.length && !rare.length) return <p className="muted">这张棋盘暂无对应的体系战绩。</p>;
   return <div className="guide-carry-samples guide-family-results">
-    <p>含不同等级和变阵。</p>
     {!!rows.length && <ul>{rows.map(({ stat }) => <li key={stat.clusterId}>
       <div className="guide-family-result-head"><strong>{displayGuideName(stat.name)}</strong>
         <a href={stat.url} target="_blank" rel="noreferrer" title={stat.sourceName}>MetaTFT · {family.patch} · 近 {family.days} 天 ↗</a>
       </div>
       <dl className="guide-family-metrics">
-        <div><dt>平均排名</dt><dd>{stat.mean.toFixed(2)}</dd></div>
+        <div><dt>均名</dt><dd>{stat.mean.toFixed(2)}</dd></div>
         <div><dt>前四率</dt><dd>{percent.format(stat.topFourRate)}</dd></div>
         <div><dt>登顶率</dt><dd>{percent.format(stat.winRate)}</dd></div>
         <div><dt>场数</dt><dd>{number.format(stat.games)}</dd></div>
@@ -82,8 +81,18 @@ export function GuideMatchStats({ id, stage, team, teams, section, edition, augm
     return { rating, related, carry, rows, rare, groups, formation, reference };
   }
   const { rating, related, carry, rows, rare, groups, formation, reference } = evidenceFor(team);
-  const activeView = view ?? (heroGuide ? "board" : (["family", "board", "carry"] as const)
+  const populatedViews = views.filter(([value]) => groups[value].some(sample => sample.games > 0));
+  const visibleViews = populatedViews.length > 0 ? populatedViews : views;
+  const preferredView = view ?? (heroGuide ? "board" : (["family", "board", "carry"] as const)
     .find(type => groups[type].some(sample => sample.games > 0)) ?? "board");
+  const activeView = visibleViews.some(([value]) => value === preferredView) ? preferredView : visibleViews[0][0];
+  const scopeNote = activeView === "family"
+    ? "同套体系含不同等级和变阵的整体结算样本。"
+    : activeView === "carry"
+      ? "按棋子、星级或装备筛选，各组场数可能重叠。"
+      : heroGuide
+        ? "携带该英雄强化的对应阵容结算样本。"
+        : "按当前棋盘固定终盘名单与人口匹配的结算样本。";
   const oceanBoards = activeView === "board" ? rankedOceanBoards(teams, section) : undefined;
   const available = oceanBoards ? oceanBoards.flatMap(({ board, sample }) => {
     if (board.id === team.id || !sample?.games) return [];
@@ -115,13 +124,17 @@ export function GuideMatchStats({ id, stage, team, teams, section, edition, augm
   }
   return <section id={id} className="guide-match-stats" aria-label="阵容战绩">
     <div className="guide-stat-switch" role="group" aria-label="战绩范围">
-      {views.map(([value]) => {
+      {visibleViews.map(([value]) => {
         const total = value === "board" && rating?.games ? "" : countLabel(groups[value]);
         return <button key={value} type="button" aria-pressed={activeView === value} onClick={() => onSelectView(value)}>
           <span>{viewLabel(value)}</span>
           {total && <small>{total}</small>}
         </button>;
       })}
+      <details className="guide-stat-scope-hint">
+        <summary>口径 ?</summary>
+        <p>{scopeNote}</p>
+      </details>
     </div>
     <div className="guide-stat-body">
       {activeView === "board" && <>
@@ -131,7 +144,6 @@ export function GuideMatchStats({ id, stage, team, teams, section, edition, augm
         <GuideDistribution team={team} sectionId={section.id} ratings={rating ? [rating] : []} edition={edition} heroGuide={heroGuide} view="board" />
       </>}
       {activeView === "carry" && <>
-        <p className="muted guide-stat-scope">按棋子、星级或装备筛选，各组场数可能重叠。</p>
         {related.map(sample => <PlacementSummary key={sample.url} rating={sample} />)}
         {(carry.rows.length > 0 || carry.builds.length > 0 || !related.length) && <GuideCarryStats {...carry} />}
         <GuideDistribution team={team} sectionId={section.id} ratings={related} edition={edition} heroGuide={heroGuide} view="carry" />

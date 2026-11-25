@@ -72,13 +72,10 @@ export function GuideFormationStats({ evidence }: { evidence: NonNullable<Return
       <a href={core.url} target="_blank" rel="noreferrer">{core.label} ↗</a> · 恰好九张不同棋子 · 均名 {coreResult.mean.toFixed(2)} · {number.format(coreResult.games)} 场
     </p>}
     <ComparisonTable rows={rows} caption={group.condition} />
-    {subset && remaining && <>
-      <ComparisonTable caption={board.name + " · 同盘成型对照"} rows={[
-        { name: subset.remainder, counts: remaining },
-        { name: subset.condition, counts: subset.sample.placementCounts, url: subset.sample.url },
-      ]} />
-      <p>同盘两组按八个名次拆分。血量、经济和来牌会同时影响成型与名次。</p>
-    </>}
+    {subset && remaining && <ComparisonTable caption={board.name + " · 同盘成型对照"} rows={[
+      { name: subset.remainder, counts: remaining },
+      { name: subset.condition, counts: subset.sample.placementCounts, url: subset.sample.url },
+    ]} />}
     <small>MetaTFT · {group.patch} · {group.window ?? `滚动 ${group.windowHours} 小时`} · {checkedDate.format(new Date(group.checkedAt))} 北京时间取数。少于 {stats.minGames} 场仅列场数。</small>
   </details>;
 }
