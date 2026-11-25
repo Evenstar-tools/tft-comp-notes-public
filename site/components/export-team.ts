@@ -3,6 +3,7 @@ import { traitCounts, traitLines, usedPopulation } from "@/domain/team";
 import type { Team } from "@/domain/types";
 import { boardInstruments, boardMarkerNote, type BoardInstrument } from "@/domain/board-instruments";
 import { BOARD_WIDTH, HEX_WIDTH, HEX_HEIGHT, HEX_POINTS, STAR_PATH, hexPosition } from "@/domain/board-layout";
+import { preferredItemImage } from "@/domain/item-art";
 const colors: Record<number, string> = {
   1: "#9ba4b7",
   2: "#52b987",
@@ -14,7 +15,7 @@ const colors: Record<number, string> = {
 export async function loadImage(url: string, timeoutMs?: number) {
   return new Promise<HTMLImageElement | null>((resolve) => {
     const image = new Image();
-    image.crossOrigin = "anonymous";
+    if (new URL(url, document.baseURI).origin !== window.location.origin) image.crossOrigin = "anonymous";
     const timer = timeoutMs && setTimeout(() => resolve(null), timeoutMs);
     const finish = (value: HTMLImageElement | null) => {
       if (timer) clearTimeout(timer);
@@ -119,7 +120,7 @@ export async function exportTeamImage(team: Team): Promise<Blob> {
   if (instruments.size) ctx.fillText(boardMarkerNote(instruments), 48, 128);
   const urls = team.pieces.flatMap((piece) => [
     unitMap.get(piece.unitId)?.image,
-    ...piece.items.map((id) => season.items.find((item) => item.id === id)?.image),
+    ...piece.items.map((id) => preferredItemImage(season.items.find((item) => item.id === id))),
   ]);
   urls.push(...[...instruments.values()].map(entry => entry.image));
   const imageUrls = [...new Set(urls.filter((url): url is string => !!url))];
@@ -160,7 +161,8 @@ export async function exportTeamImage(team: Team): Promise<Blob> {
     ctx.fillText(unit.name, center, nameY, width * .86);
     piece.items.forEach((id, index) => {
       const item = season.items.find((entry) => entry.id === id);
-      const itemImage = item?.image && images.get(item.image);
+      const itemUrl = preferredItemImage(item);
+      const itemImage = itemUrl && images.get(itemUrl);
       const itemX = x + width / 2 - (piece.items.length * 30 - 2) / 2 + index * 30;
       const itemY = y + height * 0.74;
       if (itemImage) {
