@@ -1,5 +1,5 @@
 import { itemMap, season, traitMap, unitMap } from "@/data";
-import { itemReference } from "@/data/item-library";
+import { itemReference } from "@/data/item-reference";
 import emblemSnapshot from "@/data/emblem-stats.json";
 import { emblemItemId } from "./links";
 import { gearWearerMatches, type GearOrder } from "./gear-wearer";

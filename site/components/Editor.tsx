@@ -45,7 +45,7 @@ import type { HeroItemSample, HeroItemSource } from "@/domain/hero-insights";
 import { unlockText } from "@/domain/unlocks";
 import { feishuSection, manageLink } from "@/domain/links";
 import { itemMap, season, unitLabel, unitMap } from "@/data";
-import { itemReference } from "@/data/item-library";
+import { itemReference } from "@/data/item-reference";
 import { akaliForms, conflictingForm, emptyTeam, equippedTraitIds, mixedForms, movePiece, relatedUnitIds, splitAlternate, stackPiece, switchAlternate, switchForm, teamFromCombo, teamText, traitCounts, usedPopulation } from "@/domain/team";
 import { independentDraft } from "@/domain/roster-import";
 import { boardStages, stageLabels, readTeamStage, writeTeamStage } from "@/domain/team-stages";

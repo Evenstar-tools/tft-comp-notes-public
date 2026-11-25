@@ -2,7 +2,9 @@
 import { Fragment, useEffect, useId, useLayoutEffect, useRef, useState, type MouseEvent } from "react";
 import { itemMap, season, unitMap, unitLabel } from "@/data";
 import emblemSnapshot from "@/data/emblem-stats.json";
-import { itemReference, itemWearers, specialItemWearers, type WearerSnapshot } from "@/data/item-library";
+import { itemReference } from "@/data/item-reference";
+import { itemWearers, type WearerSnapshot } from "@/data/item-wearers";
+import { specialItemWearers } from "@/data/special-item-wearers";
 import { guideLink } from "@/domain/guide-reading";
 import { gearSampleMinimum } from "@/domain/gear-wearer";
 import { compareGearWearerSamples, cookware, emblemMatches, filterEmblems, filterGear, gearFilters, gearGroups, gearHref, gearMatches, gearWearerStats, isCookRecipe, itemName, recipeParts, searchGear, selectableWearers,

@@ -6,7 +6,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { itemMap, unitMap } from "@/data";
 import currentPatch from "@/data/current-patch.json";
 import snapshot from "@/data/emblem-stats.json";
-import { itemReference } from "@/data/item-library";
+import { itemReference } from "@/data/item-reference";
 import { compareGearWearerSamples, filterEmblems, gearFilters, gearHref, selectableWearers, type GearFilters, type GearOrder } from "@/domain/gear-library";
 import { gearSampleMinimum } from "@/domain/gear-wearer";
 import { guideLink } from "@/domain/guide-reading";
