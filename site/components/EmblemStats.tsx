@@ -210,7 +210,7 @@ export function EmblemStats({ traitId, holderId, initialFilters, guideHref, guid
 
   return <div className="emblem-page" data-wearer-view={selectedUnit ? "" : undefined}>
     <EmblemEntryPosition traitId={traitId} holderId={holderId} />
-    <header className="emblem-heading">
+    <header className="page-heading emblem-heading">
       <h1>装备图鉴</h1>
       <div className="emblem-catalog-tabs"><GearCategoryNav current="emblems" filters={filters} /></div>
       <details className="emblem-method">
@@ -236,7 +236,9 @@ export function EmblemStats({ traitId, holderId, initialFilters, guideHref, guid
     </div>
     {visible.length > 0 && <div className="emblem-column-head" aria-hidden="true">
       <span>纹章</span><span>均名</span><span>登顶率</span><span>场数</span>
-      {!selectedUnit && (visible.some(({ id }) => id !== open) ? <span className="emblem-best-heading">最佳使用者</span> : <span />)}
+      {!selectedUnit && (visible.some(({ id }) => id !== open)
+        ? <span className="emblem-best-heading" title={`满 ${snapshot.minGames} 场，按均名排序`}>最佳使用者<small>均名 · 场数</small></span>
+        : <span />)}
       <span />
     </div>}
     <Tooltip.Provider delayDuration={180} disableHoverableContent><ol className="emblem-results">
