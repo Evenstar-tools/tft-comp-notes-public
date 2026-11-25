@@ -12,11 +12,11 @@ import { request } from "./api";
 
 const referenceLinks = [
   ["/heroes", "英雄"], ["/traits", "羁绊"], ["/augments", "海克斯"],
-  ["/items", "装备"], ["/emblems", "转职"], ["/updates", "更新"],
+  ["/items", "装备"], ["/updates", "更新"],
 ] as const;
 const referenceGroups = [
   { label: "棋子与羁绊", links: [referenceLinks[0], referenceLinks[1], ["/heroes?view=grid", "羁绊网"], ["/traits/medley", "合奏组合"]] },
-  { label: "装备与强化", links: [referenceLinks[3], referenceLinks[4], referenceLinks[2]] },
+  { label: "装备与强化", links: [referenceLinks[3], referenceLinks[2]] },
 ];
 
 function subscribeToGuideNavigation(listener: () => void) {
@@ -80,6 +80,7 @@ export function SiteNav() {
 
   function isCurrent(href: string) {
     if (href === "/") return pathname === "/" || pathname === "/find" || pathname.startsWith("/guides/");
+    if (href === "/items") return pathname === "/items" || pathname.startsWith("/items/") || pathname === "/emblems" || pathname.startsWith("/emblems/");
     return pathname === href || pathname.startsWith(href + "/");
   }
 
