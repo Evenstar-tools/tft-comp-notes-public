@@ -296,7 +296,7 @@ export function DocumentView({ section, gameData, publicationId, initialTeam, in
   function teamHeader(team: Team, performance?: ReactNode) {
     const stage = section.reroll?.stages.find(entry => entry.teamId === team.id);
     const formation = stage && stage.boardRole !== "variant" ? rerollRoute(section, team)?.final ?? team : team;
-    if (section.stageTeamIds?.includes(team.id) && !stage) return header(section.title, undefined, performance);
+    if (section.stageTeamIds?.includes(team.id) && !section.reroll) return header(section.title, undefined, performance);
     const title = boardTitle(section, formation);
     if (formation.id !== primary?.id && title !== section.title && !title.startsWith(section.title + " · ")) return header(title, section.title, performance);
     const name = publicationId && formation.id !== primary?.id

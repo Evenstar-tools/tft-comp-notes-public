@@ -39,6 +39,8 @@ import { feishuBoardIssue } from "@/domain/document-flow";
 import { draftCategoryLabel, draftCategoryValue, sourceSectionTitle } from "@/domain/source-category-display";
 import { guideLink } from "@/domain/guide-reading";
 import { moveBoardInstrument } from "@/domain/board-instruments";
+import { conditionKey, editableTeamConditions, sharedGuideEditorConditions } from "@/domain/guide-equipment-conditions";
+import { publishedBoardContent } from "@/domain/published-board-layout";
 import type { HeroItemSample, HeroItemSource } from "@/domain/hero-insights";
 import { unlockText } from "@/domain/unlocks";
 import { feishuSection, manageLink } from "@/domain/links";
@@ -52,6 +54,7 @@ import { QuickImport } from "./QuickImport";
 import { BoardPivots } from "./BoardPivots";
 import { Board } from "./Board";
 import { EditorGearRecommendations } from "./EditorGearRecommendations";
+import { EditorConditions } from "./EditorConditions";
 import { EditorUnitDetails } from "./EditorUnitDetails";
 import { MatrixDialog } from "./MatrixDetails";
 import { ItemIcon } from "./ItemIcon";
@@ -63,7 +66,7 @@ import { SelectionSheet, UnitBrowser, UnitDetails, type BrowserFilters } from ".
 import { request } from "./api";
 import { downloadBlob, exportTeamImage } from "./export-team";
 import { GuidePoster } from "./GuidePoster";
-import { clearGuideBoardTransfer, readGuideBoardTransfer } from "./guide-board-transfer";
+import { clearGuideBoardTransfer, readGuideBoardSource, readGuideBoardTransfer, storeGuideBoardSource, type GuideBoardSource } from "./guide-board-transfer";
 import { exportPlayerTeams, importPlayerTeams, isPlayerTeamStorageKey, readPlayerTeams, savePlayerTeam } from "./player-team-storage";
 import "./editor-workspace.css";
 
@@ -162,9 +165,11 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
     if (!guideBoardId) return;
     const source = readGuideBoardTransfer(guideBoardId);
     const board = source && readTeamStage(source.team, source.team.mainStage ?? "late");
+    const draft = source && board ? independentDraft({ ...board, name: source.title.slice(0, 80) }, emptyTeam()) : null;
+    if (draft && board && source?.target) draft.pieces = board.pieces;
     setGuideTransfer({
       id: guideBoardId, source,
-      draft: source && board ? independentDraft({ ...board, name: source.title.slice(0, 80) }, emptyTeam()) : null,
+      draft,
     });
   }, [guideBoardId]);
   const pendingGuide = guideBoardId && guideTransfer?.id === guideBoardId ? guideTransfer : undefined;
@@ -172,7 +177,8 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
   const incomingDraft = guideBoardId ? pendingGuide?.draft : copyQuery ? (sourceCopy?.query === copyQuery ? sourceCopy.team : null) : comboDraft;
   const handledImport = useRef<string | null>(null);
   const [comboOrigin, setComboOrigin] = useState("");
-  const [guideBoardSource, setGuideBoardSource] = useState<{ title: string; href: string } | null>(null);
+  const [guideBoardSource, setGuideBoardSource] = useState<GuideBoardSource | null>(null);
+  const guideTarget = ownerMode ? guideBoardSource?.target : undefined;
   const [wantedForm, setWantedForm] = useState<string | null>(null);
   const incomingTeamId = ownerMode ? params.get("team") : null;
   const incomingUnitId = params.get("unit");
@@ -193,6 +199,13 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
   const highlightRelated = pieceSelection?.highlightRelated === true;
   const [rightPane, setRightPane] = useState<"equipment" | "details">("equipment");
   const [notesOpen, setNotesOpen] = useState(false);
+  const [conditionsOpen, setConditionsOpen] = useState(false);
+  const conditions = editableTeamConditions(guideTarget && draftTeam.conditions === undefined
+    ? { ...draftTeam, id: guideTarget.teamId, sectionId: guideTarget.sectionId } : draftTeam);
+  const sharedConditions = (guideBoardSource?.sharedConditions ??
+    sharedGuideEditorConditions(saved ?? [], guideTarget?.sectionId ?? draftTeam.sectionId, guideTarget?.teamId ?? draftTeam.id))
+    .filter(row => !conditions.some(local => conditionKey(local) === conditionKey(row)));
+  const conditionCount = conditions.length + sharedConditions.length;
   const [mobileTool, setMobileTool] = useState<"units" | "gear" | "traits">("units");
   const workspaceSide = useRef<HTMLElement>(null);
   useEffect(() => {
@@ -257,6 +270,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
     teamRef.current = readTeamStage(next, selectedStage);
     setDraftTeam(next);
     setStage(selectedStage);
+    setGuideBoardSource(current => current?.draftId === next.id ? current : readGuideBoardSource(next.id));
   }, []);
   const pieceRef = useRef(pieceId);
   pieceRef.current = pieceId;
@@ -349,6 +363,9 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
 
   const known = saved?.find((entry) => entry.id === team.id);
   const dirty = known ? !same(known, draftTeam) : meaningful(draftTeam);
+  const guidePublished = !!guideBoardSource?.published && guideBoardSource.published === JSON.stringify(publishedBoardContent(draftTeam));
+  const priorGuideCopy = guideTarget && !known && !history.length && saved?.find(entry =>
+    entry.id !== draftTeam.id && !entry.sectionId && entry.name === draftTeam.name);
   const initializingPlayer = !ownerMode && saved === null;
   const incomingTeam = saved?.find((entry) => entry.id === incomingTeamId);
   useEffect(() => {
@@ -379,7 +396,11 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
     if (guideBoardId) clearGuideBoardTransfer(guideBoardId);
     if (!draft) return;
     const guide = pendingGuide?.source;
-    setGuideBoardSource(guide ? { title: guide.title, href: guide.href } : null);
+    if (guide) {
+      const source = { draftId: draft.id, title: guide.title, href: guide.href, target: guide.target, sharedConditions: guide.sharedConditions };
+      storeGuideBoardSource(source);
+      setGuideBoardSource(source);
+    }
     setComboOrigin(guide ? "" : copyQuery && sectionId && copyId ? guideLink(sectionId, copyId) : origin?.startsWith("/combos?") ? origin : "/combos");
     setRestore(null);
     showDraft(draft);
@@ -708,13 +729,32 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
       await save();
       notify({ kind: "ok", text: ownerMode ? "已保存到云端" : "已保存到此浏览器" });
     });
+  const publishGuideNow = () => run("save", async () => {
+    if (!guideTarget || !guideBoardSource) return;
+    const current = draftRef.current;
+    if (current.stages || stageRef.current !== (current.mainStage ?? "late"))
+      throw new Error("请在带入的阶段编辑原棋盘。新增的阶段可单独保存到云端副本。");
+    if (!current.pieces.length) throw new Error("棋盘至少需要一枚棋子");
+    const board = publishedBoardContent(await save(current));
+    const { publicationId } = await request<{ publicationId: string }>("/api/publication/board", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        publicationId: guideTarget.publicationId, sectionId: guideTarget.sectionId,
+        team: { id: guideTarget.teamId, ...board },
+      }),
+    });
+    const source = { ...guideBoardSource, target: { ...guideTarget, publicationId }, published: JSON.stringify(board) };
+    storeGuideBoardSource(source);
+    setGuideBoardSource(source);
+    notify({ kind: "ok", text: "已发布到原棋盘" });
+  });
   function activate(next: Team, message: string) {
     setPendingOpen(null);
     if (next.id === incomingTeamId) handledTeam.current = next.id;
     showDraft(next);
     setWantedForm(null);
     setComboOrigin("");
-    setGuideBoardSource(null);
     setSelectedId(null);
     setPieceSelection(null);
     setReplacement(null);
@@ -923,8 +963,19 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
         setDefault={posterFormat => commit(prev => ({...prev, posterFormat}))} />}
       <h1 className="sr-only">阵容构建器</h1>
       {guideBoardSource && <div className="editor-guide-source">
-        <div><strong>来自{guideBoardSource.title}</strong><small>{ownerMode ? known && !dirty ? "已保存到云端" : "待保存到云端" : known && !dirty ? "已保存在本机" : "本地草稿"}</small></div>
-        <a href={guideBoardSource.href}>返回原棋盘</a>
+        <div><strong>来自{guideBoardSource.title}</strong><small aria-live="polite">{guideTarget
+          ? guidePublished ? "已发布到原棋盘" : known && !dirty ? "副本已保存 · 原棋盘待发布" : "原棋盘待发布"
+          : ownerMode ? known && !dirty ? "副本已保存到云端" : "云端副本草稿" : known && !dirty ? "已保存在本机" : "本地草稿"}</small></div>
+        <div className="editor-guide-source-actions">
+          {priorGuideCopy && guideBoardSource && <button type="button" className="btn secondary sm" disabled={!!busy} onClick={() => {
+            const source = { ...guideBoardSource, draftId: priorGuideCopy.id, published: undefined };
+            storeGuideBoardSource(source);
+            setGuideBoardSource(source);
+            activate(priorGuideCopy, "已带入同名云端副本");
+          }}>使用已存副本</button>}
+          {guideTarget && <button type="button" className="btn ghost sm" disabled={!!busy || !team.name.trim()} onClick={saveNow}>仅保存副本</button>}
+          <a href={guideBoardSource.href}>返回原棋盘</a>
+        </div>
       </div>}
       {copyQuery && copyError && <div className="banner" role="alert">{copyError}<button onClick={() => setRetryCopy(v => v + 1)}>重新读取棋盘</button></div>}
       {copyQuery && !incomingDraft && !copyError && <p role="status">正在读取所选发布棋盘…</p>}
@@ -1294,17 +1345,19 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
         </div>
         <button
           type="button"
-          className="btn primary tb-save"
+          className={`btn primary tb-save${guideTarget ? " tb-publish-board" : ""}`}
           disabled={!!busy || !team.name.trim() || mixedForms(team.pieces)}
-          onClick={saveNow}
-          title={ownerMode ? "保存到云端（Ctrl+S）" : "保存到此浏览器（Ctrl+S）"}
+          onClick={guideTarget ? publishGuideNow : saveNow}
+          aria-label={guideTarget ? "保存并发布原棋盘" : undefined}
+          title={guideTarget ? "更新攻略中的原棋盘" : ownerMode ? "保存到云端（Ctrl+S）" : "保存到此浏览器（Ctrl+S）"}
         >
           {busy === "save" ? (
             <LoaderCircle size={16} className="spin" aria-hidden />
           ) : (
             <Save size={16} aria-hidden />
           )}
-          {ownerMode ? "保存到云端" : "保存"}
+          {guideTarget ? <><span className="guide-save-full">保存并发布原棋盘</span><span className="guide-save-compact">发布棋盘</span></>
+            : ownerMode ? "保存到云端" : "保存"}
         </button>
       </div>
 
@@ -1342,6 +1395,8 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
                   if (!pivotsOpen) { setCollapsed(false); setQuickOpen(false); }
                   setPivotsOpen(!pivotsOpen);
                 }}>找转阵</button>}
+              <button type="button" className="btn secondary sm editor-conditions-trigger" aria-haspopup="dialog"
+                onClick={() => setConditionsOpen(true)}>定阵条件{conditionCount ? <span aria-hidden>{conditionCount}</span> : null}</button>
               <span className="panel-hint">{hint}</span>
               <div className="editor-stage-actions" role="group" aria-label="当前阶段操作">
                 <button type="button" className="btn ghost sm stage-swap" disabled={!population}
@@ -1471,6 +1526,8 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
       {notesOpen && <MatrixDialog title="阵容备注" closeLabel="关闭阵容备注" className="editor-notes-dialog" onClose={() => setNotesOpen(false)}>
         {noteField}
       </MatrixDialog>}
+      {conditionsOpen && <EditorConditions key={draftTeam.id} team={draftTeam} rows={conditions} sharedRows={sharedConditions}
+        onChange={next => commit(prev => ({ ...prev, conditions: next }))} onClose={() => setConditionsOpen(false)} />}
       <details className="editor-shortcuts">
         <summary>快捷键</summary>
         <ul>

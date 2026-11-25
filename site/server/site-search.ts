@@ -66,7 +66,9 @@ function searchGuides(live: Publication | null) {
   const current = sameEdition(live.season.id, currentPatch.seasonId);
   const withFamilies = currentFamilyBatch(familyStats, live.season.id, currentPatch);
   const withCores = current && canRankRecommendations(coreStats, live.season.id, currentPatch);
-  const reviewed = new Set(currentPatchRecommendations(live)?.entries.filter(row => row.status === "review")
+  const recommendations = currentPatchRecommendations(live);
+  const fixed = new Map(recommendations?.fixedBoardRecommendations?.map(row => [row.teamId, row]));
+  const reviewed = new Set(recommendations?.entries.filter(row => row.status === "review")
     .map(row => row.sectionId + ":" + row.teamId));
   const cores = new Map((withCores ? coreStats.rows : []).map(row => [row.sectionId + ":" + row.teamId, row]));
   const labels = { recommended: "推荐", secondary: "次选", review: "待复核" };
@@ -85,7 +87,7 @@ function searchGuides(live: Publication | null) {
       const rows = familiesByBoard.get(board.id) ?? [];
       const core = edition === coreStats.seasonId ? cores.get(id) : undefined;
       const tiers = new Set(rows.map(row => recommendationTier(row.stat)));
-      if (!tiers.size) tiers.add(recommendationTier(core));
+      if (!tiers.size) tiers.add(recommendationTier(core ?? fixed.get(board.id)));
       const [tier] = tiers;
       const label = section.category === heroAugmentCategory ? "英雄强化" : reviewed.has(id) ? "待复核" :
         tiers.size > 1 ? "全部攻略" : labels[tier];

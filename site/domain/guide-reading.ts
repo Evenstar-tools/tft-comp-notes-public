@@ -214,7 +214,7 @@ export function guideRoute(section: Section, teams: Team[], current: Team): { ph
   }
   const paragraphs = authoredParagraphs(section).flatMap(block => sentences(block.text ?? ""));
   const line = (start: string) => paragraphs.find(text => text.startsWith(start)) ?? "";
-  const board = (start: string) => teams.find(team => team.name.startsWith(start));
+  const board = (start: string) => teams.find(team => displayGuideName(team.name).startsWith(start));
   const phase = (label: string, team?: Team, text = team?.notes ?? ""): RouteStep => ({ label, team, text });
 
   if (isHyperpopMain(section, current)) {
@@ -254,8 +254,8 @@ export function guideRoute(section: Section, teams: Team[], current: Team): { ph
       ].filter(step => step.team),
       choices: [
         phase("女枪蒙多", board("女枪蒙多"), line("女枪接卢锡安装") || board("女枪蒙多")?.notes),
-        phase("酷炫卡牌", board("酷炫卡牌"), line("卡牌先到且有羊刀法装") || board("酷炫卡牌")?.notes),
-        phase("疾风泽丽", board("疾风泽丽"), line("带物理装的泽丽先二星") || board("疾风泽丽")?.notes),
+        phase("大触打击乐卡牌", board("大触打击乐卡牌"), line("卡牌先到且有羊刀法装") || board("大触打击乐卡牌")?.notes),
+        phase("迅击鼓手泽丽", board("迅击鼓手泽丽"), line("带物理装的泽丽先二星") || board("迅击鼓手泽丽")?.notes),
       ].filter(step => step.team),
     };
   }
@@ -482,8 +482,9 @@ function authoredRoles(section: Section, team: Team, data: Season) {
 }
 
 function boardRoles(section: Section, team: Team, data: Season) {
-  const title = boardLoadoutPrefix + team.name;
-  const block = allBlocks(section.blocks).find(entry => isBoardLoadout(entry) && entry.text?.split("\n", 1)[0] === title);
+  if (!team.name) return [];
+  const title = boardLoadoutPrefix + displayGuideName(team.name);
+  const block = allBlocks(section.blocks).find(entry => isBoardLoadout(entry) && displayGuideName(entry.text?.split("\n", 1)[0] ?? "") === title);
   return block?.text ? parseRoles(block.text.split("\n").slice(1), team, data) : [];
 }
 

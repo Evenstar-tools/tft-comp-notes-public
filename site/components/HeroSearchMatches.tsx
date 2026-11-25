@@ -24,10 +24,10 @@ export function HeroSearchMatches({ query, units }: { query: string; units: Unit
 
   const matches = [
     ...aliases.map(({ unit, alias, label }) => <span className="hero-search-match" key={unit.id}>
-      <b>{label}</b> {alias} → {unit.name}
+      <span className="sr-only">{label}匹配 </span>{alias} → <strong>{unit.name}</strong>
     </span>),
     ...traits.map(trait => <div className="hero-search-match" key={trait.id}>
-      <a href={traitLibraryLink(trait.id)}>{trait.name}羁绊</a>
+      <a href={traitLibraryLink(trait.id)} aria-label={"查看" + trait.name + "羁绊"}>{trait.name}</a>
       {traits.length === 1 && trait.thresholds.map(tier => <a key={tier} href={traitLibraryLink(trait.id, tier)}
         aria-label={trait.name + " " + tier + (trait.countMode === "stars" ? "星" : "档") + "战绩"}>
         {tier}{trait.countMode === "stars" ? "星" : "档"}

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { buildCompTrendModel } from "../domain/comp-trends.ts";
+import { buildCompTrendModel, selectTrendWindow } from "../domain/comp-trends.ts";
 
 // Fixed samples keep the scope and continuity checks stable as production archives roll forward.
 const oldBatches = [
@@ -38,7 +38,7 @@ const season = { id: archive.seasonId, units: [{ id: "jhin", cost: 4, image: "/a
 const boards = new Map([[classical.sectionId, new Set([classical.teamId])]]);
 const build = (history, edition = season, active) => buildCompTrendModel(history, edition, boards, active);
 
-test("the archived Classical Jhin track opens its board and breaks across the 427 to 428 change", () => {
+test("the Classical Jhin track keeps both samples across the 427 to 428 change and excludes their delta", () => {
   const first428 = archive.batches.findIndex(batch => Number(batch.model) === 428);
   assert.ok(first428 > 0);
   const batches = archive.batches.slice(0, first428 + 1);
@@ -62,13 +62,14 @@ test("the archived Classical Jhin track opens its board and breaks across the 42
   assert.deepEqual(build({ ...archive, batches: [...batches, revisit] }).patches.map(patch => patch.label), [latest.patch + " 实装"]);
 });
 
-test("a missing sample starts a new segment and the following comparable batch resumes the delta", () => {
+test("a missing sample rules out the delta until the following comparable batch", () => {
   const batches = archive.batches.filter(batch => Number(batch.model) === 427).slice(0, 4).map((batch, index) => ({
     ...batch, capturedAt: new Date(Date.UTC(2026, 10, 18 + index, 12)).toISOString(),
   }));
   assert.equal(batches.length, 4);
-  const series = { ...classical, points: classical.points.filter(point => point.batchId !== batches[1].id) };
+  const series = { ...classical, name: "四炫酷德莱文", points: classical.points.filter(point => point.batchId !== batches[1].id) };
   const partial = build({ ...archive, batches: batches.slice(0, 3), series: [series] }).tracks[0];
+  assert.equal(partial.name, "四大触打击乐德莱文");
   assert.deepEqual(partial.points.map(point => point.at), [batches[0].capturedAt, batches[2].capturedAt]);
   assert.notEqual(partial.points[0].segment, partial.points[1].segment);
   assert.equal(partial.delta, undefined);
@@ -103,7 +104,7 @@ test("trend pick rate uses only the total player finishes of the same batch", ()
   assert.equal(build({ ...history, batches: [{ ...batches[0], totalFinishes: 1 }] }).tracks[0].points[0].pickRate, null);
 });
 
-test("a skipped date or a changed cluster leaves a break even when the patch is unchanged", () => {
+test("a skipped date or a changed cluster separates comparison segments even under the same patch", () => {
   const [before, after] = archive.batches;
   const history = { ...archive, batches: [before, { ...after, capturedAt: "2026-11-25T01:00:00Z" }] };
   const gap = build(history).tracks[0];
@@ -114,6 +115,17 @@ test("a skipped date or a changed cluster leaves a break even when the patch is 
     point.batchId === after.id ? { ...point, clusterId: "reassigned" } : point) };
   const changed = build({ ...history, batches: [before, { ...after, capturedAt: "2026-11-22T01:00:00Z" }], series: [series] }).tracks[0];
   assert.notEqual(changed.points[0].segment, changed.points[1].segment);
+});
+
+test("a patch change retains both observed points and excludes their delta", () => {
+  const [before, after] = archive.batches;
+  const first = { ...before, capturedAt: "2026-11-23T15:00:00Z", effectiveAt: "2026-11-23T10:00:00Z", build: "older", patch: "19.1a" };
+  const next = { ...after, capturedAt: "2026-11-24T15:00:00Z", effectiveAt: "2026-11-24T10:00:00Z", build: "newer", patch: "19.1b" };
+  const history = { ...archive, batches: [first, next], series: [classical] };
+  const track = build(history).tracks[0];
+  assert.deepEqual(track.points.map(point => point.at), [first.capturedAt, next.capturedAt]);
+  assert.notEqual(track.points[0].segment, track.points[1].segment);
+  assert.equal(track.delta, undefined);
 });
 
 test("a different edition or incompatible queue cannot appear as current trends", () => {
@@ -143,7 +155,9 @@ test("discoveries keep their observed batch dates and omit events without an arc
   for (const [index, event] of trend.discoveries.entries()) {
     const source = events.get(event.id);
     assert.equal(event.at, batches.get(source.batchId).capturedAt);
-    assert.equal(event.note, [batches.get(source.batchId).patch, source.reason, source.status].filter(Boolean).join(" · "));
+    assert.equal(event.patch, batches.get(source.batchId).patch);
+    assert.ok(event.reason);
+    assert.equal(event.status, source.status === "待交叉核对" ? "待复核" : source.status);
     if (index > 0) assert.ok(Date.parse(event.at) <= Date.parse(trend.discoveries[index - 1].at));
   }
 });
@@ -160,4 +174,38 @@ test("a repeated discovery from one model is shown once with its most recent obs
     ],
   });
   assert.deepEqual(trend.discoveries.map(event => [event.id, event.at]), [["latest-event", latest.capturedAt]]);
+});
+
+test("the trend chart spans the same observed dates for the ten latest-ranked comps", () => {
+  const dates = ["2026-11-21","2026-11-22","2026-11-23","2026-11-24","2026-11-25"];
+  const batches = dates.map((day, i) => ({ ...archive.batches[0], capturedAt: day + "T15:00:00Z", id: String(i) }));
+  const variants = ["四古典乐烬","爵士乐烬"];
+  const series = Array.from({ length: 13 }, (_, i) => ({
+    ...classical, id: String(i), teamId: String(i), name: variants[i] ?? "阵容" + i,
+    points: batches.flatMap((b, day) => (i === 0 && day > 2) || (i === 1 && day < 3) ? [] :
+      [{ ...classical.points[0], batchId: b.id, mean: 3 + i / 10 }]),
+  }));
+  const allBoards = new Map([[classical.sectionId, new Set(series.map(t => t.teamId))]]);
+  const history = { ...archive, batches, series, families: [{ name: "古典乐烬", members: ["1", "0"] }] };
+  const trend = buildCompTrendModel(history, season, allBoards);
+  const top = selectTrendWindow(trend.tracks, "top", trend.days, "mean");
+  assert.equal(top.tracks.length, 10);
+  assert.deepEqual(top.tracks, trend.tracks.slice(0, 10));
+  assert.deepEqual(top.days, trend.days);
+  const jhin = top.tracks.find(t => t.name === "古典乐烬");
+  assert.equal(jhin.points[0].board.name, variants[0]);
+  assert.equal(jhin.points.at(-1).board.name, variants[1]);
+  for (const track of top.tracks) {
+    assert.ok(track.points.some(p => p.at === top.days[0]));
+    assert.equal(track.points.at(-1).at, top.days.at(-1));
+  }
+});
+
+test("the high-cost filter includes seven-cost carries and begins on a shared metric observation", () => {
+  const days = ["a","b","c","d"];
+  const track = (cost, from) => ({ cost, points: days.slice(from).map(at => ({ at, mean: 4, pickRate: at === "b" ? null : 0.15 })) });
+  const five = track(5, 0), seven = track(7, 1);
+  const tracks = [five, seven, track(4, 0)];
+  assert.deepEqual(selectTrendWindow(tracks, "cost:5", days, "mean"), { tracks: [five, seven], days: days.slice(1) });
+  assert.deepEqual(selectTrendWindow(tracks, "cost:5", days, "pickRate"), { tracks: [five, seven], days: days.slice(2) });
 });

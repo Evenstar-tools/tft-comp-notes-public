@@ -1,0 +1,37 @@
+.medley-library { width: min(100%, 82rem); margin-inline: auto; padding: 20px 0 30px; min-width: 0; }
+.medley-back, .medley-source a { display: inline-flex; align-items: center; gap: 4px; }
+.medley-back { font-size: .82rem; }
+.medley-heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px 22px; margin-block: 12px 18px; }
+.medley-title { display: flex; align-items: center; gap: 8px; }
+.medley-title h1 { margin: 0; font-size: clamp(1.55rem, 3vw, 2.1rem); line-height: 1.2; }
+.medley-heading p { margin: 6px 0 0; color: var(--muted); font-size: .85rem; }
+.medley-fixed { display: flex; align-items: center; gap: 10px; padding: 7px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); }
+.medley-fixed p { display: grid; gap: 4px; margin: 0; }
+.medley-fixed strong { color: var(--text); }
+.medley-toolbar { display: flex; align-items: center; gap: 10px 14px; margin-block-end: 12px; }
+.medley-search { min-width: 0; display: flex; align-items: center; gap: 8px; padding: 0 12px; width: min(28rem, 100%); min-height: 40px; border: 1px solid var(--line); border-radius: 7px; background: var(--panel); color: var(--muted); }
+.medley-search:focus-within { border-color: var(--gold); }
+.medley-search svg { flex: none; }
+.medley-search input { width: 100%; min-width: 0; padding: 7px 0; border: 0; outline: none; color: var(--text); background: transparent; font: inherit; }
+.medley-count { color: var(--muted); font-size: .84rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.medley-library ul { list-style: none; margin: 0; padding: 0; }
+.medley-groups { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 21.5rem), 1fr)); gap: 10px; }
+.medley-group { padding: 11px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); min-width: 0; }
+.medley-group header { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-block-end: 8px; }
+.medley-group h2 { margin: 0; font-size: .92rem; }
+.medley-group header span { color: var(--muted); font-size: .75rem; white-space: nowrap; }
+.medley-roster { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); align-items: start; gap: 4px; }
+.medley-unit { display: grid; align-content: start; justify-items: center; padding: 3px 1px; border-radius: 5px; text-decoration: none; text-align: center; color: var(--text); gap: 4px; min-width: 0; }
+.medley-unit img { display: block; width: min(100%, 37px); height: auto; aspect-ratio: 1; object-fit: cover; border: 2px solid var(--unit-cost, var(--line)); border-radius: 6px; background: var(--raised); }
+.medley-unit span { font-size: .73rem; line-height: 1.25; overflow-wrap: anywhere; }
+.medley-unit:is(:hover, :focus-visible, [data-matched]) { color: var(--accent); background: var(--raised); }
+.medley-fixed .medley-unit { min-width: 43px; }
+.medley-empty { padding-block: 14px; color: var(--muted); }
+.medley-empty button { margin-inline-start: 6px; }
+.medley-source { display: flex; align-items: center; gap: 8px 15px; flex-wrap: wrap; margin-block-start: 16px; color: var(--muted); font-size: .8rem; }
+.medley-source a { color: var(--accent); }
+@media (max-width: 460px) {
+  .medley-heading { margin-block-end: 12px; }
+  .medley-fixed { padding: 4px 8px; }
+  .medley-group { padding-inline: 8px; }
+}

@@ -1,6 +1,7 @@
 import currentPatch from "@/data/current-patch.json";
 import initialRecommendations from "@/data/patch-recommendations.json";
 import type { Publication } from "@/domain/document";
+import { recommendationTier } from "@/domain/guide-family-stats";
 import { sectionTeams } from "@/domain/document-flow";
 import { getPublishedPatchRecommendations, type PatchRecommendationBatch } from "@/domain/patch-recommendations";
 import { sameEdition } from "@/domain/version-updates";
@@ -8,15 +9,20 @@ import { sameEdition } from "@/domain/version-updates";
 export function currentPatchRecommendations(publication: Publication | null): PatchRecommendationBatch | undefined {
   const patch = currentPatch;
   if (!publication || !sameEdition(publication.season.id, patch.seasonId)) return;
-  const published = getPublishedPatchRecommendations(publication.sections, patch.seasonId, patch.build, patch.effectiveAt);
   const initial = initialRecommendations as PatchRecommendationBatch | null;
-  if (published.declared) {
-    const displayOrder = initial?.seasonId === patch.seasonId && initial.build === patch.build ? initial.displayOrder : undefined;
-    return published.batch && { ...published.batch, displayOrder };
-  }
-  if (!initial || initial.seasonId !== patch.seasonId || initial.build !== patch.build ||
-    !(Date.parse(initial.reviewedAt) >= Date.parse(patch.effectiveAt))) return;
+  const published = getPublishedPatchRecommendations(publication.sections, patch.seasonId, patch.build, patch.effectiveAt);
+  const patchStart = Date.parse(patch.effectiveAt);
+  const defaults = initial && initial.seasonId === patch.seasonId && initial.build === patch.build &&
+    Date.parse(initial.reviewedAt) >= patchStart ? initial : undefined;
+  const batch = published.declared ? published.batch : defaults;
+  if (!batch) return;
   const boardsByGuide = new Map(publication.sections.map(guide => [guide.id, new Set(sectionTeams(guide).map(team => team.id))]));
-  const entries = initial.entries.filter(record => boardsByGuide.get(record.sectionId)?.has(record.teamId));
-  return { ...initial, entries, ...(entries.length !== initial.entries.length && { summary: undefined }) };
+  const entries = batch.entries.filter(record => boardsByGuide.get(record.sectionId)?.has(record.teamId));
+  const fixedBoardRecommendations = defaults?.fixedBoardRecommendations?.filter(record =>
+    boardsByGuide.get(record.sectionId)?.has(record.teamId) &&
+    Date.parse(record.checkedAt) >= patchStart && recommendationTier(record) === "recommended" &&
+    !entries.some(entry => entry.sectionId === record.sectionId && entry.teamId === record.teamId &&
+      (entry.status === "avoid" || entry.status === "review")));
+  return { ...batch, displayOrder: defaults?.displayOrder, fixedBoardRecommendations, entries,
+    ...(entries.length !== batch.entries.length && { summary: undefined }) };
 }

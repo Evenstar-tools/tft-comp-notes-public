@@ -1,10 +1,10 @@
 import { attachBoundRegions, duplicatePublishedTeam, isBoardCaption, readableSection, sectionTeams, splitSections } from "@/domain/document-flow";
-import { season, traitMap, unitMap } from "@/data";
+import { itemMap, season, traitMap, unitMap } from "@/data";
 import { allBlocks, authoredParagraphs, guideSectionWithCurrentNames, isEditorialSection } from "@/domain/guide-reading";
 import { guideExecutionUnitIds } from "@/domain/guide-execution";
 import { isVersionUpdate, sameEdition } from "@/domain/version-updates";
 import { getPublishedPatchRecommendations, sectionsAfterPartialPublish } from "@/domain/patch-recommendations";
-import { publishedBoardLayouts } from "@/domain/published-board-layout";
+import { publishedBoardEdits, publishedBoardLayouts } from "@/domain/published-board-layout";
 import currentPatch from "@/data/current-patch.json";
 import type {
   ContentBlock,
@@ -16,6 +16,7 @@ import type { Season, Team } from "@/domain/types";
 import { database, setting, ApiError } from "./access";
 import { includeWebDetails, refreshWebDetails } from "./guide-details";
 import { includeRerollBoards } from "./reroll-guides";
+import { mergeClassicalJhin } from "./classical-jhin";
 import {
   blockText,
   cacheMedia,
@@ -43,7 +44,7 @@ export async function livePublication(): Promise<Publication | null> {
 export async function publicGuidePublication(): Promise<Publication | null> {
   const publication = await publishedSnapshot();
   if (!publication) return null;
-  const prepared = await prepareForReading(includeRerollBoards(publication, season));
+  const prepared = await prepareForReading(mergeClassicalJhin(includeRerollBoards(publication, season)));
   return {
     ...prepared,
     sections: prepared.sections.map(section => (section.gameData?.id ?? prepared.season.id).startsWith("s19-") &&
@@ -93,14 +94,16 @@ function withGameData(section: Section, data: Season): Section {
   const teams = sectionTeams(section);
   if (!teams.length) return section;
   const snapshot = section.gameData ?? data;
-  const pieces = teams.flatMap(team => [team, ...Object.values(team.stages ?? {})].flatMap(board => board.pieces));
+  const pieces = teams.flatMap(team => [team, ...Object.values(team.stages ?? {})].flatMap(board => board.pieces))
+    .flatMap(piece => piece.alternate ? [piece, piece.alternate] : [piece]);
+  const conditions = teams.flatMap(team => (team.conditions ?? []).filter(rule => "itemId" in rule));
   const unitIds = new Set(pieces.map(piece => piece.unitId));
   const currentEdition = sameEdition(snapshot.id, season.id);
   const executionUnits = currentEdition ? guideExecutionUnitIds(section.id, teams) : [];
   const availableUnits = new Map(snapshot.units.map(unit => [unit.id, unit]));
-  for (const id of executionUnits) {
+  for (const id of [...unitIds, ...executionUnits, ...conditions.map(rule => rule.recipientId)]) {
     unitIds.add(id);
-    const current = unitMap.get(id);
+    const current = currentEdition && unitMap.get(id);
     if (current && !availableUnits.has(id)) availableUnits.set(id, current);
   }
   const units = [...availableUnits.values()].filter(unit => unitIds.has(unit.id)).map(unit => {
@@ -111,8 +114,14 @@ function withGameData(section: Section, data: Season): Section {
   const itemIds = new Set(pieces.flatMap(piece => piece.items));
   const available = new Map((snapshot.sourceDate === data.sourceDate ? data.items : []).map(item => [item.id, item]));
   for (const item of snapshot.items) available.set(item.id, item);
+  for (const rule of conditions) {
+    for (const id of rule.replaces ? [rule.itemId, rule.replaces] : [rule.itemId]) {
+      itemIds.add(id);
+    }
+  }
   for (const id of [...itemIds]) {
-    const item = available.get(id);
+    const item = available.get(id) ?? (currentEdition ? itemMap.get(id) : undefined);
+    if (item && !available.has(id)) available.set(id, item);
     if (item?.traitId) traitIds.add(item.traitId);
     for (const part of item?.components ?? []) itemIds.add(part);
   }
@@ -242,12 +251,15 @@ export async function synchronizeDocument() {
     content: normalize(block.block_id),
   })));
   const bindingRows = await database()
-    .prepare("SELECT settings.value FROM teams JOIN settings ON settings.key='binding:' || teams.id")
-    .all<{ value: string }>();
+    .prepare("SELECT settings.value, teams.body FROM teams JOIN settings ON settings.key='binding:' || teams.id")
+    .all<{ value: string; body: string }>();
   const bindings: { sectionId: string; textId: string; imageId: string; team: Team }[] = [];
   for (const row of bindingRows.results) {
     const binding = JSON.parse(row.value);
-    if (binding.team) bindings.push(binding);
+    const team = JSON.parse(row.body) as Team;
+    if (binding.team) bindings.push(team.conditions === undefined
+      ? binding
+      : { ...binding, team: { ...binding.team, conditions: team.conditions } });
   }
   const sectionIssues: NonNullable<DocumentDraft["sectionIssues"]> = [];
   attachBoundRegions(sections, bindings, issue => sectionIssues.push(issue)).forEach(warning => warnings.add(warning));
@@ -336,6 +348,8 @@ export async function publishSections(
   };
   const boardLayouts = publishedBoardLayouts(combined, previous?.boardLayouts);
   if (boardLayouts.length) publication.boardLayouts = boardLayouts;
+  const boardEdits = publishedBoardEdits(combined, previous?.boardEdits);
+  if (boardEdits.length) publication.boardEdits = boardEdits;
   await installPublication(publication, draftId);
   return publication;
 }

@@ -26,7 +26,7 @@ export const patchReferences: PatchReference[] = [
     groups: {
       "解锁": [
         { name: "薇恩", unit: "vayne", aliases: ["VN"], guides: ["sample-block-0338", "sample-block-0407"],
-          values: [["七级及以上", "激活摇滚恶魔出战 3 回合", "摇滚恶魔或花式射手的不同名弈子合计 5 星"]] },
+          values: [["七级及以上", "激活摇滚恶魔出战 3 回合", "摇滚恶魔或花式射手的不同名弈子合计 5 星"]] },
         { name: "莫德凯撒", unit: "mordekaiser", aliases: ["铁男"], guides: ["sample-block-0219"],
           values: [["五杀乐队不同名弈子星级总和", "10 星", "9 星"]] },
       ],

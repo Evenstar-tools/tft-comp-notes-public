@@ -1,7 +1,7 @@
 import { season, unitMap } from "@/data";
 import { traitCounts, traitLines, usedPopulation } from "@/domain/team";
 import type { Team } from "@/domain/types";
-import { boardInstruments, boardMarkerNote } from "@/domain/board-instruments";
+import { boardInstruments, boardMarkerNote, type BoardInstrument } from "@/domain/board-instruments";
 import { BOARD_WIDTH, HEX_WIDTH, HEX_HEIGHT, HEX_POINTS, STAR_PATH, hexPosition } from "@/domain/board-layout";
 const colors: Record<number, string> = {
   1: "#9ba4b7",
@@ -60,25 +60,38 @@ export function drawBoardStars(ctx: CanvasRenderingContext2D, count: number, x: 
   }
   ctx.restore();
 }
-export function drawBoardInstrument(ctx: CanvasRenderingContext2D, name: string, image: HTMLImageElement | null | undefined, x: number, y: number, width: number, height: number) {
+export function drawBoardInstrument(ctx: CanvasRenderingContext2D, instrument: BoardInstrument, image: HTMLImageElement | null | undefined, x: number, y: number, width: number, height: number) {
+  const summon = instrument.id === "infernalIdol";
   ctx.save();
   hexPath(ctx, x, y, width, height);
   ctx.fillStyle = "#243942";
   ctx.fill();
-  ctx.lineWidth = Math.max(1, width * .019);
-  ctx.strokeStyle = "#78b8b3";
-  ctx.stroke();
   const center = x + width / 2;
-  if (image) {
+  if (image && summon) {
+    ctx.save();
+    ctx.clip();
+    drawCover(ctx, image, x - width * .24, y - height * .08, width * 1.32, height * 1.32);
+    ctx.restore();
+  } else if (image) {
     const scale = Math.min(width * .68 / image.naturalWidth, height * .48 / image.naturalHeight);
     const w = image.naturalWidth * scale, h = image.naturalHeight * scale;
     ctx.drawImage(image, center - w / 2, y + height * .43 - h / 2, w, h);
   }
+  ctx.lineWidth = Math.max(1, width * (summon ? .034 : .019));
+  ctx.strokeStyle = "#78b8b3";
+  ctx.stroke();
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   ctx.font = `bold ${Math.max(10, width * .175)}px "Microsoft YaHei", "PingFang SC", sans-serif`;
   ctx.fillStyle = "#effaf7";
-  ctx.fillText(name, center, y + height * (image ? .73 : .5), width * .9);
+  const nameY = y + height * (image ? .73 : .5);
+  if (summon) {
+    ctx.strokeStyle = "rgba(10, 13, 20, .92)";
+    ctx.lineWidth = Math.max(2, width * .032);
+    ctx.lineJoin = "round";
+    ctx.strokeText(instrument.name, center, nameY, width * .9);
+  }
+  ctx.fillText(instrument.name, center, nameY, width * .9);
   ctx.restore();
 }
 
@@ -116,7 +129,7 @@ export async function exportTeamImage(team: Team): Promise<Blob> {
     const x = 75 + point.x * scale, y = 140 + point.y * scale;
     const instrument = instruments.get(position);
     if (instrument) {
-      drawBoardInstrument(ctx, instrument.name, images.get(instrument.image), x, y, width, height);
+      drawBoardInstrument(ctx, instrument, images.get(instrument.image), x, y, width, height);
       continue;
     }
     hexPath(ctx, x, y, width, height);

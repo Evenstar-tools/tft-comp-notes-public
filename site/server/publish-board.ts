@@ -1,12 +1,13 @@
 import { season } from "@/data";
 import { sectionTeams } from "@/domain/document-flow";
 import { isEditorialSection } from "@/domain/guide-reading";
-import { applyBoardLayout, boardLayout, publishedBoardLayouts, sameBoardLayout } from "@/domain/published-board-layout";
+import { applyBoardLayout, boardLayout, publishedBoardContent, publishedBoardEdits, publishedBoardLayouts, sameBoardLayout, type PublishedBoardContent } from "@/domain/published-board-layout";
 import { sameEdition } from "@/domain/version-updates";
 import type { BoardSetup, PieceLoadout } from "@/domain/types";
 import { ApiError } from "./access";
 import { installPublication, publishedSnapshot } from "./publication";
 import { includeRerollBoards } from "./reroll-guides";
+import { validateBoard, validateTeamConditions } from "./validate-team";
 
 export async function editablePublishedBoard(publicationId: string, sectionId: string, teamId: string) {
   const publication = await publishedSnapshot();
@@ -28,11 +29,15 @@ function sameLoadout(first: PieceLoadout, second: PieceLoadout) {
     first.items.length === second.items.length && first.items.every((item, index) => item === second.items[index]);
 }
 
+function checkPositions({ pieces, instrumentPositions }: BoardSetup) {
+  const positions = [...pieces.map(piece => piece.position), ...Object.values(instrumentPositions ?? {})];
+  if (new Set(positions).size !== positions.length) throw new ApiError(400, "棋子或乐器占用了同一格");
+}
+
 export async function publishBoardPositions(publicationId: string, sectionId: string, submitted: BoardSetup & { id: string }) {
   const { publication, source, team } = await editablePublishedBoard(publicationId, sectionId, submitted.id);
+  checkPositions(submitted);
   const layout = boardLayout(submitted);
-  const positions = [...layout.pieces.map(piece => piece.position), ...Object.values(layout.instrumentPositions ?? {})];
-  if (new Set(positions).size !== positions.length) throw new ApiError(400, "棋子或乐器占用了同一格");
   const previousPieces = new Map(team.pieces.map(piece => [piece.instanceId, piece]));
   if (new Set(layout.pieces.map(piece => piece.instanceId)).size !== previousPieces.size ||
       submitted.pieces.length !== previousPieces.size || submitted.pieces.some((piece) => {
@@ -53,4 +58,28 @@ export async function publishBoardPositions(publicationId: string, sectionId: st
   };
   await installPublication(next);
   return { publicationId: next.id, team: applyBoardLayout(team, layout) };
+}
+
+export async function publishBoardFormation(publicationId: string, sectionId: string, submitted: PublishedBoardContent & { id: string }) {
+  const { publication, source, team } = await editablePublishedBoard(publicationId, sectionId, submitted.id);
+  if (!submitted.pieces.length) throw new ApiError(400, "棋盘至少需要一枚棋子");
+  validateBoard(submitted);
+  validateTeamConditions(submitted.conditions);
+  checkPositions(submitted);
+  const content = publishedBoardContent(submitted);
+  if (JSON.stringify(content) === JSON.stringify(publishedBoardContent(team))) return { publicationId, team };
+  const contents = publishedBoardEdits(publication.sections, publication.boardEdits)
+    .filter(edit => edit.sectionId !== sectionId || edit.teamId !== team.id);
+  const layouts = publishedBoardLayouts(publication.sections, publication.boardLayouts)
+    .filter(edit => edit.sectionId !== sectionId || edit.teamId !== team.id);
+  const next = {
+    ...publication,
+    id: crypto.randomUUID(),
+    previousId: publication.id,
+    publishedAt: new Date().toISOString(),
+    boardLayouts: layouts,
+    boardEdits: [...contents, { sectionId, teamId: team.id, source: publishedBoardContent(source), content }],
+  };
+  await installPublication(next);
+  return { publicationId: next.id, team: { ...team, ...content } };
 }

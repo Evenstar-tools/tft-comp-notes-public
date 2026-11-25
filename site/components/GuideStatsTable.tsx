@@ -55,7 +55,7 @@ export function GuideStatsTable({ rows, metric, direction, onSort }: {
     <thead role="rowgroup">
       <tr role="row">
         <th scope="col" role="columnheader">阵容</th>
-        <th scope="col" role="columnheader">棋盘成员</th>
+        <th scope="col" role="columnheader">核心棋子</th>
         {metrics.map(key => {
           const active = key === metric;
           const Icon = active ? (direction === "asc" ? ArrowUp : ArrowDown) : ArrowUpDown;

@@ -15,7 +15,7 @@ const referenceLinks = [
   ["/items", "装备"], ["/emblems", "转职"], ["/updates", "更新"],
 ] as const;
 const referenceGroups = [
-  { label: "棋子与羁绊", links: [referenceLinks[0], referenceLinks[1], ["/heroes?view=grid", "羁绊网"]] },
+  { label: "棋子与羁绊", links: [referenceLinks[0], referenceLinks[1], ["/heroes?view=grid", "羁绊网"], ["/traits/medley", "合奏组合"]] },
   { label: "装备与强化", links: [referenceLinks[3], referenceLinks[4], referenceLinks[2]] },
 ];
 
@@ -97,7 +97,7 @@ export function SiteNav() {
           <summary>资料<ChevronDown size={13} aria-hidden /></summary>
           <div className="task-menu-panel">
             {referenceGroups.map(group => <div key={group.label}><strong>{group.label}</strong>{group.links.map(([href, label]) => (
-              <a key={href} href={href} aria-current={!href.includes("?") && isCurrent(href) ? "page" : undefined}>{label}</a>
+              <a key={href} href={href} aria-current={!href.includes("?") && pathname === href ? "page" : undefined}>{label}</a>
             ))}</div>)}
             <div className="task-mobile-tools">
               <a href="/updates" aria-current={isCurrent("/updates") ? "page" : undefined}>版本更新</a>

@@ -1,10 +1,11 @@
 import { familyPickRate } from "./guide-family-stats.ts";
 import type { Season } from "./types";
+import { displayGuideName, displayTraitNames } from "./trait-names.mjs";
 
 export type TrendPoint = {
   at: string; games: number; mean: number; topFourRate: number; winRate: number;
   pickRate: number | null; totalFinishes?: number | null;
-  patch: string; build?: string; sourceUrl?: string; segment?: string;
+  patch: string; build?: string; sourceUrl?: string; segment?: string; board?: { name: string; href?: string };
 };
 export type TrendTrack = {
   id: string; name: string; href?: string; image?: string; cost?: number;
@@ -13,7 +14,7 @@ export type TrendTrack = {
 export type TrendPatch = { at: string; label: string; href?: string };
 export type TrendDiscovery = {
   id: string; name: string; at: string; kind: "新阵容" | "打法变化";
-  note: string; href?: string; games?: number; mean?: number;
+  patch: string; reason: string; status?: string; href?: string; games?: number; mean?: number;
 };
 export type CompTrendModel = {
   scope: string; note?: string; days: string[]; tracks: TrendTrack[]; patches: TrendPatch[]; discoveries: TrendDiscovery[];
@@ -38,9 +39,41 @@ type HistoryDiscovery = {
 export type CompTrendHistory = {
   version: number; seasonId: string; set: string; queue: string; scope: string; source: string; sourceUrl: string;
   batches: HistoryBatch[]; series: HistoryTrack[]; discoveries: HistoryDiscovery[];
+  families?: { name: string; members: string[] }[];
 };
 const dayMs = 86_400_000;
 const trendDay = (date: string) => Math.floor(Date.parse(date) / dayMs);
+
+export function selectTrendWindow(tracks: TrendTrack[], filter: string, days: string[], metric: "mean" | "pickRate" | "topFourRate" | "winRate") {
+  const latest = days.at(-1);
+  const change = (track: TrendTrack) => {
+    const last = track.points.at(-1)!;
+    const recent = track.points.slice(-4).filter(point => point.board?.name === last.board?.name);
+    return last.mean - recent[0].mean;
+  };
+  const candidates = tracks.filter(track => {
+    const point = track.points.at(-1);
+    if (!point || point.at !== latest || point[metric] === null) return false;
+    if (filter === "up") return change(track) < -0.005;
+    if (filter === "down") return change(track) > 0.005;
+    if (filter === "recommended") return track.recommended;
+    if (filter.startsWith("cost:")) return track.cost !== undefined && Math.min(track.cost, 5) === Number(filter.slice(5));
+    return true;
+  });
+  if (filter === "up") candidates.sort((a, b) => change(a) - change(b));
+  if (filter === "down") candidates.sort((a, b) => change(b) - change(a));
+  // Compare from an observed date shared by the selected curves. Never extend a
+  // new comp backwards, or silently replace a better comp just to fill the chart.
+  const limit = filter === "recommended" ? 6 : 10;
+  const eligible = candidates.filter(track => track.points.some(point => point.at !== latest && point[metric] !== null));
+  const selected = eligible.slice(0, limit);
+  if (!selected.length) return { tracks: candidates.slice(0, limit), days: days.slice(-1) };
+  const observed = selected.map(track => new Set(track.points.filter(point => point[metric] !== null).map(point => point.at)));
+  const previous = days.slice(0, -1);
+  const counts = previous.map(day => observed.filter(dates => dates.has(day)).length);
+  const start = counts.indexOf(Math.max(...counts));
+  return { tracks: selected.filter((_, index) => observed[index].has(previous[start])), days: days.slice(start) };
+}
 
 function era(edition: string) {
   return /^s\d+-(?:pbe|live)(?=-|$)/i.exec(edition)?.[0]?.toLowerCase();
@@ -89,7 +122,8 @@ export function buildCompTrendModel(history: CompTrendHistory, season: Season, b
       if (!sample || !qualified(sample)) continue;
       const day = trendDay(batch.capturedAt);
       const scope = [batch.patch, batch.build, batch.model, batch.windowDays, sample.clusterId].join("|");
-      if (index !== previousIndex + 1 || day !== previousDay + 1 || scope !== previousScope) segment += 1;
+      const adjacent = index === previousIndex + 1 && day === previousDay + 1;
+      if (!adjacent || scope !== previousScope) segment += 1;
       previousIndex = index;
       previousDay = day;
       previousScope = scope;
@@ -107,11 +141,30 @@ export function buildCompTrendModel(history: CompTrendHistory, season: Season, b
     const currentPoint = current ? pointIndex.get(latest.id) : undefined;
     const carry = series.carryIds.map(id => unitIndex.get(id)).find(unit => unit !== undefined);
     return [{
-      id: series.id, name: series.name, href, image: carry?.image, cost: carry?.cost, points, delta,
+      id: series.id, name: displayGuideName(series.name), href, image: carry?.image, cost: carry?.cost, points, delta,
       recommended: current && active?.build === latest.build && now.mean <= 4.5,
       recommendedKey: currentPoint?.clusterId === undefined ? undefined : String(currentPoint.clusterId),
     }];
-  }).sort((a, b) => {
+  });
+  for (const family of history.families ?? []) {
+    // Members are explicitly curated variants. Each day retains one real board and its own sample.
+    const members = family.members.flatMap(id => tracks.find(track => track.id === id) ?? []);
+    if (members.length < 2) continue;
+    const daily = new Map<string, TrendPoint>();
+    for (const member of members) {
+      for (const point of member.points) {
+        if (!daily.has(point.at)) daily.set(point.at, { ...point, board: { name: member.name, href: member.href } });
+      }
+    }
+    const points = [...daily.values()].sort((a, b) => a.at.localeCompare(b.at));
+    const last = points.at(-1)!;
+    const current = members.find(member => member.points.some(point => point.at === last.at))!;
+    for (const member of members) tracks.splice(tracks.indexOf(member), 1);
+    const previous = points.at(-2);
+    tracks.push({ ...current, id: family.members[0], name: family.name, points,
+      delta: previous?.board?.href === last.board?.href && previous?.at === current.points.at(-2)?.at ? current.delta : undefined });
+  }
+  tracks.sort((a, b) => {
     const ap = a.points[a.points.length - 1], bp = b.points[b.points.length - 1];
     return Date.parse(bp.at) - Date.parse(ap.at) || ap.mean - bp.mean || bp.games - ap.games || a.id.localeCompare(b.id);
   });
@@ -146,15 +199,23 @@ export function buildCompTrendModel(history: CompTrendHistory, season: Season, b
     seenEvents.add(key);
     const local = event.sectionId && guideHref(event.sectionId, event.teamId, boards);
     return [{
-      id: event.id, name: event.name, at: entry.batch.capturedAt,
+      id: event.id, name: displayGuideName(event.name), at: entry.batch.capturedAt,
       kind: event.kind === "change" ? "打法变化" : "新阵容",
-      note: [entry.batch.patch, event.reason, event.status].filter(Boolean).join(" · "), games: event.games, mean: event.mean,
+      patch: entry.batch.patch,
+      reason: displayTraitNames(event.reason ?? "")
+        .replace("尚未关联攻略，核对是否补变阵", "未收录")
+        .replace("历史攻略关联待复核", "旧攻略关联")
+        .replaceAll("代表棋盘有变", "代表棋盘变化")
+        .replaceAll("代表配装分工有变", "配装变化")
+        .replaceAll("搜牌节奏有变", "搜牌节奏变化"),
+      status: event.status === "待交叉核对" ? "待复核" : event.status,
+      games: event.games, mean: event.mean,
       href: local || event.href || entry.batch.sourceUrl || history.sourceUrl,
     }];
   });
   const scope = [history.source, currentEra.replace("-", " ").toUpperCase(), "近 " + latest.windowDays + " 天滚动样本"].join(" · ");
   return {
     scope, days: batches.map(batch => batch.capturedAt), tracks, patches, discoveries,
-    note: "每天取最后一批快照。滚动样本可能重叠，换补丁、分组或缺数时断开。",
+    note: "出场率按同批玩家结算计算。曲线从所选阵容都有实测的日期开始，古典乐烬按当日构筑取样。涨跌比较近四个观测日内同构筑的均名。",
   };
 }

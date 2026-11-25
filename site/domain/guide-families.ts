@@ -68,7 +68,7 @@ function compatible(a: Board, b: Board) {
 }
 
 export function boardTitle(section: Section, team: Team, distinguish = false) {
-  if (team.id === "00000000-0000-4000-8000-000000000044") return "六保镖烈娜塔";
+  if (team.id === "00000000-0000-4000-8000-000000000044") return "六护卫烈娜塔";
   // These variants transfer the main carry's items, while the parent guide keeps its own headliner.
   if (team.id === "00000000-0000-4000-8000-000000000049") return "双电子女枪";
   if (team.id === "00000000-0000-4000-8000-000000000090") return "五离子金克丝";

@@ -170,12 +170,12 @@ export const UnitBrowser = memo(function UnitBrowser({
             ref={searchInput}
             type="search"
             aria-label="搜索英雄"
-            placeholder="英雄 / 外号 / 拼音 / 羁绊"
+            placeholder={explainSearch ? "搜英雄、外号、拼音或羁绊" : "英雄 / 外号 / 拼音 / 羁绊"}
             value={query}
             onChange={(event) => setQuery(event.target.value)}
           />
           <span className="search-count" aria-live="polite">
-            {units.length}/{season.units.length}
+            {explainSearch ? (filtered && units.length + " 个结果") : units.length + "/" + season.units.length}
           </span>
         </label>
         {showViewSwitch && !renderList && <div className="segmented" role="group" aria-label="英雄视图">
@@ -323,7 +323,8 @@ export const UnitBrowser = memo(function UnitBrowser({
             }}>重置筛选</button>}
           </div>
         ) : renderList ? renderList(units) : groups.length ? (
-          <div className={"unit-list-scroll" + (onTrayPick ? " editor-unit-tray" : "")} ref={listScroll}>
+          <div className={"unit-list-scroll" + (onTrayPick ? " editor-unit-tray" : "")}
+            data-compact-results={explainSearch && filtered && units.length <= 12 || undefined} ref={listScroll}>
             {groups.map((group) => {
               const cards = group.units.map(unit => (
                 <UnitCard

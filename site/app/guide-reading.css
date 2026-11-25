@@ -179,7 +179,8 @@ html[data-theme="dark"] .guide-placement.weak {color:#ff9ba3;}
 }
 .guide-board-options--compact > :not(.guide-phases,.guide-route-choices) {grid-column:1 / -1;}
 .reader-layout {display:grid;grid-template-columns:var(--guide-columns);grid-template-rows:auto minmax(0,1fr);gap:0 var(--guide-column-gap);align-items:start;margin-top:14px;}
-.reader-play,.reader-support,.guide-gear {min-width:0;}
+.reader-play,.reader-support,.guide-sidebar,.guide-gear {min-width:0;}
+.guide-sidebar {grid-column:2;grid-row:1 / -1;display:grid;gap:10px;}
 .reader-support {grid-column:1;}
 .reader-board-title {display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;}
 .guide-reader :is(.reader-play,.guide-gear) h3 {margin:0;font-size:1.1875rem;font-weight:650;line-height:1.4;}
@@ -313,7 +314,7 @@ html[data-theme="dark"] .guide-placement.weak {color:#ff9ba3;}
 .read-board .board-hex:disabled {opacity:1;cursor:default;}
 .read-board .board-hex:not(.is-filled,.has-instrument) .board-surface {inset:1px;}
 .read-board .board-hex:disabled:not(.has-instrument):hover .board-surface {background:var(--board-cell);}
-.read-board .board-hex.is-filled .board-surface {inset:clamp(1.6px,.52cqw,3.2px);}
+.read-board .board-hex:is(.is-filled,.is-summon) .board-surface {inset:clamp(1.6px,.52cqw,3.2px);}
 .read-board .board-avatar img {position:absolute;inset:0;}
 .read-board .board-avatar::after {
   background:linear-gradient(180deg,#10101d40,transparent 25% 48%,#0b0b1830 56%,#0b0b18df 83%,#10101dee);
@@ -388,7 +389,7 @@ html[data-theme="dark"] .guide-placement.weak {color:#ff9ba3;}
 .guide-actions a {display:inline-flex;align-items:center;min-height:36px;padding-block:3px;text-decoration:underline;text-underline-offset:4px;}
 .guide-actions {font-size:.9375rem;}
 .preview-choices summary {cursor:pointer;}
-.guide-gear {grid-column:2;grid-row:1 / -1;padding-inline-start:20px;border-inline-start:1px solid var(--line);font-size:1rem;}
+.guide-gear {padding-inline-start:20px;border-inline-start:1px solid var(--line);font-size:1rem;}
 .guide-gear-heading {display:flex;align-items:center;justify-content:space-between;gap:8px;}
 .guide-gear-name-toggle {display:inline-flex;align-items:center;gap:6px;min-height:44px;padding-inline:4px;cursor:pointer;color:var(--muted);font-size:.875rem;}
 .guide-gear-name-toggle input {accent-color:var(--accent);width:15px;height:15px;margin:0;}

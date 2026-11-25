@@ -65,6 +65,9 @@ def public_snapshot(live, aliases):
         raise ValueError('Expected one nonempty published snapshot, not a draft or API envelope.')
     snapshot = {key: live[key] for key in fields}
     snapshot.update(media=[], warnings=[])
+    for key in ('boardLayouts', 'boardEdits'):
+        if live.get(key):
+            snapshot[key] = live[key]
     for section in snapshot['sections']:
         regions = section.pop('generatedRegions', {})
         section.pop('sourceHeadingIds', None)
@@ -73,7 +76,11 @@ def public_snapshot(live, aliases):
     serialized = json.dumps(redact_links(snapshot), ensure_ascii=False, separators=(',', ':'))
     if PRIVATE_TEXT.search(serialized):
         raise ValueError('Review possible sensitive content in the published snapshot before releasing.')
-    return remap_ids(serialized, aliases) + '\n'
+    remapped = json.loads(remap_ids(serialized, aliases))
+    for record in remapped.get('boardLayouts', []):
+        for key in ('source', 'layout'):
+            record[key]['pieces'].sort(key=lambda piece: piece['instanceId'])
+    return json.dumps(remapped, ensure_ascii=False, separators=(',', ':')) + '\n'
 
 
 def main():

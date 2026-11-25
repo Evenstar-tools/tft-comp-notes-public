@@ -1,6 +1,6 @@
 import type { Publication, Section } from "./document";
 import { sectionTeams } from "./document-flow.ts";
-import type { BoardSetup, Piece, Team } from "./types";
+import type { BoardSetup, Piece, PieceLoadout, Team } from "./types";
 
 export type BoardLayout = {
   pieces: Pick<Piece, "instanceId" | "unitId" | "position">[];
@@ -13,6 +13,54 @@ export type PublishedBoardLayout = {
   source: BoardLayout;
   layout: BoardLayout;
 };
+
+export type PublishedBoardContent = BoardSetup & Pick<Team, "conditions">;
+
+export type PublishedBoardEdit = {
+  sectionId: string;
+  teamId: string;
+  source: PublishedBoardContent;
+  content: PublishedBoardContent;
+};
+
+function loadout({ instanceId, unitId, stars, items }: PieceLoadout): PieceLoadout {
+  return { instanceId, unitId, stars, items };
+}
+
+export function publishedBoardContent({ pieces, instrumentPositions, conditions }: PublishedBoardContent): PublishedBoardContent {
+  return {
+    pieces: pieces.map(piece => ({
+      ...loadout(piece), position: piece.position, alternate: piece.alternate && loadout(piece.alternate),
+    })).sort((a, b) => a.position - b.position),
+    instrumentPositions: Object.keys(instrumentPositions ?? {}).length ? instrumentPositions : undefined,
+    conditions,
+  };
+}
+
+export function publishedBoardEdits(sections: Section[], edits?: PublishedBoardEdit[]) {
+  return (edits ?? []).filter(({ sectionId, teamId, source }) => {
+    const section = sections.find(entry => entry.id === sectionId);
+    const team = section && sectionTeams(section).find(entry => entry.id === teamId);
+    return team && JSON.stringify(publishedBoardContent(team)) === JSON.stringify(source);
+  });
+}
+
+export function applyPublishedBoardEdits(source: Publication, rendered: Publication): Publication {
+  const edits = publishedBoardEdits(source.sections, source.boardEdits);
+  if (!edits.length) return rendered;
+  return {
+    ...rendered,
+    sections: rendered.sections.map(section => {
+      const byTeam = new Map(edits.filter(edit => edit.sectionId === section.id).map(edit => [edit.teamId, edit.content]));
+      if (!byTeam.size) return section;
+      const replace = (team: Team) => {
+        const content = byTeam.get(team.id);
+        return content ? { ...team, ...content, instrumentPositions: content.instrumentPositions, conditions: content.conditions } : team;
+      };
+      return { ...section, team: section.team && replace(section.team), teams: section.teams?.map(replace) };
+    }),
+  };
+}
 
 export function boardLayout({ pieces, instrumentPositions }: BoardSetup): BoardLayout {
   return {

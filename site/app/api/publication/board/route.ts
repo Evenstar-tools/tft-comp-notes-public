@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { ApiError, apiError, requireOwner } from "@/server/access";
-import { editablePublishedBoard, publishBoardPositions } from "@/server/publish-board";
+import { editablePublishedBoard, publishBoardFormation, publishBoardPositions } from "@/server/publish-board";
+import { teamBoardSchema, teamConditionsSchema } from "@/server/validate-team";
 
 const position = z.number().int().min(0).max(27);
 const identifier = z.string().min(1).max(100);
@@ -27,6 +28,10 @@ const submission = z.object({
 
 const headers = { "Cache-Control": "no-store" };
 
+const formation = submission.extend({
+  team: teamBoardSchema.extend({ id: identifier, conditions: teamConditionsSchema }),
+});
+
 export async function GET(request: Request) {
   try {
     await requireOwner(request);
@@ -47,6 +52,18 @@ export async function POST(request: Request) {
     if (!parsed.success) throw new ApiError(400, "棋盘格式不正确");
     const { publicationId, sectionId, team } = parsed.data;
     return Response.json(await publishBoardPositions(publicationId, sectionId, team), { headers });
+  } catch (error) {
+    return apiError(error);
+  }
+}
+
+export async function PUT(request: Request) {
+  try {
+    await requireOwner(request);
+    const parsed = formation.safeParse(await request.json().catch(() => null));
+    if (!parsed.success) throw new ApiError(400, "棋盘格式不正确");
+    const { publicationId, sectionId, team } = parsed.data;
+    return Response.json(await publishBoardFormation(publicationId, sectionId, team), { headers });
   } catch (error) {
     return apiError(error);
   }

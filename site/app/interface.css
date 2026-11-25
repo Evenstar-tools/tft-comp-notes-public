@@ -33,7 +33,8 @@ body:has(.editor) .site-footer {display:none}
 .editor .editor-toolbar {display:flex;flex-wrap:nowrap;gap:12px;padding:0 0 12px;border:0;border-bottom:1px solid var(--line);flex:none}
 .editor .tb-group {display:flex;align-items:center;gap:5px;min-width:0}
 .editor .tb-identity {flex:1;gap:10px}
-.editor .team-name-input {width:clamp(180px,20vw,300px);font-size:16px;font-weight:600;border-color:transparent;background:transparent;padding-left:0}
+.editor .team-name-input {min-width:0;width:clamp(180px,20vw,300px);font-size:16px;font-weight:600;border-color:transparent;background:transparent;padding-left:0}
+.editor .tb-identity .select-field {flex:none;max-width:clamp(7rem,45%,12rem)}
 .editor .team-name-input:hover,.editor .team-name-input:focus {border-color:var(--line);background:var(--surface-2);padding-left:10px}
 .editor .save-state {display:flex;gap:6px;align-items:center;font-size:12px;color:var(--text-2);white-space:nowrap}
 .editor .save-state i {width:5px;height:5px;border-radius:50%;background:currentColor}
@@ -57,7 +58,7 @@ body:has(.editor) .site-footer {display:none}
 .editor .board-hex {padding:0;border:0;border-radius:0;min-height:0;background:none}
 .editor .board-hex::before {background:var(--unit-cost,var(--board-edge))}
 .editor .board-surface {background:var(--board-cell)}
-.editor .board-hex.is-filled .board-surface {inset:2px}
+.editor .board-hex:is(.is-filled,.is-summon) .board-surface {inset:2px}
 .editor .board.is-targeting .board-hex:not(.is-filled)::before {background:color-mix(in srgb,var(--accent) 40%,transparent)}
 .editor .board-hex:not(.is-filled):hover .board-surface,.editor .board-hex[data-drop-target] .board-surface {background:var(--board-hover)}
 .editor .board-hex[data-drop-target] .board-selection {color:var(--selection-ring)}
@@ -360,7 +361,7 @@ body:has(.editor) .site-footer {display:none}
 }
 @media(max-width:1099px) {
   .editor .workspace {grid-template-columns:minmax(0,1fr) 300px}
-  .editor .tb-identity {flex-wrap:wrap}
+  .editor .tb-identity {flex:1 0 100%;flex-wrap:nowrap}
   .editor .board-layout {grid-template-columns:140px minmax(0,1fr);gap:10px}
   .editor .panel-hint {display:none}
   .editor .unit-list-scroll {max-height:480px}
@@ -372,7 +373,6 @@ body:has(.editor) .site-footer {display:none}
   .editor .editor-toolbar {flex-wrap:wrap;gap:8px;padding-bottom:12px}
   .editor .tb-identity {flex:1 1 100%;flex-wrap:nowrap;gap:6px}
   .editor .team-name-input {flex:1;width:130px;font-size:16px}
-  .editor .tb-identity .select-field {max-width:88px}
   .editor .save-state {font-size:12px}
   .editor .tb-group {gap:3px}
   .editor .tb-menus {flex:1;justify-content:center;gap:4px}
@@ -614,6 +614,5 @@ body:has(.editor) .site-footer {display:none}
 @media (max-width:760px) {
   .editor .editor-toolbar {display:grid;grid-template-columns:minmax(0,1fr) auto;}
   .editor .editor-toolbar .tb-identity {grid-column:1/-1;min-width:0;}
-  .editor .team-name-input {min-width:0;}
   .editor .tb-menus {justify-content:flex-start;}
 }

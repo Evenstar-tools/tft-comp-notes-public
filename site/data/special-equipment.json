@@ -1404,8 +1404,8 @@
   ],
   "recipes": {
     "emblem-arcanist": {
-      "name": "黑魔法师纹章",
-      "description": "携带者获得【黑魔法师】羁绊。",
+      "name": "法师纹章",
+      "description": "携带者获得【法师】羁绊。",
       "stats": [
         {
           "label": "法术加成",
@@ -1419,8 +1419,8 @@
       "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
     },
     "emblem-bodyguard": {
-      "name": "保镖纹章",
-      "description": "携带者获得【保镖】羁绊。",
+      "name": "护卫纹章",
+      "description": "携带者获得【护卫】羁绊。",
       "stats": [
         {
           "label": "护甲",
@@ -1438,8 +1438,8 @@
       "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
     },
     "emblem-rock": {
-      "name": "摇滚乐纹章",
-      "description": "携带者获得【摇滚乐】羁绊。",
+      "name": "摇滚恶魔纹章",
+      "description": "携带者获得【摇滚恶魔】羁绊。",
       "stats": [
         {
           "label": "生命值",
@@ -1461,8 +1461,8 @@
       "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
     },
     "emblem-frontman": {
-      "name": "泰坦纹章",
-      "description": "携带者获得【泰坦】羁绊。",
+      "name": "主唱纹章",
+      "description": "携带者获得【主唱】羁绊。",
       "stats": [
         {
           "label": "生命值",
@@ -1503,8 +1503,8 @@
       "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
     },
     "emblem-hitmaker": {
-      "name": "金曲制作人纹章",
-      "description": "携带者获得【金曲制作人】羁绊。",
+      "name": "音乐制作人纹章",
+      "description": "携带者获得【制作人】羁绊。",
       "stats": [
         {
           "label": "物理加成",
@@ -1518,8 +1518,8 @@
       "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
     },
     "emblem-illbeats": {
-      "name": "酷炫节拍纹章",
-      "description": "携带者获得【酷炫节拍】羁绊。",
+      "name": "大触打击乐纹章",
+      "description": "携带者获得【大触打击乐】羁绊。",
       "stats": [
         {
           "label": "护甲",
@@ -1587,8 +1587,8 @@
       "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
     },
     "emblem-slayer": {
-      "name": "裁决战士纹章",
-      "description": "携带者获得【裁决战士】羁绊。",
+      "name": "舞者纹章",
+      "description": "携带者获得【舞者】羁绊。",
       "stats": [
         {
           "label": "物理加成",
@@ -1606,8 +1606,8 @@
       "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
     },
     "emblem-beach-pop": {
-      "name": "海洋之歌纹章",
-      "description": "携带者获得【海洋之歌】羁绊。",
+      "name": "海之歌纹章",
+      "description": "携带者获得【海之歌】羁绊。",
       "stats": [
         {
           "label": "生命值",
@@ -1625,8 +1625,8 @@
       "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
     },
     "emblem-pentakill": {
-      "name": "五杀摇滚纹章",
-      "description": "携带者获得【五杀摇滚】羁绊。",
+      "name": "五杀乐队纹章",
+      "description": "携带者获得【五杀乐队】羁绊。",
       "stats": [
         {
           "label": "生命值",
@@ -1686,8 +1686,8 @@
       "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
     },
     "emblem-swiftstriker": {
-      "name": "迅捷攻手纹章",
-      "description": "携带者获得【迅捷攻手】羁绊。",
+      "name": "迅击鼓手纹章",
+      "description": "携带者获得【迅击鼓手】羁绊。",
       "stats": [
         {
           "label": "攻速",

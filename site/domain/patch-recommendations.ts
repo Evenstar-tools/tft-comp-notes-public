@@ -11,6 +11,21 @@ export type PatchRecommendation = {
   sources?: string[];
 };
 
+export type FixedBoardRecommendation = {
+  sectionId: string;
+  teamId: string;
+  name: string;
+  carryId: string;
+  checkedAt: string;
+  label: string;
+  note: string;
+  games: number;
+  mean: number;
+  topFourRate: number;
+  winRate: number;
+  url: string;
+};
+
 export type PatchRecommendationBatch = {
   seasonId: string;
   build: string;
@@ -18,6 +33,7 @@ export type PatchRecommendationBatch = {
   window?: { start: string; end: string };
   summary?: string;
   displayOrder?: string[];
+  fixedBoardRecommendations?: FixedBoardRecommendation[];
   entries: PatchRecommendation[];
 };
 
