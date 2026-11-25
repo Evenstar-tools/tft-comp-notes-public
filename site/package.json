@@ -14,7 +14,10 @@
     "db:generate": "drizzle-kit generate",
     "test": "node --experimental-strip-types --test tests/*.test.mjs",
     "verify:public": "node -e \"const {spawnSync}=require('node:child_process');const cands=process.platform==='win32'?[['py',['-3','-X','utf8']],['python',['-X','utf8']],['python3',['-X','utf8']]]:[['python3',[]],['python',[]]];for(const [cmd,pre] of cands){const r=spawnSync(cmd,[...pre,'scripts/verify-public-release.py'],{stdio:'inherit'});if(!r.error)process.exit(r.status??1);}console.error('Python 3 not found');process.exit(1);\"",
-    "check": "npm run typecheck && npm test && npm run verify:public"
+    "data:status": "node scripts/run-data-refresh.mjs --status",
+    "data:refresh": "node scripts/run-data-refresh.mjs",
+    "data:verify": "node scripts/run-data-refresh.mjs --verify",
+    "check": "npm run typecheck && npm test && npm run verify:public && npm run data:verify"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
