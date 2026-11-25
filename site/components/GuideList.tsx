@@ -19,6 +19,7 @@ import { usedPopulation } from "@/domain/team";
 import type { Section } from "@/domain/document";
 import type { Season, Team } from "@/domain/types";
 import { heroAugmentCategory, heroAugmentForGuide } from "@/domain/hero-augments";
+import { beijingDateTime } from "@/lib/beijing-time";
 import { homeGuideReturn } from "@/lib/home-position";
 import { guideNavigationChange, guideNavigationHref } from "@/domain/guide-navigation";
 import { HomeGuideBanner } from "./GuideNavigation";
@@ -81,16 +82,20 @@ const shortOpenings: Record<string, readonly [source: string, short: string]> = 
   "四大触打击乐德莱文": ["德莱文、布隆来得早，有青龙刀或无尽就走。前期两星韦鲁斯带输出装，两星俄洛伊带肉装。德莱文、布隆各自两星再接装，预留一张韦鲁斯和俄洛伊补羁绊。七级优先追德莱文和布隆，卡莎顺手留。", "德莱文、布隆来得早，有青龙刀或无尽就七级一起追三。"],
   "五杀天使": ["炸弹人带羊刀，纳尔带肉。七级上纳尔、奥拉夫、死歌、炸弹人开天使，八级天使、约里克两星接装。不同名五杀合计 9 星开铁男，没开先用乌鸦，开了换铁男，九级补回乌鸦。", "七级开天使，八级找天使和约里克两星。"],
   "双电子泽丽": ["速九跳九。高血高经济时，八级用现成打工盘过渡，直上九搜泽丽和蒙多。青龙刀、无尽先给芸阿娜，两星凯尔或卢锡安接装。优先两星泽丽；女枪先两星就上她和卢锡安。蒙多两星再接蕾欧娜的肉装。", "八级用现成打工盘过渡，存钱直上九找泽丽和蒙多。"],
-  "七海之歌扎克男枪": ["奥拉夫带男枪装，鳄鱼带两件肉装开艾希。七级上五个不同的海洋或主唱开扎克，塔里克只算一个。八级搜男枪、扎克，谁两星谁接装，留一张空装鳄鱼。", "七级凑五个不同的海之歌或主唱开扎克，八级找扎克、男枪两星。"],
+  "七海之歌扎克男枪": ["奥拉夫带男枪装，鳄鱼带两件肉装开艾希。七级上五个不同的海之歌或主唱开扎克，塔里克只算一个。八级搜男枪、扎克，谁两星谁接装，留一张空装鳄鱼。", "七级凑五个不同的海之歌或主唱开扎克，八级找扎克、男枪两星。"],
   "史密奇95": ["饮血、血手、泰坦先合给战士打工。八级先稳血，九级摆八个非唯一羁绊开史密奇。上限看两星主坦和先来的副 C。", "八级稳血，九级开八个非唯一羁绊解锁。"],
   "爵士乐史密奇": ["九级同时开出至少 8 个非唯一羁绊，确认解锁后再 D 史密奇。五杀线优先，烬先两星走四爵士，亚索早到走真伤。", "五杀优先，烬先两星走四爵士，亚索早到走真伤。"],
   "三爵士乐女枪泽丽": ["女枪或泽丽谁先二星谁先接装。第二套输出装和前排齐备再做双 C，有战士装且已开锁时，补史密奇从边路切进去。", "女枪或泽丽谁先两星谁接装，装备够再做双 C。"],
   "K/DA转芬妮": ["有 K/DA 纹章再走。二阶段选秀前刷 4 次解锁芬妮。金铲铲加大棒可合纹章。", "有 K/DA 转再走，二阶段选秀前刷 4 次开芬妮。"],
-  "K/DA毒舞莉莉娅": ["2-1 拿到莉莉娅专属，先合离子或正义。五级先拼双保镖、五颗 K/DA 星。", "五级追莉莉娅，先合离子或正义。"],
-  "救生员鳄鱼": ["2-1 拿到雷克顿专属，有大剑、反曲弓或锁子甲再走。雷克顿先穿两件装备开艾希，未解锁前用佐伊凑三海洋。", "鳄鱼先穿两件开艾希，六级追三。"],
+  "K/DA毒舞莉莉娅": ["2-1 拿到莉莉娅专属，先合离子或正义。五级先拼双护卫、五颗 K/DA 星。", "五级追莉莉娅，先合离子或正义。"],
+  "救生员鳄鱼": ["2-1 拿到雷克顿专属，有大剑、反曲弓或锁子甲再走。雷克顿先穿两件装备开艾希，未解锁前用佐伊凑三海之歌。", "鳄鱼先穿两件开艾希，六级追三。"],
   "骑熊安妮": ["2-1 拿到安妮专属才走。先做纳什或法爆，看到提伯斯就买。强化已解锁提伯斯，低星熊没成型时让内瑟斯扛。", "先合纳什或法爆，五级追安妮三星。"],
-  "咬痕伊莉丝": ["2-1 拿 Bite Marks。伊莉丝张数多、大棒能合装时走。五级同追伊莉丝和瑟提，尽早开 3 离子火花积攒格温的欢呼。", "伊莉丝多、大棒能合装时，五级同追伊莉丝和瑟提。"],
+  "咬痕伊莉丝": ["2-1 拿齿痕。伊莉丝张数多、大棒能合装时走。五级同追伊莉丝和瑟提，尽早开 3 离子火花积攒格温的欢呼。", "伊莉丝多、大棒能合装时，五级同追伊莉丝和瑟提。"],
 };
+
+function displayOpening(text: string) {
+  return displayTraitNames(text).replaceAll("海洋", "海之歌").replace(/拿\s*Bite Marks/g, "拿齿痕");
+}
 
 function homeOpening(text: string, title: string, augment?: ReturnType<typeof heroAugmentForGuide>) {
   if (augment) {
@@ -596,7 +601,8 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
     const primary = entry.teams[0]?.id === team.id;
     const [original, short] = shortOpenings[guideTitleWithoutPlaystyle(section.title, entry.playstyle)] ?? [];
     const advice = decision?.status === "recommended" || decision?.status === "conditional" ? decision.note : undefined;
-    const opening = note ?? advice ?? (primary && notes.opening.trim() === original ? short : homeOpening(notes.opening, rating.name));
+    const authoredOpening = displayOpening(notes.opening);
+    const opening = note ?? advice ?? (primary && authoredOpening.trim() === original ? short : homeOpening(authoredOpening, rating.name));
     const roles = notes.roles;
     const roster = guideRoster(team, data, roles);
     const lineup: RecommendationCard["avatars"] = roster.map(({ unit, role }) => ({
@@ -636,7 +642,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
     const conditions = guideEquipmentConditions(section, entry.teams, data, patch?.build, team)?.rows
       .filter(condition => team.conditions || condition.featured || condition.kind === "required");
     return {
-      group, rating, team, title: guideTitleWithoutPlaystyle(displayGuideName(rating.name), entry.playstyle), avatars, opening: displayTraitNames(opening), conditional, sampleLabel,
+      group, rating, team, title: guideTitleWithoutPlaystyle(displayGuideName(rating.name), entry.playstyle), avatars, opening: displayOpening(opening), conditional, sampleLabel,
       timing: decision?.timing && displayTraitNames(decision.timing),
       upgrade: decision?.upgrade && displayTraitNames(decision.upgrade),
       entryTeamId: primary && (!needle || exact?.namedFamily) ? section.reroll?.entryTeamId : undefined,
@@ -697,11 +703,11 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
       const entryNote = decision && (decision.status === "recommended" || decision.status === "conditional" ||
         (formation && decision.status === "avoid")) ? decision.note : undefined;
       const fixedOpening = team && fixedRecommendations.get(team.id)?.note;
-      const intro = searchContext ?? entryNote ?? fixedOpening ?? notes?.opening ?? "";
+      const intro = displayOpening(searchContext ?? entryNote ?? fixedOpening ?? notes?.opening ?? "");
       const guideName = guideTitleWithoutPlaystyle(section.title, playstyle);
       const [sourceIntro, compactIntro] = shortOpenings[guideName] ?? [];
       const title = guideTitleWithoutPlaystyle(routeName ?? (team ? boardTitle(section, team) : section.title), playstyle);
-      const opening = entryNote && !searchContext ? entryNote
+      const opening = entryNote && !searchContext ? intro
         : !searchContext && !alternative && intro.trim() === sourceIntro ? compactIntro : homeOpening(intro, title, augment);
       const stage = section.reroll?.stages.find(entry => entry.teamId === team?.id);
       const chaseTargets = team ? guideRerollTargets(section.id, team.id, stage?.parentTeamId) : [];
@@ -724,7 +730,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
       const previewId = "guide-quick-view-" + cardId;
       const previewKey = cardId + ":" + team?.id;
       const expanded = quickView?.key === previewKey && quickView.home === home;
-      const fullOpening = notes?.opening.trim();
+      const fullOpening = notes && displayOpening(notes.opening.trim());
       const quickNote = expanded && opening && fullOpening?.startsWith(opening)
         ? homeOpening(fullOpening.slice(opening.length).trim(), title)
         : undefined;
@@ -789,7 +795,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
             {formation.label} <b>{formation.mean.toFixed(2)}</b> · {formation.games.toLocaleString("zh-CN")} 场
           </small>}
           {gearMatches.length > 0 && <small className="guide-result-meta">带 {gearMatches.map(item => item.name).join("、")}</small>}
-          {opening && <p>{displayTraitNames(opening)}</p>}
+          {opening && <p>{opening}</p>}
           {needle && searchDetails && <small className="guide-result-meta">{displayTraitNames(searchDetails)}</small>}
         </a>
         {cardConditions.length > 0 && conditionBoard && <div className="guide-featured-conditions" aria-label={conditionHeading}>
@@ -806,7 +812,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
               setQuickView(expanded ? undefined : { key: previewKey, home });
             }} />
           {expanded && <GuideQuickView id={previewId} team={team} data={data} roles={roles}
-            note={quickNote && displayTraitNames(quickNote)}
+            note={quickNote}
             href={guideLink(section.id, team.id, homeGuideReturn(home, cardId, team.id))} />}
         </>}
         {routes && routes.length > 1 && <nav className="guide-lineup-routes" aria-label={section.title + "的棋盘"}>
@@ -955,7 +961,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
         <span>{statsRows.length} 套{familyWindowNote && <> · {familyWindowNote}</>}</span>
         <details className="guide-rank-source"><summary>数据来源</summary>
           <div><a href={familyStats.sourceUrl} target="_blank" rel="noreferrer">MetaTFT</a> · {familyStats.queue} {familyStats.patch} · 近 {familyStats.days} 天
-            <p>更新于 <time dateTime={familyStats.updatedAt}>{familyStats.updatedAt.slice(5,10).replace("-", "/")} {familyStats.updatedAt.slice(11,16)} UTC</time></p>
+            <p>更新于 <time dateTime={familyStats.updatedAt} title="北京时间">{beijingDateTime.format(new Date(familyStats.updatedAt))}</time></p>
           </div>
         </details>
       </div>}

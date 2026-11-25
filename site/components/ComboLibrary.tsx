@@ -419,8 +419,8 @@ export function ComboLibrary() {
         <details className="combo-rules">
           <summary>计算规则</summary>
           <div className="combo-rule-content">
-            <p>{purpose === "bronze" ? "按当前棋盘星级计铜档，当局合奏和额外纹章另计。" : "专属和动态羁绊不计，K/DA 每人最多两星。"}</p>
-            <p>费用按每人一张计算。8–9 羁绊收录已验证的部分组合。</p>
+            <p>{purpose === "bronze" ? "铜档按棋盘星级计算，合奏与额外纹章另计。" : "专属和动态羁绊不计，K/DA 每人最多两星。"}</p>
+            <p>费用按每人一张计。8–9 羁绊仅收录部分已验证组合。</p>
             <a href={tiers.localizedLookupUrl} target="_blank" rel="noreferrer" title={tiers.build}>档位来源</a>
           </div>
         </details>
@@ -431,8 +431,8 @@ export function ComboLibrary() {
         </button>
       ) : rows && !filtered.length ? (
         <section className="empty-state">
-          <h2>这组条件下没有组合</h2>
-          <p>{requiredIds.length ? "可把一张必上牌改为可用，或降低羁绊数。" : "可降低羁绊数，或切换费用范围。"}</p>
+          <h2>暂无匹配组合</h2>
+          <p>{requiredIds.length ? "可减少必上牌或降低羁绊数。" : "可降低羁绊数或放宽费用。"}</p>
           <button className="button" onClick={reset}>
             重置筛选
           </button>

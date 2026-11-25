@@ -4,6 +4,7 @@ import { useEffect, useId, useMemo, useState, type CSSProperties } from "react";
 import { ArrowDownRight, ArrowUpRight, ChevronRight } from "lucide-react";
 import { CartesianGrid, Line, LineChart, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { selectTrendWindow, type CompTrendModel, type TrendDiscovery, type TrendPoint, type TrendTrack } from "@/domain/comp-trends";
+import { beijingDateTime } from "@/lib/beijing-time";
 import "./comp-trend-panel.css";
 
 const tftableUrl = "https://tftable.cc/meta";
@@ -17,10 +18,8 @@ type Metric = (typeof metrics)[number][0];
 type Observation = { time: number; day: number; points: Map<string, TrendPoint>; values: Record<string, number> };
 type PlotLine = { key: string; trackId: string; name: string; color: string };
 const number = new Intl.NumberFormat("zh-CN");
-const date = new Intl.DateTimeFormat("zh-CN", { month: "numeric", day: "numeric", timeZone: "UTC" });
-const dateTime = new Intl.DateTimeFormat("zh-CN", {
-  month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit", hourCycle: "h23", timeZone: "UTC",
-});
+const archiveDay = new Intl.DateTimeFormat("zh-CN", { month: "numeric", day: "numeric", timeZone: "UTC" });
+const beijingDay = new Intl.DateTimeFormat("zh-CN", { month: "numeric", day: "numeric", timeZone: "Asia/Shanghai" });
 const trackColors = [
   "var(--trend-gold)", "var(--trend-blue)", "var(--trend-green)", "var(--trend-purple)", "var(--trend-red)",
   "var(--trend-cyan)", "var(--trend-pink)", "var(--trend-gray)", "var(--trend-olive)", "var(--trend-indigo)",
@@ -136,7 +135,7 @@ function TrendTooltip({ row, tracks, metric, colors, focused, onPreview }: {
 
   if (!row) return null;
   return <div className="comp-trend-tooltip">
-    <strong>{date.format(row.time)}</strong>
+    <strong>{archiveDay.format(row.day)}</strong>
     <ul>{trendReadout(tracks, row, metric).map(({ track, value }) =>
       <li key={track.id} className="comp-trend-tooltip-row" data-focused={track.id === focused || undefined}>
         <span className="comp-trend-track-mark" style={{ "--trend-track": colors.get(track.id) } as CSSProperties} aria-hidden="true" />
@@ -225,7 +224,7 @@ export function CompTrendPanel({ model }: { model: CompTrendModel }) {
         <details className="comp-trend-method">
           <summary>口径与来源</summary>
           <div>
-            <p>{model.scope} · UTC</p>
+            <p>{model.scope} · 按世界协调时归日</p>
             {model.note && <p>{model.note}</p>}
             <p><a className="comp-trend-credit" href={tftableUrl} target="_blank" rel="noopener">
               TFTable 环境对照 <ArrowUpRight size={13} aria-hidden="true" />
@@ -245,7 +244,7 @@ export function CompTrendPanel({ model }: { model: CompTrendModel }) {
                   if (row) setSelectedTime(row.time);
                 }}>
                 <CartesianGrid vertical={false} stroke="var(--line)" strokeDasharray="3 4" />
-                <XAxis type="number" dataKey="day" domain={timing} ticks={sampledTicks(rows)} tickFormatter={time => date.format(time)}
+                <XAxis type="number" dataKey="day" domain={timing} ticks={sampledTicks(rows)} tickFormatter={time => archiveDay.format(time)}
                   tickLine={false} axisLine={false} tickMargin={8} minTickGap={10} tick={{ fontSize: 12, fill: "var(--muted)" }} />
                 <YAxis reversed={metric === "mean"} domain={scale.domain} ticks={scale.ticks} allowDataOverflow width={45}
                   tickFormatter={value => metric === "mean" ? Number(value).toFixed(2) : value + "%"} tickLine={false} axisLine={false}
@@ -279,7 +278,7 @@ export function CompTrendPanel({ model }: { model: CompTrendModel }) {
           <div className="comp-trend-legend-heading" data-preview={previewTime !== undefined || undefined}>
             <select className="comp-trend-date" aria-label="趋势日期" value={readoutRow?.time}
               onChange={event => setSelectedTime(Number(event.target.value))}>
-              {rows.map(row => <option key={row.time} value={row.time}>{date.format(row.time)}</option>)}
+              {rows.map(row => <option key={row.time} value={row.time}>{archiveDay.format(row.day)}</option>)}
             </select>
             <span>{metricLabel}</span>
           </div>
@@ -315,13 +314,13 @@ export function CompTrendPanel({ model }: { model: CompTrendModel }) {
           </div>}
         </div>
       </div>
-      : <p className="comp-trend-empty">{waitingForComparison ? "当前还没有两天可比较的记录。"
-        : ranked.length ? metric === "pickRate" ? "当前筛选暂无可核对的出场率。" : "当前筛选暂无可比趋势。"
-        : "等待可比较的阵容样本。"}</p>}
+      : <p className="comp-trend-empty">{waitingForComparison ? "至少需两天可比样本"
+        : ranked.length ? metric === "pickRate" ? "当前筛选暂无出场率" : "当前筛选暂无可比趋势"
+        : "暂无可比样本"}</p>}
       {patchMarks.length > 0 && <div className="comp-trend-caption">
         <div className="comp-trend-patches" aria-label="补丁节点">
           {patchMarks.map(patch => <span key={patch.at + patch.label}>
-            <time dateTime={patch.at} title={dateTime.format(new Date(patch.at)) + " UTC"}>{date.format(new Date(patch.at))}</time>
+            <time dateTime={patch.at} title={beijingDateTime.format(new Date(patch.at)) + " 北京时间"}>{beijingDay.format(new Date(patch.at))}</time>
             {patch.href ? <a href={patch.href}>{patch.label.split(" ")[0]}</a> : patch.label.split(" ")[0]}
           </span>)}
         </div>
@@ -331,7 +330,7 @@ export function CompTrendPanel({ model }: { model: CompTrendModel }) {
       {[...discoveryGroups].map(([key, items]) => {
         const { at, patch } = items[0];
         return <section key={key} className="comp-trend-discovery-group">
-          <h3><time dateTime={at.slice(0, 10)}>{date.format(new Date(at))}</time><span>{patch}</span></h3>
+          <h3><time dateTime={at.slice(0, 10)}>{archiveDay.format(new Date(at))}</time><span>{patch}</span></h3>
           <ul>{items.map(item => <DiscoveryCard key={item.id} item={item} />)}</ul>
         </section>;
       })}

@@ -2,6 +2,7 @@ import { guideLink, repeatsFormationLabel } from "@/domain/guide-reading";
 import { guideConditionName, guideConditionsAnchor, type GuideCondition } from "@/domain/guide-equipment-conditions";
 import { formatRecommendationMean, recommendationGroups, type GuideFamilyBatch, type RecommendationGroup, type RecommendationStat } from "@/domain/guide-family-stats";
 import type { Team, Unit } from "@/domain/types";
+import { beijingDateTime } from "@/lib/beijing-time";
 import { homeGuideReturn } from "@/lib/home-position";
 import { GuideConditionIcon } from "./GuideEquipmentConditions";
 
@@ -31,8 +32,6 @@ export function PatchRecommendationList({ stats, cards, home, previousBuild }: {
   previousBuild?: boolean;
 }) {
   if (!cards.length) return null;
-  const date = stats.updatedAt.slice(5, 10).replace("-", "/");
-  const time = stats.updatedAt.slice(11, 16);
   const groups = recommendationGroups.map(group => ({
     ...group, entries: cards.filter(card => card.group === group.id),
   })).filter(group => group.entries.length > 0);
@@ -40,7 +39,7 @@ export function PatchRecommendationList({ stats, cards, home, previousBuild }: {
   const showMeta = previousBuild || showJumps;
   const updatedSample = <p className="home-patch-sample">
     {previousBuild ? <>上一版参考 · {stats.queue} {stats.patch} · </> : "数据更新 "}
-    <time dateTime={stats.updatedAt}>{date} {time} UTC</time>
+    <time dateTime={stats.updatedAt} title="北京时间">{beijingDateTime.format(new Date(stats.updatedAt))}</time>
   </p>;
 
   return <div className="home-patch-recommendations">
@@ -96,7 +95,7 @@ export function PatchRecommendationList({ stats, cards, home, previousBuild }: {
                 </div>
                 <span id={id + "-mean"} className={"home-patch-mean guide-placement " + tone}>
                   <span><span className="home-patch-mean-label" aria-hidden="true">均名</span><span className="sr-only">平均排名</span> <b>{formatRecommendationMean(rating.mean)}</b></span>
-                  {topFour !== undefined && <small>前四 {topFour}</small>}
+                  {topFour !== undefined && <small className="home-patch-top-four">前四 {topFour}</small>}
                   <small>{rating.games.toLocaleString("zh-CN")} 场{sampleLabel && " · " + sampleLabel}</small>
                 </span>
               </a>

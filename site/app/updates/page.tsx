@@ -201,7 +201,7 @@ export default async function VersionUpdates({ searchParams }: { searchParams: P
             </section>}
             {!!sampledBoards.length && <section className="patch-board-observation" id="eight-board-samples">
               <h3>八级棋盘实测</h3>
-              <p>MetaTFT · PBE 19.1 近三天 · 原名单八人、无纹章和冠冕</p>
+              <p>MetaTFT · PBE 19.1 近三天 · <span title="固定八人，排除纹章和冠冕">固定八人无纹章<span className="sr-only">、无冠冕</span></span></p>
               <ul>
                 {sampledBoards.map(({ row, note, mean }) => {
                   const tone = mean <= placementBatch.greenThrough ? "strong" : mean >= placementBatch.redFrom ? "weak" : "middle";

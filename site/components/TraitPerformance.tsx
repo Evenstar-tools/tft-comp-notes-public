@@ -126,9 +126,10 @@ export function SourceComparison({ data, filter, onFilter }: { data: TraitCrossc
   const example = available.includes("迅捷射手") ? "迅捷射手" : available[0];
   const chosen = available.includes(filter) ? filter : example;
   const rows: CrossTier[] = data.rows.filter(r => r.name === chosen);
+  const noxuScope = "NoxuTFT 场数为约数，时间窗和段位范围可能不同。";
   return <details className="trait-crosscheck" data-trait-fold="source-comparison">
     <summary>历史数据 · S{data.set} 正式服排位</summary>
-    <p>MetaTFT {data.patch} 近三天。NoxuTFT 场数为约数，时间窗和段位范围可能不同。</p>
+    <p>MetaTFT {data.patch} 近三天；<span title={noxuScope}>NoxuTFT 口径略有差异。<span className="sr-only">{noxuScope}</span></span></p>
     <label>羁绊 <select value={chosen} onChange={e => onFilter(e.target.value)}>{available.map(n => <option key={n}>{n}</option>)}</select></label>
     <table><thead><tr><th>档位</th><th>MetaTFT 均名／场数</th><th>NoxuTFT 均名／场数</th></tr></thead>
     <tbody>{rows.map(r => <tr key={r.tier}><th>{r.tier}</th><td>{r.metaMean.toFixed(2)} · {number.format(r.metaGames)}</td><td>{r.noxuMean.toFixed(2)} · {r.noxuGames}</td></tr>)}</tbody></table>

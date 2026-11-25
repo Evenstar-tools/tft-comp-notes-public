@@ -53,11 +53,11 @@ export function MedleyLibrary() {
     <header className="medley-heading">
       <div>
         <div className="medley-title"><TraitBadge trait={collab} size={32} /><h1>合奏组合</h1></div>
-        <p>S{catalog.set} {catalog.environment} · 每局随机一组，每组 {(catalog.probability * 100).toFixed(1)}%</p>
+        <p>每局随机一组（各 {(catalog.probability * 100).toFixed(1)}%）</p>
       </div>
       <div className="medley-fixed">
         <MedleyUnit unit={fixed} />
-        <p><strong>娑娜固定计入</strong><span>上场 {collab.thresholds.join(" / ")} 名合奏弈子开启对应档位</span></p>
+        <p><strong>娑娜固定计入</strong><span>上场 {collab.thresholds.join(" / ")} 名开启对应档位</span></p>
       </div>
     </header>
     <div className="medley-toolbar">
