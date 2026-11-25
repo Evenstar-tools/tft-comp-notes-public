@@ -1,8 +1,7 @@
 "use client";
 import { useState } from "react";
 import type { Item } from "@/domain/types";
-import bundledIds from "@/data/item-art.json";
-const bundled = new Set(bundledIds);
+import { bundledItemImage } from "@/domain/item-art";
 
 /** The bundled, verified art also covers equipment in earlier published snapshots. */
 export function ItemIcon({
@@ -16,7 +15,7 @@ export function ItemIcon({
 }) {
   const [failedSource, setFailedSource] = useState<string>();
   const style = { width: size, height: size };
-  const local = item && bundled.has(item.id) ? "/assets/items/" + item.id + ".webp" : undefined;
+  const local = bundledItemImage(item);
   const source = local && (!failedSource || (failedSource !== local && failedSource !== item?.image)) ? local : item?.image;
   const radiant = item?.category === "radiant";
   const iconClassName = radiant ? "item-icon" : `item-icon ${className}`;

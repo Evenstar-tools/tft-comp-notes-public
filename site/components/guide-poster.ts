@@ -5,6 +5,7 @@ import { sectionTeams } from "@/domain/document-flow";
 import { guideConditionName, guideConditionTag, guideEquipmentConditions, guideReferenceConditions } from "@/domain/guide-equipment-conditions";
 import { guideRoster, readingNotes } from "@/domain/guide-reading";
 import { heroArtworkFocus } from "@/domain/hero-artwork";
+import { preferredItemImage } from "@/domain/item-art";
 import { defaultPosterFormat, posterGear, posterLayout, posterOperationTitle, posterRequirements, posterStageTitle, posterTitle, type PosterFormat } from "@/domain/poster";
 import { traitCounts, traitGroup } from "@/domain/team";
 import type { Season, Team } from "@/domain/types";
@@ -85,18 +86,23 @@ export async function guidePoster({ section, team, data, format = defaultPosterF
   const teamMembers = new Map(teams.map(board => [board.id, guideRoster(board, data, section ? readingNotes(section, board, data).roles : [])]));
   const gear = new Map(teams.map(board => [board.id, posterGear(section, board, data)]));
   const items = new Map(data.items.map(item => [item.id, item]));
+  const itemImages = new Map(data.items.map(item => [item.id, preferredItemImage(item)]));
   const coverUnit = gear.get(team.id)?.[0]?.unit ?? teamMembers.get(team.id)?.[0]?.unit;
   const coverUrl = coverUnit?.splashImage || coverUnit?.image;
   const coverFocus = coverUnit && heroArtworkFocus(coverUnit);
   const urls = new Set([
     coverUrl,
-    ...namedConditions.map(({ row }) => row.image ?? row.item?.image),
+    ...namedConditions.map(({ row }) => preferredItemImage(row.item) ?? row.image),
     ...[...teamMembers.values()].flatMap(members => members.map(member => member.unit.image)),
-    ...teams.flatMap(board => board.pieces.flatMap(piece => piece.items.map(id => items.get(id)?.image))),
+    ...teams.flatMap(board => board.pieces.flatMap(piece => piece.items.map(id => itemImages.get(id)))),
     ...[...instrumentsByBoard.values()].flatMap(entries => [...entries.values()].map(entry => entry.image)),
   ]);
   const images = new Map(await Promise.all([...urls].filter((url): url is string => !!url)
-    .map(async url => [url, await loadImage(url, 5000)] as const)));
+    .map(async url => [url, await loadImage(url, 15000)] as const)));
+  if ([...instrumentsByBoard.values()].some(entries =>
+    [...entries.values()].some(instrument => instrument.id === "infernalIdol" && !images.get(instrument.image)))) {
+    throw new Error("地狱偶像头像尚未加载，请重试。");
+  }
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
   if (!ctx) throw new Error("当前浏览器无法生成图片");
@@ -154,7 +160,7 @@ export async function guidePoster({ section, team, data, format = defaultPosterF
       if (member) {
         drawBoardStars(c, member.piece.stars, x, top, w, h);
         const equipped = member.piece.items.flatMap(id => {
-          const src = items.get(id)?.image;
+          const src = itemImages.get(id);
           const icon = src && images.get(src);
           return icon ? [icon] : [];
         });
@@ -206,7 +212,8 @@ export async function guidePoster({ section, team, data, format = defaultPosterF
       for (const [index, id] of piece.items.entries()) {
         const item = items.get(id);
         const x = pad + 93 + 103 * index;
-        const icon = item?.image && images.get(item.image);
+        const url = itemImages.get(id);
+        const icon = url && images.get(url);
         if (icon) {
           c.save();
           c.beginPath();
@@ -261,7 +268,7 @@ export async function guidePoster({ section, team, data, format = defaultPosterF
     if (boards.length === 1) block(c, subtitle, pad, titleEnd + 6, inner, 15, "#eee4fb", 19, 650);
     let y = headerHeight + 10;
     for (const { row, context } of namedConditions) {
-      const image = row.image ?? row.item?.image;
+      const image = preferredItemImage(row.item) ?? row.image;
       const icon = image && images.get(image);
       const x = pad + (icon ? 29 : 0);
       if (icon) c.drawImage(icon, pad, y, 23, 23);
