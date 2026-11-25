@@ -1,91 +1,127 @@
 {
   "seasonId": "s19-pbe",
-  "build": "6018196",
-  "reviewedAt": "2026-11-24T01:13:08Z",
-  "displayOrder": [
-    "00000000-0000-4000-8000-000000000071",
-    "00000000-0000-4000-8000-000000000044",
-    "00000000-0000-4000-8000-000000000042",
-    "00000000-0000-4000-8000-000000000078",
-    "00000000-0000-4000-8000-000000000059",
-    "00000000-0000-4000-8000-000000000031",
-    "00000000-0000-4000-8000-000000000019"
-  ],
+  "build": "6028987",
+  "reviewedAt": "2026-11-25T05:00:26.105Z",
   "window": {
-    "start": "2026-11-23T19:41:35Z",
-    "end": "2026-11-24T01:07:09.092Z"
+    "start": "2026-11-24T23:36:09Z",
+    "end": "2026-11-25T04:05:44.689Z"
   },
   "entries": [
     {
-      "sectionId": "sample-block-0051",
-      "teamId": "00000000-0000-4000-8000-000000000059",
-      "status": "recommended",
-      "note": "莎弥拉带烬装过渡，尽早开古典解锁锤石。八级找烬和锤石两星，有余钱再上九。",
-      "sources": [
-        "https://www.metatft.com/pbe-comps#DA_Virtuosos19-DA_Jhin19"
-      ]
-    },
-    {
-      "sectionId": "sample-block-0307",
-      "teamId": "00000000-0000-4000-8000-000000000031",
-      "status": "recommended",
-      "note": "八级先让金克丝、龙女两星稳血。离子生命值下调，前排没质量时先用两星坦。",
-      "sources": [
-        "https://www.metatft.com/pbe-comps#DA_IonicSpark19-DA_Jinx19"
-      ]
-    },
-    {
-      "sectionId": "sample-block-0338",
-      "teamId": "00000000-0000-4000-8000-000000000078",
-      "status": "conditional",
-      "note": "七级先数摇滚或花式射手不同名棋子的星级，合计 5 星解锁薇恩。八级有约里克接肉装再追两星薇恩。",
-      "sources": [
-        "https://www.metatft.com/pbe-comps#DA_DemonVision19-DA_Vayne19"
-      ]
-    },
-    {
-      "sectionId": "sample-block-0229",
-      "teamId": "00000000-0000-4000-8000-000000000071",
-      "status": "conditional",
-      "note": "七级慢搜玛尔扎哈和艾克，艾克拿肉装。男爵解锁后再补。",
-      "sources": [
-        "https://www.metatft.com/pbe-comps#DA_Prodigy19-DA_Malzahar19"
-      ]
-    },
-    {
       "sectionId": "sample-block-0420",
-      "teamId": "00000000-0000-4000-8000-000000000042",
-      "status": "conditional",
-      "note": "五级追吉格斯、可酷伯，六级追芬妮、璐璐、小炮三星，帮芬妮开巨星。可酷伯先三星就先接肉装。",
+      "teamId": "00000000-0000-4000-8000-000000000089",
+      "status": "recommended",
+      "note": "吉格斯、可酷伯来得多，五级先追这两张。前排先三星就接肉装，法装优先留吉格斯。",
       "sources": [
         "https://www.metatft.com/pbe-comps#DA_GlitterBomb19-DA_Kobuko19"
+      ]
+    },
+    {
+      "sectionId": "sample-block-0464",
+      "teamId": "00000000-0000-4000-8000-000000000039",
+      "status": "recommended",
+      "note": "妮蔻来得多、法装顺再慢搜。谁先两星就先顶前排，莉莉娅和酒桶都能接肉。",
+      "sources": [
+        "https://www.metatft.com/pbe-comps#DA_KDA19-DA_Neeko19"
       ]
     },
     {
       "sectionId": "sample-block-0122",
       "teamId": "00000000-0000-4000-8000-000000000044",
       "status": "conditional",
-      "note": "六级一起追烈娜塔、狗头，肉装给狗头。前排两星能扛再留钱慢搜。",
+      "note": "六级一起搜烈娜塔、狗头。优先给狗头肉装，狗头两星能扛再存钱追三。",
       "sources": [
         "https://www.metatft.com/pbe-comps#DA_Bodyguard19-DA_RenataGlasc19"
       ]
     },
     {
-      "sectionId": "sample-block-0219",
-      "teamId": "00000000-0000-4000-8000-000000000019",
-      "status": "conditional",
-      "note": "有羊刀开局再走。解锁凯尔后八级找凯尔和约里克，五杀不同名棋子合计 9 星解锁铁男。",
+      "sectionId": "sample-block-0338",
+      "teamId": "00000000-0000-4000-8000-000000000078",
+      "status": "recommended",
+      "note": "七级先数摇滚或花式射手不同名棋子的星级，合计 5 星解锁薇恩。八级先找薇恩、约里克两星。",
       "sources": [
-        "https://www.metatft.com/pbe-comps#DA_Pentakill19-DA_Kayle19"
+        "https://www.metatft.com/pbe-comps#DA_DemonVision19-DA_Vayne19-DA_Yorick19"
+      ]
+    },
+    {
+      "sectionId": "sample-block-0251",
+      "teamId": "00000000-0000-4000-8000-000000000075",
+      "status": "recommended",
+      "note": "先留海之歌棋子做扎克解锁。八级找扎克和男枪两星稳血，有血有钱再上九补塔莉垭。",
+      "sources": [
+        "https://www.metatft.com/pbe-comps#DA_OceanSong19-DA_Zac19-DA_Graves19"
+      ]
+    },
+    {
+      "sectionId": "sample-block-0307",
+      "teamId": "00000000-0000-4000-8000-000000000007",
+      "status": "recommended",
+      "note": "八级先找金克丝和希瓦娜两星，格温补伤害。稳住后再升九补女枪。",
+      "sources": [
+        "https://www.metatft.com/pbe-comps#DA_IonicSpark19-DA_Jinx19"
+      ]
+    },
+    {
+      "sectionId": "sample-block-0219",
+      "teamId": "00000000-0000-4000-8000-000000000064",
+      "status": "conditional",
+      "note": "羊刀开局、有五杀留牌再走。八级找凯尔约里克，五杀不同名棋子合计 9 星解锁铁男。",
+      "sources": [
+        "https://www.metatft.com/pbe-comps#DA_Pentakill19-DA_Kayle19-DA_Olaf19"
+      ]
+    },
+    {
+      "sectionId": "sample-block-0452",
+      "teamId": "00000000-0000-4000-8000-000000000093",
+      "status": "conditional",
+      "note": "血量稳、能留 85 金开派克再走。八级用两星男枪和扎克稳血，九级搜两星派克、补蔚。",
+      "sources": [
+        "https://www.metatft.com/pbe-comps#DA_Renegade19-DA_Graves19-DA_Zac19"
+      ]
+    },
+    {
+      "sectionId": "sample-block-0214",
+      "teamId": "00000000-0000-4000-8000-000000000104",
+      "status": "conditional",
+      "note": "先用现成物理装过渡，血量和经济允许才升九。四国风先找霞和悟空两星。",
+      "sources": [
+        "https://www.metatft.com/pbe-comps#DA_Heavenscale19-DA_Xayah19"
+      ]
+    },
+    {
+      "sectionId": "sample-block-0229",
+      "teamId": "00000000-0000-4000-8000-000000000071",
+      "status": "review",
+      "note": "七级搜玛尔扎哈和艾克。当前体系取的是带男爵的上限盘，七级稳血按攻略看。",
+      "sources": [
+        "https://www.metatft.com/pbe-comps#DA_Prodigy19-DA_Malzahar19-DA_Amumu19"
+      ]
+    },
+    {
+      "sectionId": "sample-block-0254",
+      "teamId": "00000000-0000-4000-8000-000000000050",
+      "status": "avoid",
+      "note": "伊泽瑞尔和狗头来得多再慢搜。19.1c 四安可体系均名 4.65，胡牌再进。",
+      "sources": [
+        "https://www.metatft.com/pbe-comps#DA_Encore19-DA_Ezreal19"
       ]
     },
     {
       "sectionId": "sample-block-0235",
       "teamId": "00000000-0000-4000-8000-000000000105",
       "status": "avoid",
-      "note": "速九跳九。八级沿用现成打工盘，经济和血量够就直上九搜泽丽和蒙多。",
+      "note": "前期有人接泽丽装、血量经济都富余再上九。双电子的当期体系均名 4.88。",
       "sources": [
-        "https://www.metatft.com/pbe-comps#DA_Swiftstriker19-DA_Zeri19"
+        "https://www.metatft.com/pbe-comps#DA_Jazz19-DA_Leona19"
+      ]
+    },
+    {
+      "sectionId": "sample-block-0051",
+      "teamId": "00000000-0000-4000-8000-000000000059",
+      "status": "conditional",
+      "note": "莎弥拉带烬装过渡，八级先找烬和锤石。近四小时核心样本 103 场，双 C 的九级上限另查。",
+      "sources": [
+        "https://www.metatft.com/explorer?tab=units&set=TFTSet19&trait=DA_Virtuosos19_2&unit=DA_Jhin19-1&unit=DA_Thresh19-1&queue=PBE&patch=19.1&b_patch=c&days=0.16666666666666666"
       ]
     }
   ]

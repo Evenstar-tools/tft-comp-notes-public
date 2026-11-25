@@ -3,6 +3,18 @@ import type { PatchReference } from "../domain/patch-reference";
 // Numbers cover the star level or breakpoint named in each row.
 export const patchReferences: PatchReference[] = [
   {
+    id: "pbe-6028987",
+    edition: "s19-pbe",
+    title: "PBE 19.1c 环境观察",
+    date: "2026-11-24",
+    dateLabel: "PBE1 实装 · UTC",
+    build: "19.1.0.6028987",
+    source: { name: "PBE1 对局样本", url: "https://matches3.metatft.com/PBE1_4536967443.json" },
+    highlights: ["PBE1 于 23:36 UTC 实装构建 6028987。推荐与阵容趋势使用 MetaTFT 19.1c 同批战绩。"],
+    observation: "五摇滚薇恩 876 场、均名 4.00，七海之歌扎克男枪 825 场、4.04，七离子金克丝 2,253 场、4.19。四安可伊泽瑞尔均名 4.65，双电子泽丽 4.88。八级先看主 C 和主坦能不能两星，再决定是否升九。",
+    groups: {},
+  },
+  {
     id: "pbe-6018196",
     edition: "s19-pbe",
     title: "PBE 11/23 更新 · 薇恩和铁男解锁",
