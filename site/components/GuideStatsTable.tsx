@@ -8,7 +8,7 @@ export type GuideStatsDirection = "asc" | "desc";
 
 export const guideStatsMetricLabels = {
   pickRate: "出场率",
-  mean: "平均排名",
+  mean: "均名",
   topFourRate: "前四率",
   winRate: "登顶率",
 } satisfies Record<GuideStatsMetric, string>;

@@ -373,6 +373,17 @@ html[data-theme="dark"] .guide-placement.weak {color:#ff9ba3;}
   border:1px solid var(--line);border-radius:var(--radius-sm);background:var(--surface);color:var(--ink);
   box-shadow:var(--shadow);font-size:.82rem;line-height:1.5;
 }
+.guide-owner-menu {position:relative;}
+.guide-owner-menu > summary {list-style:none;cursor:pointer;}
+.guide-owner-menu > summary::-webkit-details-marker {display:none;}
+.guide-owner-menu-panel {
+  position:absolute;right:0;top:calc(100% + 6px);z-index:12;min-width:132px;display:grid;gap:2px;padding:6px;
+  border:1px solid var(--line);border-radius:var(--radius-sm);background:var(--panel);box-shadow:var(--shadow);
+}
+.guide-owner-menu-panel a {
+  display:block;padding:6px 10px;border-radius:4px;color:var(--text);font-size:.875rem;white-space:nowrap;text-decoration:none;
+}
+.guide-owner-menu-panel a:hover {background:var(--raised);color:var(--accent);}
 .guide-stat-body {padding:8px 4px;}
 .guide-stat-body > p {margin:2px 0;font-size:.875rem;}
 .guide-stat-body > .guide-stat-scope {margin-bottom:8px;}

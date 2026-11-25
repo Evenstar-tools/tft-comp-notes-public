@@ -30,7 +30,7 @@ export function GuideFormationFamilyReference({ sample }: { sample: FormationFam
   return <div className="guide-carry-samples">
     <p>MetaTFT 阵容榜参考 · 同类棋盘的玩家结算，包含不同等级和成型质量。</p>
     <ul><li>
-      <div className="carry-sample-head"><strong>{sample.name}</strong><span>平均排名 <b>{result.mean.toFixed(2)}</b> · {number.format(result.games)} 场</span></div>
+      <div className="carry-sample-head"><strong>{sample.name}</strong><span>均名 <b>{result.mean.toFixed(2)}</b> · {number.format(result.games)} 场</span></div>
       <p>前四 {percent.format(result.top4)} · 登顶 {percent.format(result.win)}</p>
       <div className="carry-source"><a href={sample.url} target="_blank" rel="noreferrer">
         {sample.patch ?? "PBE"} 阵容榜 · {sample.window ?? `近 ${sample.windowHours} 小时`} · {checkedDate.format(new Date(sample.checkedAt))} 北京时间 ↗
