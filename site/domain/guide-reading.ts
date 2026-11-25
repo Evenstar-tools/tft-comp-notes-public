@@ -482,8 +482,9 @@ function authoredRoles(section: Section, team: Team, data: Season) {
 }
 
 function boardRoles(section: Section, team: Team, data: Season) {
-  const title = boardLoadoutPrefix + team.name;
-  const block = allBlocks(section.blocks).find(entry => isBoardLoadout(entry) && entry.text?.split("\n", 1)[0] === title);
+  if (!team.name) return [];
+  const title = boardLoadoutPrefix + displayGuideName(team.name);
+  const block = allBlocks(section.blocks).find(entry => isBoardLoadout(entry) && displayGuideName(entry.text?.split("\n", 1)[0] ?? "") === title);
   return block?.text ? parseRoles(block.text.split("\n").slice(1), team, data) : [];
 }
 

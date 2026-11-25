@@ -119,7 +119,7 @@ export async function guidePoster({ section, team, data, format = defaultPosterF
       const w = HEX_WIDTH * scale, h = HEX_HEIGHT * scale;
       const instrument = instruments?.get(index);
       if (instrument) {
-        drawBoardInstrument(c, instrument.name, images.get(instrument.image), x, top, w, h);
+        drawBoardInstrument(c, instrument, images.get(instrument.image), x, top, w, h);
         continue;
       }
       const member = members.get(index);

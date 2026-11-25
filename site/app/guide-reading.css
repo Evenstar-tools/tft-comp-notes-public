@@ -314,7 +314,7 @@ html[data-theme="dark"] .guide-placement.weak {color:#ff9ba3;}
 .read-board .board-hex:disabled {opacity:1;cursor:default;}
 .read-board .board-hex:not(.is-filled,.has-instrument) .board-surface {inset:1px;}
 .read-board .board-hex:disabled:not(.has-instrument):hover .board-surface {background:var(--board-cell);}
-.read-board .board-hex.is-filled .board-surface {inset:clamp(1.6px,.52cqw,3.2px);}
+.read-board .board-hex:is(.is-filled,.is-summon) .board-surface {inset:clamp(1.6px,.52cqw,3.2px);}
 .read-board .board-avatar img {position:absolute;inset:0;}
 .read-board .board-avatar::after {
   background:linear-gradient(180deg,#10101d40,transparent 25% 48%,#0b0b1830 56%,#0b0b18df 83%,#10101dee);

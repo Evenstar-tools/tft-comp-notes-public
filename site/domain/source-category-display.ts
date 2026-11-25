@@ -17,11 +17,20 @@ export function draftCategoryLabel(category: string) {
   return value === "条件定阵" ? "条件开局" : value;
 }
 
-export function sourceSectionTitle({ title, level, kind, category: folder }: {
-  title: string; level?: number; kind?: string; category?: string;
+// Keep original Feishu block IDs reachable when reading an older S19 snapshot.
+const renamedFolders = new Map<string, readonly [string, string]>([
+  ["sample-block-1067", ["次选成熟阵容", "八级运营"]],
+  ["sample-block-1064", ["连胜成型阵容", "国风九五"]],
+  ["sample-block-1065", ["条件定阵阵容", "高能流行与天才慢搜"]],
+  ["sample-block-1066", ["PBE试阵", "芸阿娜慢搜"]],
+]);
+export function sourceSectionTitle({ id, title, level, kind, category: folder }: {
+  id: string; title: string; level?: number; kind?: string; category?: string;
 }) {
   if (level !== 1 && title !== folder && kind !== "category") return title;
   const name = title.trim().replace(/^\d+\s*[.．、]\s*/, "");
+  const renamed = renamedFolders.get(id);
+  if (renamed && renamed[0] === name) return renamed[1];
   const category = storedDraftCategories.get(name);
   if (!category) return title;
   return category === "次选" ? "阵容目录" : draftCategoryLabel(category);

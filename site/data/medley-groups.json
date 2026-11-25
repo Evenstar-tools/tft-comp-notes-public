@@ -1,0 +1,429 @@
+{
+  "set": 19,
+  "environment": "PBE",
+  "checkedOn": "2026-11-25",
+  "sources": {
+    "maomi": "https://maomitft.com/index.html?s19=1#s18?tab=collab",
+    "tftips": "https://tftips.app/zh/set19/tables/collab-patterns"
+  },
+  "fixedUnit": "sona",
+  "probability": 0.025,
+  "groups": [
+    {
+      "number": 1,
+      "unitIds": [
+        "taric",
+        "camille",
+        "ezreal",
+        "senna",
+        "tibbers",
+        "dr-mundo"
+      ]
+    },
+    {
+      "number": 2,
+      "unitIds": [
+        "gnar",
+        "camille",
+        "nasus",
+        "shyvana",
+        "yuumi"
+      ]
+    },
+    {
+      "number": 3,
+      "unitIds": [
+        "kennen",
+        "sett",
+        "karthus",
+        "bard",
+        "evelynn",
+        "twisted-fate"
+      ]
+    },
+    {
+      "number": 4,
+      "unitIds": [
+        "lillia",
+        "karthus",
+        "camille",
+        "braum",
+        "aurora"
+      ]
+    },
+    {
+      "number": 5,
+      "unitIds": [
+        "kayn",
+        "taric",
+        "renata-glasc",
+        "bard",
+        "shyvana"
+      ]
+    },
+    {
+      "number": 6,
+      "unitIds": [
+        "kennen",
+        "gnar",
+        "gragas",
+        "amumu",
+        "aurora"
+      ]
+    },
+    {
+      "number": 7,
+      "unitIds": [
+        "kayn",
+        "varus",
+        "illaoi",
+        "karthus",
+        "tibbers",
+        "graves"
+      ]
+    },
+    {
+      "number": 8,
+      "unitIds": [
+        "kayn",
+        "elise",
+        "karthus",
+        "malzahar",
+        "jhin"
+      ]
+    },
+    {
+      "number": 9,
+      "unitIds": [
+        "sett",
+        "yunara",
+        "qiyana",
+        "braum",
+        "xayah"
+      ]
+    },
+    {
+      "number": 10,
+      "unitIds": [
+        "kennen",
+        "gnar",
+        "renata-glasc",
+        "ezreal",
+        "evelynn",
+        "locke"
+      ]
+    },
+    {
+      "number": 11,
+      "unitIds": [
+        "kayn",
+        "yunara",
+        "nasus",
+        "senna",
+        "evelynn",
+        "nunu-willump"
+      ]
+    },
+    {
+      "number": 12,
+      "unitIds": [
+        "gnar",
+        "yunara",
+        "gragas",
+        "qiyana",
+        "syndra",
+        "vladimir"
+      ]
+    },
+    {
+      "number": 13,
+      "unitIds": [
+        "varus",
+        "zoe",
+        "nasus",
+        "bard",
+        "draven"
+      ]
+    },
+    {
+      "number": 14,
+      "unitIds": [
+        "gnar",
+        "elise",
+        "gragas",
+        "qiyana",
+        "ezreal",
+        "jinx"
+      ]
+    },
+    {
+      "number": 15,
+      "unitIds": [
+        "katarina",
+        "lux",
+        "renekton",
+        "k-sante",
+        "evelynn",
+        "rell"
+      ]
+    },
+    {
+      "number": 16,
+      "unitIds": [
+        "lillia",
+        "illaoi",
+        "renata-glasc",
+        "briar",
+        "mel"
+      ]
+    },
+    {
+      "number": 17,
+      "unitIds": [
+        "katarina",
+        "zoe",
+        "gragas",
+        "malzahar",
+        "garen"
+      ]
+    },
+    {
+      "number": 18,
+      "unitIds": [
+        "lillia",
+        "sett",
+        "renata-glasc",
+        "draven",
+        "jinx",
+        "vi"
+      ]
+    },
+    {
+      "number": 19,
+      "unitIds": [
+        "lillia",
+        "renekton",
+        "ezreal",
+        "malzahar",
+        "jinx",
+        "zeri"
+      ]
+    },
+    {
+      "number": 20,
+      "unitIds": [
+        "katarina",
+        "yunara",
+        "renekton",
+        "draven",
+        "ahri"
+      ]
+    },
+    {
+      "number": 21,
+      "unitIds": [
+        "katarina",
+        "taric",
+        "karthus",
+        "galio",
+        "xayah"
+      ]
+    },
+    {
+      "number": 22,
+      "unitIds": [
+        "sett",
+        "zoe",
+        "renata-glasc",
+        "senna",
+        "tibbers",
+        "rell"
+      ]
+    },
+    {
+      "number": 23,
+      "unitIds": [
+        "yunara",
+        "zoe",
+        "illaoi",
+        "k-sante",
+        "jhin"
+      ]
+    },
+    {
+      "number": 24,
+      "unitIds": [
+        "varus",
+        "lux",
+        "renekton",
+        "braum",
+        "garen"
+      ]
+    },
+    {
+      "number": 25,
+      "unitIds": [
+        "sett",
+        "gragas",
+        "karthus",
+        "briar",
+        "yuumi"
+      ]
+    },
+    {
+      "number": 26,
+      "unitIds": [
+        "lillia",
+        "lux",
+        "qiyana",
+        "bard",
+        "yorick"
+      ]
+    },
+    {
+      "number": 27,
+      "unitIds": [
+        "elise",
+        "gragas",
+        "renata-glasc",
+        "draven",
+        "graves"
+      ]
+    },
+    {
+      "number": 28,
+      "unitIds": [
+        "gnar",
+        "taric",
+        "illaoi",
+        "malzahar",
+        "ahri"
+      ]
+    },
+    {
+      "number": 29,
+      "unitIds": [
+        "katarina",
+        "varus",
+        "illaoi",
+        "senna",
+        "tibbers",
+        "twisted-fate"
+      ]
+    },
+    {
+      "number": 30,
+      "unitIds": [
+        "elise",
+        "zoe",
+        "nasus",
+        "braum",
+        "yone"
+      ]
+    },
+    {
+      "number": 31,
+      "unitIds": [
+        "taric",
+        "varus",
+        "qiyana",
+        "briar",
+        "vayne",
+        "miss-fortune"
+      ]
+    },
+    {
+      "number": 32,
+      "unitIds": [
+        "lillia",
+        "yunara",
+        "ezreal",
+        "galio",
+        "garen"
+      ]
+    },
+    {
+      "number": 33,
+      "unitIds": [
+        "gnar",
+        "gragas",
+        "renekton",
+        "k-sante",
+        "mel"
+      ]
+    },
+    {
+      "number": 34,
+      "unitIds": [
+        "kennen",
+        "karthus",
+        "renekton",
+        "draven",
+        "yone"
+      ]
+    },
+    {
+      "number": 35,
+      "unitIds": [
+        "sett",
+        "varus",
+        "nasus",
+        "malzahar",
+        "aurora"
+      ]
+    },
+    {
+      "number": 36,
+      "unitIds": [
+        "kennen",
+        "zoe",
+        "lux",
+        "galio",
+        "evelynn",
+        "dr-mundo"
+      ]
+    },
+    {
+      "number": 37,
+      "unitIds": [
+        "katarina",
+        "lillia",
+        "karthus",
+        "syndra",
+        "jinx",
+        "nunu-willump"
+      ]
+    },
+    {
+      "number": 38,
+      "unitIds": [
+        "kayn",
+        "renekton",
+        "renata-glasc",
+        "braum",
+        "evelynn",
+        "dr-mundo"
+      ]
+    },
+    {
+      "number": 39,
+      "unitIds": [
+        "zoe",
+        "illaoi",
+        "camille",
+        "bard",
+        "xayah"
+      ]
+    },
+    {
+      "number": 40,
+      "unitIds": [
+        "elise",
+        "karthus",
+        "qiyana",
+        "k-sante",
+        "ahri"
+      ]
+    }
+  ]
+}

@@ -67,6 +67,7 @@ function TraitEntry({ trait, members, memberQuery, overall, picked, onPick, link
           <div className="trait-entry-actions">
             <a href={"/?" + new URLSearchParams({ q: (picked ?? "") + trait.name, sort: "category" })}
               aria-label={"查" + lineupName + "阵容"}>阵容</a>
+            {trait.id === "collab" && <a href="/traits/medley">查看 40 组</a>}
             <a href={traitLibraryLink(trait.id, picked, true)} aria-label="在羁绊网看搭配">羁绊网</a>
           </div>
           {inlineMembers && roster}
@@ -161,6 +162,7 @@ export function TraitsLibrary({ initialQuery, initialTrait, initialTier, meta, o
                 <span>PBE {meta.patch} · 近 {meta.days} 天 · {meta.on.slice(0, 10)} UTC</span>
               </div>
             </details> : <span>本版本战绩待更新</span>}
+            <a href="/traits/medley">合奏组合</a>
             <a href="https://www.datatft.com/rate?season=19#true-damage" target="_blank" rel="noreferrer">收菜奖励 ↗</a>
           </div>
         </div>

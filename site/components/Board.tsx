@@ -159,17 +159,19 @@ export const Board = memo(function Board({
               const unit = piece && units.get(piece.unitId);
               const alternate = piece?.alternate && onSwitchAlternate ? units.get(piece.alternate.unitId) : undefined;
               const instrument = !piece ? instruments.get(position) : undefined;
+              const summon = instrument?.id === "infernalIdol" ? instrument : undefined;
+              const portrait = unit?.image ?? summon?.image;
               const items = piece?.items.map((id) => itemsById.get(id)) ?? [];
               const name = unit ? unitLabel(unit).base : "";
               const isSelected = piece ? piece.instanceId === selectedId : !!instrument && selectedInstrument?.id === instrument.id;
               const occupantLabel = unit
                 ? `${unit.name} ${piece!.stars}星${items.length ? ` 装备：${items.map((item) => item?.name ?? "").join("、")}` : ""}`
-                : instrument?.id === "infernalIdol" ? `${instrument.name}，站位示意`
+                : summon ? `${summon.name}，站位示意`
                 : instrument ? `空位，${instrument.name}，乐器站位示意` : "空位";
               return <Fragment key={position}>
                 <button
                   type="button"
-                  className={`board-hex${unit ? ` is-filled cost-${unit.cost}` : ""}${instrument ? " has-instrument" : ""}${isSelected ? " is-selected" : ""}${changedPositions?.includes(position) ? " read-change" : ""}${coverage.includes(position) ? " instrument-coverage" : ""}`}
+                  className={`board-hex${unit ? ` is-filled cost-${unit.cost}` : ""}${instrument ? " has-instrument" : ""}${summon ? " is-summon" : ""}${isSelected ? " is-selected" : ""}${changedPositions?.includes(position) ? " read-change" : ""}${coverage.includes(position) ? " instrument-coverage" : ""}`}
                   style={CELL_STYLE[position]}
                   data-board-slot={!data ? position : undefined}
                   data-has-alternate={!data && alternate ? "true" : undefined}
@@ -203,10 +205,10 @@ export const Board = memo(function Board({
                   }}
                 >
                   <span className="board-surface">
-                    {unit ? (
+                    {portrait ? (
                       <span className="board-avatar">
                         <img
-                          src={unit.image}
+                          src={portrait}
                           alt=""
                           width={96}
                           height={96}
@@ -224,6 +226,7 @@ export const Board = memo(function Board({
                       </span>
                     )}
                   </span>
+                  {summon && <span className="board-unit-name">{summon.name}</span>}
                   {unit && (
                     <>
                       {data && <span className="read-cost">{unit.cost}</span>}

@@ -9,8 +9,8 @@ export interface BoardInstrument {
 }
 
 export const BOARD_INSTRUMENT_NOTE = "乐器站位示意";
-const idol: BoardInstrument = {
-  id: "infernalIdol", name: "地狱偶像", image: "/assets/infernal-idol.webp",
+const idol: BoardInstrument & { preferred: number } = {
+  id: "infernalIdol", name: "地狱偶像", image: "/assets/infernal-idol-portrait.png", preferred: 3,
 };
 
 export function boardMarkerNote(instruments: ReadonlyMap<number, BoardInstrument>) {
@@ -33,13 +33,11 @@ export function boardInstruments(pieces: readonly Piece[], data: Season, positio
   const level = traits.find(trait => trait.id === "beach-pop")?.level ?? 0;
   const result = new Map<number, BoardInstrument>();
   const occupied = new Set(pieces.map(piece => piece.position));
-  const idolPosition = positions?.infernalIdol;
-  if (boardPosition(idolPosition) && !occupied.has(idolPosition)
-    && traits.some(trait => trait.id === "rock" && trait.level >= 3)) result.set(idolPosition, idol);
   const count = level >= 5 ? 2 : level >= 3 ? 1 : 0;
-  if (!count) return result;
-
   const instruments = examples.slice(0, count);
+  if (traits.some(trait => trait.id === "rock" && trait.level >= 3)) instruments.unshift(idol);
+  if (!instruments.length) return result;
+
   const placed = new Set<BoardInstrumentId>();
   for (const instrument of instruments) {
     const position = positions?.[instrument.id];
@@ -54,10 +52,11 @@ export function boardInstruments(pieces: readonly Piece[], data: Season, positio
     if (placed.has(instrument.id)) continue;
     const preferred = positions?.[instrument.id];
     const target = hexPosition(boardPosition(preferred) ? preferred : instrument.preferred);
+    const preferFront = instrument.id === idol.id && available.some(position => position < 7 && !result.has(position));
     let closest: number | undefined;
     let nearest = Infinity;
     for (const position of available) {
-      if (result.has(position)) continue;
+      if (result.has(position) || (preferFront && position >= 7)) continue;
       const point = hexPosition(position);
       const distance = (point.x - target.x) ** 2 + (point.y - target.y) ** 2;
       if (distance < nearest) {

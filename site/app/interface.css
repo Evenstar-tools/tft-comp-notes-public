@@ -58,7 +58,7 @@ body:has(.editor) .site-footer {display:none}
 .editor .board-hex {padding:0;border:0;border-radius:0;min-height:0;background:none}
 .editor .board-hex::before {background:var(--unit-cost,var(--board-edge))}
 .editor .board-surface {background:var(--board-cell)}
-.editor .board-hex.is-filled .board-surface {inset:2px}
+.editor .board-hex:is(.is-filled,.is-summon) .board-surface {inset:2px}
 .editor .board.is-targeting .board-hex:not(.is-filled)::before {background:color-mix(in srgb,var(--accent) 40%,transparent)}
 .editor .board-hex:not(.is-filled):hover .board-surface,.editor .board-hex[data-drop-target] .board-surface {background:var(--board-hover)}
 .editor .board-hex[data-drop-target] .board-selection {color:var(--selection-ring)}

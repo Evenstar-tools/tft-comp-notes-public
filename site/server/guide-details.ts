@@ -2,7 +2,7 @@ import type { ContentBlock, Section } from "../domain/document";
 import details from "./s19-guide-details.json" with { type: "json" };
 
 interface GuideDetails {
-  previousText?: Record<string, string>;
+  previousText?: Record<string, string | string[]>;
   summaryId: string;
   groups: { afterImage: string | null; blocks: ContentBlock[] }[];
 }
@@ -18,9 +18,10 @@ export function refreshWebDetails(section: Section) {
   const existing = new Map(section.blocks.map(block => [block.id, block]));
   for (const { blocks } of guide.groups) {
     for (const source of blocks) {
-      const before = guide.previousText[source.id];
       const block = existing.get(source.id);
-      if (!before || !source.text || !block || block.type !== "text" || block.text !== before) continue;
+      const prior = guide.previousText[source.id];
+      const before = block?.text;
+      if (!before || !source.text || block?.type !== "text" || (Array.isArray(prior) ? !prior.includes(before) : prior !== before)) continue;
       if (block.elements?.length) {
         const run = block.elements[0].text_run;
         if (block.elements.length !== 1 || run?.content !== before) continue;
