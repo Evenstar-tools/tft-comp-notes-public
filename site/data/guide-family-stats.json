@@ -3,13 +3,14 @@
   "set": "TFTSet19",
   "queue": "PBE",
   "patch": "19.1c",
+  "build": "6028987",
   "days": 3,
-  "updatedAt": "2026-11-25T09:26:14.842Z",
+  "updatedAt": "2026-11-25T10:29:24.884Z",
   "model": 429,
   "source": "MetaTFT",
   "sourceUrl": "https://www.metatft.com/pbe-comps",
   "statsUrl": "https://api-hc.metatft.com/tft-comps-api/comps_stats?queue=PBE&patch=19.1&b_patch=c&days=3&permit_filter_adjustment=false",
-  "totalFinishes": 89739,
+  "totalFinishes": 174325,
   "rows": [
     {
       "clusterId": "429006",
@@ -25,19 +26,82 @@
       ],
       "url": "https://www.metatft.com/pbe-comps#DA_DemonVision19-DA_Vayne19-DA_Yorick19",
       "places": [
-        205,
-        394,
-        432,
-        341,
-        313,
-        284,
-        211,
-        120
+        390,
+        685,
+        798,
+        687,
+        620,
+        529,
+        407,
+        228
       ],
-      "games": 2300,
-      "mean": 4.0691304347826085,
-      "topFourRate": 0.5965217391304348,
-      "winRate": 0.0891304347826087
+      "games": 4344,
+      "mean": 4.108885819521179,
+      "winRate": 0.08977900552486189,
+      "topFourRate": 0.5893186003683242
+    },
+    {
+      "clusterId": "429008",
+      "sourceName": "Hyperpop Kobuko",
+      "name": "四主唱高能炸弹",
+      "sectionId": "sample-block-0420",
+      "teamId": "00000000-0000-4000-8000-000000000089",
+      "aliases": [
+        "四主唱高能",
+        "可酷伯吉格斯",
+        "四主唱炸弹"
+      ],
+      "carryIds": [
+        "ziggs"
+      ],
+      "url": "https://www.metatft.com/pbe-comps#DA_GlitterBomb19-DA_Kobuko19",
+      "places": [
+        1605,
+        1477,
+        1345,
+        1202,
+        1148,
+        1053,
+        1022,
+        989
+      ],
+      "games": 9841,
+      "mean": 4.1180774311553705,
+      "winRate": 0.16309318158723707,
+      "topFourRate": 0.571994715984148
+    },
+    {
+      "clusterId": "429012",
+      "sourceName": "Ionic Spark Jinx",
+      "name": "七离子金克丝",
+      "sectionId": "sample-block-0307",
+      "teamId": "00000000-0000-4000-8000-000000000031",
+      "aliases": [
+        "七离子",
+        "离子金克丝"
+      ],
+      "carryIds": [
+        "jinx"
+      ],
+      "url": "https://www.metatft.com/pbe-comps#DA_IonicSpark19-DA_Jinx19",
+      "landingTeamId": "00000000-0000-4000-8000-000000000007",
+      "sharedTeamIds": [
+        "00000000-0000-4000-8000-000000000007"
+      ],
+      "places": [
+        1518,
+        1515,
+        1693,
+        1660,
+        1610,
+        1473,
+        1186,
+        691
+      ],
+      "games": 11346,
+      "mean": 4.141106998060991,
+      "winRate": 0.1337916446324696,
+      "topFourRate": 0.5628415300546448
     },
     {
       "clusterId": "429028",
@@ -60,82 +124,135 @@
         "00000000-0000-4000-8000-000000000075"
       ],
       "places": [
-        263,
-        362,
-        401,
+        529,
+        744,
+        818,
+        751,
+        683,
+        599,
+        483,
+        368
+      ],
+      "games": 4975,
+      "mean": 4.182713567839196,
+      "winRate": 0.10633165829145728,
+      "topFourRate": 0.5712562814070352
+    },
+    {
+      "clusterId": "429014",
+      "sourceName": "K/DA Neeko",
+      "name": "K/DA妮蔻",
+      "sectionId": "sample-block-0464",
+      "teamId": "00000000-0000-4000-8000-000000000039",
+      "aliases": [
+        "KDA妮蔻"
+      ],
+      "carryIds": [
+        "neeko"
+      ],
+      "url": "https://www.metatft.com/pbe-comps#DA_KDA19-DA_Neeko19",
+      "places": [
+        823,
+        647,
+        539,
+        549,
+        511,
+        512,
+        519,
+        611
+      ],
+      "games": 4711,
+      "mean": 4.261940140097644,
+      "winRate": 0.17469751645085968,
+      "topFourRate": 0.5429845043515177
+    },
+    {
+      "clusterId": "429001",
+      "sourceName": "Prodigy Malzahar",
+      "name": "五天才玛尔扎哈·男爵",
+      "sectionId": "sample-block-0229",
+      "teamId": "00000000-0000-4000-8000-000000000071",
+      "aliases": [
+        "五天才男爵",
+        "天才蚂蚱"
+      ],
+      "carryIds": [
+        "malzahar"
+      ],
+      "url": "https://www.metatft.com/pbe-comps#DA_Prodigy19-DA_Malzahar19-DA_Amumu19",
+      "places": [
+        306,
+        400,
+        376,
+        394,
         363,
-        312,
-        256,
-        216,
-        174
+        326,
+        292,
+        237
       ],
-      "games": 2347,
-      "mean": 4.108223263740946,
-      "topFourRate": 0.5918193438432041,
-      "winRate": 0.11205794631444398
+      "games": 2694,
+      "mean": 4.276540460282108,
+      "winRate": 0.11358574610244988,
+      "topFourRate": 0.5478841870824054
     },
     {
-      "clusterId": "429008",
-      "sourceName": "Hyperpop Kobuko",
-      "name": "四主唱高能炸弹",
-      "sectionId": "sample-block-0420",
-      "teamId": "00000000-0000-4000-8000-000000000089",
+      "clusterId": "429021",
+      "sourceName": "Gu Feng Xayah Wukong",
+      "name": "四国风霞",
+      "sectionId": "sample-block-0214",
+      "teamId": "00000000-0000-4000-8000-000000000104",
       "aliases": [
-        "四主唱高能",
-        "可酷伯吉格斯",
-        "四主唱炸弹"
+        "国风悟空霞"
       ],
       "carryIds": [
-        "ziggs"
+        "xayah"
       ],
-      "url": "https://www.metatft.com/pbe-comps#DA_GlitterBomb19-DA_Kobuko19",
+      "url": "https://www.metatft.com/pbe-comps#DA_Heavenscale19-DA_Xayah19",
       "places": [
-        866,
-        782,
-        694,
-        622,
-        640,
-        571,
-        552,
-        521
-      ],
-      "games": 5248,
-      "mean": 4.126905487804878,
-      "topFourRate": 0.5647865853658537,
-      "winRate": 0.16501524390243902
-    },
-    {
-      "clusterId": "429012",
-      "sourceName": "Ionic Spark Jinx",
-      "name": "七离子金克丝",
-      "sectionId": "sample-block-0307",
-      "teamId": "00000000-0000-4000-8000-000000000031",
-      "aliases": [
-        "七离子",
-        "离子金克丝"
-      ],
-      "carryIds": [
-        "jinx"
-      ],
-      "url": "https://www.metatft.com/pbe-comps#DA_IonicSpark19-DA_Jinx19",
-      "landingTeamId": "00000000-0000-4000-8000-000000000007",
-      "sharedTeamIds": [
-        "00000000-0000-4000-8000-000000000007"
-      ],
-      "places": [
+        1305,
         754,
-        810,
-        882,
-        878,
-        834,
-        779,
-        622,
-        351
+        739,
+        901,
+        986,
+        1086,
+        1020,
+        675
       ],
-      "games": 5910,
-      "mean": 4.151945854483926,
-      "topFourRate": 0.5624365482233502,
-      "winRate": 0.127580372250423
+      "games": 7466,
+      "mean": 4.3691401017948035,
+      "winRate": 0.174792392177873,
+      "topFourRate": 0.495446021966247
+    },
+    {
+      "clusterId": "429007",
+      "sourceName": "Bodyguard Renata Glasc",
+      "name": "六保镖贾克斯烈娜塔",
+      "sectionId": "sample-block-0122",
+      "teamId": "00000000-0000-4000-8000-000000000044",
+      "aliases": [
+        "护卫贾克斯",
+        "武器烈娜塔",
+        "六护卫烈娜塔"
+      ],
+      "carryIds": [
+        "renata-glasc",
+        "jax"
+      ],
+      "url": "https://www.metatft.com/pbe-comps#DA_Bodyguard19-DA_RenataGlasc19",
+      "places": [
+        390,
+        604,
+        550,
+        473,
+        422,
+        412,
+        428,
+        444
+      ],
+      "games": 3723,
+      "mean": 4.370131614289551,
+      "winRate": 0.10475423045930701,
+      "topFourRate": 0.5417673918882622
     },
     {
       "clusterId": "429024",
@@ -155,166 +272,19 @@
         "00000000-0000-4000-8000-000000000064"
       ],
       "places": [
-        296,
-        479,
-        553,
-        490,
-        516,
-        457,
-        376,
-        253
+        551,
+        892,
+        986,
+        925,
+        971,
+        875,
+        735,
+        520
       ],
-      "games": 3420,
-      "mean": 4.342397660818714,
-      "topFourRate": 0.531578947368421,
-      "winRate": 0.08654970760233918
-    },
-    {
-      "clusterId": "429013",
-      "sourceName": "Renegade Graves Zac",
-      "name": "五非主流派克男枪",
-      "sectionId": "sample-block-0452",
-      "teamId": "00000000-0000-4000-8000-000000000093",
-      "aliases": [
-        "非主流派克男枪",
-        "五非主流男枪",
-        "派克95"
-      ],
-      "carryIds": [
-        "pyke",
-        "graves"
-      ],
-      "url": "https://www.metatft.com/pbe-comps#DA_Renegade19-DA_Graves19-DA_Zac19",
-      "places": [
-        70,
-        86,
-        81,
-        71,
-        64,
-        74,
-        74,
-        70
-      ],
-      "games": 590,
-      "mean": 4.425423728813559,
-      "topFourRate": 0.5220338983050847,
-      "winRate": 0.11864406779661017
-    },
-    {
-      "clusterId": "429014",
-      "sourceName": "K/DA Neeko",
-      "name": "K/DA妮蔻",
-      "sectionId": "sample-block-0464",
-      "teamId": "00000000-0000-4000-8000-000000000039",
-      "aliases": [
-        "KDA妮蔻"
-      ],
-      "carryIds": [
-        "neeko"
-      ],
-      "url": "https://www.metatft.com/pbe-comps#DA_KDA19-DA_Neeko19",
-      "places": [
-        439,
-        331,
-        287,
-        275,
-        251,
-        269,
-        270,
-        314
-      ],
-      "games": 2436,
-      "mean": 4.241789819376026,
-      "topFourRate": 0.5467980295566502,
-      "winRate": 0.18021346469622332
-    },
-    {
-      "clusterId": "429007",
-      "sourceName": "Bodyguard Renata Glasc",
-      "name": "六保镖贾克斯烈娜塔",
-      "sectionId": "sample-block-0122",
-      "teamId": "00000000-0000-4000-8000-000000000044",
-      "aliases": [
-        "护卫贾克斯",
-        "武器烈娜塔",
-        "六护卫烈娜塔"
-      ],
-      "carryIds": [
-        "renata-glasc",
-        "jax"
-      ],
-      "url": "https://www.metatft.com/pbe-comps#DA_Bodyguard19-DA_RenataGlasc19",
-      "places": [
-        204,
-        329,
-        296,
-        271,
-        216,
-        233,
-        235,
-        236
-      ],
-      "games": 2020,
-      "mean": 4.378712871287129,
-      "topFourRate": 0.5445544554455446,
-      "winRate": 0.100990099009901
-    },
-    {
-      "clusterId": "429001",
-      "sourceName": "Prodigy Malzahar",
-      "name": "五天才玛尔扎哈·男爵",
-      "sectionId": "sample-block-0229",
-      "teamId": "00000000-0000-4000-8000-000000000071",
-      "aliases": [
-        "五天才男爵",
-        "天才蚂蚱"
-      ],
-      "carryIds": [
-        "malzahar"
-      ],
-      "url": "https://www.metatft.com/pbe-comps#DA_Prodigy19-DA_Malzahar19-DA_Amumu19",
-      "places": [
-        167,
-        209,
-        207,
-        204,
-        194,
-        182,
-        172,
-        131
-      ],
-      "games": 1466,
-      "mean": 4.321964529331514,
-      "topFourRate": 0.5368349249658936,
-      "winRate": 0.11391541609822646
-    },
-    {
-      "clusterId": "429021",
-      "sourceName": "Gu Feng Xayah Wukong",
-      "name": "四国风霞",
-      "sectionId": "sample-block-0214",
-      "teamId": "00000000-0000-4000-8000-000000000104",
-      "aliases": [
-        "国风悟空霞"
-      ],
-      "carryIds": [
-        "xayah"
-      ],
-      "url": "https://www.metatft.com/pbe-comps#DA_Heavenscale19-DA_Xayah19",
-      "places": [
-        622,
-        355,
-        365,
-        452,
-        468,
-        521,
-        520,
-        341
-      ],
-      "games": 3644,
-      "mean": 4.409714599341383,
-      "topFourRate": 0.49231613611416025,
-      "winRate": 0.1706915477497256
+      "games": 6455,
+      "mean": 4.4001549186677,
+      "winRate": 0.08536018590240124,
+      "topFourRate": 0.5195972114639814
     },
     {
       "clusterId": "429017",
@@ -333,47 +303,50 @@
       ],
       "url": "https://www.metatft.com/pbe-comps#DA_OceanSong19-DA_Zac19-DA_Aurora19",
       "places": [
-        39,
-        62,
-        74,
-        77,
-        79,
-        76,
-        51,
-        51
+        66,
+        114,
+        144,
+        136,
+        132,
+        125,
+        92,
+        81
       ],
-      "games": 509,
-      "mean": 4.5363457760314345,
-      "topFourRate": 0.4950884086444008,
-      "winRate": 0.07662082514734773
+      "games": 890,
+      "mean": 4.462921348314607,
+      "winRate": 0.07415730337078652,
+      "topFourRate": 0.5168539325842697
     },
     {
-      "clusterId": "429032",
-      "sourceName": "Illbeats Draven",
-      "name": "四酷炫德莱文",
-      "sectionId": "sample-block-0407",
-      "teamId": "00000000-0000-4000-8000-000000000029",
+      "clusterId": "429013",
+      "sourceName": "Renegade Graves Zac",
+      "name": "五非主流派克男枪",
+      "sectionId": "sample-block-0452",
+      "teamId": "00000000-0000-4000-8000-000000000093",
       "aliases": [
-        "打击乐德莱文"
+        "非主流派克男枪",
+        "五非主流男枪",
+        "派克95"
       ],
       "carryIds": [
-        "draven"
+        "pyke",
+        "graves"
       ],
-      "url": "https://www.metatft.com/pbe-comps#DA_Illbeats19-DA_Draven19",
+      "url": "https://www.metatft.com/pbe-comps#DA_Renegade19-DA_Graves19-DA_Zac19",
       "places": [
-        203,
-        224,
-        226,
-        199,
-        215,
-        245,
-        253,
-        281
+        127,
+        164,
+        164,
+        136,
+        125,
+        153,
+        146,
+        145
       ],
-      "games": 1846,
-      "mean": 4.706933911159263,
-      "topFourRate": 0.46153846153846156,
-      "winRate": 0.10996749729144095
+      "games": 1160,
+      "mean": 4.496551724137931,
+      "winRate": 0.10948275862068965,
+      "topFourRate": 0.5094827586206897
     },
     {
       "clusterId": "429000",
@@ -392,47 +365,19 @@
       ],
       "url": "https://www.metatft.com/pbe-comps#DA_Encore19-DA_Ezreal19",
       "places": [
-        309,
-        503,
-        518,
-        553,
-        538,
-        535,
-        510,
-        467
+        525,
+        811,
+        890,
+        931,
+        890,
+        888,
+        822,
+        777
       ],
-      "games": 3933,
-      "mean": 4.649631324688533,
-      "topFourRate": 0.47876938723620643,
-      "winRate": 0.07856598016781083
-    },
-    {
-      "clusterId": "429055",
-      "sourceName": "Swiftstriker Zeri",
-      "name": "双电子泽丽",
-      "sectionId": "sample-block-0235",
-      "teamId": "00000000-0000-4000-8000-000000000105",
-      "aliases": [
-        "迅击泽丽"
-      ],
-      "carryIds": [
-        "zeri"
-      ],
-      "url": "https://www.metatft.com/pbe-comps#DA_Jazz19-DA_Leona19",
-      "places": [
-        1851,
-        1003,
-        655,
-        665,
-        697,
-        873,
-        1279,
-        2378
-      ],
-      "games": 9401,
-      "mean": 4.806084459100096,
-      "topFourRate": 0.4439953196468461,
-      "winRate": 0.1968939474523987
+      "games": 6534,
+      "mean": 4.635598408325681,
+      "winRate": 0.08034894398530762,
+      "topFourRate": 0.4831649831649832
     },
     {
       "clusterId": "429040",
@@ -450,23 +395,78 @@
       ],
       "url": "https://www.metatft.com/pbe-comps#DA_Mosher19-DA_Viego19-DA_Choreographer19",
       "places": [
-        54,
-        62,
-        53,
-        52,
-        43,
-        46,
-        65,
-        104
+        122,
+        134,
+        126,
+        100,
+        97,
+        101,
+        128,
+        176
       ],
-      "games": 479,
-      "mean": 4.849686847599165,
-      "topFourRate": 0.4613778705636743,
-      "winRate": 0.1127348643006263
+      "games": 984,
+      "mean": 4.637195121951219,
+      "winRate": 0.12398373983739837,
+      "topFourRate": 0.4898373983739837
+    },
+    {
+      "clusterId": "429032",
+      "sourceName": "Illbeats Draven",
+      "name": "四酷炫德莱文",
+      "sectionId": "sample-block-0407",
+      "teamId": "00000000-0000-4000-8000-000000000029",
+      "aliases": [
+        "打击乐德莱文"
+      ],
+      "carryIds": [
+        "draven"
+      ],
+      "url": "https://www.metatft.com/pbe-comps#DA_Illbeats19-DA_Draven19",
+      "places": [
+        426,
+        451,
+        432,
+        401,
+        456,
+        505,
+        540,
+        545
+      ],
+      "games": 3756,
+      "mean": 4.706602768903088,
+      "winRate": 0.1134185303514377,
+      "topFourRate": 0.45527156549520764
+    },
+    {
+      "clusterId": "429055",
+      "sourceName": "Swiftstriker Zeri",
+      "name": "双电子泽丽",
+      "sectionId": "sample-block-0235",
+      "teamId": "00000000-0000-4000-8000-000000000105",
+      "aliases": [
+        "迅击泽丽"
+      ],
+      "carryIds": [
+        "zeri"
+      ],
+      "url": "https://www.metatft.com/pbe-comps#DA_Jazz19-DA_Leona19",
+      "places": [
+        4063,
+        2196,
+        1435,
+        1425,
+        1560,
+        1884,
+        2747,
+        4924
+      ],
+      "games": 20234,
+      "mean": 4.753632499752891,
+      "winRate": 0.20080063259859643,
+      "topFourRate": 0.4506770781852328
     }
   ],
   "smallSamples": [],
-  "build": "6028987",
   "previous": {
     "seasonId": "s19-pbe-19.1.0.5973071",
     "set": "TFTSet19",
