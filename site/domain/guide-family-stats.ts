@@ -11,6 +11,7 @@ export interface GuideFamilyStat {
   sourceName: string;
   aliases?: string[];
   carryIds: string[];
+  heroAugment?: boolean;
   games: number;
   mean: number;
   winRate: number;
@@ -125,15 +126,16 @@ export const recommendationGroups = [
   { id: "reroll", label: "赌狗（1–3 费）" },
   { id: "fast8", label: "84" },
   { id: "fast9", label: "95" },
+  { id: "heroAugment", label: "英雄强化" },
 ] as const;
 
 export type RecommendationGroup = typeof recommendationGroups[number]["id"];
 
 export type RecommendationStat = Pick<GuideFamilyStat, "sectionId" | "name" | "games" | "mean" | "url"> & {
   teamId: string;
-  opening?: string;
   carryId?: string;
-  carryGames?: number;
+  topFourRate?: number;
+  winRate?: number;
 };
 
 export type RecommendationStats = {
@@ -160,29 +162,32 @@ export function recommendationGroup(style: string, carryCosts: number[], rollLev
       (/慢[搜D]|赌/i.test(style) || (!style && rollLevel !== undefined && rollLevel >= 5 && rollLevel <= 7))) return "reroll";
 }
 
-export function selectRecommendationRoutes<T extends { group: RecommendationGroup; familyId: string; rating: RecommendationStat; conditional?: boolean }>(
+export function selectRecommendationRoutes<T extends {
+  group: RecommendationGroup; familyId: string; rating: RecommendationStat; conditional?: boolean; preferred?: boolean;
+}>(
   candidates: T[],
+  { maxRegular = 12, maxHeroAugment = 2, displayOrder = [] }: {
+    maxRegular?: number; maxHeroAugment?: number; displayOrder?: string[];
+  } = {},
 ) {
+  const positions = new Map(displayOrder.map((id, index) => [id, index]));
+  const position = ({ rating }: T) => positions.get(rating.teamId) ?? positions.size;
   const ranked = candidates.filter(({ rating }) => recommendationTier(rating) === "recommended")
-    .sort((a, b) => a.rating.mean - b.rating.mean || b.rating.games - a.rating.games);
-  return recommendationGroups.flatMap(({ id }) => {
-    const families = new Set<string>();
-    const carries = new Set<string>();
-    const routes = ranked.filter(({ group, familyId, rating }) => {
-      if (group !== id || families.has(familyId) || (rating.carryId && carries.has(rating.carryId))) return false;
-      families.add(familyId);
-      if (rating.carryId) carries.add(rating.carryId);
-      return true;
-    });
-    const top = routes.slice(0, 4);
-    // Reserve one optional slot for a less commonly held carry in the same sample.
-    const [first, second] = top;
-    const leadUsage = Math.min(first?.rating.carryGames ?? 0, second?.rating.carryGames ?? 0);
-    const alternative = leadUsage > 0 && routes.slice(2).find(({ rating }) =>
-      rating.carryGames !== undefined && rating.carryGames > 0 && rating.carryGames < leadUsage);
-    if (alternative && !top.includes(alternative)) top[3] = alternative;
-    return top.sort((a, b) => Number(!!a.conditional) - Number(!!b.conditional));
+    .sort((a, b) => position(a) - position(b) || Number(!!b.preferred) - Number(!!a.preferred) ||
+      a.rating.mean - b.rating.mean || b.rating.games - a.rating.games);
+  const families = new Set<string>();
+  const boards = new Set<string>();
+  const slots = { regular: maxRegular, heroAugment: maxHeroAugment };
+  const selected = ranked.filter(({ group, familyId, rating }) => {
+    const pool = group === "heroAugment" ? "heroAugment" : "regular";
+    if (slots[pool] <= 0 || families.has(familyId) || boards.has(rating.teamId)) return false;
+    slots[pool]--;
+    families.add(familyId);
+    boards.add(rating.teamId);
+    return true;
   });
+  return recommendationGroups.flatMap(({ id }) => selected.filter(route => route.group === id)
+    .sort((a, b) => position(a) - position(b) || Number(!!a.conditional) - Number(!!b.conditional)));
 }
 
 export function guideFamilyRows(batch: GuideFamilyBatch, seasonId: string, sectionId: string, teams: Team[]) {

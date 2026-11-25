@@ -36,6 +36,9 @@ ISO_TIME = re.compile(
     r"(?::[0-5]\d(?:\.\d+)?)?(?:Z|[+-](?:[01]\d|2[0-3]):[0-5]\d)"
 )
 PRIVATE_ID = re.compile(r"\bdoxc[a-z0-9_]+", re.I)
+REGULAR_GROUPS = {"reroll", "fast8", "fast9"}
+RECOMMENDATION_GROUPS = REGULAR_GROUPS | {"heroAugment"}
+RECOMMENDATION_STATUSES = ("recommended", "conditional", "avoid", "review")
 UTC8 = timezone(timedelta(hours=8))
 
 
@@ -278,14 +281,75 @@ def check_history(errors):
     return len(history)
 
 
+def check_recommendation_entries(recommendations, sections, errors):
+    name = "data/patch-recommendations.json"
+    entries = recommendations.get("entries")
+    if not isinstance(entries, list):
+        return
+    boards = {
+        (section["id"], team["id"]): section.get("category")
+        for section in sections
+        for team in [section.get("team"), *(section.get("teams") or [])]
+        if isinstance(team, dict) and isinstance(team.get("id"), str)
+    }
+    seen, active, groups = set(), set(), set()
+    regular = hero = 0
+    for index, entry in enumerate(entries):
+        if not isinstance(entry, dict):
+            continue
+        path = f"{name}.entries[{index}]"
+        section_id, team_id, group, status = (entry.get(key) for key in ("sectionId", "teamId", "group", "status"))
+        valid_group = isinstance(group, str) and group in RECOMMENDATION_GROUPS
+        if "group" in entry and not valid_group:
+            errors.append(f"{path}.group：未知推荐分组")
+        if status not in RECOMMENDATION_STATUSES:
+            errors.append(f"{path}.status：未知推荐状态")
+        for key in ("note", "timing", "upgrade"):
+            value = entry.get(key)
+            if (key == "note" or key in entry) and (not isinstance(value, str) or not value.strip()
+                                                   or key != "note" and len(value.splitlines()) != 1):
+                errors.append(f"{path}.{key}：需填写有效文字，结构化建议须为单行")
+        if not isinstance(section_id, str) or not isinstance(team_id, str) or (section_id, team_id) not in boards:
+            errors.append(f"{path}.teamId：未在对应的公开攻略中找到")
+            continue
+        key = (section_id, team_id)
+        if key in seen:
+            errors.append(f"{path}.teamId：同一棋盘只能写一次")
+            continue
+        seen.add(key)
+        is_hero = boards[key] == "英雄强化阵容"
+        if valid_group and is_hero != (group == "heroAugment"):
+            errors.append(f"{path}.group：与公开攻略的英雄强化分类不匹配")
+        if status in ("recommended", "conditional"):
+            active.add(team_id)
+            if is_hero:
+                hero += 1
+            else:
+                regular += 1
+                if valid_group:
+                    groups.add(group)
+
+    if regular > 12 or hero > 2:
+        errors.append(f"{name}：常规推荐最多 12 套，英雄强化最多 2 套")
+    if regular == 12 and groups and not REGULAR_GROUPS.issubset(groups):
+        errors.append(f"{name}：12 套常规推荐须涵盖赌狗、84 和 95")
+    if "displayOrder" in recommendations:
+        order = recommendations["displayOrder"]
+        if not isinstance(order, list) or not all(isinstance(team_id, str) and team_id in active for team_id in order):
+            errors.append(f"{name}.displayOrder：只可引用推荐或有条件的棋盘")
+        elif len(order) != len(set(order)):
+            errors.append(f"{name}.displayOrder：棋盘不得重复")
+
+
 def check_references(recommendations, errors):
     preview = read_json("data/public-preview.json", dict, errors)
     sections = preview.get("sections")
     if not isinstance(sections, list) or not sections:
         errors.append("data/public-preview.json：sections 缺失或为空")
         sections = []
-    ids = {section["id"] for section in sections
-           if isinstance(section, dict) and isinstance(section.get("id"), str)}
+    sections = [section for section in sections if isinstance(section, dict) and isinstance(section.get("id"), str)]
+    ids = {section["id"] for section in sections}
+    check_recommendation_entries(recommendations, sections, errors)
     names = ("data/patch-recommendations.json", "data/guide-family-map.json")
     family_map = read_json(names[1], dict, errors)
     for name, source, key in zip(names, (recommendations, family_map), ("entries", "rows")):

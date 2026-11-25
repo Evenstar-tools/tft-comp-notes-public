@@ -6,19 +6,19 @@ import { guideRerollTargets } from "@/domain/reroll-targets";
 import familyStats from "@/data/guide-family-stats.json";
 import coreStats from "@/data/patch-recommendation-stats.json";
 import { displayGuideName, displayTraitNames } from "@/domain/trait-names.mjs";
-import { canRankRecommendations, compareGuideFamilyPerformance, currentFamilyBatch, currentRecommendationEvidence, familyMetricValue, formatRecommendationMean, guideFamilyRows, previousRecommendationDeadline, recommendationGroup, recommendationTier, selectRecommendationRoutes, type GuideFamilyDirection, type GuideFamilyMetric, type GuideFamilySnapshot, type GuideFamilyStat, type RecommendationStat } from "@/domain/guide-family-stats";
+import { canRankRecommendations, compareGuideFamilyPerformance, currentFamilyBatch, currentRecommendationEvidence, familyMetricValue, formatRecommendationMean, guideFamilyRows, previousRecommendationDeadline, recommendationGroup, recommendationTier, selectRecommendationRoutes, type GuideFamilyDirection, type GuideFamilyMetric, type GuideFamilySnapshot, type GuideFamilyStat, type RecommendationGroup, type RecommendationStat } from "@/domain/guide-family-stats";
 import { carryMinGames, guideCarryRows } from "@/domain/guide-carry-stats";
 import { sectionTeams } from "@/domain/document-flow";
 import { boardTitle, groupGuides, type GuideFamily } from "@/domain/guide-families";
 import { guideBoardName, guideFacets, guideLink, guidePlaystyle, guideRollLevel, guideRoster, guideRoute, guideStrategyLabel, guideTitleWithoutPlaystyle, matchingGear, parseGuideFilters, primaryFirst, readingNotes, repeatsFormationLabel, type GuideFilters, type GuideSearchScope, type GuideSort } from "@/domain/guide-reading";
-import { patchRecommendationLabels, type PatchRecommendationBatch } from "@/domain/patch-recommendations";
+import { patchRecommendationLabels, type PatchRecommendation, type PatchRecommendationBatch } from "@/domain/patch-recommendations";
 import { homeGuideFilter, matchesGuideStyle, guideWearerQuery, searchPhaseNote, splitGuideConditions, guideSearchKey, guideStyleKey } from "@/domain/guide-search";
 import { equippedGuideRoutes, familyNameMatches, homeSearchIntent, matchHomeGuide, searchUnitIds } from "@/domain/home-guide-search";
 import { itemAliases } from "@/domain/roster-import";
 import { usedPopulation } from "@/domain/team";
 import type { Section } from "@/domain/document";
 import type { Season, Team } from "@/domain/types";
-import { heroAugmentForGuide } from "@/domain/hero-augments";
+import { heroAugmentCategory, heroAugmentForGuide } from "@/domain/hero-augments";
 import { homeGuideReturn } from "@/lib/home-position";
 import { guideNavigationChange, guideNavigationHref } from "@/domain/guide-navigation";
 import { HomeGuideBanner } from "./GuideNavigation";
@@ -304,7 +304,8 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
   const hasCurrentCore = !!patch && canRankRecommendations(coreStats, season.id, patch);
   const showTiers = view === "regular" && !recommended;
   const tierFilter = showTiers ? category : "";
-  const availableFacets = view === "regular" ? [...visible, ...library["hero-augments"]] : visible;
+  const homeEntries = [...library.regular, ...library["hero-augments"]];
+  const availableFacets = view === "regular" ? homeEntries : visible;
   const styles = new Map([...availableFacets.map(entry => entry.filterStyle), style].filter(Boolean)
     .map(tag => [guideStyleKey(tag), tag.replace(/^([一二三])费/, (text, digit: string) => ("一二三".indexOf(digit) + 1) + "费")] as const));
   const costs = [...new Set([...availableFacets.flatMap(entry => entry.costOptions), ...(cost ? [cost] : [])])].sort((a,b) => a-b);
@@ -523,12 +524,19 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
     label: name, id: name === backupCategory ? "backup-guides" : "guide-group-" + index,
   })) : [];
 
-  function homeRoutes(batch: GuideFamilySnapshot, entries: (typeof visible[number] & { matches?: Candidate["matches"] })[]) {
-    return selectRecommendationRoutes(entries.flatMap(entry => {
+  type HomeEntry = typeof visible[number] & { matches?: Candidate["matches"] };
+  type HomeSelection = {
+    entry: HomeEntry; team: Team; group: RecommendationGroup; familyId: string; rating: RecommendationStat;
+    strategy?: string; exact?: Candidate["matches"][number]; decision?: PatchRecommendation;
+    conditional: boolean; preferred: boolean; sampleLabel?: string; note?: string;
+  };
+  function homeRoutes(batch: GuideFamilySnapshot, entries: HomeEntry[], includeFixed = false) {
+    const routes = entries.flatMap<HomeSelection>(entry => {
       const { section, data } = entry;
-      if (entry.augment) return [];
+      const isHero = section.category === heroAugmentCategory;
       const families = batch === homeFamilyStats ? entry.rows : guideFamilyRows(batch, data.id, section.id, entry.teams);
       return families.flatMap(({ stat, boards }) => {
+        if (isHero !== Boolean(stat.heroAugment)) return [];
         const eligible = boards.filter(board => canShowBoard(section, board) && families.filter(row =>
           row.boards.some(option => option.id === board.id)).length === 1 &&
           (!entry.matches || (!needle && !cost) || entry.matches.some(match => match.board.id === board.id)));
@@ -541,50 +549,53 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
         const exact = entry.matches?.find(match => match.board.id === team.id);
         const facet = guideFacets(section, team, data);
         const strategy = guideStrategyLabel(section, team, data, entry.teams[0]);
-        const group = recommendationGroup(entry.playstyle ?? strategy ?? facet.style, facet.costs, guideRollLevel(section, team));
-        if (!group) return [];
-        const conditional = decisions.get(`${section.id}:${team.id}`)?.status === "conditional";
-        const rating = { ...stat, teamId: team.id, carryId: stat.carryIds[0], carryGames: stat.games };
-        return [{ entry, team, group, rating, strategy, exact, conditional, familyId: String(stat.clusterId) }];
+        const decision = decisions.get(`${section.id}:${team.id}`);
+        const inferredGroup = recommendationGroup(entry.playstyle ?? strategy ?? facet.style, facet.costs, guideRollLevel(section, team));
+        const group = isHero ? "heroAugment" : decision?.group ?? inferredGroup;
+        if (!group || (!isHero && group === "heroAugment")) return [];
+        const conditional = decision?.status === "conditional";
+        const rating = { ...stat, teamId: team.id, carryId: stat.carryIds[0] };
+        return [{ entry, team, group, rating, strategy: !isHero && inferredGroup && group !== inferredGroup ? undefined : strategy,
+          exact, decision, conditional,
+          preferred: decision?.status === "recommended" || conditional, familyId: String(stat.clusterId) }];
       });
-    }));
+    });
+    if (includeFixed) {
+      const familyBoards = new Set(routes.map(route => route.team.id));
+      routes.push(...entries.flatMap(entry => entry.teams.flatMap(team => {
+        const { section, data } = entry;
+        const rating = fixedRecommendations.get(team.id);
+        if (!rating || section.category === heroAugmentCategory || familyBoards.has(team.id) || !canShowBoard(section, team) ||
+          (needle || cost) && !entry.matches?.some(match => match.board.id === team.id)) return [];
+        const facet = guideFacets(section, team, data);
+        const strategy = guideStrategyLabel(section, team, data, entry.teams[0]);
+        const decision = decisions.get(`${section.id}:${team.id}`);
+        const group = decision?.group ??
+          recommendationGroup(entry.playstyle ?? strategy ?? facet.style, facet.costs, guideRollLevel(section, team));
+        if (!group || group === "heroAugment") return [];
+        return [{ entry, team, group, rating, strategy, decision, conditional: true,
+          preferred: decision?.status === "recommended" || decision?.status === "conditional",
+          familyId: team.id, note: rating.note, sampleLabel: rating.label }];
+      })));
+    }
+    return selectRecommendationRoutes(routes, { displayOrder: batch === homeFamilyStats ? recommendations?.displayOrder : undefined });
   }
   const currentHomeEvidence = currentRecommendationEvidence(homeFamilyStats, season.id, patch);
   // Decide when to switch data for the whole home, independently of a visitor's filters.
-  const currentHomeRoutes = (recommended || showingTrends) && currentHomeEvidence ? homeRoutes(homeFamilyStats, library.regular) : [];
+  const currentHomeRoutes = (recommended || showingTrends) && currentHomeEvidence ? homeRoutes(homeFamilyStats, homeEntries) : [];
   const currentHomeReady = currentHomeRoutes.length > 0;
   const recommendationSnapshot = currentHomeReady ? homeFamilyStats : previousDeadline !== undefined ? previousFamilyStats : undefined;
-  const selectedRoutes = recommended && recommendationSnapshot ? homeRoutes(recommendationSnapshot, candidates) : [];
-  if (currentHomeReady && recommendations?.displayOrder) {
-    const positions = new Map(recommendations.displayOrder.map((id, index) => [id, index]));
-    selectedRoutes.sort((a, b) => (positions.get(a.team.id) ?? positions.size) - (positions.get(b.team.id) ?? positions.size));
-  }
-  const fixedRoutes = currentHomeReady ? candidates.flatMap(entry => entry.teams.flatMap(team => {
-    const rating = fixedRecommendations.get(team.id);
-    if (!rating || !canShowBoard(entry.section, team) ||
-      (needle || cost) && !entry.matches.some(match => match.board.id === team.id) ||
-      selectedRoutes.some(route => route.team.id === team.id)) return [];
-    const facet = guideFacets(entry.section, team, entry.data);
-    const strategy = guideStrategyLabel(entry.section, team, entry.data, entry.teams[0]);
-    const group = recommendationGroup(entry.playstyle ?? strategy ?? facet.style, facet.costs, guideRollLevel(entry.section, team));
-    if (!group) return [];
-    return [{ entry, team, group, rating, strategy, exact: undefined, conditional: true, note: rating.note, sampleLabel: rating.label }];
-  })) : [];
-  type HomeSelection = Omit<ReturnType<typeof homeRoutes>[number], "familyId" | "rating"> & {
-    rating: RecommendationStat; note?: string; sampleLabel?: string;
-  };
-  const homeSelections: HomeSelection[] = [...selectedRoutes];
-  for (const route of fixedRoutes) {
-    if (homeSelections.filter(existing => existing.group === route.group).length >= 4) continue;
-    homeSelections.push(route);
-  }
-  const recommendationCards: RecommendationCard[] = homeSelections.map(({ entry, exact, team, group, rating, strategy, conditional, note, sampleLabel }) => {
+  const homeSelections = !equipmentQuery && recommended && recommendationSnapshot
+    ? (needle || cost || style ? homeRoutes(recommendationSnapshot, candidatesFor(homeEntries), currentHomeReady)
+      : currentHomeReady && !fixedRecommendations.size ? currentHomeRoutes
+      : homeRoutes(recommendationSnapshot, homeEntries, currentHomeReady))
+    : [];
+  const recommendationCards: RecommendationCard[] = homeSelections.map(({ entry, exact, team, group, rating, strategy, conditional, decision, note, sampleLabel }) => {
     const { section, data } = entry;
     const notes = readingNotes(section, team, data);
-    const record = decisions.get(`${section.id}:${team.id}`);
     const primary = entry.teams[0]?.id === team.id;
     const [original, short] = shortOpenings[guideTitleWithoutPlaystyle(section.title, entry.playstyle)] ?? [];
-    const advice = record?.status === "recommended" || record?.status === "conditional" ? record.note : undefined;
+    const advice = decision?.status === "recommended" || decision?.status === "conditional" ? decision.note : undefined;
     const opening = note ?? advice ?? (primary && notes.opening.trim() === original ? short : homeOpening(notes.opening, rating.name));
     const roles = notes.roles;
     const roster = guideRoster(team, data, roles);
@@ -606,7 +617,8 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
         title: guideBoardName(laterBoard),
       },
     };
-    const carry = lineup.find(({ role }) => role === "主C");
+    const sampledCarry = lineup.find(({ unit }) => unit.id === rating.carryId);
+    const carry = lineup.find(({ role }) => role === "主C") ?? (sampledCarry && { ...sampledCarry, role: "主C" as const });
     const tank = lineup.find(({ role }) => role === "主坦");
     const ordered = [carry, tank, secondary, ...lineup].filter(avatar => avatar !== undefined);
     const avatars = ordered.filter(({ unit }, index) =>
@@ -625,6 +637,8 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
       .filter(condition => team.conditions || condition.featured || condition.kind === "required");
     return {
       group, rating, team, title: guideTitleWithoutPlaystyle(displayGuideName(rating.name), entry.playstyle), avatars, opening: displayTraitNames(opening), conditional, sampleLabel,
+      timing: decision?.timing && displayTraitNames(decision.timing),
+      upgrade: decision?.upgrade && displayTraitNames(decision.upgrade),
       entryTeamId: primary && (!needle || exact?.namedFamily) ? section.reroll?.entryTeamId : undefined,
       stages: [...stages.values()],
       conditions,
@@ -829,7 +843,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
     tracks: trends.tracks.map(track => ({
       ...track,
       href: guideFromTrends(track.href, home),
-      recommended: track.recommended && currentHomeRoutes.some(route => track.recommendedKey === String(route.rating.clusterId)),
+      recommended: track.recommended && currentHomeRoutes.some(route => track.recommendedKey === route.familyId),
     })),
     discoveries: trends.discoveries.map(discovery => ({ ...discovery, href: guideFromTrends(discovery.href, home) })),
   };

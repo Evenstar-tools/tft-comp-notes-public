@@ -2,6 +2,13 @@
 const damage = new Set("ArchangelsStaff Bloodthirster BlueBuff Deathblade GiantSlayer GuinsoosRageblade HandOfJustice HextechGunblade InfinityEdge JeweledGauntlet KrakensFury LastWhisper NashorsTooth RabadonsDeathcap SpearOfShojin StrikersFlail".split(" "));
 const defense = new Set("BrambleVest DragonsClaw Evenshroud GargoyleStoneplate ProtectorsVow SpiritVisage SunfireCape WarmogsArmor".split(" "));
 
+export function heroAugmentSourceUnits(sourceKey) {
+  return (sourceKey ?? "").split(/,\s*/).flatMap(key => {
+    const match = key.match(/^(.+)_HeroAugment$/i);
+    return match ? [match[1]] : [];
+  });
+}
+
 export function sourceProfile(group, sourceIds) {
   const units = (group?.units_string ?? "").split(/,\s*/).filter(Boolean);
   const builds = [];

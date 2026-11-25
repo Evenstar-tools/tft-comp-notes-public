@@ -11,6 +11,8 @@ export type RecommendationCard = {
   team: Team;
   title: string;
   opening: string;
+  timing?: string;
+  upgrade?: string;
   conditional: boolean;
   sampleLabel?: string;
   avatars: { unit: Unit; role?: "主C" | "主坦" | "副C"; context?: { label: string; title: string } }[];
@@ -34,7 +36,7 @@ export function PatchRecommendationList({ stats, cards, home, previousBuild }: {
   const groups = recommendationGroups.map(group => ({
     ...group, entries: cards.filter(card => card.group === group.id),
   })).filter(group => group.entries.length > 0);
-  const showJumps = groups.length > 1 && cards.length > 10;
+  const showJumps = groups.length > 1;
   const showMeta = previousBuild || showJumps;
   const updatedSample = <p className="home-patch-sample">
     {previousBuild ? <>上一版参考 · {stats.queue} {stats.patch} · </> : "数据更新 "}
@@ -56,17 +58,21 @@ export function PatchRecommendationList({ stats, cards, home, previousBuild }: {
           {!showMeta && index === 0 && updatedSample}
         </div>
         <div className="home-patch-cards">
-          {entries.map(({ rating, team, title, opening, conditional, sampleLabel, avatars, entryTeamId, stages, conditions, strategy, badgeLabel, hit }) => {
+          {entries.map(({ rating, team, title, opening, timing, upgrade, conditional, sampleLabel, avatars, entryTeamId, stages, conditions, strategy, badgeLabel, hit }) => {
             const cardId = "patch-" + rating.sectionId + "-" + team.id;
             const id = "guide-card-" + cardId;
             const back = homeGuideReturn(home, cardId, team.id);
             const href = guideLink(rating.sectionId, entryTeamId ?? team.id, back);
             const tone = rating.mean < 4.5 ? "strong" : rating.mean > 4.5 ? "weak" : "middle";
             const note = opening || (!strategy ? badgeLabel : "");
+            const hasAdvice = Boolean(timing || upgrade);
+            const topFour = rating.topFourRate != null && Number.isFinite(rating.topFourRate) &&
+              rating.topFourRate >= 0 && rating.topFourRate <= 1 ? (rating.topFourRate * 100).toFixed(1) + "%" : undefined;
             const shownStrategy = repeatsFormationLabel(label, strategy) ? undefined : strategy;
             return <article key={id} id={id} className="home-patch-card">
               <a href={href} data-home-board={team.id} className="home-patch-card-link"
-                aria-labelledby={id + "-title"} aria-describedby={[id + "-roles", shownStrategy && id + "-strategy", note && id + "-note", id + "-mean"].filter(Boolean).join(" ")}>
+                aria-labelledby={id + "-title"} aria-describedby={[id + "-roles", shownStrategy && id + "-strategy",
+                  (hasAdvice || note) && id + "-note", id + "-mean"].filter(Boolean).join(" ")}>
                 <div className="home-patch-avatars" id={id + "-roles"}>
                   {avatars.map(({ unit, role, context }) => <span key={unit.id} className="home-patch-avatar" data-core={role}>
                     <img className={"cost-" + unit.cost} src={unit.image} alt="" title={unit.name}
@@ -82,11 +88,15 @@ export function PatchRecommendationList({ stats, cards, home, previousBuild }: {
                     {shownStrategy && <span id={id + "-strategy"} className="home-patch-strategy">{shownStrategy}</span>}
                     {conditional && <span>有条件</span>}
                   </div>
-                  {note && <p id={id + "-note"}>{note}</p>}
+                  {hasAdvice ? <dl id={id + "-note"} className="home-patch-advice">
+                    {timing && <><dt>时机</dt><dd>{timing}</dd></>}
+                    {upgrade && <><dt>提档</dt><dd>{upgrade}</dd></>}
+                  </dl> : note && <p id={id + "-note"}>{note}</p>}
                   {hit && <p className="home-patch-hit">{hit}</p>}
                 </div>
                 <span id={id + "-mean"} className={"home-patch-mean guide-placement " + tone}>
                   <span><span className="home-patch-mean-label" aria-hidden="true">均名</span><span className="sr-only">平均排名</span> <b>{formatRecommendationMean(rating.mean)}</b></span>
+                  {topFour !== undefined && <small>前四 {topFour}</small>}
                   <small>{rating.games.toLocaleString("zh-CN")} 场{sampleLabel && " · " + sampleLabel}</small>
                 </span>
               </a>

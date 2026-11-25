@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { buildCompTrendModel, selectTrendWindow } from "../domain/comp-trends.ts";
+import { appendCompTrendBatch } from "../scripts/refresh-comp-trends.mjs";
 
 // Fixed samples keep the scope and continuity checks stable as production archives roll forward.
 const oldBatches = [
@@ -37,6 +38,29 @@ const archive = {
 const season = { id: archive.seasonId, units: [{ id: "jhin", cost: 4, image: "/assets/datatft/jhin-portrait.jpg" }] };
 const boards = new Map([[classical.sectionId, new Set([classical.teamId])]]);
 const build = (history, edition = season, active) => buildCompTrendModel(history, edition, boards, active);
+
+test("hero augment clusters stay out of regular trend tracks and discoveries", () => {
+  const input = {
+    seasonId: archive.seasonId, set: archive.set, queue: archive.queue, source: archive.source,
+    sourceUrl: archive.sourceUrl, patch: "19.1c", model: 429, days: 3, updatedAt: "2026-11-25T12:00:00Z",
+    rows: [
+      { ...classical, clusterId: "429003", games: 120, mean: 4.1, topFourRate: .55, winRate: .15 },
+      { sectionId: "hero-guide", teamId: "hero-board", name: "远程奥拉夫", carryIds: ["olaf"],
+        heroAugment: true, clusterId: "429034", games: 123, mean: 4.2, topFourRate: .55, winRate: .12 },
+    ],
+  };
+  const older = { ...hotfix, model: 429 };
+  const history = { ...archive, batches: [...oldBatches, older], discoveries: [...archive.discoveries,
+    { id: "previous-hero-sighting", batchId: older.id, clusterId: "429010" }] };
+  const review = {
+    queue: { normal: [] }, matchQueue: input.queue, set: input.set, model: input.model, days: input.days,
+    patch: input.patch, updatedAt: input.updatedAt, allGroups: [{ id: "429010", sourceKey: "DA_Elise19_HeroAugment" }],
+  };
+  const refreshed = appendCompTrendBatch(history, input, { review });
+  assert.ok(refreshed.series.some(track => track.points.some(point => point.clusterId === "429003")));
+  assert.ok(refreshed.series.every(track => track.sectionId !== "hero-guide"));
+  assert.deepEqual(refreshed.discoveries, archive.discoveries);
+});
 
 test("the Classical Jhin track keeps both samples across the 427 to 428 change and excludes their delta", () => {
   const first428 = archive.batches.findIndex(batch => Number(batch.model) === 428);

@@ -1,17 +1,32 @@
 {
   "seasonId": "s19-pbe",
   "build": "6028987",
-  "reviewedAt": "2026-11-25T05:00:26.105Z",
-  "window": {
-    "start": "2026-11-24T23:36:09Z",
-    "end": "2026-11-25T04:05:44.689Z"
-  },
+  "reviewedAt": "2026-11-25T15:30:30.091Z",
+  "displayOrder": [
+    "00000000-0000-4000-8000-000000000089",
+    "00000000-0000-4000-8000-000000000039",
+    "00000000-0000-4000-8000-000000000071",
+    "00000000-0000-4000-8000-000000000044",
+    "00000000-0000-4000-8000-000000000059",
+    "00000000-0000-4000-8000-000000000078",
+    "00000000-0000-4000-8000-000000000007",
+    "00000000-0000-4000-8000-000000001158",
+    "00000000-0000-4000-8000-000000000067",
+    "00000000-0000-4000-8000-000000000076",
+    "00000000-0000-4000-8000-000000001146",
+    "00000000-0000-4000-8000-000000000104",
+    "00000000-0000-4000-8000-000000000002",
+    "00000000-0000-4000-8000-000000000097"
+  ],
   "entries": [
     {
       "sectionId": "sample-block-0420",
       "teamId": "00000000-0000-4000-8000-000000000089",
       "status": "recommended",
-      "note": "吉格斯、可酷伯来得多，五级先追这两张。前排先三星就接肉装，法装优先留吉格斯。",
+      "group": "reroll",
+      "note": "炸弹人、可酷伯来得多，二星炸弹带装开熊。五级追双三星，900 热力开提莫。",
+      "timing": "炸弹人、可酷伯来得多，二星炸弹带装开熊。",
+      "upgrade": "五级追双三星，900 热力开提莫。",
       "sources": [
         "https://www.metatft.com/pbe-comps#DA_GlitterBomb19-DA_Kobuko19"
       ]
@@ -20,88 +35,163 @@
       "sectionId": "sample-block-0464",
       "teamId": "00000000-0000-4000-8000-000000000039",
       "status": "recommended",
-      "note": "妮蔻来得多、法装顺再慢搜。谁先两星就先顶前排，莉莉娅和酒桶都能接肉。",
+      "group": "reroll",
+      "note": "妮蔻、莉莉娅来得多，手里能做回蓝装和肉装。五级追妮蔻三星，莉莉娅或酒桶先三星就接肉。",
+      "timing": "妮蔻、莉莉娅来得多，手里能做回蓝装和肉装。",
+      "upgrade": "五级追妮蔻三星，莉莉娅或酒桶先三星就接肉。",
       "sources": [
         "https://www.metatft.com/pbe-comps#DA_KDA19-DA_Neeko19"
+      ]
+    },
+    {
+      "sectionId": "sample-block-0229",
+      "teamId": "00000000-0000-4000-8000-000000000071",
+      "status": "conditional",
+      "group": "reroll",
+      "note": "玛尔扎哈和艾克来得多，有法装就停七双追。七级追双三星，做完男爵任务再上九。",
+      "timing": "玛尔扎哈和艾克来得多，有法装就停七双追。",
+      "upgrade": "七级追双三星，做完男爵任务再上九。",
+      "sources": [
+        "https://www.metatft.com/pbe-comps#DA_Prodigy19-DA_Malzahar19-DA_Amumu19"
       ]
     },
     {
       "sectionId": "sample-block-0122",
       "teamId": "00000000-0000-4000-8000-000000000044",
       "status": "conditional",
-      "note": "六级一起搜烈娜塔、狗头。优先给狗头肉装，狗头两星能扛再存钱追三。",
+      "group": "reroll",
+      "note": "烈娜塔、狗头来得多，能做回蓝和肉装。六级追烈娜塔三星，稳住再上八开六护卫。",
+      "timing": "烈娜塔、狗头来得多，能做回蓝和肉装。",
+      "upgrade": "六级追烈娜塔三星，稳住再上八开六护卫。",
       "sources": [
         "https://www.metatft.com/pbe-comps#DA_Bodyguard19-DA_RenataGlasc19"
+      ]
+    },
+    {
+      "sectionId": "sample-block-0051",
+      "teamId": "00000000-0000-4000-8000-000000000059",
+      "status": "recommended",
+      "group": "fast8",
+      "note": "狗头两件开莎弥拉，无尽打工攒锤石。八级烬和锤石双两星，稳血后升九补女枪。",
+      "timing": "狗头两件开莎弥拉，无尽打工攒锤石。",
+      "upgrade": "八级烬和锤石双两星，稳血后升九补女枪。",
+      "sources": [
+        "https://www.metatft.com/pbe-comps#DA_Virtuosos19-DA_Thresh19"
       ]
     },
     {
       "sectionId": "sample-block-0338",
       "teamId": "00000000-0000-4000-8000-000000000078",
       "status": "recommended",
-      "note": "七级先数摇滚或花式射手不同名棋子的星级，合计 5 星解锁薇恩。八级先找薇恩、约里克两星。",
+      "group": "fast8",
+      "note": "有羊刀、海妖散件，提前挂摇滚解锁薇恩。八级搜薇恩和约里克两星，稳住再考虑上九。",
+      "timing": "有羊刀、海妖散件，提前挂摇滚解锁薇恩。",
+      "upgrade": "八级搜薇恩和约里克两星，稳住再考虑上九。",
       "sources": [
         "https://www.metatft.com/pbe-comps#DA_DemonVision19-DA_Vayne19-DA_Yorick19"
-      ]
-    },
-    {
-      "sectionId": "sample-block-0251",
-      "teamId": "00000000-0000-4000-8000-000000000075",
-      "status": "recommended",
-      "note": "先留海之歌棋子做扎克解锁。八级找扎克和男枪两星稳血，有血有钱再上九补塔莉垭。",
-      "sources": [
-        "https://www.metatft.com/pbe-comps#DA_OceanSong19-DA_Zac19-DA_Graves19"
       ]
     },
     {
       "sectionId": "sample-block-0307",
       "teamId": "00000000-0000-4000-8000-000000000007",
       "status": "recommended",
-      "note": "八级先找金克丝和希瓦娜两星，格温补伤害。稳住后再升九补女枪。",
+      "group": "fast8",
+      "note": "两星安妮能开提伯斯，物理装用卢锡安过渡。八级金克丝和龙女双两星，格温到手换拉克丝。",
+      "timing": "两星安妮能开提伯斯，物理装用卢锡安过渡。",
+      "upgrade": "八级金克丝和龙女双两星，格温到手换拉克丝。",
       "sources": [
         "https://www.metatft.com/pbe-comps#DA_IonicSpark19-DA_Jinx19"
       ]
     },
     {
-      "sectionId": "sample-block-0219",
-      "teamId": "00000000-0000-4000-8000-000000000064",
+      "sectionId": "sample-block-1020",
+      "teamId": "00000000-0000-4000-8000-000000001158",
       "status": "conditional",
-      "note": "羊刀开局、有五杀留牌再走。八级找凯尔约里克，五杀不同名棋子合计 9 星解锁铁男。",
+      "group": "fast8",
+      "note": "七级来卡莎、德莱文和布隆，输出肉装都齐。七级先出两星，八级开四花式，牌多再追三。",
+      "timing": "七级来卡莎、德莱文和布隆，输出肉装都齐。",
+      "upgrade": "七级先出两星，八级开四花式，牌多再追三。",
       "sources": [
-        "https://www.metatft.com/pbe-comps#DA_Pentakill19-DA_Kayle19-DA_Olaf19"
+        "https://www.metatft.com/pbe-comps#DA_KDA19-DA_Kaisa19"
       ]
     },
     {
-      "sectionId": "sample-block-0452",
-      "teamId": "00000000-0000-4000-8000-000000000093",
-      "status": "conditional",
-      "note": "血量稳、能留 85 金开派克再走。八级用两星男枪和扎克稳血，九级搜两星派克、补蔚。",
+      "sectionId": "sample-block-0006",
+      "teamId": "00000000-0000-4000-8000-000000000067",
+      "status": "recommended",
+      "group": "fast8",
+      "note": "K/DA 来牌顺、有回蓝法装，用妮蔻代持。八级阿狸、蕾欧娜两星，凑到 13 星 K/DA。",
+      "timing": "K/DA 来牌顺、有回蓝法装，用妮蔻代持。",
+      "upgrade": "八级阿狸、蕾欧娜两星，凑到 13 星 K/DA。",
       "sources": [
-        "https://www.metatft.com/pbe-comps#DA_Renegade19-DA_Graves19-DA_Zac19"
+        "https://www.metatft.com/pbe-comps#DA_KDA19-DA_19_Ahri-DA_Leona19"
+      ]
+    },
+    {
+      "sectionId": "sample-block-0251",
+      "teamId": "00000000-0000-4000-8000-000000000076",
+      "status": "conditional",
+      "group": "fast9",
+      "note": "八级扎克和男枪都两星，稳血有钱再上九。一到五费各占一强化格开岩雀，九级补悠米。",
+      "timing": "八级扎克和男枪都两星，稳血有钱再上九。",
+      "upgrade": "一到五费各占一强化格开岩雀，九级补悠米。",
+      "sources": [
+        "https://www.metatft.com/pbe-comps#DA_OceanSong19-DA_Zac19-DA_Graves19"
+      ]
+    },
+    {
+      "sectionId": "sample-block-0854",
+      "teamId": "00000000-0000-4000-8000-000000001146",
+      "status": "conditional",
+      "group": "fast9",
+      "note": "有回蓝法爆，八级两星阿狸稳血才上九。九级凑四编舞三经纪，盖伦或蒙多两星接肉。",
+      "timing": "有回蓝法爆，八级两星阿狸稳血才上九。",
+      "upgrade": "九级凑四编舞三经纪，盖伦或蒙多两星接肉。",
+      "sources": [
+        "https://www.metatft.com/pbe-comps#DA_KDA19-DA_19_Ahri-DA_Garen19"
       ]
     },
     {
       "sectionId": "sample-block-0214",
       "teamId": "00000000-0000-4000-8000-000000000104",
       "status": "conditional",
-      "note": "先用现成物理装过渡，血量和经济允许才升九。四国风先找霞和悟空两星。",
+      "group": "fast9",
+      "note": "有物理装、霞来得早，八级先上霞做国风任务。霞和前排两星稳住，九级补悟空、迦娜和李青。",
+      "timing": "有物理装、霞来得早，八级先上霞做国风任务。",
+      "upgrade": "霞和前排两星稳住，九级补悟空、迦娜和李青。",
       "sources": [
         "https://www.metatft.com/pbe-comps#DA_Heavenscale19-DA_Xayah19"
       ]
     },
     {
-      "sectionId": "sample-block-0229",
-      "teamId": "00000000-0000-4000-8000-000000000071",
-      "status": "review",
-      "note": "七级搜玛尔扎哈和艾克。当前体系取的是带男爵的上限盘，七级稳血按攻略看。",
+      "sectionId": "sample-block-0171",
+      "teamId": "00000000-0000-4000-8000-000000000002",
+      "status": "recommended",
+      "group": "heroAugment",
+      "note": "2-1 拿到救生员强化，有饮血或泰坦散件就进。六级追鳄鱼三星，八级补男枪和扎克。",
+      "timing": "2-1 拿到救生员强化，有饮血或泰坦散件就进。",
+      "upgrade": "六级追鳄鱼三星，八级补男枪和扎克。",
       "sources": [
-        "https://www.metatft.com/pbe-comps#DA_Prodigy19-DA_Malzahar19-DA_Amumu19"
+        "https://www.metatft.com/pbe-comps#DA_Renekton19_HeroAugment-DA_Zac19"
+      ]
+    },
+    {
+      "sectionId": "sample-block-0281",
+      "teamId": "00000000-0000-4000-8000-000000000097",
+      "status": "recommended",
+      "group": "heroAugment",
+      "note": "2-1 拿到远程奥拉夫强化，有反曲弓先做羊刀。五级追三奥拉夫，八级上扎克开六主唱。",
+      "timing": "2-1 拿到远程奥拉夫强化，有反曲弓先做羊刀。",
+      "upgrade": "五级追三奥拉夫，八级上扎克开六主唱。",
+      "sources": [
+        "https://www.metatft.com/pbe-comps#DA_Olaf19_HeroAugment-DA_Taric19"
       ]
     },
     {
       "sectionId": "sample-block-0254",
       "teamId": "00000000-0000-4000-8000-000000000050",
       "status": "avoid",
-      "note": "伊泽瑞尔和狗头来得多再慢搜。19.1c 四安可体系均名 4.65，胡牌再进。",
+      "note": "伊泽瑞尔和狗头来牌多、能做蓝霸符再慢搜。19.1c 体系均名 4.62。",
       "sources": [
         "https://www.metatft.com/pbe-comps#DA_Encore19-DA_Ezreal19"
       ]
@@ -110,18 +200,18 @@
       "sectionId": "sample-block-0235",
       "teamId": "00000000-0000-4000-8000-000000000105",
       "status": "avoid",
-      "note": "前期有人接泽丽装、血量经济都富余再上九。双电子的当期体系均名 4.88。",
+      "note": "前期有人接泽丽装、血量经济都富余再上九。19.1c 体系均名 4.72。",
       "sources": [
         "https://www.metatft.com/pbe-comps#DA_Jazz19-DA_Leona19"
       ]
     },
     {
-      "sectionId": "sample-block-0051",
-      "teamId": "00000000-0000-4000-8000-000000000059",
-      "status": "conditional",
-      "note": "莎弥拉带烬装过渡，八级先找烬和锤石。近四小时核心样本 103 场，双 C 的九级上限另查。",
+      "sectionId": "sample-block-0452",
+      "teamId": "00000000-0000-4000-8000-000000000093",
+      "status": "avoid",
+      "note": "八级先用两星男枪和扎克稳血。血量够才留 85 金开派克。19.1c 体系均名 4.55。",
       "sources": [
-        "https://www.metatft.com/explorer?tab=units&set=TFTSet19&trait=DA_Virtuosos19_2&unit=DA_Jhin19-1&unit=DA_Thresh19-1&queue=PBE&patch=19.1&b_patch=c&days=0.16666666666666666"
+        "https://www.metatft.com/pbe-comps#DA_Renegade19-DA_Graves19-DA_Zac19"
       ]
     }
   ]
