@@ -1,10 +1,10 @@
 .editor .tb-commands,
 .editor .tb-command-panel { display: contents; }
 .editor .btn.tb-mobile-menu,
-.editor .btn.tb-menu-redo,
-.editor .tb-history span,
-.editor .editor-stage-actions { display: none; }
-.editor :is(.tb-mobile-swap, .stage-swap)[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+.editor .tb-history span { display: none; }
+.editor .stage-swap[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+.editor .editor-stage-actions { display: flex; flex: none; align-items: center; gap: 3px; margin-inline-start: auto; }
+.editor .editor-stage-actions .btn { min-height: 30px; padding: 3px 7px; font-size: 12px; white-space: nowrap; }
 .editor .tb-history { order: 1; }
 .editor .tb-menus { order: 2; }
 .editor .tb-save { order: 3; }
@@ -55,12 +55,6 @@
 .editor .editor-stages button:hover { color: var(--text); }
 .editor .editor-stages button[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); font-weight: 700; }
 .editor .editor-stages button span { font-variant-numeric: tabular-nums; font-size: .87em; }
-@media (min-width: 1100px) {
-  .editor .tb-board-actions .tb-stage-clear,
-  .editor .editor-toolbar .tb-mobile-swap { display: none; }
-  .editor .editor-stage-actions { display: flex; flex: none; align-items: center; gap: 3px; }
-  .editor .editor-stage-actions .btn { min-height: 30px; padding: 3px 7px; font-size: 12px; white-space: nowrap; }
-}
 @media (max-width: 420px) {
   .editor .editor-stages button span { display: none; }
 }
@@ -409,26 +403,35 @@
 @media (max-width: 760px) {
   .editor .editor-toolbar {
     display: grid;
-    grid-template-columns: minmax(84px, 1.5fr) repeat(2, minmax(54px, 1fr)) minmax(58px, 1fr);
+    grid-template-columns: minmax(90px, 1.3fr) auto minmax(68px, 1fr);
     align-items: stretch;
     gap: 5px;
     padding-bottom: 8px;
   }
   .editor .tb-commands { display: block; position: relative; min-width: 0; }
-  .editor .editor-toolbar :is(.tb-mobile-menu,.tb-mobile-swap,.tb-history .btn,.tb-save) {
+  .editor .editor-toolbar :is(.tb-mobile-menu,.tb-save) {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
     min-height: 38px;
     height: auto;
-    padding: 3px;
+    padding: 3px 8px;
     gap: 4px;
     white-space: nowrap;
     font-size: 13px;
   }
-  .editor .tb-history span { display: inline; }
-  .editor .tb-history .btn.tb-desktop-redo { display: none; }
+  .editor .editor-toolbar .tb-history { display: flex; align-items: center; gap: 4px; }
+  .editor .editor-toolbar .tb-history .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 38px;
+    min-height: 38px;
+    height: 38px;
+    padding: 0;
+  }
   .editor .tb-command-panel {
     position: absolute;
     inset: calc(100% + 6px) auto auto 0;
@@ -450,8 +453,7 @@
     align-items: stretch;
     gap: 4px;
   }
-  .editor .tb-command-panel .tb-board-actions { order: 1; display: grid; grid-template-columns: repeat(2, 1fr); }
-  .editor .tb-command-panel .tb-menu-redo { order: 2; display: inline-flex; min-height: 38px; }
+  .editor .tb-command-panel .tb-board-actions { order: 1; display: grid; grid-template-columns: 1fr; }
   .editor .tb-command-panel .tb-menus > .popover > .btn { min-height: 40px; width: 100%; justify-content: space-between; padding-inline: 10px; }
   .editor .tb-command-panel .tb-menus > .popover > .btn > svg:first-child { display: inline-block; }
   .editor .tb-command-panel .tb-menus .popover-panel {
