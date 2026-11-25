@@ -403,6 +403,138 @@
         "DA_Yorick19",
         "DA_Zac19"
       ]
+    },
+    {
+      "clusterId": "429003",
+      "sourceName": "Classical Jhin",
+      "name": "四古典烬",
+      "sectionId": "sample-block-0051",
+      "teamId": "00000000-0000-4000-8000-000000000059",
+      "carryIds": [
+        "jhin",
+        "miss-fortune"
+      ],
+      "url": "https://www.metatft.com/pbe-comps#DA_Virtuosos19-DA_Thresh19",
+      "sharedTeamIds": [
+        "00000000-0000-4000-8000-000000000034"
+      ],
+      "representativeUnits": [
+        "DA_Galio19",
+        "DA_Jhin19",
+        "DA_KSante19",
+        "DA_Lucian19",
+        "DA_Mel19",
+        "DA_Nasus19",
+        "DA_Smeech19",
+        "DA_Thresh19",
+        "DA_Vladimir19"
+      ]
+    },
+    {
+      "clusterId": "429027",
+      "sourceName": "Hitmaker Kai'Sa Draven",
+      "name": "四花式卡莎德莱文",
+      "sectionId": "sample-block-1020",
+      "teamId": "00000000-0000-4000-8000-000000001158",
+      "carryIds": [
+        "kai-sa",
+        "draven"
+      ],
+      "url": "https://www.metatft.com/pbe-comps#DA_KDA19-DA_Kaisa19",
+      "representativeUnits": [
+        "DA_Braum19",
+        "DA_Draven19",
+        "DA_Gragas19",
+        "DA_Kaisa19",
+        "DA_Leona19",
+        "DA_Lillia19",
+        "DA_Samira19"
+      ]
+    },
+    {
+      "clusterId": "429015",
+      "sourceName": "Choreographer Ahri",
+      "name": "四编舞三经纪阿狸",
+      "sectionId": "sample-block-0854",
+      "teamId": "00000000-0000-4000-8000-000000001146",
+      "carryIds": [
+        "ahri"
+      ],
+      "url": "https://www.metatft.com/pbe-comps#DA_KDA19-DA_19_Ahri-DA_Garen19",
+      "representativeUnits": [
+        "DA_19_Ahri",
+        "DA_Alune19",
+        "DA_Aphelios19",
+        "DA_DrMundo19",
+        "DA_Garen19",
+        "DA_Leona19",
+        "DA_Nidalee19",
+        "DA_Nunu19",
+        "DA_Sett19"
+      ]
+    },
+    {
+      "clusterId": "429025",
+      "sourceName": "K/DA Ahri",
+      "name": "K/DA阿狸",
+      "sectionId": "sample-block-0006",
+      "teamId": "00000000-0000-4000-8000-000000000067",
+      "carryIds": [
+        "ahri"
+      ],
+      "url": "https://www.metatft.com/pbe-comps#DA_KDA19-DA_19_Ahri-DA_Leona19",
+      "representativeUnits": [
+        "DA_19_Ahri",
+        "DA_AkaliKDA19",
+        "DA_Evelynn19",
+        "DA_Gragas19",
+        "DA_Kaisa19",
+        "DA_Leona19",
+        "DA_Lillia19",
+        "DA_Neeko19"
+      ]
+    },
+    {
+      "clusterId": "429005",
+      "sourceName": "Lifeguard Renekton",
+      "name": "救生员鳄鱼",
+      "sectionId": "sample-block-0171",
+      "teamId": "00000000-0000-4000-8000-000000000002",
+      "carryIds": [
+        "renekton"
+      ],
+      "url": "https://www.metatft.com/pbe-comps#DA_Renekton19_HeroAugment-DA_Zac19",
+      "representativeUnits": [
+        "DA_Ashe19",
+        "DA_Graves19",
+        "DA_Renekton19",
+        "DA_Swain19",
+        "DA_Syndra19",
+        "DA_Taric19",
+        "DA_Zac19",
+        "DA_Zoe19"
+      ]
+    },
+    {
+      "clusterId": "429034",
+      "sourceName": "Axe Crescendo Olaf",
+      "name": "远程奥拉夫",
+      "sectionId": "sample-block-0281",
+      "teamId": "00000000-0000-4000-8000-000000000097",
+      "carryIds": [
+        "olaf"
+      ],
+      "url": "https://www.metatft.com/pbe-comps#DA_Olaf19_HeroAugment-DA_Taric19",
+      "representativeUnits": [
+        "DA_Annie19",
+        "DA_Braum19",
+        "DA_Graves19",
+        "DA_Karthus19",
+        "DA_Olaf19",
+        "DA_Taric19",
+        "DA_Yorick19",
+        "DA_Zac19"
+      ]
     }
   ]
 }

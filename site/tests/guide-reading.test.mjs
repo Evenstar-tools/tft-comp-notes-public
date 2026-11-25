@@ -422,27 +422,33 @@ test("archive filters migrate old links without assigning today's tier from a Fe
   assert.equal(parseGuideFilters({category:"自定义旧目录"}).category, undefined);
 });
 
-test("home recommendations keep up to four viable, distinct routes and offer a less common carry", () => {
-  function route(name, mean, games, carryGames, { group = "reroll", familyId = name, carryId = name } = {}) {
-    return { group, familyId, rating: { name, mean, games, carryId, carryGames } };
-  }
-  const entries = [
-    route("renata", 3.1, 1900, 4987),
-    route("viego", 3.6, 1500, 6588),
-    route("same family", 3.7, 3000, 5500, { familyId: "renata" }),
-    route("same carry", 3.75, 745, 4987, { carryId: "renata" }),
-    route("malzahar", 3.8, 1600, 5500),
-    route("neeko", 4.1, 600, 6100),
-    route("draven", 4.32, 842, 2779),
-    route("few matches", 2.8, 99, 123),
-    route("graves", 4.08, 1508, 5342, { group: "fast8" }),
-    { ...route("jhin", 3.58, 2541, 6046, { group: "fast8" }), conditional: true },
-    route("kayle", 4.54, 504, 5134, { group: "fast8" }),
+test("home recommendations honor separate 12+2 limits and keep same-carry families with distinct boards", () => {
+  const route = (group, index, overrides = {}) => ({
+    group, familyId: group + index,
+    rating: { teamId: group + index, mean: 4 + index / 100, games: 500, carryId: "ahri", topFourRate: .613, winRate: .17, ...overrides },
+  });
+  const reroll = Array.from({ length: 4 }, (_, i) => route("reroll", i));
+  const fast8 = Array.from({ length: 5 }, (_, i) => route("fast8", i));
+  const fast9 = Array.from({ length: 3 }, (_, i) => route("fast9", i));
+  const hero = Array.from({ length: 3 }, (_, i) => route("heroAugment", i));
+  const authored = { ...fast8[4], conditional: true, decision: { timing: "有法装再进", upgrade: "八级找双两星" } };
+  const fixed = { ...route("fast8", 5), sampleLabel: "固定终盘", preferred: true };
+  const other = [
+    { ...route("fast8", 6), familyId: fast8[0].familyId },
+    route("fast9", 3, { games: 99 }),
+    route("fast8", 7, { mean: 4.51 }),
+    route("fast8", 8, { mean: 4.1 }),
   ];
-  const names = rows => selectRecommendationRoutes(rows).map(row => row.rating.name);
-  assert.deepEqual(names(entries), ["renata", "viego", "malzahar", "draven", "graves", "jhin"]);
-  assert.deepEqual(names(entries.filter(r => r.rating.name === "draven")), ["draven"]);
-  assert.deepEqual(names(entries.filter(r => r.rating.name === "kayle")), []);
+  const entries = [...reroll, ...fast8.slice(0, 4), authored, fixed, ...fast9, ...hero, ...other];
+  const displayOrder = [authored.rating.teamId, ...[...reroll, ...fast8.slice(0, 4), ...fast9].map(r => r.rating.teamId)];
+  const selected = selectRecommendationRoutes(entries, { displayOrder });
+  assert.deepEqual(selected, [...reroll, authored, ...fast8.slice(0, 4), ...fast9, ...hero.slice(0, 2)]);
+  assert.deepEqual(selected[4].decision, { timing: "有法装再进", upgrade: "八级找双两星" });
+  assert.equal(selected[4].rating.topFourRate, .613);
+  assert.equal(selected[4].rating.winRate, .17);
+  assert.ok(selectRecommendationRoutes(entries, { displayOrder: displayOrder.slice(0, -1) }).includes(fixed));
+  assert.deepEqual(selectRecommendationRoutes([fast8[0], ...other.slice(0, 3)]), [fast8[0]]);
+  assert.deepEqual(selectRecommendationRoutes(hero, { maxHeroAugment: 1 }), [hero[0]]);
 });
 
 test("the authoring-only introduction stays off the home index, and an introduction with reader content stays visible", () => {

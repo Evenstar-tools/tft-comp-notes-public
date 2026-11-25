@@ -88,6 +88,45 @@ test("the gate rejects a bad histogram and a missing history archive", t => {
     [`public/stats-history/${batch.id}/equipment.json：文件缺失`]);
 });
 
+test("the gate validates structured recommendations and accepts legacy notes", t => {
+  const cwd = fixture(t);
+  const file = join(cwd, "data", "patch-recommendations.json");
+  const sections = readJson(join(cwd, "data", "public-preview.json")).sections.filter(section => section.team?.id);
+  const entry = ({ id, team }, group, status = "recommended") =>
+    ({ sectionId: id, teamId: team.id, status, note: "来牌顺再玩", group });
+  const regular = sections.filter(section => section.category !== "英雄强化阵容").slice(0, 13)
+    .map((section, index) => entry(section, ["reroll", "fast8", "fast9"][index % 3], index < 12 ? "recommended" : "avoid"));
+  const heroes = sections.filter(section => section.category === "英雄强化阵容").slice(0, 2)
+    .map(section => entry(section, "heroAugment"));
+  const { seasonId, build, reviewedAt } = readJson(file);
+  const batch = { seasonId, build, reviewedAt, entries: [...regular, ...heroes],
+    displayOrder: [...regular.slice(0, 12), ...heroes].map(pick => pick.teamId) };
+  writeFileSync(file, JSON.stringify(batch));
+  assert.equal(run(cwd, "--verify").status, 0);
+
+  const original = structuredClone(batch);
+  regular[0].timing = ["来牌顺"];
+  regular[0].upgrade = "八级稳血\n九级再补";
+  heroes[0].group = "fast8";
+  regular.at(-1).status = "conditional";
+  batch.displayOrder.push(regular[0].teamId);
+  writeFileSync(file, JSON.stringify(batch));
+  const invalid = run(cwd, "--verify");
+  assert.equal(invalid.status, 1);
+  const { errors } = JSON.parse(invalid.stdout);
+  for (const expected of [/\.timing/, /\.upgrade/, /\.group.*分类不匹配/, /常规推荐最多 12 套/, /\.displayOrder.*重复/]) {
+    assert.ok(errors.some(error => expected.test(error)), expected);
+  }
+
+  for (const entry of original.entries) {
+    delete entry.timing;
+    delete entry.upgrade;
+    delete entry.group;
+  }
+  writeFileSync(file, JSON.stringify(original));
+  assert.equal(run(cwd, "--verify").status, 0);
+});
+
 test("daily dry-run lists every step in order and leaves the checkout unchanged", t => {
   const cwd = fixture(t);
   const baseline = snapshot(cwd);

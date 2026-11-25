@@ -3,6 +3,7 @@ import { mkdir, readFile, rename, rm, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { parseArgs } from "node:util";
+import { heroAugmentSourceUnits } from "./family-review.mjs";
 
 const root = new URL("../", import.meta.url);
 const defaultFile = fileURLToPath(new URL("data/comp-trends.json", root));
@@ -103,7 +104,14 @@ export function appendCompTrendBatch(history, input, { review, patch, unitNames,
   const timeByBatch = new Map(output.batches.map(entry => [entry.id, entry.capturedAt]));
   const seriesById = new Map(output.series.map(entry => [entry.id, entry]));
   const touchedSeries = new Set();
+  const heroClusters = new Set(input.rows.filter(row => row.heroAugment).map(row => String(row.clusterId)));
+  if (review?.model === input.model && review?.set === input.set) {
+    for (const group of review.allGroups ?? []) {
+      if (heroAugmentSourceUnits(group.sourceKey).length) heroClusters.add(String(group.id));
+    }
+  }
   for (const row of input.rows) {
+    if (heroClusters.has(String(row.clusterId))) continue;
     const point = metrics(row);
     if (!point || typeof row.sectionId !== "string" || !row.sectionId ||
         typeof row.name !== "string" || !row.name || !row.clusterId ||
@@ -132,6 +140,8 @@ export function appendCompTrendBatch(history, input, { review, patch, unitNames,
         a.mean - b.mean || b.games - a.games || a.id.localeCompare(b.id));
     }
   }
+  const modelBatches = new Set(output.batches.filter(batch => batch.model === input.model).map(batch => batch.id));
+  output.discoveries = output.discoveries.filter(entry => !modelBatches.has(entry.batchId) || !heroClusters.has(String(entry.clusterId)));
   return output;
 }
 
@@ -147,7 +157,7 @@ export function importCompTrendObservation(input, bindings, reference, archiveSn
     totalFinishes: iso(input.updatedAt) === iso(archiveSnapshot?.updatedAt) ? archiveSnapshot?.totalFinishes : undefined,
     rows: bindings.rows.flatMap(entry => {
       const group = groupById.get(String(entry.clusterId));
-      return group ? [{ ...entry, name: labels.get(String(entry.clusterId)) ?? entry.name,
+      return group && !heroAugmentSourceUnits(group.sourceKey).length ? [{ ...entry, name: labels.get(String(entry.clusterId)) ?? entry.name,
         games: group.games, mean: group.mean, topFourRate: group.topFourRate, winRate: group.winRate }] : [];
     }),
   };

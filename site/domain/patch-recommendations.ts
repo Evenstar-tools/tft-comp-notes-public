@@ -1,6 +1,7 @@
 import type { ContentBlock, Section } from "./document";
 import { readableSection, sectionTeams } from "./document-flow";
 import { isEditorialSection } from "./guide-reading";
+import type { RecommendationGroup } from "./guide-family-stats";
 import { isVersionUpdate, sameEdition } from "./version-updates";
 
 export type PatchRecommendation = {
@@ -8,6 +9,9 @@ export type PatchRecommendation = {
   teamId: string;
   status: "recommended" | "conditional" | "avoid" | "review";
   note: string;
+  group?: RecommendationGroup;
+  timing?: string;
+  upgrade?: string;
   sources?: string[];
 };
 

@@ -2,7 +2,7 @@ import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
-import { changeSignals, makeReviewQueue, sourceProfile } from "./family-review.mjs";
+import { changeSignals, heroAugmentSourceUnits, makeReviewQueue, sourceProfile } from "./family-review.mjs";
 import { crossCheck } from "./family-evidence.mjs";
 import { saveCompTrendBatch } from "./refresh-comp-trends.mjs";
 
@@ -127,23 +127,25 @@ for (const b of bindings.rows) {
     review.push({id:b.clusterId,guide:b.name,reason:modelChanged?"模型更新，请重新配对":!group||!metric?"本批没有原分组":"代表棋盘有变",roster});
     continue;
   }
-  if (metric.games < 100) {
-    const {representativeUnits, ...info} = b;
-    smallSamples.push({...info,...metric});
-    review.push({id:b.clusterId,guide:b.name,reason:"不足 100 场，留在攻略检索",games:metric.games});
-    continue;
-  }
   const { representativeUnits, ...info } = b;
   const anchor = publicBoardById.get(info.teamId);
-  if (!anchor || anchor.sectionId !== info.sectionId || anchor.special) {
+  const augmentUnits = heroAugmentSourceUnits(group.name_string);
+  const heroAugment = anchor?.special === "英雄强化" && augmentUnits.some(apiId => info.carryIds.includes(unitIds.get(apiId)));
+  if (!anchor || anchor.sectionId !== info.sectionId || (!heroAugment && (anchor.special || augmentUnits.length))) {
     review.push({id:b.clusterId,guide:b.name,reason:"主盘已变或应独立检索"});
+    continue;
+  }
+  if (heroAugment) info.heroAugment = true;
+  if (metric.games < 100) {
+    smallSamples.push({...info,...metric});
+    review.push({id:b.clusterId,guide:b.name,reason:"不足 100 场，留在攻略检索",games:metric.games});
     continue;
   }
   const ids = [...new Set([info.landingTeamId, ...(info.sharedTeamIds ?? [])].filter(Boolean))];
   const compatible = ids.filter(id => {
     const board = publicBoardById.get(id);
     const carries = board?.roles.filter(role => role.label === "主C" || role.label === "主输出").flatMap(role => role.units) ?? [];
-    return board?.sectionId === info.sectionId && !board.special && !board.emblems?.length && board.kind !== "过渡"
+    return board?.sectionId === info.sectionId && board.special === anchor.special && !board.emblems?.length && board.kind !== "过渡"
       && carries.some(id => info.carryIds.includes(id))
       && (!anchor.rollLevel || !board.rollLevel || anchor.rollLevel === board.rollLevel);
   });
