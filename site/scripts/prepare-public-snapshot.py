@@ -68,9 +68,13 @@ def public_snapshot(live, aliases):
     for key in ('boardLayouts', 'boardEdits'):
         if live.get(key):
             snapshot[key] = live[key]
+    top_season_id = snapshot['season'].get('id') if isinstance(snapshot.get('season'), dict) else None
     for section in snapshot['sections']:
         regions = section.pop('generatedRegions', {})
         section.pop('sourceHeadingIds', None)
+        game_data = section.get('gameData')
+        if isinstance(game_data, dict) and top_season_id and game_data.get('id') == top_season_id:
+            section.pop('gameData', None)
         generated = {region[key] for region in regions.values() for key in ('textId', 'imageId')}
         section['blocks'] = list(clean_blocks(section['blocks'], generated))
     serialized = json.dumps(redact_links(snapshot), ensure_ascii=False, separators=(',', ':'))

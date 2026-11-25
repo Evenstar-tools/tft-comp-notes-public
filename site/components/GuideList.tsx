@@ -33,6 +33,7 @@ import { guideConditionName, guideConditionsAnchor, guideEquipmentConditions } f
 import { HomeGearSearch, isHomeGear } from "./HomeGearSearch";
 import { GuideCardBoard, GuideQuickView } from "./GuideCardBoard";
 import { GuideStatsTable, guideStatsMetricLabels, type GuideStatsTableRow } from "./GuideStatsTable";
+import { GUIDE_SECTION_IDS } from "@/domain/guide-identities";
 import { CompTrendPanel } from "./CompTrendPanel";
 import type { CompTrendModel } from "@/domain/comp-trends";
 
@@ -46,10 +47,10 @@ type Choices = Partial<Record<View, Selections>>;
 type FamilySort = { metric: GuideFamilyMetric; direction: GuideFamilyDirection };
 const emptyFilters = { category: "", style: "", cost: 0 };
 const archiveViews = [["category", "攻略卡片"], ["mean", "战绩对照"]] as const;
-const recommendationSecondaryCarries = new Map([
-  ["sample-block-0251", { unitId: "taliyah", boardId: "00000000-0000-4000-8000-000000000076" }],
-  ["sample-block-0464", { unitId: "akali-kda", boardId: "00000000-0000-4000-8000-000000000039" }],
-  ["sample-block-0338", { unitId: "pyke", boardId: "00000000-0000-4000-8000-000000000068" }],
+const recommendationSecondaryCarries = new Map<string, { unitId: string; boardId: string }>([
+  [GUIDE_SECTION_IDS.oceanGraves, { unitId: "taliyah", boardId: "00000000-0000-4000-8000-000000000076" }],
+  [GUIDE_SECTION_IDS.kdaNeeko, { unitId: "akali-kda", boardId: "00000000-0000-4000-8000-000000000039" }],
+  [GUIDE_SECTION_IDS.rockVayne, { unitId: "pyke", boardId: "00000000-0000-4000-8000-000000000068" }],
 ]);
 
 function filterView(view: GuideFilters["view"]): View {
@@ -758,7 +759,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
             </div>
             {rating && <span id={ratingId} className={"guide-placement " + (rating.mean < 4.5 ? "strong" : rating.mean > 4.5 ? "weak" : "middle")}
               title={(fixedSample ?? (core ? coreStats.patch + " · " + coreStats.hours + " 小时核心样本" : familyStats.patch + " · 近 " + familyStats.days + " 天体系样本")) + " · 前四 " + (100 * rating.topFourRate).toFixed(1) + "% · 吃鸡 " + (100 * rating.winRate).toFixed(1) + "%"}>
-              {recommendationTier(rating) !== "review" && <><span>平均排名</span> <strong>{formatRecommendationMean(rating.mean)}</strong></>}
+              {recommendationTier(rating) !== "review" && <><span>均名</span> <strong>{formatRecommendationMean(rating.mean)}</strong></>}
               <small>{rating.games.toLocaleString("zh-CN")} 场{fixedSample ? " · " + fixedSample : core ? " · 核心样本" : formation ? " · 跨人口样本" : ""}</small>
             </span>}
           </div>
@@ -941,7 +942,6 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
         <details className="guide-rank-source"><summary>数据来源</summary>
           <div><a href={familyStats.sourceUrl} target="_blank" rel="noreferrer">MetaTFT</a> · {familyStats.queue} {familyStats.patch} · 近 {familyStats.days} 天
             <p>更新于 <time dateTime={familyStats.updatedAt}>{familyStats.updatedAt.slice(5,10).replace("-", "/")} {familyStats.updatedAt.slice(11,16)} UTC</time></p>
-            <p>出场率按同批全部玩家结算统计。</p>
           </div>
         </details>
       </div>}

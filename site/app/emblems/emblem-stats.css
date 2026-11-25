@@ -120,9 +120,20 @@ html[data-theme="dark"] .emblem-page .weak {color:#ff9ca4;}
 .emblem-wearer-guides a {padding-block:5px;}
 .emblem-wearer-guides span {color:var(--muted);}
 .emblem-empty,.emblem-method {color:var(--muted);}
-.emblem-method {position:relative;justify-self:end;font-size:.875rem;font-variant-numeric:tabular-nums;}
-.emblem-method summary {padding:6px 0;cursor:pointer;white-space:nowrap;}
-.emblem-method summary:hover,.emblem-method[open] summary {color:var(--accent);}
+.emblem-method {position:relative;justify-self:end;font-size:.8125rem;font-variant-numeric:tabular-nums;}
+.emblem-method summary {
+  display:inline-flex;align-items:center;gap:6px;min-height:34px;padding:4px 10px;border-radius:.35rem;
+  border:1px solid var(--line);background:var(--raised);color:var(--text);cursor:pointer;white-space:nowrap;
+  list-style:none;
+}
+.emblem-method summary::-webkit-details-marker {display:none;}
+.emblem-method summary:hover,.emblem-method[open] summary {color:var(--accent);border-color:color-mix(in srgb,var(--accent) 42%,var(--line));}
+.emblem-stale-badge {
+  display:inline-flex;align-items:center;padding:1px 6px;border-radius:999px;font-size:.75rem;font-weight:650;
+  background:color-mix(in srgb,#d97706 16%,var(--panel));color:light-dark(#9a5200,#fbbf24);
+}
+.emblem-best-heading {display:inline-flex;align-items:baseline;gap:6px;}
+.emblem-best-heading small {font-weight:400;font-size:.75rem;color:var(--muted);}
 .emblem-method-panel {
   position:absolute;z-index:8;inset-inline-end:0;top:calc(100% + 4px);width:min(19rem, calc(100vw - 28px));
   padding:10px 13px;border:1px solid var(--line);border-radius:8px;background:var(--panel);

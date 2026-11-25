@@ -1,5 +1,8 @@
 import { publicGuidePublication } from "@/server/publication";
+import { season as currentSeason } from "@/data";
 import { readableSection, sectionTeams } from "@/domain/document-flow";
+import type { ContentBlock, Section } from "@/domain/document";
+import type { Season } from "@/domain/types";
 import { guideLink, isEditorialSection, parseGuideFilters } from "@/domain/guide-reading";
 import { guideNavigationHref } from "@/domain/guide-navigation";
 import { guideWearerQuery, splitGuideConditions } from "@/domain/guide-search";
@@ -18,6 +21,25 @@ import { performSiteSearch } from "@/server/site-search";
 import "./home-recommendations.css";
 
 export const dynamic = "force-dynamic";
+
+function slimBlocksForHome(blocks: ContentBlock[]): ContentBlock[] {
+  return blocks.map(block => {
+    const { elements: _elements, children, ...rest } = block;
+    void _elements;
+    return children?.length ? { ...rest, children: slimBlocksForHome(children) } : rest;
+  });
+}
+
+function slimSectionForHome(section: Section, homeSeason: Season): Section {
+  const { gameData, ...rest } = section;
+  const keepGameData = gameData && !sameEdition(gameData.id, homeSeason.id);
+  return {
+    ...rest,
+    ...(keepGameData ? { gameData } : {}),
+    blocks: slimBlocksForHome(section.blocks),
+  };
+}
+
 export default async function Home({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const [live, query] = await Promise.all([publicGuidePublication(), searchParams]);
   const filters = parseGuideFilters(query);
@@ -37,11 +59,14 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
     scope: isOfficialEdition(live.season.id) ? "国际服排位 · 数据待更新" : "PBE · 数据待更新",
     days: [], tracks: [], patches: [], discoveries: [],
   });
+  const homeSeason = live && sameEdition(live.season.id, currentSeason.id) ? currentSeason : live?.season;
+  const homeRegularGuides = homeSeason ? regularGuides.map(section => slimSectionForHome(section, homeSeason)) : regularGuides;
+  const homeHeroGuides = homeSeason ? heroGuides.map(section => slimSectionForHome(section, homeSeason)) : heroGuides;
   return (
     <div className="home-library">
-      {live && guides.length ? (
+      {live && homeSeason && guides.length ? (
         <>
-          <GuideList sections={regularGuides} heroSections={heroGuides} season={live.season} initial={filters} initialSearch={initialSearch}
+          <GuideList sections={homeRegularGuides} heroSections={homeHeroGuides} season={homeSeason} initial={filters} initialSearch={initialSearch}
             recommendations={currentPatchRecommendations(live)} trends={trends || undefined}
             artifactRanking={<ArtifactTrendRanking edition={live.season.id} />} patch={patch} fromItem={fromItem} checkedAt={Date.now()} />
           <HomeGuidePosition />

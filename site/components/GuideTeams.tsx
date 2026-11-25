@@ -157,7 +157,7 @@ export function GuideTeams({ section, data, initialTeam, initialStage, initialFl
   const overall = matchingFamily.length === 1 ? matchingFamily[0].stat : undefined;
   const performance = overall && <a className="guide-family-rating" href={mainBoardActive && !showFlex ? "#" + sampleId : overall.url}
     onClick={() => setSampleView("family")} title={overall.sourceName + " · " + familyStats.patch + " · 近 " + familyStats.days + " 天"}>
-    <span>平均排名</span><strong>{overall.mean.toFixed(2)}</strong><small>{overall.games.toLocaleString("zh-CN")} 场</small>
+    <span>均名</span><strong>{overall.mean.toFixed(2)}</strong><small>{overall.games.toLocaleString("zh-CN")} 场</small>
   </a>;
   const routeBoardIds = new Set([...linkedPhases, ...linkedChoices].map(step => step.team?.id));
   const otherStages = stageTeams.filter(option => !routeBoardIds.has(option.id) &&
@@ -384,6 +384,13 @@ export function GuideTeams({ section, data, initialTeam, initialStage, initialFl
               target={canEditPositions ? { publicationId, sectionId: section.id, teamId: team.id } : undefined} />}
             {canEditPositions && <GuideBoardPositionEditor key={team.id} publicationId={publicationId!}
               sectionId={section.id} teamId={team.id} title={editorTitle} href={guideHref!} />}
+            {session?.isOwner && mainBoardActive && (publicationId || !section.reroll?.added.includes(team.id)) && <details className="guide-owner-menu">
+              <summary className="guide-zoom-trigger">更多</summary>
+              <div className="guide-owner-menu-panel">
+                {publicationId && <a href={ownerEditorPath + "?" + new URLSearchParams({ copy: team.id, publication: publicationId, section: section.id })}>复制到草稿</a>}
+                {!section.reroll?.added.includes(team.id) && <a href={editorLink(team.id)}>修改原阵容</a>}
+              </div>
+            </details>}
           </div>
         </div>
         <div className="read-board" ref={board}><Board data={data} pieces={shownBoard.pieces} instrumentPositions={shownBoard.instrumentPositions} targeting={null} selectedId={selectedPiece} changedPositions={showFlex && flexPreview ? [flexPreview.position] : mainBoardActive ? changed : undefined}
@@ -407,9 +414,12 @@ export function GuideTeams({ section, data, initialTeam, initialStage, initialFl
           <button type="button" aria-pressed={showFlex} onClick={toggleFlex}>{showFlex ? "恢复原阵容" : "预览替换"}</button>
         </div>}
         {mainBoardActive && (stageCopy.length > 0 || advice || nextPhase || notes.starHint) && <div className="guide-phase-workflow">
-          {stageCopy.map(passage => <p key={passage.source} id={passage.blockId ? "note-" + passage.blockId : undefined}>{displayTraitNames(passage.text)}</p>)}
+          {stageCopy.map((passage, index) => <p key={passage.source} id={passage.blockId ? "note-" + passage.blockId : undefined}>
+            {index === 0 && advice && <a className="guide-patch-advice-chip" href={advice.href} title={displayTraitNames(advice.note)}>{advice.label}</a>}
+            {displayTraitNames(passage.text)}
+          </p>)}
           {notes.starHint && <p className="star-hint">{notes.starHint}</p>}
-          {advice && <p className="guide-patch-advice"><a href={advice.href}>{advice.label}</a> {displayTraitNames(advice.note)}</p>}
+          {advice && !stageCopy.length && <p className="guide-patch-advice"><a href={advice.href}>{advice.label}</a> {displayTraitNames(advice.note)}</p>}
           {nextPhase && <div className="guide-next-phase">
             {nextRoster && <details className="guide-next-changes" key={nextBoard?.id ?? nextPhase.label}><summary>下一阶段换人</summary>{nextRoster}</details>}
             <button type="button" onClick={() => nextBoard ? pickTeam(nextBoard) : setRouteNote(nextPhase.label)}>
@@ -470,11 +480,9 @@ export function GuideTeams({ section, data, initialTeam, initialStage, initialFl
         {mainBoardActive && !showFlex && <GuideMatchStats key={team.id} id={sampleId} team={team} teams={teams} section={section}
           stage={inStage} edition={data.id} augmentName={augment?.name}
           heroGuide={heroGuide} familyRows={familyRows} view={sampleView} onSelectView={setSampleView} onPickTeam={selectSampleTeam} />}
-        {mainBoardActive && (picture?.imageToken || session?.isOwner) && <div className="reader-links">
+        {mainBoardActive && picture?.imageToken && <div className="reader-links">
         <div className="guide-actions">
-          {picture?.imageToken && <a href={"/api/media/" + encodeURIComponent(picture.imageToken)} target="_blank" rel="noreferrer">飞书原图</a>}
-          {session?.isOwner && publicationId && <a href={ownerEditorPath + "?" + new URLSearchParams({ copy: team.id, publication: publicationId, section: section.id })}>复制到草稿</a>}
-          {session?.isOwner && !section.reroll?.added.includes(team.id) && <a href={editorLink(team.id)}>修改原阵容</a>}
+          <a href={"/api/media/" + encodeURIComponent(picture.imageToken)} target="_blank" rel="noreferrer">飞书原图</a>
         </div>
         </div>}
       </div>

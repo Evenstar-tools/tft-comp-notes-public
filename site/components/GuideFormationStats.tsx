@@ -30,7 +30,7 @@ export function GuideFormationFamilyReference({ sample }: { sample: FormationFam
   return <div className="guide-carry-samples">
     <p>MetaTFT 阵容榜参考 · 同类棋盘的玩家结算，包含不同等级和成型质量。</p>
     <ul><li>
-      <div className="carry-sample-head"><strong>{sample.name}</strong><span>平均排名 <b>{result.mean.toFixed(2)}</b> · {number.format(result.games)} 场</span></div>
+      <div className="carry-sample-head"><strong>{sample.name}</strong><span>均名 <b>{result.mean.toFixed(2)}</b> · {number.format(result.games)} 场</span></div>
       <p>前四 {percent.format(result.top4)} · 登顶 {percent.format(result.win)}</p>
       <div className="carry-source"><a href={sample.url} target="_blank" rel="noreferrer">
         {sample.patch ?? "PBE"} 阵容榜 · {sample.window ?? `近 ${sample.windowHours} 小时`} · {checkedDate.format(new Date(sample.checkedAt))} 北京时间 ↗
@@ -72,13 +72,10 @@ export function GuideFormationStats({ evidence }: { evidence: NonNullable<Return
       <a href={core.url} target="_blank" rel="noreferrer">{core.label} ↗</a> · 恰好九张不同棋子 · 均名 {coreResult.mean.toFixed(2)} · {number.format(coreResult.games)} 场
     </p>}
     <ComparisonTable rows={rows} caption={group.condition} />
-    {subset && remaining && <>
-      <ComparisonTable caption={board.name + " · 同盘成型对照"} rows={[
-        { name: subset.remainder, counts: remaining },
-        { name: subset.condition, counts: subset.sample.placementCounts, url: subset.sample.url },
-      ]} />
-      <p>同盘两组按八个名次拆分。血量、经济和来牌会同时影响成型与名次。</p>
-    </>}
+    {subset && remaining && <ComparisonTable caption={board.name + " · 同盘成型对照"} rows={[
+      { name: subset.remainder, counts: remaining },
+      { name: subset.condition, counts: subset.sample.placementCounts, url: subset.sample.url },
+    ]} />}
     <small>MetaTFT · {group.patch} · {group.window ?? `滚动 ${group.windowHours} 小时`} · {checkedDate.format(new Date(group.checkedAt))} 北京时间取数。少于 {stats.minGames} 场仅列场数。</small>
   </details>;
 }

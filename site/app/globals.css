@@ -1,7 +1,7 @@
 @import "tailwindcss" source(none);
 @source "./**/*.{ts,tsx}";
 @source "../components/*.tsx";
-@source "../components/ui/button.tsx";
+@source "../components/ui/popover.tsx";
 :root {
   color-scheme: light;
   --masthead-height: 64px;

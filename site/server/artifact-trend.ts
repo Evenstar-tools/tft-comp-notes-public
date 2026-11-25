@@ -1,6 +1,6 @@
 import { itemMap, season, unitMap } from "@/data";
 import currentPatch from "@/data/current-patch.json";
-import { specialItemWearers } from "@/data/item-library";
+import { specialItemWearers } from "@/data/special-item-wearers";
 import { currentWearerSnapshot } from "@/domain/gear-wearer";
 import { rankedWearers } from "@/domain/site-search";
 import { isOfficialEdition, sameEdition } from "@/domain/version-updates";

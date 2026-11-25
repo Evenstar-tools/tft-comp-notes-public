@@ -1,5 +1,5 @@
 import { itemMap } from "@/data";
-import { itemWearers } from "@/data/item-library";
+import { itemWearers } from "@/data/item-wearers";
 import { commonHeroItems } from "@/domain/hero-insights";
 
 const { items, ...gearSource } = itemWearers;

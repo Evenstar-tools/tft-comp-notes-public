@@ -51,7 +51,6 @@ function Detail({ entry, guide, samples, results, returnTo }: {
     <div className="aug-effect">
       {heroAugment ? <>
         <strong>{heroAugment.baseRole} → {heroAugment.role}</strong>
-        <p>获得 1 个{augmentUnits.get(entry.apiName)?.name}，仅最强的一枚获得强化。</p>
         <p>{heroAugment.ability}</p>
       </> : <p>{entry.effect}</p>}
       {(heroAugment || bronze || guideEntry) && <nav className="aug-links" aria-label="相关资料">

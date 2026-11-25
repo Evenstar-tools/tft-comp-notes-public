@@ -10,7 +10,7 @@ export interface BoardInstrument {
 
 export const BOARD_INSTRUMENT_NOTE = "乐器站位示意";
 const idol: BoardInstrument & { preferred: number } = {
-  id: "infernalIdol", name: "地狱偶像", image: "/assets/infernal-idol-portrait.png", preferred: 3,
+  id: "infernalIdol", name: "地狱偶像", image: "/assets/infernal-idol-portrait.webp", preferred: 3,
 };
 
 export function boardMarkerNote(instruments: ReadonlyMap<number, BoardInstrument>) {
@@ -20,8 +20,8 @@ export function boardMarkerNote(instruments: ReadonlyMap<number, BoardInstrument
 
 // 名称采用 PBE 简中，组合和位置用于示意。
 const examples: readonly (BoardInstrument & { preferred: number })[] = [
-  { id: "maracas", name: "砂槌", image: "/assets/ocean-maracas.png", preferred: 9 },
-  { id: "rainstick", name: "雨棍", image: "/assets/ocean-rainstick.png", preferred: 15 },
+  { id: "maracas", name: "砂槌", image: "/assets/ocean-maracas.webp", preferred: 9 },
+  { id: "rainstick", name: "雨棍", image: "/assets/ocean-rainstick.webp", preferred: 15 },
 ];
 
 function boardPosition(position?: number): position is number {

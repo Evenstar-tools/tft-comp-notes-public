@@ -45,7 +45,7 @@ import type { HeroItemSample, HeroItemSource } from "@/domain/hero-insights";
 import { unlockText } from "@/domain/unlocks";
 import { feishuSection, manageLink } from "@/domain/links";
 import { itemMap, season, unitLabel, unitMap } from "@/data";
-import { itemReference } from "@/data/item-library";
+import { itemReference } from "@/data/item-reference";
 import { akaliForms, conflictingForm, emptyTeam, equippedTraitIds, mixedForms, movePiece, relatedUnitIds, splitAlternate, stackPiece, switchAlternate, switchForm, teamFromCombo, teamText, traitCounts, usedPopulation } from "@/domain/team";
 import { independentDraft } from "@/domain/roster-import";
 import { boardStages, stageLabels, readTeamStage, writeTeamStage } from "@/domain/team-stages";
@@ -897,13 +897,9 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
   const population = usedPopulation(team.pieces);
   const replacementUnit = replacement ? unitMap.get(replacement) : undefined;
   const replacementBlocked = !piece || piece.unitId === replacement || (!!replacement && !!conflictingForm(team.pieces, replacement));
-  const hint = mobileReplace
+  const replaceHint = mobileReplace
     ? (pieceUnit ? `选一张棋子替换${unitLabel(pieceUnit).base}` : "点要换下的棋子")
-    : pieceUnit
-    ? `点空格移动${unitLabel(pieceUnit).base}`
-    : selected
-      ? `点空格放置${unitLabel(selected).base}`
-      : "";
+    : "";
   function toggleReplace() {
     setCommandsOpen(false);
     setReplacement(null);
@@ -915,10 +911,6 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
     setMobileTool("units");
     setBrowserFilters(current => ({ ...current, view: "cards" }));
   }
-  const clearAction = <button type="button" className="btn ghost tb-stage-clear" disabled={!team.pieces.length}
-    onClick={clearBoard} title={`清空${stageLabels[stage]}棋盘，可撤销`}>
-    <Eraser size={15} aria-hidden />清空棋盘
-  </button>;
   const sheetSummary: ReactNode = pieceUnit ? (
     <>
       <img src={pieceUnit.image} alt="" width={32} height={32} decoding="async" />
@@ -1080,14 +1072,13 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
         </button>
         <div className="tb-command-panel" id="editor-commands" data-open={commandsOpen || undefined}
           onClick={event => {
-            if (event.target instanceof Element && event.target.closest(".tb-board-actions button,.tb-menu-redo")) setCommandsOpen(false);
+            if (event.target instanceof Element && event.target.closest(".tb-board-actions button")) setCommandsOpen(false);
           }}>
         <div className="tb-group tb-board-actions">
           <button type="button" className="btn secondary" onClick={() => open(emptyTeam(), "已新建空阵容")}>
             <Plus size={15} aria-hidden />
             新建
           </button>
-          {clearAction}
         </div>
         <div className="tb-group tb-menus">
           <Popover label={ownerMode ? "阵容库" : "我的阵容"} icon={<Library size={15} aria-hidden />}
@@ -1324,23 +1315,16 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
             )}
           </Popover>}
         </div>
-        <button type="button" className="btn ghost tb-menu-redo" onClick={redo} disabled={!future.length}>
-          <Redo2 size={16} aria-hidden />重做
-        </button>
         </div>
         </div>
-        <button type="button" className="btn secondary tb-mobile-swap" disabled={!population} aria-pressed={mobileReplace}
-          onClick={toggleReplace}>
-          {mobileReplace ? "取消换人" : "换人"}
-        </button>
         <div className="tb-group tb-history">
           <button type="button" className="btn ghost icon" disabled={!history.length} onClick={undo}
             title="撤销（Ctrl+Z）" aria-label="撤销">
             <Undo2 size={16} aria-hidden /><span>撤销</span>
           </button>
-          <button type="button" className="btn ghost icon tb-desktop-redo" disabled={!future.length} onClick={redo}
+          <button type="button" className="btn ghost icon" disabled={!future.length} onClick={redo}
             title="重做（Ctrl+Shift+Z）" aria-label="重做">
-            <Redo2 size={16} aria-hidden />
+            <Redo2 size={16} aria-hidden /><span>重做</span>
           </button>
         </div>
         <button
@@ -1397,11 +1381,14 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
                 }}>找转阵</button>}
               <button type="button" className="btn secondary sm editor-conditions-trigger" aria-haspopup="dialog"
                 onClick={() => setConditionsOpen(true)}>定阵条件{conditionCount ? <span aria-hidden>{conditionCount}</span> : null}</button>
-              <span className="panel-hint">{hint}</span>
+              {mobileReplace && <span className="panel-hint">{replaceHint}</span>}
               <div className="editor-stage-actions" role="group" aria-label="当前阶段操作">
                 <button type="button" className="btn ghost sm stage-swap" disabled={!population}
                   aria-pressed={mobileReplace} onClick={toggleReplace}>{mobileReplace ? "取消换人" : "换人"}</button>
-                {clearAction}
+                <button type="button" className="btn ghost sm tb-stage-clear" disabled={!team.pieces.length}
+                  onClick={clearBoard} title={`清空${stageLabels[stage]}棋盘，可撤销`}>
+                  <Eraser size={15} aria-hidden />清空棋盘
+                </button>
               </div>
               <button
                 type="button"

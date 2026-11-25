@@ -4,7 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { ArrowUpRight } from "lucide-react";
 import { itemMap, season, unitMap, traitMap } from "@/data";
 import liveStats from "@/data/hero-stats.json";
-import type { WearerSnapshot } from "@/data/item-library";
+import type { WearerSnapshot } from "@/data/item-wearers";
 import { commonHeroItems, type HeroItemSample, type HeroItemSource } from "@/domain/hero-insights";
 import type { Unit } from "@/domain/types";
 import { hasUnlockCondition, unlockText } from "@/domain/unlocks";

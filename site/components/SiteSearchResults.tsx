@@ -54,7 +54,7 @@ function ResultLink({ hit, primary, numericColumns = false }: { hit: LinkResult;
     </span>
     {(typeof hit.games === "number" || typeof hit.mean === "number" || hit.category) && <span className="site-lookup-metrics" data-numeric={numericColumns || undefined}>
       {hit.category && <small>{hit.category}</small>}
-      {typeof hit.mean === "number" && <strong>{numericColumns ? <span className="sr-only">平均排名 </span> : "平均排名 "}{hit.mean.toFixed(2)}</strong>}
+      {typeof hit.mean === "number" && <strong>{numericColumns ? <span className="sr-only">平均排名 </span> : "均名 "}{hit.mean.toFixed(2)}</strong>}
       {typeof hit.games === "number" && <small>{hit.games.toLocaleString("zh-CN")}{numericColumns ? <span className="sr-only"> 场</span> : " 场"}</small>}
     </span>}
   </a>;
@@ -74,7 +74,7 @@ function GearResult({ hit, intent, onToggleExclusion }: {
       <h3>携带者</h3>
       {canExclude && <button aria-pressed={gear.exclude === "rakan"}
         type="button" onClick={() => canExclude(gear.exclude === "rakan" ? "none" : "rakan")}>剔除洛</button>}
-      {hasHolders && <span className="site-lookup-column-names" aria-hidden="true"><span>平均排名</span><span>场数</span></span>}
+      {hasHolders && <span className="site-lookup-column-names" aria-hidden="true"><span>均名</span><span>场数</span></span>}
     </header>
     {gear.holders.slice(0, 3).map((holder, i) => <ResultLink key={holder.id} hit={holder} numericColumns
       primary={i === 0 && (intent === "holders" || (intent === "comps" && !hasExamples))} />)}

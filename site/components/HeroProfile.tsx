@@ -47,7 +47,7 @@ export function HeroProfile({ unit, guides, statsContent, returnHref, backLabel,
         </label>
       </div>
       <header className={`hero-profile-banner cost-${unit.cost}${unit.splashImage ? " has-splash" : ""}`}>
-        <HeroArtwork unit={unit} className="hero-profile-splash" eager />
+        <HeroArtwork unit={unit} className="hero-profile-splash" eager size="splash" />
         <div className="hero-profile-title">
           <img className="hero-profile-portrait" src={unit.image} alt="" width={80} height={80} />
           <div className="hero-profile-labels">

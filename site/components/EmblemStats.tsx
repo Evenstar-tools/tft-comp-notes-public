@@ -4,8 +4,9 @@ import { ChevronDown } from "lucide-react";
 import { Tooltip } from "radix-ui";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { itemMap, unitMap } from "@/data";
+import currentPatch from "@/data/current-patch.json";
 import snapshot from "@/data/emblem-stats.json";
-import { itemReference } from "@/data/item-library";
+import { itemReference } from "@/data/item-reference";
 import { compareGearWearerSamples, filterEmblems, gearFilters, gearHref, selectableWearers, type GearFilters, type GearOrder } from "@/domain/gear-library";
 import { gearSampleMinimum } from "@/domain/gear-wearer";
 import { guideLink } from "@/domain/guide-reading";
@@ -38,6 +39,9 @@ const time = new Intl.DateTimeFormat("zh-CN", {
   timeZone: "Asia/Shanghai", month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false,
 }).format(new Date(snapshot.updatedAt));
 const displayMinimum = gearSampleMinimum("emblem", snapshot.mode === "PBE", snapshot.minGames);
+const currentPatchVersion = currentPatch.metaTftPatch
+  ? currentPatch.metaTftPatch.patch + (currentPatch.metaTftPatch.bPatch ?? "") : "";
+const isPreviousPatch = Boolean(currentPatchVersion && snapshot.patch && snapshot.patch !== currentPatchVersion);
 const hasSample = (sample: Sample) => sample.games >= displayMinimum;
 const isSmallSample = (sample: Sample) => hasSample(sample) && sample.games < snapshot.minGames;
 
@@ -206,14 +210,17 @@ export function EmblemStats({ traitId, holderId, initialFilters, guideHref, guid
 
   return <div className="emblem-page" data-wearer-view={selectedUnit ? "" : undefined}>
     <EmblemEntryPosition traitId={traitId} holderId={holderId} />
-    <header className="emblem-heading">
-      <h1>转职数据</h1>
+    <header className="page-heading emblem-heading">
+      <h1>装备图鉴</h1>
       <div className="emblem-catalog-tabs"><GearCategoryNav current="emblems" filters={filters} /></div>
       <details className="emblem-method">
-        <summary><span className="sr-only">数据来源 </span>{snapshot.mode} {snapshot.patch}</summary>
+        <summary>
+          <span>数据批次 {snapshot.mode} {snapshot.patch}</span>
+          {isPreviousPatch && <span className="emblem-stale-badge">上一版</span>}
+        </summary>
         <div className="emblem-method-panel">
           <p>{snapshot.set} · 近 {snapshot.days} 天 · <time dateTime={snapshot.updatedAt}>{time}</time>（北京时间）</p>
-          <p>最佳使用者至少携带 {snapshot.minGames} 场。均名变化为携带均名减去棋子总体均名。</p>
+          <p>最佳使用者 ≥ {snapshot.minGames} 场；均名变化 = 携装均名 − 总体均名。</p>
           <a href="https://www.metatft.com/items?set=TFTSet19" target="_blank" rel="noreferrer">MetaTFT 数据</a>
           <a href="https://www.datatft.com/explorerForPBE" target="_blank" rel="noreferrer">DataTFT 检索</a>
         </div>
@@ -229,7 +236,9 @@ export function EmblemStats({ traitId, holderId, initialFilters, guideHref, guid
     </div>
     {visible.length > 0 && <div className="emblem-column-head" aria-hidden="true">
       <span>纹章</span><span>均名</span><span>登顶率</span><span>场数</span>
-      {!selectedUnit && (visible.some(({ id }) => id !== open) ? <span className="emblem-best-heading">最佳使用者</span> : <span />)}
+      {!selectedUnit && (visible.some(({ id }) => id !== open)
+        ? <span className="emblem-best-heading" title={`满 ${snapshot.minGames} 场，按均名排序`}>最佳使用者<small>均名 · 场数</small></span>
+        : <span />)}
       <span />
     </div>}
     <Tooltip.Provider delayDuration={180} disableHoverableContent><ol className="emblem-results">
