@@ -3,6 +3,7 @@
 import { Fragment, useEffect, useLayoutEffect, useMemo, useRef, useState, type MouseEvent, type ReactNode } from "react";
 import { ChevronRight, Search, X } from "lucide-react";
 import { guideRerollTargets } from "@/domain/reroll-targets";
+import { season as currentSeason } from "@/data";
 import familyStats from "@/data/guide-family-stats.json";
 import coreStats from "@/data/patch-recommendation-stats.json";
 import placementBatch from "@/data/guide-placement.json";
@@ -125,8 +126,8 @@ function homeOpening(text: string, title: string, augment?: ReturnType<typeof he
 
 const homeFamilyStats: GuideFamilySnapshot & { previous?: GuideFamilySnapshot } = familyStats;
 
-export function GuideList({ sections, heroSections, season, initial = {}, initialSearch, recommendations, trends, artifactRanking, patch, fromItem, checkedAt }: {
-  sections: Section[]; heroSections: Section[]; season: Season; initial?: GuideFilters;
+export function GuideList({ sections, heroSections, season = currentSeason, initial = {}, initialSearch, recommendations, trends, artifactRanking, patch, fromItem, checkedAt }: {
+  sections: Section[]; heroSections: Section[]; season?: Season; initial?: GuideFilters;
   initialSearch?: SiteSearchResponse;
   recommendations?: PatchRecommendationBatch;
   trends?: CompTrendModel;

@@ -58,7 +58,7 @@ export function PatchRecommendationList({ stats, cards, home, previousBuild }: {
           {!showMeta && index === 0 && updatedSample}
         </div>
         <div className="home-patch-cards">
-          {entries.map(({ rating, team, title, opening, timing, upgrade, sampleLabel, avatars, entryTeamId, stages, conditions, strategy, badgeLabel, hit }) => {
+          {entries.map(({ rating, team, title, opening, timing, upgrade, sampleLabel, avatars, entryTeamId, stages, conditions, strategy, badgeLabel, hit }, cardIndex) => {
             const cardId = "patch-" + rating.sectionId + "-" + team.id;
             const id = "guide-card-" + cardId;
             const back = homeGuideReturn(home, cardId, team.id);
@@ -81,7 +81,7 @@ export function PatchRecommendationList({ stats, cards, home, previousBuild }: {
                 <div className="home-patch-avatars" id={id + "-roles"}>
                   {avatars.map(({ unit, role, context }) => <span key={unit.id} className="home-patch-avatar" data-core={role}>
                     <img className={"cost-" + unit.cost} src={unit.image} alt="" title={unit.name}
-                      width={32} height={32} decoding="async" />
+                      width={32} height={32} decoding="async" loading={index === 0 && cardIndex < 4 ? "eager" : "lazy"} />
                     {role && <small><span className="sr-only">{unit.name} </span>{role}
                       {context && <span className="home-patch-avatar-context" title={context.title}> · {context.label}</span>}
                     </small>}

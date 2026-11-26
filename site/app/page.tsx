@@ -66,7 +66,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
     <div className="home-library">
       {live && homeSeason && guides.length ? (
         <>
-          <GuideList sections={homeRegularGuides} heroSections={homeHeroGuides} season={homeSeason} initial={filters} initialSearch={initialSearch}
+          <GuideList sections={homeRegularGuides} heroSections={homeHeroGuides} season={homeSeason === currentSeason ? undefined : homeSeason} initial={filters} initialSearch={initialSearch}
             recommendations={currentPatchRecommendations(live)} trends={trends || undefined}
             artifactRanking={<ArtifactTrendRanking edition={live.season.id} />} patch={patch} fromItem={fromItem} checkedAt={Date.now()} />
           <HomeGuidePosition />
