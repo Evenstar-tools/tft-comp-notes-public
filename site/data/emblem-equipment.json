@@ -1,5 +1,5 @@
 {
-  "build": "19.1.0.6014015",
+  "build": "19.1.0.6035832",
   "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_en_us.json",
   "items": {
     "emblem-beach-pop": {
@@ -54,9 +54,7 @@
           "label": "法术加成",
           "value": "+15%"
         }
-      ],
-      "build": "19.1.0.6018196",
-      "sourceUrl": "https://i.redd.it/587f3bw91f3i1.png"
+      ]
     },
     "emblem-hyperpop": {
       "name": "高能流行纹章",
@@ -84,9 +82,7 @@
           "label": "攻速",
           "value": "+20%"
         }
-      ],
-      "build": "19.1.0.6018196",
-      "sourceUrl": "https://i.redd.it/587f3bw91f3i1.png"
+      ]
     },
     "emblem-ionic-spark": {
       "name": "离子火花纹章",
@@ -136,9 +132,7 @@
           "label": "法术加成",
           "value": "+10%"
         }
-      ],
-      "build": "19.1.0.6018196",
-      "sourceUrl": "https://i.redd.it/587f3bw91f3i1.png"
+      ]
     },
     "emblem-pentakill": {
       "name": "五杀乐队纹章",
@@ -244,15 +238,13 @@
     },
     "emblem-hitmaker": {
       "name": "音乐制作人纹章",
-      "description": "携带者获得【制作人】羁绊。\n携带者额外成为一名大腕枪手。",
+      "description": "携带者获得【音乐制作人】羁绊。\n携带者额外成为一名大腕枪手。",
       "stats": [
         {
           "label": "物理加成",
           "value": "+25%"
         }
-      ],
-      "build": "19.1.0.6018196",
-      "sourceUrl": "https://i.redd.it/587f3bw91f3i1.png"
+      ]
     },
     "emblem-juggernaut": {
       "name": "主宰纹章",

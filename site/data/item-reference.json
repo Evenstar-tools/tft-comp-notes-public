@@ -1,6 +1,6 @@
 {
-  "build": "19.1.0.6014015",
-  "date": "2026-11-22",
+  "build": "19.1.0.6035832",
+  "date": "2026-11-26",
   "sources": [
     {
       "label": "MetaTFT PBE 简中装备数据",
@@ -178,7 +178,7 @@
     },
     "TFT_Item_Bloodthirster": {
       "name": "饮血剑",
-      "description": "每场战斗限一次。生命值降至60%时，获得相当于25%最大生命值的护盾。此效果触发后，战斗剩余时间获得15%额外全能吸血。",
+      "description": "每场战斗仅触发1次：在50%生命值时，获得相当于25%最大生命值的护盾值。在该效果触发后，获得15%全能吸血，持续至战斗结束。",
       "stats": [
         {
           "label": "物理加成",
@@ -246,11 +246,11 @@
     },
     "TFT_Item_Crownguard": {
       "name": "冕卫",
-      "description": "战斗开始时，获得相当于20%最大生命值的护盾，持续8秒。携带者获得的治疗和护盾提高25%。",
+      "description": "战斗开始时，获得相当于20%最大生命值的护盾，持续8秒。携带者获得的治疗和护盾提高20%。",
       "stats": [
         {
           "label": "生命值",
-          "value": "+100"
+          "value": "+150"
         },
         {
           "label": "法术加成",
@@ -266,7 +266,7 @@
         "TFT_Item_ChainVest"
       ],
       "pbeId": "DA_Crownguard",
-      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+      "sourceUrl": "https://bsky.app/profile/truexy-bot.bsky.social/post/3n35nkji6lr2w"
     },
     "TFT_Item_Deathblade": {
       "name": "死亡之刃",
@@ -778,11 +778,11 @@
       "stats": [
         {
           "label": "物理加成",
-          "value": "+15%"
+          "value": "+18%"
         },
         {
           "label": "法术加成",
-          "value": "+15%"
+          "value": "+18%"
         },
         {
           "label": "法力回复",
@@ -842,7 +842,7 @@
     },
     "TFT_Item_SteraksGage": {
       "name": "斯特拉克的挑战护手",
-      "description": "在40%生命值时，获得相当于携带者40%最大生命值的护盾值，在4秒内快速衰减。",
+      "description": "在60%生命值时，获得相当于携带者40%最大生命值的护盾值，在4秒内快速衰减。",
       "stats": [
         {
           "label": "生命值",
@@ -926,7 +926,7 @@
       "stats": [
         {
           "label": "生命值",
-          "value": "+500"
+          "value": "+550"
         }
       ],
       "components": [

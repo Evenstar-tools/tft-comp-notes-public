@@ -248,7 +248,7 @@ export function guideRoute(section: Section, teams: Team[], current: Team): { ph
       opening: line("八级先稳血"),
       phases: [
         phase("八级稳血", board("八级"), line("前期留卢锡安") + line("卢锡安拿后排装") || board("八级")?.notes),
-        phase("九级开锁", board("九级八羁绊")),
+        phase("九级开锁准备", board("九级 · 史密奇开锁准备")),
       ].filter(step => step.team),
       choices: [
         phase("女枪蒙多", board("女枪蒙多"), line("女枪接卢锡安装") || board("女枪蒙多")?.notes),

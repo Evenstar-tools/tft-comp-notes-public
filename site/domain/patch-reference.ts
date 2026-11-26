@@ -2,7 +2,7 @@ import type { ContentBlock, Section } from "./document";
 import type { Unit } from "./types";
 import { unitSearchNames } from "./unit-search.mjs";
 
-export type PatchCategory = "弈子" | "羁绊" | "解锁" | "海克斯" | "装备" | "修复";
+export type PatchCategory = "弈子" | "羁绊" | "解锁" | "海克斯" | "装备" | "奇遇" | "修复";
 
 export interface PatchObject {
   name: string;

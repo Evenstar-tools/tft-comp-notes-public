@@ -1,7 +1,7 @@
 {
   "seasonId": "s19-pbe",
-  "build": "6028987",
-  "reviewedAt": "2026-11-25T15:30:30.091Z",
+  "build": "6035832",
+  "reviewedAt": "2026-11-26T00:26:23.865Z",
   "displayOrder": [
     "00000000-0000-4000-8000-000000000089",
     "00000000-0000-4000-8000-000000000039",
@@ -34,13 +34,14 @@
     {
       "sectionId": "sample-block-0464",
       "teamId": "00000000-0000-4000-8000-000000000039",
-      "status": "recommended",
+      "status": "conditional",
       "group": "reroll",
-      "note": "妮蔻、莉莉娅来得多，手里能做回蓝装和肉装。五级追妮蔻三星，莉莉娅或酒桶先三星就接肉。",
-      "timing": "妮蔻、莉莉娅来得多，手里能做回蓝装和肉装。",
+      "note": "妮蔻、莉莉娅来得特别多且能做回蓝和肉装再进。新构建两小时核心均名 4.97。五级追妮蔻三星，莉莉娅或酒桶先三星就接肉。",
+      "timing": "妮蔻、莉莉娅来得特别多且能做回蓝和肉装再进。",
       "upgrade": "五级追妮蔻三星，莉莉娅或酒桶先三星就接肉。",
       "sources": [
-        "https://www.metatft.com/pbe-comps#DA_KDA19-DA_Neeko19"
+        "https://www.metatft.com/pbe-comps#DA_KDA19-DA_Neeko19",
+        "https://www.metatft.com/explorer?tab=units&set=TFTSet19&trait=DA_KDA19_5&unit=DA_Neeko19-1&unit=DA_Lillia19-1&unit=DA_AkaliKDA19-1&queue=PBE&patch=19.1&b_patch=c&days=0.08333333333333333"
       ]
     },
     {
@@ -48,9 +49,9 @@
       "teamId": "00000000-0000-4000-8000-000000000071",
       "status": "conditional",
       "group": "reroll",
-      "note": "玛尔扎哈和艾克来得多，有法装就停七双追。七级追双三星，做完男爵任务再上九。",
+      "note": "玛尔扎哈和艾克来得多，有法装就停七双追。七级追双三星。男爵乐器更难刷，玛尔扎哈先稳血，有条件再上九。",
       "timing": "玛尔扎哈和艾克来得多，有法装就停七双追。",
-      "upgrade": "七级追双三星，做完男爵任务再上九。",
+      "upgrade": "七级追双三星。男爵乐器更难刷，玛尔扎哈先稳血，有条件再上九。",
       "sources": [
         "https://www.metatft.com/pbe-comps#DA_Prodigy19-DA_Malzahar19-DA_Amumu19"
       ]
@@ -72,8 +73,8 @@
       "teamId": "00000000-0000-4000-8000-000000000059",
       "status": "recommended",
       "group": "fast8",
-      "note": "狗头两件开莎弥拉，无尽打工攒锤石。八级烬和锤石双两星，稳血后升九补女枪。",
-      "timing": "狗头两件开莎弥拉，无尽打工攒锤石。",
+      "note": "狗头两件开莎弥拉，无尽打工攒锤石。烬的小提琴伤害下调，留够钱搜两星。八级烬和锤石双两星，稳血后升九补女枪。",
+      "timing": "狗头两件开莎弥拉，无尽打工攒锤石。烬的小提琴伤害下调，留够钱搜两星。",
       "upgrade": "八级烬和锤石双两星，稳血后升九补女枪。",
       "sources": [
         "https://www.metatft.com/pbe-comps#DA_Virtuosos19-DA_Thresh19"
@@ -84,8 +85,8 @@
       "teamId": "00000000-0000-4000-8000-000000000078",
       "status": "recommended",
       "group": "fast8",
-      "note": "有羊刀、海妖散件，提前挂摇滚解锁薇恩。八级搜薇恩和约里克两星，稳住再考虑上九。",
-      "timing": "有羊刀、海妖散件，提前挂摇滚解锁薇恩。",
+      "note": "有羊刀、海妖散件，七级用摇滚恶魔或花式射手的不同名弈子凑 5 星解锁薇恩。八级搜薇恩和约里克两星，稳住再考虑上九。",
+      "timing": "有羊刀、海妖散件，七级用摇滚恶魔或花式射手的不同名弈子凑 5 星解锁薇恩。",
       "upgrade": "八级搜薇恩和约里克两星，稳住再考虑上九。",
       "sources": [
         "https://www.metatft.com/pbe-comps#DA_DemonVision19-DA_Vayne19-DA_Yorick19"
@@ -156,11 +157,11 @@
       "teamId": "00000000-0000-4000-8000-000000000104",
       "status": "conditional",
       "group": "fast9",
-      "note": "有物理装、霞来得早，八级先上霞做国风任务。霞和前排两星稳住，九级补悟空、迦娜和李青。",
-      "timing": "有物理装、霞来得早，八级先上霞做国风任务。",
-      "upgrade": "霞和前排两星稳住，九级补悟空、迦娜和李青。",
+      "note": "物理装、早来霞且有高血经济时走。新构建两小时核心 367 场，均名 3.57。八级用两星霞和前排稳血。灵兽画卷每胜经验下调，稳住后再上九补悟空、迦娜和李青。",
+      "timing": "物理装、早来霞且高血高经济时走。",
+      "upgrade": "八级用两星霞和前排稳血。灵兽画卷每胜经验下调，稳住后再上九补悟空、迦娜和李青。",
       "sources": [
-        "https://www.metatft.com/pbe-comps#DA_Heavenscale19-DA_Xayah19"
+        "https://www.metatft.com/explorer?set=TFTSet19&tab=units&trait=DA_Heavenscale19_3&unit=DA_Xayah19-1&unit=DA_Wukong19-1&queue=PBE&patch=19.1&b_patch=c&days=0.08333333333333333"
       ]
     },
     {
@@ -191,7 +192,7 @@
       "sectionId": "sample-block-0254",
       "teamId": "00000000-0000-4000-8000-000000000050",
       "status": "avoid",
-      "note": "伊泽瑞尔和狗头来牌多、能做蓝霸符再慢搜。19.1c 体系均名 4.62。",
+      "note": "伊泽瑞尔和狗头来牌多、能做蓝霸符再慢搜。19.1c 滚动体系均名 4.61。",
       "sources": [
         "https://www.metatft.com/pbe-comps#DA_Encore19-DA_Ezreal19"
       ]
@@ -200,19 +201,21 @@
       "sectionId": "sample-block-0235",
       "teamId": "00000000-0000-4000-8000-000000000105",
       "status": "avoid",
-      "note": "前期有人接泽丽装、血量经济都富余再上九。19.1c 体系均名 4.72。",
+      "note": "前期有人接泽丽装、血量经济都富余再上九。19.1c 滚动体系均名 4.72。泽丽基础激光系数下调。短窗核心 438 场、均名 3.40，包含不同九级结算盘，继续观察。",
       "sources": [
-        "https://www.metatft.com/pbe-comps#DA_Jazz19-DA_Leona19"
+        "https://www.metatft.com/pbe-comps#DA_Jazz19-DA_Leona19",
+        "https://www.metatft.com/explorer?set=TFTSet19&tab=units&trait=DA_EDM19_1&unit=DA_Zeri19-1&unit=DA_DrMundo19-1&queue=PBE&patch=19.1&b_patch=c&days=0.08333333333333333"
       ]
     },
     {
       "sectionId": "sample-block-0452",
       "teamId": "00000000-0000-4000-8000-000000000093",
       "status": "avoid",
-      "note": "八级先用两星男枪和扎克稳血。血量够才留 85 金开派克。19.1c 体系均名 4.55。",
+      "note": "八级先用两星男枪和扎克稳血。血量够才留 85 金开派克。19.1c 滚动体系均名 4.54。",
       "sources": [
         "https://www.metatft.com/pbe-comps#DA_Renegade19-DA_Graves19-DA_Zac19"
       ]
     }
-  ]
+  ],
+  "summary": "体系表现来自跨构建的 19.1c 近三天滚动窗口。四古典烬仍领先常规体系；四国风霞的 6035832 两小时核心样本达线，按速九条件进场。"
 }
