@@ -340,7 +340,7 @@ html[data-theme="dark"] .guide-placement.weak {color:#ff9ba3;}
   .read-cost {top:30%}
 }
 .star-hint {margin:5px 0;color:var(--accent);font-size:1rem;font-weight:650;}
-.read-traits,.guide-actions,.read-items,.guide-part-options {display:flex;align-items:center;flex-wrap:wrap;gap:5px 12px;}
+.read-traits,.guide-actions,.read-items {display:flex;align-items:center;flex-wrap:wrap;gap:5px 12px;}
 .read-traits {list-style:none;padding:0;margin:5px 0;font-size:.875rem;color:var(--text);gap:5px;}
 .read-traits li {
   display:flex;
@@ -462,21 +462,10 @@ html[data-theme="dark"] .guide-placement.weak {color:#ff9ba3;}
   .guide-loadout-gear {margin-inline-start:4px;}
 }
 .guide-loadout-gear a:is(:hover,:focus-visible) {background:var(--raised);}
-.guide-item-row {display:flex;align-items:flex-start;gap:8px;line-height:1.45;}
-.guide-item-row small,.guide-item-row span,.piece-slot {color:var(--muted);}
-.guide-gear-tools {display:flex;flex-wrap:wrap;gap:0 14px;align-items:start;}
-.guide-gear-tools:has(> details[open]) {display:block;}
-.guide-gear-tools > details {margin-block:0;}
-.guide-gear-tools > details > summary {min-height:44px;align-content:center;}
-.guide-unequipped > summary {min-height:40px;align-content:center;cursor:pointer;color:var(--text);font-size:.9375rem;}
+.piece-slot {color:var(--muted);}
+.guide-unequipped > summary {min-height:44px;align-content:center;cursor:pointer;color:var(--text);font-size:.9375rem;}
 .guide-unequipped > summary span {margin-inline-start:6px;color:var(--muted);font-variant-numeric:tabular-nums;}
-.guide-part-options {gap:5px;}
-.guide-parts button {padding:3px;min-height:42px;min-width:42px;background:var(--panel);}
-.guide-parts button[aria-pressed=true] {outline:2px solid var(--accent);outline-offset:1px;}
-.guide-builds {display:grid;grid-template-columns:repeat(auto-fit,minmax(min(150px,100%),1fr));gap:8px;margin:12px 0;}
-.guide-item-row>div>* {display:block;}
 .guide-item-link {color:var(--accent);font-weight:600;text-decoration:underline;text-underline-offset:3px;}
-.guide-item-row .guide-item-link,.guide-item-row small {font-size:.9375rem;}
 .read-items :is(span,a) {display:inline-flex;align-items:center;gap:7px;}
 .read-items a {min-height:42px;}
 .guide-inspector p {margin:5px 0;}

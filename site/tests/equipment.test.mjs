@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { equipItem, indexRecipes, transferEquipment, wornCombinations } from "../domain/equipment.ts";
-import { planCarousel, thirdItems } from "../domain/guide-equipment.ts";
+import { thirdItems } from "../domain/guide-equipment.ts";
 import { conditionalGearCohorts, conditionalGearRows } from "../domain/conditional-gear.ts";
 import { compareGearWearerSamples, gearSampleMinimum, gearWearerMatches, gearWearerStats } from "../domain/gear-wearer.ts";
 import { itemGuideOrigin, itemLink } from "../domain/links.ts";
@@ -63,17 +63,6 @@ test("PBE shows sparse radiant, emblem and artifact results without changing oth
   }
   assert.equal(gearSampleMinimum("completed", true, 100), 100);
   assert.equal(gearSampleMinimum("support", true, 100), 100);
-});
-
-test("carousel counts duplicate parts and carries an inherited item only once on the next board", () => {
-  const early = [{ owner: "莎弥拉", item: catalog.get(blade) }];
-  const next = [{ owner: "烬", item: catalog.get(blade) }, { owner: "烬", item: catalog.get(slayer) }];
-  assert.equal(planCarousel(early, { [sword]: 1 }, {}).picks[0].completes, true);
-  assert.equal(planCarousel(early, { [sword]: 2 }, {}).ready.length, 1);
-  const afterTransfer = planCarousel(next, { [bow]: 1 }, { [blade]: 1 });
-  assert.deepEqual(afterTransfer.needs, [{ id: sword, count: 1 }]);
-  assert.equal(afterTransfer.picks[0].goal.owner, "烬");
-  assert.equal(afterTransfer.picks[0].goal.item.id, slayer);
 });
 
 test("third item matches both locked copies in any order within the selected sample", () => {

@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { primaryFirst, matchGuideTeams, sourceSummary, complementItems, guideFacets, guidePlaystyle, guideRoster, guideBody, guideRoute, guideRollLevel, guideStrategyLabel, guideTitleWithoutPlaystyle, guideUnitMatch, readingNotes, isAuthoringIntroduction, isEditorialSection, parseGuideFilters, guideSectionWithCurrentNames } from "../domain/guide-reading.ts";
+import { primaryFirst, matchGuideTeams, sourceSummary, guideFacets, guidePlaystyle, guideRoster, guideBody, guideRoute, guideRollLevel, guideStrategyLabel, guideTitleWithoutPlaystyle, guideUnitMatch, readingNotes, isAuthoringIntroduction, isEditorialSection, parseGuideFilters, guideSectionWithCurrentNames } from "../domain/guide-reading.ts";
 import { displayGuideName, displayTraitNames } from "../domain/trait-names.mjs";
 import { comboStarMask, comboTierCounts } from "../domain/combo-tiers.ts";
 import { guideStyleKey, guideWearerQuery, homeGuideFilter, matchOpeningSearch, openingSearch, searchPhaseNote } from "../domain/guide-search.ts";
@@ -500,7 +500,6 @@ test("the author's primary survives reordered Feishu blocks and a Bard search li
   const section = {id:"x", blocks:[{type:"columns",children:[{id:"p",type:"text",text:"改后的原段落"}]}],summaryBlockId:"p"};
   assert.equal(sourceSummary(section),"改后的原段落");
   assert.equal(sourceSummary({...section,summaryBlockId:"moved"}),undefined);
-  assert.deepEqual(complementItems(["tear","tear"],"tear"),["tear"]);
   const faceted = {...section,blocks:[{id:"s",type:"text",text:"打法：慢搜"},{id:"c",type:"text",text:"主C：吉格斯"}]};
   assert.deepEqual(guideFacets(faceted,teams[0],data),{style:"慢搜",styleLabel:"1费慢搜",costs:[1]});
 });
