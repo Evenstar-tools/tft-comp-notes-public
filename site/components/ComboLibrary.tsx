@@ -1,16 +1,16 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
+import Image from "next/image";
 import { useSearchParams } from "next/navigation";
-import { Check, ChevronLeft, ChevronRight, Search, SquarePen, X } from "lucide-react";
-import { TraitBadge } from "@/components/Glyphs";
+import { ArrowUpRight, ChevronLeft, ChevronRight, Search, X } from "lucide-react";
+import { traitMap, unitLabel, unitMap } from "@/data";
 import meta from "@/data/combos-s19-meta.json";
 import tiers from "@/data/combo-tiers-s19.json";
 import { comboStarMask, comboTierCounts } from "@/domain/combo-tiers";
-import { hasUnlockCondition } from "@/domain/unlocks";
+import { unlockText } from "@/domain/unlocks";
 import { unitSearchNames } from "@/domain/unit-search.mjs";
 import { trackToolAction } from "@/lib/analytics";
 type Purpose = "all" | "jazz" | "bronze";
-import { traitMap, unitLabel, unitMap } from "@/data";
 
 type Row = [
   number[],
@@ -26,9 +26,27 @@ type Row = [
 type Group = "default" | "high";
 type HeldUnit = { stars: 1 | 2; required: boolean };
 const size = 8;
+const smeechMinimum = 9;
+const modes = [
+  { purpose: "all", minimum: smeechMinimum, label: "解锁史密奇 (≥9 羁绊)" },
+  { purpose: "all", minimum: 8, label: "常规 8+ 羁绊" },
+  { purpose: "jazz", minimum: null, label: "爵士乐" },
+  { purpose: "bronze", minimum: null, label: "终身黄铜" },
+] as const;
 const heroes = meta.units;
+// The combo archive only includes countable, non-unique traits.
 const traits = meta.traits.map(trait => ({ ...trait, siteName: traitMap.get(trait.id)?.name ?? trait.siteName }));
 const byId = new Map(heroes.map((u, index) => [u.id, index]));
+const unlockConditions = heroes.map(({ id }) => {
+  const unit = unitMap.get(id);
+  return unit ? unlockText(unit) : "";
+});
+const quickUnits = ["ziggs", "neeko", "lucian", "tristana", "jax", "alune", "mel", "leona", "zoe", "kobuko"]
+  .flatMap(id => {
+    const index = byId.get(id);
+    const unit = unitMap.get(id);
+    return index !== undefined && unit ? [{ index, unit }] : [];
+  });
 const number = (value: number) => value.toLocaleString("zh-CN");
 function activeTraits(
   indices: number[],
@@ -37,7 +55,7 @@ function activeTraits(
 ) {
   const counts = new Map<string, number>();
   indices.forEach((id, position) =>
-    heroes[id][source].forEach((trait) =>
+    heroes[id][source].forEach(trait =>
       counts.set(
         trait,
         (counts.get(trait) ?? 0) +
@@ -45,7 +63,10 @@ function activeTraits(
       ),
     ),
   );
-  return traits.filter((t) => (counts.get(t.id) ?? 0) >= t.threshold);
+  return traits.flatMap(trait => {
+    const count = counts.get(trait.id) ?? 0;
+    return count >= trait.threshold ? [{ ...trait, count }] : [];
+  });
 }
 function ComboResult({
   row,
@@ -70,73 +91,74 @@ function ComboResult({
   const upgradesNeeded = indices.filter((_, i) => pending & (1 << i));
   const activeSite = activeTraits(indices, mask, "siteTraits");
   const activeData = activeTraits(indices, mask, "dataTraits");
-  const site = activeSite.length, data = activeData.length;
-  const locked = needed.map(id => unitMap.get(heroes[id].id)!).filter(hasUnlockCondition);
-  const common = activeSite.filter((t) =>
-    activeData.some((other) => other.id === t.id),
-  );
-  const siteOnly = activeSite.filter((t) => !common.includes(t));
-  const dataOnly = activeData.filter((t) => !common.includes(t));
+  const site = activeSite.length;
+  const data = activeData.length;
+  const nonUniqueCount = Math.min(site, data);
+  const siteIds = new Set(activeSite.map(trait => trait.id));
+  const dataIds = new Set(activeData.map(trait => trait.id));
+  const common = activeSite.filter(trait => dataIds.has(trait.id));
+  const siteOnly = activeSite.filter(trait => !dataIds.has(trait.id));
+  const dataOnly = activeData.filter(trait => !siteIds.has(trait.id));
+  const names = common.filter(trait => trait.name !== trait.siteName);
   const bronzeMode = purpose === "bronze";
-  const previewTraits = (bronzeMode ? currentTier.bronze : common.map(trait => trait.id))
-    .flatMap(id => {
-      const trait = traitMap.get(id);
-      return trait ? [trait] : [];
-    });
-  const listedTraits = bronzeMode
-    ? common.filter(trait => !previewTraits.some(preview => preview.id === trait.id))
-    : common;
+  const bronzeIds = new Set(bronzeMode ? currentTier.bronze : []);
+  const listedTraits = [
+    ...activeSite.filter(trait => bronzeIds.has(trait.id)),
+    ...activeSite.filter(trait => !bronzeIds.has(trait.id)),
+  ];
   const code = indices
     .map((id, i) => heroes[id].id + (mask & (1 << i) ? ":2" : ""))
     .join(".");
   return (
-    <article className="combo-result">
-      <header>
-        <h2>
-          {purpose === "jazz" ? <><strong>{jazzCount}</strong> 爵士乐 <small>{currentTier.activeCount} 羁绊</small></> :
-            bronzeMode ? <><strong>{currentTier.bronze.length}</strong> 铜档</> :
-              <><strong>{Math.min(site, data)}</strong> 羁绊</>}
-        </h2>
-        <div className="combo-result-actions">
-          {hand.length > 0 && <strong className="combo-missing">{needed.length ? "缺 " + needed.length + " 张" : "手牌已齐"}</strong>}
-          <span title="每名棋子按一张计价">{cost} 金</span>
-          <a
-            className="button combo-import"
-            aria-label="带入编辑器"
-            onClick={() => trackToolAction({ action: "editor_import_combo", surface: "combos" })}
-            href={
-              "/editor?combo=" +
-              encodeURIComponent(code) +
-              "&from=" +
-              encodeURIComponent(from)
-            }
-          >
-            <SquarePen size={15} aria-hidden /> 带入编辑器
-          </a>
+    <article className="combos-result">
+      <header className="combos-result-head">
+        <div className="combos-result-meta">
+          <h2 className="combos-count">
+            {purpose === "jazz" ? <><strong>{jazzCount}</strong> 爵士乐</> :
+              bronzeMode ? <><strong>{currentTier.bronze.length}</strong> 铜档</> :
+                <><strong>{nonUniqueCount}</strong> 羁绊</>}
+          </h2>
+          {purpose === "jazz" && <span>{currentTier.activeCount} 羁绊</span>}
+          {nonUniqueCount >= smeechMinimum && <span className="combos-smeech" title="升到 9 级后触发解锁">✓ 解锁史密奇</span>}
+          <span>{needed.length ? <>需补 <b>{needed.length}</b> 张</> : <b>手牌已齐</b>}{" · "}<span title="每名棋子按一张计价">共 <b>{cost} 金</b></span></span>
         </div>
+        <a
+          className="combos-import"
+          onClick={() => trackToolAction({ action: "editor_import_combo", surface: "combos" })}
+          href={"/editor?combo=" + encodeURIComponent(code) + "&from=" + encodeURIComponent(from)}
+        >
+          带入编辑器 <ArrowUpRight size={14} aria-hidden />
+        </a>
       </header>
-      <div className="combo-roster">
+      <div className="combos-roster">
         {indices.map((id, i) => {
           const unit = unitMap.get(heroes[id].id)!;
           const label = unitLabel(unit);
+          const inHand = hand.includes(id);
+          const unlock = unlockConditions[id];
           return (
             <div
-              className={`combo-piece cost-${unit.cost}${hand.includes(id) ? " in-hand" : ""}`}
+              className={`combos-piece cost-${unit.cost}${inHand ? " in-hand" : ""}`}
               key={unit.id}
-              title={unit.name + " · " + unit.cost + "费"}
+              title={`${unit.name} · ${unit.cost}费`}
             >
-              <div>
-                <img
+              <div className="combos-piece-tags">
+                {inHand && <span className="combos-hand-tag">手牌</span>}
+                {unlock && <a className="combos-unlock-tag" href={"/heroes?unit=" + encodeURIComponent(unit.id)} title={unlock} aria-label={`${unit.name}解锁条件`}>解锁</a>}
+              </div>
+              <div className="combos-portrait">
+                <Image
                   src={unit.image}
                   width={48}
                   height={48}
                   alt=""
-                  loading="lazy"
+                  unoptimized
                 />
-                {!!(mask & (1 << i)) && <b aria-label={pending & (1 << i) ? "需两星" : "已两星"}>★★</b>}
-                {hand.includes(id) && <Check size={13} aria-label="手中已有" />}
+                {!!(mask & (1 << i)) && (
+                  <b className="combos-stars" role="img" aria-label={pending & (1 << i) ? "需两星" : "已两星"}>★★</b>
+                )}
               </div>
-              <span>
+              <span className="combos-piece-name">
                 {label.base}
                 {label.form && <small>{label.form}</small>}
               </span>
@@ -144,37 +166,28 @@ function ComboResult({
           );
         })}
       </div>
-      <div className="combo-requirements">
-        {upgradesNeeded.length > 0 && <p>{upgradesNeeded.map(id => heroes[id].name).join("、")}需两星</p>}
-        {locked.length > 0 && <p>需解锁{locked.map(unit => <a key={unit.id} href={"/heroes?unit=" + encodeURIComponent(unit.id)}>{unit.name}</a>)}</p>}
-      </div>
-      <footer>
-        <details>
-          <summary>
-            <span>羁绊明细</span>
-            {!!previewTraits.length && <span className="combo-trait-preview" aria-hidden="true">
-              {previewTraits.map(trait => <span key={trait.id} title={trait.name}><TraitBadge trait={trait} size={19} tone="active" /></span>)}
-            </span>}
-          </summary>
-          {bronzeMode && !!previewTraits.length && <p><b>铜档</b> {previewTraits.map(trait => trait.name).join("、")}</p>}
-          {!!listedTraits.length && <p>{bronzeMode && <b>其他羁绊</b>} {listedTraits.map(trait => trait.siteName).join("、")}</p>}
-          {(siteOnly.length > 0 || dataOnly.length > 0) && <p><b>口径差异</b> 本站 {site} · DataTFT {data}</p>}
-          {!!siteOnly.length && (
-            <p><b>仅本站</b> {siteOnly.map((t) => t.siteName).join("、")}</p>
-          )}
-          {!!dataOnly.length && (
-            <p><b>仅 DataTFT</b> {dataOnly.map((t) => t.name).join("、")}</p>
-          )}
-          {common.some((t) => t.name !== t.siteName) && (
-            <p>
-              <b>名称对照</b>{" "}
-              {common
-                .filter((t) => t.name !== t.siteName)
-                .map((t) => t.siteName + " / " + t.name)
-                .join("、")}
-            </p>
-          )}
-        </details>
+      {upgradesNeeded.length > 0 && <p className="combos-upgrades">{upgradesNeeded.map(id => heroes[id].name).join("、")}需两星</p>}
+      <footer className="combos-result-foot">
+        <ul className="combos-traits" aria-label="激活羁绊">
+          {listedTraits.map(trait => {
+            const isBronze = bronzeIds.has(trait.id);
+            const notes = [isBronze && "铜档", !dataIds.has(trait.id) && "仅本站口径激活"];
+            return (
+              <li key={trait.id} className={isBronze ? "is-bronze" : undefined} title={notes.filter(Boolean).join(" · ") || undefined}>
+                <b>{trait.count}</b> {trait.siteName}
+              </li>
+            );
+          })}
+        </ul>
+        {(siteOnly.length > 0 || dataOnly.length > 0 || names.length > 0) && (
+          <details className="combos-comparison">
+            <summary>口径与名称对照</summary>
+            {(siteOnly.length > 0 || dataOnly.length > 0) && <p><b>口径差异</b> 本站 {site} · DataTFT {data}</p>}
+            {!!siteOnly.length && <p><b>仅本站</b> {siteOnly.map(trait => trait.siteName).join("、")}</p>}
+            {!!dataOnly.length && <p><b>仅 DataTFT</b> {dataOnly.map(trait => trait.name).join("、")}</p>}
+            {!!names.length && <p><b>名称对照</b> {names.map(trait => `${trait.siteName} / ${trait.name}`).join("、")}</p>}
+          </details>
+        )}
       </footer>
     </article>
   );
@@ -204,6 +217,7 @@ export function ComboLibrary() {
     return held;
   });
   const [oneStarOnly, setAllOne] = useState(params.get("stars") === "1");
+  const [excludeUnlocks, setExcludeUnlocks] = useState(params.get("noUnlock") === "1");
   const heldIds = useMemo(() => Object.keys(hand).map(Number), [hand]);
   const requiredIds = useMemo(() => heldIds.filter(id => hand[id].required), [heldIds, hand]);
   const heldAtTwo = useMemo(() => new Set(heldIds.filter(id => hand[id].stars === 2)), [heldIds, hand]);
@@ -226,7 +240,6 @@ export function ComboLibrary() {
   useEffect(() => {
     if (rows) return;
     const controller = new AbortController();
-    setFailure("");
     fetch("/combos/s19-" + group + ".json", { signal: controller.signal })
       .then(async (reply) => {
         if (!reply.ok) throw new Error();
@@ -241,7 +254,9 @@ export function ComboLibrary() {
   }, [rows, group, retry]);
   const filtered = useMemo(() => {
     const candidates = (rows ?? []).filter(row =>
-      (allOne ? Math.min(row[3], row[4]) : Math.min(row[1], row[2])) >= limit && requiredIds.every(id => row[0].includes(id)));
+      (allOne ? Math.min(row[3], row[4]) : Math.min(row[1], row[2])) >= limit &&
+      requiredIds.every(id => row[0].includes(id)) &&
+      (!excludeUnlocks || !row[0].some(id => unlockConditions[id])));
     if (purpose === "all" && !heldIds.length) return candidates;
     return candidates.flatMap(row => {
       const { mask, pending } = comboStarMask(row[0], allOne ? 0 : row[8], heldAtTwo, heroes);
@@ -252,7 +267,7 @@ export function ComboLibrary() {
       const score = purpose === "jazz" ? current.activeCount : current.bronze.length;
       return (purpose === "jazz" ? current.jazz : score >= minimumBronze) ? [{ row, score, upgrades, held }] : [];
     }).sort((a, b) => b.held - a.held || (heldIds.length ? a.upgrades - b.upgrades : 0) || b.score - a.score || a.row[5] - b.row[5]).map(entry => entry.row);
-  }, [rows, limit, requiredIds, heldIds, heldAtTwo, allOne, purpose, minimumBronze]);
+  }, [rows, limit, requiredIds, heldIds, heldAtTwo, allOne, purpose, minimumBronze, excludeUnlocks]);
   const pages = Math.max(1, Math.ceil(filtered.length / size));
   const current = rows ? Math.min(page, pages) : page;
   const url = new URLSearchParams();
@@ -261,6 +276,7 @@ export function ComboLibrary() {
   if (group === "high") url.set("group", group);
   if (limit > 8) url.set("min", String(limit));
   if (allOne) url.set("stars", "1");
+  if (excludeUnlocks) url.set("noUnlock", "1");
   if (heldIds.length) url.set("hand", heldIds.map(id => heroes[id].id + (hand[id].stars === 2 ? ":2" : "")).join("."));
   const optionalIds = heldIds.filter(id => !hand[id].required);
   if (optionalIds.length) url.set("optional", optionalIds.map(id => heroes[id].id).join("."));
@@ -288,12 +304,21 @@ export function ComboLibrary() {
         })
         .slice(0, 8)
     : [];
-  function selectHero(id: number) {
+  function selectHero(id: number, keepSearching = true) {
     markUserAction();
     setHand(held => ({ ...held, [id]: { stars: 1, required: true } }));
     setPage(1);
     setQuery("");
-    searchInput.current?.focus();
+    if (keepSearching) searchInput.current?.focus();
+  }
+  function removeHero(id: number) {
+    markUserAction();
+    setHand(held => {
+      const next = { ...held };
+      delete next[id];
+      return next;
+    });
+    setPage(1);
   }
   function clearHand() {
     markUserAction();
@@ -306,158 +331,203 @@ export function ComboLibrary() {
     setLimit(8);
     setMinimumBronze(0);
     setAllOne(false);
+    setExcludeUnlocks(false);
   }
   return (
-    <div className="combo-library">
-      <div className="page-heading combo-heading">
-        <h1>八人口羁绊组合</h1>
-        <div className="combo-purpose" role="group" aria-label="组合用途">
-          {([["all","常规羁绊"],["jazz","爵士乐"],["bronze","终身黄铜"]] as const).map(([id, label]) =>
-            <button type="button" key={id} aria-pressed={purpose === id} onClick={() => { markUserAction(); setPurpose(id); setPage(1); }}>{label}</button>)}
+    <>
+      <header className="combos-heading">
+        <div>
+          <h1>凑羁绊工作台</h1>
+          <p>
+            <span>8 人口极速算高羁绊组合</span>
+            <span className="combos-goal">热补 6035832 · 9 个非唯一羁绊解锁史密奇</span>
+          </p>
         </div>
-      </div>
-      <section className="combo-controls" aria-label="组合筛选">
-        <div className="combo-filterline">
-          <div className="combo-picker">
-            <label className="search-field">
-              <Search size={15} aria-hidden />
+        <div className="combos-modes" role="group" aria-label="组合用途">
+          {modes.map(mode => (
+            <button
+              type="button"
+              key={mode.label}
+              aria-pressed={purpose === mode.purpose && (mode.minimum === null || (limit >= smeechMinimum ? smeechMinimum : 8) === mode.minimum)}
+              onClick={() => {
+                markUserAction();
+                setPurpose(mode.purpose);
+                if (mode.minimum !== null) setLimit(mode.minimum);
+                setPage(1);
+              }}
+            >{mode.label}</button>
+          ))}
+        </div>
+      </header>
+      <section className="combos-workbench" aria-label="手牌与组合筛选">
+        <div className="combos-workbench-top">
+          <div className="combos-hand">
+            <strong>本局手牌 <span>{heldIds.length}/{size}</span></strong>
+            {!heldIds.length && <span className="combos-hand-empty">搜索棋子或从下方加入</span>}
+            {heldIds.map(id => {
+              const { name, cost } = heroes[id];
+              const { required, stars } = hand[id];
+              return (
+                <div className={`combos-held cost-${cost}`} key={id}>
+                  <Image src={unitMap.get(heroes[id].id)!.image} alt="" width={24} height={24} unoptimized />
+                  <span>{name}</span>
+                  <button type="button" aria-label={`${name}必上`} aria-pressed={required} onClick={() => {
+                    markUserAction();
+                    setHand(held => ({ ...held, [id]: { ...held[id], required: !held[id].required } }));
+                    setPage(1);
+                  }}>{required ? "必上" : "可用"}</button>
+                  <button type="button" aria-label={`${name}二星`} aria-pressed={stars === 2} onClick={() => {
+                    markUserAction();
+                    setHand(held => ({ ...held, [id]: { ...held[id], stars: stars === 2 ? 1 : 2 } }));
+                    if (stars === 1) setAllOne(false);
+                    setPage(1);
+                  }}>{stars}★</button>
+                  <button type="button" aria-label={`移除${name}`} onClick={() => removeHero(id)}><X size={13} aria-hidden /></button>
+                </div>
+              );
+            })}
+            {!!heldIds.length && <button type="button" className="combos-clear" onClick={clearHand}>清空</button>}
+          </div>
+          <div className="combos-filters">
+            <div className="combos-picker">
+              <label className="combos-search">
+                <Search size={15} aria-hidden />
+                <input
+                  ref={searchInput}
+                  type="search"
+                  aria-label="添加手中已有英雄"
+                  placeholder="搜索棋子，加入手牌"
+                  value={query}
+                  disabled={heldIds.length >= size}
+                  onChange={(e) => setQuery(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && matches.length === 1)
+                      selectHero(matches[0].i);
+                    if (e.key === "Escape") setQuery("");
+                  }}
+                />
+              </label>
+              {needle && (
+                <div className="combos-options">
+                  {matches.length ? (
+                    matches.map(({ hero, i }) => {
+                      const unit = unitMap.get(hero.id)!;
+                      return <button key={i} type="button" onClick={() => selectHero(i)} className={"cost-" + hero.cost}>
+                      <Image src={unit.image} alt="" width={28} height={28} unoptimized />
+                        <span>{hero.name}</span>
+                        <small>{hero.cost}费</small>
+                      </button>;
+                    })
+                  ) : (
+                    <p>没有匹配的英雄</p>
+                  )}
+                </div>
+              )}
+            </div>
+            <label className="combos-select">
+              <select aria-label="费用范围" value={group} onChange={event => {
+                markUserAction();
+                setFailure("");
+                setGroup(event.target.value as Group);
+                setPage(1);
+              }}>
+                <option value="default">四费及以下（含解锁五费）</option>
+                <option value="high">含常规五费或七费</option>
+              </select>
+            </label>
+            <label className="combos-select">
+              <select
+                aria-label="最低羁绊数"
+                value={limit}
+                onChange={(e) => {
+                  markUserAction();
+                  setLimit(Number(e.target.value));
+                  setPage(1);
+                }}
+              >
+                {[8, 9, 10].map((n) => (
+                  <option key={n} value={n}>
+                    {n} 个常规羁绊起
+                  </option>
+                ))}
+              </select>
+            </label>
+            {purpose === "bronze" && <label className="combos-select"><select aria-label="最低铜色羁绊数" value={minimumBronze} onChange={e => { markUserAction(); setMinimumBronze(Number(e.target.value)); setPage(1); }}>
+              <option value={0}>铜档不限</option>{[1,2,3,4,5,6,7,8,9,10,11].map(n => <option key={n} value={n}>{n} 个铜档起</option>)}
+            </select></label>}
+            <label className="combos-check" title={heldAtTwo.size ? "手牌已有二星棋子" : undefined}>
               <input
-                ref={searchInput}
-                type="search"
-                aria-label="添加手中已有英雄"
-                placeholder="搜索棋子，加入手牌"
-                value={query}
-                disabled={heldIds.length >= 8}
-                onChange={(e) => setQuery(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && matches.length === 1)
-                    selectHero(matches[0].i);
-                  if (e.key === "Escape") setQuery("");
+                type="checkbox"
+                checked={allOne}
+                disabled={!!heldAtTwo.size}
+                onChange={(e) => {
+                  markUserAction();
+                  setAllOne(e.target.checked);
+                  setPage(1);
                 }}
               />
+              全员一星
             </label>
-            {needle && (
-              <div className="combo-options">
-                {matches.length ? (
-                  matches.map(({ hero, i }) => {
-                    const unit = unitMap.get(hero.id)!;
-                    return <button key={i} type="button" onClick={() => selectHero(i)} className={"cost-" + hero.cost}>
-                      <img src={unit.image} alt="" width={28} height={28} />
-                      <span>{hero.name}</span>
-                      <small>{hero.cost}费</small>
-                    </button>;
-                  })
-                ) : (
-                  <p>没有匹配的英雄</p>
-                )}
-              </div>
-            )}
+            <label className="combos-check">
+              <input type="checkbox" checked={excludeUnlocks} onChange={event => {
+                markUserAction();
+                setExcludeUnlocks(event.target.checked);
+                setPage(1);
+              }} />
+              排除需解锁弈子
+            </label>
+            {purpose === "bronze" && <a className="combos-text-link" href="/augments?q=终身黄铜">强化效果</a>}
           </div>
-          <label className="combo-select">
-            <select aria-label="费用范围" value={group} onChange={event => {
-              markUserAction();
-              setGroup(event.target.value as Group);
-              setPage(1);
-            }}>
-              <option value="default">四费及以下（含解锁五费）</option>
-              <option value="high">含常规五费或七费</option>
-            </select>
-          </label>
-          <label className="combo-select">
-            <select
-              aria-label="最低羁绊数"
-              value={limit}
-              onChange={(e) => {
-                markUserAction();
-                setLimit(Number(e.target.value));
-                setPage(1);
-              }}
-            >
-              {[8, 9, 10].map((n) => (
-                <option key={n} value={n}>
-                  {n} 个常规羁绊起
-                </option>
-              ))}
-            </select>
-          </label>
-          {purpose === "bronze" && <label className="combo-select"><select aria-label="最低铜色羁绊数" value={minimumBronze} onChange={e => { markUserAction(); setMinimumBronze(Number(e.target.value)); setPage(1); }}>
-            <option value={0}>铜档不限</option>{[1,2,3,4,5,6,7,8,9,10,11].map(n => <option key={n} value={n}>{n} 个铜档起</option>)}
-          </select></label>}
-          <label className="check" title={heldAtTwo.size ? "手牌已有二星棋子" : undefined}>
-            <input
-              type="checkbox"
-              checked={allOne}
-              disabled={!!heldAtTwo.size}
-              onChange={(e) => {
-                markUserAction();
-                setAllOne(e.target.checked);
-                setPage(1);
-              }}
-            />
-            全员一星
-          </label>
-          {purpose === "bronze" && <a className="text-link" href="/augments?q=终身黄铜">强化效果</a>}
         </div>
-        {!!heldIds.length && <div className="combo-hand">
-          <span className="combo-hand-label">手牌 <small>{heldIds.length}/8</small></span>
-          {heldIds.map(id => <span className={"combo-held cost-" + heroes[id].cost} key={id}>
-            <img src={unitMap.get(heroes[id].id)!.image} alt="" width={25} height={25} />
-            {heroes[id].name}
-            <select aria-label={heroes[id].name + "上阵要求"} value={hand[id].required ? "required" : "optional"} onChange={event => {
-              markUserAction();
-              const required = event.target.value === "required";
-              setHand(held => ({ ...held, [id]: { ...held[id], required } }));
-              setPage(1);
-            }}><option value="required">必上</option><option value="optional">可用</option></select>
-            <select aria-label={heroes[id].name + "星级"} value={hand[id].stars} onChange={event => {
-              markUserAction();
-              const stars = event.target.value === "2" ? 2 : 1;
-              setHand(held => ({ ...held, [id]: { ...held[id], stars } }));
-              if (stars === 2) setAllOne(false);
-              setPage(1);
-            }}><option value="1">1 星</option><option value="2">2 星</option></select>
-            <button type="button" aria-label={"移除" + heroes[id].name} onClick={() => {
-              markUserAction();
-              setHand(held => {
-                const next = { ...held };
-                delete next[id];
-                return next;
-              });
-              setPage(1);
-            }}><X size={12} /></button>
-          </span>)}
-          <button type="button" className="text-link combo-clear-hand" onClick={clearHand}>清空</button>
-        </div>}
+        {!!quickUnits.length && (
+          <div className="combos-quick" role="group" aria-label="高频多羁绊拼图">
+            <span>高频多羁绊拼图（一键加手牌）</span>
+            {quickUnits.map(({ index, unit }) => (
+              <button
+                key={unit.id}
+                className={`cost-${unit.cost}`}
+                type="button"
+                aria-pressed={!!hand[index]}
+                disabled={!hand[index] && heldIds.length >= size}
+                onClick={() => hand[index] ? removeHero(index) : selectHero(index, false)}
+              >
+                <Image src={unit.image} width={20} height={20} alt="" unoptimized />
+                {unit.name}
+              </button>
+            ))}
+          </div>
+        )}
       </section>
-      <div className="combo-list-head">
+      <div className="combos-list-head">
         <strong aria-live="polite">
           {rows
             ? number(filtered.length) + " 套候选"
             : failure || "正在读取组合…"}
         </strong>
-        <details className="combo-rules">
+        <details className="combos-rules">
           <summary>计算规则</summary>
-          <div className="combo-rule-content">
+          <div className="combos-rule-content">
             <p>{purpose === "bronze" ? "铜档按棋盘星级计算，合奏与额外纹章另计。" : "专属和动态羁绊不计，K/DA 每人最多两星。"}</p>
             <p>费用按每人一张计。8–9 羁绊仅收录部分已验证组合。</p>
+            <p>升到 9 级并激活至少 9 个非唯一羁绊可解锁史密奇。</p>
             <a href={tiers.localizedLookupUrl} target="_blank" rel="noreferrer" title={tiers.build}>档位来源</a>
           </div>
         </details>
       </div>
       {failure && !rows ? (
-        <button className="button" onClick={() => setRetry(retry + 1)}>
+        <button type="button" onClick={() => { setFailure(""); setRetry(count => count + 1); }}>
           重新读取
         </button>
       ) : rows && !filtered.length ? (
-        <section className="empty-state">
+        <section className="combos-empty">
           <h2>暂无匹配组合</h2>
-          <p>{requiredIds.length ? "可减少必上牌或降低羁绊数。" : "可降低羁绊数或放宽费用。"}</p>
-          <button className="button" onClick={reset}>
+          <p>{excludeUnlocks ? "可取消排除需解锁弈子。" : requiredIds.length ? "可减少必上牌或降低羁绊数。" : "可降低羁绊数或放宽费用。"}</p>
+          <button type="button" onClick={reset}>
             重置筛选
           </button>
         </section>
       ) : (
-        <div className="combo-list">
+        <div className="combos-list">
           {filtered
             .slice((current - 1) * size, current * size)
             .map(row => (
@@ -474,13 +544,13 @@ export function ComboLibrary() {
         </div>
       )}
       {!!filtered.length && (
-        <nav className="combo-pages" aria-label="组合翻页">
+        <nav className="combos-pages" aria-label="组合翻页">
           <button
             disabled={current === 1}
             onClick={() => {
               setPage(current - 1);
               document
-                .querySelector(".combo-list-head")
+                .querySelector(".combos-list-head")
                 ?.scrollIntoView({ block: "start" });
             }}
           >
@@ -495,7 +565,7 @@ export function ComboLibrary() {
             onClick={() => {
               setPage(current + 1);
               document
-                .querySelector(".combo-list-head")
+                .querySelector(".combos-list-head")
                 ?.scrollIntoView({ block: "start" });
             }}
           >
@@ -504,6 +574,6 @@ export function ComboLibrary() {
           </button>
         </nav>
       )}
-    </div>
+    </>
   );
 }

@@ -1,5 +1,6 @@
 "use client";
 import { Fragment, useEffect, useId, useLayoutEffect, useRef, useState, type MouseEvent } from "react";
+import Image from "next/image";
 import { itemMap, season, unitMap, unitLabel } from "@/data";
 import emblemSnapshot from "@/data/emblem-stats.json";
 import { itemReference } from "@/data/item-reference";
@@ -10,6 +11,7 @@ import { gearSampleMinimum } from "@/domain/gear-wearer";
 import { compareGearWearerSamples, cookware, emblemMatches, filterEmblems, filterGear, gearFilters, gearGroups, gearHref, gearMatches, gearWearerStats, isCookRecipe, itemName, recipeParts, searchGear, selectableWearers,
   type GearFilters, type GearGroup, type GearOrder, type ItemGroup } from "@/domain/gear-library";
 import { emblemItemId, type itemGuideOrigin } from "@/domain/links";
+import { itemAliases } from "@/domain/roster-import";
 import { withStatPeriod } from "@/domain/stat-periods";
 import type { Item } from "@/domain/types";
 import { ArrowUpRight, ChevronDown } from "lucide-react";
@@ -21,9 +23,11 @@ import { GearCategoryEmpty, GearCategoryNav } from "./GearCategoryNav";
 import { GearWearerSearch } from "./GearWearerSearch";
 import { StatPeriodSelect, useStatArchive, useStatPeriod } from "./StatPeriod";
 
-export type ItemGuideUse = { sectionId: string; teamId: string; title: string; boardName: string; isPrimary: boolean; unitId: string };
+export type ItemGuideUse = {
+  sectionId: string; teamId: string; title: string; boardName: string; isPrimary: boolean; unitId: string; boardUnitIds?: string[];
+};
 type GuideOrigin = NonNullable<ReturnType<typeof itemGuideOrigin>>;
-type ItemBoardUse = { href: string; label: string; isPrimary: boolean; holders: Set<string>; sectionId: string; title: string };
+type ItemBoardUse = { href: string; label: string; holders: Set<string>; unitIds: Set<string>; sectionId: string; title: string };
 type ReverseGearRow = { entry: Item; category: GearGroup; sample: ReturnType<typeof gearWearerStats>; rankedMinimum: number; rate?: number; trait: string };
 type EquipmentStats = { standard: WearerSnapshot; special: WearerSnapshot };
 
@@ -36,6 +40,8 @@ const categoryNames: Record<string, string> = {
   component: "散件", completed: "成装", "team-size": "人口装", emblem: "转职纹章",
   artifact: "神器", support: "辅助装", radiant: "光明装",
 };
+const shortItemNames = new Map(Object.entries(itemAliases).filter(([alias, name]) => name.length > 6 && alias.length < name.length)
+  .map(([alias, name]) => [name, alias]));
 const number = new Intl.NumberFormat("zh-CN");
 const percent = new Intl.NumberFormat("zh-CN", { style: "percent", maximumFractionDigits: 1 });
 const carryRateLabel = (rate: number) => rate > 0 && rate < 0.0005 ? "<0.1%" : percent.format(rate);
@@ -242,13 +248,16 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
   }
 
   function renderIndex(entry: Item, matches?: Item[]) {
-    const parts = group === "craft" ? recipeParts(entry) : matches;
+    const isList = group === "craft" || group === "special";
+    const parts = isList ? recipeParts(entry) : matches;
+    const name = itemName(entry);
+    const shortName = isList ? name : shortItemNames.get(name) ?? name;
     return <a key={entry.id} href={itemHref(group, filters, { item: entry.id, unit: wearer, from: origin?.href })}
-      aria-current={entry.id === item?.id ? "true" : undefined} onClick={event => openItem(event, entry)}>
-      <ItemIcon item={entry} size={32} />
-      <span className="gear-list-name">{itemName(entry)}
+      aria-current={entry.id === item?.id ? "true" : undefined} title={name} onClick={event => openItem(event, entry)}>
+      <ItemIcon item={entry} size={34} />
+      <span className="gear-list-name">{shortName === name ? name : <><span aria-hidden="true">{shortName}</span><span className="sr-only">{name}</span></>}
         {!!parts?.length && <small>{parts.map((part, index) => <span key={index}>
-          {index > 0 && (group === "craft" ? " + " : " · ")}
+          {index > 0 && (isList ? " + " : " · ")}
           {matches?.some(match => match.id === part.id)
             ? <strong className="gear-recipe-match">{itemName(part)}</strong> : itemName(part)}
         </span>)}</small>}
@@ -418,15 +427,14 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
         <ItemReading key={item.id} item={item} wearer={wearer} filters={filters} uses={examples[item.id] ?? []} onRecipe={openItem} equipment={equipment} period={period?.id}
           onWearer={(event, unit) => openWearer(event, item.id, unit)} wearerHref={unit => wearerLink(item.id, unit)}
           returnHref={itemHref(group, filters, { item: item.id, unit: wearer })}
-          showCategory={item.category !== group} origin={origin} openBuilds={openBuilds} />
+          origin={origin} openBuilds={openBuilds} />
       </section>}
     </div>}
   </>;
 }
 
-function ItemReading({ item, wearer, filters, uses, onRecipe, onWearer, wearerHref, equipment, period, inRanking = false, showCategory = true, origin, returnHref, openBuilds = false }: {
+function ItemReading({ item, wearer, filters, uses, onRecipe, onWearer, wearerHref, equipment, period, inRanking = false, origin, returnHref, openBuilds = false }: {
   inRanking?: boolean;
-  showCategory?: boolean;
   openBuilds?: boolean;
   origin?: GuideOrigin;
   item: Item; wearer: string; filters: GearFilters; uses: ItemGuideUse[]; returnHref: string;
@@ -445,6 +453,7 @@ function ItemReading({ item, wearer, filters, uses, onRecipe, onWearer, wearerHr
   const [buildsOpen, setBuildsOpen] = useState(openBuilds);
   const [buildsRevision, setBuildsRevision] = useState(0);
   const buildsId = useId();
+  const wearerTitle = useId();
   const buildsPanel = useRef<HTMLDivElement>(null);
   const radiant = item.category === "radiant";
   const special = item.category === "artifact" || item.category === "support";
@@ -460,15 +469,17 @@ function ItemReading({ item, wearer, filters, uses, onRecipe, onWearer, wearerHr
   const limit = radiant || special ? 3 : 6;
   const orderedUsers = inRanking || allUsers ? known : known.slice(0, limit);
   const shown = selectedWearer && !orderedUsers.includes(selectedWearer) ? [selectedWearer, ...orderedUsers] : orderedUsers;
+  const maxWearerGames = known.reduce((max, row) => Math.max(max, row.games), selectedWearer?.games || 1);
   const boardUses = new Map<string, ItemBoardUse>();
   const relevant = uses.filter(use => (!reverse || use.unitId === filters.wearer) && unitMap.has(use.unitId) &&
     !(use.sectionId === origin?.sectionId && use.teamId === origin.teamId));
   for (const use of [...relevant.filter(use => use.unitId === wearer), ...relevant.filter(use => use.unitId !== wearer)]) {
     const href = withStatPeriod(guideLink(use.sectionId, use.teamId, reverse ? returnHref : undefined), period);
     const board = boardUses.get(href) ?? {
-      href, label: use.boardName, isPrimary: use.isPrimary, holders: new Set<string>(), sectionId: use.sectionId, title: use.title,
+      href, label: use.boardName, holders: new Set<string>(), unitIds: new Set<string>(), sectionId: use.sectionId, title: use.title,
     };
     board.holders.add(use.unitId);
+    for (const id of use.boardUnitIds ?? []) board.unitIds.add(id);
     boardUses.set(href, board);
   }
   const guideExamples = new Map<string, { title: string; boards: ItemBoardUse[] }>();
@@ -487,6 +498,10 @@ function ItemReading({ item, wearer, filters, uses, onRecipe, onWearer, wearerHr
   const placement = (special || radiant) && snapshot ? itemPerformance(item, snapshot)?.mean : undefined;
   const showWearers = snapshot && !reverse && (!!sampled?.rows.some(row => !excluded.includes(row.unitId) && unitMap.has(row.unitId)) ||
     !inRanking && (item.category === "completed" || item.category === "team-size" || special || radiant));
+  const showBoardUses = guideExamples.size > 0 || !inRanking && showWearers;
+  const category = categoryNames[item.category ?? ""];
+  const attributes = !!reference?.stats.length && <dl className="gear-attributes" aria-label="装备属性">{reference.stats.map(({ label, value }) =>
+    <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>;
 
   function recipeLink(entry: Item, index: number) {
     const group = itemGroup(entry);
@@ -498,11 +513,21 @@ function ItemReading({ item, wearer, filters, uses, onRecipe, onWearer, wearerHr
   }
 
   function boardLink(board: ItemBoardUse, title?: string) {
-    return <a key={board.href} href={board.href}>
+    const units = [...new Set([...board.holders, ...board.unitIds])].flatMap(id => unitMap.get(id) ?? []).slice(0, 5);
+    const otherHolders = [...board.holders].filter(id => !units.some(unit => unit.id === id));
+    return <a key={board.href} className="gear-board-link" href={board.href}>
       <span className="gear-use-name">{title ?? board.label}
-        {title && !board.isPrimary && title !== board.label && <small>{board.label}</small>}
+        {title && title !== board.label && <small>{board.label}</small>}
       </span>
-      <span className="gear-use-holders">{[...board.holders].map(id => unitMap.get(id)?.name).join("、")}</span>
+      <span className="gear-guide-link-label">前往攻略<ArrowUpRight size={14} aria-hidden="true" /></span>
+      <span className="gear-board-portraits">{units.map(unit => {
+        const holder = board.holders.has(unit.id);
+        const label = unit.name + (holder ? "（携带者）" : "");
+        return <Image key={unit.id} className={"cost-" + unit.cost} data-holder={holder || undefined}
+          src={unit.image} alt={label} title={label} width={28} height={28} unoptimized />;
+      })}
+      </span>
+      {!!otherHolders.length && <small className="gear-use-holders">其他携带者 {otherHolders.map(id => unitMap.get(id)?.name).join("、")}</small>}
     </a>;
   }
 
@@ -517,33 +542,22 @@ function ItemReading({ item, wearer, filters, uses, onRecipe, onWearer, wearerHr
 
   return <>
     {origin && <a className="gear-origin text-link" href={origin.href}>← 返回棋盘</a>}
-    {!inRanking && <header className="gear-detail-heading">
-      <ItemIcon item={item} size={52} />
-      <div><h2 id="gear-item-name">{itemName(item)}</h2>{showCategory && <span>{categoryNames[item.category ?? ""]}</span>}</div>
-      {snapshot && (special || radiant) && <div className="gear-detail-placement">
-        {placement !== undefined && <strong>均名 {placement.toFixed(2)}</strong>}
-        <small>{sampled?.totalGames === undefined ? "暂无数据" : number.format(sampled.totalGames) + " 场"}</small>
-      </div>}
-      {showBuildQuery && <button type="button" className="gear-build-toggle" aria-expanded={buildsOpen}
-        aria-controls={buildsId} onClick={() => setBuildsOpen(!buildsOpen)}>
-        查三件套
-        <ChevronDown size={15} aria-hidden="true" />
-      </button>}
-    </header>}
-    {reverse && showBuildQuery && <button type="button" className="gear-build-toggle" aria-expanded={buildsOpen}
-      aria-controls={buildsId} onClick={() => setBuildsOpen(!buildsOpen)}>
-      查三件套<ChevronDown size={15} aria-hidden="true" />
-    </button>}
-    {showBuildQuery && <div className="gear-build-query" id={buildsId} ref={buildsPanel} tabIndex={-1} hidden={!buildsOpen}>
-      <ConditionalGear key={buildsRevision} lockedItems={[item]} wearer={wearer} wearerIds={sampled?.rows.filter(row => !excluded.includes(row.unitId)).map(row => row.unitId)} active={buildsOpen} period={period} />
-    </div>}
-    <div className="gear-reading-body" data-wearers={showWearers || undefined}>
-      <div className="gear-reading-reference">
-        {!!reference?.stats.length && <dl className="gear-attributes" aria-label="装备属性">{reference.stats.map(({ label, value }) =>
-          <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>}
-        {effect && <p className="gear-effect">{effect}</p>}
-        {!!glossary.length && <details className="gear-glossary"><summary>效果术语</summary><p>{glossary.join("\n")}</p></details>}
-        {!reference && <p className="gear-empty">暂无效果资料</p>}
+    <div className="gear-reading-reference">
+      <div className="gear-reference-top">
+        {!inRanking ? <header className="gear-detail-heading">
+          <ItemIcon item={item} size={56} className="gear-feature-icon" />
+          <div className="gear-item-identity">
+            <h2 id="gear-item-name">{itemName(item)}</h2>
+            <div className="gear-item-tags">
+              {category && <span className="gear-item-category">{category}</span>}
+              {attributes}
+            </div>
+          </div>
+          {snapshot && (special || radiant) && <div className="gear-detail-placement">
+            {placement !== undefined && <strong>均名 {placement.toFixed(2)}</strong>}
+            <small>{sampled?.totalGames === undefined ? "暂无数据" : number.format(sampled.totalGames) + " 场"}</small>
+          </div>}
+        </header> : attributes}
         {!!parts.length && <section className="gear-recipe gear-visible-recipe" aria-label="合成配方">
           <span className="gear-recipe-label">合成</span>
           <div>{parts.map((entry, index) => <span key={entry.id + index}>
@@ -551,15 +565,25 @@ function ItemReading({ item, wearer, filters, uses, onRecipe, onWearer, wearerHr
           </span>)}</div>
           {cookRecipe && item.traitId && <a className="gear-emblem-link" href={gearHref("emblems",
             emblemMatches(item.traitId, filters.query) ? filters : { ...filters, query: "" }, {
-            trait: item.traitId, unit: wearer,
-          })}>纹章使用者</a>}
+              trait: item.traitId, unit: wearer,
+            })}>纹章使用者</a>}
         </section>}
       </div>
-      {showWearers && <div className="gear-reading-users">
-        <section className="gear-wearers" aria-label={inRanking ? "实战使用者" : undefined}
-          aria-labelledby={inRanking ? undefined : "gear-wearer-title"}>
+      {effect && <p className="gear-effect">{effect}</p>}
+      {!!glossary.length && <details className="gear-glossary"><summary>效果术语</summary><p>{glossary.join("\n")}</p></details>}
+      {!reference && <p className="gear-empty">暂无效果资料</p>}
+      {showBuildQuery && (!inRanking || reverse) && <div className="gear-build-entry"><button type="button" className="gear-build-toggle" aria-expanded={buildsOpen}
+        aria-controls={buildsId} onClick={() => setBuildsOpen(!buildsOpen)}>
+        查三件套<ChevronDown size={15} aria-hidden="true" />
+      </button></div>}
+    </div>
+    {showBuildQuery && <div className="gear-build-query" id={buildsId} ref={buildsPanel} tabIndex={-1} hidden={!buildsOpen}>
+      <ConditionalGear key={buildsRevision} lockedItems={[item]} wearer={wearer} wearerIds={sampled?.rows.filter(row => !excluded.includes(row.unitId)).map(row => row.unitId)} active={buildsOpen} period={period} />
+    </div>}
+    {(showWearers || showBoardUses) && <div className="gear-reading-body" data-split={!!(showWearers && showBoardUses) || undefined}>
+      {showWearers && <section className="gear-wearers" aria-labelledby={wearerTitle}>
           <header className="gear-section-heading">
-            {!inRanking && <h3 id="gear-wearer-title">实战使用者</h3>}
+            <h3 id={wearerTitle}>实战使用者</h3>
             {!!sampled?.rows.length && <select aria-label="实战使用者排序" value={order} onChange={event => setOrder(event.target.value as typeof order)}>
               <option value="games">按场数</option>
               <option value="mean">按均名</option>
@@ -573,6 +597,9 @@ function ItemReading({ item, wearer, filters, uses, onRecipe, onWearer, wearerHr
               <tbody>{shown.map(row => {
                 const unit = unitMap.get(row.unitId)!;
                 const active = unit.id === selectedWearer?.unitId;
+                const label = unitLabel(unit);
+                const mean = row.games >= minGames ? row.mean : undefined;
+                const tone = mean == null ? undefined : mean <= 3.75 ? "good" : mean <= 4.15 ? "mid" : "low";
                 return <Fragment key={unit.id}><tr data-selected={active || undefined}>
                   <th scope="row">
                     <div className="gear-wearer-choice">
@@ -580,7 +607,7 @@ function ItemReading({ item, wearer, filters, uses, onRecipe, onWearer, wearerHr
                         aria-label={"查看" + unit.name + "使用战绩"} aria-current={active ? "true" : undefined}
                         onClick={event => onWearer(event, unit.id)}>
                         <img src={unit.image} alt="" width={32} height={32} loading="lazy" />
-                        <span>{unitLabel(unit).base}{unitLabel(unit).form && <small>{unitLabel(unit).form}</small>}</span>
+                        <span>{label.base}{label.form && <small>{label.form}</small>}</span>
                       </a>
                       <a className="gear-wearer-hero" href={withStatPeriod("/heroes?unit=" + encodeURIComponent(unit.id), period)}
                         title={unit.name + "英雄资料"} aria-label={unit.name + "英雄资料"}>
@@ -588,10 +615,13 @@ function ItemReading({ item, wearer, filters, uses, onRecipe, onWearer, wearerHr
                       </a>
                     </div>
                   </th>
-                  <td>{number.format(row.games)}</td>
+                  <td className="gear-wearer-games"><span>{number.format(row.games)}</span>
+                    <span className="gear-games-track" aria-hidden="true"><span style={{ inlineSize: `${row.games / maxWearerGames * 100}%` }} /></span>
+                  </td>
                   {withRate && <td>{row.rate === undefined ? "—" : carryRateLabel(row.rate)}</td>}
-                  <td>{row.games >= minGames && row.mean !== undefined
-                    ? row.mean.toFixed(2) : <span title={row.games < minGames ? "满 " + minGames + " 场显示均名" : undefined}>—</span>}</td>
+                  <td><span className="gear-wearer-mean" data-tone={tone} title={row.games < minGames ? "满 " + minGames + " 场显示均名" : undefined}>
+                    {mean?.toFixed(2) ?? "—"}
+                  </span></td>
                 </tr>{active && <tr className="gear-wearer-action" data-selected>
                   <td colSpan={withRate ? 4 : 3}><div>
                     {!inRanking && showBuildQuery && <button type="button" aria-controls={buildsId}
@@ -610,15 +640,14 @@ function ItemReading({ item, wearer, filters, uses, onRecipe, onWearer, wearerHr
               {allUsers ? "收起使用者" : "更多使用者"}
             </button>}
           </> : <p className="gear-empty">{sampled?.totalGames && minGames > 1 ? `暂无达到 ${minGames} 场的使用者` : "暂无携带数据"}</p>}
-        </section>
-      </div>}
+      </section>}
 
-      {!!guideExamples.size && <section className="gear-board-uses" aria-labelledby="gear-guide-title">
+      {showBoardUses && <section className="gear-board-uses" aria-labelledby="gear-guide-title">
         <header className="gear-section-heading">
-          <h3 id="gear-guide-title">实戴阵容</h3>
-          {!reverse && <a href={withStatPeriod("/?" + new URLSearchParams({ q: itemName(item) + "能玩什么", sort: "category", fromItem: returnHref }), period)}>找阵容</a>}
+          <h3 id="gear-guide-title">实戴推荐阵容</h3>
+          {!reverse && !!guideExamples.size && <a href={withStatPeriod("/?" + new URLSearchParams({ q: itemName(item) + "能玩什么", sort: "category", fromItem: returnHref }), period)}>找阵容</a>}
         </header>
-        <ul>{[...guideExamples].slice(0, 5).map(([sectionId, { title, boards }]) => {
+        {guideExamples.size ? <ul>{[...guideExamples].slice(0, 5).map(([sectionId, { title, boards }]) => {
           const [first, ...others] = boards;
           return <li key={sectionId}>
             {boardLink(first, title)}
@@ -627,9 +656,9 @@ function ItemReading({ item, wearer, filters, uses, onRecipe, onWearer, wearerHr
               <div>{others.map(board => boardLink(board))}</div>
             </details>}
           </li>;
-        })}</ul>
+        })}</ul> : <p className="gear-empty">暂无实戴阵容</p>}
       </section>}
-    </div>
+    </div>}
     {cookComponent && !!builds.length && <section className="gear-cook-results" aria-labelledby="gear-cook-title">
       <h3 id="gear-cook-title">可合成装备</h3>
       <ul>{builds.map(entry => <li key={entry.id}>
@@ -640,7 +669,7 @@ function ItemReading({ item, wearer, filters, uses, onRecipe, onWearer, wearerHr
         </a>
       </li>)}</ul>
     </section>}
-    {!cookComponent && !!builds.length && <details className="gear-recipe">
+    {!cookComponent && !!builds.length && <details className="gear-recipe gear-recipe-options">
       <summary>可合成装备</summary>
       <div>{builds.map(recipeLink)}</div>
     </details>}
