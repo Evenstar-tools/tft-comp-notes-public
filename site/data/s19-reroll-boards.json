@@ -1873,6 +1873,267 @@
         "teamId": "00000000-0000-4000-8000-000000000017",
         "name": "7级追出",
         "notes": "优先玛尔扎哈、艾克三星，布隆顺路追。艾克居中接首轮集火，带日炎的布隆靠玛尔扎哈火力侧。"
+      },
+      {
+        "teamId": "0dd45d5d-496c-459b-9db2-8e05355bd6c2",
+        "parentTeamId": "00000000-0000-4000-8000-000000000017",
+        "boardRole": "variant",
+        "name": "9级 · 大龙焚决",
+        "notes": "五种乐器、6 万伤害都达成后，下妮蔻上纳什男爵。坦度或血量不够时先稳住八级。",
+        "pieces": [
+          {
+            "unitId": "shyvana",
+            "stars": 2,
+            "position": 3,
+            "items": [
+              "TFT_Item_Crownguard",
+              "TFT_Item_WarmogsArmor",
+              "TFT_Item_GargoyleStoneplate"
+            ]
+          },
+          {
+            "unitId": "swain",
+            "stars": 2,
+            "position": 9,
+            "items": []
+          },
+          {
+            "unitId": "annie",
+            "stars": 2,
+            "position": 10,
+            "items": []
+          },
+          {
+            "unitId": "ekko",
+            "stars": 2,
+            "position": 19,
+            "items": []
+          },
+          {
+            "unitId": "lux",
+            "stars": 2,
+            "position": 22,
+            "items": []
+          },
+          {
+            "unitId": "malzahar",
+            "stars": 2,
+            "position": 24,
+            "items": [
+              "TFT_Item_JeweledGauntlet",
+              "TFT_Item_MadredsBloodrazor"
+            ]
+          },
+          {
+            "unitId": "alune",
+            "stars": 1,
+            "position": 26,
+            "items": []
+          },
+          {
+            "unitId": "baron-nashor",
+            "stars": 1,
+            "position": 27,
+            "items": [
+              "TFT_Item_BlueBuff",
+              "TFT_Item_PowerGauntlet",
+              "TFT_Item_InfinityEdge"
+            ]
+          }
+        ],
+        "roles": [
+          {
+            "label": "主C",
+            "units": [
+              "malzahar"
+            ]
+          },
+          {
+            "label": "主坦",
+            "units": [
+              "shyvana"
+            ]
+          },
+          {
+            "label": "副C",
+            "units": [
+              "baron-nashor"
+            ]
+          }
+        ]
+      },
+      {
+        "teamId": "a56a62e0-a4de-4986-9917-7acfaab6c105",
+        "parentTeamId": "00000000-0000-4000-8000-000000000017",
+        "boardRole": "variant",
+        "name": "8级 · 大龙焚决过渡",
+        "notes": "玛尔扎哈早到就开始攒伤害。七级补到两星后上八找希瓦娜，先稳血再为九级存钱。",
+        "pieces": [
+          {
+            "unitId": "shyvana",
+            "stars": 2,
+            "position": 3,
+            "items": [
+              "TFT_Item_Crownguard",
+              "TFT_Item_WarmogsArmor",
+              "TFT_Item_GargoyleStoneplate"
+            ]
+          },
+          {
+            "unitId": "swain",
+            "stars": 2,
+            "position": 9,
+            "items": []
+          },
+          {
+            "unitId": "annie",
+            "stars": 2,
+            "position": 10,
+            "items": []
+          },
+          {
+            "unitId": "ekko",
+            "stars": 2,
+            "position": 19,
+            "items": []
+          },
+          {
+            "unitId": "neeko",
+            "stars": 2,
+            "position": 21,
+            "items": []
+          },
+          {
+            "unitId": "lux",
+            "stars": 2,
+            "position": 22,
+            "items": []
+          },
+          {
+            "unitId": "malzahar",
+            "stars": 2,
+            "position": 24,
+            "items": [
+              "TFT_Item_JeweledGauntlet",
+              "TFT_Item_MadredsBloodrazor",
+              "TFT_Item_PowerGauntlet"
+            ]
+          },
+          {
+            "unitId": "alune",
+            "stars": 1,
+            "position": 26,
+            "items": []
+          }
+        ],
+        "roles": [
+          {
+            "label": "主C",
+            "units": [
+              "malzahar"
+            ]
+          },
+          {
+            "label": "主坦",
+            "units": [
+              "shyvana"
+            ]
+          }
+        ]
+      },
+      {
+        "teamId": "cae04fb7-8a61-4ef2-8e86-b716e0b2fd13",
+        "parentTeamId": "00000000-0000-4000-8000-000000000017",
+        "boardRole": "variant",
+        "name": "10级 · 大龙焚决上限",
+        "notes": "男爵占两人口。十级再补回妮蔻，开回五天才。",
+        "pieces": [
+          {
+            "unitId": "shyvana",
+            "stars": 2,
+            "position": 3,
+            "items": [
+              "TFT_Item_Crownguard",
+              "TFT_Item_WarmogsArmor",
+              "TFT_Item_GargoyleStoneplate"
+            ]
+          },
+          {
+            "unitId": "swain",
+            "stars": 2,
+            "position": 9,
+            "items": []
+          },
+          {
+            "unitId": "annie",
+            "stars": 2,
+            "position": 10,
+            "items": []
+          },
+          {
+            "unitId": "ekko",
+            "stars": 2,
+            "position": 19,
+            "items": []
+          },
+          {
+            "unitId": "neeko",
+            "stars": 2,
+            "position": 21,
+            "items": []
+          },
+          {
+            "unitId": "lux",
+            "stars": 2,
+            "position": 22,
+            "items": []
+          },
+          {
+            "unitId": "malzahar",
+            "stars": 2,
+            "position": 24,
+            "items": [
+              "TFT_Item_JeweledGauntlet",
+              "TFT_Item_MadredsBloodrazor"
+            ]
+          },
+          {
+            "unitId": "alune",
+            "stars": 1,
+            "position": 26,
+            "items": []
+          },
+          {
+            "unitId": "baron-nashor",
+            "stars": 1,
+            "position": 27,
+            "items": [
+              "TFT_Item_BlueBuff",
+              "TFT_Item_PowerGauntlet",
+              "TFT_Item_InfinityEdge"
+            ]
+          }
+        ],
+        "roles": [
+          {
+            "label": "主C",
+            "units": [
+              "malzahar"
+            ]
+          },
+          {
+            "label": "主坦",
+            "units": [
+              "shyvana"
+            ]
+          },
+          {
+            "label": "副C",
+            "units": [
+              "baron-nashor"
+            ]
+          }
+        ]
       }
     ],
     "edits": [
