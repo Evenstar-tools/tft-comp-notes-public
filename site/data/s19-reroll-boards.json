@@ -468,12 +468,12 @@
       {
         "teamId": "00000000-0000-4000-8000-000000000051",
         "name": "5级追三",
-        "notes": "五级追三星奥拉夫。塔里克先扛，奥拉夫和带轻语的纳尔同侧打前排。缺安妮用佐伊开双法师。"
+        "notes": "五级追三星奥拉夫，缺安妮先用佐伊开双法师。"
       }
     ],
     "edits": [
-      {"teamId": "00000000-0000-4000-8000-000000000097", "originalPositions": {"olaf": 22, "gnar": 23}, "positions": {"olaf": 21, "gnar": 22}},
-      {"teamId": "00000000-0000-4000-8000-000000000051", "originalPositions": {"olaf": 22, "gnar": 23}, "positions": {"olaf": 21, "gnar": 22}},
+      {"teamId": "00000000-0000-4000-8000-000000000097", "originalPositions": {"olaf": 22, "gnar": 23}, "positions": {"olaf": 21, "gnar": 22, "taric": 2, "yorick": 5, "zac": 8, "ekko": 11, "annie": 16, "karthus": 27}, "alternates": {"annie": {"instanceId": "deecdd49-fdb7-4052-95ff-7e3d77f56ffb", "unitId": "zoe", "stars": 2, "items": []}}},
+      {"teamId": "00000000-0000-4000-8000-000000000051", "originalPositions": {"olaf": 22, "gnar": 23}, "positions": {"olaf": 21, "gnar": 22, "taric": 2, "annie": 9, "karthus": 27}, "alternates": {"annie": {"instanceId": "d53b9e6e-9058-4d6d-8f4d-d90a2f06e136", "unitId": "zoe", "stars": 2, "items": []}}},
       {"teamId": "00000000-0000-4000-8000-000000000097", "positions": {"zac": 8, "ekko": 11}, "stoneplateHolder": "taric", "originalPositions": {"taric": 1, "yorick": 3, "zac": 2, "ekko": 5}}
     ]
   },
@@ -1143,12 +1143,12 @@
       {
         "teamId": "00000000-0000-4000-8000-000000000079",
         "name": "6级追三",
-        "notes": "六级追三星雷克顿、俄洛伊，鳄鱼优先。俄洛伊带肉装先扛，鳄鱼穿饮血、泰坦解锁艾希，从第二排进场。缺艾希用佐伊保三海之歌。"
+        "notes": "六级追三星鳄鱼和俄洛伊，艾希缺席就上佐伊。"
       },
       {
         "teamId": "00000000-0000-4000-8000-000000000032",
         "name": "6级带芬妮",
-        "notes": "六级追三星雷克顿、俄洛伊。芬妮已解锁且到两星，再用她换奥拉夫。俄洛伊先扛，鳄鱼站第二排，缺艾希用佐伊。",
+        "notes": "芬妮两星可换奥拉夫，六级继续追鳄鱼、俄洛伊。",
         "parentTeamId": "00000000-0000-4000-8000-000000000100",
         "pieces": [
           {
@@ -1171,7 +1171,7 @@
           {
             "unitId": "renekton",
             "stars": 3,
-            "position": 9,
+            "position": 8,
             "items": [
               "TFT_Item_Bloodthirster",
               "TFT_Item_TitansResolve"
@@ -1186,10 +1186,11 @@
           {
             "unitId": "ashe",
             "stars": 2,
-            "position": 23,
+            "position": 21,
             "items": [
               "TFT_Item_LastWhisper"
-            ]
+            ],
+            "alternate": {"instanceId": "da42de1d-f6eb-4121-a3bf-601e9945a433", "unitId": "zoe", "stars": 2, "items": []}
           },
           {
             "unitId": "seraphine",
@@ -1234,7 +1235,7 @@
           "maracas": 3
         }
       },
-      {"teamId": "00000000-0000-4000-8000-000000000100", "originalPositions": {"seraphine": 26}, "positions": {"seraphine": 27}}
+      {"teamId": "00000000-0000-4000-8000-000000000100", "originalPositions": {"seraphine": 26}, "positions": {"seraphine": 27, "illaoi": 2, "renekton": 8, "jax": 11, "zac": 10, "taric": 4, "ashe": 21}, "alternates": {"ashe": {"instanceId": "f558557f-e79d-4802-a955-e4a3c68e14c8", "unitId": "zoe", "stars": 2, "items": []}}}
     ]
   },
   {
@@ -1274,22 +1275,22 @@
         "originalName": "五高能三编舞",
         "name": "九级上限 · 五高能三编舞"
       },
-      {"teamId": "00000000-0000-4000-8000-000000000042", "originalPositions": {"seraphine": 22}, "positions": {"seraphine": 27}},
-      {"teamId": "00000000-0000-4000-8000-000000000066", "originalPositions": {"ziggs": 22}, "positions": {"ziggs": 21}},
-      {"teamId": "00000000-0000-4000-8000-000000000096", "originalPositions": {"ziggs": 22, "seraphine": 24}, "positions": {"ziggs": 21, "seraphine": 27}},
+      {"teamId": "00000000-0000-4000-8000-000000000042", "originalPositions": {"seraphine": 22}, "positions": {"seraphine": 27, "nidalee": 22}},
+      {"teamId": "00000000-0000-4000-8000-000000000066", "originalPositions": {"ziggs": 22}, "positions": {"ziggs": 21, "elise": 8}, "alternates": {"kobuko": {"instanceId": "cd710bea-0b39-4758-95e9-f8ade9f1e1f1", "unitId": "sett", "stars": 2, "items": []}}},
+      {"teamId": "00000000-0000-4000-8000-000000000096", "originalPositions": {"ziggs": 22, "seraphine": 24}, "positions": {"ziggs": 21, "seraphine": 27, "swain": 8, "lulu": 24}},
       {"teamId": "00000000-0000-4000-8000-000000000098", "positions": {"galio": 11}, "stoneplateHolder": "kobuko", "originalPositions": {"kobuko": 3, "swain": 1, "galio": 5}},
-      {"teamId": "00000000-0000-4000-8000-000000000089", "positions": {"shyvana": 10}, "stoneplateHolder": "kobuko", "originalPositions": {"kobuko": 3, "shyvana": 4, "elise": 2}}
+      {"teamId": "00000000-0000-4000-8000-000000000089", "positions": {"shyvana": 10, "elise": 8, "teemo": 23, "lulu": 25}, "stoneplateHolder": "kobuko", "originalPositions": {"kobuko": 3, "shyvana": 4, "elise": 2}}
     ],
     "stages": [
       {
         "teamId": "00000000-0000-4000-8000-000000000066",
         "name": "5级追三",
-        "notes": "五级追三星吉格斯、可酷伯。两星吉格斯带一件装备解锁可酷伯，没来先用瑟提。芬妮还没解锁就上佐伊开双法师。",
+        "notes": "两星吉格斯带一件开可酷伯，没来用瑟提先扛。",
         "pieces": [
           {
             "unitId": "elise",
             "stars": 2,
-            "position": 2,
+            "position": 8,
             "items": []
           },
           {
@@ -1298,12 +1299,13 @@
             "position": 3,
             "items": [
               "TFT_Item_GargoyleStoneplate"
-            ]
+            ],
+            "alternate": {"instanceId": "cd710bea-0b39-4758-95e9-f8ade9f1e1f1", "unitId": "sett", "stars": 2, "items": []}
           },
           {
             "unitId": "ziggs",
             "stars": 3,
-            "position": 22,
+            "position": 21,
             "items": [
               "TFT_Item_GuinsoosRageblade",
               "TFT_Item_JeweledGauntlet"
@@ -1348,7 +1350,7 @@
       {
         "teamId": "00000000-0000-4000-8000-000000000096",
         "name": "6级追三",
-        "notes": "六级上四高能加芬妮、斯维因。芬妮、璐璐和小炮都追三，凑够四个三星开芬妮巨星。斯维因两星够用。没解锁芬妮就走八级三爵士。",
+        "notes": "六级开四高能，芬妮、璐璐和小炮来得顺就追三。",
         "pieces": [
           {
             "unitId": "kobuko",
@@ -1362,7 +1364,7 @@
           {
             "unitId": "swain",
             "stars": 2,
-            "position": 9,
+            "position": 8,
             "items": [
               "TFT_Item_Crownguard"
             ]
@@ -1370,7 +1372,7 @@
           {
             "unitId": "ziggs",
             "stars": 3,
-            "position": 22,
+            "position": 21,
             "items": [
               "TFT_Item_GuinsoosRageblade",
               "TFT_Item_JeweledGauntlet"
@@ -1379,7 +1381,7 @@
           {
             "unitId": "seraphine",
             "stars": 3,
-            "position": 24,
+            "position": 27,
             "items": [
               "TFT_Item_SpearOfShojin",
               "TFT_Item_StatikkShiv"
@@ -1388,7 +1390,7 @@
           {
             "unitId": "lulu",
             "stars": 3,
-            "position": 25,
+            "position": 24,
             "items": []
           },
           {
@@ -1422,7 +1424,8 @@
             "units": [
               "swain"
             ]
-          }
+          },
+          {"label": "功能装", "units": ["seraphine"]}
         ]
       }
     ]
@@ -1606,12 +1609,12 @@
       {
         "teamId": "00000000-0000-4000-8000-000000000041",
         "name": "7级四舞者",
-        "notes": "先搜双 C 两星。缺亚索或永恩，上布隆、奥拉夫开双主宰。阿木木单顶。",
+        "notes": "先搜双C两星，缺亚索或永恩就上布隆、奥拉夫。",
         "pieces": [
           {
             "unitId": "amumu",
             "stars": 2,
-            "position": 3,
+            "position": 4,
             "items": [
               "TFT_Item_SpectralGauntlet",
               "TFT_Item_WarmogsArmor"
@@ -1620,19 +1623,19 @@
           {
             "unitId": "braum",
             "stars": 2,
-            "position": 1,
+            "position": 8,
             "items": []
           },
           {
             "unitId": "olaf",
             "stars": 2,
-            "position": 5,
+            "position": 9,
             "items": []
           },
           {
             "unitId": "viego",
             "stars": 2,
-            "position": 8,
+            "position": 13,
             "items": [
               "TFT_Item_GuardianAngel",
               "TFT_Item_UnstableConcoction"
@@ -1641,7 +1644,7 @@
           {
             "unitId": "briar",
             "stars": 2,
-            "position": 7,
+            "position": 12,
             "items": [
               "TFT_Item_Bloodthirster"
             ]
@@ -1649,13 +1652,13 @@
           {
             "unitId": "kayn",
             "stars": 2,
-            "position": 11,
+            "position": 14,
             "items": []
           },
           {
             "unitId": "camille",
             "stars": 2,
-            "position": 12,
+            "position": 7,
             "items": []
           }
         ],
@@ -1677,18 +1680,19 @@
             "units": [
               "briar"
             ]
-          }
+          },
+          {"label": "功能装", "units": ["amumu"]}
         ]
       },
       {
         "teamId": "00000000-0000-4000-8000-000000000074",
         "name": "7级六舞者",
-        "notes": "舞者或真伤弈子合计六星开亚索。开六舞者后留利息追三星。",
+        "notes": "七级凑六星舞者或真伤开亚索，开六舞者再追三。",
         "pieces": [
           {
             "unitId": "amumu",
             "stars": 2,
-            "position": 3,
+            "position": 4,
             "items": [
               "TFT_Item_SpectralGauntlet",
               "TFT_Item_WarmogsArmor"
@@ -1697,19 +1701,19 @@
           {
             "unitId": "camille",
             "stars": 2,
-            "position": 1,
+            "position": 9,
             "items": []
           },
           {
             "unitId": "yone",
             "stars": 1,
-            "position": 5,
+            "position": 7,
             "items": []
           },
           {
             "unitId": "viego",
             "stars": 2,
-            "position": 8,
+            "position": 13,
             "items": [
               "TFT_Item_GuardianAngel",
               "TFT_Item_UnstableConcoction",
@@ -1719,7 +1723,7 @@
           {
             "unitId": "briar",
             "stars": 2,
-            "position": 7,
+            "position": 12,
             "items": [
               "TFT_Item_Bloodthirster",
               "TFT_Item_SteraksGage"
@@ -1728,13 +1732,13 @@
           {
             "unitId": "yasuo",
             "stars": 1,
-            "position": 11,
+            "position": 17,
             "items": []
           },
           {
             "unitId": "kayn",
             "stars": 2,
-            "position": 12,
+            "position": 14,
             "items": []
           }
         ],
@@ -1756,23 +1760,24 @@
             "units": [
               "briar"
             ]
-          }
+          },
+          {"label": "功能装", "units": ["amumu"]}
         ]
       }
     ],
     "edits": [
       {
         "teamId": "00000000-0000-4000-8000-000000000087",
-        "notes": "双 C 追三后升八，下阿木木，上约里克和奥拉夫。约里克带薄暮、日炎站双 C 同侧第一排，佛耶戈从第二排进场，贝蕾亚看对手后排换边。",
+        "notes": "阿木木追不出时，换约里克、奥拉夫开三五杀。",
         "positions": {
           "yorick": 2,
-          "olaf": 3,
-          "camille": 5,
-          "viego": 8,
-          "briar": 7,
-          "kayn": 11,
-          "yone": 10,
-          "yasuo": 6
+          "olaf": 5,
+          "camille": 9,
+          "viego": 7,
+          "briar": 8,
+          "kayn": 16,
+          "yone": 13,
+          "yasuo": 12
         },
         "originalName": "八级 · 六舞者佛耶戈",
         "originalPositions": {
@@ -1795,7 +1800,7 @@
         "teamId": "00000000-0000-4000-8000-000000000005",
         "parentTeamId": "00000000-0000-4000-8000-000000000017",
         "name": "7级起搜",
-        "notes": "玛尔扎哈、艾克先到两星再慢 D，拉露恩没到用斯维因顶两星前排。四名不同的天才在七级解锁拉露恩，买到即换斯维因开五天才。",
+        "notes": "先找玛尔扎哈、艾克两星，拉露恩买到就换斯维因。",
         "pieces": [
           {
             "unitId": "swain",
@@ -1815,7 +1820,7 @@
           {
             "unitId": "braum",
             "stars": 2,
-            "position": 5,
+            "position": 11,
             "items": [
               "TFT_Item_RedBuff"
             ]
@@ -1823,7 +1828,7 @@
           {
             "unitId": "neeko",
             "stars": 2,
-            "position": 15,
+            "position": 8,
             "items": []
           },
           {
@@ -1872,7 +1877,7 @@
       {
         "teamId": "00000000-0000-4000-8000-000000000017",
         "name": "7级追出",
-        "notes": "优先玛尔扎哈、艾克三星，布隆顺路追。艾克居中接首轮集火，带日炎的布隆靠玛尔扎哈火力侧。"
+        "notes": "七级先稳两星，再卡利息追玛尔扎哈、艾克三星。"
       },
       {
         "teamId": "0dd45d5d-496c-459b-9db2-8e05355bd6c2",
@@ -1933,7 +1938,7 @@
           {
             "unitId": "baron-nashor",
             "stars": 1,
-            "position": 27,
+            "position": 12,
             "items": [
               "TFT_Item_BlueBuff",
               "TFT_Item_PowerGauntlet",
@@ -2106,7 +2111,7 @@
           {
             "unitId": "baron-nashor",
             "stars": 1,
-            "position": 27,
+            "position": 12,
             "items": [
               "TFT_Item_BlueBuff",
               "TFT_Item_PowerGauntlet",
@@ -2140,27 +2145,30 @@
       {
         "teamId": "00000000-0000-4000-8000-000000000017",
         "name": "7级 · 五天才追出后",
-        "notes": "优先玛尔扎哈、艾克三星，布隆顺路追。艾克居中接首轮集火，带日炎的布隆靠玛尔扎哈火力侧。",
+        "notes": "七级先稳两星，再卡利息追玛尔扎哈、艾克三星。",
         "positions": {
-          "braum": 5,
+          "braum": 11,
           "ekko": 3,
-          "malzahar": 26
+          "malzahar": 27,
+          "neeko": 8
         },
         "originalName": "七人口五天才 · 追三费",
         "originalPositions": {
           "braum": 2,
           "ekko": 4,
           "malzahar": 27
-        }
+        },
+        "alternates": {"alune": {"instanceId": "9f393dc0-4e76-4fc0-ba51-f27158a223c7", "unitId": "swain", "stars": 2, "items": []}}
       },
       {
         "teamId": "00000000-0000-4000-8000-000000000071",
-        "notes": "两项任务都做完才能买到男爵。男爵占两人口，放第二排跟艾克、布隆同侧进场。",
+        "notes": "集齐五种乐器、玛尔扎哈打满六万伤害后，九级上男爵。",
         "positions": {
-          "braum": 5,
+          "braum": 11,
           "ekko": 3,
-          "malzahar": 26,
-          "baron-nashor": 12
+          "malzahar": 27,
+          "baron-nashor": 12,
+          "neeko": 8
         },
         "originalName": "九人口五天才 · 男爵上限",
         "originalPositions": {
@@ -2172,7 +2180,7 @@
       },
       {"teamId": "00000000-0000-4000-8000-000000000017", "originalPositions": {"malzahar": 26}, "positions": {"malzahar": 27}},
       {"teamId": "00000000-0000-4000-8000-000000000071", "originalPositions": {"malzahar": 26}, "positions": {"malzahar": 27}},
-      {"teamId": "00000000-0000-4000-8000-000000000005", "originalPositions": {"malzahar": 26}, "positions": {"malzahar": 27}},
+      {"teamId": "00000000-0000-4000-8000-000000000005", "originalPositions": {"malzahar": 26}, "positions": {"malzahar": 27, "braum": 11, "neeko": 8}},
       {"teamId": "00000000-0000-4000-8000-000000000005", "positions": {"swain": 7}, "stoneplateHolder": "ekko", "originalPositions": {"ekko": 3, "swain": 1, "braum": 5}}
     ]
   },
@@ -2262,7 +2270,7 @@
         "parentTeamId": "00000000-0000-4000-8000-000000000075",
         "name": "八级 · 三海三杀三摇滚男枪",
         "boardRole": "variant",
-        "notes": "派克已解锁、三五杀到齐才转。男枪、扎克两星优先，砂槌贴双核，约里克带日炎站侧前。打不过就回七海。",
+        "notes": "派克已解锁、五杀牌齐再转，砂槌贴男枪和扎克。",
         "roles": [
           {
             "label": "主C",
@@ -2290,8 +2298,8 @@
           }
         ],
         "instrumentPositions": {
-          "maracas": 8,
-          "infernalIdol": 26
+          "maracas": 1,
+          "infernalIdol": 5
         },
         "pieces": [
           {
@@ -2336,7 +2344,7 @@
           },
           {
             "unitId": "pyke",
-            "position": 16,
+            "position": 8,
             "stars": 1,
             "items": [
               "TFT_Item_ThiefsGloves"
@@ -2361,7 +2369,7 @@
       {
         "teamId": "00000000-0000-4000-8000-000000000062",
         "name": "7级 · 解锁扎克",
-        "notes": "七级上塔里克、佐伊、雷克顿、辛德拉、奥拉夫解锁扎克。奥拉夫带男枪装，鳄鱼带扎克装，砂槌贴两人。",
+        "notes": "七级五名不同海之歌或主宰开扎克，塔里克只算一名。",
         "positions": {
           "taric": 10,
           "renekton": 3,
@@ -2421,7 +2429,7 @@
       {
         "teamId": "00000000-0000-4000-8000-000000000075",
         "name": "8级成型 · 七海",
-        "notes": "七级上塔里克、佐伊、雷克顿、辛德拉、奥拉夫解锁扎克。奥拉夫带男枪装，鳄鱼带扎克装。八级搜男枪、扎克两星，两件乐器都贴两人。",
+        "notes": "男枪、扎克两星接装，砂槌和雨棍都贴双核。",
         "positions": {
           "taric": 10,
           "zac": 2,
@@ -2460,12 +2468,13 @@
         "originalInstruments": {
           "maracas": 9,
           "rainstick": 15
-        }
+        },
+        "alternates": {"graves": {"instanceId": "6898d40a-afbe-4b03-85be-5a0fd642f95d", "unitId": "olaf", "stars": 2, "items": ["TFT_Item_UnstableConcoction", "TFT_Item_InfinityEdge"]}}
       },
       {
         "teamId": "00000000-0000-4000-8000-000000000076",
         "name": "9级上限 · 七海岩雀",
-        "notes": "岩雀换艾希，俄洛伊换斯维因，再补悠米。男枪沿用八级装。砂槌贴男枪、扎克，雨棍贴男枪和左下角的岩雀。",
+        "notes": "岩雀换艾希，再补悠米。砂槌贴男枪、扎克，雨棍贴男枪、岩雀。",
         "positions": {
           "taric": 10,
           "zac": 2,
@@ -2510,17 +2519,18 @@
         "originalInstruments": {
           "maracas": 9,
           "rainstick": 15
-        }
+        },
+        "alternates": {"graves": {"instanceId": "a45b96e9-70ff-478c-a927-60842b59331a", "unitId": "olaf", "stars": 2, "items": ["TFT_Item_UnstableConcoction", "TFT_Item_InfinityEdge"]}}
       },
       {
         "teamId": "00000000-0000-4000-8000-000000000030",
         "originalName": "9级 · 五海洋男枪派克",
         "name": "9级 · 五海三摇滚派克",
-        "notes": "派克已解锁，能上九再转。扎克带薄暮，男枪、派克打同侧。砂槌贴男枪、扎克，雨棍贴男枪和左下角的岩雀。",
+        "notes": "派克已解锁且能上九，可转五海派克。",
         "positions": {
           "zac": 2,
-          "renekton": 7,
-          "pyke": 14,
+          "renekton": 14,
+          "pyke": 7,
           "swain": 10,
           "ezreal": 27,
           "graves": 8,
@@ -2549,7 +2559,7 @@
         "teamId": "00000000-0000-4000-8000-000000000102",
         "originalName": "九级 · 五海洋三离子男枪",
         "name": "9级 · 五海三离子",
-        "notes": "阿萝拉、希瓦娜先来再转。男枪用轻语破甲。砂槌贴男枪、扎克，雨棍贴男枪和左下角的岩雀，阿萝拉放另一侧。",
+        "notes": "阿萝拉、希瓦娜来得早，可转五海三离子。",
         "positions": {
           "graves": 8,
           "zac": 2,
@@ -2594,7 +2604,8 @@
         "teamId": "00000000-0000-4000-8000-000000000119",
         "originalName": "八级 · 三海三杀三摇滚男枪",
         "name": "8级 · 三海三杀三摇滚",
-        "notes": "派克已解锁、三五杀到齐才转。男枪、扎克两星优先，砂槌贴双核，约里克带日炎站侧前。打不过就回七海。",
+        "notes": "派克已解锁、五杀牌齐再转，砂槌贴男枪和扎克。",
+        "positions": {"pyke": 8},
         "originalPositions": {
           "zac": 2,
           "yorick": 10,
@@ -2606,8 +2617,8 @@
           "kayle": 21
         },
         "instrumentMoves": {
-          "maracas": 8,
-          "infernalIdol": 26
+          "maracas": 1,
+          "infernalIdol": 5
         }
       },
       {"teamId": "00000000-0000-4000-8000-000000000093", "positions": {"qiyana": 11, "yorick": 12}, "stoneplateHolder": "zac", "originalPositions": {"zac": 3, "qiyana": 1, "vi": 2, "yorick": 4}, "originalInstruments": {"maracas": 16}}
@@ -2668,7 +2679,7 @@
         "parentTeamId": "00000000-0000-4000-8000-000000000078",
         "boardRole": "stage",
         "name": "8级稳血",
-        "notes": "八级搜薇恩和约里克两星。血量、经济都够时再留 85 金解锁派克。",
+        "notes": "八级先搜薇恩、约里克两星，韦鲁斯留场补羁绊。",
         "pieces": [
           {
             "unitId": "yorick",
@@ -2683,13 +2694,13 @@
           {
             "unitId": "swain",
             "stars": 1,
-            "position": 3,
+            "position": 8,
             "items": []
           },
           {
             "unitId": "olaf",
             "stars": 2,
-            "position": 4,
+            "position": 12,
             "items": []
           },
           {
@@ -2723,7 +2734,7 @@
           {
             "unitId": "camille",
             "stars": 1,
-            "position": 26,
+            "position": 13,
             "items": []
           }
         ],
@@ -2739,14 +2750,16 @@
             "units": [
               "yorick"
             ]
-          }
-        ]
+          },
+          {"label": "功能装", "units": ["yorick"]}
+        ],
+        "instrumentPositions": {"infernalIdol": 4}
       }
     ],
     "edits": [
-      {"teamId": "00000000-0000-4000-8000-000000000068", "originalPositions": {"vayne": 22}, "positions": {"vayne": 21}},
+      {"teamId": "00000000-0000-4000-8000-000000000068", "originalPositions": {"vayne": 22}, "positions": {"vayne": 21, "swain": 3, "vi": 0, "olaf": 12, "camille": 8, "locke": 15, "nunu-willump": 7}, "instrumentMoves": {"infernalIdol": 5}},
       {"teamId": "00000000-0000-4000-8000-000000000068", "notes": "有纹章就让努努接转。九级靠冠冕上十、手里没转时，留韦鲁斯凑七摇滚恶魔。"},
-      {"teamId": "00000000-0000-4000-8000-000000000078", "originalName": "八级 · 五摇滚稳血", "name": "九级上限 · 补派克", "positions": {"olaf": 8, "camille": 11}, "stoneplateHolder": "yorick", "originalPositions": {"yorick": 3, "swain": 1, "olaf": 2, "camille": 5}}
+      {"teamId": "00000000-0000-4000-8000-000000000078", "originalName": "八级 · 五摇滚稳血", "name": "九级上限 · 补派克", "positions": {"olaf": 12, "camille": 13, "yorick": 2, "swain": 8, "pyke": 7}, "stoneplateHolder": "yorick", "originalPositions": {"yorick": 3, "swain": 1, "olaf": 2, "camille": 5}, "instrumentMoves": {"infernalIdol": 4}}
     ]
   },
   {
@@ -2779,14 +2792,18 @@
       {
         "teamId": "00000000-0000-4000-8000-000000000082",
         "positions": {
-          "swain": 11
+          "swain": 8,
+          "smeech": 7,
+          "camille": 12,
+          "olaf": 13
         },
         "stoneplateHolder": "yorick",
         "originalPositions": {
           "yorick": 3,
           "galio": 1,
           "swain": 5
-        }
+        },
+        "alternates": {"smeech": {"instanceId": "6107c87a-86b6-4023-a55c-738d04e19ffc", "unitId": "kayn", "stars": 2, "items": []}}
       }
     ]
   },
@@ -2794,8 +2811,8 @@
     "sectionId": "sample-block-0307",
     "stages": [],
     "edits": [
-      {"teamId": "00000000-0000-4000-8000-000000000007", "positions": {"elise": 7, "tibbers": 8, "annie": 10}, "stoneplateHolder": "shyvana", "originalPositions": {"shyvana": 5, "elise": 1, "tibbers": 2, "annie": 3, "leona": 4}},
-      {"teamId": "00000000-0000-4000-8000-000000000031", "positions": {"elise": 7, "tibbers": 8, "annie": 9}, "stoneplateHolder": "shyvana", "originalPositions": {"shyvana": 5, "elise": 1, "tibbers": 2, "annie": 3, "leona": 4}}
+      {"teamId": "00000000-0000-4000-8000-000000000007", "positions": {"elise": 7, "tibbers": 8, "annie": 10, "shyvana": 3, "leona": 5, "gwen": 13}, "stoneplateHolder": "shyvana", "originalPositions": {"shyvana": 5, "elise": 1, "tibbers": 2, "annie": 3, "leona": 4}, "alternates": {"jinx": {"instanceId": "a64913bd-e046-4ed7-af64-5f2c810600b0", "unitId": "lucian", "stars": 2, "items": ["TFT_Item_GuinsoosRageblade", "TFT_Item_InfinityEdge", "TFT_Item_PowerGauntlet"]}, "gwen": {"instanceId": "b21ce555-2100-4538-a231-a5e13b29de5a", "unitId": "lux", "stars": 2, "items": []}}},
+      {"teamId": "00000000-0000-4000-8000-000000000031", "positions": {"elise": 7, "tibbers": 8, "annie": 9, "shyvana": 3, "leona": 5, "gwen": 13}, "stoneplateHolder": "shyvana", "originalPositions": {"shyvana": 5, "elise": 1, "tibbers": 2, "annie": 3, "leona": 4}}
     ]
   },
   {
@@ -2881,7 +2898,7 @@
     "sectionId": "sample-block-0006",
     "stages": [],
     "edits": [
-      {"teamId": "00000000-0000-4000-8000-000000000067", "positions": {"lillia": 8, "ekko": 11}, "stoneplateHolder": "leona", "originalPositions": {"leona": 3, "lillia": 2, "gragas": 4, "ekko": 5}}
+      {"teamId": "00000000-0000-4000-8000-000000000067", "positions": {"lillia": 8, "ekko": 11, "leona": 2, "gragas": 9, "neeko": 7, "evelynn": 13, "kai-sa": 27}, "stoneplateHolder": "leona", "originalPositions": {"leona": 3, "lillia": 2, "gragas": 4, "ekko": 5}}
     ]
   },
   {
