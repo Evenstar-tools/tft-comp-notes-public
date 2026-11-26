@@ -152,7 +152,8 @@ export function GuideTeams({ section, data, initialTeam, initialStage, initialFl
   const inlineAugment = augment && equipmentConditions?.rows.some(row => row.id === augment.id);
   const augmentUnitName = inlineAugment ? data.units.find(unit => unit.id === augment.unitId)?.name : undefined;
   const heroGuide = !!augment || section.category === heroAugmentCategory;
-  const familyRows = heroGuide ? [] : guideFamilyRows(familyStats, data.id, section.id, teams);
+  const familyRows = guideFamilyRows(familyStats, data.id, section.id, teams)
+    .filter(({ stat }) => Boolean(stat.heroAugment) === heroGuide);
   const matchingFamily = familyRows.filter(row => row.boards.some(board => board.id === team.id));
   const overall = matchingFamily.length === 1 ? matchingFamily[0].stat : undefined;
   const performance = overall && <a className="guide-family-rating" href={mainBoardActive && !showFlex ? "#" + sampleId : overall.url}

@@ -417,14 +417,14 @@ test("archive filters migrate old links without assigning today's tier from a Fe
   assert.equal(parseGuideFilters({category:"自定义旧目录"}).category, undefined);
 });
 
-test("home recommendations fit the 3/8/3/2 lineup and keep same-carry families with distinct boards", () => {
+test("home recommendations keep five reroll, eight fast-eight, two fast-nine and two augment routes", () => {
   const route = (group, index, overrides = {}) => ({
     group, familyId: group + index,
     rating: { teamId: group + index, mean: 4 + index / 100, games: 500, carryId: "ahri", topFourRate: .613, winRate: .17, ...overrides },
   });
-  const reroll = Array.from({ length: 3 }, (_, i) => route("reroll", i));
+  const reroll = Array.from({ length: 5 }, (_, i) => route("reroll", i));
   const fast8 = Array.from({ length: 7 }, (_, i) => route("fast8", i));
-  const fast9 = Array.from({ length: 3 }, (_, i) => route("fast9", i));
+  const fast9 = Array.from({ length: 2 }, (_, i) => route("fast9", i));
   const hero = Array.from({ length: 3 }, (_, i) => route("heroAugment", i));
   const authored = { ...route("fast8", 7), conditional: true, decision: { timing: "有法装再进", upgrade: "八级找双两星" } };
   const fixed = { ...route("fast8", 8), sampleLabel: "固定终盘", preferred: true };
@@ -438,9 +438,9 @@ test("home recommendations fit the 3/8/3/2 lineup and keep same-carry families w
   const displayOrder = [authored.rating.teamId, ...[...reroll, ...fast8, ...fast9].map(r => r.rating.teamId)];
   const selected = selectRecommendationRoutes(entries, { displayOrder });
   assert.deepEqual(selected, [...reroll, authored, ...fast8, ...fast9, ...hero.slice(0, 2)]);
-  assert.deepEqual(selected[3].decision, { timing: "有法装再进", upgrade: "八级找双两星" });
-  assert.equal(selected[3].rating.topFourRate, .613);
-  assert.equal(selected[3].rating.winRate, .17);
+  assert.deepEqual(selected[5].decision, { timing: "有法装再进", upgrade: "八级找双两星" });
+  assert.equal(selected[5].rating.topFourRate, .613);
+  assert.equal(selected[5].rating.winRate, .17);
   assert.ok(selectRecommendationRoutes(entries, { displayOrder: displayOrder.slice(0, -1) }).includes(fixed));
   assert.deepEqual(selectRecommendationRoutes([fast8[0], ...other.slice(0, 3)]), [fast8[0]]);
   assert.deepEqual(selectRecommendationRoutes(hero, { maxHeroAugment: 1 }), [hero[0]]);

@@ -27,6 +27,7 @@ import { guideBoardKind } from "@/domain/team";
 import { displayGuideName } from "@/domain/trait-names.mjs";
 import { unitSearchNames } from "@/domain/unit-search.mjs";
 import { isVersionUpdate, sameEdition } from "@/domain/version-updates";
+import { recommendationBoardSample } from "@/components/GuidePlacement";
 import { currentPatchRecommendations } from "./patch-recommendations";
 import { publicGuidePublication } from "./publication";
 
@@ -65,6 +66,7 @@ const augmentIndex = augments.rows.map(entry => ({
 function searchGuides(live: Publication | null) {
   if (!live) return [];
   const current = sameEdition(live.season.id, currentPatch.seasonId);
+  const build = current ? currentPatch.build : undefined;
   const withFamilies = currentFamilyBatch(familyStats, live.season.id, currentPatch);
   const withCores = current && canRankRecommendations(coreStats, live.season.id, currentPatch);
   const recommendations = currentPatchRecommendations(live);
@@ -88,7 +90,8 @@ function searchGuides(live: Publication | null) {
       const rows = familiesByBoard.get(board.id) ?? [];
       const core = edition === coreStats.seasonId ? cores.get(id) : undefined;
       const tiers = new Set(rows.map(row => recommendationTier(row.stat)));
-      if (!tiers.size) tiers.add(recommendationTier(core ?? fixed.get(board.id)));
+      if (!tiers.size) tiers.add(recommendationTier(core ?? fixed.get(board.id) ??
+        recommendationBoardSample(board, section, "fixed", build) ?? recommendationBoardSample(board, section, "core", build)));
       const [tier] = tiers;
       const label = section.category === heroAugmentCategory ? "英雄强化" : reviewed.has(id) ? "待复核" :
         tiers.size > 1 ? "全部攻略" : labels[tier];

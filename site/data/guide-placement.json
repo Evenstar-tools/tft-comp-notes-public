@@ -4945,6 +4945,203 @@
       "mean": 3.45,
       "topFourRate": 0.6607142857142857,
       "winRate": 0.23214285714285715
+    },
+    {
+      "population": 9,
+      "roster": [
+        "bard",
+        "dr-mundo",
+        "galio",
+        "leona",
+        "lucian",
+        "miss-fortune",
+        "nunu-willump",
+        "rell",
+        "twisted-fate"
+      ],
+      "games": 123,
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&level=9&trait=DA_Jazz19_2&unit=DA_TwistedFate19-1_2_3&unit=DA_Galio19-1&unit=DA_DrMundo19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "observedOn": "2026-11-26",
+      "sampleScope": "9级结算 · 3爵士乐 · 崔斯特两星三件 · 加里奥、蒙多同场",
+      "conditions": {
+        "kind": "core",
+        "teamId": "752a22a6-a1e1-4c6a-b4ab-a66ae4fc3b80",
+        "population": 9,
+        "coreRoster": [
+          "dr-mundo",
+          "galio",
+          "twisted-fate"
+        ],
+        "traits": {
+          "jazz": 3
+        },
+        "units": [
+          {
+            "unitId": "twisted-fate",
+            "stars": 2,
+            "items": 3
+          }
+        ]
+      },
+      "placementCounts": [
+        24,
+        16,
+        17,
+        20,
+        18,
+        13,
+        9,
+        6
+      ],
+      "mean": 3.79,
+      "topFourRate": 0.6260162601626016,
+      "winRate": 0.1951219512195122,
+      "sectionId": "sample-block-1180"
+    },
+    {
+      "population": 8,
+      "roster": [
+        "ahri",
+        "bard",
+        "galio",
+        "k-sante",
+        "leona",
+        "lucian",
+        "senna",
+        "shyvana"
+      ],
+      "games": 138,
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&level=8&trait=DA_Bodyguard19_1&unit=DA_19_Ahri-1&unit=DA_Shyvana19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "observedOn": "2026-11-26",
+      "sampleScope": "8级结算 · 2护卫档 · 阿狸、希瓦娜同场",
+      "conditions": {
+        "kind": "core",
+        "teamId": "9294d9e9-bdbd-42c3-ae67-d1884a0198d6",
+        "population": 8,
+        "coreRoster": [
+          "ahri",
+          "shyvana"
+        ],
+        "traits": {
+          "bodyguard": 2
+        }
+      },
+      "placementCounts": [
+        2,
+        4,
+        9,
+        14,
+        27,
+        27,
+        30,
+        25
+      ],
+      "mean": 5.8,
+      "topFourRate": 0.21014492753623187,
+      "winRate": 0.014492753623188406,
+      "sectionId": "sample-block-1180"
+    },
+    {
+      "population": 9,
+      "roster": [
+        "alune",
+        "aphelios",
+        "dr-mundo",
+        "galio",
+        "k-sante",
+        "leona",
+        "lucian",
+        "nunu-willump",
+        "rell"
+      ],
+      "games": 157,
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&level=9&trait=DA_Heartsteel19_2&trait=DA_Manager19_2&trait=DA_Bodyguard19_1&unit=DA_Aphelios19-1_2_3&unit=DA_Alune19-1&unit=DA_KSante19-1&unit=DA_Leona19-1&unit=DA_DrMundo19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "observedOn": "2026-11-26",
+      "sampleScope": "9级结算 · 3心之钢、3经纪人、2护卫档 · 厄斐琉斯两星三件 · 拉露恩、奎桑提、蕾欧娜、蒙多同场",
+      "conditions": {
+        "kind": "core",
+        "teamId": "83cebafb-502e-4f5d-8a17-db9871730b44",
+        "population": 9,
+        "coreRoster": [
+          "alune",
+          "aphelios",
+          "dr-mundo",
+          "k-sante",
+          "leona"
+        ],
+        "traits": {
+          "heartsteel": 3,
+          "manager": 3,
+          "bodyguard": 2
+        },
+        "units": [
+          {
+            "unitId": "aphelios",
+            "stars": 2,
+            "items": 3
+          }
+        ]
+      },
+      "placementCounts": [
+        18,
+        36,
+        23,
+        29,
+        28,
+        16,
+        7,
+        0
+      ],
+      "mean": 3.57,
+      "topFourRate": 0.6751592356687898,
+      "winRate": 0.11464968152866242,
+      "sectionId": "sample-block-1181"
+    },
+    {
+      "population": 8,
+      "roster": [
+        "alune",
+        "ezreal",
+        "galio",
+        "k-sante",
+        "leona",
+        "lucian",
+        "neeko",
+        "senna"
+      ],
+      "games": 818,
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&level=8&trait=DA_Heartsteel19_2&trait=DA_Manager19_1&trait=DA_Bodyguard19_1&unit=DA_Alune19-1&unit=DA_KSante19-1&unit=DA_Leona19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "observedOn": "2026-11-26",
+      "sampleScope": "8级结算 · 3心之钢、2经纪人、2护卫档 · 拉露恩、奎桑提、蕾欧娜同场",
+      "conditions": {
+        "kind": "core",
+        "teamId": "3f5c63e5-1ea1-4310-bbc0-9871308b936d",
+        "population": 8,
+        "coreRoster": [
+          "alune",
+          "k-sante",
+          "leona"
+        ],
+        "traits": {
+          "heartsteel": 3,
+          "manager": 2,
+          "bodyguard": 2
+        }
+      },
+      "placementCounts": [
+        10,
+        27,
+        34,
+        94,
+        140,
+        194,
+        164,
+        155
+      ],
+      "mean": 5.86,
+      "topFourRate": 0.2017114914425428,
+      "winRate": 0.012224938875305624,
+      "sectionId": "sample-block-1181"
     }
   ],
   "edition": "s19-pbe-19.1",

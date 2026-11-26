@@ -173,7 +173,7 @@ export function selectRecommendationRoutes<T extends {
   group: RecommendationGroup; familyId: string; rating: RecommendationStat; conditional?: boolean; preferred?: boolean;
 }>(
   candidates: T[],
-  { maxRegular = 14, maxHeroAugment = 2, displayOrder = [] }: {
+  { maxRegular = 15, maxHeroAugment = 2, displayOrder = [] }: {
     maxRegular?: number; maxHeroAugment?: number; displayOrder?: string[];
   } = {},
 ) {
