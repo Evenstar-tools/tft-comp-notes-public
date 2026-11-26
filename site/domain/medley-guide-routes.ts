@@ -1,6 +1,6 @@
 import type { Section } from "./document";
 import { readableSection, sectionTeams } from "./document-flow.ts";
-import { reviewedGuidePhases } from "./guide-execution.ts";
+import { guideFlexPreview, guideOpeningGear, reviewedGuidePhases } from "./guide-execution.ts";
 import { boardTitle } from "./guide-families.ts";
 import { guideBoardName, guideLink, guidePlaystyle, guideRoute, isEditorialSection, primaryFirst, readingNotes } from "./guide-reading.ts";
 import { heroAugmentCategory } from "./hero-augments.ts";
@@ -10,12 +10,16 @@ import { readTeamStage, stageLabels } from "./team-stages.ts";
 import type { Season, Team } from "./types";
 import { isVersionUpdate, sameEdition } from "./version-updates.ts";
 
-const carryRole = /^(主C|主输出|前期输出|后期输出|物理输出|法系输出)$/;
+const openingCarryRole = /^(主C|副C|主输出|前期输出|后期输出|物理输出|法系输出)$/;
+const finalCarryRole = /^(主C|主输出|后期输出)$/;
 const requiredCondition = (team: Team) => team.conditions?.some(condition => condition.kind === "required");
 
-function carryIds(section: Section, team: Team, data: Season) {
-  return readingNotes(section, team, data).roles.filter(role => carryRole.test(role.label)).flatMap(role => role.units);
-}
+const reviewedTransitions = new Map([
+  // Three-Sea/Shojin opening into seven-Sea Shojin. The Blue Buff and six-Mage boards remain independent.
+  ["00000000-0000-4000-8000-000000001085", { openingId: "00000000-0000-4000-8000-000000001126", carryId: "zoe" }],
+  // Eight-level Guardian Renata sells Garen to add Viego and Vi at nine as described in the guide.
+  ["00000000-0000-4000-8000-000000000046", { openingId: "00000000-0000-4000-8000-000000000111", carryId: "renata-glasc" }],
+]);
 
 export function medleyGuideRoutes(sections: Section[], publicationSeason: Season, currentSeason: Season): MedleyRoute[] {
   return sections.flatMap(section => {
@@ -26,10 +30,10 @@ export function medleyGuideRoutes(sections: Section[], publicationSeason: Season
     const primary = teams[0];
     if (!primary) return [];
     const reviewed = reviewedGuidePhases(section.id, teams, data);
-    const carries = new Map<string, string[]>();
-    const cachedCarryIds = (team: Team) => {
-      if (!carries.has(team.id)) carries.set(team.id, carryIds(section, team, data));
-      return carries.get(team.id) ?? [];
+    const rolesByTeam = new Map<string, ReturnType<typeof readingNotes>["roles"]>();
+    const carryIds = (team: Team, rolePattern: RegExp) => {
+      if (!rolesByTeam.has(team.id)) rolesByTeam.set(team.id, readingNotes(section, team, data).roles);
+      return (rolesByTeam.get(team.id) ?? []).filter(role => rolePattern.test(role.label)).flatMap(role => role.units);
     };
     return teams.flatMap(final => {
       if (requiredCondition(final) || (final.mainStage ?? "late") !== "late") return [];
@@ -55,15 +59,41 @@ export function medleyGuideRoutes(sections: Section[], publicationSeason: Season
         const team = { ...readTeamStage(final, stage), id: final.id + "-" + stage };
         openingBoards.set(finalHref + "&stage=" + stage, { team, label: stageLabels[stage] + " · " + usedPopulation(team.pieces) + "人口" });
       }
-      return [...openingBoards].flatMap(([stageHref, { team: opening, label: stageLabel }]) => {
+      const reviewedTransition = reviewedTransitions.get(final.id);
+      const reviewedOpening = reviewedTransition ? teams.find(team => team.id === reviewedTransition.openingId) : undefined;
+      if (reviewedOpening) openingBoards.set(guideLink(section.id, reviewedOpening.id), {
+        team: reviewedOpening, label: guideBoardName(reviewedOpening),
+      });
+      const board = { sectionId: section.id, teamId: final.id, title: boardTitle(section, final), finalHref, final: final.pieces };
+      const routes = [...openingBoards].flatMap(([stageHref, { team: opening, label: stageLabel }]) => {
         const openingCount = usedPopulation(opening.pieces);
         if (openingCount < 3 || openingCount > 8 || openingCount >= population || requiredCondition(opening)) return [];
-        return [{
-          sectionId: section.id, teamId: final.id, title: boardTitle(section, final), stageLabel, stageHref, finalHref,
-          opening: opening.pieces, final: final.pieces,
-          openingCarryIds: cachedCarryIds(opening), finalCarryIds: cachedCarryIds(final),
-        }];
+        const reviewedCarry = opening === reviewedOpening ? reviewedTransition?.carryId : undefined;
+        const route: MedleyRoute = {
+          ...board, stageLabel, stageHref, opening: opening.pieces,
+          openingCarryIds: reviewedCarry ? [reviewedCarry] : carryIds(opening, openingCarryRole),
+          finalCarryIds: reviewedCarry ? [reviewedCarry] : carryIds(final, finalCarryRole),
+        };
+        const flex = guideFlexPreview(section.id, opening, data);
+        if (!flex) return [route];
+        const guides = guideOpeningGear(section.id, opening, data)?.rows ?? [];
+        const alternatives = guides.flatMap(gear => {
+          if (gear.from.id !== flex.incoming.id || !route.finalCarryIds.includes(gear.to.id)) return [];
+          const items = gear.items.map(item => item.id);
+          const projection = flex.liveTeam.pieces.map(piece => {
+            if (piece.unitId === gear.from.id) return { ...piece, items };
+            if (piece.unitId === gear.to.id) return { ...piece, items: piece.items.filter(id => !items.includes(id)) };
+            return piece;
+          });
+          return [{
+            ...route, opening: projection, openingCarryIds: [gear.from.id], guideOpening: true,
+            stageLabel: stageLabel + " · " + gear.from.name + "开装",
+          }];
+        });
+        return [route, ...alternatives];
       });
+      // A real terminal can prove the three-member check even without a reviewed opening.
+      return [...routes, { ...board, opening: [], openingCarryIds: [], finalCarryIds: [] }];
     });
   });
 }
