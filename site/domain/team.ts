@@ -1,4 +1,5 @@
 import { confirmedTraitLevel } from "./trait-activation.mjs";
+import { createId } from "./id.ts";
 import type { Section } from "./document";
 import type { Item, Piece, PieceLoadout, Team, Trait, Unit } from "./types";
 
@@ -138,7 +139,7 @@ export function splitAlternate(pieces: Piece[], instanceId: string, position: nu
 
 export function emptyTeam(): Team {
   return {
-    id: crypto.randomUUID(),
+    id: createId(),
     name: "未命名阵容",
     category: "待分类",
     pieces: [],
@@ -160,7 +161,7 @@ export function teamFromCombo(code: string, units: Unit[], traits: Trait[]): Tea
     const unit = match && byId.get(match[1]);
     if (!unit || names.has(unit.nameEn) || pieces.length >= slots.length) return null;
     names.add(unit.nameEn);
-    pieces.push({ instanceId: crypto.randomUUID(), unitId: unit.id, position: slots[pieces.length], stars: match[2] ? 2 : 1, items: [] });
+    pieces.push({ instanceId: createId(), unitId: unit.id, position: slots[pieces.length], stars: match[2] ? 2 : 1, items: [] });
   }
   if (usedPopulation(pieces) !== 8 || traitCounts(pieces, units, traits, []).filter(t => traitGroup(t) === "已开常规").length < 8) return null;
   const label = [...pieces].sort((a, b) => byId.get(b.unitId)!.cost - byId.get(a.unitId)!.cost).slice(0,2).map(p => byId.get(p.unitId)!.name).join("、");

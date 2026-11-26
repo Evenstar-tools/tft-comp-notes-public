@@ -1,4 +1,5 @@
 import type { Item, Piece, Team, Unit } from "./types";
+import { createId } from "./id.ts";
 import { unitSearchNames } from "./unit-search.mjs";
 import { legacyEmblemNames } from "./trait-names.mjs";
 
@@ -112,8 +113,8 @@ export function parseRoster(input: string, units: Unit[], items: Item[]): Roster
 function copyBoard(board: { pieces: Placement[]; instrumentPositions?: Team["instrumentPositions"] }) {
   return {
     pieces: board.pieces.map(piece => ({
-      ...piece, instanceId: crypto.randomUUID(), items: [...piece.items],
-      ...(piece.alternate && { alternate: { ...piece.alternate, instanceId: crypto.randomUUID(), items: [...piece.alternate.items] } }),
+      ...piece, instanceId: createId(), items: [...piece.items],
+      ...(piece.alternate && { alternate: { ...piece.alternate, instanceId: createId(), items: [...piece.alternate.items] } }),
     })),
     ...(board.instrumentPositions && { instrumentPositions: { ...board.instrumentPositions } }),
   };

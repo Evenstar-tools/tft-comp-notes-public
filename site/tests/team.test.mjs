@@ -1,7 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import { guideBoardKind, relatedUnitIds, traitCounts, movePiece, teamFromCombo, teamText, usedPopulation, mixedForms, conflictingForm, splitAlternate, stackPiece, switchAlternate, switchForm } from "../domain/team.ts";
+import { emptyTeam, guideBoardKind, relatedUnitIds, traitCounts, movePiece, teamFromCombo, teamText, usedPopulation, mixedForms, conflictingForm, splitAlternate, stackPiece, switchAlternate, switchForm } from "../domain/team.ts";
+import { createId } from "../domain/id.ts";
 import { readTeamStage, writeTeamStage } from "../domain/team-stages.ts";
 const season = JSON.parse(
   fs.readFileSync(new URL("../data/season.json", import.meta.url), "utf8"),
@@ -166,4 +167,22 @@ test("the public guide catalog treats a capped Jinx board as a final board and a
   assert.deepEqual([main, cap, leveling].map(team => guideBoardKind(section, team, main)), ["主阵", "上限", "过渡"]);
   assert.equal(guideBoardKind({stageTeamIds:[]}, leveling, main), "变阵");
   assert.equal(guideBoardKind({}, leveling, main), "过渡");
+});
+
+test("createId and emptyTeam still generate RFC 4122 v4 UUIDs when crypto.randomUUID is unavailable", () => {
+  const original = Object.getOwnPropertyDescriptor(globalThis, "crypto");
+  const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
+  try {
+    Object.defineProperty(globalThis, "crypto", {
+      configurable: true,
+      value: { getRandomValues: original?.value?.getRandomValues?.bind(original.value) },
+    });
+    const a = createId();
+    const b = emptyTeam().id;
+    assert.match(a, uuidPattern);
+    assert.match(b, uuidPattern);
+    assert.notEqual(a, b);
+  } finally {
+    if (original) Object.defineProperty(globalThis, "crypto", original);
+  }
 });
