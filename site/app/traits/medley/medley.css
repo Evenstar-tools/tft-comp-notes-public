@@ -13,9 +13,11 @@
 .medley-search:focus-within { border-color: var(--gold); }
 .medley-search svg { flex: none; }
 .medley-search input { width: 100%; min-width: 0; padding: 7px 0; border: 0; outline: none; color: var(--text); background: transparent; font: inherit; }
+.medley-fit-filter { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; font-size: .86rem; white-space: nowrap; cursor: pointer; }
+.medley-fit-filter input { inline-size: 16px; block-size: 16px; margin: 0; accent-color: var(--gold); cursor: pointer; }
 .medley-count { color: var(--muted); font-size: .84rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .medley-library ul { list-style: none; margin: 0; padding: 0; }
-.medley-groups { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 21.5rem), 1fr)); gap: 10px; }
+.medley-groups { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 21.5rem), 1fr)); align-items: start; gap: 10px; }
 .medley-group { padding: 11px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); min-width: 0; }
 .medley-group header { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-block-end: 8px; }
 .medley-group h2 { margin: 0; font-size: .92rem; }
@@ -26,6 +28,31 @@
 .medley-unit span { font-size: .73rem; line-height: 1.25; overflow-wrap: anywhere; }
 .medley-unit:is(:hover, :focus-visible, [data-matched]) { color: var(--accent); background: var(--raised); }
 .medley-fixed .medley-unit { min-width: 43px; }
+.medley-how { margin-block: 0 16px; padding-block: 10px; border-block: 1px solid var(--line); font-size: .86rem; line-height: 1.55; }
+.medley-how p { margin: 0; color: var(--muted); }
+.medley-how strong { color: var(--text); }
+.medley-how summary, .medley-fits summary {
+  display: flex; align-items: center; gap: 5px; color: var(--accent); cursor: pointer; list-style: none;
+}
+.medley-how summary { width: fit-content; min-height: 32px; }
+.medley-how summary::-webkit-details-marker, .medley-fits summary::-webkit-details-marker { display: none; }
+.medley-how details[open] summary svg, .medley-fits[open] summary svg { transform: rotate(90deg); }
+.medley-how dl, .medley-fit-evidence { display: grid; grid-template-columns: max-content minmax(0, 1fr); column-gap: .65rem; row-gap: 2px; margin: 0; }
+.medley-how dl { margin-block: 1px 5px; }
+.medley-how dt, .medley-fit-evidence dt { color: var(--muted); }
+.medley-how dd, .medley-fit-evidence dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+.medley-fits { margin-block-start: 8px; border-top: 1px solid var(--line); }
+.medley-fits summary { min-height: 34px; font-size: .83rem; }
+.medley-fits summary > span:not(.medley-fit-score) { color: var(--muted); font-size: .8rem; }
+.medley-fits summary > .medley-fit-score { margin-inline-start: auto; }
+.medley-fit-score { flex: none; border-radius: 5px; background: var(--raised); color: var(--accent); padding: 1px 6px; font-size: .76rem; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.medley-fit { padding-block: 8px; border-top: 1px solid var(--line); font-size: .82rem; line-height: 1.45; }
+.medley-fit:last-child { padding-block-end: 0; }
+.medley-fit-title { display: flex; align-items: baseline; justify-content: space-between; gap: 6px; margin-block-end: 4px; }
+.medley-fit-title a { color: var(--text); font-weight: 700; text-underline-offset: 3px; overflow-wrap: anywhere; }
+.medley-fit-title a:hover { color: var(--accent); }
+.medley-fit-gear { display: block; color: var(--muted); }
+.medley-fit-stage { display: inline-flex; align-items: center; min-height: 30px; gap: 3px; margin-block-start: 3px; }
 .medley-empty { padding-block: 14px; color: var(--muted); }
 .medley-empty button { margin-inline-start: 6px; }
 .medley-source { display: flex; align-items: center; gap: 8px 15px; flex-wrap: wrap; margin-block-start: 16px; color: var(--muted); font-size: .8rem; }
@@ -34,4 +61,6 @@
   .medley-heading { margin-block-end: 12px; }
   .medley-fixed { padding: 4px 8px; }
   .medley-group { padding-inline: 8px; }
+  .medley-toolbar { flex-wrap: wrap; row-gap: 2px; }
+  .medley-search { width: 100%; }
 }
