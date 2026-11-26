@@ -1,4 +1,6 @@
 import { publicGuidePublication } from "@/server/publication";
+import { packedHomeGuideIndex } from "@/server/home-guide-index";
+import type { Publication, Section } from "@/domain/document";
 import { season as currentSeason } from "@/data";
 import { readableSection, sectionTeams } from "@/domain/document-flow";
 import { homeGuidePreview } from "@/domain/home-guide-preview";
@@ -21,6 +23,15 @@ import "./home-recommendations.css";
 
 export const dynamic = "force-dynamic";
 
+function homeTrends(live: Publication, guides: Section[], patch?: typeof currentPatch) {
+  if (!editionScope(live.season.id)) return;
+  const boards = new Map(guides.map(section => [section.id, new Set(sectionTeams(section).map(team => team.id))]));
+  return buildCompTrendModel(compTrendHistory, live.season, boards, patch) ?? {
+    scope: isOfficialEdition(live.season.id) ? "国际服排位 · 数据待更新" : "PBE · 数据待更新",
+    days: [], tracks: [], patches: [], discoveries: [],
+  };
+}
+
 export default async function Home({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const [live, query] = await Promise.all([publicGuidePublication(), searchParams]);
   const filters = parseGuideFilters(query);
@@ -35,20 +46,18 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
   const regularGuides = guides.filter(section => section.category !== heroAugmentCategory);
   const notes = sections.filter(section => !guides.includes(section));
   const patch = live && sameEdition(live.season.id, currentPatch.seasonId) ? currentPatch : undefined;
-  const trends = live && editionScope(live.season.id) && (buildCompTrendModel(compTrendHistory, live.season,
-    new Map(regularGuides.map(section => [section.id, new Set(sectionTeams(section).map(team => team.id))])), patch) ?? {
-    scope: isOfficialEdition(live.season.id) ? "国际服排位 · 数据待更新" : "PBE · 数据待更新",
-    days: [], tracks: [], patches: [], discoveries: [],
-  });
   const homeSeason = live && sameEdition(live.season.id, currentSeason.id) ? currentSeason : live?.season;
-  const homeRegularGuides = homeSeason ? regularGuides.map(section => homeGuidePreview(section, homeSeason)) : regularGuides;
-  const homeHeroGuides = homeSeason ? heroGuides.map(section => homeGuidePreview(section, homeSeason)) : heroGuides;
   return (
     <div className="home-library">
       {live && homeSeason && guides.length ? (
         <>
-          <GuideList sections={homeRegularGuides} heroSections={homeHeroGuides} season={homeSeason === currentSeason ? undefined : homeSeason} initial={filters} initialSearch={initialSearch}
-            recommendations={currentPatchRecommendations(live)} trends={trends || undefined}
+          <GuideList index={packedHomeGuideIndex(live, () => ({
+              sections: regularGuides.map(section => homeGuidePreview(section, homeSeason)),
+              heroSections: heroGuides.map(section => homeGuidePreview(section, homeSeason)),
+              trends: homeTrends(live, regularGuides, patch),
+            }))}
+            season={homeSeason === currentSeason ? undefined : homeSeason} initial={filters} initialSearch={initialSearch}
+            recommendations={currentPatchRecommendations(live)}
             artifactRanking={<ArtifactTrendRanking edition={live.season.id} />} patch={patch} fromItem={fromItem} checkedAt={Date.now()} />
           <HomeGuidePosition />
         </>

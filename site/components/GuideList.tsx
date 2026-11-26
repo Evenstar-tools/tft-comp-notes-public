@@ -38,7 +38,7 @@ import { GuideCardBoard, GuideQuickView } from "./GuideCardBoard";
 import { GuideStatsTable, guideStatsMetricLabels, type GuideStatsTableRow } from "./GuideStatsTable";
 import { AD_GRAVES_BOARD_IDS, GUIDE_SECTION_IDS } from "@/domain/guide-identities";
 import { CompTrendPanel } from "./CompTrendPanel";
-import type { CompTrendModel } from "@/domain/comp-trends";
+import { decodeHomeGuideIndex } from "@/lib/home-guide-index";
 import { extractPublicGuideIdFromHref, type GuideEntrySource } from "@/domain/analytics";
 import { rememberGuideEntry, trackGuideView, trackSearchResultOpen, trackSearchResults } from "@/lib/analytics";
 
@@ -126,16 +126,16 @@ function homeOpening(text: string, title: string, augment?: ReturnType<typeof he
 
 const homeFamilyStats: GuideFamilySnapshot & { previous?: GuideFamilySnapshot } = familyStats;
 
-export function GuideList({ sections, heroSections, season = currentSeason, initial = {}, initialSearch, recommendations, trends, artifactRanking, patch, fromItem, checkedAt }: {
-  sections: Section[]; heroSections: Section[]; season?: Season; initial?: GuideFilters;
+export function GuideList({ index, season = currentSeason, initial = {}, initialSearch, recommendations, artifactRanking, patch, fromItem, checkedAt }: {
+  index: string; season?: Season; initial?: GuideFilters;
   initialSearch?: SiteSearchResponse;
   recommendations?: PatchRecommendationBatch;
-  trends?: CompTrendModel;
   artifactRanking?: ReactNode;
   patch?: { build: string; label: string; updateId: string; effectiveAt: string };
   fromItem?: string;
   checkedAt: number;
 }) {
+  const { sections, heroSections, trends } = useMemo(() => decodeHomeGuideIndex(index), [index]);
   const initialView = filterView(initial.view);
   const [view, setView] = useState<View>(initialView);
   const [query, setQuery] = useState(initial.q ?? "");
