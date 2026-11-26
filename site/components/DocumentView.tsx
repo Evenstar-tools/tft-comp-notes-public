@@ -275,8 +275,8 @@ export function DocumentView({ section, gameData, publicationId, initialTeam, in
         : returnPath === "/items" ? "返回装备"
           : returnPath === "/emblems" ? "返回转职"
             : returnTo ? "返回阵容列表" : augment ? "英雄强化" : "全部阵容";
-  const playstyle = guidePlaystyle(section);
-  function header(title: string, guideName?: string, performance?: ReactNode) {
+  function header(title: string, guideName?: string, performance?: ReactNode, team?: Team) {
+    const playstyle = guidePlaystyle(section, team);
     const showFolder = !augment && category === heroAugmentCategory;
     const context = guideName ? guideTitleWithoutPlaystyle(guideName, playstyle)
       : showCategory && showFolder && category !== section.title.trim() ? "英雄强化" : "";
@@ -296,14 +296,14 @@ export function DocumentView({ section, gameData, publicationId, initialTeam, in
   function teamHeader(team: Team, performance?: ReactNode) {
     const stage = section.reroll?.stages.find(entry => entry.teamId === team.id);
     const formation = stage && stage.boardRole !== "variant" ? rerollRoute(section, team)?.final ?? team : team;
-    if (section.stageTeamIds?.includes(team.id) && !section.reroll) return header(section.title, undefined, performance);
+    if (section.stageTeamIds?.includes(team.id) && !section.reroll) return header(section.title, undefined, performance, team);
     const title = boardTitle(section, formation);
-    if (formation.id !== primary?.id && title !== section.title && !title.startsWith(section.title + " · ")) return header(title, section.title, performance);
+    if (formation.id !== primary?.id && title !== section.title && !title.startsWith(section.title + " · ")) return header(title, section.title, performance, team);
     const name = publicationId && formation.id !== primary?.id
       ? guideBoardName(formation).match(/^[一二三四五六七八九十\d]+(?:级|人口)\s*·\s*(.+)$/)?.[1].trim()
       : undefined;
-    if (name && name !== section.title && !/^(主阵|过渡|成型|上限|稳血|变阵)$/.test(name)) return header(name, section.title, performance);
-    return header(title, undefined, performance);
+    if (name && name !== section.title && !/^(主阵|过渡|成型|上限|稳血|变阵)$/.test(name)) return header(name, section.title, performance, team);
+    return header(title, undefined, performance, team);
   }
   return (
     <article className={primary ? "document-view with-guide-board" : "document-view"}>

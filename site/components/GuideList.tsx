@@ -35,7 +35,7 @@ import { guideConditionName, guideConditionsAnchor, guideEquipmentConditions } f
 import { HomeGearSearch, isHomeGear } from "./HomeGearSearch";
 import { GuideCardBoard, GuideQuickView } from "./GuideCardBoard";
 import { GuideStatsTable, guideStatsMetricLabels, type GuideStatsTableRow } from "./GuideStatsTable";
-import { GUIDE_SECTION_IDS } from "@/domain/guide-identities";
+import { AD_GRAVES_BOARD_IDS, GUIDE_SECTION_IDS } from "@/domain/guide-identities";
 import { CompTrendPanel } from "./CompTrendPanel";
 import type { CompTrendModel } from "@/domain/comp-trends";
 
@@ -49,7 +49,12 @@ type Choices = Partial<Record<View, Selections>>;
 type FamilySort = { metric: GuideFamilyMetric; direction: GuideFamilyDirection };
 const emptyFilters = { category: "", style: "", cost: 0 };
 const archiveViews = [["category", "攻略卡片"], ["mean", "战绩对照"]] as const;
-const boardSampleGuides = new Set<string>([GUIDE_SECTION_IDS.jazzJinx, GUIDE_SECTION_IDS.adGraves]);
+const boardSampleTeams = new Set([
+  "00000000-0000-4000-8000-000000001251",
+  "00000000-0000-4000-8000-000000001252",
+  "00000000-0000-4000-8000-000000001253",
+  ...AD_GRAVES_BOARD_IDS,
+]);
 const recommendationSecondaryCarries = new Map<string, { unitId: string; boardId: string }>([
   [GUIDE_SECTION_IDS.oceanGraves, { unitId: "taliyah", boardId: "00000000-0000-4000-8000-000000000076" }],
   [GUIDE_SECTION_IDS.kdaNeeko, { unitId: "akali-kda", boardId: "00000000-0000-4000-8000-000000000039" }],
@@ -82,16 +87,11 @@ const shortOpenings: Record<string, readonly [source: string, short: string]> = 
   "高能流行芬妮&炸弹": ["六级上四高能、芬妮、斯维因，二费来得多再一起追三。", "六级追芬妮、璐璐和小炮。四个三星开巨星。"],
   "五天才玛尔扎哈": ["玛尔扎哈、艾克来得多就停七一起追三。五天才七级成型。", "玛尔扎哈、艾克来得多，七级一起追三。"],
   "四主宰海之歌艾克辛德拉": ["辛德拉、艾克来得早走七级慢搜；双三成型立刻升八／九，别死停七级。", "辛德拉、艾克来得早走七级慢搜；双三立刻升八／九，别死停七级。"],
-  "爵士派克兔牛": ["高经济开派克走这套；八级两星阿萝拉和阿利斯塔稳血，立刻上九补芮尔或史密奇吃鸡。", "高经济开派克，八级双两星即上九。"],
   "爵士金克丝": ["八级自带 9 个非唯一羁绊，拉九零换牌自动领史密奇；物理装主养金克丝，战士装留史密奇。", "八级双两星稳血，原盘上九解锁史密奇。"],
-  "四主宰 AD 男枪": ["不吃史密奇的双核 AD 84；七级解扎克和派克，八级双主 C 两星即上九补崔斯特。", "七级解扎克、派克，八级双 C 和扎克两星就上九。"],
   "四大触打击乐德莱文": ["德莱文、布隆来得早，有青龙刀或无尽就走。前期两星韦鲁斯带输出装，两星俄洛伊带肉装。德莱文、布隆各自两星再接装，预留一张韦鲁斯和俄洛伊补羁绊。七级优先追德莱文和布隆，卡莎顺手留。", "德莱文、布隆来得早，有青龙刀或无尽就七级一起追三。"],
   "五杀天使": ["炸弹人带羊刀，纳尔带肉。七级上纳尔、奥拉夫、死歌、炸弹人开天使，八级天使、约里克两星接装。不同名五杀合计 9 星开铁男，没开先用乌鸦，开了换铁男，九级补回乌鸦。", "七级开天使，八级找天使和约里克两星。"],
   "双电子泽丽": ["速九跳九。高血高经济时，八级用现成打工盘过渡，直上九搜泽丽和蒙多。青龙刀、无尽先给芸阿娜，两星凯尔或卢锡安接装。优先两星泽丽；女枪先两星就上她和卢锡安。蒙多两星再接蕾欧娜的肉装。", "八级用现成打工盘过渡，存钱直上九找泽丽和蒙多。"],
   "七海之歌扎克男枪": ["奥拉夫带男枪装，鳄鱼带两件肉装开艾希。七级上五个不同的海之歌或主唱开扎克，塔里克只算一个。八级搜男枪、扎克，谁两星谁接装，留一张空装鳄鱼。", "七级凑五个不同的海之歌或主唱开扎克，八级找扎克、男枪两星。"],
-  "史密奇95": ["饮血、血手、泰坦先合给战士打工。八级先稳血，九级开九个非唯一羁绊再搜史密奇。上限看两星主坦和先来的副 C。", "八级稳血，九级开九个非唯一羁绊解锁。"],
-  "爵士乐史密奇": ["九级同时开出至少 9 个非唯一羁绊，确认解锁后再 D 史密奇。五杀线优先，烬先两星走四爵士，亚索早到走真伤。", "五杀优先，烬先两星走四爵士，亚索早到走真伤。"],
-  "三爵士乐女枪泽丽": ["女枪或泽丽谁先二星谁先接装。第二套输出装和前排齐备再做双 C，有战士装且已开锁时，补史密奇从边路切进去。", "女枪或泽丽谁先两星谁接装，装备够再做双 C。"],
   "K/DA转芬妮": ["有 K/DA 纹章再走。二阶段选秀前刷 4 次解锁芬妮。金铲铲加大棒可合纹章。", "有 K/DA 转再走，二阶段选秀前刷 4 次开芬妮。"],
   "K/DA毒舞莉莉娅": ["2-1 拿到莉莉娅专属，先合离子或正义。五级先拼双护卫、五颗 K/DA 星。", "五级追莉莉娅，先合离子或正义。"],
   "救生员鳄鱼": ["2-1 拿到雷克顿专属，有大剑、反曲弓或锁子甲再走。雷克顿先穿两件装备开艾希，未解锁前用佐伊凑三海之歌。", "鳄鱼先穿两件开艾希，六级追三。"],
@@ -288,9 +288,10 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
       const costOptions = [...costsByBoard.values()].flat().concat(rows.flatMap(({stat}) => rowCosts(stat)));
       const playstyle = guidePlaystyle(section);
       const filterStyle = playstyle ?? facet.style;
+      const stylesByBoard = new Map(teams.map(board => [board.id, guidePlaystyle(section, board) ?? filterStyle]));
       const searchTopic = section.category === "纹章阵容" ? "纹章 转职" : "";
       const curated = patch?.build ? guideEquipmentConditions(section, teams, data, patch.build) : undefined;
-      return { section, data, teams, facet, family, rows, costsByBoard, rowCosts, costOptions, playstyle, filterStyle, searchTopic, curated, augment: heroAugmentForGuide(section) };
+      return { section, data, teams, facet, family, rows, costsByBoard, rowCosts, costOptions, playstyle, filterStyle, stylesByBoard, searchTopic, curated, augment: heroAugmentForGuide(section) };
     });
     return { regular: prepare(sections), "hero-augments": prepare(heroSections) };
   }, [sections, heroSections, season, patch?.build]);
@@ -318,13 +319,13 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
   const tierFilter = showTiers ? category : "";
   const homeEntries = [...library.regular, ...library["hero-augments"]];
   const availableFacets = view === "regular" ? homeEntries : visible;
-  const styles = new Map([...availableFacets.map(entry => entry.filterStyle), style].filter(Boolean)
+  const styles = new Map([...availableFacets.flatMap(entry => [...entry.stylesByBoard.values()]), style].filter(Boolean)
     .map(tag => [guideStyleKey(tag), tag.replace(/^([一二三])费/, (text, digit: string) => ("一二三".indexOf(digit) + 1) + "费")] as const));
   const costs = [...new Set([...availableFacets.flatMap(entry => entry.costOptions), ...(cost ? [cost] : [])])].sort((a,b) => a-b);
   const fixedRecommendations = new Map((recommendations?.fixedBoardRecommendations ?? []).map(record => [record.teamId, record]));
   const decisions = new Map((recommendations?.entries ?? []).map(record => [`${record.sectionId}:${record.teamId}`, record]));
   function boardSample(section: Section, team: Team, scope: "fixed" | "core") {
-    if (!boardSampleGuides.has(section.id) || placementBatch.build !== patch?.build) return;
+    if (!boardSampleTeams.has(team.id) || placementBatch.build !== patch?.build) return;
     const sample = teamPlacement(team, section, scope);
     if (sample?.conditions?.teamId !== team.id || sample.sourcePeriod || sample.mean === undefined ||
       sample.topFourRate === undefined || sample.winRate === undefined) return;
@@ -345,7 +346,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
     const entries = library[target];
     return {
       category: "",
-      style: entries.some(entry => guideStyleKey(entry.filterStyle) === styleKey) ? style : "",
+      style: entries.some(entry => [...entry.stylesByBoard.values()].some(tag => guideStyleKey(tag) === styleKey)) ? style : "",
       cost: entries.some(entry => entry.costOptions.includes(cost)) ? cost : 0,
     };
   };
@@ -376,9 +377,10 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
       const { section, data, teams, filterStyle, augment, searchTopic } = entry;
       const searchFamilies = recommendationsOnly && previousDeadline !== undefined && previousFamilyStats && previousFamilyStats !== homeFamilyStats
         ? [...entry.rows, ...guideFamilyRows(previousFamilyStats, data.id, section.id, teams)] : entry.rows;
-      if ((style && !matchesGuideStyle(filterStyle, style)) || (cost && !entry.costOptions.includes(cost))) return [];
-      const searchTeams = recommendationsOnly ? teams.filter(board => canShowBoard(section, board)) : teams;
-      if (recommendationsOnly && !searchTeams.length) return [];
+      if (cost && !entry.costOptions.includes(cost)) return [];
+      const searchTeams = teams.filter(board => (!recommendationsOnly || canShowBoard(section, board)) &&
+        (!style || matchesGuideStyle(entry.stylesByBoard.get(board.id) ?? filterStyle, style)));
+      if (!searchTeams.length) return [];
       const one = (term: string) => {
         const part = homeSearchIntent(term, terms.length === 1 ? intent.scope : "all");
         const component = season.items.find(item => item.category === "component" && guideSearchKey(item.name) === guideSearchKey(part.text.replace(/^散件[：:]?\s*/, "")));
@@ -431,7 +433,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
   const seen = new Set<string>();
   type Candidate = (typeof candidates)[number];
   type Result = Candidate & { siblings: Candidate[]; family?: GuideFamily };
-  const canUseUnmatchedLead = !recommended && !needle && !cost;
+  const canUseUnmatchedLead = !recommended && !needle && !cost && !style;
   const grouped = candidates.flatMap<Result>(candidate => {
     const family = candidate.family;
     if (!family) return [{ ...candidate, siblings: [] }];
@@ -708,7 +710,8 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
 
   const renderCards = (group: Card[], groupName: string, eager: boolean) => {
     const CardTitle = groupName ? "h3" : "h2";
-    return <div className="guide-list reader-list">{group.map(({ section, data, team, teams, matches, augment, siblings, family, rating: matchedRating, core, fixedSample, routeName, clusterId, rows, routes, cardId, context: searchContext, unitLabel, facet, playstyle, curated }, index) => {
+    return <div className="guide-list reader-list">{group.map(({ section, data, team, teams, matches, augment, siblings, family, rating: matchedRating, core, fixedSample, routeName, clusterId, rows, routes, cardId, context: searchContext, unitLabel, facet, curated }, index) => {
+      const playstyle = guidePlaystyle(section, team);
       const primary = teams[0];
       const kind = team && guideBoardKind(section, team, primary);
       const alternative = team && team.id !== primary.id;

@@ -8,8 +8,6 @@
 export const GUIDE_SECTION_IDS = {
   /** 四古典烬 */
   classicalJhin: "sample-block-0051",
-  /** 爵士乐烬（旧独立章节，已并入四古典烬） */
-  formerJazzJhin: "sample-block-1055",
   /** 四保镖烈娜塔 */
   bodyguardRenata: "sample-block-0122",
   /** 五天才玛尔扎哈 */
@@ -18,27 +16,28 @@ export const GUIDE_SECTION_IDS = {
   oceanGraves: "sample-block-0251",
   /** 四安可伊泽瑞尔 */
   encoreEzreal: "sample-block-0254",
-  /** 爵士乐派克 */
-  jazzPyke: "sample-block-0290",
   /** 海洋艾希 */
   oceanAshe: "sample-block-0327",
   /** 五摇滚薇恩 */
   rockVayne: "sample-block-0338",
-  /** 史密奇95 */
-  smeech95: "sample-block-0368",
   /** 高能流行芬妮&炸弹 */
   hyperpopSeraphine: "sample-block-0420",
   /** 非主流派克男枪 */
   altPykeGraves: "sample-block-0452",
   /** 爵士金克丝 */
   jazzJinx: "sample-block-1110",
-  /** 四主宰 AD 男枪 */
-  adGraves: "sample-block-1120",
+  threeJazzSmeech: "sample-block-0275",
+  jazzPykeAurora: "sample-block-1090",
   /** K/DA妮蔻 */
   kdaNeeko: "sample-block-0464",
   /** K/DA伊芙琳&卡莎 */
   kdaEvelynn: "sample-block-0764",
 } as const;
+
+export const AD_GRAVES_BOARD_IDS = [
+  "00000000-0000-4000-8000-000000001261",
+  "00000000-0000-4000-8000-000000001262",
+] as const;
 
 export const LEGACY_FOLDER_IDS = {
   /** 次选成熟阵容 -> 八级运营 */
@@ -61,10 +60,4 @@ export const HYPERPOP_BLOCK_IDS = {
   teemo: "sample-block-0040",
   jazzWhen: "sample-block-0255",
   jazzItems: "sample-block-0169",
-} as const;
-
-export const CLASSICAL_JHIN_BLOCK_IDS = {
-  firstBatchEvidence: "sample-block-1006",
-  secondaryEvidence: "sample-block-0980",
-  jazzLoadout: "sample-block-0872",
 } as const;

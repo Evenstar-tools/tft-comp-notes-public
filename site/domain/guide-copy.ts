@@ -101,18 +101,6 @@ export function compactGuideParagraph(text: string, team: Team, data: Season, se
       itemList("石像鬼、狂徒、振奋", wornNames(team, data, "wukong"))) {
     return "八级蕾欧娜先带日炎补重伤。";
   }
-  if (team.id === "00000000-0000-4000-8000-000000000011") {
-    if (revised.trim() === "副C：厄运小姐、泽丽。无尽、轻语、青龙刀，接卢锡安的整套输出装。已有薄暮时，轻语可换输出装。" &&
-        !team.pieces.some(piece => piece.unitId === "zeri") &&
-        itemList("无尽、轻语、青龙刀", wornNames(team, data, "miss-fortune"))) {
-      const handoff = seen.has(guideCopyKey("女枪接卢锡安装，留一张空装卢锡安开双金曲。"));
-      return (handoff ? "" : "女枪接卢锡安的输出装。") + "已有薄暮时，女枪的轻语可换输出装。";
-    }
-    if (revised.trim() === "副C：崔斯特。羊刀、法爆、虚空之杖。羊刀能从德莱文转过来。薄暮给前排，替史密奇补破甲。" &&
-        !team.pieces.some(piece => piece.unitId === "twisted-fate")) {
-      return "薄暮给前排，替史密奇补破甲。转卡牌时，羊刀可从德莱文接过来。";
-    }
-  }
   const role = revised.match(/^(主C|副C|主坦|副坦|功能装)[：:]\s*([^。]+)。\s*/);
   const member = role && data.units.find(unit => unit.name === role[2].trim() && team.pieces.some(piece => piece.unitId === unit.id));
   const names = member ? wornNames(team, data, member.id) : [];

@@ -203,7 +203,7 @@ test("a repeated discovery from one model is shown once with its most recent obs
 test("the trend chart spans the same observed dates for the ten latest-ranked comps", () => {
   const dates = ["2026-11-21","2026-11-22","2026-11-23","2026-11-24","2026-11-25"];
   const batches = dates.map((day, i) => ({ ...archive.batches[0], capturedAt: day + "T15:00:00Z", id: String(i) }));
-  const variants = ["四古典乐烬","爵士乐烬"];
+  const variants = ["四古典烬","三爵士史密奇"];
   const series = Array.from({ length: 13 }, (_, i) => ({
     ...classical, id: String(i), teamId: String(i), name: variants[i] ?? "阵容" + i,
     points: batches.flatMap((b, day) => (i === 0 && day > 2) || (i === 1 && day < 3) ? [] :

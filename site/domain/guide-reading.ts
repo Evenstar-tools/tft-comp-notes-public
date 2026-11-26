@@ -3,7 +3,7 @@ import type { Piece, Season, Team, Unit } from "./types";
 import { unitSearchNames } from "./unit-search.mjs";
 import { rerollRoute } from "./reroll-stages.ts";
 import { guideBoardKind, usedPopulation } from "./team.ts";
-import { GUIDE_SECTION_IDS, HYPERPOP_BLOCK_IDS } from "./guide-identities.ts";
+import { AD_GRAVES_BOARD_IDS, GUIDE_SECTION_IDS, HYPERPOP_BLOCK_IDS } from "./guide-identities.ts";
 import { sourceSectionTitle } from "./source-category-display.ts";
 import { displayGuideName } from "./trait-names.mjs";
 
@@ -136,7 +136,7 @@ export function parseGuideFilters(values: Record<string, string | string[] | und
   const archiveTier = category && ["推荐", "次选", "待复核"].includes(category) ? category : undefined;
   const hero = view === "hero-augments" || oldCategory === "英雄强化阵容";
   const legacyStyle = oldCategory === "慢搜阵容" ? "慢搜" : oldCategory === "高费阵容" ? "高费运营" : undefined;
-  const topic = oldCategory === "史密奇阵容" ? "史密奇" : oldCategory === "纹章阵容" ? "纹章" : undefined;
+  const topic = oldCategory === "纹章阵容" ? "纹章" : undefined;
   const query = read("q");
   const exclude = read("exclude");
   const metric = read("metric"), direction = read("direction");
@@ -194,15 +194,19 @@ export const oceanGravesUnlockBoardId = "00000000-0000-4000-8000-000000000062";
 
 export function guideRoute(section: Section, teams: Team[], current: Team): { phases: RouteStep[]; choices?: RouteStep[]; opening?: string } | undefined {
   const oceanGraves = section.id === oceanGravesGuideId;
-  if (section.id === GUIDE_SECTION_IDS.jazzJinx || section.id === GUIDE_SECTION_IDS.adGraves) {
+  const guide = section.id;
+  if (guide === GUIDE_SECTION_IDS.jazzJinx) {
     const steps = [...teams].sort((a, b) => usedPopulation(a.pieces) - usedPopulation(b.pieces))
       .map(team => ({ label: guideBoardName(team), text: "", team }));
-    return section.id === GUIDE_SECTION_IDS.jazzJinx ? { phases: steps.slice(0, 1), choices: steps.slice(1) } : { phases: steps };
-  }
-  if (section.id === "sample-block-1090") {
-    const steps = primaryFirst(teams, section.primaryTeamId)
-      .map(team => ({ label: guideBoardName(team), text: "", team }));
     return { phases: steps.slice(0, 1), choices: steps.slice(1) };
+  }
+  if (guide === GUIDE_SECTION_IDS.classicalJhin || guide === GUIDE_SECTION_IDS.threeJazzSmeech ||
+      guide === GUIDE_SECTION_IDS.altPykeGraves || guide === GUIDE_SECTION_IDS.jazzPykeAurora) {
+    const [primary] = primaryFirst(teams, section.primaryTeamId);
+    const phases = teams.filter(team => team === primary || section.stageTeamIds?.includes(team.id))
+      .sort((a, b) => usedPopulation(a.pieces) - usedPopulation(b.pieces));
+    const step = (team: Team) => ({ label: guideBoardName(team), text: "", team });
+    return { phases: phases.map(step), choices: teams.filter(team => !phases.includes(team)).map(step) };
   }
   if (section.id === "sample-block-1060") {
     const phases = [...teams].sort((a, b) => usedPopulation(a.pieces) - usedPopulation(b.pieces))
@@ -240,13 +244,6 @@ export function guideRoute(section: Section, teams: Team[], current: Team): { ph
         legacyHyperpopFinalAdvice(section, current)),
     ].filter(step => step.team || step.text) };
   }
-  if (section.id === GUIDE_SECTION_IDS.classicalJhin) {
-    return { phases: [
-      phase("七级过渡", board("七级"), line("两星莎弥拉带烬装") || board("七级")?.notes),
-      phase("八级主阵", board("八级"), [line("通常 4-2"), line("锤石锁着")].filter(Boolean).join("") || board("八级")?.notes),
-      phase("九级上限", board("九级"), line("八级双核两星") || board("九级")?.notes),
-    ].filter(step => step.team) };
-  }
   if (oceanGraves) {
     const find = (id: string) => teams.find(team => team.id === id);
     const step = (label: string, id: string, prefix: string) => phase(label, find(id) ?? board(prefix), section.reroll?.advice[id]);
@@ -256,20 +253,6 @@ export function guideRoute(section: Section, teams: Team[], current: Team): { ph
         step("8级 · 七海成型", "00000000-0000-4000-8000-000000000075", "八级"),
         step("9级上限 · 七海岩雀", "00000000-0000-4000-8000-000000000076", "九级"),
       ].filter(entry => entry.team),
-    };
-  }
-  if (section.id === GUIDE_SECTION_IDS.smeech95) {
-    return {
-      opening: line("八级先稳血"),
-      phases: [
-        phase("八级稳血", board("八级"), line("前期留卢锡安") + line("卢锡安拿后排装") || board("八级")?.notes),
-        phase("九级开锁准备", board("九级 · 史密奇开锁准备")),
-      ].filter(step => step.team),
-      choices: [
-        phase("女枪蒙多", board("女枪蒙多"), line("女枪接卢锡安装") || board("女枪蒙多")?.notes),
-        phase("大触打击乐卡牌", board("大触打击乐卡牌"), line("卡牌先到且有羊刀法装") || board("大触打击乐卡牌")?.notes),
-        phase("迅击鼓手泽丽", board("迅击鼓手泽丽"), line("带物理装的泽丽先二星") || board("迅击鼓手泽丽")?.notes),
-      ].filter(step => step.team),
     };
   }
 }
@@ -341,11 +324,10 @@ function playstyleCode(style?: string) {
   if (/^(?:95|速[九9](?:运营)?)$/.test(style ?? "")) return "95";
 }
 
-export function guidePlaystyle(section: Section): "84" | "95" | undefined {
+export function guidePlaystyle(section: Section, team?: Team): "84" | "95" | undefined {
+  if (section.id === GUIDE_SECTION_IDS.altPykeGraves && AD_GRAVES_BOARD_IDS.some(id => id === team?.id)) return "84";
   const style = authoredStrategy(section);
   if (style === "84" || style === "95") return style;
-  // These Pyke routes search for their five-cost carry at level nine.
-  if (section.id === GUIDE_SECTION_IDS.jazzPyke || section.id === GUIDE_SECTION_IDS.altPykeGraves) return "95";
   return playstyleCode(style);
 }
 
@@ -361,7 +343,6 @@ function isSlowRoll(style: string) {
 // Published routes whose formation needs an explicit editorial label.
 const reviewedFormation: Record<string, string> = {
   "00000000-0000-4000-8000-000000000104": "9级成型",
-  "00000000-0000-4000-8000-000000000108": "9级成型",
   "00000000-0000-4000-8000-000000000093": "9级成型",
   "00000000-0000-4000-8000-000000000078": "8级稳血",
 };
@@ -377,7 +358,7 @@ export function guideStrategyLabel(section: Section, team: Team, data: Season, p
   if (styleLabel) return styleLabel;
   const reviewed = reviewedFormation[team.id];
   if (reviewed) return reviewed;
-  const tag = guidePlaystyle(section);
+  const tag = guidePlaystyle(section, team);
   const formation = tag === "84" ? 8 : tag === "95" ? 9 : undefined;
   if (!formation) return;
   const population = usedPopulation(team.pieces);
@@ -496,8 +477,9 @@ function authoredRoles(section: Section, team: Team, data: Season) {
 
 function boardRoles(section: Section, team: Team, data: Season) {
   if (!team.name) return [];
-  const title = boardLoadoutPrefix + displayGuideName(team.name);
-  const block = allBlocks(section.blocks).find(entry => isBoardLoadout(entry) && displayGuideName(entry.text?.split("\n", 1)[0] ?? "") === title);
+  const name = displayGuideName(team.name);
+  const block = allBlocks(section.blocks).find(entry => isBoardLoadout(entry) &&
+    displayGuideName(entry.text!.split("\n", 1)[0].slice(boardLoadoutPrefix.length)) === name);
   return block?.text ? parseRoles(block.text.split("\n").slice(1), team, data) : [];
 }
 

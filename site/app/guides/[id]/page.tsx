@@ -14,7 +14,7 @@ import { patchRecommendationLabels } from "@/domain/patch-recommendations";
 import currentPatch from "@/data/current-patch.json";
 import { readPosterShare, validItemLibraryReturn } from "@/domain/links";
 import { boardStages } from "@/domain/team-stages";
-import { classicalJhinId, classicalJhinMainId, formerJazzEarlyId, formerJazzJhinId, jazzJhinTeamId } from "@/server/classical-jhin";
+import { legacyGuideDestination } from "@/domain/legacy-guide-redirects";
 export const metadata = { title: "阵容笔记" };
 export const dynamic = "force-dynamic";
 export default async function Guide({
@@ -27,12 +27,13 @@ export default async function Guide({
   const { team, stage, flex, poster, posterFormat, posterStages, from } = await searchParams;
   const returnTo = validHomeReturn(from) ?? validAugmentReturn(from) ?? validVersionReturn(from) ?? validHeroReturn(from) ?? validItemLibraryReturn(from);
   const live = await publicGuidePublication();
-  if (id === formerJazzJhinId && live?.sections.some(section => section.id === classicalJhinId)) {
-    const target = new URLSearchParams({ team: team === formerJazzEarlyId ? classicalJhinMainId : jazzJhinTeamId });
+  const legacy = legacyGuideDestination(id, typeof team === "string" ? team : undefined, live?.sections ?? []);
+  if (legacy) {
+    const target = new URLSearchParams({ team: legacy.teamId });
     if (returnTo) target.set("from", returnTo);
     if (poster === "1") target.set("poster", poster);
     if (posterFormat === "quick" || posterFormat === "full") target.set("posterFormat", posterFormat);
-    redirect("/guides/" + classicalJhinId + "?" + target);
+    redirect("/guides/" + legacy.sectionId + "?" + target);
   }
   const section = live?.sections.find((entry) => entry.id === id);
   if (!section) notFound();

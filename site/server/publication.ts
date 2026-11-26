@@ -16,7 +16,7 @@ import type { Season, Team } from "@/domain/types";
 import { database, setting, ApiError } from "./access";
 import { includeWebDetails, refreshWebDetails } from "./guide-details";
 import { includeRerollBoards } from "./reroll-guides";
-import { mergeClassicalJhin } from "./classical-jhin";
+import { migrateS19GuideSnapshot } from "./s19-guide-cleanup";
 import {
   blockText,
   cacheMedia,
@@ -63,7 +63,7 @@ export async function livePublication(): Promise<Publication | null> {
 async function buildPublicGuidePublication(): Promise<Publication | null> {
   const publication = await publishedSnapshot();
   if (!publication) return null;
-  const prepared = await prepareForReading(mergeClassicalJhin(includeRerollBoards(publication, season)));
+  const prepared = await prepareForReading(includeRerollBoards(migrateS19GuideSnapshot(publication), season));
   return {
     ...prepared,
     sections: prepared.sections.map(section => (section.gameData?.id ?? prepared.season.id).startsWith("s19-") &&

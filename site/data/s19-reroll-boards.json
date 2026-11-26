@@ -2416,74 +2416,6 @@
     ]
   },
   {
-    "sectionId": "sample-block-0290",
-    "stages": [],
-    "edits": [
-      {"teamId": "00000000-0000-4000-8000-000000000080", "originalPositions": {"samira": 22}, "positions": {"samira": 21}},
-      {"teamId": "00000000-0000-4000-8000-000000000108", "positions": {"galio": 10}, "stoneplateHolder": "rell", "originalPositions": {"rell": 3, "swain": 2, "galio": 4}},
-      {"teamId": "00000000-0000-4000-8000-000000000022", "positions": {"galio": 10}, "stoneplateHolder": "rell", "originalPositions": {"rell": 3, "swain": 2, "galio": 4}}
-    ]
-  },
-  {
-    "sectionId": "sample-block-0154",
-    "stages": [],
-    "edits": [
-      {"teamId": "00000000-0000-4000-8000-000000000101", "originalPositions": {"lucian": 26, "xayah": 27}, "positions": {"lucian": 27, "xayah": 26}},
-      {"teamId": "00000000-0000-4000-8000-000000000026", "positions": {"dr-mundo": 7}, "stoneplateHolder": "leona", "originalPositions": {"leona": 3, "dr-mundo": 1, "rell": 5}},
-      {"teamId": "00000000-0000-4000-8000-000000000101", "positions": {"sett": 12}, "stoneplateHolder": "galio", "originalPositions": {"galio": 3, "lillia": 1, "sett": 5}}
-    ]
-  },
-  {
-    "sectionId": "sample-block-0051",
-    "stages": [
-      {
-        "teamId": "00000000-0000-4000-8000-000000000121",
-        "parentTeamId": "00000000-0000-4000-8000-000000000059",
-        "name": "八级 · 四摇滚古典烬",
-        "boardRole": "variant",
-        "notes": "七级用韦鲁斯、奥拉夫、斯维因开三摇滚打三轮，解锁薇恩。派克要七级起战斗结束有 85 金，没开先用奥拉夫。八级搜烬和锤石两星，锤石单顶、第二排留空开吸血鬼。薇恩跟烬同侧吃轻语破甲，怕范围伤害时和韦鲁斯换边。",
-        "roles": [
-          {"label": "主C", "units": ["jhin"]},
-          {"label": "主坦", "units": ["thresh"]},
-          {"label": "副C", "units": ["vayne"]},
-          {"label": "功能装", "units": ["vladimir"]}
-        ],
-        "instrumentPositions": {"infernalIdol": 17},
-        "pieces": [
-          {"unitId": "thresh", "position": 4, "stars": 2, "items": ["TFT_Item_GargoyleStoneplate", "TFT_Item_Redemption", "TFT_Item_Crownguard"]},
-          {"unitId": "swain", "position": 16, "stars": 2, "items": []},
-          {"unitId": "vladimir", "position": 18, "stars": 1, "items": ["TFT_Item_AdaptiveHelm", "TFT_Item_StatikkShiv", "TFT_Item_Morellonomicon"]},
-          {"unitId": "varus", "position": 21, "stars": 2, "items": []},
-          {"unitId": "samira", "position": 23, "stars": 2, "items": []},
-          {"unitId": "pyke", "position": 24, "stars": 1, "items": []},
-          {"unitId": "vayne", "position": 26, "stars": 2, "items": ["TFT_Item_GuinsoosRageblade", "TFT_Item_RunaansHurricane", "TFT_Item_RunaansHurricane"]},
-          {"unitId": "jhin", "position": 27, "stars": 2, "items": ["TFT_Item_InfinityEdge", "TFT_Item_Deathblade", "TFT_Item_LastWhisper"]}
-        ]
-      }
-    ],
-    "edits": [
-      {"teamId": "00000000-0000-4000-8000-000000000036", "originalPositions": {"jhin": 26, "vladimir": 27}, "positions": {"jhin": 27, "vladimir": 26}},
-      {"teamId": "00000000-0000-4000-8000-000000000092", "originalPositions": {"jhin": 26, "vladimir": 27}, "positions": {"jhin": 27, "vladimir": 26}},
-      {
-        "teamId": "00000000-0000-4000-8000-000000000059",
-        "stoneplateHolder": "thresh",
-        "originalPositions": {"k-sante": 1, "thresh": 2, "nasus": 3, "galio": 4, "vladimir": 9, "jhin": 21, "mel": 23, "lucian": 27},
-        "positions": {"thresh": 4, "galio": 1, "nasus": 2, "vladimir": 8, "jhin": 27, "mel": 25, "lucian": 21, "k-sante": 3},
-        "originalItems": {"k-sante": ["TFT_Item_SpectralGauntlet"], "thresh": ["TFT_Item_GargoyleStoneplate", "TFT_Item_WarmogsArmor", "TFT_Item_Redemption"], "jhin": ["TFT_Item_InfinityEdge", "TFT_Item_PowerGauntlet", "TFT_Item_Deathblade"], "mel": ["TFT_Item_BlueBuff", "TFT_Item_Morellonomicon"]},
-        "items": {"thresh": ["TFT_Item_GargoyleStoneplate", "TFT_Item_Redemption", "TFT_Item_Crownguard"], "jhin": ["TFT_Item_InfinityEdge", "TFT_Item_Deathblade", "TFT_Item_LastWhisper"], "mel": ["TFT_Item_BlueBuff", "TFT_Item_Morellonomicon", "TFT_Item_ArchangelsStaff"], "k-sante": []},
-        "notes": "八级搜两星烬和锤石。锤石在首排右侧半单顶，其他前排靠左。烬守右底角，梅尔和他同侧集火。吸血鬼没来先用烈娜塔保四古典。"
-      },
-      {
-        "teamId": "00000000-0000-4000-8000-000000000034",
-        "stoneplateHolder": "thresh",
-        "originalPositions": {"k-sante": 1, "thresh": 2, "nasus": 3, "galio": 4, "vladimir": 9, "jhin": 21, "mel": 23, "miss-fortune": 25, "lucian": 27},
-        "positions": {"thresh": 4, "galio": 1, "nasus": 2, "vladimir": 8, "jhin": 27, "mel": 25, "lucian": 21, "miss-fortune": 23, "k-sante": 3},
-        "originalItems": {"k-sante": ["TFT_Item_SpectralGauntlet"], "thresh": ["TFT_Item_GargoyleStoneplate", "TFT_Item_WarmogsArmor", "TFT_Item_Redemption"], "jhin": ["TFT_Item_InfinityEdge", "TFT_Item_PowerGauntlet", "TFT_Item_Deathblade"], "mel": ["TFT_Item_BlueBuff", "TFT_Item_Morellonomicon"]},
-        "items": {"thresh": ["TFT_Item_GargoyleStoneplate", "TFT_Item_Redemption", "TFT_Item_Crownguard"], "jhin": ["TFT_Item_InfinityEdge", "TFT_Item_Deathblade", "TFT_Item_LastWhisper"], "mel": ["TFT_Item_BlueBuff", "TFT_Item_Morellonomicon", "TFT_Item_ArchangelsStaff"], "k-sante": []}
-      }
-    ]
-  },
-  {
     "sectionId": "sample-block-0338",
     "stages": [],
     "edits": [
@@ -2501,8 +2433,7 @@
       {"before": "，稳住再上九。优先两星泽丽；女枪先两星就上她和卢锡安。", "after": "优先两星泽丽；女枪先两星就上她和卢锡安。"},
       {"before": "八级用凯尔、巴德、贾克斯、加里奥、蕾欧娜、约里克、雷克顿、艾克稳血。", "after": "八级沿用凯尔、巴德、贾克斯、加里奥、蕾欧娜、约里克、雷克顿、艾克过渡，把钱留到九级搜牌。"},
       {"before": "场上能稳且换牌已备齐，可以当轮上九，找五费概率由 3% 到 15%。", "after": "场上能稳且换牌已备齐，就当轮跳九搜泽丽和蒙多，找五费概率由 3% 到 15%。"},
-      {"before": "每轮大掉血就留八级先搜二星打工 C 和二星前排，稳住再上九。", "after": ""},
-      {"before": "女枪先两星，下泽丽、巴德，上女枪、卢锡安。保留双电子、双爵士，三疾风换双制作人。卢锡安打工时先留一张，再卖带装的交装备。", "after": "女枪先两星就切女枪盘。泽丽、酒桶、史密奇换成女枪、卢锡安、约里克。卢锡安打工时先留一张空装的，再卖带装的交装备。"}
+      {"before": "每轮大掉血就留八级先搜二星打工 C 和二星前排，稳住再上九。", "after": ""}
     ],
     "hiddenLegacy": [
       {"id": "sample-block-0108", "prefix": "PBE 19.1 数据"},
@@ -2512,18 +2443,6 @@
       {"id": "sample-block-0814", "prefix": "PBE 19.1 近三天，原九人泽丽 426 场"}
     ],
     "edits": [
-      {
-        "teamId": "00000000-0000-4000-8000-000000000105",
-        "positions": {"leona": 2, "vi": 8, "gragas": 9, "dr-mundo": 10, "jax": 11, "galio": 12, "nunu-willump": 13, "smeech": 14, "zeri": 21},
-        "originalPositions": {"dr-mundo": 3, "leona": 1, "galio": 5, "nunu-willump": 6, "jax": 8, "vi": 11, "yorick": 12, "bard": 22, "zeri": 27},
-        "originalItems": {"yorick": [], "bard": []},
-        "replacements": {
-          "yorick": {"unitId": "gragas", "stars": 1, "items": []},
-          "bard": {"unitId": "smeech", "stars": 1, "items": []}
-        },
-        "notes": "蕾欧娜第一排单顶，泽丽站左下角。开锁时先上巴德，酒桶与蕾欧娜合计至少 3 星，用瑟提临时换努努开心之钢，凑齐九个非唯一羁绊。确认解锁后史密奇换巴德，换回努努。",
-        "wording": {"before": "优先两星泽丽接装，留巴德开三疾风。女枪先两星时改上女枪、卢锡安开双制作人。下艾克、雷克顿，上蔚、努努，第九格补蒙多。蒙多两星再接蕾欧娜的肉装。", "after": "九级先上酒桶和巴德，酒桶与蕾欧娜合计至少 3 星开 K/DA。临时用瑟提换努努，开心之钢凑齐九个非唯一羁绊。解锁后史密奇换巴德，努努换回瑟提。泽丽和蒙多各两星后再接装。"}
-      },
       {"teamId": "00000000-0000-4000-8000-000000000003", "positions": {"galio": 10}, "stoneplateHolder": "leona", "originalPositions": {"leona": 3, "renekton": 1, "galio": 5}}
     ]
   },
@@ -2535,35 +2454,21 @@
     ]
   },
   {
-    "sectionId": "sample-block-0394",
-    "stages": [],
-    "edits": [
-      {"teamId": "00000000-0000-4000-8000-000000000083", "positions": {"galio": 12, "nunu-willump": 13}, "stoneplateHolder": "thresh", "originalPositions": {"thresh": 3, "nasus": 1, "galio": 5, "nunu-willump": 6}},
-      {"teamId": "00000000-0000-4000-8000-000000000018", "positions": {"galio": 12}, "stoneplateHolder": "nasus", "originalPositions": {"nasus": 3, "thresh": 1, "galio": 5}}
-    ]
-  },
-  {
-    "sectionId": "sample-block-0368",
-    "stages": [],
-    "edits": [
-      {"teamId": "00000000-0000-4000-8000-000000000011", "positions": {"jax": 11}, "stoneplateHolder": "dr-mundo", "originalPositions": {"dr-mundo": 3, "leona": 1, "jax": 5}},
-      {"teamId": "00000000-0000-4000-8000-000000000021", "positions": {"k-sante": 7, "braum": 11}, "stoneplateHolder": "galio", "originalPositions": {"galio": 3, "k-sante": 1, "braum": 5, "swain": 6}},
-      {"teamId": "00000000-0000-4000-8000-000000000077", "positions": {"braum": 11}, "stoneplateHolder": "galio", "originalPositions": {"galio": 3, "illaoi": 1, "braum": 5}},
-      {"teamId": "00000000-0000-4000-8000-000000000027", "positions": {"lillia": 7}, "stoneplateHolder": "galio", "originalPositions": {"galio": 3, "lillia": 1, "swain": 5}},
-      {"teamId": "00000000-0000-4000-8000-000000000085", "positions": {"lillia": 7}, "stoneplateHolder": "galio", "originalPositions": {"galio": 3, "lillia": 1, "swain": 5}, "notes": "加里奥顶第一排，斯维因在第二排，卢锡安带后排装，凯隐代持史密奇装。"}
-    ]
-  },
-  {
     "sectionId": "sample-block-0275",
     "stages": [],
     "edits": [
-      {"teamId": "00000000-0000-4000-8000-000000000082", "positions": {"swain": 11}, "stoneplateHolder": "yorick", "originalPositions": {"yorick": 3, "galio": 1, "swain": 5}},
-      {"teamId": "00000000-0000-4000-8000-000000000107", "positions": {"jax": 12}, "stoneplateHolder": "ekko", "originalPositions": {"ekko": 3, "kennen": 1, "jax": 5}},
-      {"teamId": "00000000-0000-4000-8000-000000000117", "positions": {"jax": 10}, "stoneplateHolder": "ekko", "originalPositions": {"ekko": 3, "kennen": 1, "jax": 5}},
-      {"teamId": "00000000-0000-4000-8000-000000000004", "positions": {"jax": 12}, "stoneplateHolder": "ekko", "originalPositions": {"ekko": 3, "kennen": 1, "jax": 5}},
-      {"teamId": "00000000-0000-4000-8000-000000000008", "positions": {"swain": 11}, "stoneplateHolder": "galio", "originalPositions": {"galio": 3, "annie": 1, "swain": 5}},
-      {"teamId": "00000000-0000-4000-8000-000000000014", "positions": {"swain": 11}, "stoneplateHolder": "galio", "originalPositions": {"galio": 3, "annie": 1, "swain": 5}},
-      {"teamId": "00000000-0000-4000-8000-000000000116", "positions": {"jax": 7}, "stoneplateHolder": "ekko", "originalPositions": {"ekko": 3, "jax": 1, "rell": 5}}
+      {
+        "teamId": "00000000-0000-4000-8000-000000000082",
+        "positions": {
+          "swain": 11
+        },
+        "stoneplateHolder": "yorick",
+        "originalPositions": {
+          "yorick": 3,
+          "galio": 1,
+          "swain": 5
+        }
+      }
     ]
   },
   {

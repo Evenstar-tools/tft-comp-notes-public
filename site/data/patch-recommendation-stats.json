@@ -7,32 +7,10 @@
   "updatedAt": "2026-11-26T00:19:24.187Z",
   "rows": [
     {
-      "sectionId": "sample-block-0368",
-      "teamId": "00000000-0000-4000-8000-000000000011",
-      "name": "史密奇95",
-      "carryId": "smeech",
-      "games": 47,
-      "mean": 2.851063829787234,
-      "topFourRate": 0.7659574468085106,
-      "winRate": 0.40425531914893614,
-      "placementCounts": [
-        19,
-        7,
-        7,
-        3,
-        3,
-        5,
-        1,
-        2
-      ],
-      "queryUrl": "https://api-hc.metatft.com/tft-explorer-api/total?queue=PBE&patch=19.1&b_patch=c&days=0.08333333333333333&formatnoarray=true&compact=true&trait=DA_Jazz19_1&unit_unique=DA_Smeech19-1&unit_unique=DA_DrMundo19-1&permit_filter_adjustment=false",
-      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&trait=DA_Jazz19_1&unit=DA_Smeech19-1&unit=DA_DrMundo19-1&queue=PBE&patch=19.1&b_patch=c&days=0.08333333333333333"
-    },
-    {
       "sectionId": "sample-block-0275",
       "teamId": "00000000-0000-4000-8000-000000000082",
       "name": "三爵士五杀史密奇",
-      "opening": "卡蜜尔带战士装过渡，九级凑八个羁绊开史密奇，凯尔补输出。",
+      "opening": "八级五杀爵士原盘开 8 个非唯一羁绊，九级补心之钢凑满 9 个解锁史密奇。",
       "carryId": "smeech",
       "games": 61,
       "mean": 2.8852459016393444,
@@ -52,9 +30,9 @@
       "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&trait=DA_Jazz19_2&trait=DA_Pentakill19_1&unit=DA_Smeech19-1&unit=DA_Kayle19-1&queue=PBE&patch=19.1&b_patch=c&days=0.08333333333333333"
     },
     {
-      "sectionId": "sample-block-0394",
+      "sectionId": "sample-block-0051",
       "teamId": "00000000-0000-4000-8000-000000000083",
-      "name": "四古典女枪",
+      "name": "九级 · 女枪主 C 变阵",
       "carryId": "miss-fortune",
       "games": 77,
       "mean": 2.935064935064935,
@@ -185,28 +163,6 @@
       "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&trait=DA_OceanSong19_3&unit=DA_Graves19-1&unit=DA_Zac19-1&queue=PBE&patch=19.1&b_patch=c&days=0.08333333333333333"
     },
     {
-      "sectionId": "sample-block-0290",
-      "teamId": "00000000-0000-4000-8000-000000000108",
-      "name": "爵士乐派克",
-      "carryId": "pyke",
-      "games": 7,
-      "mean": 3.7142857142857144,
-      "topFourRate": 0.5714285714285714,
-      "winRate": 0.2857142857142857,
-      "placementCounts": [
-        2,
-        0,
-        1,
-        1,
-        1,
-        2,
-        0,
-        0
-      ],
-      "queryUrl": "https://api-hc.metatft.com/tft-explorer-api/total?queue=PBE&patch=19.1&b_patch=c&days=0.08333333333333333&formatnoarray=true&compact=true&trait=DA_Jazz19_1&unit_unique=DA_Pyke19-1&unit_unique=DA_Rell19-1&permit_filter_adjustment=false",
-      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&trait=DA_Jazz19_1&unit=DA_Pyke19-1&unit=DA_Rell19-1&queue=PBE&patch=19.1&b_patch=c&days=0.08333333333333333"
-    },
-    {
       "sectionId": "sample-block-0243",
       "teamId": "00000000-0000-4000-8000-000000000087",
       "name": "六舞者佛耶戈",
@@ -315,28 +271,6 @@
       ],
       "queryUrl": "https://api-hc.metatft.com/tft-explorer-api/total?queue=PBE&patch=19.1&b_patch=c&days=0.08333333333333333&formatnoarray=true&compact=true&trait=DA_KDA19_5&unit_unique=DA_19_Ahri-1&unit_unique=DA_Leona19-1&permit_filter_adjustment=false",
       "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&trait=DA_KDA19_5&unit=DA_19_Ahri-1&unit=DA_Leona19-1&queue=PBE&patch=19.1&b_patch=c&days=0.08333333333333333"
-    },
-    {
-      "sectionId": "sample-block-0154",
-      "teamId": "00000000-0000-4000-8000-000000000026",
-      "name": "三爵士女枪泽丽",
-      "carryId": "miss-fortune",
-      "games": 14,
-      "mean": 4.428571428571429,
-      "topFourRate": 0.5,
-      "winRate": 0.21428571428571427,
-      "placementCounts": [
-        3,
-        0,
-        2,
-        2,
-        1,
-        3,
-        2,
-        1
-      ],
-      "queryUrl": "https://api-hc.metatft.com/tft-explorer-api/total?queue=PBE&patch=19.1&b_patch=c&days=0.08333333333333333&formatnoarray=true&compact=true&trait=DA_Jazz19_2&unit_unique=DA_MissFortune19-1&unit_unique=DA_Zeri19-1&permit_filter_adjustment=false",
-      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&trait=DA_Jazz19_2&unit=DA_MissFortune19-1&unit=DA_Zeri19-1&queue=PBE&patch=19.1&b_patch=c&days=0.08333333333333333"
     },
     {
       "sectionId": "sample-block-0229",

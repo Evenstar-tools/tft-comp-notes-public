@@ -18,7 +18,7 @@ export const patchReferences: PatchReference[] = [
     observation: "6035832 对局已入库。MetaTFT 大盘当前仍以 19.1c 近三天滚动样本为主，窗口覆盖实装前后的多个构建。阵容表现可结合新构建的短窗核心样本观察。",
     groups: {
       "解锁": [
-        { name: "史密奇", unit: "smeech", guides: ["sample-block-0368", "sample-block-0275", "sample-block-0154"], values: [["同时激活的非唯一羁绊", "8 个", "9 个"]] },
+        { name: "史密奇", unit: "smeech", guides: ["sample-block-0275", "sample-block-0051", "sample-block-1110"], values: [["同时激活的非唯一羁绊", "8 个", "9 个"]] },
         { name: "娑娜", unit: "sona", values: [["合奏弈子在玩家对战中获得灵感", "15 次", "20 次"]] },
         { name: "纳什男爵", unit: "baron-nashor", aliases: ["大龙"], guides: ["sample-block-0229"], values: [["商店男爵乐器", "原掉率", "略微降低出现概率"]] },
       ],
@@ -30,7 +30,7 @@ export const patchReferences: PatchReference[] = [
           ["每名三星 K/DA 友军的额外技能效果", "15%", "12%"], ["每秒治疗法强系数（1／2／3／4 星）", "56／61／68／77", "60／66／74／85"],
         ] },
         { name: "卢锡安", unit: "lucian", values: [["每发子弹攻击力系数（1／2／3／4 星）", "85%／130%／200%／340%", "90%／135%／205%／350%"]] },
-        { name: "莎弥拉", unit: "samira", guides: ["sample-block-0051", "sample-block-0394"], values: [
+        { name: "莎弥拉", unit: "samira", guides: ["sample-block-0051"], values: [
           ["每发子弹攻击力系数（1／2／3／4 星）", "38%／57%／86%／146%", "31%／47%／70%／119%"],
           ["实际伤害", "受异常影响偏低", "修复后净加强"],
         ] },
@@ -54,11 +54,11 @@ export const patchReferences: PatchReference[] = [
         { name: "纳什男爵", unit: "baron-nashor", aliases: ["大龙"], guides: ["sample-block-0229"], values: [["召唤物每击攻击力系数（1／2 星）", "33%／50%", "35%／55%"]] },
         { name: "迦娜", unit: "janna", aliases: ["风女"], guides: ["sample-block-0214"], values: [["天风伤害法强系数（1／2 星）", "1800／2700", "1950／3000"]] },
         { name: "奈德丽", unit: "nidalee", aliases: ["豹女"], values: [["美洲狮形态每次猛扑的法强系数（1／2 星）", "125／185", "140／210"]] },
-        { name: "派克", unit: "pyke", guides: ["sample-block-0290", "sample-block-0452"], values: [["基础攻速", "0.9", "0.85"]] },
+        { name: "派克", unit: "pyke", guides: ["sample-block-0452"], values: [["基础攻速", "0.9", "0.85"]] },
         { name: "娑娜", unit: "sona", values: [["主动伤害法强系数（1／2 星）", "1500／2400", "1650／2600"], ["主动护盾法强系数（1／2 星）", "250／450", "250／500"]] },
         { name: "崔斯特", unit: "twisted-fate", aliases: ["卡牌"], values: [["主目标伤害法强系数（1／2 星）", "100／150", "110／165"]] },
         { name: "弗拉基米尔", unit: "vladimir", aliases: ["吸血鬼"], values: [["客户端推荐装备", "莫雷洛秘典", "正义之手"]] },
-        { name: "泽丽", unit: "zeri", guides: ["sample-block-0235", "sample-block-0154"], values: [["每道激光的攻击力系数（1／2 星）", "135%／200%", "125%／190%"]] },
+        { name: "泽丽", unit: "zeri", guides: ["sample-block-0235"], values: [["每道激光的攻击力系数（1／2 星）", "135%／200%", "125%／190%"]] },
       ],
       "羁绊": [
         { name: "海之歌", aliases: ["Beach Pop"], guides: ["sample-block-0251"], values: [["5 海之歌攻速", "40%", "45%"], ["7 海之歌海风回蓝", "40", "30"]] },
@@ -174,9 +174,9 @@ export const patchReferences: PatchReference[] = [
       "弈子": [
         { name: "薇恩", unit: "vayne", aliases: ["VN"], guides: ["sample-block-0338", "sample-block-0407"],
           values: [["技能攻击力系数（1／2／3 星）", "165%／250%／2000%", "175%／265%／2400%"]] },
-        { name: "厄运小姐", unit: "miss-fortune", aliases: ["女枪", "MF"], guides: ["sample-block-0394", "sample-block-0154"],
+        { name: "厄运小姐", unit: "miss-fortune", aliases: ["女枪", "MF"], guides: ["sample-block-0051"],
           values: [["技能攻击力系数（1／2 星）", "140%／210%", "150%／225%"]] },
-        { name: "泽丽", unit: "zeri", guides: ["sample-block-0235", "sample-block-0154"],
+        { name: "泽丽", unit: "zeri", guides: ["sample-block-0235"],
           values: [["激光攻击力系数（1／2 星）", "145%／215%", "135%／200%"]] },
         { name: "格雷福斯", unit: "graves", aliases: ["男枪"], guides: ["sample-block-0251", "sample-block-0452"],
           values: [["技能攻击力系数（1／2 星）", "40%／60%", "42%／63%"]] },
@@ -304,7 +304,7 @@ export const patchReferences: PatchReference[] = [
           name: "莎弥拉",
           unit: "samira",
           aliases: ["莎米拉","沙弥拉"],
-          guides: ["sample-block-0051","sample-block-0394"],
+          guides: ["sample-block-0051"],
           values: [
             ["三星攻击力系数","80%","86%"],
             ["法力值","0／60","0／55"],
@@ -392,7 +392,7 @@ export const patchReferences: PatchReference[] = [
           name: "厄运小姐",
           unit: "miss-fortune",
           aliases: ["女枪","MF"],
-          guides: ["sample-block-0394","sample-block-0154"],
+          guides: ["sample-block-0051"],
           values: [
             ["技能攻击力系数（1／2 星）","130%／200%","140%／210%"],
           ],
@@ -443,7 +443,7 @@ export const patchReferences: PatchReference[] = [
           name: "弗拉基米尔",
           unit: "vladimir",
           aliases: ["吸血鬼"],
-          guides: ["sample-block-0051","sample-block-0394"],
+          guides: ["sample-block-0051"],
           values: [
             ["小技能伤害（1／2 星）","100／150","120／180"],
           ],
@@ -453,7 +453,7 @@ export const patchReferences: PatchReference[] = [
         {
           name: "古典乐",
           aliases: ["古典","Classical"],
-          guides: ["sample-block-0051","sample-block-0394"],
+          guides: ["sample-block-0051"],
           values: [
             ["4 古典增伤","18%","20%"],
             ["6 古典增伤","33%","35%"],
@@ -531,7 +531,7 @@ export const patchReferences: PatchReference[] = [
           name: "锤石",
           unit: "thresh",
           aliases: ["迷醉","古典"],
-          guides: ["sample-block-0051","sample-block-0394"],
+          guides: ["sample-block-0051"],
           values: [
             ["古典乐累计沉醉敌人","300 秒","275 秒"],
           ],
