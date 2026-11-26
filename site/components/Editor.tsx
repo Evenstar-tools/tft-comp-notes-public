@@ -47,6 +47,7 @@ import { feishuSection, manageLink } from "@/domain/links";
 import { itemMap, season, unitLabel, unitMap } from "@/data";
 import { itemReference } from "@/data/item-reference";
 import { akaliForms, conflictingForm, emptyTeam, equippedTraitIds, mixedForms, movePiece, relatedUnitIds, splitAlternate, stackPiece, switchAlternate, switchForm, teamFromCombo, teamText, traitCounts, usedPopulation } from "@/domain/team";
+import { createId } from "@/domain/id";
 import { independentDraft } from "@/domain/roster-import";
 import { boardStages, stageLabels, readTeamStage, writeTeamStage } from "@/domain/team-stages";
 import type { BoardInstrumentId, BoardStage, Item, Piece, PieceLoadout, Team } from "@/domain/types";
@@ -467,7 +468,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
         setWantedForm(unitId);
         return;
       }
-      const added: Piece = { instanceId: crypto.randomUUID(), unitId, position, stars: 1, items: [] };
+      const added: Piece = { instanceId: createId(), unitId, position, stars: 1, items: [] };
       commit(prev => ({ ...prev, pieces: [...prev.pieces, added] }));
       setSelectedId(unitId);
       setPieceSelection({ id: added.instanceId });
@@ -480,7 +481,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
     const pieces = teamRef.current.pieces;
     if (!pieces.some(piece => piece.position === position)) return place(position, unitId);
     if (!unitMap.has(unitId)) return;
-    const incoming: PieceLoadout = { instanceId: crypto.randomUUID(), unitId, stars: 1, items: [] };
+    const incoming: PieceLoadout = { instanceId: createId(), unitId, stars: 1, items: [] };
     const next = stackPiece(pieces, incoming, position);
     if (next !== pieces) commit(current => ({ ...current, pieces: next }));
   }, [commit, place]);

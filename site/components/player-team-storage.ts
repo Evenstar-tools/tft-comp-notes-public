@@ -1,4 +1,5 @@
 import type { Team } from "@/domain/types";
+import { createId } from "@/domain/id";
 
 const prefix = "tft-player-team-v1:";
 const backupFormat = "tft-player-teams-v1";
@@ -136,7 +137,7 @@ export async function importPlayerTeams(
       try {
         for (const source of teams) {
           let id = source.id;
-          while (id === currentId || storage.getItem(prefix + id) !== null) id = crypto.randomUUID();
+          while (id === currentId || storage.getItem(prefix + id) !== null) id = createId();
           const copy = id !== source.id;
           if (copy) copies++;
           const imported: Team = {

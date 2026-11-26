@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { SquarePen } from "lucide-react";
 import type { Team, TeamCondition } from "@/domain/types";
+import { createId } from "@/domain/id";
 import { ownerEditorPath } from "@/domain/links";
 import { guideBoardTransferKey, type GuideBoardTarget } from "./guide-board-transfer";
 
@@ -17,7 +18,7 @@ export function GuideEditorLink({ team, title, href, focusUnit, secondary = fals
 
   function openEditor() {
     try {
-      const id = crypto.randomUUID();
+      const id = createId();
       sessionStorage.setItem(guideBoardTransferKey, JSON.stringify({ id, team, title, href, focusUnit, target, sharedConditions }));
       setError("");
       window.location.assign((owner ? ownerEditorPath : "/editor") + "?" + new URLSearchParams({ guideBoard: id }));
