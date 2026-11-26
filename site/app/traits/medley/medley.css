@@ -48,7 +48,7 @@
 .medley-fits summary > span { color: var(--muted); font-weight: 400; }
 .medley-fit-row { display: flex; align-items: stretch; gap: 2px; border-top: 1px solid var(--line); }
 .medley-fit-row:is(:hover, :focus-within, [data-active]) { background: var(--raised); }
-.medley-fit-row button { flex: 1; min-width: 0; min-height: 42px; padding: 6px 8px; background: transparent; border: 0; color: var(--text); text-align: start; white-space: normal; font: inherit; font-size: .9rem; font-weight: 650; cursor: pointer; }
+.medley-fit-row button { display: block; flex: 1; min-width: 0; min-height: 42px; padding: 6px 8px; background: transparent; border: 0; color: var(--text); text-align: start; white-space: normal; font: inherit; font-size: .9rem; font-weight: 650; cursor: pointer; }
 .medley-fit-row a { flex: none; display: grid; place-items: center; width: 40px; color: var(--accent); }
 .medley-fit-row a:hover { background: color-mix(in srgb, var(--accent) 10%, transparent); }
 .medley-fit-row :is(button, a):focus-visible { outline-offset: -2px; }
