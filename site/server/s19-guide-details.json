@@ -117,23 +117,8 @@
           {
             "id": "sample-block-0033",
             "type": "text",
-            "text": "11 月 18 日七离子运营讲解　Mobalytics 九人口站位与配装",
+            "text": "Mobalytics 九人口站位与配装",
             "elements": [
-              {
-                "text_run": {
-                  "content": "11 月 18 日七离子运营讲解",
-                  "text_element_style": {
-                    "link": {
-                      "url": "https://www.bilibili.com/video/BV1dKsU6fEqq/"
-                    }
-                  }
-                }
-              },
-              {
-                "text_run": {
-                  "content": "　"
-                }
-              },
               {
                 "text_run": {
                   "content": "Mobalytics 九人口站位与配装",
@@ -931,23 +916,8 @@
           {
             "id": "sample-block-0107",
             "type": "text",
-            "text": "Ch1oe__ 的五天才七级实战　Mobalytics 的玛尔扎哈、艾克配装参考　Riot 的男爵乐团和解锁介绍",
+            "text": "Mobalytics 的玛尔扎哈、艾克配装参考　Riot 的男爵乐团和解锁介绍",
             "elements": [
-              {
-                "text_run": {
-                  "content": "Ch1oe__ 的五天才七级实战",
-                  "text_element_style": {
-                    "link": {
-                      "url": "https://www.bilibili.com/video/BV1k3s16fEKJ/"
-                    }
-                  }
-                }
-              },
-              {
-                "text_run": {
-                  "content": "　"
-                }
-              },
               {
                 "text_run": {
                   "content": "Mobalytics 的玛尔扎哈、艾克配装参考",
