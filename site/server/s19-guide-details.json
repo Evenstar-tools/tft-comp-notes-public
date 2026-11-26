@@ -1494,6 +1494,124 @@
                 }
               }
             ]
+          },
+          {
+            "id": "sample-block-kayle-juggernaut-heading",
+            "type": "heading",
+            "text": "九级 · 四主宰派克泽丽",
+            "level": 3
+          },
+          {
+            "id": "sample-block-0661",
+            "type": "text",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "羊刀、法棒多时走。七级先解锁凯尔和扎克，八级搜两星；九级补泽丽。",
+                  "text_element_style": {
+                    "bold": false,
+                    "inline_code": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false
+                  }
+                }
+              }
+            ],
+            "level": 0,
+            "text": "羊刀、法棒多时走。七级先解锁凯尔和扎克，八级搜两星；九级补泽丽。"
+          },
+          {
+            "id": "sample-block-0665",
+            "type": "text",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "纳尔、死歌、奥拉夫、塔里克打工。死歌拿天使法装，塔里克穿两件开艾希；留一张空装塔里克，方便卖打工卡转肉装。",
+                  "text_element_style": {
+                    "bold": false,
+                    "inline_code": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false
+                  }
+                }
+              }
+            ],
+            "level": 0,
+            "text": "纳尔、死歌、奥拉夫、塔里克打工。死歌拿天使法装，塔里克穿两件开艾希；留一张空装塔里克，方便卖打工卡转肉装。"
+          },
+          {
+            "id": "sample-block-0635",
+            "type": "text",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "七级用奥拉夫、纳尔、死歌、艾希解锁天使；用塔里克、奥拉夫、艾希、佐伊、鳄鱼解锁扎克。死歌换天使，扎克接肉。",
+                  "text_element_style": {
+                    "bold": false,
+                    "inline_code": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false
+                  }
+                }
+              }
+            ],
+            "level": 0,
+            "text": "七级用奥拉夫、纳尔、死歌、艾希解锁天使；用塔里克、奥拉夫、艾希、佐伊、鳄鱼解锁扎克。死歌换天使，扎克接肉。"
+          },
+          {
+            "id": "sample-block-0675",
+            "type": "text",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "八级摆天使、扎克、约里克、塔里克、奥拉夫、洛克、艾希，再补迅击或前排。先找两星天使、扎克。派克要七级以上战斗结束留85金币；血少就先搜。九级上泽丽，洛克的物理装转给泽丽，补派克开三摇滚。",
+                  "text_element_style": {
+                    "bold": false,
+                    "inline_code": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false
+                  }
+                }
+              }
+            ],
+            "level": 0,
+            "text": "八级摆天使、扎克、约里克、塔里克、奥拉夫、洛克、艾希，再补迅击或前排。先找两星天使、扎克。派克要七级以上战斗结束留85金币；血少就先搜。九级上泽丽，洛克的物理装转给泽丽，补派克开三摇滚。"
+          },
+          {
+            "id": "sample-block-0718",
+            "type": "text",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "棋盘配装 · 九级 · 四主宰派克泽丽\n主C：凯尔。羊刀先做，鬼书补重伤。\n主坦：扎克。肉装先给打工塔里克。\n副C：泽丽。吃剩余物理装。\n",
+                  "text_element_style": {
+                    "bold": false,
+                    "inline_code": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false
+                  }
+                }
+              },
+              {
+                "text_run": {
+                  "content": "副坦：约里克。薄暮跟泽丽同侧。",
+                  "text_element_style": {
+                    "bold": false,
+                    "inline_code": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false
+                  }
+                }
+              }
+            ],
+            "level": 0,
+            "text": "棋盘配装 · 九级 · 四主宰派克泽丽\n主C：凯尔。羊刀先做，鬼书补重伤。\n主坦：扎克。肉装先给打工塔里克。\n副C：泽丽。吃剩余物理装。\n副坦：约里克。薄暮跟泽丽同侧。"
           }
         ]
       }
@@ -3484,6 +3602,127 @@
             ]
           },
           {
+            "id": "sample-block-classic-yuumi-heading",
+            "type": "heading",
+            "text": "八级 · 六古典烬猫",
+            "level": 3
+          },
+          {
+            "id": "sample-block-0590",
+            "type": "text",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "早点用古典攒沉醉，八级搜烬、锤石。有多余法装再给悠米。",
+                  "text_element_style": {
+                    "bold": false,
+                    "inline_code": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false
+                  }
+                }
+              }
+            ],
+            "level": 0,
+            "text": "早点用古典攒沉醉，八级搜烬、锤石。有多余法装再给悠米。"
+          },
+          {
+            "id": "sample-block-0594",
+            "type": "text",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "开古典尽早攒够 250 秒沉醉解锁锤石。给古典、非主流或花式射手任一弈子两件装备解锁莎弥拉。",
+                  "text_element_style": {
+                    "bold": false,
+                    "inline_code": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false
+                  }
+                }
+              }
+            ],
+            "level": 0,
+            "text": "开古典尽早攒够 250 秒沉醉解锁锤石。给古典、非主流或花式射手任一弈子两件装备解锁莎弥拉。"
+          },
+          {
+            "id": "sample-block-0713",
+            "type": "text",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "莎弥拉先带烬装，烈娜塔帮悠米拿法装。先两星烬和两星前排，锤石未解锁时用两星狗头稳血。",
+                  "text_element_style": {
+                    "bold": false,
+                    "inline_code": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false
+                  }
+                }
+              }
+            ],
+            "level": 0,
+            "text": "莎弥拉先带烬装，烈娜塔帮悠米拿法装。先两星烬和两星前排，锤石未解锁时用两星狗头稳血。"
+          },
+          {
+            "id": "sample-block-0759",
+            "type": "text",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "八级烬和锤石两星能稳住，血量经济够再上九补蕾欧娜开双保镖。",
+                  "text_element_style": {
+                    "bold": false,
+                    "inline_code": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false
+                  }
+                }
+              }
+            ],
+            "level": 0,
+            "text": "八级烬和锤石两星能稳住，血量经济够再上九补蕾欧娜开双保镖。"
+          },
+          {
+            "id": "sample-block-0692",
+            "type": "text",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "PBE 19.1 · 36 场 · 样本少。",
+                  "text_element_style": {
+                    "bold": false,
+                    "inline_code": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false
+                  }
+                }
+              },
+              {
+                "text_run": {
+                  "content": "数据来源",
+                  "text_element_style": {
+                    "bold": false,
+                    "inline_code": false,
+                    "italic": false,
+                    "link": {
+                      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&level=8&unit=DA_Jhin19-1&unit=DA_Yuumi19-1&unit=DA_Thresh19-1&unit=DA_Nasus19-1&unit=DA_RenataGlasc19-1&unit=DA_Samira19-1&unit=DA_Katarina19-1&unit=DA_Illaoi19-1"
+                    },
+                    "strikethrough": false,
+                    "underline": false
+                  }
+                }
+              }
+            ],
+            "level": 0,
+            "text": "PBE 19.1 · 36 场 · 样本少。数据来源"
+          },
+          {
             "id": "sample-block-classic-loadouts",
             "type": "heading",
             "level": 3,
@@ -3548,6 +3787,86 @@
                 }
               }
             ]
+          },
+          {
+            "id": "sample-block-0517",
+            "type": "text",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "棋盘配装 · 八级 · 六古典烬猫\n",
+                  "text_element_style": {
+                    "bold": false,
+                    "inline_code": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false
+                  }
+                }
+              },
+              {
+                "text_run": {
+                  "content": "主C：烬。无尽、链枷、杀人剑。没薄暮时，杀人剑换轻语。\n",
+                  "text_element_style": {
+                    "bold": false,
+                    "inline_code": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false
+                  }
+                }
+              },
+              {
+                "text_run": {
+                  "content": "主坦：锤石。板甲、狂徒、振奋。锤石没两星先用两星狗头扛。\n",
+                  "text_element_style": {
+                    "bold": false,
+                    "inline_code": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false
+                  }
+                }
+              },
+              {
+                "text_run": {
+                  "content": "副C：悠米。青龙刀、法爆、大天使，接烈娜塔的输出装。\n",
+                  "text_element_style": {
+                    "bold": false,
+                    "inline_code": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false
+                  }
+                }
+              },
+              {
+                "text_run": {
+                  "content": "功能装：内瑟斯。薄暮补破甲，和烬同侧。\n",
+                  "text_element_style": {
+                    "bold": false,
+                    "inline_code": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false
+                  }
+                }
+              },
+              {
+                "text_run": {
+                  "content": "功能装：烈娜塔·戈拉斯克。鬼书补重伤。",
+                  "text_element_style": {
+                    "bold": false,
+                    "inline_code": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false
+                  }
+                }
+              }
+            ],
+            "level": 0,
+            "text": "棋盘配装 · 八级 · 六古典烬猫\n主C：烬。无尽、链枷、杀人剑。没薄暮时，杀人剑换轻语。\n主坦：锤石。板甲、狂徒、振奋。锤石没两星先用两星狗头扛。\n副C：悠米。青龙刀、法爆、大天使，接烈娜塔的输出装。\n功能装：内瑟斯。薄暮补破甲，和烬同侧。\n功能装：烈娜塔·戈拉斯克。鬼书补重伤。"
           }
         ]
       }

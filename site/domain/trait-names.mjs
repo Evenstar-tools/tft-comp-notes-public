@@ -60,7 +60,7 @@ const guideTitleTraits = [
 export function displayGuideName(title) {
   if ([
     "爵士派克兔牛", "爵士金克丝", "四古典烬", "三爵士五杀史密奇", "三爵士史密奇",
-    "八级 · 四古典烬", "九级 · 三爵士史密奇", "七级 · 古典过渡",
+    "八级 · 四古典烬", "八级 · 六古典烬猫", "六古典烬猫", "九级 · 三爵士史密奇", "七级 · 古典过渡",
     "八级 · 五杀爵士", "九级 · 三爵士五杀",
   ].includes(title)) return title;
   return guideTitleTraits.reduce((name, [former, current]) => name.replace(former, current), displayTraitNames(title));

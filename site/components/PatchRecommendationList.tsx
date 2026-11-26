@@ -14,7 +14,6 @@ export type RecommendationCard = {
   opening: string;
   timing?: string;
   upgrade?: string;
-  conditional: boolean;
   sampleLabel?: string;
   avatars: { unit: Unit; role?: "主C" | "主坦" | "副C"; context?: { label: string; title: string } }[];
   entryTeamId?: string;
@@ -26,7 +25,7 @@ export type RecommendationCard = {
 };
 
 export function PatchRecommendationList({ stats, cards, home, previousBuild }: {
-  stats: Pick<GuideFamilyBatch, "patch" | "queue" | "updatedAt">;
+  stats: Pick<GuideFamilyBatch, "patch" | "queue" | "days" | "updatedAt">;
   cards: RecommendationCard[];
   home: string;
   previousBuild?: boolean;
@@ -58,7 +57,7 @@ export function PatchRecommendationList({ stats, cards, home, previousBuild }: {
           {!showMeta && index === 0 && updatedSample}
         </div>
         <div className="home-patch-cards">
-          {entries.map(({ rating, team, title, opening, timing, upgrade, conditional, sampleLabel, avatars, entryTeamId, stages, conditions, strategy, badgeLabel, hit }) => {
+          {entries.map(({ rating, team, title, opening, timing, upgrade, sampleLabel, avatars, entryTeamId, stages, conditions, strategy, badgeLabel, hit }) => {
             const cardId = "patch-" + rating.sectionId + "-" + team.id;
             const id = "guide-card-" + cardId;
             const back = homeGuideReturn(home, cardId, team.id);
@@ -66,12 +65,16 @@ export function PatchRecommendationList({ stats, cards, home, previousBuild }: {
             const tone = rating.mean < 4.5 ? "strong" : rating.mean > 4.5 ? "weak" : "middle";
             const note = opening || (!strategy ? badgeLabel : "");
             const hasAdvice = Boolean(timing || upgrade);
-            const topFour = rating.topFourRate != null && Number.isFinite(rating.topFourRate) &&
-              rating.topFourRate >= 0 && rating.topFourRate <= 1 ? (rating.topFourRate * 100).toFixed(1) + "%" : undefined;
+            const mean = formatRecommendationMean(rating.mean);
+            const rates = [["前四", rating.topFourRate], ["登顶", rating.winRate]] as const;
+            const sample = ["平均排名 " + mean, ...rates.flatMap(([label, rate]) =>
+              rate != null && Number.isFinite(rate) && rate >= 0 && rate <= 1 ? [label + " " + (rate * 100).toFixed(1) + "%"] : []),
+              rating.games.toLocaleString("zh-CN") + " 场",
+              sampleLabel || `${stats.queue} ${stats.patch} · 近 ${stats.days} 天体系样本`, rating.sampleScope,
+            ].filter(Boolean).join(" · ");
             const shownStrategy = repeatsFormationLabel(label, strategy) ? undefined : strategy;
             return <article key={id} id={id} className="home-patch-card">
-              <a href={href} data-home-board={team.id} className={"home-patch-card-link" +
-                (sampleLabel === "核心样本" ? " home-patch-card-link--core" : "")}
+              <a href={href} data-home-board={team.id} className="home-patch-card-link"
                 aria-labelledby={id + "-title"} aria-describedby={[id + "-roles", shownStrategy && id + "-strategy",
                   (hasAdvice || note) && id + "-note", id + "-mean"].filter(Boolean).join(" ")}>
                 <div className="home-patch-avatars" id={id + "-roles"}>
@@ -87,7 +90,6 @@ export function PatchRecommendationList({ stats, cards, home, previousBuild }: {
                   <div className="home-patch-title">
                     <h3 id={id + "-title"}>{title}</h3>
                     {shownStrategy && <span id={id + "-strategy"} className="home-patch-strategy">{shownStrategy}</span>}
-                    {conditional && <span>有条件</span>}
                   </div>
                   {hasAdvice ? <dl id={id + "-note"} className="home-patch-advice">
                     {timing && <><dt>时机</dt><dd>{timing}</dd></>}
@@ -95,10 +97,8 @@ export function PatchRecommendationList({ stats, cards, home, previousBuild }: {
                   </dl> : note && <p id={id + "-note"}>{note}</p>}
                   {hit && <p className="home-patch-hit">{hit}</p>}
                 </div>
-                <span id={id + "-mean"} className={"home-patch-mean guide-placement " + tone}>
-                  <span><span className="home-patch-mean-label" aria-hidden="true">均名</span><span className="sr-only">平均排名</span> <b>{formatRecommendationMean(rating.mean)}</b></span>
-                  {topFour !== undefined && <small className="home-patch-top-four">前四 {topFour}</small>}
-                  <small>{rating.games.toLocaleString("zh-CN")} 场{sampleLabel && " · " + sampleLabel}</small>
+                <span id={id + "-mean"} className={"home-patch-mean guide-placement " + tone} role="group" title={sample} aria-label={sample}>
+                  <span className="home-patch-mean-label">均名</span> <b>{mean}</b>
                 </span>
               </a>
               {!!conditions?.length && <div className="guide-featured-conditions home-patch-conditions" aria-label="定阵条件">

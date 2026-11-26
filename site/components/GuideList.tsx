@@ -53,6 +53,8 @@ const boardSampleTeams = new Set([
   "00000000-0000-4000-8000-000000001251",
   "00000000-0000-4000-8000-000000001252",
   "00000000-0000-4000-8000-000000001253",
+  "00000000-0000-4000-8000-000000000105",
+  "00000000-0000-4000-8000-000000000082",
   ...AD_GRAVES_BOARD_IDS,
 ]);
 const recommendationSecondaryCarries = new Map<string, { unitId: string; boardId: string }>([
@@ -333,6 +335,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
       sectionId: section.id, teamId: team.id, name: section.title, url: sample.url, games: sample.games,
       mean: sample.mean, topFourRate: sample.topFourRate, winRate: sample.winRate,
       label: scope === "core" ? "核心样本" : "固定盘",
+      sampleScope: [sample.patch, sample.window, sample.sampleScope].filter(Boolean).join(" · "),
     };
   }
   function canShowBoard(section: Section, team: Team) {
@@ -556,6 +559,11 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
     strategy?: string; exact?: Candidate["matches"][number]; decision?: PatchRecommendation;
     conditional: boolean; preferred: boolean; sampleLabel?: string; note?: string;
   };
+  function editorialCore(section: Section, team: Team, decision?: PatchRecommendation) {
+    if (decision?.status !== "recommended") return;
+    const core = boardSample(section, team, "core");
+    if (core && decision.sources?.includes(core.url) && recommendationTier(core) === "recommended") return core;
+  }
   function homeRoutes(batch: GuideFamilySnapshot | undefined, entries: HomeEntry[], includeEditorial = false) {
     const routes = batch ? entries.flatMap<HomeSelection>(entry => {
       const { section, data } = entry;
@@ -580,9 +588,10 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
         const group = isHero ? "heroAugment" : decision?.group ?? inferredGroup;
         if (!group || (!isHero && group === "heroAugment")) return [];
         const conditional = decision?.status === "conditional";
-        const rating = { ...stat, teamId: team.id, carryId: stat.carryIds[0] };
+        const core = includeEditorial && editorialCore(section, team, decision);
+        const rating = core || { ...stat, teamId: team.id, carryId: stat.carryIds[0] };
         return [{ entry, team, group, rating, strategy: !isHero && inferredGroup && group !== inferredGroup ? undefined : strategy,
-          exact, decision, conditional,
+          exact, decision, conditional, sampleLabel: core ? core.label : undefined,
           preferred: decision?.status === "recommended" || conditional, familyId: String(stat.clusterId) }];
       });
     }) : [];
@@ -591,8 +600,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
       routes.push(...entries.flatMap(entry => entry.teams.flatMap(team => {
         const { section, data } = entry;
         const decision = decisions.get(`${section.id}:${team.id}`);
-        const core = decision?.status === "recommended" && boardSample(section, team, "core");
-        const editorial = core && decision?.sources?.includes(core.url) ? core : undefined;
+        const editorial = editorialCore(section, team, decision);
         const fixed = currentHomeReady ? fixedRecommendations.get(team.id) : undefined;
         const rating = editorial || fixed;
         if (!rating || section.category === heroAugmentCategory || familyBoards.has(team.id) || !canShowBoard(section, team) ||
@@ -618,7 +626,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
   const homeSelections = !equipmentQuery && recommended
     ? homeRoutes(recommendationSnapshot, needle || cost || style ? candidatesFor(homeEntries) : homeEntries, true)
     : [];
-  const recommendationCards: RecommendationCard[] = homeSelections.map(({ entry, exact, team, group, rating, strategy, conditional, decision, note, sampleLabel }) => {
+  const recommendationCards: RecommendationCard[] = homeSelections.map(({ entry, exact, team, group, rating, strategy, decision, note, sampleLabel }) => {
     const { section, data } = entry;
     const notes = readingNotes(section, team, data);
     const primary = entry.teams[0]?.id === team.id;
@@ -665,7 +673,7 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
     const conditions = guideEquipmentConditions(section, entry.teams, data, patch?.build, team)?.rows
       .filter(condition => team.conditions || condition.featured || condition.kind === "required");
     return {
-      group, rating, team, title: guideTitleWithoutPlaystyle(displayGuideName(rating.name), entry.playstyle), avatars, opening: displayOpening(opening), conditional, sampleLabel,
+      group, rating, team, title: guideTitleWithoutPlaystyle(displayGuideName(rating.name), entry.playstyle), avatars, opening: displayOpening(opening), sampleLabel,
       timing: decision?.timing && displayTraitNames(decision.timing),
       upgrade: decision?.upgrade && displayTraitNames(decision.upgrade),
       entryTeamId: primary && (!needle || exact?.namedFamily) ? section.reroll?.entryTeamId : undefined,

@@ -2378,44 +2378,6 @@
     ]
   },
   {
-    "sectionId": "sample-block-0468",
-    "entryTeamId": "00000000-0000-4000-8000-000000000120",
-    "stages": [
-      {
-        "teamId": "00000000-0000-4000-8000-000000000120",
-        "name": "8级成型",
-        "notes": "先让海之歌棋子带两件装备解锁艾希。七级摆奥拉夫、纳尔、卡尔萨斯、艾希、塔里克、佐伊、雷克顿，一起解锁凯尔、扎克。八级搜两人二星，巴德没来用两星贾克斯。九级补泽丽，派克解锁后换巴德。",
-        "parentTeamId": "00000000-0000-4000-8000-000000000106",
-        "boardRole": "stage",
-        "roles": [
-          {"label": "主C", "units": ["kayle"]},
-          {"label": "主坦", "units": ["zac"]},
-          {"label": "副坦", "units": ["yorick"]}
-        ],
-        "pieces": [
-          {"unitId": "olaf", "position": 1, "stars": 2, "items": []},
-          {"unitId": "taric", "position": 2, "stars": 2, "items": []},
-          {"unitId": "zac", "position": 3, "stars": 2, "items": ["TFT_Item_Crownguard", "TFT_Item_GargoyleStoneplate", "TFT_Item_Redemption"]},
-          {"unitId": "yorick", "position": 4, "stars": 2, "items": ["TFT_Item_SpectralGauntlet", "TFT_Item_GargoyleStoneplate", "TFT_Item_WarmogsArmor"]},
-          {"unitId": "locke", "position": 14, "stars": 2, "items": []},
-          {"unitId": "kayle", "position": 21, "stars": 2, "items": ["TFT_Item_GuinsoosRageblade", "TFT_Item_Morellonomicon", "TFT_Item_RabadonsDeathcap"]},
-          {"unitId": "bard", "position": 25, "stars": 2, "items": []},
-          {"unitId": "ashe", "position": 27, "stars": 2, "items": []}
-        ]
-      }
-    ],
-    "edits": [
-      {
-        "teamId": "00000000-0000-4000-8000-000000000106",
-        "originalName": "九级 · 四主宰天使扎克",
-        "name": "九级上限 · 四主宰天使扎克"
-      },
-      {"teamId": "00000000-0000-4000-8000-000000000106", "originalPositions": {"zeri": 22, "ashe": 27}, "positions": {"zeri": 27, "ashe": 22}},
-      {"teamId": "00000000-0000-4000-8000-000000000106", "positions": {"yorick": 5, "olaf": 7, "taric": 8}, "stoneplateHolder": "zac", "originalPositions": {"zac": 3, "yorick": 4, "olaf": 1, "taric": 2}, "originalInstruments": {"maracas": 9}},
-      {"teamId": "00000000-0000-4000-8000-000000000120", "positions": {"yorick": 5, "olaf": 7, "taric": 8}, "stoneplateHolder": "zac", "originalPositions": {"zac": 3, "olaf": 1, "taric": 2, "yorick": 4}, "originalInstruments": {"maracas": 9}}
-    ]
-  },
-  {
     "sectionId": "sample-block-0338",
     "stages": [],
     "edits": [
@@ -2481,11 +2443,81 @@
   },
   {
     "sectionId": "sample-block-0219",
-    "stages": [],
+    "stages": [
+      {
+        "teamId": "00000000-0000-4000-8000-000000000120",
+        "name": "8级成型",
+        "notes": "先让海之歌棋子带两件装备解锁艾希。七级摆奥拉夫、纳尔、卡尔萨斯、艾希、塔里克、佐伊、雷克顿，一起解锁凯尔、扎克。八级搜两人二星，巴德没来用两星贾克斯。九级补泽丽，派克解锁后换巴德。",
+        "parentTeamId": "00000000-0000-4000-8000-000000000106",
+        "boardRole": "stage",
+        "roles": [
+          {"label": "主C", "units": ["kayle"]},
+          {"label": "主坦", "units": ["zac"]},
+          {"label": "副坦", "units": ["yorick"]}
+        ],
+        "pieces": [
+          {"unitId": "olaf", "position": 1, "stars": 2, "items": []},
+          {"unitId": "taric", "position": 2, "stars": 2, "items": []},
+          {"unitId": "zac", "position": 3, "stars": 2, "items": ["TFT_Item_Crownguard", "TFT_Item_GargoyleStoneplate", "TFT_Item_Redemption"]},
+          {"unitId": "yorick", "position": 4, "stars": 2, "items": ["TFT_Item_SpectralGauntlet", "TFT_Item_GargoyleStoneplate", "TFT_Item_WarmogsArmor"]},
+          {"unitId": "locke", "position": 14, "stars": 2, "items": []},
+          {"unitId": "kayle", "position": 21, "stars": 2, "items": ["TFT_Item_GuinsoosRageblade", "TFT_Item_Morellonomicon", "TFT_Item_RabadonsDeathcap"]},
+          {"unitId": "bard", "position": 25, "stars": 2, "items": []},
+          {"unitId": "ashe", "position": 27, "stars": 2, "items": []}
+        ]
+      }
+    ],
     "edits": [
       {"teamId": "00000000-0000-4000-8000-000000000064", "positions": {"locke": 9, "viego": 10}, "stoneplateHolder": "yorick", "originalPositions": {"yorick": 2, "locke": 3, "viego": 4, "olaf": 5}},
       {"teamId": "00000000-0000-4000-8000-000000000024", "positions": {"locke": 9, "viego": 10}, "stoneplateHolder": "yorick", "originalPositions": {"yorick": 2, "locke": 3, "viego": 4, "olaf": 5, "swain": 6}},
-      {"teamId": "00000000-0000-4000-8000-000000000019", "positions": {"locke": 9, "viego": 10}, "stoneplateHolder": "yorick", "originalPositions": {"yorick": 2, "locke": 3, "viego": 4, "olaf": 5, "swain": 6}}
+      {"teamId": "00000000-0000-4000-8000-000000000019", "positions": {"locke": 9, "viego": 10}, "stoneplateHolder": "yorick", "originalPositions": {"yorick": 2, "locke": 3, "viego": 4, "olaf": 5, "swain": 6}},
+      {
+        "teamId": "00000000-0000-4000-8000-000000000106",
+        "originalPositions": {
+          "zeri": 22,
+          "ashe": 27
+        },
+        "positions": {
+          "zeri": 27,
+          "ashe": 22
+        }
+      },
+      {
+        "teamId": "00000000-0000-4000-8000-000000000106",
+        "positions": {
+          "yorick": 5,
+          "olaf": 7,
+          "taric": 8
+        },
+        "stoneplateHolder": "zac",
+        "originalPositions": {
+          "zac": 3,
+          "yorick": 4,
+          "olaf": 1,
+          "taric": 2
+        },
+        "originalInstruments": {
+          "maracas": 9
+        }
+      },
+      {
+        "teamId": "00000000-0000-4000-8000-000000000120",
+        "positions": {
+          "yorick": 5,
+          "olaf": 7,
+          "taric": 8
+        },
+        "stoneplateHolder": "zac",
+        "originalPositions": {
+          "zac": 3,
+          "olaf": 1,
+          "taric": 2,
+          "yorick": 4
+        },
+        "originalInstruments": {
+          "maracas": 9
+        }
+      }
     ]
   },
   {
@@ -2503,7 +2535,7 @@
     ]
   },
   {
-    "sectionId": "sample-block-0173",
+    "sectionId": "sample-block-0051",
     "stages": [],
     "edits": [
       {"teamId": "00000000-0000-4000-8000-000000000006", "positions": {"illaoi": 10}, "stoneplateHolder": "thresh", "originalPositions": {"thresh": 3, "nasus": 2, "illaoi": 4}}

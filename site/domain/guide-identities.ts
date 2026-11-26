@@ -8,6 +8,8 @@
 export const GUIDE_SECTION_IDS = {
   /** 四古典烬 */
   classicalJhin: "sample-block-0051",
+  /** 五杀天使 */
+  pentakillKayle: "sample-block-0219",
   /** 四保镖烈娜塔 */
   bodyguardRenata: "sample-block-0122",
   /** 五天才玛尔扎哈 */

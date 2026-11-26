@@ -12,6 +12,15 @@ const legacyGuideRedirects: Record<string, { sectionId: string; teamId: string; 
     sectionId: GUIDE_SECTION_IDS.classicalJhin,
     teamId: "00000000-0000-4000-8000-000000000083",
   },
+  "sample-block-0173": {
+    sectionId: GUIDE_SECTION_IDS.classicalJhin,
+    teamId: "00000000-0000-4000-8000-000000000006",
+  },
+  "sample-block-0468": {
+    sectionId: GUIDE_SECTION_IDS.pentakillKayle,
+    teamId: "00000000-0000-4000-8000-000000000106",
+    teams: { "00000000-0000-4000-8000-000000000120": "00000000-0000-4000-8000-000000000120" },
+  },
   "sample-block-1120": {
     sectionId: GUIDE_SECTION_IDS.altPykeGraves,
     teamId: "00000000-0000-4000-8000-000000001261",

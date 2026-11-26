@@ -137,6 +137,7 @@ export type RecommendationStat = Pick<GuideFamilyStat, "sectionId" | "name" | "g
   carryId?: string;
   topFourRate?: number;
   winRate?: number;
+  sampleScope?: string;
 };
 
 export type RecommendationStats = {
@@ -167,7 +168,7 @@ export function selectRecommendationRoutes<T extends {
   group: RecommendationGroup; familyId: string; rating: RecommendationStat; conditional?: boolean; preferred?: boolean;
 }>(
   candidates: T[],
-  { maxRegular = 12, maxHeroAugment = 2, displayOrder = [] }: {
+  { maxRegular = 14, maxHeroAugment = 2, displayOrder = [] }: {
     maxRegular?: number; maxHeroAugment?: number; displayOrder?: string[];
   } = {},
 ) {

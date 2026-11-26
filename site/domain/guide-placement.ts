@@ -23,6 +23,8 @@ export interface PlacementRecord {
   sampleLabel?: string;
   detailOnly?: boolean;
   observedOn?: string;
+  build?: string;
+  windowHours?: number;
   sourcePeriod?: { patch: string; window: string };
   boardObservation?: {
     patchId: string;
@@ -41,6 +43,7 @@ export interface PlacementBatch {
   window: string;
   date: string;
   edition?: string;
+  build?: string;
   minGames: number;
   greenThrough: number;
   redFrom: number;
@@ -180,6 +183,7 @@ export function findPlacement(batch: PlacementBatch, roster: string[], populatio
       (board.edition !== batch.edition && !board.edition.startsWith(batch.edition + ".")))) return;
   const identity = [...roster].sort().join(",");
   function matches(entry: PlacementRecord) {
+    if (entry.build && entry.build !== batch.build) return false;
     const scope = entry.conditions;
     if (board?.requireBoundFull && (!board.teamId || scope?.kind !== "full" || scope.teamId !== board.teamId)) return false;
     if ((scope?.augmentId ?? entry.referencesAugment) !== board?.augmentId) return false;
@@ -222,6 +226,8 @@ export function findPlacement(batch: PlacementBatch, roster: string[], populatio
   const mean = hasMean(record) ? record.mean : undefined;
   const tone = mean === undefined || record.games < batch.minGames || record.referencesAugment || record.sourcePeriod ? "limited"
     : mean <= batch.greenThrough ? "strong" : mean >= batch.redFrom ? "weak" : "middle";
-  const { patch, window } = record.sourcePeriod ?? batch;
+  const { patch, window } = record.sourcePeriod ?? {
+    patch: batch.patch, window: record.windowHours ? `近 ${record.windowHours} 小时 · 构建 ${record.build}` : batch.window,
+  };
   return { ...record, mean, tone, patch, window, date: record.observedOn ?? batch.date };
 }

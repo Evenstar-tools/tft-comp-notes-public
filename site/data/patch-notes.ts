@@ -180,7 +180,7 @@ export const patchReferences: PatchReference[] = [
           values: [["激光攻击力系数（1／2 星）", "145%／215%", "135%／200%"]] },
         { name: "格雷福斯", unit: "graves", aliases: ["男枪"], guides: ["sample-block-0251", "sample-block-0452"],
           values: [["技能攻击力系数（1／2 星）", "40%／60%", "42%／63%"]] },
-        { name: "凯尔", unit: "kayle", aliases: ["天使"], guides: ["sample-block-0219", "sample-block-0468"],
+        { name: "凯尔", unit: "kayle", aliases: ["天使"], guides: ["sample-block-0219"],
           values: [["剑刃伤害（1／2／3 星）", "37／55／400", "42／63／480"]] },
         { name: "内瑟斯", unit: "nasus", aliases: ["狗头", "烈娜塔"], guides: ["sample-block-0122"],
           values: [["自身每秒治疗（2／3 星）", "150／250", "130／225"], ["友军每秒治疗（2／3 星）", "35／60", "30／50"]] },
