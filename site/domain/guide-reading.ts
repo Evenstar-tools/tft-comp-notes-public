@@ -318,8 +318,10 @@ export function guideBody(section: Section, team: Team) {
 const rollAtLevel = /(?<!不在)([456789四五六七八九])(?:级|人口)[\s·，,]*(?:再|先|留利息|卡利息|一起)?\s*(?:起搜|[慢大][搜D]|[搜D](?![a-z])|找(?:到)?[一两二三123]星|追[三3])/i;
 const stopToRoll = /(?:停|卡)(?:在)?([456789四五六七八九])(?:级|人口)?[\s·，,]*(?:一起)?(?:[慢大]?[搜D]|追[三3])/i;
 
-function authoredStrategy(section: Section) {
-  return authoredParagraphs(section).map(block => block.text?.match(/^(?:打法|运营类型)\s*[：:]\s*([^。；;，,\n]{1,18})/)?.[1]?.trim()).find(Boolean) ?? "";
+function authoredStrategy(section: Section, team?: Team) {
+  const styleIn = (blocks: ContentBlock[]) => blocks.map(block => block.text?.match(/^(?:打法|运营类型)\s*[：:]\s*([^。；;，,\n]{1,18})/)?.[1]?.trim()).find(Boolean);
+  const boardStyle = team && styleIn(authoredParagraphs({ ...section, blocks: guideBody(section, team).current }));
+  return boardStyle || styleIn(authoredParagraphs(section)) || "";
 }
 
 function playstyleCode(style?: string) {
@@ -329,7 +331,7 @@ function playstyleCode(style?: string) {
 
 export function guidePlaystyle(section: Section, team?: Team): "84" | "95" | undefined {
   if (section.id === GUIDE_SECTION_IDS.oceanGraves && team?.id === PYKE_GRAVES_BOARD_ID) return "95";
-  const style = authoredStrategy(section);
+  const style = authoredStrategy(section, team);
   if (style === "84" || style === "95") return style;
   return playstyleCode(style);
 }
@@ -384,7 +386,7 @@ export function guideFacets(section: Section, team: Team | undefined, data: Seas
   const paragraphs = authoredParagraphs(section).map(block => block.text ?? "");
   const line = (pattern: RegExp) => paragraphs.map(text => text.match(pattern)?.[1]?.trim()).find(Boolean) ?? "";
   // Future guides can declare these directly in their Feishu text.
-  const authoredStyle = authoredStrategy(section);
+  const authoredStyle = authoredStrategy(section, team);
   const authoredCarries = line(/^(?:主[ＣC]|核心输出)\s*[：:]\s*([^。；;\n]+)/i);
   const boardCarries = new Set(readingNotes(section, team, data).roles.filter(role => role.label === "主C" || role.label === "主输出").flatMap(role => role.units));
   const pilot = section.id === hyperpop.section && [hyperpop.main, hyperpop.jazz].includes(team.id);
