@@ -69,6 +69,7 @@ import { downloadBlob, exportTeamImage } from "./export-team";
 import { GuidePoster } from "./GuidePoster";
 import { clearGuideBoardTransfer, readGuideBoardSource, readGuideBoardTransfer, storeGuideBoardSource, type GuideBoardSource } from "./guide-board-transfer";
 import { exportPlayerTeams, importPlayerTeams, isPlayerTeamStorageKey, readPlayerTeams, savePlayerTeam } from "./player-team-storage";
+import { trackToolAction } from "@/lib/analytics";
 import "./editor-workspace.css";
 
 const LOCAL_KEY = "tft-s19-unsynced-team-v1";
@@ -728,6 +729,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
       if (!teamRef.current.name.trim())
         throw new Error("先给阵容起个名字再保存。");
       await save();
+      if (!ownerMode) trackToolAction({ action: "editor_save_local", surface: "editor" });
       notify({ kind: "ok", text: ownerMode ? "已保存到云端" : "已保存到此浏览器" });
     });
   const publishGuideNow = () => run("save", async () => {
@@ -1195,6 +1197,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
                       const current = teamRef.current;
                       if (mixedForms(current.pieces)) throw new Error("请先为阿卡丽选择一种形态");
                       downloadBlob(await exportTeamImage(current), `${current.name}-${stageLabels[stageRef.current]}.png`);
+                      if (!ownerMode) trackToolAction({ action: "editor_export_image", surface: "editor" });
                       close();
                       notify({ kind: "ok", text: "已下载棋盘图" });
                     })
@@ -1214,6 +1217,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
                       await navigator.clipboard.writeText(
                         teamText(teamRef.current, season.units, season.traits, season.items),
                       );
+                      if (!ownerMode) trackToolAction({ action: "editor_copy_text", surface: "editor" });
                       close();
                       notify({ kind: "ok", text: "阵容文字已复制。" });
                     } catch {

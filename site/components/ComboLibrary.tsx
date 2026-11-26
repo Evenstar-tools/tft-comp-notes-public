@@ -8,6 +8,7 @@ import tiers from "@/data/combo-tiers-s19.json";
 import { comboStarMask, comboTierCounts } from "@/domain/combo-tiers";
 import { hasUnlockCondition } from "@/domain/unlocks";
 import { unitSearchNames } from "@/domain/unit-search.mjs";
+import { trackToolAction } from "@/lib/analytics";
 type Purpose = "all" | "jazz" | "bronze";
 import { traitMap, unitLabel, unitMap } from "@/data";
 
@@ -102,6 +103,7 @@ function ComboResult({
           <a
             className="button combo-import"
             aria-label="带入编辑器"
+            onClick={() => trackToolAction({ action: "editor_import_combo", surface: "combos" })}
             href={
               "/editor?combo=" +
               encodeURIComponent(code) +
@@ -217,6 +219,9 @@ export function ComboLibrary() {
   const [data, setData] = useState<Partial<Record<Group, Row[]>>>({});
   const [failure, setFailure] = useState("");
   const [retry, setRetry] = useState(0);
+  const [userActionCount, setUserActionCount] = useState(0);
+  const reportedFirstResult = useRef(false);
+  const markUserAction = () => setUserActionCount(count => count + 1);
   const rows = data[group];
   useEffect(() => {
     if (rows) return;
@@ -264,6 +269,12 @@ export function ComboLibrary() {
   useEffect(() => {
     window.history.replaceState(window.history.state, "", from);
   }, [from]);
+  useEffect(() => {
+    if (userActionCount <= 0 || reportedFirstResult.current) return;
+    if (!rows || !filtered.length) return;
+    reportedFirstResult.current = true;
+    trackToolAction({ action: "combo_first_result", surface: "combos" });
+  }, [userActionCount, rows, filtered.length]);
   const needle = query.trim().toLowerCase();
   const matches = needle
     ? heroes
@@ -278,12 +289,14 @@ export function ComboLibrary() {
         .slice(0, 8)
     : [];
   function selectHero(id: number) {
+    markUserAction();
     setHand(held => ({ ...held, [id]: { stars: 1, required: true } }));
     setPage(1);
     setQuery("");
     searchInput.current?.focus();
   }
   function clearHand() {
+    markUserAction();
     setHand({});
     setQuery("");
     setPage(1);
@@ -300,7 +313,7 @@ export function ComboLibrary() {
         <h1>八人口羁绊组合</h1>
         <div className="combo-purpose" role="group" aria-label="组合用途">
           {([["all","常规羁绊"],["jazz","爵士乐"],["bronze","终身黄铜"]] as const).map(([id, label]) =>
-            <button type="button" key={id} aria-pressed={purpose === id} onClick={() => { setPurpose(id); setPage(1); }}>{label}</button>)}
+            <button type="button" key={id} aria-pressed={purpose === id} onClick={() => { markUserAction(); setPurpose(id); setPage(1); }}>{label}</button>)}
         </div>
       </div>
       <section className="combo-controls" aria-label="组合筛选">
@@ -342,6 +355,7 @@ export function ComboLibrary() {
           </div>
           <label className="combo-select">
             <select aria-label="费用范围" value={group} onChange={event => {
+              markUserAction();
               setGroup(event.target.value as Group);
               setPage(1);
             }}>
@@ -354,6 +368,7 @@ export function ComboLibrary() {
               aria-label="最低羁绊数"
               value={limit}
               onChange={(e) => {
+                markUserAction();
                 setLimit(Number(e.target.value));
                 setPage(1);
               }}
@@ -365,7 +380,7 @@ export function ComboLibrary() {
               ))}
             </select>
           </label>
-          {purpose === "bronze" && <label className="combo-select"><select aria-label="最低铜色羁绊数" value={minimumBronze} onChange={e => { setMinimumBronze(Number(e.target.value)); setPage(1); }}>
+          {purpose === "bronze" && <label className="combo-select"><select aria-label="最低铜色羁绊数" value={minimumBronze} onChange={e => { markUserAction(); setMinimumBronze(Number(e.target.value)); setPage(1); }}>
             <option value={0}>铜档不限</option>{[1,2,3,4,5,6,7,8,9,10,11].map(n => <option key={n} value={n}>{n} 个铜档起</option>)}
           </select></label>}
           <label className="check" title={heldAtTwo.size ? "手牌已有二星棋子" : undefined}>
@@ -374,6 +389,7 @@ export function ComboLibrary() {
               checked={allOne}
               disabled={!!heldAtTwo.size}
               onChange={(e) => {
+                markUserAction();
                 setAllOne(e.target.checked);
                 setPage(1);
               }}
@@ -388,17 +404,20 @@ export function ComboLibrary() {
             <img src={unitMap.get(heroes[id].id)!.image} alt="" width={25} height={25} />
             {heroes[id].name}
             <select aria-label={heroes[id].name + "上阵要求"} value={hand[id].required ? "required" : "optional"} onChange={event => {
+              markUserAction();
               const required = event.target.value === "required";
               setHand(held => ({ ...held, [id]: { ...held[id], required } }));
               setPage(1);
             }}><option value="required">必上</option><option value="optional">可用</option></select>
             <select aria-label={heroes[id].name + "星级"} value={hand[id].stars} onChange={event => {
+              markUserAction();
               const stars = event.target.value === "2" ? 2 : 1;
               setHand(held => ({ ...held, [id]: { ...held[id], stars } }));
               if (stars === 2) setAllOne(false);
               setPage(1);
             }}><option value="1">1 星</option><option value="2">2 星</option></select>
             <button type="button" aria-label={"移除" + heroes[id].name} onClick={() => {
+              markUserAction();
               setHand(held => {
                 const next = { ...held };
                 delete next[id];
