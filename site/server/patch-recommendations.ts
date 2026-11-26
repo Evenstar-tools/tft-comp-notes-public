@@ -24,6 +24,6 @@ export function currentPatchRecommendations(publication: Publication | null): Pa
     Date.parse(record.checkedAt) >= patchStart && recommendationTier(record) === "recommended" &&
     !entries.some(entry => entry.sectionId === record.sectionId && entry.teamId === record.teamId &&
       (entry.status === "avoid" || entry.status === "review")));
-  return { ...batch, fixedBoardRecommendations, entries,
+  return { ...batch, reviewedRollingPatch: batch.reviewedRollingPatch ?? defaults?.reviewedRollingPatch, fixedBoardRecommendations, entries,
     ...(entries.length !== configured.length && { summary: undefined }) };
 }
