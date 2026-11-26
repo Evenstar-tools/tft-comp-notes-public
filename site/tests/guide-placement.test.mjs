@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { augmentBoardSamples, byBestMean, findPlacement, formationComparisonFor, heroAugmentSortingMinGames, isLowWinRate, orderByPlacement, placementEvidenceKind, placementSortTier, remainingPlacements } from "../domain/guide-placement.ts";
+import { augmentBoardSamples, byBestMean, findPlacement, fixedBoardPlacementDetail, formationComparisonFor, heroAugmentSortingMinGames, isLowWinRate, orderByPlacement, placementEvidenceKind, placementSortTier, remainingPlacements } from "../domain/guide-placement.ts";
 
 test("legacy co-occurrence keeps its own scope even when the query lists all units", () => {
   const url = "https://www.metatft.com/explorer?level=9&unit=DA_Kayle19-1&tab=";
@@ -48,6 +48,24 @@ test("same-guide variants use their own population and full roster; small sample
   assert.equal(findPlacement(batch, ["neeko", "baron-nashor"], 3).tone, "weak");
   assert.equal(findPlacement(batch, ["neeko", "baron-nashor"], 2), undefined);
   assert.equal(findPlacement(batch, ["neeko", "akali-true-damage"], 2), undefined);
+});
+
+test("the fixed-board detail can show a small sample with a complete placement distribution", () => {
+  const sample = { population: 2, roster: ["jinx", "rell"], games: 57, mean: 4.14,
+    url: "https://www.metatft.com/explorer?tab=comps", placementCounts: [2, 10, 14, 10, 7, 5, 5, 4] };
+  const batch = { patch: "PBE 19.1c", window: "最近三天", date: "2026-11-26", minGames: 100,
+    greenThrough: 3.4, redFrom: 4.25, records: [sample] };
+  const rating = findPlacement(batch, sample.roster, sample.population);
+  const detail = fixedBoardPlacementDetail(rating);
+  assert.deepEqual([detail.games, detail.mean, detail.topFourRate, detail.winRate, detail.tone],
+    [57, 236 / 57, 36 / 57, 2 / 57, "limited"]);
+  assert.equal(rating.mean, undefined);
+  assert.equal(placementSortTier(rating), "low");
+
+  const mismatched = { ...rating, games: 58 };
+  assert.equal(fixedBoardPlacementDetail(mismatched), mismatched);
+  const coOccurrence = { ...rating, url: "https://www.metatft.com/explorer?tab=units" };
+  assert.equal(fixedBoardPlacementDetail(coOccurrence), coOccurrence);
 });
 
 test("edition and explicit core conditions prevent attaching the reroll sample to the wrong board", () => {

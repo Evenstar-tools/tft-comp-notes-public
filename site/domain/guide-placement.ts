@@ -1,3 +1,5 @@
+import { tierPerformance } from "./trait-performance.ts";
+
 type SampleUnit = { unitId: string; stars?: number; items?: number; completedItems?: number; itemIds?: string[] };
 type SampleBoard = {
   edition?: string;
@@ -109,6 +111,13 @@ export type PlacementRating = PlacementRecord & {
   window: string;
   date: string;
 };
+
+export function fixedBoardPlacementDetail(rating: PlacementRating): PlacementRating {
+  if (rating.mean !== undefined || placementEvidenceKind(rating) !== "fixed") return rating;
+  const result = tierPerformance(rating.placementCounts);
+  if (!result || result.games !== rating.games) return rating;
+  return { ...rating, mean: result.mean, topFourRate: result.top4, winRate: result.win };
+}
 
 export function augmentLoadout(record: PlacementRecord) {
   if (!record.referencesAugment || !record.augmentBuild) return;

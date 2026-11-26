@@ -6,7 +6,7 @@ import { guideFamilyRows, type GuideFamilyBatch, type GuideFamilyStat } from "@/
 import { guideBoardName } from "@/domain/guide-reading";
 import { displayGuideName } from "@/domain/trait-names.mjs";
 import type { Team } from "@/domain/types";
-import type { PlacementRating } from "@/domain/guide-placement";
+import { fixedBoardPlacementDetail, type PlacementRating } from "@/domain/guide-placement";
 import { carryEvidence, GuideCarryStats } from "./GuideCarryStats";
 import { GuideDistribution } from "./GuideDistribution";
 import { formationEvidence, GuideFormationFamilyReference, GuideFormationStats } from "./GuideFormationStats";
@@ -46,9 +46,10 @@ function countLabel(groups: { games: number }[]) {
 }
 
 function PlacementSummary({ rating, stage = false }: { rating: PlacementRating; stage?: boolean }) {
+  const detail = fixedBoardPlacementDetail(rating);
   return <div className="guide-stat-summary">
-    <PlacementBadge rating={rating} />
-    <PlacementRates rating={rating} stage={stage} />
+    <PlacementBadge rating={detail} />
+    <PlacementRates rating={detail} stage={stage} />
     <details className="guide-stat-method"><summary>样本口径</summary><PlacementMethod rating={rating} /></details>
   </div>;
 }
