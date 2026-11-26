@@ -8,6 +8,7 @@ import catalog from "@/data/medley-groups.json";
 import type { MedleyBoardPiece, MedleyGuideFit, MedleySyncMeta } from "@/domain/medley-fit";
 import { unitSearchNames } from "@/domain/unit-search.mjs";
 import type { Unit } from "@/domain/types";
+import { beijingDateTime } from "@/lib/beijing-time";
 
 const fixed = unitMap.get(catalog.fixedUnit)!;
 const collab = traitMap.get("collab")!;
@@ -102,7 +103,9 @@ function MiniUnit({ id, suffix }: { id: string; suffix?: string }) {
 function MedleyChecksStrip({ fit }: { fit: MedleyGuideFit }) {
   const finalMet = fit.finalIds.length >= 3;
   const handoff = fit.handoff;
-  const handoffMet = Boolean(handoff);
+  const handoffMet = handoff?.quality === "usable";
+  const handoffLabel = handoff?.quality === "unverified" ? "接装待核"
+    : handoff?.quality === "weaker" ? "同星单件偏弱" : "无输出装继承";
   const lateMet = fit.lateIds.length > 0 && finalMet;
 
   return <div className="medley-checks-strip" aria-label="三项适配判定">
@@ -120,9 +123,9 @@ function MedleyChecksStrip({ fit }: { fit: MedleyGuideFit }) {
         {handoffMet ? <Check size={11} strokeWidth={3.2} /> : <Minus size={10} strokeWidth={2.8} />}
       </span>
       <span className="medley-check-title">
-        {handoff ? (handoff.fromId === handoff.toId ? "主C留输出装" : "同定位接装") : "无输出装继承"}
+        {handoffMet ? (handoff.fromId === handoff.toId ? "主C留输出装" : "同定位接装") : handoffLabel}
       </span>
-      {handoff && <span className="medley-check-detail">
+      {handoffMet && <span className="medley-check-detail">
         <MiniUnit id={handoff.fromId} />
         {handoff.fromId === handoff.toId
           ? <span className="medley-handoff-note">留原装</span>
@@ -134,8 +137,12 @@ function MedleyChecksStrip({ fit }: { fit: MedleyGuideFit }) {
         <span className="medley-mini-items">
           {handoff.itemIds.map((itemId, idx) => {
             const item = itemMap.get(itemId);
+            const row = handoff.evidence?.find(sample => sample.itemId === itemId);
+            const title = row && item
+              ? `${item.name} · ${row.stars} 星 ${row.equipped.games.toLocaleString("zh-CN")} 场，均名 ${row.equipped.mean.toFixed(2)}。未带时 ${row.alternatives.mean.toFixed(2)}。`
+              : item?.name;
             return item?.image
-              ? <img key={`${itemId}-${idx}`} src={item.image} alt={item.name} title={item.name} width={20} height={20} loading="lazy" decoding="async" />
+              ? <img key={`${itemId}-${idx}`} src={item.image} alt={item.name} title={title} width={20} height={20} loading="lazy" decoding="async" />
               : null;
           })}
         </span>
@@ -214,8 +221,7 @@ function formatSyncTime(iso?: string) {
   if (!iso) return null;
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) return null;
-  const pad = (n: number) => String(n).padStart(2, "0");
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+  return beijingDateTime.format(date);
 }
 
 export function MedleyLibrary({
@@ -265,8 +271,9 @@ export function MedleyLibrary({
   const focusedFits = focusedGroup ? (fitsByGroup[focusedGroup.number] ?? []) : [];
   const activeFit = focusedGroup ? (hoveredFit ?? pinnedFit) : null;
   const activeFinalSet = new Set(activeFit ? activeFit.finalIds : []);
-  const activeLateSet = new Set(activeFit ? activeFit.lateIds : []);
-  const activeHandoffFrom = activeFit?.handoff?.fromId ?? null;
+  const activeLateSet = new Set(activeFit && activeFit.finalIds.length >= 3 ? activeFit.lateIds : []);
+  const activeHandoffFrom = activeFit?.handoff?.quality === "usable" ? activeFit.handoff.fromId : null;
+  const drawerHandoff = drawerState?.fit.handoff?.quality === "usable" ? drawerState.fit.handoff : undefined;
 
   function clearSearch() {
     setQuery("");
@@ -326,7 +333,7 @@ export function MedleyLibrary({
       <div className="medley-how-rules">
         <h3>三条直观判定（最多算 5 套，默认展前 3 套完整阵容）</h3>
         <div className="medley-how-rule"><span className="medley-how-tag">① 终盘 ≥ 3 张</span><span>成型终盘自带 3 张及以上合奏棋子，不用硬挂凑数牌即可稳开 3 合奏。</span></div>
-        <div className="medley-how-rule"><span className="medley-how-tag">② 同定位接装</span><span>开局合奏打工位（如纳尔羊刀、佐伊龙刀）与终盘主 C 定位一致，输出装无缝继承或留原装。</span></div>
+        <div className="medley-how-rule"><span className="medley-how-tag">② 同定位接装</span><span>开局合奏打工位与终盘主 C 同定位，有至少一件输出装能接或能原样留用。按同补丁、同英雄、同星级的样本逐件比较。</span></div>
         <div className="medley-how-rule"><span className="medley-how-tag">③ 4–5 费开 3</span><span>后期补进 4–5 费合奏棋子后仍能保持 3 合奏，换下低费打工牌不掉合奏收益。</span></div>
       </div>
     </section>}
@@ -603,10 +610,10 @@ export function MedleyLibrary({
           </div>
           <div className="medley-drawer-note">
             {drawerState.tab === "opening"
-              ? (drawerState.fit.handoff
-                ? <>过渡思路：前期优先留合奏牌开 3 合奏嫖质量，由 <strong>{shortUnitName(drawerState.fit.handoff.fromId)}</strong> 携带 {drawerState.fit.handoff.itemIds.map(id => itemMap.get(id)?.name ?? id).join("、")}{drawerState.fit.handoff.fromId === drawerState.fit.handoff.toId ? " 一路留到终盘。" : <> 打工，后期无缝交给主C <strong>{shortUnitName(drawerState.fit.handoff.toId)}</strong>。</>}</>
+              ? (drawerHandoff
+                ? <>过渡思路：前期优先留合奏牌开 3 合奏，由 <strong>{shortUnitName(drawerHandoff.fromId)}</strong> 携带 {drawerHandoff.itemIds.map(id => itemMap.get(id)?.name ?? id).join("、")}{drawerHandoff.fromId === drawerHandoff.toId ? " 留到终盘。" : <> 打工，后期交给主 C <strong>{shortUnitName(drawerHandoff.toId)}</strong>。</>}</>
                 : "过渡思路：前期用重合的合奏低费牌吃灵感收益，稳血上人口后再按终盘替换。")
-              : <>终盘状态：共 {drawerState.fit.finalBoard.length} 人口，包含 <strong>{drawerState.fit.finalIds.length} 张</strong>本组合奏棋子（{drawerState.fit.finalIds.map(shortUnitName).join("、") || "无"}）。{drawerState.fit.lateIds.length > 0 && <>高费合奏 <strong>{drawerState.fit.lateIds.map(shortUnitName).join("、")}</strong> 进场后仍可保持 3 合奏。</>}</>}
+              : <>终盘状态：共 {drawerState.fit.finalBoard.length} 人口，包含 <strong>{drawerState.fit.finalIds.length} 张</strong>本组合奏棋子（{drawerState.fit.finalIds.map(shortUnitName).join("、") || "无"}）。{drawerState.fit.finalIds.length >= 3 && drawerState.fit.lateIds.length > 0 && <>高费合奏 <strong>{drawerState.fit.lateIds.map(shortUnitName).join("、")}</strong> 进场后仍可保持 3 合奏。</>}</>}
           </div>
         </div>
         <div className="medley-drawer-foot">

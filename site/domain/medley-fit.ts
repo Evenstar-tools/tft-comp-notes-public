@@ -17,7 +17,24 @@ export type MedleyRoute = FitBoard & {
   guideOpening?: boolean;
 };
 
-export type MedleyHandoff = { fromId: string; toId: string; itemIds: string[]; source?: "guide" };
+type GearSample = { games: number; mean: number };
+
+export type MedleyGearEvidence = {
+  unitId: string;
+  stars: number;
+  itemId: string;
+  equipped: GearSample;
+  alternatives: GearSample;
+};
+
+export type MedleyHandoff = {
+  fromId: string;
+  toId: string;
+  itemIds: string[];
+  source?: "guide";
+  quality: "usable" | "weaker" | "unverified";
+  evidence?: MedleyGearEvidence[];
+};
 
 export type MedleyBoardPiece = {
   unitId: string;
@@ -72,6 +89,18 @@ const carryProfiles = [
 ];
 const profileByUnit = new Map(carryProfiles.flatMap((ids, profile) => ids.map(id => [id, profile] as const)));
 
+const minHandoffGames = 100;
+const maxHandoffPlacementLoss = 0.1;
+
+function itemKey(unitId: string, stars: number, itemId: string) {
+  return `${unitId}:${stars}:${itemId}`;
+}
+
+function usableGearSample(sample: GearSample) {
+  return Number.isSafeInteger(sample.games) && sample.games >= minHandoffGames &&
+    Number.isFinite(sample.mean) && sample.mean >= 1 && sample.mean <= 8;
+}
+
 export function inferCarryIdsFromPieces(
   pieces: readonly Piece[],
   unitCosts: ReadonlyMap<string, number>,
@@ -95,6 +124,7 @@ function carryHandoffs(
   carryItems: Set<string>,
   openingCarryIds: readonly string[],
   finalCarryIds: readonly string[],
+  gearEvidence: ReadonlyMap<string, MedleyGearEvidence>,
 ): MedleyHandoff[] {
   const openingCarries = route.opening.filter(piece => openingCarryIds.includes(piece.unitId));
   const finalCarries = route.final.filter(piece => finalCarryIds.includes(piece.unitId));
@@ -106,11 +136,21 @@ function carryHandoffs(
       if (profile === undefined || profile !== profileByUnit.get(to.unitId) || finalIds.has(from.unitId)) continue;
     }
     const itemIds = [...new Set(to.items.filter(item => carryItems.has(item) && from.items.includes(item)))];
-    if (itemIds.length) choices.push({
-      fromId: from.unitId, toId: to.unitId, itemIds, ...(route.guideOpening && { source: "guide" }),
+    if (!itemIds.length) continue;
+    const samples = itemIds.flatMap(itemId => {
+      const sample = gearEvidence.get(itemKey(to.unitId, to.stars, itemId));
+      return sample && usableGearSample(sample.equipped) && usableGearSample(sample.alternatives) ? [sample] : [];
+    });
+    const usable = samples.filter(sample =>
+      Math.round((sample.equipped.mean - sample.alternatives.mean) * 1e6) / 1e6 < maxHandoffPlacementLoss);
+    const quality = usable.length ? "usable" : samples.length === itemIds.length ? "weaker" : "unverified";
+    choices.push({
+      fromId: from.unitId, toId: to.unitId, itemIds: usable.map(sample => sample.itemId), quality,
+      ...(usable.length && { evidence: usable }), ...(route.guideOpening && { source: "guide" }),
     });
   }
-  return choices.sort((a, b) => Number(b.fromId === b.toId) - Number(a.fromId === a.toId) ||
+  return choices.sort((a, b) => Number(b.quality === "usable") - Number(a.quality === "usable") ||
+    Number(b.fromId === b.toId) - Number(a.fromId === a.toId) ||
     b.itemIds.length - a.itemIds.length);
 }
 
@@ -162,10 +202,12 @@ export function buildMedleyFits(
   items: readonly Item[],
   fixedUnitId = "sona",
   maxPerGroup = 5,
+  evidence: readonly MedleyGearEvidence[] = [],
 ): Record<number, MedleyGuideFit[]> {
   const unitCosts = new Map(units.map(unit => [unit.id, unit.cost]));
   const carryItems = new Set(items.filter(item =>
     item.category === "completed" && !item.traitId && MEDLEY_OUTPUT_ITEMS.has(item.id)).map(item => item.id));
+  const gearEvidence = new Map(evidence.map(row => [itemKey(row.unitId, row.stars, row.itemId), row]));
   const boards = routes.map(route => {
     const { opening, final, openingCarryIds, finalCarryIds, ...rest } = route;
     const { sectionId, teamId, title, stageLabel, stageHref, finalHref } = rest;
@@ -187,7 +229,7 @@ export function buildMedleyFits(
       finalIds,
       openingCarrySet: new Set(resolvedOpeningCarries),
       finalCarrySet: new Set(resolvedFinalCarries),
-      handoffs: carryHandoffs(route, finalIds, carryItems, resolvedOpeningCarries, resolvedFinalCarries),
+      handoffs: carryHandoffs(route, finalIds, carryItems, resolvedOpeningCarries, resolvedFinalCarries, gearEvidence),
     };
   });
 
@@ -203,7 +245,7 @@ export function buildMedleyFits(
       const lateIds = link.stageHref ? expensive.filter(id => !openingIds.has(id) && finalIds.has(id)) : [];
       const handoff = handoffs.find(transfer => openingMembers.includes(transfer.fromId));
       const terminalActive = terminalMembers.length >= 3;
-      const score = Number(terminalActive) + Number(terminalActive && lateIds.length > 0) + Number(Boolean(handoff));
+      const score = Number(terminalActive) + Number(terminalActive && lateIds.length > 0) + Number(handoff?.quality === "usable");
 
       const isCore = Boolean(score || cheapIds.length >= 2) && (openingMembers.length > 0 || !link.stageHref);
       const isExtra = !isCore && (terminalMembers.length >= 2 || (openingMembers.length >= 2 && terminalMembers.length >= 1));
@@ -211,7 +253,7 @@ export function buildMedleyFits(
 
       const terminalSet = new Set(terminalMembers);
       const openingSet = new Set(openingMembers);
-      const lateSet = new Set(lateIds);
+      const lateSet = new Set(terminalActive ? lateIds : []);
       const fit: MedleyGuideFit = {
         ...link,
         tier: isCore ? "core" : "extra",

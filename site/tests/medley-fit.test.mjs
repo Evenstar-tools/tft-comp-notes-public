@@ -9,14 +9,20 @@ const rageblade = "TFT_Item_GuinsoosRageblade";
 const shojin = "TFT_Item_SpearOfShojin";
 const armor = "TFT_Item_BrambleVest";
 const shred = "TFT_Item_StatikkShiv";
-const items = [rageblade, shojin, armor, shred, "TFT_Item_GuardianAngel"].map(id => ({ id, category: "completed" }));
-const piece = (unitId, items = [], alternate) => ({ unitId, items, alternate });
+const kraken = "TFT_Item_RunaansHurricane";
+const gunblade = "TFT_Item_HextechGunblade";
+const items = [rageblade, shojin, armor, shred, kraken, gunblade].map(id => ({ id, category: "completed" }));
+const piece = (unitId, items = [], alternate) => ({ unitId, items, alternate, stars: 3 });
 const group = { number: 1, unitIds: ["a", "b", "c", "late", "high", "spare", "gnar", "zoe"] };
 const route = (sectionId, opening, final, openingCarryIds = [], finalCarryIds = [], teamId = sectionId) => ({
   sectionId, teamId, title: sectionId, stageLabel: "六级", stageHref: "/opening/" + teamId, finalHref: "/final/" + teamId,
   opening, final, openingCarryIds, finalCarryIds,
 });
 const picks = (...routes) => buildMedleyFits([group], routes, units, items)[1];
+const picksWithEvidence = (routes, evidence) => buildMedleyFits([group], routes, units, items, "sona", 5, evidence)[1];
+const sampleFor = (unitId, itemId, mean, games = 200, stars = 3) => ({
+  unitId, stars, itemId, equipped: { mean, games }, alternatives: { mean: 4, games: 400 },
+});
 
 test("terminal counts actual distinct Medley champions, late check requires newly fielded high costs, and finalBoard marks members", () => {
   const [fit] = picks(route("fit",
@@ -53,15 +59,13 @@ test("without a stage only the confirmed terminal can score", () => {
 });
 
 test("only an actual group starter's output can stay or transfer to a compatible main carry", () => {
-  const loadout = [shojin, armor, shred, "TFT_Item_GuardianAngel"];
+  const loadout = [shojin, armor, shred];
   const opener = [piece("a"), piece("b"), piece("zoe", loadout)];
   const [ap] = picks(route("AP", opener, [piece("a"), piece("b"), piece("lux", loadout)], ["zoe"], ["lux"]));
-  assert.deepEqual(ap.handoff, { fromId: "zoe", toId: "lux", itemIds: [shojin] });
+  assert.deepEqual(ap.handoff, { fromId: "zoe", toId: "lux", itemIds: [], quality: "unverified" });
   const [keep] = picks(route("keep", opener, [piece("a"), piece("b"), piece("zoe", loadout)], ["zoe"], ["zoe"]));
-  assert.deepEqual(keep.handoff, { fromId: "zoe", toId: "zoe", itemIds: [shojin] });
-  assert.equal(keep.score, 2);
-  const [ad] = picks({ ...route("AD", [piece("gnar", [rageblade])], [piece("kai-sa", [rageblade])], ["gnar"], ["kai-sa"]), guideOpening: true });
-  assert.deepEqual(ad.handoff, { fromId: "gnar", toId: "kai-sa", itemIds: [rageblade], source: "guide" });
+  assert.deepEqual(keep.handoff, { fromId: "zoe", toId: "zoe", itemIds: [], quality: "unverified" });
+  assert.equal(keep.score, 1);
 
   const finished = [piece("a"), piece("b"), piece("ezreal", [shojin])];
   const [mismatch] = picks(route("cross profile", opener, finished, ["zoe"], ["ezreal"]));
@@ -72,6 +76,32 @@ test("only an actual group starter's output can stay or transfer to a compatible
   for (const fit of [mismatch, stillFielded, nonMember, utilityOnly]) assert.equal(fit.handoff, undefined);
 });
 
+test("one usable item earns the handoff check, including when the receiving board has one item", () => {
+  const opener = [piece("a"), piece("b"), piece("gnar", [rageblade, kraken])];
+  const final = [piece("a"), piece("b"), piece("kai-sa", [rageblade, kraken, gunblade])];
+  const candidate = { ...route("AD", opener, final, ["gnar"], ["kai-sa"]), guideOpening: true };
+  const assertFit = (evidence, quality, shown, score) => {
+    const [fit] = picksWithEvidence([candidate], evidence);
+    assert.equal(fit.handoff.quality, quality);
+    assert.deepEqual(fit.handoff.itemIds, shown);
+    assert.equal(fit.handoff.source, "guide");
+    assert.equal(fit.score, score);
+    assert.deepEqual(fit.finalBoard.find(piece => piece.unitId === "kai-sa").items, [rageblade, kraken, gunblade]);
+  };
+  const usable = sampleFor("kai-sa", kraken, 4.04);
+  const weaker = sampleFor("kai-sa", rageblade, 4.2);
+  assertFit([weaker, usable, sampleFor("kai-sa", gunblade, 3.7)], "usable", [kraken], 1);
+  assertFit([sampleFor("kai-sa", rageblade, 3.9), usable], "usable", [rageblade, kraken], 1);
+  assertFit([weaker, sampleFor("kai-sa", kraken, 4.1)], "weaker", [], 0);
+  assertFit([weaker, sampleFor("kai-sa", kraken, 3.7, 99)], "unverified", [], 0);
+  assertFit([weaker, sampleFor("kai-sa", kraken, 3.7, 200, 2)], "unverified", [], 0);
+  assertFit([weaker, { ...usable, alternatives: { mean: 4, games: 99 } }], "unverified", [], 0);
+  const gearOnly = route("gear only", [opener[2]], [piece("kai-sa", [kraken])], ["gnar"], ["kai-sa"]);
+  const [oneItem] = picksWithEvidence([gearOnly], [usable]);
+  assert.deepEqual(oneItem.handoff.itemIds, [kraken]);
+  assert.equal(oneItem.score, 1);
+});
+
 test("returns up to five candidates with top three favored by checks and opening activation, at most one entry per guide", () => {
   const final = [piece("a"), piece("b"), piece("high")];
   const base = id => route(id, [piece("a"), piece("b")], final);
@@ -79,7 +109,7 @@ test("returns up to five candidates with top three favored by checks and opening
   const fit = route("F", [piece("a"), piece("b"), piece("gnar", [rageblade])], [...final, piece("kai-sa", [rageblade])],
     ["gnar"], ["kai-sa"]);
   const routes = ["G", "E", "A", "D", "C", "H"].map(base).concat(alternate, fit);
-  const ids = list => picks(...list).map(result => result.teamId);
+  const ids = list => picksWithEvidence(list, [sampleFor("kai-sa", rageblade, 3.7)]).map(result => result.teamId);
   assert.deepEqual(ids(routes), ["F", "A-early", "C", "D", "E"]);
   assert.deepEqual(ids(routes.reverse()), ["F", "A-early", "C", "D", "E"]);
 });
@@ -90,9 +120,10 @@ test("newly added or edited guides without authored role labels auto-infer carri
     [piece("a"), piece("b"), piece("gnar", [rageblade])],
     [piece("a"), piece("b"), piece("high"), piece("kai-sa", [rageblade])],
   );
-  const [fit] = picks(newlyAdded);
+  const [fit] = picksWithEvidence([newlyAdded], [sampleFor("kai-sa", rageblade, 3.7)]);
   assert.equal(fit.score, 3);
-  assert.deepEqual(fit.handoff, { fromId: "gnar", toId: "kai-sa", itemIds: [rageblade] });
+  assert.equal(fit.handoff.fromId, "gnar");
+  assert.deepEqual(fit.handoff.itemIds, [rageblade]);
   assert.equal(fit.finalBoard.find(p => p.unitId === "kai-sa")?.isCarry, true);
 });
 
