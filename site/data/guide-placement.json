@@ -5134,6 +5134,217 @@
       ],
       "topFourRate": 0.25,
       "winRate": 0.005
+    },
+    {
+      "population": 7,
+      "roster": [
+        "braum",
+        "ekko",
+        "garen",
+        "malzahar",
+        "syndra",
+        "taric",
+        "zac"
+      ],
+      "games": 18,
+      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=7&trait=DA_Juggernaut19_2&trait=DA_OceanSong19_1&unit=DA_Braum19-1&unit=DA_Ekko19-1&unit=DA_Garen19-1&unit=DA_Malzahar19-1&unit=DA_Syndra19-1&unit=DA_Taric19-1&unit=DA_Zac19-1&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "sampleScope": "7级结算 · 固定名单 · 星级不限 · 无纹章、人口装或重复弈子",
+      "conditions": {
+        "kind": "full",
+        "teamId": "00000000-0000-4000-8000-000000001202",
+        "population": 7,
+        "traits": {
+          "juggernaut": 4,
+          "beach-pop": 3
+        }
+      },
+      "placementCounts": [
+        0,
+        0,
+        1,
+        2,
+        6,
+        4,
+        4,
+        1
+      ],
+      "observedOn": "2026-11-26",
+      "mean": 5.61,
+      "topFourRate": 0.16666666666666666,
+      "winRate": 0.0
+    },
+    {
+      "population": 8,
+      "roster": [
+        "braum",
+        "ekko",
+        "garen",
+        "malzahar",
+        "syndra",
+        "taric",
+        "yuumi",
+        "zac"
+      ],
+      "games": 4,
+      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&trait=DA_Juggernaut19_2&trait=DA_OceanSong19_1&trait=DA_Illbeats19_1&unit=DA_Braum19-1&unit=DA_Ekko19-1&unit=DA_Garen19-1&unit=DA_Malzahar19-1&unit=DA_Syndra19-1&unit=DA_Taric19-1&unit=DA_Yuumi19-1&unit=DA_Zac19-1&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "sampleScope": "8级结算 · 固定名单 · 星级不限 · 无纹章、人口装或重复弈子",
+      "conditions": {
+        "kind": "full",
+        "teamId": "00000000-0000-4000-8000-000000001201",
+        "population": 8,
+        "traits": {
+          "juggernaut": 4,
+          "beach-pop": 3,
+          "illbeats": 2
+        }
+      },
+      "placementCounts": [
+        0,
+        3,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "observedOn": "2026-11-26",
+      "mean": 2.5,
+      "topFourRate": 1.0,
+      "winRate": 0.0
+    },
+    {
+      "population": 9,
+      "roster": [
+        "braum",
+        "ekko",
+        "garen",
+        "malzahar",
+        "nidalee",
+        "syndra",
+        "taric",
+        "yuumi",
+        "zac"
+      ],
+      "games": 0,
+      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&trait=DA_Juggernaut19_2&trait=DA_OceanSong19_1&trait=DA_Illbeats19_1&unit=DA_Braum19-1&unit=DA_Ekko19-1&unit=DA_Garen19-1&unit=DA_Malzahar19-1&unit=DA_Nidalee19-1&unit=DA_Syndra19-1&unit=DA_Taric19-1&unit=DA_Yuumi19-1&unit=DA_Zac19-1&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "sampleScope": "9级结算 · 固定名单 · 星级不限 · 无纹章、人口装或重复弈子",
+      "conditions": {
+        "kind": "full",
+        "teamId": "00000000-0000-4000-8000-000000001203",
+        "population": 9,
+        "traits": {
+          "juggernaut": 4,
+          "beach-pop": 3,
+          "illbeats": 2
+        }
+      },
+      "placementCounts": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "observedOn": "2026-11-26"
+    },
+    {
+      "population": 7,
+      "roster": [
+        "ekko",
+        "syndra"
+      ],
+      "games": 15,
+      "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=7&trait=DA_Juggernaut19_2&trait=DA_OceanSong19_1&unit=DA_Ekko19-1_3&unit=DA_Syndra19-1_3&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "sampleScope": "7级结算 · 4 主宰、3 海之歌 · 艾克与辛德拉三星",
+      "conditions": {
+        "kind": "core",
+        "teamId": "00000000-0000-4000-8000-000000001202",
+        "population": 7,
+        "coreRoster": [
+          "ekko",
+          "syndra"
+        ],
+        "traits": {
+          "juggernaut": 4,
+          "beach-pop": 3
+        },
+        "units": [
+          {
+            "unitId": "ekko",
+            "stars": 3
+          },
+          {
+            "unitId": "syndra",
+            "stars": 3
+          }
+        ]
+      },
+      "placementCounts": [
+        0,
+        1,
+        3,
+        1,
+        4,
+        1,
+        5,
+        0
+      ],
+      "observedOn": "2026-11-26",
+      "mean": 5.07,
+      "topFourRate": 0.3333333333333333,
+      "winRate": 0.0
+    },
+    {
+      "population": 7,
+      "roster": [
+        "braum",
+        "ekko",
+        "garen",
+        "malzahar",
+        "syndra",
+        "taric",
+        "zac"
+      ],
+      "games": 6,
+      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=7&trait=DA_Juggernaut19_2&trait=DA_OceanSong19_1&unit=DA_Braum19-1&unit=DA_Ekko19-1_3&unit=DA_Garen19-1&unit=DA_Malzahar19-1&unit=DA_Syndra19-1_3&unit=DA_Taric19-1&unit=DA_Zac19-1&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "sampleScope": "7级结算 · 固定名单 · 艾克与辛德拉三星 · 无纹章、人口装或重复弈子",
+      "conditions": {
+        "kind": "full",
+        "teamId": "00000000-0000-4000-8000-000000001202",
+        "population": 7,
+        "traits": {
+          "juggernaut": 4,
+          "beach-pop": 3
+        },
+        "units": [
+          {
+            "unitId": "ekko",
+            "stars": 3
+          },
+          {
+            "unitId": "syndra",
+            "stars": 3
+          }
+        ]
+      },
+      "placementCounts": [
+        0,
+        0,
+        1,
+        0,
+        2,
+        1,
+        2,
+        0
+      ],
+      "observedOn": "2026-11-26",
+      "mean": 5.5,
+      "topFourRate": 0.16666666666666666,
+      "winRate": 0.0
     }
   ],
   "edition": "s19-pbe-19.1",
