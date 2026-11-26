@@ -149,7 +149,10 @@ export function EmblemStats({ traitId, holderId, initialFilters, guideHref, guid
   guideUses: Record<string, EmblemGuideUse[]>;
 }) {
   const [view, setView] = usePageReturnView<EmblemView>(visitKey, { ...initialFilters, holders: defaultHolders });
-  const filters = { ...initialFilters, ...view, order: gearFilters({ order: view.order }).order };
+  const filters = {
+    ...initialFilters, ...view, order: gearFilters({ order: view.order }).order,
+    excluded: Array.isArray(view.excluded) ? view.excluded : initialFilters.excluded,
+  };
   const { query, order, excluded, wearer } = filters;
   const selectedUnit = unitMap.get(wearer);
   const searchInput = useRef<HTMLInputElement>(null);
@@ -245,7 +248,7 @@ export function EmblemStats({ traitId, holderId, initialFilters, guideHref, guid
       {visible.map(({ id, entry, sample }) => {
         const item = itemMap.get(emblemItemId(id));
         if (!item) return null;
-        const holders = entry.holders.filter(holder => holder.unitId !== excluded);
+        const holders = entry.holders.filter(holder => !excluded.includes(holder.unitId));
         const expanded = open === id;
         const smallSample = isSmallSample(sample);
         const best = expanded || selectedUnit ? [] : holders.filter(holder => holder.games >= snapshot.minGames && unitMap.has(holder.unitId))

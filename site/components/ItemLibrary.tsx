@@ -88,7 +88,8 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
   const [selected, setSelected] = useState(itemId && itemMap.has(itemId) ? itemId : defaultSelection(initialGroup, initialFilters));
   const [wearer, setWearer] = useState(unitId && unitMap.has(unitId) ? unitId : "");
   const [group, setGroup] = useState(initialGroup);
-  const [filters, setFilters] = usePageReturnView("gearLibraryVisit", initialFilters);
+  const [savedFilters, setFilters] = usePageReturnView("gearLibraryVisit", initialFilters);
+  const filters = Array.isArray(savedFilters.excluded) ? savedFilters : { ...savedFilters, excluded: initialFilters.excluded };
   const { period, selectPeriod } = useStatPeriod();
   const archive = useStatArchive<EquipmentStats>(period, "equipment");
   const equipment = period ? archive.status === "ready" ? archive.data : undefined : currentEquipment;
@@ -153,7 +154,7 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
       const unit = params.get("unit") ?? "";
       const visit = history.state?.gearLibraryVisit;
       const fromUrl = gearFilters(Object.fromEntries(params));
-      const restored = visit?.url === location.href ? { ...fromUrl, ...visit.view, wearer: fromUrl.wearer } : fromUrl;
+      const restored = visit?.url === location.href ? { ...fromUrl, ...visit.view, excluded: fromUrl.excluded, wearer: fromUrl.wearer } : fromUrl;
       setSelected(itemMap.has(id) ? id : defaultSelection(next, restored));
       setWearer(unitMap.has(unit) ? unit : "");
       setGroup(next);
@@ -260,7 +261,7 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
   const radiantCount = group === "all" ? reverseRows.filter(row => row.category === "radiant").length : 0;
   const rankedEntries = ranking && !reverse && specialStats ? visible.map(entry => {
     const stats = specialStats.items[entry.id];
-    const holders = stats?.rows.filter(row => row.unitId !== excluded && unitMap.has(row.unitId)) ?? [];
+    const holders = stats?.rows.filter(row => !excluded.includes(row.unitId) && unitMap.has(row.unitId)) ?? [];
     const qualified = holders.filter(row => row.games >= specialStats.minGames && row.mean !== undefined);
     const commonOnly = !qualified.length;
     const best = (commonOnly ? holders.sort((a, b) => b.games - a.games) :
@@ -435,7 +436,7 @@ function ItemReading({ item, wearer, filters, uses, onRecipe, onWearer, wearerHr
   wearerHref: (unit: string) => string;
 }) {
   const reverse = inRanking && !!filters.wearer;
-  const excluded = reverse ? "" : filters.excluded;
+  const excluded = reverse ? [] : filters.excluded;
   const reference = itemReference.items[item.id];
   const snapshot = equipment?.special.items[item.id] ? equipment.special : equipment?.standard;
   const sampled = snapshot?.items[item.id];
@@ -449,10 +450,10 @@ function ItemReading({ item, wearer, filters, uses, onRecipe, onWearer, wearerHr
   const special = item.category === "artifact" || item.category === "support";
   const cookRecipe = isCookRecipe(item);
   const cookComponent = cookware.has(item.id);
-  const suitable = sampled?.rows.some(row => row.unitId !== excluded && unitMap.has(row.unitId) && row.mean !== undefined && row.games >= minGames);
+  const suitable = sampled?.rows.some(row => !excluded.includes(row.unitId) && unitMap.has(row.unitId) && row.mean !== undefined && row.games >= minGames);
   const [order, setOrder] = useState<"games" | "mean">(!inRanking && (radiant || special) && suitable ? "mean" : "games");
-  const selectedWearer = wearer && wearer !== excluded ? sampled?.rows.find(row => row.unitId === wearer && unitMap.has(wearer)) : undefined;
-  const known = sampled?.rows.filter(row => row.unitId !== excluded && unitMap.has(row.unitId) &&
+  const selectedWearer = wearer && !excluded.includes(wearer) ? sampled?.rows.find(row => row.unitId === wearer && unitMap.has(wearer)) : undefined;
+  const known = sampled?.rows.filter(row => !excluded.includes(row.unitId) && unitMap.has(row.unitId) &&
     (order === "games" || row.games >= minGames && row.mean !== undefined)) ?? [];
   known.sort(order === "mean" ? (a, b) => (a.mean ?? 9) - (b.mean ?? 9) || b.games - a.games : (a, b) => b.games - a.games);
   const [allUsers, setAllUsers] = useState(false);
@@ -484,7 +485,7 @@ function ItemReading({ item, wearer, filters, uses, onRecipe, onWearer, wearerHr
   const effect = lines.filter(line => !isGlossary(line)).join("\n");
   const glossary = lines.filter(isGlossary);
   const placement = (special || radiant) && snapshot ? itemPerformance(item, snapshot)?.mean : undefined;
-  const showWearers = snapshot && !reverse && (!!sampled?.rows.some(row => row.unitId !== excluded && unitMap.has(row.unitId)) ||
+  const showWearers = snapshot && !reverse && (!!sampled?.rows.some(row => !excluded.includes(row.unitId) && unitMap.has(row.unitId)) ||
     !inRanking && (item.category === "completed" || item.category === "team-size" || special || radiant));
 
   function recipeLink(entry: Item, index: number) {
@@ -534,7 +535,7 @@ function ItemReading({ item, wearer, filters, uses, onRecipe, onWearer, wearerHr
       查三件套<ChevronDown size={15} aria-hidden="true" />
     </button>}
     {showBuildQuery && <div className="gear-build-query" id={buildsId} ref={buildsPanel} tabIndex={-1} hidden={!buildsOpen}>
-      <ConditionalGear key={buildsRevision} lockedItems={[item]} wearer={wearer} wearerIds={sampled?.rows.filter(row => row.unitId !== excluded).map(row => row.unitId)} active={buildsOpen} period={period} />
+      <ConditionalGear key={buildsRevision} lockedItems={[item]} wearer={wearer} wearerIds={sampled?.rows.filter(row => !excluded.includes(row.unitId)).map(row => row.unitId)} active={buildsOpen} period={period} />
     </div>}
     <div className="gear-reading-body" data-wearers={showWearers || undefined}>
       <div className="gear-reading-reference">
