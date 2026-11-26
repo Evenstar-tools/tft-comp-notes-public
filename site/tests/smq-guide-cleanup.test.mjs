@@ -4,6 +4,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import { sectionTeams } from "../domain/document-flow.ts";
 import { guidePlaystyle, guideSectionWithCurrentNames, readingNotes } from "../domain/guide-reading.ts";
 import { legacyGuideDestination } from "../domain/legacy-guide-redirects.ts";
+import { rerollEntryTeamId } from "../domain/reroll-stages.ts";
 import { traitCounts, traitGroup, usedPopulation } from "../domain/team.ts";
 import { findPlacement } from "../domain/guide-placement.ts";
 import { guideFamilyBoardIds, guideFamilyRows, recommendationTier } from "../domain/guide-family-stats.ts";
@@ -39,6 +40,49 @@ test("the published Smeech routes reach nine non-unique traits with the original
   const notes = readingNotes(guideSectionWithCurrentNames(five), five.team, preview.season);
   assert.deepEqual(notes.roles.find(role => role.label === "主C").units, ["smeech"]);
   assert.equal(active(board(jinx, "1252").pieces).length, 9);
+});
+
+test("guide entry boards follow the playable level and retain the family results on their original boards", () => {
+  const entries = json("../data/s19-reroll-boards.json");
+  const map = json("../data/guide-family-map.json");
+  const entry = section => entries.find(row => row.sectionId === section.id);
+
+  const jinx = guide("1110");
+  assert.equal(entry(jinx).entryTeamId, board(jinx, "1252").id);
+  assert.equal(usedPopulation(board(jinx, "1252").pieces), 8);
+  assert.equal(jinx.primaryTeamId, board(jinx, "1251").id);
+  assert.equal(map.rows.find(row => row.sectionId === jinx.id).teamId, jinx.primaryTeamId);
+
+  const viego = guide("0243");
+  const vr = entry(viego);
+  assert.ok(vr.entryTeamId.endsWith("0074"));
+  const seven = vr.stages.find(stage => stage.teamId === vr.entryTeamId);
+  assert.equal(usedPopulation(seven.pieces), 7);
+  assert.ok(seven.pieces.some(piece => piece.unitId === "amumu"));
+  assert.equal(map.rows.find(row => row.clusterId === "429002").teamId, viego.primaryTeamId);
+
+  const renata = guide("0122");
+  const sixGuards = board(renata, "0044");
+  const routeStage = entry(renata).stages.find(stage => stage.parentTeamId === sixGuards.id && stage.entry);
+  const readSection = { ...renata, reroll: entry(renata) };
+  assert.ok(routeStage.teamId.endsWith("0048"));
+  assert.equal(usedPopulation(routeStage.pieces), 6);
+  assert.equal(rerollEntryTeamId(readSection, sixGuards.id), routeStage.teamId);
+  assert.equal(rerollEntryTeamId(readSection, renata.primaryTeamId), board(renata, "0118").id);
+  assert.equal(rerollEntryTeamId(readSection, board(renata, "0046").id), undefined);
+
+  const vayne = guide("0338");
+  const rock = entry(vayne);
+  const steady = rock.stages.find(stage => stage.teamId === rock.entryTeamId);
+  const anchor = board(vayne, "0078");
+  assert.equal(steady.parentTeamId, anchor.id);
+  assert.equal(usedPopulation(steady.pieces), 8);
+  assert.equal(active(steady.pieces).find(trait => trait.id === "rock").level, 5);
+  assert.ok(!steady.pieces.some(piece => piece.unitId === "pyke"));
+  const published = preview.boardEdits.find(edit => edit.teamId === anchor.id);
+  assert.equal(usedPopulation(published.content.pieces), 9);
+  assert.ok(published.content.pieces.some(piece => piece.unitId === "pyke"));
+  assert.equal(map.rows.find(row => row.sectionId === vayne.id).teamId, anchor.id);
 });
 
 test("merged links select their retained boards and retired guides are omitted from older public reads", () => {
