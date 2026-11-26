@@ -293,7 +293,7 @@ def check_recommendation_entries(recommendations, sections, errors):
         if isinstance(team, dict) and isinstance(team.get("id"), str)
     }
     seen, active, groups = set(), set(), set()
-    regular = hero = 0
+    regular_guides, hero_guides = set(), set()
     for index, entry in enumerate(entries):
         if not isinstance(entry, dict):
             continue
@@ -323,11 +323,13 @@ def check_recommendation_entries(recommendations, sections, errors):
         if status in ("recommended", "conditional"):
             active.add(team_id)
             if is_hero:
-                hero += 1
+                hero_guides.add(section_id)
             else:
-                regular += 1
+                regular_guides.add((group, section_id))
                 if valid_group:
                     groups.add(group)
+
+    regular, hero = len(regular_guides), len(hero_guides)
 
     max_regular, max_hero = 15, 2
     if regular > max_regular or hero > max_hero:

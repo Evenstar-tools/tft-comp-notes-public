@@ -178,8 +178,24 @@ export function selectRecommendationRoutes<T extends {
   } = {},
 ) {
   const positions = new Map(displayOrder.map((id, index) => [id, index]));
-  const position = ({ rating }: T) => positions.get(rating.teamId) ?? positions.size;
-  const ranked = candidates.filter(({ rating }) => recommendationTier(rating) === "recommended")
+  const eligible = candidates.filter(({ rating }) => recommendationTier(rating) === "recommended");
+  // When one guide owns multiple parallel variant clusters in the same group (e.g. Graves-Zac axes),
+  // keep the strongest current variant on the home card while preserving the guide's earliest display slot.
+  const guideSlots = new Map<string, number>();
+  const bestByGuideGroup = new Map<string, T>();
+  for (const candidate of eligible) {
+    const key = `${candidate.group}:${candidate.rating.sectionId ?? candidate.familyId}`;
+    const slot = positions.get(candidate.rating.teamId) ?? positions.size;
+    guideSlots.set(key, Math.min(guideSlots.get(key) ?? positions.size, slot));
+    const current = bestByGuideGroup.get(key);
+    if (!current || candidate.rating.mean < current.rating.mean ||
+        (candidate.rating.mean === current.rating.mean && candidate.rating.games > current.rating.games)) {
+      bestByGuideGroup.set(key, candidate);
+    }
+  }
+  const position = (route: T) =>
+    guideSlots.get(`${route.group}:${route.rating.sectionId ?? route.familyId}`) ?? positions.get(route.rating.teamId) ?? positions.size;
+  const ranked = [...bestByGuideGroup.values()]
     .sort((a, b) => position(a) - position(b) || Number(!!b.preferred) - Number(!!a.preferred) ||
       a.rating.mean - b.rating.mean || b.rating.games - a.rating.games);
   const families = new Set<string>();
