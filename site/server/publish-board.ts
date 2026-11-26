@@ -7,20 +7,23 @@ import type { BoardSetup, PieceLoadout } from "@/domain/types";
 import { ApiError } from "./access";
 import { installPublication, publishedSnapshot } from "./publication";
 import { includeRerollBoards } from "./reroll-guides";
+import { migrateS19GuideSnapshot } from "./s19-guide-cleanup";
 import { validateBoard, validateTeamConditions } from "./validate-team";
 
 export async function editablePublishedBoard(publicationId: string, sectionId: string, teamId: string) {
-  const publication = await publishedSnapshot();
-  if (!publication || publication.id !== publicationId) throw new ApiError(409, "公开棋盘已有新版本，请返回攻略后重新打开");
-  const section = publication.sections.find(entry => entry.id === sectionId);
+  const snapshot = await publishedSnapshot();
+  if (!snapshot || snapshot.id !== publicationId) throw new ApiError(409, "公开棋盘已有新版本，请返回攻略后重新打开");
+  const migrated = migrateS19GuideSnapshot(snapshot);
+  const section = migrated.sections.find(entry => entry.id === sectionId);
   const source = section && sectionTeams(section).find(team => team.id === teamId);
   if (!section || !source || !source.pieces.length || isEditorialSection(section))
     throw new ApiError(404, "此章节没有对应的可发布棋盘");
-  if (!sameEdition((section.gameData ?? publication.season).id, season.id))
+  if (!sameEdition((section.gameData ?? migrated.season).id, season.id))
     throw new ApiError(409, "该棋盘与当前编辑器赛季不同");
-  const renderedSection = includeRerollBoards(publication, season).sections.find(entry => entry.id === sectionId);
+  const renderedSection = includeRerollBoards(migrated, season).sections.find(entry => entry.id === sectionId);
   const team = renderedSection && sectionTeams(renderedSection).find(entry => entry.id === teamId);
   if (!team) throw new ApiError(404, "此章节没有对应的可发布棋盘");
+  const publication = snapshot.sections.includes(section) ? snapshot : migrated;
   return { publication, source, team };
 }
 

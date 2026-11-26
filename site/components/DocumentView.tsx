@@ -180,8 +180,8 @@ function Block({ block, folded, start = 0, replacement }: { block: ContentBlock;
       );
   }
 }
-export function DocumentView({ section, gameData, publicationId, initialTeam, initialStage, initialFlex, variants, openPoster, initialPosterShare, returnTo, showCategory = true, patchAdvice }: {
-  section: Section; gameData?: Season; publicationId?: string; initialTeam?: string; initialStage?: BoardStage; initialFlex?: string; returnTo?: string;
+export function DocumentView({ section, gameData, publicationId, initialTeam, defaultTeam, initialStage, initialFlex, variants, openPoster, initialPosterShare, returnTo, showCategory = true, patchAdvice }: {
+  section: Section; gameData?: Season; publicationId?: string; initialTeam?: string; defaultTeam?: string; initialStage?: BoardStage; initialFlex?: string; returnTo?: string;
   variants?: Record<string, import("@/domain/guide-families").PosterVariant[]>; openPoster?: boolean; initialPosterShare?: import("@/domain/links").PosterShare;
   showCategory?: boolean;
   patchAdvice?: GuidePatchAdvice[];
@@ -314,7 +314,7 @@ export function DocumentView({ section, gameData, publicationId, initialTeam, in
   }
   return (
     <article className={primary ? "document-view with-guide-board" : "document-view"}>
-      {primary && gameData ? <GuideTeams key={section.id + (section.primaryTeamId ?? "")} section={section} data={gameData} initialTeam={initialTeam}
+      {primary && gameData ? <GuideTeams key={section.id + (section.primaryTeamId ?? "")} section={section} data={gameData} initialTeam={initialTeam} defaultTeam={defaultTeam}
         initialStage={initialStage} initialFlex={initialFlex} publicationId={publicationId} returnTo={returnTo} renderHeader={teamHeader} renderNotes={selectedText}
         variants={variants} openPoster={openPoster} initialPosterShare={initialPosterShare} patchAdvice={patchAdvice} /> : header(sourceSectionTitle(section))}
       {!primary && section.blocks.map((block) => (

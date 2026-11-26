@@ -1,6 +1,8 @@
 import type { Section } from "./document";
 import { sectionTeams } from "./document-flow.ts";
-import { GUIDE_SECTION_IDS } from "./guide-identities.ts";
+import { AD_GRAVES_BOARD_IDS, GUIDE_SECTION_IDS, PYKE_GRAVES_BOARD_ID } from "./guide-identities.ts";
+
+const [adGraves, adGravesTwistedFate] = AD_GRAVES_BOARD_IDS;
 
 const legacyGuideRedirects: Record<string, { sectionId: string; teamId: string; teams?: Record<string, string> }> = {
   "sample-block-1055": {
@@ -22,9 +24,14 @@ const legacyGuideRedirects: Record<string, { sectionId: string; teamId: string; 
     teams: { "00000000-0000-4000-8000-000000000120": "00000000-0000-4000-8000-000000000120" },
   },
   "sample-block-1120": {
-    sectionId: GUIDE_SECTION_IDS.altPykeGraves,
-    teamId: "00000000-0000-4000-8000-000000001261",
-    teams: { "00000000-0000-4000-8000-000000001262": "00000000-0000-4000-8000-000000001262" },
+    sectionId: GUIDE_SECTION_IDS.oceanGraves,
+    teamId: adGraves,
+    teams: { [adGravesTwistedFate]: adGravesTwistedFate },
+  },
+  "sample-block-0452": {
+    sectionId: GUIDE_SECTION_IDS.oceanGraves,
+    teamId: adGraves,
+    teams: { [PYKE_GRAVES_BOARD_ID]: PYKE_GRAVES_BOARD_ID, [adGraves]: adGraves, [adGravesTwistedFate]: adGravesTwistedFate },
   },
 };
 

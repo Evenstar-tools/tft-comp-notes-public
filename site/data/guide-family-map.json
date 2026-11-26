@@ -428,7 +428,7 @@
       "clusterId": "429013",
       "sourceName": "Renegade Graves Zac",
       "name": "五非主流派克男枪",
-      "sectionId": "sample-block-0452",
+      "sectionId": "sample-block-0251",
       "teamId": "00000000-0000-4000-8000-000000000093",
       "aliases": [
         "非主流派克男枪",
@@ -610,7 +610,7 @@
       "clusterId": "429016",
       "sourceName": "Juggernaut Graves",
       "name": "四主宰 AD 男枪",
-      "sectionId": "sample-block-0452",
+      "sectionId": "sample-block-0251",
       "teamId": "00000000-0000-4000-8000-000000001261",
       "carryIds": [
         "graves"

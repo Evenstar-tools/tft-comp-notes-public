@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { apiError, assertSameOrigin, database, ApiError } from "@/server/access";
+import { apiError, assertSameOrigin, database, databaseConfigured, ApiError } from "@/server/access";
 import {
   acceptsOwnerCode, checkOwnerLoginRateLimit, clearOwnerLoginFailures, defaultOwnerId,
   hasOwnerSession, newOwnerSession, ownerCookieName, ownerCookieOptions, ownerLoginConfigured,
@@ -19,7 +19,7 @@ function isOwner(signedIn: boolean) {
     signedIn,
     isOwner: signedIn,
     loginConfigured: ownerLoginConfigured(),
-    databaseConfigured: Boolean(process.env.DATABASE_URL?.trim()),
+    databaseConfigured: databaseConfigured(),
   };
 }
 
@@ -42,7 +42,7 @@ export async function POST(request: Request) {
     }
     clearOwnerLoginFailures(key);
 
-    if (process.env.DATABASE_URL?.trim()) {
+    if (databaseConfigured()) {
       // Imported sites keep their existing owner id so current drafts stay editable.
       await database().prepare(
         "INSERT INTO settings (key,value) VALUES ('owner_id',?) ON CONFLICT(key) DO NOTHING",

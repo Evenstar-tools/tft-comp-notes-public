@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readdirSync, readFileSync } from "node:fs";
 import { sectionTeams } from "../domain/document-flow.ts";
-import { guidePlaystyle, guideRoute, guideSectionWithCurrentNames, readingNotes } from "../domain/guide-reading.ts";
+import { guidePlaystyle, guideSectionWithCurrentNames, readingNotes } from "../domain/guide-reading.ts";
 import { legacyGuideDestination } from "../domain/legacy-guide-redirects.ts";
 import { traitCounts, traitGroup, usedPopulation } from "../domain/team.ts";
 import { findPlacement } from "../domain/guide-placement.ts";
@@ -42,7 +42,7 @@ test("the published Smeech routes reach nine non-unique traits with the original
 });
 
 test("merged links select their retained boards and retired guides are omitted from older public reads", () => {
-  const anchor = guide("0051"), graves = guide("0452"), five = guide("0275"), kayle = guide("0219");
+  const anchor = guide("0051"), graves = guide("0251"), five = guide("0275"), kayle = guide("0219");
   const dest = (id, sourceBoard) => legacyGuideDestination("sample-block-" + id, sourceBoard, preview.sections);
   assert.deepEqual(dest("1055"), { sectionId: anchor.id, teamId: board(anchor, "1138").id });
   assert.deepEqual(dest("0394"), { sectionId: anchor.id, teamId: board(anchor, "0083").id });
@@ -58,12 +58,23 @@ test("merged links select their retained boards and retired guides are omitted f
     assert.equal(variant.boardRole, "variant");
     assert.deepEqual(readingNotes(section, variant, preview.season).roles.find(role => role.label === "副C").units, [carry]);
   }
+  assert.equal(guide("0452"), undefined);
+  assert.deepEqual(dest("0452"), { sectionId: graves.id, teamId: board(graves, "1261").id });
   assert.deepEqual(dest("1120"), { sectionId: graves.id, teamId: board(graves, "1261").id });
   assert.equal(dest("1120", board(graves, "1262").id).teamId, board(graves, "1262").id);
   assert.equal(dest("0154"), undefined);
-  assert.deepEqual(graves.teams.map(team => guidePlaystyle(graves, team)), ["95", "84", "84"]);
-  const roster = guideRoute(graves, graves.teams, graves.team);
-  assert.deepEqual(roster.choices.map(step => step.team.id), graves.teams.slice(1).map(team => team.id));
+  assert.equal(graves.primaryTeamId, board(graves, "0076").id);
+  const variants = ["1261", "1262", "0093"].map(id => board(graves, id));
+  assert.deepEqual(variants.map(team => guidePlaystyle(graves, team)), ["84", "84", "95"]);
+  for (const [index, variant] of variants.entries()) {
+    assert.deepEqual(dest("0452", variant.id), { sectionId: graves.id, teamId: variant.id });
+    assert.equal(variant.sectionId, graves.id);
+    assert.equal(variant.boardRole, "variant");
+    const roles = readingNotes(guideSectionWithCurrentNames(graves), variant, preview.season).roles;
+    assert.deepEqual(roles.find(role => role.label === "主C")?.units, [index === 2 ? "pyke" : "graves"]);
+    assert.deepEqual(roles.find(role => role.label === "主坦")?.units, ["zac"]);
+    assert.ok(roles.some(role => role.label === "副C"));
+  }
 
   const legacy = { ...preview, sections: [
     { ...five, title: "旧攻略", teams: [five.team] },
@@ -72,10 +83,17 @@ test("merged links select their retained boards and retired guides are omitted f
     { ...anchor, id: "sample-block-1055" },
     { ...kayle, teams: kayle.teams.slice(0, 3) },
     { ...kayle, id: "sample-block-" + "0468" },
+    { ...graves, teams: graves.teams.filter(team => !variants.includes(team)),
+      blocks: graves.blocks.filter(block => block.id === "sample-block-0574") },
+    { ...graves, id: "sample-block-0452", teams: variants },
   ] };
   const updated = migrateS19GuideSnapshot(legacy);
-  assert.deepEqual(updated.sections.map(s => [s.id, s.teams.length]), [[five.id, 2], [anchor.id, 6], [kayle.id, 4]]);
+  assert.deepEqual(updated.sections.map(s => [s.id, s.teams.length]), [[five.id, 2], [anchor.id, 6], [kayle.id, 4], [graves.id, 8]]);
   assert.equal(updated.sections[2].team, kayle.team);
+  assert.equal(updated.sections[3].team, graves.team);
+  assert.deepEqual(updated.sections[3].teams.slice(-3), variants);
+  assert.equal(updated.sections[3].blocks[0].id, "sample-block-0574");
+  assert.equal(readingNotes(updated.sections[3], variants[0], preview.season).roles.find(role => role.label === "主C")?.units[0], "graves");
   assert.deepEqual(migrateS19GuideSnapshot(preview), preview);
 });
 

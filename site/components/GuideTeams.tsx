@@ -38,8 +38,8 @@ import "./guide-execution.css";
 export type GuidePassage = { source: string; text: string; brief: boolean; blockId?: string };
 export type GuidePatchAdvice = { teamId: string; note: string; label: string; href: string };
 
-export function GuideTeams({ section, data, initialTeam, initialStage, initialFlex, publicationId, returnTo, renderHeader, renderNotes, variants, openPoster, initialPosterShare, patchAdvice }: {
-  section: Section; data: Season; initialTeam?: string; publicationId?: string; returnTo?: string; renderHeader?: (team: Team, performance?: ReactNode) => ReactNode;
+export function GuideTeams({ section, data, initialTeam, defaultTeam, initialStage, initialFlex, publicationId, returnTo, renderHeader, renderNotes, variants, openPoster, initialPosterShare, patchAdvice }: {
+  section: Section; data: Season; initialTeam?: string; defaultTeam?: string; publicationId?: string; returnTo?: string; renderHeader?: (team: Team, performance?: ReactNode) => ReactNode;
   initialStage?: BoardStage; initialFlex?: string;
   renderNotes?: (team: Team, passages: GuidePassage[], roles: GuideRole[]) => ReactNode;
   variants?: Record<string, PosterVariant[]>; openPoster?: boolean; initialPosterShare?: PosterShare;
@@ -47,7 +47,7 @@ export function GuideTeams({ section, data, initialTeam, initialStage, initialFl
 }) {
   const teams = primaryFirst(sectionTeams(section), section.primaryTeamId);
   const primary = teams[0];
-  const defaultTeamId = section.reroll?.entryTeamId ?? primary?.id;
+  const defaultTeamId = defaultTeam ?? section.reroll?.entryTeamId ?? primary?.id;
   const [selectedTeam, setTeam] = useState(initialTeam ?? defaultTeamId);
   const [selectedStage, setSelectedStage] = useState(initialStage);
   const [selectedFlex, setSelectedFlex] = useState(initialFlex);
@@ -315,7 +315,8 @@ export function GuideTeams({ section, data, initialTeam, initialStage, initialFl
   const phaseAdvice = passages.find(passage => passage !== intro && passage.brief && passage.text);
   const opening = intro?.brief && intro.text ? intro : undefined;
   const inStage = kind === "过渡";
-  const canEditPositions = session?.isOwner && publicationId && guideHref && mainBoardActive && !showFlex &&
+  const cloudOwner = session?.isOwner && session.databaseConfigured;
+  const canEditPositions = cloudOwner && publicationId && guideHref && mainBoardActive && !showFlex &&
     sameEdition(data.id, season.id) && !section.reroll?.added.includes(team.id);
   const openingUnderBoard = !simpleStages && (section.reroll || inStage || !!currentChoice);
   const stageCopy = [openingUnderBoard ? opening : undefined, phaseAdvice].filter(entry => entry !== undefined);
@@ -380,12 +381,12 @@ export function GuideTeams({ section, data, initialTeam, initialStage, initialFl
               <ImageDown size={16} aria-hidden /><span>一图流</span>
             </button>
             {guideHref && sameEdition(data.id, season.id) && <GuideEditorLink team={shownBoard} title={editorTitle} href={guideHref}
-              owner={session?.isOwner} secondary={!!canEditPositions} focusUnit={shownRoles.find(role => role.label === "主C")?.units[0]}
+              owner={cloudOwner} secondary={!!canEditPositions} focusUnit={shownRoles.find(role => role.label === "主C")?.units[0]}
               sharedConditions={sharedGuideEditorConditions(teams, section.id, canEditPositions || shownBoard.conditions ? team.id : undefined)}
               target={canEditPositions ? { publicationId, sectionId: section.id, teamId: team.id } : undefined} />}
             {canEditPositions && <GuideBoardPositionEditor key={team.id} publicationId={publicationId!}
               sectionId={section.id} teamId={team.id} title={editorTitle} href={guideHref!} />}
-            {session?.isOwner && mainBoardActive && (publicationId || !section.reroll?.added.includes(team.id)) && <details className="guide-owner-menu">
+            {cloudOwner && mainBoardActive && (publicationId || !section.reroll?.added.includes(team.id)) && <details className="guide-owner-menu">
               <summary className="guide-zoom-trigger">更多</summary>
               <div className="guide-owner-menu-panel">
                 {publicationId && <a href={ownerEditorPath + "?" + new URLSearchParams({ copy: team.id, publication: publicationId, section: section.id })}>复制到草稿</a>}

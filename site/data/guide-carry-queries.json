@@ -1275,7 +1275,7 @@
       "TFT_Item_WarmogsArmor",
       "TFT_Item_RedBuff"
     ],
-    "sectionId": "sample-block-0452",
+    "sectionId": "sample-block-0251",
     "teamId": "00000000-0000-4000-8000-000000000093"
   },
   {
@@ -1505,7 +1505,7 @@
     "tankItems": []
   },
   {
-    "sectionId": "sample-block-0452",
+    "sectionId": "sample-block-0251",
     "teamId": "00000000-0000-4000-8000-000000001261",
     "board": "八级 · 四主宰 AD 男枪",
     "carryId": "graves",
@@ -1534,7 +1534,7 @@
     ]
   },
   {
-    "sectionId": "sample-block-0452",
+    "sectionId": "sample-block-0251",
     "teamId": "00000000-0000-4000-8000-000000001261",
     "board": "八级 · 四主宰 AD 男枪",
     "carryId": "vayne",

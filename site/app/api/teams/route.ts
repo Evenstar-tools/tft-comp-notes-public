@@ -1,9 +1,10 @@
-import { apiError, database, requireOwner, ApiError, setting } from "@/server/access";
+import { apiError, database, requireDatabase, requireOwner, ApiError, setting } from "@/server/access";
 import { validateTeam } from "@/server/validate-team";
 import { listTeams } from "@/server/teams";
 import { sectionTeams } from "@/domain/document-flow";
 import { publicGuidePublication, publishedSnapshot } from "@/server/publication";
 import { includeRerollBoards } from "@/server/reroll-guides";
+import { migrateS19GuideSnapshot } from "@/server/s19-guide-cleanup";
 import { isEditorialSection, primaryFirst, readingNotes } from "@/domain/guide-reading";
 import { sameEdition } from "@/domain/version-updates";
 import { heroAugmentCategory, heroAugmentForGuide } from "@/domain/hero-augments";
@@ -15,6 +16,7 @@ import type { Publication } from "@/domain/document";
 export async function GET(request: Request) {
   try {
     const user = await requireOwner();
+    requireDatabase();
     const query = new URL(request.url).searchParams;
     if (query.has("catalog")) {
       const live = await publicGuidePublication();
@@ -51,7 +53,7 @@ export async function GET(request: Request) {
         if (current && current.id === requestedId) snapshot = current;
       }
       const publishedId = await setting("published_id");
-      const active = snapshot && (!publishedId || snapshot.id === publishedId) ? includeRerollBoards(snapshot, season) : snapshot;
+      const active = snapshot && (!publishedId || snapshot.id === publishedId) ? includeRerollBoards(migrateS19GuideSnapshot(snapshot), season) : snapshot;
       const section = active?.sections.find(entry => entry.id === query.get("section"));
       const team = section && sectionTeams(section).find(entry => entry.id === query.get("copy"));
       if (!team) throw new ApiError(404, "这个发布版本中找不到该阵容");
@@ -68,6 +70,7 @@ export async function GET(request: Request) {
 export async function PUT(request: Request) {
   try {
     const user = await requireOwner(request);
+    requireDatabase();
     const team = validateTeam(await request.json());
     const saved = {
       ...team,

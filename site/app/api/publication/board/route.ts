@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ApiError, apiError, requireOwner } from "@/server/access";
+import { ApiError, apiError, requireDatabase, requireOwner } from "@/server/access";
 import { editablePublishedBoard, publishBoardFormation, publishBoardPositions } from "@/server/publish-board";
 import { teamBoardSchema, teamConditionsSchema } from "@/server/validate-team";
 
@@ -48,6 +48,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     await requireOwner(request);
+    requireDatabase();
     const parsed = submission.safeParse(await request.json().catch(() => null));
     if (!parsed.success) throw new ApiError(400, "棋盘格式不正确");
     const { publicationId, sectionId, team } = parsed.data;
@@ -60,6 +61,7 @@ export async function POST(request: Request) {
 export async function PUT(request: Request) {
   try {
     await requireOwner(request);
+    requireDatabase();
     const parsed = formation.safeParse(await request.json().catch(() => null));
     if (!parsed.success) throw new ApiError(400, "棋盘格式不正确");
     const { publicationId, sectionId, team } = parsed.data;

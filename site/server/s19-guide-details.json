@@ -3337,6 +3337,257 @@
             ]
           }
         ]
+      },
+      {
+        "afterImage": null,
+        "blocks": [
+          {
+            "id": "sample-block-pyke-ad-eight",
+            "type": "heading",
+            "level": 3,
+            "text": "八级 · 四主宰 AD 男枪",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "八级 · 四主宰 AD 男枪"
+                }
+              }
+            ]
+          },
+          {
+            "id": "sample-block-1124",
+            "type": "text",
+            "text": "羊刀或攻速装多时走四主宰。七级战后留 85 金开派克，摆五名不同的海之歌或主宰开扎克，塔里克只算一名。八级找两星男枪、扎克和薇恩。",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "羊刀或攻速装多时走四主宰。七级战后留 85 金开派克，摆五名不同的海之歌或主宰开扎克，塔里克只算一名。八级找两星男枪、扎克和薇恩。"
+                }
+              }
+            ]
+          },
+          {
+            "id": "sample-block-1125",
+            "type": "text",
+            "text": "男枪吃 2 非主流暴击，链枷可换血手或轻语；多余战士装给派克，奥拉夫吃复活拉怪。",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "男枪吃 2 非主流暴击，链枷可换血手或轻语；多余战士装给派克，奥拉夫吃复活拉怪。"
+                }
+              }
+            ]
+          },
+          {
+            "id": "sample-block-1184",
+            "type": "text",
+            "text": "薇恩、纳尔可按来牌换凯尔、洛克开三五杀。",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "薇恩、纳尔可按来牌换凯尔、洛克开三五杀。"
+                }
+              }
+            ]
+          },
+          {
+            "id": "sample-block-pyke-ad-nine",
+            "type": "heading",
+            "level": 3,
+            "text": "九级 · AD 补崔斯特",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "九级 · AD 补崔斯特"
+                }
+              }
+            ]
+          },
+          {
+            "id": "sample-block-1126",
+            "type": "text",
+            "text": "8 级扎克、男枪、薇恩两星即存钱上九，优先补崔斯特（或芮尔／蔚）。",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "8 级扎克、男枪、薇恩两星即存钱上九，优先补崔斯特（或芮尔／蔚）。"
+                }
+              }
+            ]
+          },
+          {
+            "id": "sample-block-pyke-main",
+            "type": "heading",
+            "level": 3,
+            "text": "九级 · 五非主流派克男枪",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "九级 · 五非主流派克男枪"
+                }
+              }
+            ]
+          },
+          {
+            "id": "sample-block-0740",
+            "type": "text",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "战士装多且血量能上九时走五非主流。八级先搜两星男枪、扎克稳血，九级再追两星派克主 C。"
+                }
+              }
+            ],
+            "level": 0,
+            "text": "战士装多且血量能上九时走五非主流。八级先搜两星男枪、扎克稳血，九级再追两星派克主 C。"
+          },
+          {
+            "id": "sample-block-0489",
+            "type": "text",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "奇亚娜拿派克的夜刃、正义打工，留一张空装奇亚娜。奇亚娜、莉莉娅、妮蔻一起上，开伊芙琳。肉装给鳄鱼，法装给佐伊。",
+                  "text_element_style": {
+                    "bold": false,
+                    "inline_code": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false
+                  }
+                }
+              }
+            ],
+            "level": 0,
+            "text": "奇亚娜拿派克的夜刃、正义打工，留一张空装奇亚娜。奇亚娜、莉莉娅、妮蔻一起上，开伊芙琳。肉装给鳄鱼，法装给佐伊。"
+          },
+          {
+            "id": "sample-block-0698",
+            "type": "text",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "派克来后卖打工奇亚娜转装，补回空装奇亚娜，和男枪、伊芙琳、阿萝拉开五非主流。九级补蔚开四主宰，搜派克两星。男枪和派克同侧，轻语先破甲。",
+                  "text_element_style": {
+                    "bold": false,
+                    "inline_code": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false
+                  }
+                }
+              }
+            ],
+            "level": 0,
+            "text": "派克来后卖打工奇亚娜转装，补回空装奇亚娜，和男枪、伊芙琳、阿萝拉开五非主流。九级补蔚开四主宰，搜派克两星。男枪和派克同侧，轻语先破甲。"
+          },
+          {
+            "id": "sample-block-0777",
+            "type": "text",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "MetaTFT 体系战绩",
+                  "text_element_style": {
+                    "bold": false,
+                    "inline_code": false,
+                    "italic": false,
+                    "link": {
+                      "url": "https://www.metatft.com/pbe-comps#DA_Renegade19-DA_Pyke19"
+                    },
+                    "strikethrough": false,
+                    "underline": false
+                  }
+                }
+              },
+              {
+                "text_run": {
+                  "content": " · ",
+                  "text_element_style": {
+                    "bold": false,
+                    "inline_code": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false
+                  }
+                }
+              },
+              {
+                "text_run": {
+                  "content": "Mobalytics 九人棋盘",
+                  "text_element_style": {
+                    "bold": false,
+                    "inline_code": false,
+                    "italic": false,
+                    "link": {
+                      "url": "https://mobalytics.gg/tft/set19/comps-guide/renegade-3MPjU93dw2rzDvd9HPoIDtA1W3v"
+                    },
+                    "strikethrough": false,
+                    "underline": false
+                  }
+                }
+              }
+            ],
+            "level": 0,
+            "text": "MetaTFT 体系战绩 · Mobalytics 九人棋盘"
+          },
+          {
+            "id": "sample-block-1128",
+            "type": "text",
+            "text": "棋盘配装 · 八级 · 四主宰 AD 男枪\n主C：格雷福斯。正义之手、夜之锋刃、强袭者的链枷。\n主坦：扎克。石像鬼石板甲、振奋盔甲、薄暮法袍。\n副C：薇恩。鬼索的狂暴之刃、海妖之怒、无尽之刃。\n副C：派克。捡剩余战士装。\n功能装：约里克。日炎斗篷，补重伤。",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "棋盘配装 · 八级 · 四主宰 AD 男枪\n主C：格雷福斯。正义之手、夜之锋刃、强袭者的链枷。\n主坦：扎克。石像鬼石板甲、振奋盔甲、薄暮法袍。\n副C：薇恩。鬼索的狂暴之刃、海妖之怒、无尽之刃。\n副C：派克。捡剩余战士装。\n功能装：约里克。日炎斗篷，补重伤。"
+                }
+              }
+            ]
+          },
+          {
+            "id": "sample-block-1129",
+            "type": "text",
+            "text": "棋盘配装 · 九级 · AD 补崔斯特\n主C：格雷福斯。正义之手、夜之锋刃、强袭者的链枷。\n主坦：扎克。石像鬼石板甲、振奋盔甲、薄暮法袍。\n副C：薇恩。鬼索的狂暴之刃、海妖之怒、无尽之刃。\n副C：派克。捡剩余战士装。\n功能装：约里克。日炎斗篷，补重伤。\n副C：崔斯特。补收割。",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "棋盘配装 · 九级 · AD 补崔斯特\n主C：格雷福斯。正义之手、夜之锋刃、强袭者的链枷。\n主坦：扎克。石像鬼石板甲、振奋盔甲、薄暮法袍。\n副C：薇恩。鬼索的狂暴之刃、海妖之怒、无尽之刃。\n副C：派克。捡剩余战士装。\n功能装：约里克。日炎斗篷，补重伤。\n副C：崔斯特。补收割。"
+                }
+              }
+            ]
+          },
+          {
+            "id": "sample-block-0649",
+            "type": "text",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "棋盘配装 · 九级 · 五非主流派克男枪\n主C：派克。死亡之刃、夜之锋刃、正义之手。\n副C：格雷福斯。最后的轻语、正义之手，再补夜刃。\n主坦：扎克。石像鬼、狂徒、日炎；日炎挂重伤。\n",
+                  "text_element_style": {
+                    "bold": false,
+                    "inline_code": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false
+                  }
+                }
+              },
+              {
+                "text_run": {
+                  "content": "副C：阿萝拉。先接青龙刀，有多余法装再补。",
+                  "text_element_style": {
+                    "bold": false,
+                    "inline_code": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false
+                  }
+                }
+              }
+            ],
+            "level": 0,
+            "text": "棋盘配装 · 九级 · 五非主流派克男枪\n主C：派克。死亡之刃、夜之锋刃、正义之手。\n副C：格雷福斯。最后的轻语、正义之手，再补夜刃。\n主坦：扎克。石像鬼、狂徒、日炎；日炎挂重伤。\n副C：阿萝拉。先接青龙刀，有多余法装再补。"
+          }
+        ]
       }
     ]
   },
@@ -7613,315 +7864,6 @@
               {
                 "text_run": {
                   "content": "棋盘配装 · 九级补芮尔\n主C：金克丝。鬼索的狂暴之刃、无尽之刃、最后的轻语。\n主坦：希瓦娜。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n功能装：梅尔。莫雷洛秘典、虚空之杖，补重伤与魔抗击碎。"
-                }
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  "sample-block-0452": {
-    "summaryId": "sample-block-0688",
-    "groups": [
-      {
-        "afterImage": null,
-        "blocks": [
-          {
-            "id": "sample-block-0688",
-            "type": "text",
-            "text": "战士装多走五非主流，八级用两星男枪稳血，九级搜两星派克主 C。羊刀或攻速装多走四主宰 AD 男枪＋薇恩，八级成型，九级补崔斯特，两条路线均不吃史密奇。",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "战士装多走五非主流，八级用两星男枪稳血，九级搜两星派克主 C。羊刀或攻速装多走四主宰 AD 男枪＋薇恩，八级成型，九级补崔斯特，两条路线均不吃史密奇。"
-                }
-              }
-            ]
-          },
-          {
-            "id": "sample-block-0696",
-            "type": "text",
-            "text": "打法：速九运营",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "打法：速九运营"
-                }
-              }
-            ]
-          },
-          {
-            "id": "sample-block-pyke-common",
-            "type": "heading",
-            "level": 3,
-            "text": "通用解锁",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "通用解锁"
-                }
-              }
-            ]
-          },
-          {
-            "id": "sample-block-0740",
-            "type": "text",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "七级先摆塔里克、鳄鱼、佐伊、奥拉夫、男枪开扎克。血量能撑住，再留 85 金币打一轮开派克。八级搜两星男枪和扎克，扎克换鳄鱼接肉。",
-                  "text_element_style": {
-                    "bold": false,
-                    "inline_code": false,
-                    "italic": false,
-                    "strikethrough": false,
-                    "underline": false
-                  }
-                }
-              }
-            ],
-            "level": 0,
-            "text": "七级先摆塔里克、鳄鱼、佐伊、奥拉夫、男枪开扎克。血量能撑住，再留 85 金币打一轮开派克。八级搜两星男枪和扎克，扎克换鳄鱼接肉。"
-          },
-          {
-            "id": "sample-block-pyke-main",
-            "type": "heading",
-            "level": 3,
-            "text": "九级 · 五非主流派克男枪",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "九级 · 五非主流派克男枪"
-                }
-              }
-            ]
-          },
-          {
-            "id": "sample-block-0489",
-            "type": "text",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "奇亚娜拿派克的夜刃、正义打工，留一张空装奇亚娜。奇亚娜、莉莉娅、妮蔻一起上，开伊芙琳。肉装给鳄鱼，法装给佐伊。",
-                  "text_element_style": {
-                    "bold": false,
-                    "inline_code": false,
-                    "italic": false,
-                    "strikethrough": false,
-                    "underline": false
-                  }
-                }
-              }
-            ],
-            "level": 0,
-            "text": "奇亚娜拿派克的夜刃、正义打工，留一张空装奇亚娜。奇亚娜、莉莉娅、妮蔻一起上，开伊芙琳。肉装给鳄鱼，法装给佐伊。"
-          },
-          {
-            "id": "sample-block-0698",
-            "type": "text",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "派克来后卖打工奇亚娜转装，补回空装奇亚娜，和男枪、伊芙琳、阿萝拉开五非主流。九级补蔚开四主宰，搜派克两星。男枪和派克同侧，轻语先破甲。",
-                  "text_element_style": {
-                    "bold": false,
-                    "inline_code": false,
-                    "italic": false,
-                    "strikethrough": false,
-                    "underline": false
-                  }
-                }
-              }
-            ],
-            "level": 0,
-            "text": "派克来后卖打工奇亚娜转装，补回空装奇亚娜，和男枪、伊芙琳、阿萝拉开五非主流。九级补蔚开四主宰，搜派克两星。男枪和派克同侧，轻语先破甲。"
-          },
-          {
-            "id": "sample-block-0777",
-            "type": "text",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "MetaTFT 体系战绩",
-                  "text_element_style": {
-                    "bold": false,
-                    "inline_code": false,
-                    "italic": false,
-                    "link": {
-                      "url": "https://www.metatft.com/pbe-comps#DA_Renegade19-DA_Pyke19"
-                    },
-                    "strikethrough": false,
-                    "underline": false
-                  }
-                }
-              },
-              {
-                "text_run": {
-                  "content": " · ",
-                  "text_element_style": {
-                    "bold": false,
-                    "inline_code": false,
-                    "italic": false,
-                    "strikethrough": false,
-                    "underline": false
-                  }
-                }
-              },
-              {
-                "text_run": {
-                  "content": "Mobalytics 九人棋盘",
-                  "text_element_style": {
-                    "bold": false,
-                    "inline_code": false,
-                    "italic": false,
-                    "link": {
-                      "url": "https://mobalytics.gg/tft/set19/comps-guide/renegade-3MPjU93dw2rzDvd9HPoIDtA1W3v"
-                    },
-                    "strikethrough": false,
-                    "underline": false
-                  }
-                }
-              }
-            ],
-            "level": 0,
-            "text": "MetaTFT 体系战绩 · Mobalytics 九人棋盘"
-          },
-          {
-            "id": "sample-block-pyke-ad-eight",
-            "type": "heading",
-            "level": 3,
-            "text": "八级 · 四主宰 AD 男枪",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "八级 · 四主宰 AD 男枪"
-                }
-              }
-            ]
-          },
-          {
-            "id": "sample-block-1124",
-            "type": "text",
-            "text": "卡 7 级，战后留 85 金开派克。上 5 名不同海之歌／主宰开扎克（塔里克算 1 名）。",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "卡 7 级，战后留 85 金开派克",
-                  "text_element_style": {
-                    "bold": true
-                  }
-                }
-              },
-              {
-                "text_run": {
-                  "content": "。上 5 名不同海之歌／主宰开扎克（塔里克算 1 名）。"
-                }
-              }
-            ]
-          },
-          {
-            "id": "sample-block-1125",
-            "type": "text",
-            "text": "男枪吃 2 非主流暴击，链枷可换血手或轻语；多余战士装给派克，奥拉夫吃复活拉怪。",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "男枪吃 2 非主流暴击，链枷可换血手或轻语；多余战士装给派克，奥拉夫吃复活拉怪。"
-                }
-              }
-            ]
-          },
-          {
-            "id": "sample-block-pyke-ad-nine",
-            "type": "heading",
-            "level": 3,
-            "text": "九级 · AD 补崔斯特",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "九级 · AD 补崔斯特"
-                }
-              }
-            ]
-          },
-          {
-            "id": "sample-block-1126",
-            "type": "text",
-            "text": "8 级扎克、男枪、薇恩两星即存钱上九，优先补崔斯特（或芮尔／蔚）。",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "8 级扎克、男枪、薇恩两星即存钱上九，优先补崔斯特（或芮尔／蔚）。"
-                }
-              }
-            ]
-          },
-          {
-            "id": "sample-block-1127",
-            "type": "heading",
-            "level": 3,
-            "text": "各棋盘配装",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "各棋盘配装"
-                }
-              }
-            ]
-          },
-          {
-            "id": "sample-block-0649",
-            "type": "text",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "棋盘配装 · 九级 · 五非主流派克男枪\n主C：派克。死亡之刃、夜之锋刃、正义之手。\n副C：格雷福斯。最后的轻语、正义之手，再补夜刃。\n主坦：扎克。石像鬼、狂徒、日炎；日炎挂重伤。\n",
-                  "text_element_style": {
-                    "bold": false,
-                    "inline_code": false,
-                    "italic": false,
-                    "strikethrough": false,
-                    "underline": false
-                  }
-                }
-              },
-              {
-                "text_run": {
-                  "content": "副C：阿萝拉。先接青龙刀，有多余法装再补。",
-                  "text_element_style": {
-                    "bold": false,
-                    "inline_code": false,
-                    "italic": false,
-                    "strikethrough": false,
-                    "underline": false
-                  }
-                }
-              }
-            ],
-            "level": 0,
-            "text": "棋盘配装 · 九级 · 五非主流派克男枪\n主C：派克。死亡之刃、夜之锋刃、正义之手。\n副C：格雷福斯。最后的轻语、正义之手，再补夜刃。\n主坦：扎克。石像鬼、狂徒、日炎；日炎挂重伤。\n副C：阿萝拉。先接青龙刀，有多余法装再补。"
-          },
-          {
-            "id": "sample-block-1128",
-            "type": "text",
-            "text": "棋盘配装 · 八级 · 四主宰 AD 男枪\n主C：格雷福斯。正义之手、夜之锋刃、强袭者的链枷。\n主坦：扎克。石像鬼石板甲、振奋盔甲、薄暮法袍。\n副C：薇恩。鬼索的狂暴之刃、海妖之怒、无尽之刃。\n副C：派克。捡剩余战士装。\n功能装：约里克。日炎斗篷，补重伤。",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "棋盘配装 · 八级 · 四主宰 AD 男枪\n主C：格雷福斯。正义之手、夜之锋刃、强袭者的链枷。\n主坦：扎克。石像鬼石板甲、振奋盔甲、薄暮法袍。\n副C：薇恩。鬼索的狂暴之刃、海妖之怒、无尽之刃。\n副C：派克。捡剩余战士装。\n功能装：约里克。日炎斗篷，补重伤。"
-                }
-              }
-            ]
-          },
-          {
-            "id": "sample-block-1129",
-            "type": "text",
-            "text": "棋盘配装 · 九级 · AD 补崔斯特\n主C：格雷福斯。正义之手、夜之锋刃、强袭者的链枷。\n主坦：扎克。石像鬼石板甲、振奋盔甲、薄暮法袍。\n副C：薇恩。鬼索的狂暴之刃、海妖之怒、无尽之刃。\n副C：派克。捡剩余战士装。\n功能装：约里克。日炎斗篷，补重伤。\n副C：崔斯特。补收割。",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "棋盘配装 · 九级 · AD 补崔斯特\n主C：格雷福斯。正义之手、夜之锋刃、强袭者的链枷。\n主坦：扎克。石像鬼石板甲、振奋盔甲、薄暮法袍。\n副C：薇恩。鬼索的狂暴之刃、海妖之怒、无尽之刃。\n副C：派克。捡剩余战士装。\n功能装：约里克。日炎斗篷，补重伤。\n副C：崔斯特。补收割。"
                 }
               }
             ]
