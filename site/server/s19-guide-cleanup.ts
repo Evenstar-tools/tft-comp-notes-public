@@ -1,7 +1,7 @@
 import preview from "../data/public-preview.json" with { type: "json" };
 import type { Publication, Section } from "../domain/document";
 import { sectionTeams } from "../domain/document-flow.ts";
-import { AD_GRAVES_BOARD_IDS, GUIDE_SECTION_IDS, PYKE_GRAVES_BOARD_ID } from "../domain/guide-identities.ts";
+import { AD_GRAVES_BOARD_IDS, GUIDE_SECTION_IDS, PYKE_GRAVES_BOARD_ID, ZERI_JAZZ_BOARD_ID } from "../domain/guide-identities.ts";
 import { guideBody, isBoardLoadout } from "../domain/guide-reading.ts";
 import { mergedGuideIds } from "../domain/legacy-guide-redirects.ts";
 import { sameEdition } from "../domain/version-updates.ts";
@@ -13,10 +13,11 @@ const mergedVariants = new Map<string, readonly string[]>([
   [GUIDE_SECTION_IDS.classicalJhin, ["00000000-0000-4000-8000-000000000006"]],
   [GUIDE_SECTION_IDS.pentakillKayle, ["00000000-0000-4000-8000-000000000106"]],
   [GUIDE_SECTION_IDS.oceanGraves, [...AD_GRAVES_BOARD_IDS, PYKE_GRAVES_BOARD_ID]],
+  [GUIDE_SECTION_IDS.edmZeri, [ZERI_JAZZ_BOARD_ID]],
 ]);
 const replacements = new Map(previewSections.filter(({ id }) => [
   GUIDE_SECTION_IDS.classicalJhin,
-  GUIDE_SECTION_IDS.threeJazzSmeech, GUIDE_SECTION_IDS.jazzPykeAurora, "sample-block-0235",
+  GUIDE_SECTION_IDS.threeJazzSmeech, GUIDE_SECTION_IDS.jazzPykeAurora, GUIDE_SECTION_IDS.edmZeri,
 ].some(guideId => guideId === id)).map(section => [section.id, section]));
 
 function hasLegacyBoards(section: Section, current: Section) {
@@ -27,8 +28,8 @@ function hasLegacyBoards(section: Section, current: Section) {
       board.name === "8级 · 梅尔盖伦" || board.name === "9级 · 赛娜开锁准备" ||
       (board.name === "九级四古典 · 女枪" && board.pieces.some(piece => piece.unitId === "nunu-willump")))) ||
     (section.id === GUIDE_SECTION_IDS.threeJazzSmeech && section.title !== current.title) ||
-    ((section.id === GUIDE_SECTION_IDS.jazzPykeAurora || section.id === "sample-block-0235") &&
-      oldTeams.some(board => board.pieces.some(piece => piece.unitId === "smeech")));
+    ((section.id === GUIDE_SECTION_IDS.jazzPykeAurora || section.id === GUIDE_SECTION_IDS.edmZeri) &&
+      oldTeams.some(board => board.id !== ZERI_JAZZ_BOARD_ID && board.pieces.some(piece => piece.unitId === "smeech")));
 }
 
 function includeMergedVariants(section: Section): Section {
@@ -61,7 +62,7 @@ export function migrateS19GuideSnapshot(snapshot: Publication): Publication {
       if (retiredGuides.has(section.id) || section.title === obsoleteCategory) return [];
       const current = replacements.get(section.id);
       if (current && hasLegacyBoards(section, current)) return [structuredClone(current)];
-      if (section.id === "sample-block-0235") {
+      if (section.id === GUIDE_SECTION_IDS.edmZeri) {
         const edited = previewSections.find(guide => guide.id === section.id)?.blocks.find(block => block.id === "sample-block-0264");
         if (edited && section.blocks.some(block => block.id === edited.id && block.text?.includes("史密奇"))) {
           return [{ ...section, blocks: section.blocks.map(block => block.id === edited.id ? structuredClone(edited) : block) }];

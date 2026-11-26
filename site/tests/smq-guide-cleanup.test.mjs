@@ -5,7 +5,7 @@ import { sectionTeams } from "../domain/document-flow.ts";
 import { guidePlaystyle, guideSectionWithCurrentNames, readingNotes } from "../domain/guide-reading.ts";
 import { legacyGuideDestination } from "../domain/legacy-guide-redirects.ts";
 import { rerollEntryTeamId } from "../domain/reroll-stages.ts";
-import { traitCounts, traitGroup, usedPopulation } from "../domain/team.ts";
+import { switchAlternate, traitCounts, traitGroup, usedPopulation } from "../domain/team.ts";
 import { findPlacement } from "../domain/guide-placement.ts";
 import { guideFamilyBoardIds, guideFamilyRows, homeRecommendationEligible, recommendationTier } from "../domain/guide-family-stats.ts";
 import { migrateS19GuideSnapshot } from "../server/s19-guide-cleanup.ts";
@@ -40,6 +40,40 @@ test("the published Smeech routes reach nine non-unique traits with the original
   const notes = readingNotes(guideSectionWithCurrentNames(five), five.team, preview.season);
   assert.deepEqual(notes.roles.find(role => role.label === "主C").units, ["smeech"]);
   assert.equal(active(board(jinx, "1252").pieces).length, 9);
+});
+
+test("Jazz Zeri unlocks Smeech with both stacked substitutes and retains the original main board", () => {
+  const section = guide("0235");
+  const final = board(section, "1275");
+  const smeech = final.pieces.find(piece => piece.unitId === "smeech");
+  const nunu = final.pieces.find(piece => piece.unitId === "nunu-willump");
+  assert.equal(smeech.alternate.unitId, "mel");
+  assert.equal(nunu.alternate.unitId, "swain");
+  const from = switchAlternate(switchAlternate(final.pieces, smeech.instanceId), nunu.instanceId);
+  assert.equal(usedPopulation(from), 9);
+  assert.ok(from.every(piece => piece.unitId !== "smeech"));
+  assert.deepEqual(active(from).map(trait => trait.id).sort(), [
+    "arcanist", "bodyguard", "frontman", "heartsteel", "jazz", "k-da", "manager", "r-b", "swiftstriker",
+  ]);
+  assert.equal(active(from.map(piece => ["lillia", "leona"].includes(piece.unitId)
+    ? { ...piece, stars: 1 } : piece)).length, 8);
+  assert.equal(active(final.pieces).length, 8);
+  assert.equal(active(final.pieces).find(trait => trait.id === "jazz").level, 3);
+  assert.equal(final.pieces.find(piece => piece.unitId === "zeri").position, 27);
+  assert.equal(final.pieces.find(piece => piece.unitId === "zeri").items.length, 3);
+  assert.equal(final.pieces.find(piece => piece.unitId === "dr-mundo").items.length, 3);
+  assert.equal(section.primaryTeamId, board(section, "0105").id);
+  assert.deepEqual(readingNotes(section, final, preview.season).roles.find(role => role.label === "主C").units, ["zeri"]);
+
+  const prior = {
+    ...section,
+    teams: section.teams.filter(team => team !== final),
+    blocks: section.blocks.filter(block => !/^sample-block-129[0-3]$/.test(block.id)),
+  };
+  const [migrated] = migrateS19GuideSnapshot({ ...preview, sections: [prior] }).sections;
+  assert.equal(migrated.primaryTeamId, prior.primaryTeamId);
+  assert.deepEqual(migrated.teams, section.teams);
+  assert.ok(migrated.blocks.some(block => block.text?.includes("凑齐九个非唯一羁绊")));
 });
 
 test("guide entry boards follow the playable level and retain the family results on their original boards", () => {
@@ -144,10 +178,8 @@ test("merged links select their retained boards and retired guides are omitted f
 test("published guide data resolves every section and board reference", () => {
   const boardsByGuide = new Map(preview.sections.map(s => [s.id, new Set(sectionTeams(s).map(t => t.id))]));
   const rerolls = json("../data/s19-reroll-boards.json");
-  for (const suffix of ["0235", "1090"]) {
-    const section = guide(suffix);
-    assert.doesNotMatch(JSON.stringify([section, rerolls.find(entry => entry.sectionId === section.id)]), /史密奇|smeech/i);
-  }
+  const pyke = guide("1090");
+  assert.doesNotMatch(JSON.stringify([pyke, rerolls.find(entry => entry.sectionId === pyke.id)]), /史密奇|smeech/i);
   for (const { sectionId, stages } of rerolls) {
     for (const stage of stages.filter(stage => stage.pieces)) boardsByGuide.get(sectionId).add(stage.teamId);
   }

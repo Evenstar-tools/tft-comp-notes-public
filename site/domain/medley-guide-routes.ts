@@ -4,7 +4,7 @@ import { guideFlexPreview, guideOpeningGear, reviewedGuidePhases } from "./guide
 import { boardTitle } from "./guide-families.ts";
 import { guideBoardName, guideLink, guidePlaystyle, guideRoute, isEditorialSection, primaryFirst, readingNotes } from "./guide-reading.ts";
 import { heroAugmentCategory } from "./hero-augments.ts";
-import type { MedleyRoute } from "./medley-fit";
+import { inferCarryIdsFromPieces, MEDLEY_OUTPUT_ITEMS, type MedleyRoute } from "./medley-fit.ts";
 import { guideBoardKind, usedPopulation } from "./team.ts";
 import { readTeamStage, stageLabels } from "./team-stages.ts";
 import type { Season, Team } from "./types";
@@ -21,7 +21,21 @@ const reviewedTransitions = new Map([
   ["00000000-0000-4000-8000-000000000046", { openingId: "00000000-0000-4000-8000-000000000111", carryId: "renata-glasc" }],
 ]);
 
+export function medleyEligibleGuideCount(sections: Section[], publicationSeason: Season, currentSeason: Season): number {
+  return sections.filter(section => {
+    const data = section.gameData ?? publicationSeason;
+    return sameEdition(data.id, currentSeason.id) &&
+      readableSection(section) &&
+      !isEditorialSection(section) &&
+      !isVersionUpdate(section) &&
+      section.category !== heroAugmentCategory &&
+      section.category !== "纹章阵容" &&
+      sectionTeams(section).length > 0;
+  }).length;
+}
+
 export function medleyGuideRoutes(sections: Section[], publicationSeason: Season, currentSeason: Season): MedleyRoute[] {
+  const unitCosts = new Map(currentSeason.units.map(unit => [unit.id, unit.cost]));
   return sections.flatMap(section => {
     const data = section.gameData ?? publicationSeason;
     if (!sameEdition(data.id, currentSeason.id) || !readableSection(section) || isEditorialSection(section) || isVersionUpdate(section) ||
@@ -33,7 +47,10 @@ export function medleyGuideRoutes(sections: Section[], publicationSeason: Season
     const rolesByTeam = new Map<string, ReturnType<typeof readingNotes>["roles"]>();
     const carryIds = (team: Team, rolePattern: RegExp) => {
       if (!rolesByTeam.has(team.id)) rolesByTeam.set(team.id, readingNotes(section, team, data).roles);
-      return (rolesByTeam.get(team.id) ?? []).filter(role => rolePattern.test(role.label)).flatMap(role => role.units);
+      const authored = (rolesByTeam.get(team.id) ?? []).filter(role => rolePattern.test(role.label)).flatMap(role => role.units);
+      if (authored.length) return authored;
+      // Auto-infer carries from equipped output items when a newly added or edited guide omits role labels.
+      return inferCarryIdsFromPieces(team.pieces, unitCosts, MEDLEY_OUTPUT_ITEMS);
     };
     return teams.flatMap(final => {
       if (requiredCondition(final) || (final.mainStage ?? "late") !== "late") return [];
@@ -65,6 +82,7 @@ export function medleyGuideRoutes(sections: Section[], publicationSeason: Season
         team: reviewedOpening, label: guideBoardName(reviewedOpening),
       });
       const board = { sectionId: section.id, teamId: final.id, title: boardTitle(section, final), finalHref, final: final.pieces };
+      const finalCarries = carryIds(final, finalCarryRole);
       const routes = [...openingBoards].flatMap(([stageHref, { team: opening, label: stageLabel }]) => {
         const openingCount = usedPopulation(opening.pieces);
         if (openingCount < 3 || openingCount > 8 || openingCount >= population || requiredCondition(opening)) return [];
@@ -72,7 +90,7 @@ export function medleyGuideRoutes(sections: Section[], publicationSeason: Season
         const route: MedleyRoute = {
           ...board, stageLabel, stageHref, opening: opening.pieces,
           openingCarryIds: reviewedCarry ? [reviewedCarry] : carryIds(opening, openingCarryRole),
-          finalCarryIds: reviewedCarry ? [reviewedCarry] : carryIds(final, finalCarryRole),
+          finalCarryIds: reviewedCarry ? [reviewedCarry] : finalCarries,
         };
         const flex = guideFlexPreview(section.id, opening, data);
         if (!flex) return [route];
@@ -93,7 +111,7 @@ export function medleyGuideRoutes(sections: Section[], publicationSeason: Season
         return [route, ...alternatives];
       });
       // A real terminal can prove the three-member check even without a reviewed opening.
-      return [...routes, { ...board, opening: [], openingCarryIds: [], finalCarryIds: [] }];
+      return [...routes, { ...board, opening: [], openingCarryIds: [], finalCarryIds: finalCarries }];
     });
   });
 }

@@ -2,7 +2,7 @@ import { BOARD_HEIGHT, BOARD_WIDTH, HEX_HEIGHT, HEX_WIDTH, hexPosition } from "@
 import { boardInstruments, boardMarkerNote } from "@/domain/board-instruments";
 import type { Section } from "@/domain/document";
 import { sectionTeams } from "@/domain/document-flow";
-import { guideConditionName, guideConditionTag, guideEquipmentConditions, guideReferenceConditions } from "@/domain/guide-equipment-conditions";
+import { guideConditionHasName, guideConditionName, guideConditionTag, guideEquipmentConditions, guideReferenceConditions } from "@/domain/guide-equipment-conditions";
 import { guideRoster, readingNotes } from "@/domain/guide-reading";
 import { heroArtworkFocus } from "@/domain/hero-artwork";
 import { preferredItemImage } from "@/domain/item-art";
@@ -80,7 +80,7 @@ export async function guidePoster({ section, team, data, format = defaultPosterF
     ...rows.map(row => ({ row, context: undefined })),
     ...(reference?.rows ?? []).filter(row => !rows.some(local => local.id === row.id && local.recipient?.id === row.recipient?.id))
       .map(row => ({ row, context: reference?.label })),
-  ].filter(({ row }) => row.category === "海克斯" || row.recipient);
+  ].filter(({ row }) => guideConditionHasName(row));
   const teams = [team, ...stages];
   const instrumentsByBoard = new Map(teams.map(board => [board.id, boardInstruments(board.pieces, data, board.instrumentPositions)]));
   const teamMembers = new Map(teams.map(board => [board.id, guideRoster(board, data, section ? readingNotes(section, board, data).roles : [])]));
@@ -199,6 +199,12 @@ export async function guidePoster({ section, team, data, format = defaultPosterF
     }
     y += boardHeight + 7;
     if (instruments?.size) y = block(c, boardMarkerNote(instruments), pad, y, inner, 12.5, muted, 18);
+    const replacements = board.pieces.flatMap(piece => {
+      const active = units.get(piece.unitId);
+      const alternate = piece.alternate ? units.get(piece.alternate.unitId) : undefined;
+      return active && alternate ? [`${unitNames[alternate.name] ?? alternate.name}替换${unitNames[active.name] ?? active.name}`] : [];
+    });
+    if (replacements.length) y = block(c, replacements.join(" · "), pad, y, inner, 12.5, muted, 18);
     const traits = traitCounts(board.pieces, data.units, data.traits, data.items).filter(trait => traitGroup(trait) === "已开常规");
     font(c, 14, 650);
     c.fillStyle = accent;

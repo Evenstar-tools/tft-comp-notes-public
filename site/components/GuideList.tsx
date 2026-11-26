@@ -878,10 +878,10 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
           {variantReview && <span className="guide-review-badge" title={variantReview.note}>待复核</span>}
         </a></li>;
       })}</ul>;
-      const conditionBoard = curated?.board?.id;
+      const conditionBoard = (curated?.guideWide ? team?.id : undefined) ?? curated?.board?.id;
       const cardConditions = curated && (team?.id === conditionBoard || routes?.some(board => board.id === conditionBoard))
         ? curated.rows.filter(row => row.featured || row.recipient) : [];
-      const conditionHeading = cardConditions.some(row => row.recipient) ? "定阵条件" : "顶级条件";
+      const conditionHeading = curated?.guideWide || cardConditions.some(row => row.recipient) ? "定阵条件" : "顶级条件";
       return <article key={cardId} className={"guide-result" + (expanded ? " is-quick-open" : "")} id={"guide-card-" + cardId}>
         <a className="guide-result-main" href={link} data-home-board={team?.id} aria-labelledby={titleId} aria-describedby={detailsIds}>
           <div className="guide-title-row">
