@@ -74,4 +74,66 @@ test("published reviewed transitions prove Guinsoo Gnar, Shojin Zoe and the nint
   assert.ok(zoe.handoff.itemIds.includes("TFT_Item_SpearOfShojin"));
   assert.ok(zoe.finalHref.endsWith("001085"));
   assert.ok(zoe.stageHref.endsWith("001126"));
+  assert.equal(renata.finalBoard.length, 9);
+  assert.ok(fits[23].length <= 5 && fits[23].length >= 3);
+});
+
+test("newly added, edited, or removed S19 guides automatically recompute medley fits without manual mapping", () => {
+  const readData = name => JSON.parse(readFileSync(new URL("../data/" + name, import.meta.url), "utf8"));
+  const current = readData("season.json");
+  const { groups } = readData("medley-groups.json");
+
+  const newGuide = {
+    id: "new-s19-guide",
+    title: "新上架测试阵容",
+    category: "84运营",
+    kind: "guide",
+    blocks: [],
+    primaryTeamId: "new-final",
+    teams: [{
+      id: "new-final",
+      name: "新上架测试阵容",
+      pieces: [
+        { unitId: "lillia", position: 0, items: [] },
+        { unitId: "renata-glasc", position: 1, items: ["TFT_Item_SpearOfShojin"] },
+        { unitId: "vi", position: 2, items: [] },
+        { unitId: "leona", position: 3, items: [] },
+        { unitId: "k-sante", position: 4, items: [] },
+        { unitId: "viego", position: 5, items: [] },
+        { unitId: "nasus", position: 6, items: [] },
+        { unitId: "jax", position: 7, items: [] },
+      ],
+      stages: {
+        mid: {
+          pieces: [
+            { unitId: "lillia", position: 0, items: [] },
+            { unitId: "renata-glasc", position: 1, items: ["TFT_Item_SpearOfShojin"] },
+            { unitId: "sett", position: 2, items: [] },
+            { unitId: "nasus", position: 3, items: [] },
+            { unitId: "jax", position: 4, items: [] },
+          ],
+        },
+      },
+    }],
+  };
+
+  // 1. Added new guide -> automatically gets 3/3 full fit on group 18 with zero manual config
+  const addedFits = buildMedleyFits(groups, medleyGuideRoutes([newGuide], current, current), current.units, current.items);
+  const added = addedFits[18].find(fit => fit.sectionId === "new-s19-guide");
+  assert.ok(added);
+  assert.equal(added.score, 3);
+  assert.equal(added.handoff?.fromId, "renata-glasc");
+  assert.equal(added.finalBoard.length, 8);
+
+  // 2. Edited guide (removed Vi from final) -> recomputed score drops and Vi disappears from finalBoard
+  const editedGuide = structuredClone(newGuide);
+  editedGuide.teams[0].pieces = editedGuide.teams[0].pieces.filter(p => p.unitId !== "vi");
+  const editedFits = buildMedleyFits(groups, medleyGuideRoutes([editedGuide], current, current), current.units, current.items);
+  const edited = editedFits[18].find(fit => fit.sectionId === "new-s19-guide");
+  assert.equal(edited.score, 1);
+  assert.ok(!edited.finalBoard.some(p => p.unitId === "vi"));
+
+  // 3. Removed guide -> disappears cleanly
+  const removedFits = buildMedleyFits(groups, medleyGuideRoutes([], current, current), current.units, current.items);
+  assert.deepEqual(removedFits[18], []);
 });

@@ -18,7 +18,7 @@ const route = (sectionId, opening, final, openingCarryIds = [], finalCarryIds = 
 });
 const picks = (...routes) => buildMedleyFits([group], routes, units, items)[1];
 
-test("terminal counts actual distinct Medley champions and late check requires newly fielded high costs", () => {
+test("terminal counts actual distinct Medley champions, late check requires newly fielded high costs, and finalBoard marks members", () => {
   const [fit] = picks(route("fit",
     [piece("a"), piece("a"), piece("b"), piece("sona"), piece("late")],
     [piece("a"), piece("a"), piece("sona"), piece("late"), piece("high"), piece("lux", [], piece("spare"))]));
@@ -28,10 +28,19 @@ test("terminal counts actual distinct Medley champions and late check requires n
   assert.deepEqual(fit.lateIds, ["high"]);
   assert.equal(fit.openingCount, 4);
   assert.equal(fit.score, 2);
+  assert.equal(fit.tier, "core");
+  assert.equal(fit.finalBoard.length, 5);
+  assert.equal(fit.finalBoard.find(p => p.unitId === "high")?.isLateMedley, true);
+  assert.equal(fit.finalBoard.find(p => p.unitId === "lux")?.isMedley, false);
+
   const [alreadyFielded] = picks(route("before", [piece("a"), piece("late")], [piece("a"), piece("b"), piece("late")]));
   assert.deepEqual(alreadyFielded.lateIds, []);
   assert.equal(alreadyFielded.score, 1);
-  assert.deepEqual(picks(route("two final", [piece("a"), piece("b")], [piece("a"), piece("high")])), []);
+
+  const [twoFinal] = picks(route("two final", [piece("a"), piece("b")], [piece("a"), piece("high")]));
+  assert.equal(twoFinal.tier, "extra");
+  assert.equal(twoFinal.score, 0);
+  assert.deepEqual(picks(route("one final", [piece("a")], [piece("a")])), []);
 });
 
 test("without a stage only the confirmed terminal can score", () => {
@@ -63,21 +72,34 @@ test("only an actual group starter's output can stay or transfer to a compatible
   for (const fit of [mismatch, stillFielded, nonMember, utilityOnly]) assert.equal(fit.handoff, undefined);
 });
 
-test("the top three favor checks and opening activation, with at most one entry per guide", () => {
+test("returns up to five candidates with top three favored by checks and opening activation, at most one entry per guide", () => {
   const final = [piece("a"), piece("b"), piece("high")];
   const base = id => route(id, [piece("a"), piece("b")], final);
   const alternate = route("A", [piece("a"), piece("b"), piece("c")], final, [], [], "A-early");
   const fit = route("F", [piece("a"), piece("b"), piece("gnar", [rageblade])], [...final, piece("kai-sa", [rageblade])],
     ["gnar"], ["kai-sa"]);
-  const routes = ["G", "E", "A", "D", "C"].map(base).concat(alternate, fit);
+  const routes = ["G", "E", "A", "D", "C", "H"].map(base).concat(alternate, fit);
   const ids = list => picks(...list).map(result => result.teamId);
-  assert.deepEqual(ids(routes), ["F", "A-early", "C"]);
-  assert.deepEqual(ids(routes.reverse()), ["F", "A-early", "C"]);
+  assert.deepEqual(ids(routes), ["F", "A-early", "C", "D", "E"]);
+  assert.deepEqual(ids(routes.reverse()), ["F", "A-early", "C", "D", "E"]);
+});
+
+test("newly added or edited guides without authored role labels auto-infer carries from output items", () => {
+  const newlyAdded = route(
+    "brand-new-guide",
+    [piece("a"), piece("b"), piece("gnar", [rageblade])],
+    [piece("a"), piece("b"), piece("high"), piece("kai-sa", [rageblade])],
+  );
+  const [fit] = picks(newlyAdded);
+  assert.equal(fit.score, 3);
+  assert.deepEqual(fit.handoff, { fromId: "gnar", toId: "kai-sa", itemIds: [rageblade] });
+  assert.equal(fit.finalBoard.find(p => p.unitId === "kai-sa")?.isCarry, true);
 });
 
 test("two retained low-cost champions are a fallback and unsupported groups remain empty", () => {
   const [twoLow] = picks(route("two low", [piece("a"), piece("b")], [piece("a"), piece("b")]));
   assert.equal(twoLow.score, 0);
+  assert.equal(twoLow.tier, "core");
   const result = buildMedleyFits([{ number: 2, unitIds: ["spare"] }], [route("guide", [piece("a")], [piece("a")])], units, items);
   assert.deepEqual(result, { 2: [] });
 });
