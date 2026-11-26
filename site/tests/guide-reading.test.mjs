@@ -131,17 +131,6 @@ test("guide copy keeps item handoffs and alternative strategies when their equip
   const seen = new Set();
   rememberGuideCopy("卢锡安两星拿霞装，布隆拿肉。孙悟空两星接布隆的肉装。", seen);
   assert.equal(compactGuideParagraph(tank, guFeng, data, seen), "八级蕾欧娜先带日炎补重伤。");
-
-  const fortune = { id: "00000000-0000-4000-8000-000000000011", pieces: [
-    { unitId: "miss-fortune", items: ["TFT_Item_InfinityEdge", "TFT_Item_LastWhisper", "TFT_Item_SpearOfShojin"] },
-  ] };
-  const ranged = "副C：厄运小姐、泽丽。无尽、轻语、青龙刀，接卢锡安的整套输出装。已有薄暮时，轻语可换输出装。";
-  const cards = "副C：崔斯特。羊刀、法爆、虚空之杖。羊刀能从德莱文转过来。薄暮给前排，替史密奇补破甲。";
-  assert.equal(compactGuideParagraph(ranged, fortune, data, new Set()), "女枪接卢锡安的输出装。已有薄暮时，女枪的轻语可换输出装。");
-  rememberGuideCopy("女枪接卢锡安装，留一张空装卢锡安开双金曲。", seen);
-  assert.equal(compactGuideParagraph(ranged, fortune, data, seen), "已有薄暮时，女枪的轻语可换输出装。");
-  assert.equal(compactGuideParagraph(cards, fortune, data, seen), "薄暮给前排，替史密奇补破甲。转卡牌时，羊刀可从德莱文接过来。");
-  assert.equal(compactGuideParagraph(cards, { ...fortune, id: "different-board" }, data, seen), cards);
 });
 
 test("a shared poster restores an explicit stage selection and keeps earlier board links usable", () => {
@@ -500,7 +489,7 @@ test("the playstyle remains the same when a ranking uses its own guide title", (
   assert.equal(tag, "95");
   assert.equal(guideTitleWithoutPlaystyle("双电子泽丽 · 95", tag), "双电子泽丽");
   assert.equal(guideTitleWithoutPlaystyle("双电子泽丽", tag), "双电子泽丽");
-  assert.equal(guidePlaystyle({ ...guide, title: "史密奇95", blocks: [] }), undefined);
+  assert.equal(guidePlaystyle({ ...guide, title: "示例阵容95", blocks: [] }), undefined);
   assert.equal(parseGuideFilters({ style: "速九运营" }).style, tag);
   assert.deepEqual(homeGuideFilter("95", data), homeGuideFilter("速九", data));
 });

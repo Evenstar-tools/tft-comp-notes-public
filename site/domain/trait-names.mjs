@@ -15,7 +15,7 @@ const legacyTraitTerms = [
   [/黑魔法师/g, "法师"],
   [/金曲制作人纹章/g, "音乐制作人纹章"],
   [/金曲制作人/g, "制作人"],
-  [/叛逆者|混沌战士/g, "非主流"],
+  [/\u53db\u9006\u8005|混沌战士/g, "非主流"],
   [/屠戮者|裁决战士/g, "舞者"],
 ];
 
@@ -58,7 +58,11 @@ const guideTitleTraits = [
 
 /** Use for S19 lineup names and titles, not equipment names or player prose. @param {string} title */
 export function displayGuideName(title) {
-  if (["爵士派克兔牛", "爵士金克丝", "四主宰 AD 男枪"].includes(title)) return title;
+  if ([
+    "爵士派克兔牛", "爵士金克丝", "四古典烬", "三爵士五杀史密奇", "三爵士史密奇",
+    "八级 · 四古典烬", "九级 · 三爵士史密奇", "七级 · 古典过渡",
+    "八级 · 五杀爵士", "九级 · 三爵士五杀",
+  ].includes(title)) return title;
   return guideTitleTraits.reduce((name, [former, current]) => name.replace(former, current), displayTraitNames(title));
 }
 

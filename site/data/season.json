@@ -894,7 +894,7 @@
         "updatedAt": "2026-11-26"
       },
       "unlock": {
-        "text": "让一名「古典」「叛逆者」或「花式射手」弈子携带 2 件装备。",
+        "text": "让一名「古典」「非主流」或「花式射手」弈子携带 2 件装备。",
         "raw": "2 items on a Classical, Renegade, or Trickshot Champion.",
         "note": "",
         "source": {
@@ -1176,7 +1176,7 @@
         "updatedAt": "2026-11-22"
       },
       "unlock": {
-        "text": "上场 3 名不同的 K/DA 或「叛逆者」弈子，两种羁绊合计。",
+        "text": "上场 3 名不同的 K/DA 或「非主流」弈子，两种羁绊合计。",
         "raw": "3 unique K/DA or Renegade Champions.",
         "note": "",
         "source": {
@@ -3710,7 +3710,7 @@
     },
     {
       "id": "renegade",
-      "name": "叛逆者",
+      "name": "非主流",
       "nameEn": "Renegade",
       "axis": "column",
       "thresholds": [
@@ -3725,8 +3725,7 @@
       "provisional": true,
       "countMode": "unique",
       "aliases": [
-        "混沌战士",
-        "非主流"
+        "混沌战士"
       ]
     },
     {

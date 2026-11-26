@@ -3237,41 +3237,116 @@
         "八级双核两星、能赢回合且有钱再升九。补女枪和卢锡安开双金曲，余下物理装给女枪，烬留原装。"
       ]
     },
-    "summaryId": "sample-block-0297",
+    "summaryId": "sample-block-0727",
     "groups": [
       {
-        "afterImage": "sample-block-0231",
+        "afterImage": null,
         "blocks": [
+          {
+            "id": "sample-block-0727",
+            "type": "text",
+            "text": "八级原盘自带 8 个非唯一羁绊。上九补女枪或赛娜，与卢锡安开 2 制作人，直接凑满 9 个，不下主 C、主坦即可解锁史密奇。",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "八级原盘自带 8 个非唯一羁绊。上九补女枪或赛娜，与卢锡安开 2 制作人，直接凑满 9 个，不下主 C、主坦即可解锁史密奇。"
+                }
+              }
+            ]
+          },
           {
             "id": "sample-block-0451",
             "type": "text",
             "text": "打法：速八运营"
           },
           {
-            "id": "sample-block-0318",
+            "id": "sample-block-0651",
             "type": "text",
-            "text": "主C：烬。无尽、死亡之刃、轻语。有队友带薄暮覆盖同侧时，轻语可换链枷。"
-          },
-          {
-            "id": "sample-block-0239",
-            "type": "text",
-            "text": "主坦：锤石。石板甲、振奋、冕卫，冕卫可换狂徒。鬼书先给烈娜塔，成型交给梅尔。"
-          },
-          {
-            "id": "sample-block-0274",
-            "type": "text",
-            "text": "七级过渡",
             "elements": [
               {
                 "text_run": {
-                  "content": "七级过渡",
+                  "content": "卡特、狗头开双古典。狗头带两件开莎弥拉，莎弥拉拿无尽攒沉醉，累计 250 秒开锤石。",
                   "text_element_style": {
-                    "bold": true
+                    "bold": false,
+                    "inline_code": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false
                   }
                 }
               }
             ],
-            "label": true
+            "level": 0,
+            "text": "卡特、狗头开双古典。狗头带两件开莎弥拉，莎弥拉拿无尽攒沉醉，累计 250 秒开锤石。"
+          },
+          {
+            "id": "sample-block-0632",
+            "type": "text",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "4-2 上八搜烬、锤石，两星接装就成型。",
+                  "text_element_style": {
+                    "bold": true,
+                    "inline_code": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false
+                  }
+                }
+              },
+              {
+                "text_run": {
+                  "content": " 八级挑一轮前两排只放一人开吸血鬼，没来用烈娜塔。奎桑提带薄暮能破到烬的目标，就省轻语。",
+                  "text_element_style": {
+                    "bold": false,
+                    "inline_code": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false
+                  }
+                }
+              }
+            ],
+            "level": 0,
+            "text": "4-2 上八搜烬、锤石，两星接装就成型。 八级挑一轮前两排只放一人开吸血鬼，没来用烈娜塔。奎桑提带薄暮能破到烬的目标，就省轻语。"
+          },
+          {
+            "id": "sample-block-0318",
+            "type": "text",
+            "text": "主C：烬。无尽、死亡之刃、轻语。有队友带薄暮覆盖同侧时，轻语可换链枷。",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "主C：烬。无尽、死亡之刃、轻语。有队友带薄暮覆盖同侧时，轻语可换链枷。"
+                }
+              }
+            ]
+          },
+          {
+            "id": "sample-block-0239",
+            "type": "text",
+            "text": "主坦：锤石。石板甲、救赎、冕卫。法装齐时，一星弗拉基米尔可接蓝霸符、鬼书、大天使。",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "主坦：锤石。石板甲、救赎、冕卫。法装齐时，一星弗拉基米尔可接蓝霸符、鬼书、大天使。"
+                }
+              }
+            ]
+          },
+          {
+            "id": "sample-block-0274",
+            "type": "heading",
+            "level": 3,
+            "text": "七级 · 古典过渡",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "七级 · 古典过渡"
+                }
+              }
+            ]
           },
           {
             "id": "sample-block-0221",
@@ -3285,19 +3360,16 @@
           },
           {
             "id": "sample-block-0178",
-            "type": "text",
-            "text": "八级成型",
+            "type": "heading",
+            "level": 3,
+            "text": "八级 · 四古典烬",
             "elements": [
               {
                 "text_run": {
-                  "content": "八级成型",
-                  "text_element_style": {
-                    "bold": true
-                  }
+                  "content": "八级 · 四古典烬"
                 }
               }
-            ],
-            "label": true
+            ]
           },
           {
             "id": "sample-block-0267",
@@ -3311,172 +3383,168 @@
           },
           {
             "id": "sample-block-0128",
-            "type": "text",
-            "text": "九级上限",
+            "type": "heading",
+            "level": 3,
+            "text": "九级 · 补女枪（9羁绊开锁）",
             "elements": [
               {
                 "text_run": {
-                  "content": "九级上限",
-                  "text_element_style": {
-                    "bold": true
-                  }
+                  "content": "九级 · 补女枪（9羁绊开锁）"
                 }
               }
-            ],
-            "label": true
+            ]
           },
           {
             "id": "sample-block-0311",
             "type": "text",
-            "text": "八级双核两星、能赢回合且有钱再升九。史密奇已解锁、前排也能腾出一个挂件位时，可用他和加里奥、卢锡安开三爵士。史密奇没来就补女枪和卢锡安开双金曲，余下物理装给女枪，烬留原装。"
+            "text": "八级原盘自带 8 个非唯一羁绊。上九补女枪或赛娜，与卢锡安开 2 制作人，直接凑满 9 个，不下主 C、主坦即可解锁史密奇。物理装可给烬或两星女枪。史密奇解锁后可换下女枪或赛娜，开三爵士；女枪带主 C 装时可保留女枪。",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "八级原盘自带 8 个非唯一羁绊。上九补女枪或赛娜，与卢锡安开 2 制作人，直接凑满 9 个，不下主 C、主坦即可解锁史密奇。物理装可给烬或两星女枪。史密奇解锁后可换下女枪或赛娜，开三爵士；女枪带主 C 装时可保留女枪。"
+                }
+              }
+            ]
+          },
+          {
+            "id": "sample-block-classic-jazz-heading",
+            "type": "heading",
+            "level": 3,
+            "text": "九级 · 三爵士史密奇",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "九级 · 三爵士史密奇"
+                }
+              }
+            ]
+          },
+          {
+            "id": "sample-block-classic-jazz-route",
+            "type": "text",
+            "text": "用九级补女枪盘解锁后，史密奇换女枪开 3 爵士。烬继续主 C，余下战士装给史密奇。",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "用九级补女枪盘解锁后，史密奇换女枪开 3 爵士。烬继续主 C，余下战士装给史密奇。"
+                }
+              }
+            ]
+          },
+          {
+            "id": "sample-block-1006",
+            "type": "text",
+            "text": "19.1b 首批，九级三爵士固定棋盘 617 场，烬两星三件，均名 3.21、前四 80.6%。九级原盘数据",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "19.1b 首批，九级三爵士固定棋盘 617 场，烬两星三件，均名 3.21、前四 80.6%。"
+                }
+              },
+              {
+                "text_run": {
+                  "content": "九级原盘数据",
+                  "text_element_style": {
+                    "bold": false,
+                    "inline_code": false,
+                    "italic": false,
+                    "link": {
+                      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&queue=PBE&patch=19.1&b_patch=b&days=3&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&trait=DA_Jazz19_2&unit=DA_Jhin19-1_2_3&unit=DA_Vladimir19-1&unit=DA_Thresh19-1&unit=DA_Galio19-1&unit=DA_Lucian19-1&unit=DA_Mel19-1&unit=DA_KSante19-1&unit=DA_Nasus19-1&unit=DA_Smeech19-1"
+                    },
+                    "strikethrough": false,
+                    "underline": false
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "id": "sample-block-classic-mf-heading",
+            "type": "heading",
+            "level": 3,
+            "text": "九级 · 女枪主 C 变阵",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "九级 · 女枪主 C 变阵"
+                }
+              }
+            ]
+          },
+          {
+            "id": "sample-block-classic-mf-route",
+            "type": "text",
+            "text": "同一套 9 羁绊开锁棋子。女枪两星拿主 C 物理装，梅尔带鬼书，烬吃剩余物理装。",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "同一套 9 羁绊开锁棋子。女枪两星拿主 C 物理装，梅尔带鬼书，烬吃剩余物理装。"
+                }
+              }
+            ]
+          },
+          {
+            "id": "sample-block-classic-loadouts",
+            "type": "heading",
+            "level": 3,
+            "text": "各棋盘配装",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "各棋盘配装"
+                }
+              }
+            ]
           },
           {
             "id": "sample-block-0371",
             "type": "text",
-            "text": "棋盘配装 · 九级 · 补女枪\n主C：烬。无尽、死亡之刃、轻语。\n主坦：锤石。石板甲、振奋、冕卫。\n副C：梅尔。蓝霸符、鬼书、大天使。\n副C：厄运小姐。物理余装。"
+            "text": "棋盘配装 · 九级 · 补女枪（9羁绊开锁）\n主C：烬。无尽之刃、死亡之刃、最后的轻语。\n主坦：锤石。石像鬼石板甲、救赎、冕卫。\n副C：弗拉基米尔。蓝霸符、莫雷洛秘典、大天使之杖。\n副C：厄运小姐。余下物理装。",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "棋盘配装 · 九级 · 补女枪（9羁绊开锁）\n主C：烬。无尽之刃、死亡之刃、最后的轻语。\n主坦：锤石。石像鬼石板甲、救赎、冕卫。\n副C：弗拉基米尔。蓝霸符、莫雷洛秘典、大天使之杖。\n副C：厄运小姐。余下物理装。"
+                }
+              }
+            ]
           },
           {
             "id": "sample-block-0126",
             "type": "text",
-            "text": "棋盘配装 · 八级 · 四古典烬\n主C：烬。无尽、死亡之刃、轻语。\n主坦：锤石。石板甲、振奋、冕卫。\n副C：梅尔。蓝霸符、鬼书、大天使。"
+            "text": "棋盘配装 · 八级 · 四古典烬\n主C：烬。无尽之刃、死亡之刃、最后的轻语。\n主坦：锤石。石像鬼石板甲、救赎、冕卫。\n副C：弗拉基米尔。蓝霸符、莫雷洛秘典、大天使之杖。",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "棋盘配装 · 八级 · 四古典烬\n主C：烬。无尽之刃、死亡之刃、最后的轻语。\n主坦：锤石。石像鬼石板甲、救赎、冕卫。\n副C：弗拉基米尔。蓝霸符、莫雷洛秘典、大天使之杖。"
+                }
+              }
+            ]
           },
           {
             "id": "sample-block-0113",
             "type": "text",
             "text": "棋盘配装 · 七级 · 古典过渡\n主C：莎弥拉。无尽和死亡之刃打工，成型转给烬。\n主坦：内瑟斯。板甲、狂徒，同时解锁莎弥拉。\n功能装：奎桑提。薄暮覆盖莎弥拉先打的前排。\n功能装：烈娜塔·戈拉斯克。先带鬼书。"
-          }
-        ]
-      }
-    ]
-  },
-  "sample-block-0394": {
-    "previousText": {
-      "sample-block-0353": [
-        "示例旧文案 13",
-        "锤石需要让敌人累计迷醉 275 秒，锁着时用卡特琳娜保四古典。弗拉基米尔八级可开锁，选能承受掉血的一轮，把前两排缩到一名弈子。"
-      ]
-    },
-    "summaryId": "sample-block-0197",
-    "groups": [
-      {
-        "afterImage": "sample-block-0380",
-        "blocks": [
-          {
-            "id": "sample-block-0256",
-            "type": "text",
-            "text": "打法：速九运营"
           },
           {
-            "id": "sample-block-0399",
+            "id": "sample-block-0872",
             "type": "text",
-            "text": "主C：厄运小姐。青龙刀、无尽、轻语。"
-          },
-          {
-            "id": "sample-block-0376",
-            "type": "text",
-            "text": "主坦：锤石。石像鬼、狂徒、振奋。"
-          },
-          {
-            "id": "sample-block-0070",
-            "type": "text",
-            "text": "副C：烬、弗拉基米尔。剩余物理装给烬，剩余法装给弗拉基米尔。"
-          },
-          {
-            "id": "sample-block-0246",
-            "type": "text",
-            "text": "八级稳血",
+            "text": "棋盘配装 · 九级 · 三爵士史密奇\n主C：烬。无尽之刃、死亡之刃、最后的轻语。\n主坦：锤石。石像鬼石板甲、救赎、冕卫。\n副C：弗拉基米尔。蓝霸符、莫雷洛秘典、大天使之杖。\n副C：史密奇。余下战士装。",
             "elements": [
               {
                 "text_run": {
-                  "content": "八级稳血",
-                  "text_element_style": {
-                    "bold": true
-                  }
+                  "content": "棋盘配装 · 九级 · 三爵士史密奇\n主C：烬。无尽之刃、死亡之刃、最后的轻语。\n主坦：锤石。石像鬼石板甲、救赎、冕卫。\n副C：弗拉基米尔。蓝霸符、莫雷洛秘典、大天使之杖。\n副C：史密奇。余下战士装。"
                 }
               }
-            ],
-            "label": true
+            ]
           },
           {
-            "id": "sample-block-0172",
+            "id": "sample-block-classic-mf-loadout",
             "type": "text",
-            "text": "霞、卢锡安、烬、烈娜塔、内瑟斯、加里奥、斯维因、锤石。前中期用内瑟斯＋烈娜塔开古典，尽早累积迷醉。物理装用二星卢锡安打工，先摸到二星霞也可直接给霞。内瑟斯先吃肉装。"
-          },
-          {
-            "id": "sample-block-0353",
-            "type": "text",
-            "text": "锤石需要让敌人累计沉醉 250 秒，锁着时用卡特琳娜保四古典。弗拉基米尔八级可解锁，选能承受掉血的一轮，把前两排缩到一名弈子。"
-          },
-          {
-            "id": "sample-block-0425",
-            "type": "text",
-            "text": "九级换装",
+            "text": "棋盘配装 · 九级 · 女枪主 C 变阵\n主C：厄运小姐。朔极之矛、无尽之刃、最后的轻语。\n主坦：锤石。石像鬼石板甲、狂徒铠甲、救赎。\n功能装：梅尔.莫雷洛秘典。\n副C：烬。余下物理装。",
             "elements": [
               {
                 "text_run": {
-                  "content": "九级换装",
-                  "text_element_style": {
-                    "bold": true
-                  }
-                }
-              }
-            ],
-            "label": true
-          },
-          {
-            "id": "sample-block-0087",
-            "type": "text",
-            "text": "霞换厄运小姐，烈娜塔换弗拉基米尔，补努努和威朗普。女枪二星再交整套输出装，提前留一张空装卢锡安。锤石二星接肉装，内瑟斯靠备牌补回。锤石靠中路接火，女枪和烬分开站后排。"
-          },
-          {
-            "id": "sample-block-0247",
-            "type": "text",
-            "text": "PBE 19.1 数据",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "PBE 19.1 数据",
-                  "text_element_style": {
-                    "bold": true
-                  }
-                }
-              }
-            ],
-            "label": true
-          },
-          {
-            "id": "sample-block-0313",
-            "type": "text",
-            "text": "固定九人口九张棋子，近三天 1,556 场，均名 3.34，前四 76.3%。样本含不同星级和配装。"
-          },
-          {
-            "id": "sample-block-0162",
-            "type": "text",
-            "text": "MetaTFT 固定九人 · PBE 解锁与羁绊",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "MetaTFT 固定九人",
-                  "text_element_style": {
-                    "link": {
-                      "url": "https://www.metatft.com/explorer?tab=units&level=9&set=TFTSet19&unit=DA_MissFortune19-1&unit=DA_Lucian19-1&unit=DA_Galio19-1&unit=DA_Swain19-1&unit=DA_Nunu19-1&unit=DA_Thresh19-1&unit=DA_Jhin19-1&unit=DA_Vladimir19-1&unit=DA_Nasus19-1"
-                    }
-                  }
-                }
-              },
-              {
-                "text_run": {
-                  "content": " · "
-                }
-              },
-              {
-                "text_run": {
-                  "content": "PBE 解锁与羁绊",
-                  "text_element_style": {
-                    "link": {
-                      "url": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
-                    }
-                  }
+                  "content": "棋盘配装 · 九级 · 女枪主 C 变阵\n主C：厄运小姐。朔极之矛、无尽之刃、最后的轻语。\n主坦：锤石。石像鬼石板甲、狂徒铠甲、救赎。\n功能装：梅尔.莫雷洛秘典。\n副C：烬。余下物理装。"
                 }
               }
             ]
@@ -3488,10 +3556,6 @@
   "sample-block-0235": {
     "previousText": {
       "sample-block-0419": "示例旧文案 14",
-      "sample-block-0264": [
-        "示例旧文案 15",
-        "九级先上酒桶，留巴德凑齐八个常规羁绊。解锁史密奇后原位换下巴德。泽丽两星接输出装，蒙多两星再接蕾欧娜的肉装。"
-      ],
       "sample-block-0430": "示例旧文案 16",
       "sample-block-0314": "示例旧文案 17"
     },
@@ -3560,7 +3624,14 @@
           {
             "id": "sample-block-0264",
             "type": "text",
-            "text": "九级先上酒桶和巴德，酒桶与蕾欧娜合计至少 3 星开 K/DA。临时用瑟提换努努，开心之钢凑齐九个非唯一羁绊。解锁后史密奇换巴德，努努换回瑟提。泽丽和蒙多各两星后再接装。"
+            "text": "九级搜两星泽丽接输出装，留巴德开三迅击鼓手。女枪先两星就和卢锡安一起上，开 2 制作人。上蔚、努努，蒙多两星再接蕾欧娜的肉装。",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "九级搜两星泽丽接输出装，留巴德开三迅击鼓手。女枪先两星就和卢锡安一起上，开 2 制作人。上蔚、努努，蒙多两星再接蕾欧娜的肉装。"
+                }
+              }
+            ]
           },
           {
             "id": "sample-block-0393",
@@ -3571,834 +3642,77 @@
       }
     ]
   },
-  "sample-block-0368": {
-    "summaryId": "sample-block-0105",
-    "groups": [
-      {
-        "afterImage": "sample-block-0165",
-        "blocks": [
-          {
-            "id": "sample-block-0204",
-            "type": "text",
-            "text": "打法：速九运营"
-          },
-          {
-            "id": "sample-block-0176",
-            "type": "text",
-            "text": "主C：史密奇。饮血、血手、泰坦。放第二排，由主坦和副坦夹护。首枚纹章需释放 15 节拍。"
-          },
-          {
-            "id": "sample-block-0155",
-            "type": "text",
-            "text": "主坦：蒙多医生。板甲、狂徒、振奋。蒙多没来时由两星加里奥、斯维因顶。"
-          },
-          {
-            "id": "sample-block-0049",
-            "type": "text",
-            "text": "副C：厄运小姐、泽丽。无尽、轻语、青龙刀，接卢锡安的整套输出装。已有薄暮时，轻语可换输出装。"
-          },
-          {
-            "id": "sample-block-0309",
-            "type": "text",
-            "text": "副C：崔斯特。羊刀、法爆、虚空之杖。羊刀能从德莱文转过来。薄暮给前排，替史密奇补破甲。"
-          },
-          {
-            "id": "sample-block-0008",
-            "type": "text",
-            "text": "八级留牌",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "八级留牌",
-                  "text_element_style": {
-                    "bold": true
-                  }
-                }
-              }
-            ],
-            "label": true
-          },
-          {
-            "id": "sample-block-0396",
-            "type": "text",
-            "text": "前期留卢锡安、贾克斯、妮蔻。卢锡安拿后排装，凯隐或卡蜜尔先二星就带战士装。肉装先做给加里奥，斯维因补日炎。能稳住再存上九的钱，掉血多就八级先补二星前排和后排。"
-          },
-          {
-            "id": "sample-block-0312",
-            "type": "text",
-            "text": "拿德莱文打工时沿用两星布隆或俄洛伊。想转卡牌，留羊刀和法装，物理装给场上另一个输出或功能位。"
-          },
-          {
-            "id": "sample-block-0253",
-            "type": "text",
-            "text": "九级开锁",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "九级开锁",
-                  "text_element_style": {
-                    "bold": true
-                  }
-                }
-              }
-            ],
-            "label": true
-          },
-          {
-            "id": "sample-block-0021",
-            "type": "text",
-            "text": "八级留卢锡安、加里奥、斯维因、妮蔻、莉莉娅、贾克斯、巴德和凯隐。九级加赛娜开双金曲，再用吉格斯临时换巴德开双法师，凑满九个非唯一羁绊。妮蔻二星、莉莉娅一星开 K/DA。确认解锁后再搜史密奇，按战力换回。"
-          },
-          {
-            "id": "sample-block-0124",
-            "type": "text",
-            "text": "史密奇一星有三件、前后排撑得住就上。先接凯隐装，再用永恩开双裁决。永恩没到可补空装凯隐或卡蜜尔。"
-          },
-          {
-            "id": "sample-block-0335",
-            "type": "text",
-            "text": "女枪、卡牌、泽丽怎么选",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "女枪、卡牌、泽丽怎么选",
-                  "text_element_style": {
-                    "bold": true
-                  }
-                }
-              }
-            ],
-            "label": true
-          },
-          {
-            "id": "sample-block-0076",
-            "type": "text",
-            "text": "女枪蒙多。女枪接卢锡安装，留一张空装卢锡安开双金曲。蒙多、蕾欧娜开经纪人，前排稳了再让蒙多接加里奥装。蔚和贾克斯开电子舞曲，偷偷给蔚，巴德补疾风。"
-          },
-          {
-            "id": "sample-block-0296",
-            "type": "text",
-            "text": "酷炫卡牌。卡牌先到且有羊刀法装，就保留德莱文开双花式，布隆、俄洛伊撑前排。物理破甲留给史密奇，卡牌靠法爆和虚空杖打魔伤。"
-          },
-          {
-            "id": "sample-block-0183",
-            "type": "text",
-            "text": "疾风泽丽。带物理装的泽丽先二星就接卢锡安。贾克斯开双疾风，蔚开电子。蒙多没来，保持两星加里奥和斯维因，奎桑提补保镖、布隆补主唱。"
-          },
-          {
-            "id": "sample-block-0032",
-            "type": "text",
-            "text": "样本与来源",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "样本与来源",
-                  "text_element_style": {
-                    "bold": true
-                  }
-                }
-              }
-            ],
-            "label": true
-          },
-          {
-            "id": "sample-block-0459",
-            "type": "text",
-            "text": "MetaTFT PBE 19.1 最近三天，九级双核同场。女枪 4.46（9,590 局），卡牌 4.31（2,499 局），泽丽 4.26（5,391 局）。固定九人样本少，棋盘用于演示换牌。"
-          },
-          {
-            "id": "sample-block-0150",
-            "type": "text",
-            "text": "女枪双核 · 卡牌双核 · 泽丽双核 · 史密奇配装",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "女枪双核",
-                  "text_element_style": {
-                    "link": {
-                      "url": "https://www.metatft.com/explorer?tab=units&level=9&unit=DA_Smeech19-1&unit=DA_MissFortune19-1&set=TFTSet19"
-                    }
-                  }
-                }
-              },
-              {
-                "text_run": {
-                  "content": " · "
-                }
-              },
-              {
-                "text_run": {
-                  "content": "卡牌双核",
-                  "text_element_style": {
-                    "link": {
-                      "url": "https://www.metatft.com/explorer?tab=units&level=9&unit=DA_Smeech19-1&unit=DA_TwistedFate19-1&set=TFTSet19"
-                    }
-                  }
-                }
-              },
-              {
-                "text_run": {
-                  "content": " · "
-                }
-              },
-              {
-                "text_run": {
-                  "content": "泽丽双核",
-                  "text_element_style": {
-                    "link": {
-                      "url": "https://www.metatft.com/explorer?tab=units&level=9&unit=DA_Smeech19-1&unit=DA_Zeri19-1&set=TFTSet19"
-                    }
-                  }
-                }
-              },
-              {
-                "text_run": {
-                  "content": " · "
-                }
-              },
-              {
-                "text_run": {
-                  "content": "史密奇配装",
-                  "text_element_style": {
-                    "link": {
-                      "url": "https://www.metatft.com/explorer?tab=builds&level=9&unit=DA_Smeech19-1_x_3&set=TFTSet19"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "id": "sample-block-0341",
-            "type": "text",
-            "text": "视频开锁示范 10:18 · 视频成型骨架 0:47 · TFTFlow 解锁 · 爵士乐史密奇其他分支",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "视频开锁示范 10:18",
-                  "text_element_style": {
-                    "link": {
-                      "url": "https://www.bilibili.com/video/BV18xs86PEJB/?t=618"
-                    }
-                  }
-                }
-              },
-              {
-                "text_run": {
-                  "content": " · "
-                }
-              },
-              {
-                "text_run": {
-                  "content": "视频成型骨架 0:47",
-                  "text_element_style": {
-                    "link": {
-                      "url": "https://www.bilibili.com/video/BV18xs86PEJB/?t=47"
-                    }
-                  }
-                }
-              },
-              {
-                "text_run": {
-                  "content": " · "
-                }
-              },
-              {
-                "text_run": {
-                  "content": "TFTFlow 解锁",
-                  "text_element_style": {
-                    "link": {
-                      "url": "https://tftflow.com/how-to-unlock-every-champion-set19"
-                    }
-                  }
-                }
-              },
-              {
-                "text_run": {
-                  "content": " · "
-                }
-              },
-              {
-                "text_run": {
-                  "content": "爵士乐史密奇其他分支",
-                  "text_element_style": {
-                    "link": {
-                      "url": "https://tft.example.com/guides/sample-block-0275"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "id": "sample-block-0041",
-            "type": "text",
-            "text": "棋盘配装 · 女枪蒙多\n主C：史密奇。饮血剑、斯特拉克的挑战护手、泰坦的坚决。\n主坦：蒙多医生。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副C：厄运小姐。无尽之刃、最后的轻语、朔极之矛。\n功能装：厄运小姐。女枪弹球沿途破甲。\n功能装：蕾欧娜。蕾欧娜顶前排用日炎重伤。\n结算 14 局",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "棋盘配装 · 女枪蒙多",
-                  "text_element_style": {
-                    "bold": true
-                  }
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主C：史密奇。饮血剑、斯特拉克的挑战护手、泰坦的坚决。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主坦：蒙多医生。石像鬼石板甲、狂徒铠甲、振奋盔甲。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "副C：厄运小姐。无尽之刃、最后的轻语、朔极之矛。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：厄运小姐。女枪弹球沿途破甲。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：蕾欧娜。蕾欧娜顶前排用日炎重伤。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "结算 14 局",
-                  "text_element_style": {
-                    "link": {
-                      "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=9&unit=DA_Leona19-1&unit=DA_DrMundo19-1&unit=DA_Jax19-1&unit=DA_Yone19-1&unit=DA_Smeech19-1&unit=DA_Vi19-1&unit=DA_Bard19-1&unit=DA_Lucian19-1&unit=DA_MissFortune19-1"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "id": "sample-block-0302",
-            "type": "text",
-            "text": "棋盘配装 · 疾风泽丽\n主C：史密奇。饮血剑、斯特拉克的挑战护手、泰坦的坚决。\n主坦：加里奥。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副C：泽丽。无尽之刃、最后的轻语、朔极之矛。\n功能装：泽丽。带轻语为史密奇破甲；她自身技能的护甲无视只用于自己。\n功能装：斯维因。日炎重伤。\n结算 0 局",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "棋盘配装 · 疾风泽丽",
-                  "text_element_style": {
-                    "bold": true
-                  }
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主C：史密奇。饮血剑、斯特拉克的挑战护手、泰坦的坚决。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主坦：加里奥。石像鬼石板甲、狂徒铠甲、振奋盔甲。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "副C：泽丽。无尽之刃、最后的轻语、朔极之矛。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：泽丽。带轻语为史密奇破甲；她自身技能的护甲无视只用于自己。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：斯维因。日炎重伤。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "结算 0 局",
-                  "text_element_style": {
-                    "link": {
-                      "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=9&unit=DA_KSante19-1&unit=DA_Galio19-1&unit=DA_Braum19-1&unit=DA_Swain19-1&unit=DA_Yone19-1&unit=DA_Smeech19-1&unit=DA_Vi19-1&unit=DA_Jax19-1&unit=DA_Zeri19-1"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "id": "sample-block-0374",
-            "type": "text",
-            "text": "棋盘配装 · 酷炫卡牌\n主C：史密奇。饮血剑、斯特拉克的挑战护手、泰坦的坚决。\n主坦：加里奥。石像鬼石板甲、狂徒铠甲、薄暮法袍。\n副C：崔斯特。鬼索的狂暴之刃、珠光护手、虚空之杖。\n功能装：加里奥。带薄暮，替史密奇破甲。\n功能装：崔斯特。虚空杖减魔抗，探戈让崔斯特和最近舞伴的伤害附带灼烧与重伤。\n结算 0 局",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "棋盘配装 · 酷炫卡牌",
-                  "text_element_style": {
-                    "bold": true
-                  }
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主C：史密奇。饮血剑、斯特拉克的挑战护手、泰坦的坚决。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主坦：加里奥。石像鬼石板甲、狂徒铠甲、薄暮法袍。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "副C：崔斯特。鬼索的狂暴之刃、珠光护手、虚空之杖。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：加里奥。带薄暮，替史密奇破甲。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：崔斯特。虚空杖减魔抗，探戈让崔斯特和最近舞伴的伤害附带灼烧与重伤。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "结算 0 局",
-                  "text_element_style": {
-                    "link": {
-                      "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=9&unit=DA_Illaoi19-1&unit=DA_Galio19-1&unit=DA_Braum19-1&unit=DA_Jax19-1&unit=DA_Smeech19-1&unit=DA_Vi19-1&unit=DA_Yone19-1&unit=DA_Draven19-1&unit=DA_TwistedFate19-1"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "id": "sample-block-0276",
-            "type": "text",
-            "text": "棋盘配装 · 九级 · 史密奇开锁准备\n主C：卢锡安。无尽之刃、最后的轻语、朔极之矛。\n主坦：加里奥。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副C：凯隐。饮血剑、斯特拉克的挑战护手、泰坦的坚决。\n功能装：卢锡安。轻语破甲。\n功能装：斯维因。日炎重伤。\n结算 0 局",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "棋盘配装 · 九级 · 史密奇开锁准备",
-                  "text_element_style": {
-                    "bold": true
-                  }
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主C：卢锡安。无尽之刃、最后的轻语、朔极之矛。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主坦：加里奥。石像鬼石板甲、狂徒铠甲、振奋盔甲。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "副C：凯隐。饮血剑、斯特拉克的挑战护手、泰坦的坚决。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：卢锡安。轻语破甲。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：斯维因。日炎重伤。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "结算 0 局",
-                  "text_element_style": {
-                    "link": {
-                      "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=9&unit=DA_Lillia19-1&unit=DA_Galio19-1&unit=DA_Swain19-1&unit=DA_Kayn19-1&unit=DA_Jax19-1&unit=DA_Lucian19-1&unit=DA_Neeko19-1&unit=DA_Bard19-1&unit=DA_Senna19-1"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "id": "sample-block-0362",
-            "type": "text",
-            "text": "棋盘配装 · 八级卢锡安稳血\n主C：卢锡安。无尽之刃、最后的轻语、朔极之矛。\n主坦：加里奥。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副C：凯隐。饮血剑、斯特拉克的挑战护手、泰坦的坚决。\n功能装：卢锡安。轻语破甲。\n功能装：斯维因。日炎重伤。\n结算 0 局",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "棋盘配装 · 八级卢锡安稳血",
-                  "text_element_style": {
-                    "bold": true
-                  }
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主C：卢锡安。无尽之刃、最后的轻语、朔极之矛。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主坦：加里奥。石像鬼石板甲、狂徒铠甲、振奋盔甲。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "副C：凯隐。饮血剑、斯特拉克的挑战护手、泰坦的坚决。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：卢锡安。轻语破甲。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：斯维因。日炎重伤。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "结算 0 局",
-                  "text_element_style": {
-                    "link": {
-                      "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=8&unit=DA_Lillia19-1&unit=DA_Galio19-1&unit=DA_Swain19-1&unit=DA_Kayn19-1&unit=DA_Jax19-1&unit=DA_Lucian19-1&unit=DA_Neeko19-1&unit=DA_Bard19-1"
-                    }
-                  }
-                }
-              }
-            ]
-          }
-        ]
-      }
-    ],
-    "previousText": {
-      "sample-block-0021": [
-        "卢锡安、加里奥、斯维因、妮蔻、莉莉娅、贾克斯、巴德、凯隐，九级补赛娜。妮蔻二星、莉莉娅一星即可开 K/DA。双金曲是第八个羁绊。缺凯隐时用吉格斯和斯维因开双法师。看到解锁提示再 D 史密奇。"
-      ],
-      "sample-block-0276": [
-        "棋盘配装 · 九级八羁绊开锁\n主C：卢锡安。无尽之刃、最后的轻语、朔极之矛。\n主坦：加里奥。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副C：凯隐。饮血剑、斯特拉克的挑战护手、泰坦的坚决。\n功能装：卢锡安。轻语破甲。\n功能装：斯维因。日炎重伤。\n结算 0 局"
-      ]
-    }
-  },
   "sample-block-0275": {
-    "previousText": {
-      "sample-block-0444": "示例旧文案 18",
-      "sample-block-0130": [
-        "九级加吉格斯补双法师、双疾风，原有 6 个羁绊升到 8。买到史密奇后换下卡蜜尔，开四爵士。"
-      ],
-      "sample-block-0079": [
-        "八级先补两星亚索稳血。九级加蔚，同时补双电子舞曲、双主唱，凑满八个。缺蔚就用加里奥、斯维因换卢锡安、赛娜，再补安妮。"
-      ],
-      "sample-block-0386": [
-        "棋盘配装 · 四爵士 · 九级开锁\n主C：烬。无尽之刃、最后的轻语、死亡之刃。\n主坦：加里奥。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副C：卡蜜尔。饮血剑、斯特拉克的挑战护手、泰坦的坚决。\n功能装：烬。轻语破甲。\n功能装：斯维因。日炎重伤。\n结算 0 局"
-      ],
-      "sample-block-0140": [
-        "棋盘配装 · 五杀 · 九级开锁\n主C：卡蜜尔。饮血剑、斯特拉克的挑战护手、泰坦的坚决。\n主坦：加里奥。石像鬼石板甲、狂徒铠甲、薄暮法袍。\n副C：卡尔萨斯。有对应余装再补。\n功能装：加里奥。第三件先补薄暮，让卡蜜尔的物理输出吃破甲。\n功能装：安妮。安妮火焰技能命中附带灼烧和重伤。\n结算 0 局"
-      ]
-    },
     "summaryId": "sample-block-0224",
     "groups": [
       {
-        "afterImage": "sample-block-0234",
+        "afterImage": null,
         "blocks": [
           {
-            "id": "sample-block-0381",
+            "id": "sample-block-0224",
             "type": "text",
-            "text": "打法：速九运营"
-          },
-          {
-            "id": "sample-block-0211",
-            "type": "text",
-            "text": "主C：史密奇。饮血、血手、泰坦，放主坦侧后。"
-          },
-          {
-            "id": "sample-block-0238",
-            "type": "text",
-            "text": "主坦：约里克。板甲、狂徒、振奋，五杀线给约里克。"
-          },
-          {
-            "id": "sample-block-0248",
-            "type": "text",
-            "text": "史密奇带饮血、血手、泰坦，放主坦侧后。当前 PBE 首枚纹章要释放 15 节拍。前排和副 C 能稳住时，一星就可接装启动。"
-          },
-          {
-            "id": "sample-block-0208",
-            "type": "text",
-            "text": "三爵士五杀史密奇",
+            "text": "八级原盘自带 8 个非唯一羁绊。上九补凯隐、瑟提或奎桑提开 1 心之钢，保留主 C 凯尔和主坦约里克就能凑满 9 个，解锁史密奇。",
             "elements": [
               {
                 "text_run": {
-                  "content": "三爵士五杀史密奇",
-                  "text_element_style": {
-                    "bold": true
-                  }
+                  "content": "八级原盘自带 8 个非唯一羁绊。上九补凯隐、瑟提或奎桑提开 1 心之钢，保留主 C 凯尔和主坦约里克就能凑满 9 个，解锁史密奇。"
                 }
               }
-            ],
-            "label": true
-          },
-          {
-            "id": "sample-block-0271",
-            "type": "text",
-            "text": "七级上奥拉夫、卡尔萨斯、佛耶戈、巴德，四张不同的五杀或疾风射手开凯尔。另放卡蜜尔、加里奥、斯维因。"
-          },
-          {
-            "id": "sample-block-0012",
-            "type": "text",
-            "text": "八级加安妮。两星卡蜜尔带史密奇装，两星加里奥带板甲、狂徒。凯尔来就换卡尔萨斯，约里克两星再换安妮。"
+            ]
           },
           {
             "id": "sample-block-0216",
             "type": "text",
-            "text": "九级第九格加吉格斯，再用璐璐临时换安妮，凑九个非唯一羁绊。开锁后恢复安妮，再按战力换约里克。"
+            "text": "八级羁绊：3 五杀乐队、3 摇滚恶魔、3 迅击鼓手、2 爵士、2 法师、2 主唱、2 主宰、1 R&B。",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "八级羁绊：3 五杀乐队、3 摇滚恶魔、3 迅击鼓手、2 爵士、2 法师、2 主唱、2 主宰、1 R&B。"
+                }
+              }
+            ]
           },
           {
             "id": "sample-block-0414",
             "type": "text",
-            "text": "史密奇换佛耶戈。先接卡蜜尔的战士装，空装卡蜜尔补回摇滚。凯尔换卡尔萨斯接羊刀、法爆、链枷，约里克换安妮接加里奥的肉装，空装加里奥回来带薄暮，斯维因带离子和日炎。最后梅尔换吉格斯。"
-          },
-          {
-            "id": "sample-block-0395",
-            "type": "text",
-            "text": "缺梅尔先留吉格斯或上安妮补双法师。已有爵士纹章就给约里克，原九人可开四爵士。"
-          },
-          {
-            "id": "sample-block-0157",
-            "type": "text",
-            "text": "四爵士烬史密奇",
+            "text": "解锁后用史密奇换心之钢开 3 爵士，洛克可留，也可换卡蜜尔开 2 舞者。",
             "elements": [
               {
                 "text_run": {
-                  "content": "四爵士烬史密奇",
+                  "content": "解锁后用史密奇换心之钢开 3 爵士，洛克可留，也可换卡蜜尔开 2 舞者。"
+                }
+              }
+            ]
+          },
+          {
+            "id": "sample-block-0381",
+            "type": "text",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "打法：速九运营",
                   "text_element_style": {
-                    "bold": true
+                    "bold": false,
+                    "inline_code": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false
                   }
                 }
               }
             ],
-            "label": true
+            "level": 0,
+            "text": "打法：速九运营"
           },
           {
-            "id": "sample-block-0201",
-            "type": "text",
-            "text": "两星卢锡安代持烬的无尽、轻语、杀人剑。两星卡蜜尔带史密奇装，两星加里奥带肉装。留一张空装卢锡安补爵士。"
-          },
-          {
-            "id": "sample-block-0129",
-            "type": "text",
-            "text": "八级先找两星烬接装。用烬、卡特开双古典，卢锡安、巴德、加里奥开三爵士。"
-          },
-          {
-            "id": "sample-block-0130",
-            "type": "text",
-            "text": "九级加吉格斯补双法师、双疾风。把卡蜜尔临时换成凯隐开心之钢，凑到九个非唯一羁绊。买到史密奇后，让他接回卡蜜尔的装备，开四爵士。"
-          },
-          {
-            "id": "sample-block-0387",
-            "type": "text",
-            "text": "真伤电子史密奇",
+            "id": "sample-block-0633",
+            "type": "heading",
+            "level": 3,
+            "text": "各棋盘配装",
             "elements": [
               {
                 "text_run": {
-                  "content": "真伤电子史密奇",
-                  "text_element_style": {
-                    "bold": true
-                  }
-                }
-              }
-            ],
-            "label": true
-          },
-          {
-            "id": "sample-block-0444",
-            "type": "text",
-            "text": "七级上两星凯南、两星奇亚娜、两星艾克，合计 6 星解锁亚索。凯隐带饮血、血手、泰坦，两星艾克拿肉装。"
-          },
-          {
-            "id": "sample-block-0079",
-            "type": "text",
-            "text": "八级先补两星亚索稳血。九级加蔚，补电子舞曲、双主唱，开九个非唯一羁绊。缺蔚就用加里奥、斯维因换卢锡安、赛娜，再补安妮，也能开九个。"
-          },
-          {
-            "id": "sample-block-0153",
-            "type": "text",
-            "text": "史密奇换凯隐接装。女枪、芮尔质量起来再换卢锡安、凯南，保留亚索、蔚、贾克斯和艾克。"
-          },
-          {
-            "id": "sample-block-0090",
-            "type": "text",
-            "text": "史密奇与过渡棋子解锁",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "史密奇与过渡棋子解锁",
-                  "text_element_style": {
-                    "link": {
-                      "url": "https://tftflow.com/how-to-unlock-every-champion-set19"
-                    }
-                  }
+                  "content": "各棋盘配装"
                 }
               }
             ]
@@ -4406,719 +3720,11 @@
           {
             "id": "sample-block-0148",
             "type": "text",
-            "text": "棋盘配装 · 三爵士五杀\n主C：史密奇。饮血剑、斯特拉克的挑战护手、泰坦的坚决。\n主坦：约里克。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副C：凯尔。鬼索的狂暴之刃、珠光护手、强袭者的链枷。\n功能装：加里奥。带薄暮，供史密奇同侧破甲。\n功能装：斯维因。带日炎、离子，负责重伤与减魔抗。\n结算 2,904 局 · 均名 3.77 · 前四 65.8% · 登顶 11.3%",
+            "text": "棋盘配装 · 九级 · 三爵士五杀\n主C：史密奇。饮血剑、斯特拉克的挑战护手、泰坦的坚决。\n主坦：约里克。石像鬼石板甲、狂徒铠甲、救赎。\n副C：凯尔。鬼索的狂暴之刃、珠光护手、强袭者的链枷。",
             "elements": [
               {
                 "text_run": {
-                  "content": "棋盘配装 · 三爵士五杀",
-                  "text_element_style": {
-                    "bold": true
-                  }
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主C：史密奇。饮血剑、斯特拉克的挑战护手、泰坦的坚决。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主坦：约里克。石像鬼石板甲、狂徒铠甲、振奋盔甲。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "副C：凯尔。鬼索的狂暴之刃、珠光护手、强袭者的链枷。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：加里奥。带薄暮，供史密奇同侧破甲。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：斯维因。带日炎、离子，负责重伤与减魔抗。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "结算 2,904 局 · 均名 3.77 · 前四 65.8% · 登顶 11.3%",
-                  "text_element_style": {
-                    "link": {
-                      "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=9&unit=DA_Galio19-1&unit=DA_Yorick19-1&unit=DA_Swain19-1&unit=DA_Camille19-1&unit=DA_Smeech19-1&unit=DA_Olaf19-1&unit=DA_Kayle19-1&unit=DA_Bard19-1&unit=DA_Mel19-1"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "id": "sample-block-0406",
-            "type": "text",
-            "text": "棋盘配装 · 真伤电子\n主C：史密奇。饮血剑、斯特拉克的挑战护手、泰坦的坚决。\n主坦：艾克。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副C：厄运小姐。无尽之刃、最后的轻语、朔极之矛。\n功能装：厄运小姐。女枪的弹球附带轻语破甲。\n功能装：芮尔。贴前排带日炎。\n结算 147 局 · 均名 4.51 · 前四 51.0% · 登顶 6.1%",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "棋盘配装 · 真伤电子",
-                  "text_element_style": {
-                    "bold": true
-                  }
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主C：史密奇。饮血剑、斯特拉克的挑战护手、泰坦的坚决。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主坦：艾克。石像鬼石板甲、狂徒铠甲、振奋盔甲。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "副C：厄运小姐。无尽之刃、最后的轻语、朔极之矛。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：厄运小姐。女枪的弹球附带轻语破甲。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：芮尔。贴前排带日炎。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "结算 147 局 · 均名 4.51 · 前四 51.0% · 登顶 6.1%",
-                  "text_element_style": {
-                    "link": {
-                      "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=9&unit=DA_Jax19-1&unit=DA_Ekko19-1&unit=DA_Rell19-1&unit=DA_Yasuo19-1&unit=DA_Smeech19-1&unit=DA_Vi19-1&unit=DA_Bard19-1&unit=DA_Senna19-1&unit=DA_MissFortune19-1"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "id": "sample-block-0075",
-            "type": "text",
-            "text": "棋盘配装 · 四爵士烬\n主C：史密奇。饮血剑、斯特拉克的挑战护手、泰坦的坚决。\n主坦：加里奥。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副C：烬。无尽之刃、最后的轻语、死亡之刃。\n功能装：烬。轻语破甲。\n功能装：斯维因。日炎重伤。\n结算 0 局",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "棋盘配装 · 四爵士烬",
-                  "text_element_style": {
-                    "bold": true
-                  }
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主C：史密奇。饮血剑、斯特拉克的挑战护手、泰坦的坚决。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主坦：加里奥。石像鬼石板甲、狂徒铠甲、振奋盔甲。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "副C：烬。无尽之刃、最后的轻语、死亡之刃。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：烬。轻语破甲。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：斯维因。日炎重伤。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "结算 0 局",
-                  "text_element_style": {
-                    "link": {
-                      "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=9&unit=DA_Galio19-1&unit=DA_Swain19-1&unit=DA_Katarina19-1&unit=DA_Smeech19-1&unit=DA_Senna19-1&unit=DA_Jhin19-1&unit=DA_Ziggs19-1&unit=DA_Lucian19-1&unit=DA_Bard19-1"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "id": "sample-block-0232",
-            "type": "text",
-            "text": "棋盘配装 · 真伤 · 缺蔚开锁\n主C：凯隐。饮血剑、斯特拉克的挑战护手、泰坦的坚决。\n主坦：艾克。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副C：亚索。有对应余装再补。\n功能装：凯南。带薄暮，给同侧凯隐和亚索破甲。\n功能装：安妮。安妮火焰技能命中附带灼烧和重伤。\n结算 0 局",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "棋盘配装 · 真伤 · 缺蔚开锁",
-                  "text_element_style": {
-                    "bold": true
-                  }
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主C：凯隐。饮血剑、斯特拉克的挑战护手、泰坦的坚决。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主坦：艾克。石像鬼石板甲、狂徒铠甲、振奋盔甲。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "副C：亚索。有对应余装再补。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：凯南。带薄暮，给同侧凯隐和亚索破甲。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：安妮。安妮火焰技能命中附带灼烧和重伤。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "结算 0 局",
-                  "text_element_style": {
-                    "link": {
-                      "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=9&unit=DA_Kennen19-1&unit=DA_Ekko19-1&unit=DA_Jax19-1&unit=DA_Kayn19-1&unit=DA_Yasuo19-1&unit=DA_Bard19-1&unit=DA_Galio19-1&unit=DA_Swain19-1&unit=DA_Annie19-1"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "id": "sample-block-0413",
-            "type": "text",
-            "text": "棋盘配装 · 真伤 · 九级开锁\n主C：凯隐。饮血剑、斯特拉克的挑战护手、泰坦的坚决。\n主坦：艾克。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副C：亚索。有对应余装再补。\n功能装：赛娜。赛娜远程破甲，可留给两星女枪继承。\n功能装：凯南。日炎重伤。\n结算 1 局",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "棋盘配装 · 真伤 · 九级开锁",
-                  "text_element_style": {
-                    "bold": true
-                  }
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主C：凯隐。饮血剑、斯特拉克的挑战护手、泰坦的坚决。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主坦：艾克。石像鬼石板甲、狂徒铠甲、振奋盔甲。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "副C：亚索。有对应余装再补。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：赛娜。赛娜远程破甲，可留给两星女枪继承。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：凯南。日炎重伤。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "结算 1 局",
-                  "text_element_style": {
-                    "link": {
-                      "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=9&unit=DA_Kennen19-1&unit=DA_Ekko19-1&unit=DA_Jax19-1&unit=DA_Kayn19-1&unit=DA_Yasuo19-1&unit=DA_Senna19-1&unit=DA_Lucian19-1&unit=DA_Bard19-1&unit=DA_Vi19-1"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "id": "sample-block-0114",
-            "type": "text",
-            "text": "棋盘配装 · 真伤 · 八级稳血\n主C：凯隐。饮血剑、斯特拉克的挑战护手、泰坦的坚决。\n主坦：艾克。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副C：亚索。有对应余装再补。\n功能装：赛娜。赛娜远程破甲，可留给两星女枪继承。\n功能装：凯南。日炎重伤。\n结算 0 局",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "棋盘配装 · 真伤 · 八级稳血",
-                  "text_element_style": {
-                    "bold": true
-                  }
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主C：凯隐。饮血剑、斯特拉克的挑战护手、泰坦的坚决。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主坦：艾克。石像鬼石板甲、狂徒铠甲、振奋盔甲。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "副C：亚索。有对应余装再补。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：赛娜。赛娜远程破甲，可留给两星女枪继承。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：凯南。日炎重伤。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "结算 0 局",
-                  "text_element_style": {
-                    "link": {
-                      "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=8&unit=DA_Kennen19-1&unit=DA_Ekko19-1&unit=DA_Jax19-1&unit=DA_Kayn19-1&unit=DA_Yasuo19-1&unit=DA_Senna19-1&unit=DA_Lucian19-1&unit=DA_Bard19-1"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "id": "sample-block-0386",
-            "type": "text",
-            "text": "棋盘配装 · 四爵士 · 九级开锁准备\n主C：烬。无尽之刃、最后的轻语、死亡之刃。\n主坦：加里奥。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副C：卡蜜尔。饮血剑、斯特拉克的挑战护手、泰坦的坚决。\n功能装：烬。轻语破甲。\n功能装：斯维因。日炎重伤。\n结算 0 局",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "棋盘配装 · 四爵士 · 九级开锁准备",
-                  "text_element_style": {
-                    "bold": true
-                  }
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主C：烬。无尽之刃、最后的轻语、死亡之刃。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主坦：加里奥。石像鬼石板甲、狂徒铠甲、振奋盔甲。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "副C：卡蜜尔。饮血剑、斯特拉克的挑战护手、泰坦的坚决。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：烬。轻语破甲。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：斯维因。日炎重伤。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "结算 0 局",
-                  "text_element_style": {
-                    "link": {
-                      "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=9&unit=DA_Galio19-1&unit=DA_Swain19-1&unit=DA_Katarina19-1&unit=DA_Camille19-1&unit=DA_Senna19-1&unit=DA_Jhin19-1&unit=DA_Lucian19-1&unit=DA_Bard19-1&unit=DA_Ziggs19-1"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "id": "sample-block-0344",
-            "type": "text",
-            "text": "棋盘配装 · 四爵士 · 八级稳血\n主C：烬。无尽之刃、最后的轻语、死亡之刃。\n主坦：加里奥。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副C：卡蜜尔。饮血剑、斯特拉克的挑战护手、泰坦的坚决。\n功能装：烬。轻语破甲。\n功能装：斯维因。日炎重伤。\n结算 0 局",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "棋盘配装 · 四爵士 · 八级稳血",
-                  "text_element_style": {
-                    "bold": true
-                  }
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主C：烬。无尽之刃、最后的轻语、死亡之刃。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主坦：加里奥。石像鬼石板甲、狂徒铠甲、振奋盔甲。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "副C：卡蜜尔。饮血剑、斯特拉克的挑战护手、泰坦的坚决。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：烬。轻语破甲。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：斯维因。日炎重伤。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "结算 0 局",
-                  "text_element_style": {
-                    "link": {
-                      "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=8&unit=DA_Galio19-1&unit=DA_Swain19-1&unit=DA_Katarina19-1&unit=DA_Camille19-1&unit=DA_Senna19-1&unit=DA_Jhin19-1&unit=DA_Lucian19-1&unit=DA_Bard19-1"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "id": "sample-block-0140",
-            "type": "text",
-            "text": "棋盘配装 · 五杀 · 九级开锁准备\n主C：卡蜜尔。饮血剑、斯特拉克的挑战护手、泰坦的坚决。\n主坦：加里奥。石像鬼石板甲、狂徒铠甲、薄暮法袍。\n副C：卡尔萨斯。有对应余装再补。\n功能装：加里奥。第三件先补薄暮，让卡蜜尔的物理输出吃破甲。\n功能装：安妮。安妮火焰技能命中附带灼烧和重伤。\n结算 0 局",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "棋盘配装 · 五杀 · 九级开锁准备",
-                  "text_element_style": {
-                    "bold": true
-                  }
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主C：卡蜜尔。饮血剑、斯特拉克的挑战护手、泰坦的坚决。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主坦：加里奥。石像鬼石板甲、狂徒铠甲、薄暮法袍。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "副C：卡尔萨斯。有对应余装再补。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：加里奥。第三件先补薄暮，让卡蜜尔的物理输出吃破甲。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：安妮。安妮火焰技能命中附带灼烧和重伤。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "结算 0 局",
-                  "text_element_style": {
-                    "link": {
-                      "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=9&unit=DA_Annie19-1&unit=DA_Galio19-1&unit=DA_Swain19-1&unit=DA_Viego19-1&unit=DA_Camille19-1&unit=DA_Olaf19-1&unit=DA_Karthus19-1&unit=DA_Bard19-1&unit=DA_Ziggs19-1"
-                    }
-                  }
+                  "content": "棋盘配装 · 九级 · 三爵士五杀\n主C：史密奇。饮血剑、斯特拉克的挑战护手、泰坦的坚决。\n主坦：约里克。石像鬼石板甲、狂徒铠甲、救赎。\n副C：凯尔。鬼索的狂暴之刃、珠光护手、强袭者的链枷。"
                 }
               }
             ]
@@ -5126,79 +3732,11 @@
           {
             "id": "sample-block-0339",
             "type": "text",
-            "text": "棋盘配装 · 五杀 · 八级稳血\n主C：卡蜜尔。饮血剑、斯特拉克的挑战护手、泰坦的坚决。\n主坦：加里奥。石像鬼石板甲、狂徒铠甲、薄暮法袍。\n副C：卡尔萨斯。有对应余装再补。\n功能装：加里奥。第三件先补薄暮，让卡蜜尔的物理输出吃破甲。\n功能装：安妮。安妮火焰技能命中附带灼烧和重伤。\n结算 0 局",
+            "text": "棋盘配装 · 八级 · 五杀爵士\n主C：凯尔。鬼索的狂暴之刃、珠光护手、强袭者的链枷。\n主坦：约里克。石像鬼石板甲、狂徒铠甲、救赎。",
             "elements": [
               {
                 "text_run": {
-                  "content": "棋盘配装 · 五杀 · 八级稳血",
-                  "text_element_style": {
-                    "bold": true
-                  }
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主C：卡蜜尔。饮血剑、斯特拉克的挑战护手、泰坦的坚决。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主坦：加里奥。石像鬼石板甲、狂徒铠甲、薄暮法袍。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "副C：卡尔萨斯。有对应余装再补。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：加里奥。第三件先补薄暮，让卡蜜尔的物理输出吃破甲。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：安妮。安妮火焰技能命中附带灼烧和重伤。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "结算 0 局",
-                  "text_element_style": {
-                    "link": {
-                      "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=8&unit=DA_Annie19-1&unit=DA_Galio19-1&unit=DA_Swain19-1&unit=DA_Viego19-1&unit=DA_Camille19-1&unit=DA_Olaf19-1&unit=DA_Karthus19-1&unit=DA_Bard19-1"
-                    }
-                  }
+                  "content": "棋盘配装 · 八级 · 五杀爵士\n主C：凯尔。鬼索的狂暴之刃、珠光护手、强袭者的链枷。\n主坦：约里克。石像鬼石板甲、狂徒铠甲、救赎。"
                 }
               }
             ]
@@ -5206,171 +3744,6 @@
         ]
       }
     ]
-  },
-  "sample-block-0154": {
-    "summaryId": "sample-block-0320",
-    "groups": [
-      {
-        "afterImage": "sample-block-0043",
-        "blocks": [
-          {
-            "id": "sample-block-0408",
-            "type": "text",
-            "text": "打法：速九运营"
-          },
-          {
-            "id": "sample-block-0185",
-            "type": "text",
-            "text": "主C：厄运小姐、泽丽。女枪蓝霸符、无尽、轻语。泽丽青龙刀、羊刀、死亡之刃。"
-          },
-          {
-            "id": "sample-block-0131",
-            "type": "text",
-            "text": "主坦：蕾欧娜、蒙多医生。蕾欧娜石像鬼、圣盾使的誓约、振奋。芮尔带日炎、振奋，蒙多补余下肉装。"
-          },
-          {
-            "id": "sample-block-0098",
-            "type": "text",
-            "text": "副C：史密奇。饮血、血手、泰坦。"
-          },
-          {
-            "id": "sample-block-0241",
-            "type": "text",
-            "text": "八级稳血，九级开锁",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "八级稳血，九级开锁",
-                  "text_element_style": {
-                    "bold": true
-                  }
-                }
-              }
-            ],
-            "label": true
-          },
-          {
-            "id": "sample-block-0360",
-            "type": "text",
-            "text": "八级用二星卢锡安或霞带物理装，贾克斯、加里奥先接肉装，优先稳血。九级摆卢锡安、巴德、莉莉娅、瑟提、妮蔻、贾克斯、拉克丝、霞、加里奥，其中妮蔻二星、莉莉娅至少一星。这个棋盘开九个常规羁绊，史密奇要求九级且同时开至少九个非唯一羁绊。看到解锁提示再搜，锁开后按战力换回。"
-          },
-          {
-            "id": "sample-block-0147",
-            "type": "text",
-            "text": "九级成型",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "九级成型",
-                  "text_element_style": {
-                    "bold": true
-                  }
-                }
-              }
-            ],
-            "label": true
-          },
-          {
-            "id": "sample-block-0385",
-            "type": "text",
-            "text": "只到一套后排装时先成型一个二星主 C，保留现有二星前排。有第二套才养另一位，史密奇缺装时优先补前排。"
-          },
-          {
-            "id": "sample-block-0377",
-            "type": "text",
-            "text": "冠军样本",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "冠军样本",
-                  "text_element_style": {
-                    "bold": true
-                  }
-                }
-              }
-            ],
-            "label": true
-          },
-          {
-            "id": "sample-block-0053",
-            "type": "text",
-            "text": "PBE 19.1 近三天，九级女枪和泽丽均为二星三装，卢锡安和巴德同场，样本由 298 更新到 300。可见的 20 场冠军里，15 场带史密奇，14 场带蒙多，13 场带永恩，蕾欧娜与芮尔各出现 12 场，8 场用了这份九人名单。"
-          },
-          {
-            "id": "sample-block-0014",
-            "type": "text",
-            "text": "固定九人 52 场，均名 2.46、前四 92.3%、吃鸡 26.9%。统计只包含双 C 已二星三装的成型局。原局永恩带两枚纹章，未增加这块成型板的羁绊档位。"
-          },
-          {
-            "id": "sample-block-0403",
-            "type": "text",
-            "text": "MetaTFT 双 C 冠军筛选 · 固定九人样本 · 冠军原局 · PBE 解锁与羁绊",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "MetaTFT 双 C 冠军筛选",
-                  "text_element_style": {
-                    "link": {
-                      "url": "https://www.metatft.com/explorer?tab=games&placement=1&level=9&unit=DA_MissFortune19-1_2_3&unit=DA_Lucian19-1&unit=DA_Zeri19-1_2_3&unit=DA_Bard19-1&set=TFTSet19"
-                    }
-                  }
-                }
-              },
-              {
-                "text_run": {
-                  "content": " · "
-                }
-              },
-              {
-                "text_run": {
-                  "content": "固定九人样本",
-                  "text_element_style": {
-                    "link": {
-                      "url": "https://www.metatft.com/explorer?tab=units&level=9&unit=DA_MissFortune19-1_2_3&unit=DA_Zeri19-1_2_3&unit=DA_Lucian19-1&unit=DA_Bard19-1&unit=DA_Leona19-1&unit=DA_Yone19-1&unit=DA_DrMundo19-1&unit=DA_Rell19-1&unit=DA_Smeech19-1&set=TFTSet19"
-                    }
-                  }
-                }
-              },
-              {
-                "text_run": {
-                  "content": " · "
-                }
-              },
-              {
-                "text_run": {
-                  "content": "冠军原局",
-                  "text_element_style": {
-                    "link": {
-                      "url": "https://www.metatft.com/player/pbe/Lianqi-5654?match=PBE1_4535953399"
-                    }
-                  }
-                }
-              },
-              {
-                "text_run": {
-                  "content": " · "
-                }
-              },
-              {
-                "text_run": {
-                  "content": "PBE 解锁与羁绊",
-                  "text_element_style": {
-                    "link": {
-                      "url": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
-                    }
-                  }
-                }
-              }
-            ]
-          }
-        ]
-      }
-    ],
-    "previousText": {
-      "sample-block-0360": [
-        "八级用二星卢锡安或霞带物理装，贾克斯、加里奥先接肉装，优先稳血。九级摆卢锡安、巴德、莉莉娅、瑟提、妮蔻、贾克斯、拉克丝、霞、加里奥，其中妮蔻二星、莉莉娅至少一星。这个棋盘开九个常规羁绊，史密奇要求九级且同时开至少八个。看到解锁提示再搜，锁开后按战力换回。"
-      ]
-    }
   },
   "sample-block-0203": {
     "summaryId": "sample-block-0332",
@@ -8703,11 +7076,11 @@
           {
             "id": "sample-block-1091",
             "type": "text",
-            "text": "高经济开派克走这套；八级两星阿萝拉和阿利斯塔稳血，立刻上九补芮尔或史密奇吃鸡。",
+            "text": "高经济开派克，八级成型，九级补芮尔开 2 R&B 吃鸡。",
             "elements": [
               {
                 "text_run": {
-                  "content": "高经济开派克走这套；八级两星阿萝拉和阿利斯塔稳血，立刻上九补芮尔或史密奇吃鸡。"
+                  "content": "高经济开派克，八级成型，九级补芮尔开 2 R&B 吃鸡。"
                 }
               }
             ]
@@ -8725,34 +7098,13 @@
             ]
           },
           {
-            "id": "sample-block-1093",
-            "type": "heading",
-            "level": 3,
-            "text": "解锁与上九",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "解锁与上九"
-                }
-              }
-            ]
-          },
-          {
             "id": "sample-block-1094",
             "type": "text",
-            "text": "7 级先不拉 8，战后存满 85 金开派克（顺手给术师或射手挂锁子甲开阿利斯塔），4-2 再拉 8 开 D。",
+            "text": "七级战后留 85 金币解锁派克。给术师或射手一件锁子甲解锁阿利斯塔。",
             "elements": [
               {
                 "text_run": {
-                  "content": "7 级先不拉 8，战后存满 85 金开派克",
-                  "text_element_style": {
-                    "bold": true
-                  }
-                }
-              },
-              {
-                "text_run": {
-                  "content": "（顺手给术师或射手挂锁子甲开阿利斯塔），4-2 再拉 8 开 D。"
+                  "content": "七级战后留 85 金币解锁派克。给术师或射手一件锁子甲解锁阿利斯塔。"
                 }
               }
             ]
@@ -8760,23 +7112,11 @@
           {
             "id": "sample-block-1095",
             "type": "text",
-            "text": "八级双两星就存钱上九；阿萝拉可换法爆或蓝霸符，重伤和魔抗击碎放梅尔身上。",
+            "text": "八级搜到阿萝拉、阿利斯塔两星就存钱，九级补芮尔。",
             "elements": [
               {
                 "text_run": {
-                  "content": "八级双两星就存钱上九；阿萝拉可换法爆或蓝霸符，重伤和魔抗击碎放梅尔身上。"
-                }
-              }
-            ]
-          },
-          {
-            "id": "sample-block-1096",
-            "type": "text",
-            "text": "先补芮尔；走史密奇下阿利斯塔，上凯隐＋卡蜜尔／卡特或奎桑提＋蕾欧娜，凑9个非唯一羁绊后换回。",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "先补芮尔；走史密奇下阿利斯塔，上凯隐＋卡蜜尔／卡特或奎桑提＋蕾欧娜，凑9个非唯一羁绊后换回。"
+                  "content": "八级搜到阿萝拉、阿利斯塔两星就存钱，九级补芮尔。"
                 }
               }
             ]
@@ -8814,18 +7154,6 @@
               {
                 "text_run": {
                   "content": "棋盘配装 · 九级补芮尔\n主C：阿萝拉。朔极之矛、虚空之杖、灭世者的死亡之帽，帽子可换珠光护手或强袭者的链枷。\n主坦：阿利斯塔。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副C：派克。夜之锋刃、正义之手，有余装补斯特拉克的挑战护手或饮血剑。\n功能装：梅尔。莫雷洛秘典、虚空之杖，补重伤与魔抗击碎。"
-                }
-              }
-            ]
-          },
-          {
-            "id": "sample-block-1100",
-            "type": "text",
-            "text": "棋盘配装 · 九级补史密奇\n主C：阿萝拉。朔极之矛、虚空之杖、灭世者的死亡之帽，帽子可换珠光护手或强袭者的链枷。\n主坦：阿利斯塔。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副C：派克。夜之锋刃、正义之手，有余装补斯特拉克的挑战护手或饮血剑。\n功能装：梅尔。莫雷洛秘典、虚空之杖，补重伤与魔抗击碎。\n副C：史密奇。饮血剑、斯特拉克的挑战护手、泰坦的坚决。",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "棋盘配装 · 九级补史密奇\n主C：阿萝拉。朔极之矛、虚空之杖、灭世者的死亡之帽，帽子可换珠光护手或强袭者的链枷。\n主坦：阿利斯塔。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副C：派克。夜之锋刃、正义之手，有余装补斯特拉克的挑战护手或饮血剑。\n功能装：梅尔。莫雷洛秘典、虚空之杖，补重伤与魔抗击碎。\n副C：史密奇。饮血剑、斯特拉克的挑战护手、泰坦的坚决。"
                 }
               }
             ]
@@ -8974,45 +7302,181 @@
       }
     ]
   },
-  "sample-block-1120": {
-    "summaryId": "sample-block-1121",
+  "sample-block-0452": {
+    "summaryId": "sample-block-0688",
     "groups": [
       {
         "afterImage": null,
         "blocks": [
           {
-            "id": "sample-block-1121",
+            "id": "sample-block-0688",
             "type": "text",
-            "text": "不吃史密奇的双核 AD 84；七级解扎克和派克，八级双主 C 两星即上九补崔斯特。",
+            "text": "战士装多走五非主流，八级用两星男枪稳血，九级搜两星派克主 C。羊刀或攻速装多走四主宰 AD 男枪＋薇恩，八级成型，九级补崔斯特，两条路线均不吃史密奇。",
             "elements": [
               {
                 "text_run": {
-                  "content": "不吃史密奇的双核 AD 84；七级解扎克和派克，八级双主 C 两星即上九补崔斯特。"
+                  "content": "战士装多走五非主流，八级用两星男枪稳血，九级搜两星派克主 C。羊刀或攻速装多走四主宰 AD 男枪＋薇恩，八级成型，九级补崔斯特，两条路线均不吃史密奇。"
                 }
               }
             ]
           },
           {
-            "id": "sample-block-1122",
+            "id": "sample-block-0696",
             "type": "text",
-            "text": "打法：速八运营",
+            "text": "打法：速九运营",
             "elements": [
               {
                 "text_run": {
-                  "content": "打法：速八运营"
+                  "content": "打法：速九运营"
                 }
               }
             ]
           },
           {
-            "id": "sample-block-1123",
+            "id": "sample-block-pyke-common",
             "type": "heading",
             "level": 3,
-            "text": "解锁与上九",
+            "text": "通用解锁",
             "elements": [
               {
                 "text_run": {
-                  "content": "解锁与上九"
+                  "content": "通用解锁"
+                }
+              }
+            ]
+          },
+          {
+            "id": "sample-block-0740",
+            "type": "text",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "七级先摆塔里克、鳄鱼、佐伊、奥拉夫、男枪开扎克。血量能撑住，再留 85 金币打一轮开派克。八级搜两星男枪和扎克，扎克换鳄鱼接肉。",
+                  "text_element_style": {
+                    "bold": false,
+                    "inline_code": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false
+                  }
+                }
+              }
+            ],
+            "level": 0,
+            "text": "七级先摆塔里克、鳄鱼、佐伊、奥拉夫、男枪开扎克。血量能撑住，再留 85 金币打一轮开派克。八级搜两星男枪和扎克，扎克换鳄鱼接肉。"
+          },
+          {
+            "id": "sample-block-pyke-main",
+            "type": "heading",
+            "level": 3,
+            "text": "九级 · 五非主流派克男枪",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "九级 · 五非主流派克男枪"
+                }
+              }
+            ]
+          },
+          {
+            "id": "sample-block-0489",
+            "type": "text",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "奇亚娜拿派克的夜刃、正义打工，留一张空装奇亚娜。奇亚娜、莉莉娅、妮蔻一起上，开伊芙琳。肉装给鳄鱼，法装给佐伊。",
+                  "text_element_style": {
+                    "bold": false,
+                    "inline_code": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false
+                  }
+                }
+              }
+            ],
+            "level": 0,
+            "text": "奇亚娜拿派克的夜刃、正义打工，留一张空装奇亚娜。奇亚娜、莉莉娅、妮蔻一起上，开伊芙琳。肉装给鳄鱼，法装给佐伊。"
+          },
+          {
+            "id": "sample-block-0698",
+            "type": "text",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "派克来后卖打工奇亚娜转装，补回空装奇亚娜，和男枪、伊芙琳、阿萝拉开五非主流。九级补蔚开四主宰，搜派克两星。男枪和派克同侧，轻语先破甲。",
+                  "text_element_style": {
+                    "bold": false,
+                    "inline_code": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false
+                  }
+                }
+              }
+            ],
+            "level": 0,
+            "text": "派克来后卖打工奇亚娜转装，补回空装奇亚娜，和男枪、伊芙琳、阿萝拉开五非主流。九级补蔚开四主宰，搜派克两星。男枪和派克同侧，轻语先破甲。"
+          },
+          {
+            "id": "sample-block-0777",
+            "type": "text",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "MetaTFT 体系战绩",
+                  "text_element_style": {
+                    "bold": false,
+                    "inline_code": false,
+                    "italic": false,
+                    "link": {
+                      "url": "https://www.metatft.com/pbe-comps#DA_Renegade19-DA_Pyke19"
+                    },
+                    "strikethrough": false,
+                    "underline": false
+                  }
+                }
+              },
+              {
+                "text_run": {
+                  "content": " · ",
+                  "text_element_style": {
+                    "bold": false,
+                    "inline_code": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false
+                  }
+                }
+              },
+              {
+                "text_run": {
+                  "content": "Mobalytics 九人棋盘",
+                  "text_element_style": {
+                    "bold": false,
+                    "inline_code": false,
+                    "italic": false,
+                    "link": {
+                      "url": "https://mobalytics.gg/tft/set19/comps-guide/renegade-3MPjU93dw2rzDvd9HPoIDtA1W3v"
+                    },
+                    "strikethrough": false,
+                    "underline": false
+                  }
+                }
+              }
+            ],
+            "level": 0,
+            "text": "MetaTFT 体系战绩 · Mobalytics 九人棋盘"
+          },
+          {
+            "id": "sample-block-pyke-ad-eight",
+            "type": "heading",
+            "level": 3,
+            "text": "八级 · 四主宰 AD 男枪",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "八级 · 四主宰 AD 男枪"
                 }
               }
             ]
@@ -9050,6 +7514,19 @@
             ]
           },
           {
+            "id": "sample-block-pyke-ad-nine",
+            "type": "heading",
+            "level": 3,
+            "text": "九级 · AD 补崔斯特",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "九级 · AD 补崔斯特"
+                }
+              }
+            ]
+          },
+          {
             "id": "sample-block-1126",
             "type": "text",
             "text": "8 级扎克、男枪、薇恩两星即存钱上九，优先补崔斯特（或芮尔／蔚）。",
@@ -9075,13 +7552,45 @@
             ]
           },
           {
-            "id": "sample-block-1128",
+            "id": "sample-block-0649",
             "type": "text",
-            "text": "棋盘配装 · 八级成型\n主C：格雷福斯。正义之手、夜之锋刃、强袭者的链枷。\n主坦：扎克。石像鬼石板甲、振奋盔甲、薄暮法袍。\n副C：薇恩。鬼索的狂暴之刃、海妖之怒、无尽之刃。\n副C：派克。捡剩余战士装。\n功能装：约里克。日炎斗篷，补重伤。",
             "elements": [
               {
                 "text_run": {
-                  "content": "棋盘配装 · 八级成型\n主C：格雷福斯。正义之手、夜之锋刃、强袭者的链枷。\n主坦：扎克。石像鬼石板甲、振奋盔甲、薄暮法袍。\n副C：薇恩。鬼索的狂暴之刃、海妖之怒、无尽之刃。\n副C：派克。捡剩余战士装。\n功能装：约里克。日炎斗篷，补重伤。"
+                  "content": "棋盘配装 · 九级 · 五非主流派克男枪\n主C：派克。死亡之刃、夜之锋刃、正义之手。\n副C：格雷福斯。最后的轻语、正义之手，再补夜刃。\n主坦：扎克。石像鬼、狂徒、日炎；日炎挂重伤。\n",
+                  "text_element_style": {
+                    "bold": false,
+                    "inline_code": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false
+                  }
+                }
+              },
+              {
+                "text_run": {
+                  "content": "副C：阿萝拉。先接青龙刀，有多余法装再补。",
+                  "text_element_style": {
+                    "bold": false,
+                    "inline_code": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false
+                  }
+                }
+              }
+            ],
+            "level": 0,
+            "text": "棋盘配装 · 九级 · 五非主流派克男枪\n主C：派克。死亡之刃、夜之锋刃、正义之手。\n副C：格雷福斯。最后的轻语、正义之手，再补夜刃。\n主坦：扎克。石像鬼、狂徒、日炎；日炎挂重伤。\n副C：阿萝拉。先接青龙刀，有多余法装再补。"
+          },
+          {
+            "id": "sample-block-1128",
+            "type": "text",
+            "text": "棋盘配装 · 八级 · 四主宰 AD 男枪\n主C：格雷福斯。正义之手、夜之锋刃、强袭者的链枷。\n主坦：扎克。石像鬼石板甲、振奋盔甲、薄暮法袍。\n副C：薇恩。鬼索的狂暴之刃、海妖之怒、无尽之刃。\n副C：派克。捡剩余战士装。\n功能装：约里克。日炎斗篷，补重伤。",
+            "elements": [
+              {
+                "text_run": {
+                  "content": "棋盘配装 · 八级 · 四主宰 AD 男枪\n主C：格雷福斯。正义之手、夜之锋刃、强袭者的链枷。\n主坦：扎克。石像鬼石板甲、振奋盔甲、薄暮法袍。\n副C：薇恩。鬼索的狂暴之刃、海妖之怒、无尽之刃。\n副C：派克。捡剩余战士装。\n功能装：约里克。日炎斗篷，补重伤。"
                 }
               }
             ]
@@ -9089,11 +7598,11 @@
           {
             "id": "sample-block-1129",
             "type": "text",
-            "text": "棋盘配装 · 九级补崔斯特\n主C：格雷福斯。正义之手、夜之锋刃、强袭者的链枷。\n主坦：扎克。石像鬼石板甲、振奋盔甲、薄暮法袍。\n副C：薇恩。鬼索的狂暴之刃、海妖之怒、无尽之刃。\n副C：派克。捡剩余战士装。\n功能装：约里克。日炎斗篷，补重伤。\n副C：崔斯特。补收割。",
+            "text": "棋盘配装 · 九级 · AD 补崔斯特\n主C：格雷福斯。正义之手、夜之锋刃、强袭者的链枷。\n主坦：扎克。石像鬼石板甲、振奋盔甲、薄暮法袍。\n副C：薇恩。鬼索的狂暴之刃、海妖之怒、无尽之刃。\n副C：派克。捡剩余战士装。\n功能装：约里克。日炎斗篷，补重伤。\n副C：崔斯特。补收割。",
             "elements": [
               {
                 "text_run": {
-                  "content": "棋盘配装 · 九级补崔斯特\n主C：格雷福斯。正义之手、夜之锋刃、强袭者的链枷。\n主坦：扎克。石像鬼石板甲、振奋盔甲、薄暮法袍。\n副C：薇恩。鬼索的狂暴之刃、海妖之怒、无尽之刃。\n副C：派克。捡剩余战士装。\n功能装：约里克。日炎斗篷，补重伤。\n副C：崔斯特。补收割。"
+                  "content": "棋盘配装 · 九级 · AD 补崔斯特\n主C：格雷福斯。正义之手、夜之锋刃、强袭者的链枷。\n主坦：扎克。石像鬼石板甲、振奋盔甲、薄暮法袍。\n副C：薇恩。鬼索的狂暴之刃、海妖之怒、无尽之刃。\n副C：派克。捡剩余战士装。\n功能装：约里克。日炎斗篷，补重伤。\n副C：崔斯特。补收割。"
                 }
               }
             ]

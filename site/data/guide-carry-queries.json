@@ -418,9 +418,9 @@
     ]
   },
   {
-    "sectionId": "sample-block-0394",
+    "sectionId": "sample-block-0051",
     "teamId": "00000000-0000-4000-8000-000000000083",
-    "board": "九级四古典 · 女枪",
+    "board": "九级 · 女枪主 C 变阵",
     "carryId": "miss-fortune",
     "tankId": "thresh",
     "anchorIds": [
@@ -493,78 +493,9 @@
     ]
   },
   {
-    "sectionId": "sample-block-0368",
-    "teamId": "00000000-0000-4000-8000-000000000011",
-    "board": "女枪蒙多",
-    "carryId": "smeech",
-    "tankId": "dr-mundo",
-    "anchorIds": [
-      "dr-mundo",
-      "miss-fortune",
-      "vi"
-    ],
-    "traits": {},
-    "carryItems": [
-      "TFT_Item_Bloodthirster",
-      "TFT_Item_SteraksGage",
-      "TFT_Item_TitansResolve"
-    ],
-    "tankItems": [
-      "TFT_Item_GargoyleStoneplate",
-      "TFT_Item_WarmogsArmor",
-      "TFT_Item_Redemption"
-    ]
-  },
-  {
-    "sectionId": "sample-block-0368",
-    "teamId": "00000000-0000-4000-8000-000000000021",
-    "board": "疾风泽丽",
-    "carryId": "smeech",
-    "tankId": "galio",
-    "anchorIds": [
-      "galio",
-      "zeri",
-      "vi"
-    ],
-    "traits": {},
-    "carryItems": [
-      "TFT_Item_Bloodthirster",
-      "TFT_Item_SteraksGage",
-      "TFT_Item_TitansResolve"
-    ],
-    "tankItems": [
-      "TFT_Item_GargoyleStoneplate",
-      "TFT_Item_WarmogsArmor",
-      "TFT_Item_Redemption"
-    ]
-  },
-  {
-    "sectionId": "sample-block-0368",
-    "teamId": "00000000-0000-4000-8000-000000000077",
-    "board": "酷炫卡牌",
-    "carryId": "smeech",
-    "tankId": "galio",
-    "anchorIds": [
-      "galio",
-      "twisted-fate",
-      "draven"
-    ],
-    "traits": {},
-    "carryItems": [
-      "TFT_Item_Bloodthirster",
-      "TFT_Item_SteraksGage",
-      "TFT_Item_TitansResolve"
-    ],
-    "tankItems": [
-      "TFT_Item_GargoyleStoneplate",
-      "TFT_Item_WarmogsArmor",
-      "TFT_Item_SpectralGauntlet"
-    ]
-  },
-  {
     "sectionId": "sample-block-0275",
     "teamId": "00000000-0000-4000-8000-000000000082",
-    "board": "三爵士五杀",
+    "board": "九级 · 三爵士五杀",
     "carryId": "smeech",
     "tankId": "yorick",
     "anchorIds": [
@@ -584,102 +515,6 @@
       "TFT_Item_GargoyleStoneplate",
       "TFT_Item_WarmogsArmor",
       "TFT_Item_Redemption"
-    ]
-  },
-  {
-    "sectionId": "sample-block-0275",
-    "teamId": "00000000-0000-4000-8000-000000000116",
-    "board": "真伤电子",
-    "carryId": "smeech",
-    "tankId": "ekko",
-    "anchorIds": [
-      "ekko",
-      "senna",
-      "vi"
-    ],
-    "traits": {
-      "true-damage": 3
-    },
-    "carryItems": [
-      "TFT_Item_Bloodthirster",
-      "TFT_Item_SteraksGage",
-      "TFT_Item_TitansResolve"
-    ],
-    "tankItems": [
-      "TFT_Item_GargoyleStoneplate",
-      "TFT_Item_WarmogsArmor",
-      "TFT_Item_Redemption"
-    ]
-  },
-  {
-    "sectionId": "sample-block-0275",
-    "teamId": "00000000-0000-4000-8000-000000000110",
-    "board": "四爵士烬",
-    "carryId": "smeech",
-    "tankId": "galio",
-    "anchorIds": [
-      "galio",
-      "jhin",
-      "bard"
-    ],
-    "traits": {
-      "jazz": 4
-    },
-    "carryItems": [
-      "TFT_Item_Bloodthirster",
-      "TFT_Item_SteraksGage",
-      "TFT_Item_TitansResolve"
-    ],
-    "tankItems": [
-      "TFT_Item_GargoyleStoneplate",
-      "TFT_Item_WarmogsArmor",
-      "TFT_Item_Redemption"
-    ]
-  },
-  {
-    "sectionId": "sample-block-0154",
-    "teamId": "00000000-0000-4000-8000-000000000026",
-    "board": "九级三爵士 · 女枪泽丽",
-    "carryId": "miss-fortune",
-    "tankId": "dr-mundo",
-    "anchorIds": [
-      "dr-mundo",
-      "bard",
-      "zeri"
-    ],
-    "traits": {
-      "jazz": 3
-    },
-    "carryItems": [
-      "TFT_Item_BlueBuff",
-      "TFT_Item_InfinityEdge",
-      "TFT_Item_LastWhisper"
-    ],
-    "tankItems": [
-      "TFT_Item_ThiefsGloves"
-    ]
-  },
-  {
-    "sectionId": "sample-block-0154",
-    "teamId": "00000000-0000-4000-8000-000000000026",
-    "board": "九级三爵士 · 女枪泽丽",
-    "carryId": "zeri",
-    "tankId": "dr-mundo",
-    "anchorIds": [
-      "dr-mundo",
-      "bard",
-      "miss-fortune"
-    ],
-    "traits": {
-      "jazz": 3
-    },
-    "carryItems": [
-      "TFT_Item_SpearOfShojin",
-      "TFT_Item_GuinsoosRageblade",
-      "TFT_Item_Deathblade"
-    ],
-    "tankItems": [
-      "TFT_Item_ThiefsGloves"
     ]
   },
   {
@@ -947,56 +782,6 @@
       "TFT_Item_GargoyleStoneplate",
       "TFT_Item_Crownguard",
       "TFT_Item_Redemption"
-    ]
-  },
-  {
-    "sectionId": "sample-block-0051",
-    "teamId": "00000000-0000-4000-8000-000000000036",
-    "board": "8级 · 梅尔盖伦",
-    "carryId": "jhin",
-    "tankId": "thresh",
-    "anchorIds": [
-      "thresh",
-      "mel",
-      "garen"
-    ],
-    "traits": {
-      "classical": 4
-    },
-    "carryItems": [
-      "TFT_Item_InfinityEdge",
-      "TFT_Item_PowerGauntlet",
-      "TFT_Item_Deathblade"
-    ],
-    "tankItems": [
-      "TFT_Item_GargoyleStoneplate",
-      "TFT_Item_SpectralGauntlet",
-      "TFT_Item_WarmogsArmor"
-    ]
-  },
-  {
-    "sectionId": "sample-block-0051",
-    "teamId": "00000000-0000-4000-8000-000000000092",
-    "board": "9级 · 赛娜开史密奇",
-    "carryId": "jhin",
-    "tankId": "thresh",
-    "anchorIds": [
-      "thresh",
-      "mel",
-      "senna"
-    ],
-    "traits": {
-      "classical": 4
-    },
-    "carryItems": [
-      "TFT_Item_InfinityEdge",
-      "TFT_Item_PowerGauntlet",
-      "TFT_Item_Deathblade"
-    ],
-    "tankItems": [
-      "TFT_Item_GargoyleStoneplate",
-      "TFT_Item_SpectralGauntlet",
-      "TFT_Item_WarmogsArmor"
     ]
   },
   {
@@ -1494,70 +1279,6 @@
     "teamId": "00000000-0000-4000-8000-000000000093"
   },
   {
-    "sectionId": "sample-block-0394",
-    "teamId": "00000000-0000-4000-8000-000000000083",
-    "board": "九级四古典 · 女枪",
-    "carryId": "miss-fortune",
-    "tankId": "thresh",
-    "anchorIds": [
-      "thresh",
-      "nasus",
-      "galio",
-      "nunu-willump",
-      "swain",
-      "vladimir",
-      "jhin",
-      "lucian"
-    ],
-    "traits": {
-      "classical": 4
-    },
-    "carryItems": [
-      "TFT_Item_SpearOfShojin",
-      "TFT_Item_InfinityEdge",
-      "TFT_Item_LastWhisper"
-    ],
-    "tankItems": [
-      "TFT_Item_GargoyleStoneplate",
-      "TFT_Item_WarmogsArmor",
-      "TFT_Item_Redemption"
-    ],
-    "sameNine": true,
-    "level": 9
-  },
-  {
-    "sectionId": "sample-block-0394",
-    "teamId": "00000000-0000-4000-8000-000000000083",
-    "board": "九级四古典 · 女枪",
-    "carryId": "jhin",
-    "tankId": "thresh",
-    "anchorIds": [
-      "thresh",
-      "nasus",
-      "galio",
-      "nunu-willump",
-      "swain",
-      "vladimir",
-      "lucian",
-      "miss-fortune"
-    ],
-    "traits": {
-      "classical": 4
-    },
-    "carryItems": [
-      "DA_LastWhisper",
-      "DA_GiantSlayer",
-      "DA_InfinityEdge"
-    ],
-    "tankItems": [
-      "TFT_Item_GargoyleStoneplate",
-      "TFT_Item_WarmogsArmor",
-      "TFT_Item_Redemption"
-    ],
-    "sameNine": true,
-    "level": 9
-  },
-  {
     "sectionId": "sample-block-0051",
     "teamId": "00000000-0000-4000-8000-000000000034",
     "board": "九级 · 补女枪",
@@ -1784,9 +1505,9 @@
     "tankItems": []
   },
   {
-    "sectionId": "sample-block-1120",
+    "sectionId": "sample-block-0452",
     "teamId": "00000000-0000-4000-8000-000000001261",
-    "board": "八级成型",
+    "board": "八级 · 四主宰 AD 男枪",
     "carryId": "graves",
     "tankId": "zac",
     "anchorIds": [
@@ -1813,9 +1534,9 @@
     ]
   },
   {
-    "sectionId": "sample-block-1120",
+    "sectionId": "sample-block-0452",
     "teamId": "00000000-0000-4000-8000-000000001261",
-    "board": "八级成型",
+    "board": "八级 · 四主宰 AD 男枪",
     "carryId": "vayne",
     "tankId": "zac",
     "anchorIds": [
