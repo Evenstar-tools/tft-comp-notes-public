@@ -414,30 +414,30 @@ test("archive filters migrate old links without assigning today's tier from a Fe
   assert.equal(parseGuideFilters({category:"自定义旧目录"}).category, undefined);
 });
 
-test("home recommendations honor separate 12+2 limits and keep same-carry families with distinct boards", () => {
+test("home recommendations fit the 3/8/3/2 lineup and keep same-carry families with distinct boards", () => {
   const route = (group, index, overrides = {}) => ({
     group, familyId: group + index,
     rating: { teamId: group + index, mean: 4 + index / 100, games: 500, carryId: "ahri", topFourRate: .613, winRate: .17, ...overrides },
   });
-  const reroll = Array.from({ length: 4 }, (_, i) => route("reroll", i));
-  const fast8 = Array.from({ length: 5 }, (_, i) => route("fast8", i));
+  const reroll = Array.from({ length: 3 }, (_, i) => route("reroll", i));
+  const fast8 = Array.from({ length: 7 }, (_, i) => route("fast8", i));
   const fast9 = Array.from({ length: 3 }, (_, i) => route("fast9", i));
   const hero = Array.from({ length: 3 }, (_, i) => route("heroAugment", i));
-  const authored = { ...fast8[4], conditional: true, decision: { timing: "有法装再进", upgrade: "八级找双两星" } };
-  const fixed = { ...route("fast8", 5), sampleLabel: "固定终盘", preferred: true };
+  const authored = { ...route("fast8", 7), conditional: true, decision: { timing: "有法装再进", upgrade: "八级找双两星" } };
+  const fixed = { ...route("fast8", 8), sampleLabel: "固定终盘", preferred: true };
   const other = [
-    { ...route("fast8", 6), familyId: fast8[0].familyId },
+    { ...route("fast8", 9), familyId: fast8[0].familyId },
     route("fast9", 3, { games: 99 }),
-    route("fast8", 7, { mean: 4.51 }),
-    route("fast8", 8, { mean: 4.1 }),
+    route("fast8", 10, { mean: 4.51 }),
+    route("fast8", 11, { mean: 4.1 }),
   ];
-  const entries = [...reroll, ...fast8.slice(0, 4), authored, fixed, ...fast9, ...hero, ...other];
-  const displayOrder = [authored.rating.teamId, ...[...reroll, ...fast8.slice(0, 4), ...fast9].map(r => r.rating.teamId)];
+  const entries = [...reroll, ...fast8, authored, fixed, ...fast9, ...hero, ...other];
+  const displayOrder = [authored.rating.teamId, ...[...reroll, ...fast8, ...fast9].map(r => r.rating.teamId)];
   const selected = selectRecommendationRoutes(entries, { displayOrder });
-  assert.deepEqual(selected, [...reroll, authored, ...fast8.slice(0, 4), ...fast9, ...hero.slice(0, 2)]);
-  assert.deepEqual(selected[4].decision, { timing: "有法装再进", upgrade: "八级找双两星" });
-  assert.equal(selected[4].rating.topFourRate, .613);
-  assert.equal(selected[4].rating.winRate, .17);
+  assert.deepEqual(selected, [...reroll, authored, ...fast8, ...fast9, ...hero.slice(0, 2)]);
+  assert.deepEqual(selected[3].decision, { timing: "有法装再进", upgrade: "八级找双两星" });
+  assert.equal(selected[3].rating.topFourRate, .613);
+  assert.equal(selected[3].rating.winRate, .17);
   assert.ok(selectRecommendationRoutes(entries, { displayOrder: displayOrder.slice(0, -1) }).includes(fixed));
   assert.deepEqual(selectRecommendationRoutes([fast8[0], ...other.slice(0, 3)]), [fast8[0]]);
   assert.deepEqual(selectRecommendationRoutes(hero, { maxHeroAugment: 1 }), [hero[0]]);

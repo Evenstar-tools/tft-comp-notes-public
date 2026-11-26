@@ -2049,8 +2049,8 @@
       ]
     },
     {
-      "id": "sample-block-0468:00000000-0000-4000-8000-000000000106",
-      "sectionId": "sample-block-0468",
+      "id": "sample-block-0219:00000000-0000-4000-8000-000000000106",
+      "sectionId": "sample-block-0219",
       "points": [
         {
           "batchId": "427|19.1 Nov-20|3|2026-11-21T19:57:31.642Z",
@@ -2118,7 +2118,7 @@
         }
       ],
       "teamId": "00000000-0000-4000-8000-000000000106",
-      "name": "四主宰天使扎克",
+      "name": "四主宰派克泽丽",
       "carryIds": [
         "kayle"
       ]
@@ -2649,7 +2649,7 @@
       "batchId": "427|19.1 Nov-20|3|2026-11-22T19:53:33.408Z",
       "clusterId": "427013",
       "kind": "change",
-      "name": "四主宰天使扎克",
+      "name": "四主宰派克泽丽",
       "carryIds": [
         "kayle",
         "zeri"
@@ -2660,7 +2660,7 @@
       "games": 12925,
       "reason": "代表棋盘有变、代表配装分工有变",
       "status": "待复核",
-      "sectionId": "sample-block-0468",
+      "sectionId": "sample-block-0219",
       "teamId": "00000000-0000-4000-8000-000000000106"
     },
     {

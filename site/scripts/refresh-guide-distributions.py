@@ -4,7 +4,7 @@ import json
 import os
 import re
 from concurrent.futures import ThreadPoolExecutor
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from urllib.parse import parse_qsl, urlsplit
@@ -74,6 +74,8 @@ def fetch_counts(url):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--out", type=Path, default=BATCH)
+    parser.add_argument("--team", action="append", help="Refresh only records bound to this board (repeatable)")
+    parser.add_argument("--hours", type=int, help="Collect a current-build window for the selected boards")
     args = parser.parse_args()
     batch = json.loads(BATCH.read_text(encoding="utf-8"))
     build, window = current_window(DATA)
@@ -82,6 +84,14 @@ def main():
     if (batch.get("edition") != "s19-pbe-" + patch or not edition.startswith(batch["edition"] + ".")
             or batch.get("build") != build or batch["patch"] != "PBE " + patch + window["b_patch"]):
         raise ValueError("The guide snapshot and S19 PBE edition must match")
+    if args.hours is not None:
+        if not args.team or not 0 < args.hours <= 72:
+            parser.error("--hours requires --team and must be between 1 and 72")
+        active = json.loads((DATA / "current-patch.json").read_text(encoding="utf-8"))
+        start = datetime.now(timezone.utc) - timedelta(hours=args.hours)
+        if start < datetime.fromisoformat(active["effectiveAt"]):
+            raise ValueError("The requested hours extend before the current build")
+        window["days"] = str(args.hours / 24)
     # Curated short-window and hero-augment observations keep their own capture date.
     records = [
         row for row in batch["records"]
@@ -89,24 +99,30 @@ def main():
         and not row.get("sourcePeriod")
         and not row.get("referencesAugment")
         and not row.get("conditions", {}).get("augmentId")
+        and (not row.get("windowHours") or args.hours is not None)
     ]
-    comparisons = [sample for group in batch.get("boardComparisons", []) for sample in group["samples"]]
-    core = scoped_url(CORE, window)
+    if args.team:
+        records = [row for row in records if row.get("conditions", {}).get("teamId") in args.team]
+        missing = set(args.team) - {row["conditions"]["teamId"] for row in records}
+        if missing:
+            raise ValueError(f"No refreshable records for: {', '.join(sorted(missing))}")
+    comparisons = [] if args.team else [sample for group in batch.get("boardComparisons", []) for sample in group["samples"]]
+    core = None if args.team else scoped_url(CORE, window)
     for row in records + comparisons:
         row["url"] = scoped_url(row["url"], window)
     # Comparisons with a separately sampled core stay together as one observation.
     formation_groups = [
         group for group in batch.get("formationComparisons", [])
-        if group["patch"] == batch["patch"] and not group.get("coreSummary")
+        if not args.team and group["patch"] == batch["patch"] and not group.get("coreSummary")
     ]
     formation = [entry for group in formation_groups for board in group["boards"]
                  for entry in [board["sample"], board.get("subset", {}).get("sample")] if entry]
     for sample in formation:
         sample["url"] = scoped_url(sample["url"], window)
-    urls = list(dict.fromkeys([core, *(r["url"] for r in records + comparisons + formation)]))
+    urls = list(dict.fromkeys([*([core] if core else []), *(r["url"] for r in records + comparisons + formation)]))
     with ThreadPoolExecutor(max_workers=4) as pool:
         snapshots = dict(zip(urls, pool.map(fetch_counts, urls)))
-    if not sum(snapshots[core]):
+    if core and not sum(snapshots[core]):
         raise ValueError("The S19 anchor sample is empty; keeping the previous snapshot")
     now = datetime.now(timezone.utc)
     observed = now.date().isoformat()
@@ -114,14 +130,17 @@ def main():
         counts = snapshots[r["url"]]
         total = sum(counts)
         r.update(placementCounts=counts, games=total, observedOn=observed)
+        if args.hours is not None:
+            r.update(windowHours=args.hours, build=build, checkedAt=now.isoformat(timespec="seconds"))
         if total:
             r.update(mean=round(sum(i * n for i, n in enumerate(counts, 1)) / total, 2),
                      topFourRate=sum(counts[:4]) / total, winRate=counts[0] / total)
         else:
             for field in ("mean", "winRate", "topFourRate"):
                 r.pop(field, None)
-    batch["date"] = observed
-    batch["renataNasusReference"] = {"url": core, "observedOn": observed, "placementCounts": snapshots[core]}
+    if core:
+        batch["date"] = observed
+        batch["renataNasusReference"] = {"url": core, "observedOn": observed, "placementCounts": snapshots[core]}
     for sample in comparisons:
         sample.update(placementCounts=snapshots[sample["url"]], observedOn=observed)
     for sample in formation:
@@ -132,7 +151,8 @@ def main():
         json.dump(batch, tmp, ensure_ascii=False, indent=2, allow_nan=False)
         tmp.write("\n")
     os.replace(tmp.name, args.out)
-    print(f"Refreshed {len(records)} board filters and the level-eight Renata/Nasus reference, {observed}.")
+    reference = " and the level-eight Renata/Nasus reference" if core else ""
+    print(f"Refreshed {len(records)} board filters{reference}, {observed}.")
 
 
 if __name__ == "__main__":

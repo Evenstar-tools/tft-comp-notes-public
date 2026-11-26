@@ -329,10 +329,10 @@ def check_recommendation_entries(recommendations, sections, errors):
                 if valid_group:
                     groups.add(group)
 
-    if regular > 12 or hero > 2:
-        errors.append(f"{name}：常规推荐最多 12 套，英雄强化最多 2 套")
-    if regular == 12 and groups and not REGULAR_GROUPS.issubset(groups):
-        errors.append(f"{name}：12 套常规推荐须涵盖赌狗、84 和 95")
+    if regular > 14 or hero > 2:
+        errors.append(f"{name}：常规推荐最多 14 套，英雄强化最多 2 套")
+    if regular == 14 and groups and not REGULAR_GROUPS.issubset(groups):
+        errors.append(f"{name}：14 套常规推荐须涵盖赌狗、84 和 95")
     if "displayOrder" in recommendations:
         order = recommendations["displayOrder"]
         if not isinstance(order, list) or not all(isinstance(team_id, str) and team_id in active for team_id in order):

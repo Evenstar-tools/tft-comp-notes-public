@@ -856,9 +856,9 @@
     ]
   },
   {
-    "sectionId": "sample-block-0173",
+    "sectionId": "sample-block-0051",
     "teamId": "00000000-0000-4000-8000-000000000006",
-    "board": "八级 · 六古典双C",
+    "board": "八级 · 六古典烬猫",
     "carryId": "jhin",
     "tankId": "thresh",
     "anchorIds": [
@@ -1130,9 +1130,9 @@
     "augment": true
   },
   {
-    "sectionId": "sample-block-0468",
+    "sectionId": "sample-block-0219",
     "teamId": "00000000-0000-4000-8000-000000000106",
-    "board": "九级 · 四主宰天使扎克",
+    "board": "九级 · 四主宰派克泽丽",
     "carryId": "kayle",
     "tankId": "zac",
     "anchorIds": [
