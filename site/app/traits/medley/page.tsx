@@ -3,6 +3,7 @@ import { season } from "@/data";
 import catalog from "@/data/medley-groups.json";
 import { buildMedleyFits } from "@/domain/medley-fit";
 import { medleyGuideRoutes } from "@/domain/medley-guide-routes";
+import { editionScope } from "@/domain/version-updates";
 import { publicGuidePublication } from "@/server/publication";
 import { MedleyLibrary } from "./MedleyLibrary";
 import "./medley.css";
@@ -15,7 +16,8 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function MedleyPage() {
-  const publication = await publicGuidePublication();
+  const catalogEdition = `s${catalog.set}-${catalog.environment.toLowerCase()}`;
+  const publication = editionScope(season.id) === catalogEdition ? await publicGuidePublication() : null;
   const routes = publication ? medleyGuideRoutes(publication.sections, publication.season, season) : [];
   const fitsByGroup = buildMedleyFits(catalog.groups, routes, season.units, season.items, catalog.fixedUnit);
   return <MedleyLibrary fitsByGroup={fitsByGroup} />;
