@@ -434,16 +434,18 @@ test("home uses the exact 4.40 cutoff, leaving the archive tier at 4.50 and acce
   assert.equal(recommendationTier(weak.rating), "recommended");
 });
 
-test("home selection budgets twelve regular cards, at most eight per group, and two independent augment cards", () => {
+test("home selection shares twelve slots across regular, augment and manual recommendations", () => {
   const reroll = [homeRoute("reroll", "reroll-b", 4.21), homeRoute("reroll", "reroll-a", 4.20)];
   const fastEight = Array.from({ length: 12 }, (_, i) => homeRoute("fast8", "eight-" + i, 3.90 + i / 100));
   const fastNine = [homeRoute("fast9", "nine-a", 4.22), homeRoute("fast9", "nine-b", 4.24)];
   const augments = Array.from({ length: 3 }, (_, i) => homeRoute("heroAugment", "augment-" + i, 3.80 + i / 100));
-  const rows = [...reroll, ...fastEight, ...augments, ...fastNine].reverse();
-  assert.deepEqual(selectRecommendationRoutes(rows), [reroll[1], reroll[0], ...fastEight.slice(0, 8), ...fastNine, ...augments.slice(0, 2)]);
+  const regular = [...reroll, ...fastEight, ...fastNine].reverse();
+  assert.deepEqual(selectRecommendationRoutes(regular), [reroll[1], reroll[0], ...fastEight.slice(0, 8), ...fastNine]);
+  const rows = [...regular, ...augments];
+  assert.deepEqual(selectRecommendationRoutes(rows), [reroll[1], reroll[0], ...fastEight.slice(0, 8), ...augments.slice(0, 2)]);
   const manual = { ...homeRoute("reroll", "manual"), override: "include" };
   assert.deepEqual(selectRecommendationRoutes([manual, ...rows]),
-    [reroll[1], reroll[0], manual, ...fastEight.slice(0, 8), fastNine[0], ...augments.slice(0, 2)]);
+    [reroll[1], manual, ...fastEight.slice(0, 8), ...augments.slice(0, 2)]);
 });
 
 test("home chooses the strongest branch for one guide slot and breaks ties by games then cluster ID", () => {

@@ -151,7 +151,7 @@ export type HomeRecommendationRating = RecommendationStat |
 export type OwnerRecommendationOverride = "pin" | "include" | "exclude";
 
 const homeRecommendationCutoff = 4.40;
-const homeMaxRegular = 12;
+const homeMaxVisible = 12;
 const homeMaxPerGroup = 8;
 const homeMaxHeroAugment = 2;
 
@@ -234,17 +234,17 @@ export function selectRecommendationRoutes<T extends HomeRecommendationCandidate
   const groups: Record<RecommendationGroup, T[]> = { reroll: [], fast8: [], fast9: [], heroAugment: [] };
   const families = new Set<string>();
   const boards = new Set<string>();
-  let remainingRegular = homeMaxRegular;
+  let remaining = homeMaxVisible;
   for (const route of ranked) {
+    if (remaining === 0) break;
     const selected = groups[route.group];
-    const isAugment = route.group === "heroAugment";
-    if (isAugment ? selected.length >= homeMaxHeroAugment : remainingRegular === 0 || selected.length >= homeMaxPerGroup) continue;
-    if (families.has(route.familyId) || boards.has(route.rating.teamId)) continue;
+    const groupLimit = route.group === "heroAugment" ? homeMaxHeroAugment : homeMaxPerGroup;
+    if (selected.length >= groupLimit || families.has(route.familyId) || boards.has(route.rating.teamId)) continue;
 
     selected.push(route);
     families.add(route.familyId);
     boards.add(route.rating.teamId);
-    if (!isAugment) remainingRegular--;
+    remaining--;
   }
   return recommendationGroups.flatMap(({ id }) => groups[id].sort(compareHomeRoutes));
 }

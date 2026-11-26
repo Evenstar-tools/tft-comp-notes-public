@@ -106,6 +106,11 @@ test("the gate validates active recommendation overrides and accepts ordinary ad
   assert.equal(run(cwd, "--verify").status, 0);
 
   const original = structuredClone(batch);
+  const twelve = [...regular.slice(0, 10), ...heroes.slice(0, 2)].map(row => ({ ...row, override: "include" }));
+  writeFileSync(file, JSON.stringify({ ...batch, entries: twelve }));
+  assert.equal(run(cwd, "--verify").status, 0);
+  writeFileSync(file, JSON.stringify({ ...batch, entries: [...twelve, { ...regular[10], override: "pin" }] }));
+  assert.ok(JSON.parse(run(cwd, "--verify").stdout).errors.some(error => /合计最多 12 套/.test(error)));
   const landing = sections.find(section => section.id === "sample-block-1110");
   const landingPin = { ...entry(landing, "fast8"), teamId: landing.stageTeamIds[0], override: "pin" };
   writeFileSync(file, JSON.stringify({ ...batch, entries: [...batch.entries, landingPin] }));
@@ -127,7 +132,7 @@ test("the gate validates active recommendation overrides and accepts ordinary ad
   assert.equal(invalid.status, 1);
   const { errors } = JSON.parse(invalid.stdout);
   for (const expected of [/\.timing/, /\.upgrade/, /\.override.*须为/, /\.pinOrder/, /\.manualBadge/,
-    /过渡盘/, /次选棋盘/, /常规最多 12 套，英雄强化最多 2 套/]) {
+    /过渡盘/, /次选棋盘/, /合计最多 12 套，其中英雄强化最多 2 套/]) {
     assert.ok(errors.some(error => expected.test(error)), expected);
   }
 
@@ -143,7 +148,7 @@ test("the gate validates active recommendation overrides and accepts ordinary ad
   assert.equal(run(cwd, "--verify").status, 0);
 });
 
-test("the homepage warns when the current native cohort plus valid overrides has fewer than four regular guides", t => {
+test("the homepage warns when the current native cohort plus valid overrides has fewer than four home guides", t => {
   const cwd = fixture(t);
   const file = join(cwd, "data", "patch-recommendations.json");
   const familyFile = join(cwd, "data", "guide-family-stats.json");
@@ -161,7 +166,7 @@ test("the homepage warns when the current native cohort plus valid overrides has
     assert.equal(result.status, 0, result.stdout || result.stderr);
     return JSON.parse(result.stdout).warnings;
   };
-  const lowCount = warnings => warnings.find(warning => /本版推荐常规达线及手动入榜仅/.test(warning));
+  const lowCount = warnings => warnings.find(warning => /本版推荐达线及手动入榜仅/.test(warning));
   assert.match(lowCount(check([])), /仅 2 套/);
 
   const first = raw.entries.find(entry => entry.sectionId === "sample-block-0338");
@@ -178,6 +183,13 @@ test("the homepage warns when the current native cohort plus valid overrides has
   const jhin = kept.find(row => row.sectionId === jhinAdvice.sectionId);
   const excludedAlias = { ...jhinAdvice, teamId: jhin.sharedTeamIds[0], override: "exclude" };
   assert.equal(lowCount(check([...manual, excludedAlias])), undefined);
+
+  const hero = family.rows.find(row => row.heroAugment && row.games >= 100 && row.mean <= 4.40);
+  assert.ok(hero);
+  writeFileSync(familyFile, JSON.stringify({ ...family, rows: [...kept, hero] }));
+  assert.match(lowCount(check([])), /仅 3 套/);
+  assert.equal(lowCount(check(manual.slice(0, 1))), undefined);
+  writeFileSync(familyFile, JSON.stringify({ ...family, rows: kept }));
 
   const { effectiveAt } = readJson(join(cwd, "data", "current-patch.json"));
   const older = new Date(Date.parse(effectiveAt) - 1000).toISOString();
