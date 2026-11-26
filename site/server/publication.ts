@@ -34,6 +34,11 @@ function hasDatabase() {
   return Boolean(process.env.DATABASE_URL?.trim());
 }
 
+async function bundlePreviewSnapshot(): Promise<Publication> {
+  const { default: preview } = await import("@/data/public-preview.json");
+  return structuredClone(preview) as Publication;
+}
+
 async function publishedSnapshotId(): Promise<string | null> {
   const row = await database()
     .prepare("SELECT value FROM settings WHERE key='published_id'")
@@ -43,14 +48,11 @@ async function publishedSnapshotId(): Promise<string | null> {
 
 // Index pages only need the published chapters and boards. Reading the full guide also restores legacy media bindings.
 export async function publishedSnapshot(): Promise<Publication | null> {
-  if (!hasDatabase()) {
-    const { default: preview } = await import("@/data/public-preview.json");
-    return structuredClone(preview) as Publication;
-  }
+  if (!hasDatabase()) return bundlePreviewSnapshot();
   const row = await database()
     .prepare("SELECT body FROM snapshots WHERE id=(SELECT value FROM settings WHERE key='published_id')")
     .first<{ body: string }>();
-  return row ? JSON.parse(row.body) as Publication : null;
+  return row ? JSON.parse(row.body) as Publication : bundlePreviewSnapshot();
 }
 export async function livePublication(): Promise<Publication | null> {
   if (!hasDatabase()) {
@@ -78,7 +80,8 @@ export async function publicGuidePublication(): Promise<Publication | null> {
   const id = await publishedSnapshotId();
   if (!id) {
     dbPublicGuideCache = null;
-    return null;
+    previewPublicGuideCache ??= buildPublicGuidePublication().then(pub => pub!);
+    return previewPublicGuideCache;
   }
   if (dbPublicGuideCache?.id === id) return dbPublicGuideCache.value;
   const value = buildPublicGuidePublication().catch(error => {
@@ -394,9 +397,11 @@ export async function publishSections(
 export async function installPublication(publication: Publication, draftId?: string) {
   const db = database();
   const previousId = publication.previousId ?? null;
+  const currentId = await publishedSnapshotId();
+  const expectedPreviousId = currentId === null && previousId === (await bundlePreviewSnapshot()).id ? null : previousId;
   const [inserted] = await db.batch([
     db.prepare("INSERT INTO snapshots (id,body,created_at) SELECT ?,?,? WHERE (SELECT value FROM settings WHERE key='published_id') IS ? AND (? IS NULL OR json_extract((SELECT value FROM settings WHERE key='document_draft'),'$.id')=?)")
-      .bind(publication.id, JSON.stringify(publication), publication.publishedAt, previousId, draftId ?? null, draftId ?? null),
+      .bind(publication.id, JSON.stringify(publication), publication.publishedAt, expectedPreviousId, draftId ?? null, draftId ?? null),
     db.prepare("INSERT INTO settings (key,value) SELECT 'published_id',id FROM snapshots WHERE id=? ON CONFLICT(key) DO UPDATE SET value=excluded.value").bind(publication.id),
   ]);
   if (!inserted.meta.changes) throw new ApiError(409, "发布内容已更新，请刷新预览后再发布");
