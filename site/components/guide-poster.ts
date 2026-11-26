@@ -199,6 +199,12 @@ export async function guidePoster({ section, team, data, format = defaultPosterF
     }
     y += boardHeight + 7;
     if (instruments?.size) y = block(c, boardMarkerNote(instruments), pad, y, inner, 12.5, muted, 18);
+    const replacements = board.pieces.flatMap(piece => {
+      const active = units.get(piece.unitId);
+      const alternate = piece.alternate ? units.get(piece.alternate.unitId) : undefined;
+      return active && alternate ? [`${unitNames[alternate.name] ?? alternate.name}替换${unitNames[active.name] ?? active.name}`] : [];
+    });
+    if (replacements.length) y = block(c, replacements.join(" · "), pad, y, inner, 12.5, muted, 18);
     const traits = traitCounts(board.pieces, data.units, data.traits, data.items).filter(trait => traitGroup(trait) === "已开常规");
     font(c, 14, 650);
     c.fillStyle = accent;

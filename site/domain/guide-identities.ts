@@ -30,6 +30,8 @@ export const GUIDE_SECTION_IDS = {
   tangoJazzTwistedFate: "sample-block-1180",
   /** 三心之钢三经纪月男 95 */
   heartsteelManagerAphelios: "sample-block-1181",
+  /** 双电子泽丽 */
+  edmZeri: "sample-block-0235",
   threeJazzSmeech: "sample-block-0275",
   jazzPykeAurora: "sample-block-1090",
   /** K/DA妮蔻 */
@@ -42,6 +44,8 @@ export const AD_GRAVES_BOARD_IDS = [
   "00000000-0000-4000-8000-000000001261",
   "00000000-0000-4000-8000-000000001262",
 ] as const;
+
+export const ZERI_JAZZ_BOARD_ID = "00000000-0000-4000-8000-000000001275";
 
 export const PYKE_GRAVES_BOARD_ID = "00000000-0000-4000-8000-000000000093";
 

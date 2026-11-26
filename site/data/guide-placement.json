@@ -9,6 +9,41 @@
     {
       "population": 9,
       "roster": [
+        "bard",
+        "dr-mundo",
+        "galio",
+        "leona",
+        "lillia",
+        "nunu-willump",
+        "smeech",
+        "yone",
+        "zeri"
+      ],
+      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&tactician_item_count=0&duplicate_unit_count=0&emblem_count=0&unit=DA_Lillia19-1&unit=DA_Galio19-1&unit=DA_Smeech19-1&unit=DA_DrMundo19-1&unit=DA_Nunu19-1&unit=DA_Leona19-1&unit=DA_Yone19-1&unit=DA_Bard19-1&unit=DA_Zeri19-1&queue=PBE&patch=19.1&days=3.0&b_patch=c",
+      "sampleScope": "九级结算 · 固定九人 · 无纹章、额外人口装或重复棋子 · 不限星级与装备",
+      "observedOn": "2026-11-26",
+      "conditions": {
+        "kind": "full",
+        "teamId": "00000000-0000-4000-8000-000000001275"
+      },
+      "games": 7,
+      "placementCounts": [
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        1,
+        3
+      ],
+      "mean": 6.29,
+      "topFourRate": 0.2857142857142857,
+      "winRate": 0.0
+    },
+    {
+      "population": 9,
+      "roster": [
         "galio",
         "jhin",
         "k-sante",
