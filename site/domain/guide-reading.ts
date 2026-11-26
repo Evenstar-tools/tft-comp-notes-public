@@ -109,11 +109,6 @@ export function matchGuideTeams(teams: Team[], data: Season, query: string, alia
   }));
 }
 
-export function complementItems(recipe: string[], selected: string) {
-  const index = recipe.indexOf(selected);
-  return index < 0 ? [] : recipe.filter((_, position) => position !== index);
-}
-
 export function sourceSummary(section: Section) {
   const paragraphs = authoredParagraphs(section);
   return paragraphs.find(block => block.id === section.summaryBlockId)?.text?.trim();

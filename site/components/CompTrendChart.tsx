@@ -2,13 +2,12 @@
 
 import { useMemo, type ReactNode } from "react";
 import { CartesianGrid, Line, LineChart, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import type { TrendPatch, TrendPoint } from "@/domain/comp-trends";
+import type { TrendMetric, TrendPatch, TrendPoint } from "@/domain/comp-trends";
 
-export type Metric = "mean" | "pickRate" | "topFourRate" | "winRate";
 export type Observation = { time: number; day: number; points: Map<string, TrendPoint>; values: Record<string, number> };
-export type PlotLine = { key: string; trackId: string; name: string; color: string };
+export type PlotLine = { key: string; trackId: string; name: string; color: string; pointCount: number };
 
-const archiveDay = new Intl.DateTimeFormat("zh-CN", { month: "numeric", day: "numeric", timeZone: "UTC" });
+const axisDay = new Intl.DateTimeFormat("en-US", { month: "numeric", day: "numeric", timeZone: "UTC" });
 
 function sampledTicks(rows: Observation[]) {
   const count = Math.min(7, rows.length);
@@ -16,7 +15,8 @@ function sampledTicks(rows: Observation[]) {
   return Array.from({ length: count }, (_, index) => rows[Math.round(index * (rows.length - 1) / (count - 1))].day);
 }
 
-function plotScale(rows: Observation[], metric: Metric): { domain: [number, number]; ticks: number[] } {
+function plotScale(rows: Observation[], metric: TrendMetric): { domain: [number, number]; ticks: number[] } {
+  if (metric === "strength") return { domain: [0, 1], ticks: [0, 0.2, 0.4, 0.6, 0.8, 1] };
   const values = rows.flatMap(row => Object.values(row.values));
   if (!values.length) return { domain: [0, 1], ticks: [0, 1] };
   const low = Math.min(...values), high = Math.max(...values);
@@ -44,7 +44,7 @@ function patchPosition(time: number, rows: Observation[]) {
 }
 
 export function CompTrendChart({ rows, lines, metric, patchMarks, highlighted, activeDay, onSelect, onHover, renderTooltip }: {
-  rows: Observation[]; lines: PlotLine[]; metric: Metric; patchMarks: TrendPatch[];
+  rows: Observation[]; lines: PlotLine[]; metric: TrendMetric; patchMarks: TrendPatch[];
   highlighted?: string; activeDay?: number;
   onSelect: (time: number) => void;
   onHover: (trackId: string | undefined) => void;
@@ -63,10 +63,12 @@ export function CompTrendChart({ rows, lines, metric, patchMarks, highlighted, a
         if (row) onSelect(row.time);
       }}>
       <CartesianGrid vertical={false} stroke="var(--line)" strokeDasharray="3 4" />
-      <XAxis type="number" dataKey="day" domain={timing} ticks={sampledTicks(rows)} tickFormatter={time => archiveDay.format(time)}
-        tickLine={false} axisLine={false} tickMargin={8} minTickGap={10} tick={{ fontSize: 12, fill: "var(--muted)" }} />
+      <XAxis type="number" dataKey="day" domain={timing} ticks={sampledTicks(rows)} tickFormatter={time => axisDay.format(time)}
+        interval="preserveStartEnd" tickLine={false} axisLine={false} tickMargin={8} minTickGap={6}
+        tick={{ fontSize: 12, fill: "var(--muted)" }} />
       <YAxis reversed={metric === "mean"} domain={scale.domain} ticks={scale.ticks} allowDataOverflow width={45}
-        tickFormatter={value => metric === "mean" ? Number(value).toFixed(2) : value + "%"} tickLine={false} axisLine={false}
+        tickFormatter={value => metric === "strength" ? Number(value).toFixed(1) : metric === "mean" ? Number(value).toFixed(2) : value + "%"}
+        tickLine={false} axisLine={false}
         tick={{ fontSize: 12, fill: "var(--muted)" }} />
       {activeDay !== undefined && <ReferenceLine x={activeDay} stroke="var(--line)" />}
       {patchMarks.map(patch => <ReferenceLine key={patch.at + patch.label} x={patchPosition(Date.parse(patch.at), rows)}
@@ -75,13 +77,13 @@ export function CompTrendChart({ rows, lines, metric, patchMarks, highlighted, a
       {lines.map(line => {
         const emphasized = highlighted === line.trackId;
         const opacity = highlighted && !emphasized ? 0.28 : 1;
-        return <Line key={line.trackId} type={rows.length === 2 ? "bumpX" : "monotoneX"} dataKey={"values." + line.key} name={line.name} stroke={line.color}
+        return <Line key={line.trackId} type="monotoneX" dataKey={"values." + line.key} name={line.name} stroke={line.color}
           strokeWidth={emphasized ? 3.25 : 2} strokeLinecap="round" opacity={opacity}
-          dot={rows.length === 1 ? { r: 3 } : false}
+          dot={line.pointCount === 1 ? { r: 3, fill: line.color, opacity } : false}
           activeDot={{ r: emphasized ? 4.5 : 3.5, opacity }}
           connectNulls isAnimationActive={false} />;
       })}
-      {rows.length > 1 && lines.map(line => <Line key={line.trackId + "-hit"} type={rows.length === 2 ? "bumpX" : "monotoneX"}
+      {lines.filter(line => line.pointCount > 1).map(line => <Line key={line.trackId + "-hit"} type="monotoneX"
         dataKey={"values." + line.key} stroke="transparent" strokeWidth={12} className="comp-trend-hit"
         tooltipType="none" legendType="none" dot={false} activeDot={false} connectNulls isAnimationActive={false}
         onMouseEnter={() => onHover(line.trackId)} onMouseLeave={() => onHover(undefined)} />)}

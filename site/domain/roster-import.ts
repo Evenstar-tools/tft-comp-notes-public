@@ -110,7 +110,7 @@ export function parseRoster(input: string, units: Unit[], items: Item[]): Roster
   return result;
 }
 
-function copyBoard(board: { pieces: Placement[]; instrumentPositions?: Team["instrumentPositions"] }) {
+export function copyBoard(board: { pieces: Placement[]; instrumentPositions?: Team["instrumentPositions"] }) {
   return {
     pieces: board.pieces.map(piece => ({
       ...piece, instanceId: createId(), items: [...piece.items],

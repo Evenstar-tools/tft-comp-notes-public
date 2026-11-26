@@ -68,7 +68,7 @@ import { request } from "./api";
 import { downloadBlob, exportTeamImage } from "./export-team";
 import { GuidePoster } from "./GuidePoster";
 import { clearGuideBoardTransfer, readGuideBoardSource, readGuideBoardTransfer, storeGuideBoardSource, type GuideBoardSource } from "./guide-board-transfer";
-import { exportPlayerTeams, importPlayerTeams, isPlayerTeamStorageKey, readPlayerTeams, savePlayerTeam } from "./player-team-storage";
+import { exportPlayerTeams, findPlayerGuideTeam, importPlayerTeams, isPlayerTeamStorageKey, readPlayerEditorDraft, readPlayerTeams, resetPlayerGuideBoard, savePlayerTeam, writePlayerEditorDraft } from "./player-team-storage";
 import { trackToolAction } from "@/lib/analytics";
 import "./editor-workspace.css";
 
@@ -161,22 +161,14 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
   const [guideTransfer, setGuideTransfer] = useState<{
     id: string;
     source: ReturnType<typeof readGuideBoardTransfer>;
-    draft: Team | null;
   }>();
   useEffect(() => {
     if (!guideBoardId) return;
-    const source = readGuideBoardTransfer(guideBoardId);
-    const board = source && readTeamStage(source.team, source.team.mainStage ?? "late");
-    const draft = source && board ? independentDraft({ ...board, name: source.title.slice(0, 80) }, emptyTeam()) : null;
-    if (draft && board && source?.target) draft.pieces = board.pieces;
-    setGuideTransfer({
-      id: guideBoardId, source,
-      draft,
-    });
+    setGuideTransfer({ id: guideBoardId, source: readGuideBoardTransfer(guideBoardId) });
   }, [guideBoardId]);
   const pendingGuide = guideBoardId && guideTransfer?.id === guideBoardId ? guideTransfer : undefined;
   const importKey = guideBoardId || copyQuery || incomingCombo;
-  const incomingDraft = guideBoardId ? pendingGuide?.draft : copyQuery ? (sourceCopy?.query === copyQuery ? sourceCopy.team : null) : comboDraft;
+  const incomingDraft = guideBoardId ? pendingGuide?.source?.team : copyQuery ? (sourceCopy?.query === copyQuery ? sourceCopy.team : null) : comboDraft;
   const handledImport = useRef<string | null>(null);
   const [comboOrigin, setComboOrigin] = useState("");
   const [guideBoardSource, setGuideBoardSource] = useState<GuideBoardSource | null>(null);
@@ -242,7 +234,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
   );
   const [toast, setToast] = useState<Toast | null>(null);
   const [restore, setRestore] = useState<Team | null>(null);
-  const [draftChecked, setDraftChecked] = useState(!ownerMode);
+  const [draftChecked, setDraftChecked] = useState(false);
   const [history, setHistory] = useState<Team[]>([]);
   const [future, setFuture] = useState<Team[]>([]);
   const [sections, setSections] = useState<Section[] | null>(null);
@@ -266,14 +258,20 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
   const draftRef = useRef(draftTeam);
   const stageRef = useRef(stage);
   const teamRef = useRef(team);
-  const showDraft = useCallback((next: Team, selectedStage: BoardStage = next.mainStage ?? "late") => {
+  const showDraft = useCallback((next: Team, selectedStage: BoardStage = next.mainStage ?? "late", source?: GuideBoardSource | null) => {
     draftRef.current = next;
     stageRef.current = selectedStage;
     teamRef.current = readTeamStage(next, selectedStage);
     setDraftTeam(next);
     setStage(selectedStage);
-    setGuideBoardSource(current => current?.draftId === next.id ? current : readGuideBoardSource(next.id));
-  }, []);
+    setGuideBoardSource(current => {
+      if (source !== undefined) return source;
+      if (current?.draftId === next.id) return current;
+      return readGuideBoardSource(next.id) ?? (!ownerMode && next.sourceGuide ? {
+        draftId: next.id, title: next.sourceGuide.title, href: next.sourceGuide.href, sourceGuide: next.sourceGuide,
+      } : null);
+    });
+  }, [ownerMode]);
   const pieceRef = useRef(pieceId);
   pieceRef.current = pieceId;
   const selectedRef = useRef(selectedId);
@@ -363,11 +361,36 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
     }
   }, [draftTeam, restore, draftChecked, notify, ownerMode]);
 
+  const restorePlayerDraft = useCallback(() => {
+    try {
+      const draft = readPlayerEditorDraft();
+      if (draft) showDraft(draft.team, draft.stage, draft.guideBoardSource);
+    } catch {
+      notify({ kind: "error", text: "无法读取本机草稿，请检查浏览器的站点存储设置。" });
+    }
+  }, [notify, showDraft]);
+  useEffect(() => {
+    if (ownerMode || draftChecked) return;
+    if (!importKey && !params.has("team")) restorePlayerDraft();
+    setDraftChecked(true);
+  }, [draftChecked, importKey, ownerMode, params, restorePlayerDraft]);
+  useEffect(() => {
+    if (ownerMode || !draftChecked || (importKey && handledImport.current !== importKey) || params.has("team")) return;
+    try {
+      writePlayerEditorDraft({ team: draftTeam, stage, guideBoardSource });
+    } catch {
+      notify({ kind: "error", text: "无法暂存本机草稿，请检查浏览器的站点存储设置。" });
+    }
+  }, [draftTeam, stage, guideBoardSource, draftChecked, importKey, ownerMode, params, notify]);
+
   const known = saved?.find((entry) => entry.id === team.id);
   const dirty = known ? !same(known, draftTeam) : meaningful(draftTeam);
   const guidePublished = !!guideBoardSource?.published && guideBoardSource.published === JSON.stringify(publishedBoardContent(draftTeam));
   const priorGuideCopy = guideTarget && !known && !history.length && saved?.find(entry =>
     entry.id !== draftTeam.id && !entry.sectionId && entry.name === draftTeam.name);
+  const incomingGuideSource = pendingGuide?.source?.sourceGuide;
+  const playerGuideCopy = !ownerMode && saved && incomingGuideSource
+    ? findPlayerGuideTeam(saved, incomingGuideSource) : undefined;
   const initializingPlayer = !ownerMode && saved === null;
   const incomingTeam = saved?.find((entry) => entry.id === incomingTeamId);
   useEffect(() => {
@@ -388,7 +411,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
       setPieceSelection(null);
     }
   }, [incomingTeamId, incomingTeam, saved, draftChecked, restore, dirty, showDraft]);
-  const finishImport = useCallback((draft: Team | null) => {
+  const finishImport = useCallback((incoming: Team | null) => {
     handledImport.current = importKey;
     const url = new URL(window.location.href);
     for (const key of ["guideBoard", "combo", "copy", "publication", "section"]) url.searchParams.delete(key);
@@ -396,16 +419,30 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
     url.searchParams.delete("from");
     window.history.replaceState(window.history.state, "", url.pathname + url.search);
     if (guideBoardId) clearGuideBoardTransfer(guideBoardId);
-    if (!draft) return;
+    if (!incoming) {
+      if (!ownerMode && !meaningful(draftRef.current)) restorePlayerDraft();
+      return;
+    }
     const guide = pendingGuide?.source;
-    if (guide) {
-      const source = { draftId: draft.id, title: guide.title, href: guide.href, target: guide.target, sharedConditions: guide.sharedConditions };
+    const board = guide && readTeamStage(incoming, incoming.mainStage ?? "late");
+    const draft = guide && board && !playerGuideCopy
+      ? independentDraft({ ...board, name: guide.title.slice(0, 80) }, emptyTeam()) : playerGuideCopy ?? incoming;
+    let source: GuideBoardSource | undefined;
+    if (guide && board) {
+      if (ownerMode && guide.target) draft.pieces = board.pieces;
+      source = {
+        draftId: draft.id, title: guide.title, href: guide.href, target: ownerMode ? guide.target : undefined,
+        sharedConditions: guide.sharedConditions, sourceGuide: guide.sourceGuide,
+        ...(!ownerMode && {
+          officialBoard: { pieces: board.pieces, instrumentPositions: board.instrumentPositions },
+          restoredPlayerTeam: !!playerGuideCopy,
+        }),
+      };
       storeGuideBoardSource(source);
-      setGuideBoardSource(source);
     }
     setComboOrigin(guide ? "" : copyQuery && sectionId && copyId ? guideLink(sectionId, copyId) : origin?.startsWith("/combos?") ? origin : "/combos");
     setRestore(null);
-    showDraft(draft);
+    showDraft(draft, undefined, source);
     setReplacement(null); setMobileReplace(false);
     setHistory([]); setFuture([]); setWantedForm(null);
     const focus = (guide ? draft.pieces.find(piece => piece.unitId === guide.focusUnit) ??
@@ -413,7 +450,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
     setSelectedId(focus?.unitId ?? null);
     setPieceSelection(focus ? { id: focus.instanceId } : null);
     if (!guide) notify({ kind: "ok", text: copyQuery ? "棋盘已复制到新草稿" : "八人口组合已带入新草稿" });
-  }, [importKey, guideBoardId, pendingGuide, copyQuery, sectionId, copyId, notify, showDraft]);
+  }, [importKey, guideBoardId, pendingGuide, playerGuideCopy, copyQuery, sectionId, copyId, ownerMode, restorePlayerDraft, notify, showDraft]);
   useEffect(() => {
     if (!importKey || handledImport.current === importKey || !draftChecked || !saved) return;
     if (guideBoardId ? !pendingGuide : copyQuery && !incomingDraft) return;
@@ -706,15 +743,17 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
     }
     const existing = saved?.find((entry) => entry.id === current.id);
     if (ownerMode && existing && same(existing, current)) return current;
+    const sourceGuide = guideBoardSource?.draftId === current.id ? guideBoardSource.sourceGuide : current.sourceGuide;
     const savedTeam = ownerMode ? (await request<{ team: Team }>("/api/teams", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(current),
-      })).team : await savePlayerTeam(current);
+      })).team : await savePlayerTeam(sourceGuide ? { ...current, sourceGuide } : current);
     const openDraft = draftRef.current;
     if (openDraft.id === current.id) {
       const next = openDraft === current ? savedTeam : {
         ...openDraft, revision: savedTeam.revision, updatedAt: savedTeam.updatedAt,
+        ...(savedTeam.sourceGuide && { sourceGuide: savedTeam.sourceGuide }),
       };
       showDraft(next, stageRef.current);
     }
@@ -783,6 +822,14 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
     setPieceSelection(null);
     setWantedForm(null);
     notify({ kind: "info", text: `${stageLabels[stage]}棋盘已清空，可撤销。` });
+  }
+  function resetGuideBoard() {
+    const official = guideBoardSource?.officialBoard;
+    if (!official) return;
+    commit(current => resetPlayerGuideBoard(current, official));
+    setSelectedId(null);
+    setPieceSelection(null);
+    setWantedForm(null);
   }
 
   async function loadSections(force = false) {
@@ -960,7 +1007,9 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
       {guideBoardSource && <div className="editor-guide-source">
         <div><strong>来自{guideBoardSource.title}</strong><small aria-live="polite">{guideTarget
           ? guidePublished ? "已发布到原棋盘" : known && !dirty ? "副本已保存 · 原棋盘待发布" : "原棋盘待发布"
-          : ownerMode ? known && !dirty ? "副本已保存到云端" : "云端副本草稿" : known && !dirty ? "已保存在本机" : "本地草稿"}</small></div>
+          : ownerMode ? known && !dirty ? "副本已保存到云端" : "云端副本草稿"
+          : known && !dirty ? guideBoardSource.restoredPlayerTeam ? "· 已恢复本机站位" : "已保存在本机"
+          : "本地草稿"}</small></div>
         <div className="editor-guide-source-actions">
           {priorGuideCopy && guideBoardSource && <button type="button" className="btn secondary sm" disabled={!!busy} onClick={() => {
             const source = { ...guideBoardSource, draftId: priorGuideCopy.id, published: undefined };
@@ -970,13 +1019,15 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
           }}>使用已存副本</button>}
           {guideTarget && <button type="button" className="btn ghost sm" disabled={!!busy || !team.name.trim()} onClick={saveNow}>仅保存副本</button>}
           <a href={guideBoardSource.href}>返回原棋盘</a>
+          {!ownerMode && guideBoardSource.officialBoard && <button type="button" className="btn ghost sm" disabled={!!busy}
+            onClick={resetGuideBoard}>重置为官方原盘</button>}
         </div>
       </div>}
       {copyQuery && copyError && <div className="banner" role="alert">{copyError}<button onClick={() => setRetryCopy(v => v + 1)}>重新读取棋盘</button></div>}
       {copyQuery && !incomingDraft && !copyError && <p role="status">正在读取所选发布棋盘…</p>}
       {importKey && incomingDraft && handledImport.current !== importKey && draftChecked && (restore || dirty) && (
         <div className="banner flow-banner" role="status">
-          <span>有未保存的阵容「{(restore ?? team).name}」。带入后会另建一份草稿。</span>
+          <span>有未保存的阵容「{(restore ?? team).name}」。{playerGuideCopy ? "带入后会打开已保存的本机站位。" : "带入后会另建一份草稿。"}</span>
           <button type="button" className="btn secondary sm" disabled={!!busy} onClick={() => run("save", async () => { await save(restore ?? draftTeam); finishImport(incomingDraft); })}>保存当前并带入{guideBoardId || copyQuery ? "棋盘" : "组合"}</button>
           <button type="button" className="btn ghost sm" disabled={!!busy} onClick={() => finishImport(null)}>留在当前阵容</button>
         </div>

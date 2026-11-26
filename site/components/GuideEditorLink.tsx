@@ -2,15 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { SquarePen } from "lucide-react";
-import type { Team, TeamCondition } from "@/domain/types";
+import type { SourceGuide, Team, TeamCondition } from "@/domain/types";
 import { createId } from "@/domain/id";
 import { ownerEditorPath } from "@/domain/links";
 import { extractPublicGuideIdFromHref } from "@/domain/analytics";
 import { trackToolAction } from "@/lib/analytics";
 import { guideBoardTransferKey, type GuideBoardTarget } from "./guide-board-transfer";
 
-export function GuideEditorLink({ team, title, href, focusUnit, secondary = false, owner = false, target, sharedConditions }: {
+export function GuideEditorLink({ team, title, href, focusUnit, secondary = false, owner = false, target, sourceGuide, sharedConditions }: {
   team: Team; title: string; href: string; focusUnit?: string; secondary?: boolean; owner?: boolean; target?: GuideBoardTarget;
+  sourceGuide?: SourceGuide;
   sharedConditions?: TeamCondition[];
 }) {
   const label = owner ? "带入工作区" : "带入编辑器";
@@ -21,12 +22,12 @@ export function GuideEditorLink({ team, title, href, focusUnit, secondary = fals
   function openEditor() {
     try {
       const id = createId();
-      sessionStorage.setItem(guideBoardTransferKey, JSON.stringify({ id, team, title, href, focusUnit, target, sharedConditions }));
+      sessionStorage.setItem(guideBoardTransferKey, JSON.stringify({ id, team, title, href, focusUnit, target, sourceGuide, sharedConditions }));
       setError("");
       if (!owner) {
         trackToolAction({
           action: "editor_import_guide",
-          guideId: target?.sectionId ?? extractPublicGuideIdFromHref(href),
+          guideId: sourceGuide?.sectionId ?? extractPublicGuideIdFromHref(href),
           surface: "guide",
         });
       }

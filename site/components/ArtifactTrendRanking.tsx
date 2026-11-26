@@ -6,7 +6,7 @@ import "./artifact-trend-ranking.css";
 
 const number = new Intl.NumberFormat("zh-CN");
 const percent = new Intl.NumberFormat("zh-CN", { style: "percent", minimumFractionDigits: 2, maximumFractionDigits: 2 });
-const wins = { query: "", order: "wins", excluded: "", wearer: "" } as const;
+const wins = { query: "", order: "wins", excluded: [], wearer: "" } as const;
 
 export function ArtifactTrendRanking({ edition }: { edition: string }) {
   const model = currentArtifactRanking(edition);

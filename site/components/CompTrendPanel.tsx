@@ -3,19 +3,21 @@
 import { useEffect, useId, useMemo, useState, type CSSProperties } from "react";
 import { ArrowDownRight, ArrowUpRight, ChevronRight } from "lucide-react";
 import dynamic from "next/dynamic";
-import type { Metric, Observation, PlotLine } from "./CompTrendChart";
-import { selectTrendWindow, type CompTrendModel, type TrendDiscovery, type TrendPoint, type TrendTrack } from "@/domain/comp-trends";
+import type { Observation, PlotLine } from "./CompTrendChart";
+import { selectTrendWindow, type CompTrendModel, type TrendDiscovery, type TrendMetric, type TrendPoint, type TrendTrack } from "@/domain/comp-trends";
 import { beijingDateTime } from "@/lib/beijing-time";
 import "./comp-trend-panel.css";
 
 const CompTrendChart = dynamic(() => import("./CompTrendChart").then(module => module.CompTrendChart), { ssr: false });
 const tftableUrl = "https://tftable.cc/meta";
-const metrics = [
-  ["mean", "均名"],
-  ["pickRate", "出场率"],
-  ["topFourRate", "前四率"],
-  ["winRate", "登顶率"],
-] as const;
+const metrics = {
+  strength: "综合表现",
+  mean: "均名",
+  winShare: "登顶占比",
+  top4Share: "前四占比",
+  pickRate: "出场率",
+} satisfies Record<TrendMetric, string>;
+const metricKeys = Object.keys(metrics) as TrendMetric[];
 const number = new Intl.NumberFormat("zh-CN");
 const archiveDay = new Intl.DateTimeFormat("zh-CN", { month: "numeric", day: "numeric", timeZone: "UTC" });
 const beijingDay = new Intl.DateTimeFormat("zh-CN", { month: "numeric", day: "numeric", timeZone: "Asia/Shanghai" });
@@ -24,24 +26,23 @@ const trackColors = [
   "var(--trend-cyan)", "var(--trend-pink)", "var(--trend-gray)", "var(--trend-olive)", "var(--trend-indigo)",
 ];
 
-function pointValue(point: TrendPoint, metric: Metric) {
+function pointValue(point: TrendPoint, metric: TrendMetric) {
   const value = point[metric];
-  return value === null ? null : metric === "mean" ? value : 100 * value;
+  return value === null ? null : metric === "mean" || metric === "strength" ? value : 100 * value;
 }
 
-function valueLabel(value: number | null, metric: Metric) {
+function valueLabel(value: number | null, metric: TrendMetric) {
   if (value === null) return "—";
-  if (metric === "mean") return value.toFixed(2);
-  return value.toFixed(metric === "pickRate" ? 2 : 1) + "%";
+  return value.toFixed(2) + (metric === "mean" || metric === "strength" ? "" : "%");
 }
 
-function pointSampleLabel(point: TrendPoint, metric: Metric) {
+function pointSampleLabel(point: TrendPoint, metric: TrendMetric) {
   if (metric !== "pickRate") return number.format(point.games) + " 场";
   if (point.pickRate === null || point.totalFinishes == null) return "缺少同批分母";
   return number.format(point.games) + " / " + number.format(point.totalFinishes) + " 条玩家结算";
 }
 
-function makePlot(days: string[], tracks: TrendTrack[], metric: Metric) {
+function makePlot(days: string[], tracks: TrendTrack[], metric: TrendMetric) {
   const observations = new Map<number, Observation>(days.map(at => {
     const time = Date.parse(at);
     const day = Date.parse(at.slice(0, 10) + "T00:00:00Z");
@@ -53,7 +54,7 @@ function makePlot(days: string[], tracks: TrendTrack[], metric: Metric) {
     const key = "s" + index;
     const color = trackColors[index % trackColors.length];
     colors.set(track.id, color);
-    let hasValue = false;
+    let pointCount = 0;
     for (const point of track.points) {
       const row = observations.get(Date.parse(point.at));
       if (!row) continue;
@@ -61,9 +62,9 @@ function makePlot(days: string[], tracks: TrendTrack[], metric: Metric) {
       const value = pointValue(point, metric);
       if (value === null) continue;
       row.values[key] = value;
-      hasValue = true;
+      pointCount += 1;
     }
-    if (hasValue) lines.push({ key, trackId: track.id, color, name: track.name });
+    if (pointCount) lines.push({ key, trackId: track.id, color, name: track.name, pointCount });
   }
   return { rows: [...observations.values()].sort((a, b) => a.time - b.time), lines, colors };
 }
@@ -78,7 +79,7 @@ function Delta({ value }: { value?: number }) {
   </span>;
 }
 
-function trendReadout(tracks: TrendTrack[], row: Observation | undefined, metric: Metric) {
+function trendReadout(tracks: TrendTrack[], row: Observation | undefined, metric: TrendMetric) {
   const direction = metric === "mean" ? 1 : -1;
   return tracks.map(track => {
     const point = row?.points.get(track.id);
@@ -90,7 +91,7 @@ function trendReadout(tracks: TrendTrack[], row: Observation | undefined, metric
 }
 
 function TrendTooltip({ row, tracks, metric, colors, focused, onPreview }: {
-  row?: Observation; tracks: TrendTrack[]; metric: Metric; colors: Map<string, string>; focused?: string;
+  row?: Observation; tracks: TrendTrack[]; metric: TrendMetric; colors: Map<string, string>; focused?: string;
   onPreview: (time: number | undefined) => void;
 }) {
   const time = row?.time;
@@ -101,7 +102,7 @@ function TrendTooltip({ row, tracks, metric, colors, focused, onPreview }: {
 
   if (!row) return null;
   return <div className="comp-trend-tooltip">
-    <strong>{archiveDay.format(row.day)}</strong>
+    <strong>{archiveDay.format(row.day)} · {metrics[metric]}</strong>
     <ul>{trendReadout(tracks, row, metric).map(({ track, value }) =>
       <li key={track.id} className="comp-trend-tooltip-row" data-focused={track.id === focused || undefined}>
         <span className="comp-trend-track-mark" style={{ "--trend-track": colors.get(track.id) } as CSSProperties} aria-hidden="true" />
@@ -127,7 +128,7 @@ function DiscoveryCard({ item }: { item: TrendDiscovery }) {
 
 export function CompTrendPanel({ model }: { model: CompTrendModel }) {
   const id = useId();
-  const [metric, setMetric] = useState<Metric>("mean");
+  const [metric, setMetric] = useState<TrendMetric>("strength");
   const [filter, setFilter] = useState("top");
   const [focused, setFocused] = useState<string>();
   const [hovered, setHovered] = useState<string>();
@@ -158,7 +159,7 @@ export function CompTrendPanel({ model }: { model: CompTrendModel }) {
     return start !== undefined && end !== undefined && time >= start && time <= end;
   });
   const pinnedPoint = pinned && readoutRow?.points.get(pinned.id);
-  const metricLabel = metrics.find(([key]) => key === metric)?.[1];
+  const metricLabel = metrics[metric];
   const showDelta = metric === "mean" && readoutRow === rows.at(-1) && visible.some(track => Number(track.delta?.toFixed(2)));
   const costs = [...new Set(ranked.flatMap(track => track.cost ? [Math.min(5, track.cost)] : []))].sort((a, b) => a - b);
   function onFilter(value: string) {
@@ -172,14 +173,14 @@ export function CompTrendPanel({ model }: { model: CompTrendModel }) {
       <h2 id={id + "-title"}>阵容趋势</h2>
       {ranked.length > 0 && <div className="comp-trend-controls">
         <div role="group" aria-label="趋势指标" className="comp-trend-metrics">
-          {metrics.map(([key, label]) => <button type="button" key={key} aria-pressed={metric === key} onClick={() => setMetric(key)}>{label}</button>)}
+          {metricKeys.map(key => <button type="button" key={key} aria-pressed={metric === key} onClick={() => setMetric(key)}>{metrics[key]}</button>)}
         </div>
         <select className="comp-trend-filter" aria-label="筛选趋势阵容" value={activeFilter}
           onChange={event => onFilter(event.target.value)}>
-          <option value="top">最新均名前十</option>
+          <option value="top">{metricLabel} Top 10</option>
           {hasRecommendations && <option value="recommended">本版推荐</option>}
-          <option value="up">均名走强</option>
-          <option value="down">均名走弱</option>
+          <option value="up">上升趋势</option>
+          <option value="down">下降趋势</option>
           {costs.length > 0 && <optgroup label="主 C 费用">{costs.map(cost => <option key={cost} value={"cost:" + cost}>{cost === 5 ? "5 费及以上" : cost + " 费"}主 C</option>)}</optgroup>}
         </select>
       </div>}
@@ -189,6 +190,13 @@ export function CompTrendPanel({ model }: { model: CompTrendModel }) {
           <div>
             <p>{model.scope} · 按世界协调时归日</p>
             {model.note && <p>{model.note}</p>}
+            <p>占比使用当日全部有效收录阵容（至少 100 场、名次与比率有效）。同批同体系的相同样本只计一次，图表筛选不改变分母。</p>
+            <dl>
+              <dt>登顶占比</dt><dd>登顶数 = 场数 × 登顶率。占比 = 本阵容登顶数 ÷ 当日总登顶数。</dd>
+              <dt>前四占比</dt><dd>前四数 = 场数 × 前四率。占比 = 本阵容前四数 ÷ 当日总前四数。</dd>
+              <dt>综合表现</dt><dd>登顶、前四归一值各为（本阵容占比 ÷ 当日最高对应占比）<sup>0.65</sup>。均名归一值 = (5 − 均名) ÷ (5 − 3)，限制在 0～1。得分 = 35% × 登顶归一值 + 30% × 前四归一值 + 35% × 均名归一值，限制在 0～1。对应总数为零时，占比留空，该项归一值计 0。</dd>
+              <dt>出场率</dt><dd>场数 ÷ 同批玩家结算数。</dd>
+            </dl>
             <p><a className="comp-trend-credit" href={tftableUrl} target="_blank" rel="noopener">
               TFTable 环境对照 <ArrowUpRight size={13} aria-hidden="true" />
             </a></p>
@@ -248,7 +256,7 @@ export function CompTrendPanel({ model }: { model: CompTrendModel }) {
         </div>
       </div>
       : <p className="comp-trend-empty">{waitingForComparison ? "至少需两天可比样本"
-        : ranked.length ? metric === "pickRate" ? "当前筛选暂无出场率" : "当前筛选暂无可比趋势"
+        : ranked.length ? "当前筛选暂无" + metricLabel + "数据"
         : "暂无可比样本"}</p>}
       {patchMarks.length > 0 && <div className="comp-trend-caption">
         <div className="comp-trend-patches" aria-label="补丁节点">

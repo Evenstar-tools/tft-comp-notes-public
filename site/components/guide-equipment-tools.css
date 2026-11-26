@@ -1,31 +1,12 @@
 .guide-opt-gear { margin: 5px 0 10px; font-size: .9375rem; line-height: 1.45; }
-.guide-opt-gear > summary, .guide-opt-done > summary { color: var(--accent); cursor: pointer; padding: 7px 1px; }
+.guide-opt-gear > summary { color: var(--accent); cursor: pointer; padding: 7px 1px; }
 .guide-opt-gear > summary { font-weight: 650; }
-.guide-opt-components { margin-block: 4px 6px; }
-.guide-opt-components > summary { min-height: 42px; align-content: center; }
 .guide-opt-modes { display: flex; align-items: center; gap: 5px; margin-block-end: 11px; }
 .guide-opt-modes button[aria-pressed="true"] { border-color: var(--accent); background: var(--raised); color: var(--accent); }
-.guide-opt-gear > summary:focus-visible, .guide-opt-done > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.guide-opt-gear > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 .guide-opt-panel { border: 1px solid var(--line); background: var(--panel); border-radius: 7px; padding: 11px 12px; }
 .guide-opt-panel button { min-height: 35px; font-size: .875rem; padding: 4px 8px; }
-.guide-opt-inventory, .guide-opt-total { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
-.guide-opt-inventory > span:first-child, .guide-opt-needs summary > span:first-child { color: var(--muted); margin-inline-end: 3px; }
-.guide-opt-part-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(88px, 1fr)); gap: 4px; margin-top: 9px; }
-.guide-opt-part-list button { white-space: normal; line-height: 1.25; }
-.guide-opt-pick { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 8px; padding: 8px 0; border-top: 1px solid var(--line); }
-.guide-opt-pick:first-child { margin-top: 10px; }
-.guide-opt-pick strong { color: var(--accent); }
-.guide-opt-pick > span, .guide-opt-total > span, .guide-opt-done div > span, .guide-opt-compare td > span { display: inline-flex; align-items: center; gap: 5px; }
-.guide-opt-pick small { flex: 1 0 100%; color: var(--muted); }
-.guide-opt-needs { border-top: 1px solid var(--line); }
-.guide-opt-needs summary { display: flex; cursor: pointer; align-items: center; flex-wrap: wrap; gap: 6px 10px; padding: 8px 0; }
-.guide-opt-needs summary > span { display: inline-flex; align-items: center; gap: 3px; }
-.guide-opt-more { margin-inline-start: auto; font-size: .875rem; color: var(--accent); text-decoration: underline; }
-.guide-opt-total { gap: 4px 11px; color: var(--muted); font-variant-numeric: tabular-nums; font-size: .875rem; padding-bottom: 8px; }
-.guide-opt-done { margin-top: 6px; }
-.guide-opt-done > div { display: flex; align-items: center; gap: 7px; margin: 4px 0; }
-.guide-opt-done div > span:first-child { flex: 1; }
-.guide-opt-done div > button { min-width: 35px; }
+.guide-opt-compare td > span { display: inline-flex; align-items: center; gap: 5px; }
 .guide-opt-compare { grid-column: 1 / -1; margin: 5px 0 0; }
 .guide-opt-compare > summary { text-align: end; }
 .guide-opt-compare .guide-opt-panel { padding: 10px; }

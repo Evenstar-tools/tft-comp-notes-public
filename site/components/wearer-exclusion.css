@@ -1,16 +1,23 @@
-.wearer-exclude {position:relative;flex:0 0 12rem;min-width:0;}
+.wearer-exclude {flex:0 0 12rem;min-width:0;}
+.wearer-exclude-field {position:relative;}
 .wearer-exclude input {width:100%;min-height:42px;padding-inline-start:34px;text-overflow:ellipsis;}
 .wearer-exclude .wearer-exclude-icon {
   position:absolute;inset-inline-start:10px;top:50%;transform:translateY(-50%);
   color:var(--muted);pointer-events:none;
 }
-.wearer-exclude[data-excluded] input {padding-inline-end:36px;border-color:var(--accent);}
+.wearer-exclude[data-excluded] input {border-color:var(--accent);}
 .wearer-exclude[data-excluded] .wearer-exclude-icon {color:var(--accent);}
-.wearer-exclude-clear {
-  position:absolute;inset-block:3px;inset-inline-end:3px;width:30px;min-height:0;
+.wearer-exclude-chips {display:flex;flex-wrap:wrap;gap:4px;margin-top:4px;}
+.wearer-exclude-chip {
+  display:inline-flex;align-items:center;max-width:100%;padding-inline-start:7px;
+  border:1px solid var(--line);border-radius:5px;background:var(--panel);font-size:.8125rem;color:var(--text);
+}
+.wearer-exclude-chip > span {overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.wearer-exclude-chip button {
+  display:grid;place-items:center;flex:none;width:28px;min-height:25px;
   padding:0;border:0;background:transparent;color:var(--muted);
 }
-.wearer-exclude-clear:hover {color:var(--text);}
+.wearer-exclude-chip button:is(:hover,:focus-visible) {color:var(--accent);background:var(--raised);}
 .wearer-exclude-positioner {z-index:55;}
 .wearer-exclude-popup {
   width:max(13rem,var(--anchor-width));max-width:var(--available-width);
@@ -22,6 +29,7 @@
   display:flex;align-items:center;justify-content:space-between;gap:6px;
   min-height:36px;padding:4px 7px;border-radius:4px;font-size:.875rem;cursor:pointer;
 }
+.wearer-exclude-option[data-disabled] {opacity:.45;cursor:default;}
 .wearer-exclude-option[data-highlighted] {background:var(--raised);color:var(--accent);}
 .wearer-exclude-unit {display:flex;min-width:0;align-items:center;gap:8px;}
 .wearer-exclude-unit img {flex:none;width:26px;height:26px;object-fit:cover;border-bottom:2px solid var(--unit-cost);border-radius:4px;}
@@ -29,7 +37,6 @@
 .wearer-exclude-empty:not(:empty) {padding:8px;color:var(--muted);font-size:.875rem;}
 @media(max-width:760px) {
   .wearer-exclude input {min-height:44px;}
-  .wearer-exclude-clear {width:36px;}
-  .wearer-exclude[data-excluded] input {padding-inline-end:41px;}
+  .wearer-exclude-chip button {min-width:32px;min-height:30px;}
   .wearer-exclude-option {min-height:44px;}
 }

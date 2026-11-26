@@ -43,7 +43,9 @@
   inset-block-start: calc(100% + 8px);
   inset-inline-end: 0;
   width: max-content;
-  max-width: min(20rem, 75vw);
+  max-width: min(28rem, 75vw);
+  max-height: min(65dvh, 28rem);
+  overflow: auto;
   padding: 10px 12px;
   border: 1px solid var(--line);
   border-radius: 7px;
@@ -51,6 +53,9 @@
   line-height: 1.5;
 }
 .comp-trend-method p + p { margin-block-start: 5px; }
+.comp-trend-method dl { margin: 8px 0; }
+.comp-trend-method dt { color: var(--text); font-weight: 650; }
+.comp-trend-method dd { margin: 0 0 4px; }
 .comp-trend-credit,
 .comp-trend-focused a,
 .comp-trend-discovery h4 a {
@@ -62,7 +67,7 @@
 }
 .comp-trend-credit { padding-block-start: 3px; font-weight: 600; }
 .comp-trend-panel a:is(:hover, :focus-visible) { text-decoration: underline; text-underline-offset: 3px; }
-.comp-trend-metrics { display: flex; gap: 2px; padding: 3px; border-radius: 7px; background: var(--raised); }
+.comp-trend-metrics { display: flex; flex-wrap: wrap; max-width: 100%; gap: 2px; padding: 3px; border-radius: 7px; background: var(--raised); }
 .comp-trend-metrics button,
 .comp-trend-filter,
 .comp-trend-date,
@@ -219,7 +224,9 @@
   .comp-trend-panel { padding: 13px 12px 0; }
   .comp-trend-header h2 { flex-basis: 100%; }
   .comp-trend-sources { margin-inline-start: 0; }
-  .comp-trend-method > div { inset-inline-start: 0; inset-inline-end: auto; }
+  .comp-trend-sources:has(.comp-trend-method[open]) { flex-basis: 100%; }
+  .comp-trend-method[open] { width: 100%; }
+  .comp-trend-method > div { position: static; width: auto; max-width: none; max-height: none; overflow: visible; }
   .comp-trend-body { grid-template-columns: minmax(0, 1fr); gap: 5px; }
   .comp-trend-canvas { height: clamp(300px, 42svh, 380px); }
   .comp-trend-legend { padding: 6px 0 5px; border-inline-start: 0; border-top: 1px solid var(--line); }
@@ -230,6 +237,6 @@
   .comp-trend-legend ul { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 374px) {
-  .comp-trend-metrics button { padding-inline: 7px; }
+  .comp-trend-metrics button { padding-inline: 4px; }
   .comp-trend-legend li button { gap: 4px; }
 }

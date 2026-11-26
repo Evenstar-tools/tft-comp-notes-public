@@ -42,7 +42,7 @@ RECOMMENDATION_GROUPS = REGULAR_GROUPS | {"heroAugment"}
 RECOMMENDATION_STATUSES = ("recommended", "conditional", "avoid", "review")
 RECOMMENDATION_OVERRIDES = ("pin", "include", "exclude")
 HOME_MIN_GAMES, HOME_CUTOFF = 100, 4.40
-HOME_MIN_REGULAR, HOME_MAX_REGULAR, HOME_MAX_PER_GROUP, HOME_MAX_HERO = 4, 12, 8, 2
+HOME_MIN_VISIBLE, HOME_MAX_VISIBLE, HOME_MAX_PER_GROUP, HOME_MAX_HERO = 4, 12, 8, 2
 UTC8 = timezone(timedelta(hours=8))
 
 
@@ -406,26 +406,26 @@ def check_recommendation_entries(recommendations, family, sections, current, eff
         manual[key] = ("heroAugment" if is_hero else group if valid_group else None, override)
 
     manual_hero = sum(group == "heroAugment" for group, _ in manual.values())
-    manual_regular = len(manual) - manual_hero
-    if manual_regular > HOME_MAX_REGULAR or manual_hero > HOME_MAX_HERO:
-        errors.append(f"{name}：手动入榜常规最多 {HOME_MAX_REGULAR} 套，英雄强化最多 {HOME_MAX_HERO} 套")
+    if len(manual) > HOME_MAX_VISIBLE or manual_hero > HOME_MAX_HERO:
+        errors.append(f"{name}：手动入榜合计最多 {HOME_MAX_VISIBLE} 套，其中英雄强化最多 {HOME_MAX_HERO} 套")
     if sum(group != "heroAugment" and override == "pin" for group, override in manual.values()) > 4:
         warnings.append(f"{name}：常规置顶超过 4 条，请复核是否仍需保留")
 
     if not patch_ready:
         return
-    candidates = {(section_id, group) for (section_id, _), (group, _) in manual.items()
-                  if group != "heroAugment"}
+    candidates = {(section_id, group) for (section_id, _), (group, _) in manual.items()}
     if current_family:
-        candidates.update(qualified_home_guides(families, primaries, boards, decisions, excluded))
+        candidates.update(qualified_home_guides(families, primaries, boards, decisions, excluded, sections_by_id))
     # The reader infers the group from the guide when editorial metadata is absent.
     classified = {section_id for section_id, group in candidates if group is not None}
     by_group = Counter(group for section_id, group in candidates
                        if group is not None or section_id not in classified)
-    total = min(HOME_MAX_REGULAR, by_group.pop(None, 0)
+    unclassified = by_group.pop(None, 0)
+    heroes = min(by_group.pop("heroAugment", 0), HOME_MAX_HERO)
+    total = min(HOME_MAX_VISIBLE, unclassified + heroes
                 + sum(min(count, HOME_MAX_PER_GROUP) for count in by_group.values()))
-    if total < HOME_MIN_REGULAR:
-        warnings.append(f"{name}：本版推荐常规达线及手动入榜仅 {total} 套（少于 {HOME_MIN_REGULAR}），请复核")
+    if total < HOME_MIN_VISIBLE:
+        warnings.append(f"{name}：本版推荐达线及手动入榜仅 {total} 套（少于 {HOME_MIN_VISIBLE}），请复核")
 
 
 def board_population(board):
@@ -434,16 +434,17 @@ def board_population(board):
                for piece in pieces if isinstance(piece, dict)) if isinstance(pieces, list) else 0
 
 
-def qualified_home_guides(families, primaries, boards, decisions, excluded):
+def qualified_home_guides(families, primaries, boards, decisions, excluded, sections_by_id):
     comparable = [row for row in families if type(row.get("games")) is int and row["games"] >= HOME_MIN_GAMES
                   and type(row.get("mean")) in (int, float) and 1 <= row["mean"] <= 8]
     linked = [(row, dict.fromkeys(recommendation_board_ids(row, primaries.get(row["sectionId"]))))
               for row in comparable]
     counts = Counter((row["sectionId"], board) for row, keys in linked for board in keys)
     for row, keys in linked:
-        if row.get("heroAugment") or row["mean"] > HOME_CUTOFF:
-            continue
         section_id = row["sectionId"]
+        is_hero = sections_by_id[section_id].get("category") == "英雄强化阵容"
+        if is_hero != bool(row.get("heroAugment")) or row["mean"] > HOME_CUTOFF:
+            continue
         canonical = (row.get("teamId") or primaries.get(section_id), row.get("landingTeamId"))
         if any((section_id, board) in excluded for board in canonical if isinstance(board, str)):
             continue
@@ -452,7 +453,7 @@ def qualified_home_guides(families, primaries, boards, decisions, excluded):
         first = next((key for key in eligible if decisions.get(key, (None, None))[1]
                       in ("recommended", "conditional")), eligible[0] if eligible else None)
         if first is not None:
-            yield section_id, decisions.get(first, (None, None))[0]
+            yield section_id, "heroAugment" if is_hero else decisions.get(first, (None, None))[0]
 
 
 def check_references(recommendations, family, current, effective,

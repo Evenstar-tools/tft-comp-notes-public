@@ -77,13 +77,14 @@ export function PlacementBadge({ rating, id }: { rating?: PlacementRating; id?: 
   const games = frequency.format(rating.games) + " 场";
   const limited = rating.mean === undefined;
   const kind = placementEvidenceKind(rating);
+  const smallFixedSample = kind === "fixed" && rating.games < placementBatch.minGames;
   const label = { fixed: "棋盘均名", core: "核心均名", lineup: "名单共现均名", augment: "强化样本均名" }[kind];
   const description = rating.referencesAugment ? "按主 C 实际出装识别的棋盘样本" : limited ? "样本不足"
     : kind !== "fixed" || rating.sampleLabel ? [rating.patch, rating.window, rating.date, rating.sampleScope].filter(Boolean).join(" · ") : undefined;
   return <span id={id} className={"guide-placement " + rating.tone + (rating.referencesAugment ? " is-reference" : "")}
     title={description}>
     {rating.sourcePeriod && <span>历史 · </span>}
-    {rating.mean === undefined ? <span>{games}{kind === "augment" ? "" : " · 少量样本"}</span> : <><span>{rating.referencesAugment ? "同装均名" : kind === "lineup" ? label : rating.sampleLabel ?? label}</span> <strong>{rating.mean.toFixed(2)}</strong><small>{games}</small></>}
+    {rating.mean === undefined ? <span>{games}{kind === "augment" ? "" : " · 少量样本"}</span> : <><span>{rating.referencesAugment ? "同装均名" : kind === "lineup" ? label : rating.sampleLabel ?? label}</span> <strong>{rating.mean.toFixed(2)}</strong><small>{games}{smallFixedSample && " · 少量样本"}</small></>}
   </span>;
 }
 

@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { primaryFirst, matchGuideTeams, sourceSummary, complementItems, guideFacets, guidePlaystyle, guideRoster, guideBody, guideRoute, guideRollLevel, guideStrategyLabel, guideTitleWithoutPlaystyle, guideUnitMatch, readingNotes, isAuthoringIntroduction, isEditorialSection, parseGuideFilters, guideSectionWithCurrentNames } from "../domain/guide-reading.ts";
+import { primaryFirst, matchGuideTeams, sourceSummary, guideFacets, guidePlaystyle, guideRoster, guideBody, guideRoute, guideRollLevel, guideStrategyLabel, guideTitleWithoutPlaystyle, guideUnitMatch, readingNotes, isAuthoringIntroduction, isEditorialSection, parseGuideFilters, guideSectionWithCurrentNames } from "../domain/guide-reading.ts";
 import { displayGuideName, displayTraitNames } from "../domain/trait-names.mjs";
 import { comboStarMask, comboTierCounts } from "../domain/combo-tiers.ts";
 import { guideStyleKey, guideWearerQuery, homeGuideFilter, matchOpeningSearch, openingSearch, searchPhaseNote } from "../domain/guide-search.ts";
@@ -434,16 +434,18 @@ test("home uses the exact 4.40 cutoff, leaving the archive tier at 4.50 and acce
   assert.equal(recommendationTier(weak.rating), "recommended");
 });
 
-test("home selection budgets twelve regular cards, at most eight per group, and two independent augment cards", () => {
+test("home selection shares twelve slots across regular, augment and manual recommendations", () => {
   const reroll = [homeRoute("reroll", "reroll-b", 4.21), homeRoute("reroll", "reroll-a", 4.20)];
   const fastEight = Array.from({ length: 12 }, (_, i) => homeRoute("fast8", "eight-" + i, 3.90 + i / 100));
   const fastNine = [homeRoute("fast9", "nine-a", 4.22), homeRoute("fast9", "nine-b", 4.24)];
   const augments = Array.from({ length: 3 }, (_, i) => homeRoute("heroAugment", "augment-" + i, 3.80 + i / 100));
-  const rows = [...reroll, ...fastEight, ...augments, ...fastNine].reverse();
-  assert.deepEqual(selectRecommendationRoutes(rows), [reroll[1], reroll[0], ...fastEight.slice(0, 8), ...fastNine, ...augments.slice(0, 2)]);
+  const regular = [...reroll, ...fastEight, ...fastNine].reverse();
+  assert.deepEqual(selectRecommendationRoutes(regular), [reroll[1], reroll[0], ...fastEight.slice(0, 8), ...fastNine]);
+  const rows = [...regular, ...augments];
+  assert.deepEqual(selectRecommendationRoutes(rows), [reroll[1], reroll[0], ...fastEight.slice(0, 8), ...augments.slice(0, 2)]);
   const manual = { ...homeRoute("reroll", "manual"), override: "include" };
   assert.deepEqual(selectRecommendationRoutes([manual, ...rows]),
-    [reroll[1], reroll[0], manual, ...fastEight.slice(0, 8), fastNine[0], ...augments.slice(0, 2)]);
+    [reroll[1], manual, ...fastEight.slice(0, 8), ...augments.slice(0, 2)]);
 });
 
 test("home chooses the strongest branch for one guide slot and breaks ties by games then cluster ID", () => {
@@ -498,7 +500,6 @@ test("the author's primary survives reordered Feishu blocks and a Bard search li
   const section = {id:"x", blocks:[{type:"columns",children:[{id:"p",type:"text",text:"改后的原段落"}]}],summaryBlockId:"p"};
   assert.equal(sourceSummary(section),"改后的原段落");
   assert.equal(sourceSummary({...section,summaryBlockId:"moved"}),undefined);
-  assert.deepEqual(complementItems(["tear","tear"],"tear"),["tear"]);
   const faceted = {...section,blocks:[{id:"s",type:"text",text:"打法：慢搜"},{id:"c",type:"text",text:"主C：吉格斯"}]};
   assert.deepEqual(guideFacets(faceted,teams[0],data),{style:"慢搜",styleLabel:"1费慢搜",costs:[1]});
 });

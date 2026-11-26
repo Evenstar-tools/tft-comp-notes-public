@@ -77,6 +77,20 @@
 .guide-extra-phases summary { cursor: pointer; padding-block: 5px; }
 .guide-extra-phases button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
 
+.guide-player-board {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 2px 8px;
+  padding-inline: 8px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  color: var(--muted);
+  font-size: .875rem;
+}
+.guide-player-board button { margin-inline-start: auto; }
+
 .guide-flex-slot {
   display: flex;
   align-items: center;
