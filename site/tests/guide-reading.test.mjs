@@ -442,6 +442,21 @@ test("home recommendations keep five reroll, eight fast-eight, two fast-nine and
   assert.equal(selected[5].rating.topFourRate, .613);
   assert.equal(selected[5].rating.winRate, .17);
   assert.ok(selectRecommendationRoutes(entries, { displayOrder: displayOrder.slice(0, -1) }).includes(fixed));
+
+  // Multiple parallel variants under one guide collapse to one card driven by the strongest current mean.
+  const ocean = { group: "fast8", familyId: "429028", rating: { sectionId: "sample-block-0251", teamId: "ocean", mean: 4.23, games: 15000 } };
+  const juggernaut = { group: "fast8", familyId: "429016", rating: { sectionId: "sample-block-0251", teamId: "jugg", mean: 4.38, games: 3600 } };
+  const otherGuide = { group: "fast8", familyId: "429024", rating: { sectionId: "sample-block-0219", teamId: "kayle", mean: 4.41, games: 16000 } };
+  assert.deepEqual(
+    selectRecommendationRoutes([ocean, juggernaut, otherGuide], { displayOrder: ["ocean", "kayle"] }).map(r => r.rating.teamId),
+    ["ocean", "kayle"],
+  );
+  // If 4-Juggernaut overtakes Beach Pop in a later patch, it wins the single Graves-Zac slot automatically.
+  const strongerJugg = { ...juggernaut, rating: { ...juggernaut.rating, mean: 4.05 } };
+  assert.deepEqual(
+    selectRecommendationRoutes([ocean, strongerJugg, otherGuide], { displayOrder: ["ocean", "kayle"] }).map(r => r.rating.teamId),
+    ["jugg", "kayle"],
+  );
   assert.deepEqual(selectRecommendationRoutes([fast8[0], ...other.slice(0, 3)]), [fast8[0]]);
   assert.deepEqual(selectRecommendationRoutes(hero, { maxHeroAugment: 1 }), [hero[0]]);
 });

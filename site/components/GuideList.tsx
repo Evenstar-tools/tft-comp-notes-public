@@ -634,9 +634,11 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
     }));
     const population = usedPopulation(team.pieces);
     const oceanGraves = section.id === GUIDE_SECTION_IDS.oceanGraves;
-    const preferred = !oceanGraves || primary ? recommendationSecondaryCarries.get(section.id) : undefined;
-    const currentSecondary = roster.find(({ unit, role }) => preferred ? unit.id === preferred.unitId : role === "副C")?.unit;
-    const laterBoard = preferred && !currentSecondary ? entry.teams.find(board =>
+    const preferred = recommendationSecondaryCarries.get(section.id);
+    const usePreferred = Boolean(preferred && (!oceanGraves || team.id === preferred.boardId ||
+      entry.rows.some(row => row.boards.some(board => board.id === team.id) && row.boards.some(board => board.id === preferred.boardId))));
+    const currentSecondary = roster.find(({ unit, role }) => usePreferred && preferred ? unit.id === preferred.unitId : role === "副C")?.unit;
+    const laterBoard = usePreferred && preferred && !currentSecondary ? entry.teams.find(board =>
       board.id === preferred.boardId && board.pieces.some(piece => piece.unitId === preferred.unitId)) : undefined;
     const secondaryUnit = currentSecondary ?? (laterBoard ? data.units.find(unit => unit.id === preferred?.unitId) : undefined);
     const laterPopulation = laterBoard && usedPopulation(laterBoard.pieces);
@@ -667,6 +669,21 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
     }
     const upgradeChoice = upgradeTeam && guide?.choices?.find(choice => choice.team?.id === upgradeTeam.id);
     if (upgradeChoice?.team) stages.set(upgradeChoice.team.id, { team: upgradeChoice.team, label: upgradeChoice.label });
+    if (oceanGraves) {
+      for (const row of entry.rows) {
+        if (recommendationTier(row.stat) !== "recommended") continue;
+        const alt = row.boards.find(board => board.id !== team.id && !stages.has(board.id) &&
+          decisions.get(`${section.id}:${board.id}`)?.status !== "avoid" &&
+          !row.boards.some(board => board.id === team.id));
+        if (!alt) continue;
+        const altRoles = readingNotes(section, alt, data).roles;
+        const altSecId = altRoles.find(role => role.label === "副C")?.units[0];
+        const altSecName = altSecId ? data.units.find(unit => unit.id === altSecId)?.name : undefined;
+        const shortName = guideBoardName(alt).replace(/^[一二三四五六七八九十\d]+(?:级|人口)\s*·\s*/, "");
+        const label = altSecName && !shortName.includes(altSecName) ? `${shortName} · ${altSecName}` : shortName;
+        stages.set(alt.id, { team: alt, label });
+      }
+    }
     const conditions = guideEquipmentConditions(section, entry.teams, data, patch?.build, team)?.rows
       .filter(condition => team.conditions || condition.featured || condition.kind === "required");
     return {
