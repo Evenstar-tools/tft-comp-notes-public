@@ -26,7 +26,7 @@ export function HomeGearSearch({ hit, season, examples, filtered, refreshing, on
       {hit.image && <img src={hit.image} alt="" width={34} height={34} />}
       <h2>{hit.name}</h2>
       {detail && <small>{detail}</small>}
-      <a href={hit.href}>{gear.type === "emblem" ? "纹章" : "神器"}详情</a>
+      <a href={hit.href} data-home-search-result data-search-result-type="item">{gear.type === "emblem" ? "纹章" : "神器"}详情</a>
     </header>
     <div className="home-gear-columns" data-single={!examples.length || undefined}>
       <section aria-label="实战携带者">
@@ -36,7 +36,7 @@ export function HomeGearSearch({ hit, season, examples, filtered, refreshing, on
             onClick={() => onToggleExclusion(gear.exclude === "rakan" ? "none" : "rakan")}>剔除洛</button>}
         </header>
         {gear.holders.length ? <ul className="home-gear-wearers">
-          {gear.holders.map(holder => <li key={holder.id}><a href={holder.href}>
+          {gear.holders.map(holder => <li key={holder.id}><a href={holder.href} data-home-search-result data-search-result-type="unit">
             {holder.image && <img src={holder.image} alt="" width={34} height={34} loading="lazy" />}
             <strong>{holder.name}</strong>
             <span className="home-gear-measure">
@@ -51,7 +51,7 @@ export function HomeGearSearch({ hit, season, examples, filtered, refreshing, on
         <header className="home-gear-subheading"><h3>实戴棋盘</h3></header>
         <div className="home-gear-boards">
           {examples.map(example => <article key={example.id} id={"guide-card-gear-" + example.id}>
-            <a href={example.href} data-home-board={example.id}>
+            <a href={example.href} data-home-board={example.id} data-home-search-result data-search-result-type="guide">
               {example.image && <img src={example.image} alt="" width={40} height={40} loading="lazy" />}
               <span className="home-gear-board-label"><strong>{example.name}</strong>
                 {example.detail && <small>{example.detail}</small>}

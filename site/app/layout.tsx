@@ -8,6 +8,7 @@ import "./guide-reading.css";
 import "./season.css";
 import "./task-navigation.css";
 import { OwnerSession } from "@/components/OwnerSession";
+import { SiteAnalytics } from "@/components/SiteAnalytics";
 import { SiteNav } from "@/components/SiteNav";
 import { BrandMark } from "@/components/Glyphs";
 import { season } from "@/data";
@@ -30,6 +31,7 @@ export default function RootLayout({
     <html lang="zh-CN" suppressHydrationWarning>
       <body>
         <ThemeProvider attribute="data-theme" storageKey="tft-color-theme" defaultTheme="light" enableSystem={false} enableColorScheme={false}>
+          <SiteAnalytics />
           <OwnerSession>
             <a className="skip-link" href="#main">
               跳到主要内容

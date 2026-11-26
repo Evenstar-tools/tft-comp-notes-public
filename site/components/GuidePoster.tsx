@@ -7,6 +7,7 @@ import type { PosterVariant } from "@/domain/guide-families";
 import { posterShareLink, type PosterShare } from "@/domain/links";
 import { defaultPosterFormat, maxPosterStages, posterFormats, posterLayout, posterOperationTitle, posterStageOptions, posterStages, posterStageTitle, posterTitle, type PosterFormat } from "@/domain/poster";
 import type { Season, Team } from "@/domain/types";
+import { trackToolAction } from "@/lib/analytics";
 import { MatrixDialog } from "./MatrixDetails";
 import "./guide-poster-view.css";
 
@@ -32,6 +33,13 @@ export function GuidePoster({ section, team, data, variants, pickVariant, setDef
   const [shareError, setShareError] = useState<{ job: typeof job; message: string }>();
   const [copiedShare, setCopiedShare] = useState<{ link: string; fallback?: string }>();
   const preview = useRef<HTMLDivElement>(null);
+  const openedRef = useRef(false);
+
+  useEffect(() => {
+    if (openedRef.current) return;
+    openedRef.current = true;
+    trackToolAction({ action: "poster_open", guideId: section?.id, surface: "poster" });
+  }, [section?.id]);
 
   useEffect(() => {
     let active = true;
@@ -72,6 +80,7 @@ export function GuidePoster({ section, team, data, variants, pickVariant, setDef
   }
   async function shareImage() {
     if (!attachment) return;
+    trackToolAction({ action: "poster_share", guideId: section?.id, surface: "poster" });
     try {
       await navigator.share(attachment);
     } catch (error) {
@@ -80,6 +89,7 @@ export function GuidePoster({ section, team, data, variants, pickVariant, setDef
   }
   async function copyPosterLink() {
     if (!shareLink) return;
+    trackToolAction({ action: "poster_copy_link", guideId: section?.id, surface: "poster" });
     const url = new URL(shareLink, window.location.origin).href;
     try {
       await navigator.clipboard.writeText(url);
@@ -105,8 +115,10 @@ export function GuidePoster({ section, team, data, variants, pickVariant, setDef
     onClose={close} className="guide-poster-dialog" closeLabel="关闭一图流"
     action={<div className="poster-save">
       {ready?.url ? <>
-        <a className="poster-download" href={ready.url} download={ready.file?.name}>{downloadLabel}</a>
-        <a className="poster-original" aria-label="打开原图" href={ready.url} target="_blank" rel="noreferrer">原图</a>
+        <a className="poster-download" href={ready.url} download={ready.file?.name}
+          onClick={() => trackToolAction({ action: "poster_download", guideId: section?.id, surface: "poster" })}>{downloadLabel}</a>
+        <a className="poster-original" aria-label="打开原图" href={ready.url} target="_blank" rel="noreferrer"
+          onClick={() => trackToolAction({ action: "poster_open_original", guideId: section?.id, surface: "poster" })}>原图</a>
       </> : <>
         <button type="button" className="poster-download" disabled>{downloadLabel}</button>
         <button type="button" className="poster-original" aria-label="打开原图" disabled>原图</button>
