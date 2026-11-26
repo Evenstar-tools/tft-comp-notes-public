@@ -172,6 +172,8 @@
   .home-patch-title { grid-column: 2; grid-row: 1; }
   .home-patch-card-copy > :is(p, dl) { grid-column: 1 / -1; margin-top: 0; }
   .home-patch-mean { grid-column: 3; grid-row: 1; }
+  .home-patch-card-link--core { grid-template-columns: auto minmax(0, 1fr) max-content; }
+  .home-patch-card-link--core .home-patch-mean small { white-space: nowrap; }
 }
 @media (max-width: 400px) {
   .home-guide-library .home-patch-tabs { gap: 0; justify-content: space-between; }

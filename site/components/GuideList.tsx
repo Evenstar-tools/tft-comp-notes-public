@@ -5,6 +5,7 @@ import { ChevronRight, Search, X } from "lucide-react";
 import { guideRerollTargets } from "@/domain/reroll-targets";
 import familyStats from "@/data/guide-family-stats.json";
 import coreStats from "@/data/patch-recommendation-stats.json";
+import placementBatch from "@/data/guide-placement.json";
 import { displayGuideName, displayTraitNames } from "@/domain/trait-names.mjs";
 import { canRankRecommendations, compareGuideFamilyPerformance, currentFamilyBatch, currentRecommendationEvidence, familyMetricValue, formatRecommendationMean, guideFamilyRows, previousRecommendationDeadline, recommendationGroup, recommendationTier, selectRecommendationRoutes, type GuideFamilyDirection, type GuideFamilyMetric, type GuideFamilySnapshot, type GuideFamilyStat, type RecommendationGroup, type RecommendationStat } from "@/domain/guide-family-stats";
 import { carryMinGames, guideCarryRows } from "@/domain/guide-carry-stats";
@@ -26,7 +27,7 @@ import { HomeGuideBanner } from "./GuideNavigation";
 import { SiteSearchResults, useSiteSearch } from "./SiteSearchResults";
 import { siteSearchIntent, type SiteSearchResponse } from "@/domain/site-search";
 import { sameEdition } from "@/domain/version-updates";
-import { guideBoardKind } from "./GuidePlacement";
+import { guideBoardKind, teamPlacement } from "./GuidePlacement";
 import { formationCoreResult } from "./GuideFormationStats";
 import { PatchRecommendationList, type RecommendationCard } from "./PatchRecommendationList";
 import { GuideConditionIcon } from "./GuideEquipmentConditions";
@@ -48,6 +49,7 @@ type Choices = Partial<Record<View, Selections>>;
 type FamilySort = { metric: GuideFamilyMetric; direction: GuideFamilyDirection };
 const emptyFilters = { category: "", style: "", cost: 0 };
 const archiveViews = [["category", "攻略卡片"], ["mean", "战绩对照"]] as const;
+const boardSampleGuides = new Set<string>([GUIDE_SECTION_IDS.jazzJinx, GUIDE_SECTION_IDS.adGraves]);
 const recommendationSecondaryCarries = new Map<string, { unitId: string; boardId: string }>([
   [GUIDE_SECTION_IDS.oceanGraves, { unitId: "taliyah", boardId: "00000000-0000-4000-8000-000000000076" }],
   [GUIDE_SECTION_IDS.kdaNeeko, { unitId: "akali-kda", boardId: "00000000-0000-4000-8000-000000000039" }],
@@ -81,6 +83,8 @@ const shortOpenings: Record<string, readonly [source: string, short: string]> = 
   "五天才玛尔扎哈": ["玛尔扎哈、艾克来得多就停七一起追三。五天才七级成型。", "玛尔扎哈、艾克来得多，七级一起追三。"],
   "四主宰海之歌艾克辛德拉": ["辛德拉、艾克来得早走七级慢搜；双三成型立刻升八／九，别死停七级。", "辛德拉、艾克来得早走七级慢搜；双三立刻升八／九，别死停七级。"],
   "爵士派克兔牛": ["高经济开派克走这套；八级两星阿萝拉和阿利斯塔稳血，立刻上九补芮尔或史密奇吃鸡。", "高经济开派克，八级双两星即上九。"],
+  "爵士金克丝": ["八级自带 9 个非唯一羁绊，拉九零换牌自动领史密奇；物理装主养金克丝，战士装留史密奇。", "八级双两星稳血，原盘上九解锁史密奇。"],
+  "四主宰 AD 男枪": ["不吃史密奇的双核 AD 84；七级解扎克和派克，八级双主 C 两星即上九补崔斯特。", "七级解扎克、派克，八级双 C 和扎克两星就上九。"],
   "四大触打击乐德莱文": ["德莱文、布隆来得早，有青龙刀或无尽就走。前期两星韦鲁斯带输出装，两星俄洛伊带肉装。德莱文、布隆各自两星再接装，预留一张韦鲁斯和俄洛伊补羁绊。七级优先追德莱文和布隆，卡莎顺手留。", "德莱文、布隆来得早，有青龙刀或无尽就七级一起追三。"],
   "五杀天使": ["炸弹人带羊刀，纳尔带肉。七级上纳尔、奥拉夫、死歌、炸弹人开天使，八级天使、约里克两星接装。不同名五杀合计 9 星开铁男，没开先用乌鸦，开了换铁男，九级补回乌鸦。", "七级开天使，八级找天使和约里克两星。"],
   "双电子泽丽": ["速九跳九。高血高经济时，八级用现成打工盘过渡，直上九搜泽丽和蒙多。青龙刀、无尽先给芸阿娜，两星凯尔或卢锡安接装。优先两星泽丽；女枪先两星就上她和卢锡安。蒙多两星再接蕾欧娜的肉装。", "八级用现成打工盘过渡，存钱直上九找泽丽和蒙多。"],
@@ -319,6 +323,17 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
   const costs = [...new Set([...availableFacets.flatMap(entry => entry.costOptions), ...(cost ? [cost] : [])])].sort((a,b) => a-b);
   const fixedRecommendations = new Map((recommendations?.fixedBoardRecommendations ?? []).map(record => [record.teamId, record]));
   const decisions = new Map((recommendations?.entries ?? []).map(record => [`${record.sectionId}:${record.teamId}`, record]));
+  function boardSample(section: Section, team: Team, scope: "fixed" | "core") {
+    if (!boardSampleGuides.has(section.id) || placementBatch.build !== patch?.build) return;
+    const sample = teamPlacement(team, section, scope);
+    if (sample?.conditions?.teamId !== team.id || sample.sourcePeriod || sample.mean === undefined ||
+      sample.topFourRate === undefined || sample.winRate === undefined) return;
+    return {
+      sectionId: section.id, teamId: team.id, name: section.title, url: sample.url, games: sample.games,
+      mean: sample.mean, topFourRate: sample.topFourRate, winRate: sample.winRate,
+      label: scope === "core" ? "核心样本" : "固定盘",
+    };
+  }
   function canShowBoard(section: Section, team: Team) {
     if (!recommended && !showingTrends) return true;
     const status = decisions.get(`${section.id}:${team.id}`)?.status;
@@ -500,11 +515,12 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
       if (matches.some(match => includesBoard(match.boards, focus))) continue;
       const core = hasCurrentCore && route.data.id === coreStats.seasonId ? coreStats.rows.find(row =>
         row.sectionId === route.section.id && row.teamId === focus?.id) : undefined;
-      const fixed = focus && fixedRecommendations.get(focus.id);
-      const rating = core ?? fixed;
+      const boardRating = focus && (fixedRecommendations.get(focus.id) ??
+        boardSample(route.section, focus, "fixed") ?? boardSample(route.section, focus, "core"));
+      const rating = core ?? boardRating;
       if (route !== entry && !rating) continue;
       cards.push({ ...entry, ...route, tier: boardTier(route.section, focus, rating), core: !!core,
-        fixedSample: !core ? fixed?.label : undefined, rating, cardId: route.section.id });
+        fixedSample: !core ? boardRating?.label : undefined, rating, cardId: route.section.id });
     }
     return cards.filter(card => !tierFilter || tierLabels[card.tier] === tierFilter);
   });
@@ -538,8 +554,8 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
     strategy?: string; exact?: Candidate["matches"][number]; decision?: PatchRecommendation;
     conditional: boolean; preferred: boolean; sampleLabel?: string; note?: string;
   };
-  function homeRoutes(batch: GuideFamilySnapshot, entries: HomeEntry[], includeFixed = false) {
-    const routes = entries.flatMap<HomeSelection>(entry => {
+  function homeRoutes(batch: GuideFamilySnapshot | undefined, entries: HomeEntry[], includeEditorial = false) {
+    const routes = batch ? entries.flatMap<HomeSelection>(entry => {
       const { section, data } = entry;
       const isHero = section.category === heroAugmentCategory;
       const families = batch === homeFamilyStats ? entry.rows : guideFamilyRows(batch, data.id, section.id, entry.teams);
@@ -567,36 +583,38 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
           exact, decision, conditional,
           preferred: decision?.status === "recommended" || conditional, familyId: String(stat.clusterId) }];
       });
-    });
-    if (includeFixed) {
+    }) : [];
+    if (includeEditorial) {
       const familyBoards = new Set(routes.map(route => route.team.id));
       routes.push(...entries.flatMap(entry => entry.teams.flatMap(team => {
         const { section, data } = entry;
-        const rating = fixedRecommendations.get(team.id);
+        const decision = decisions.get(`${section.id}:${team.id}`);
+        const core = decision?.status === "recommended" && boardSample(section, team, "core");
+        const editorial = core && decision?.sources?.includes(core.url) ? core : undefined;
+        const fixed = currentHomeReady ? fixedRecommendations.get(team.id) : undefined;
+        const rating = editorial || fixed;
         if (!rating || section.category === heroAugmentCategory || familyBoards.has(team.id) || !canShowBoard(section, team) ||
           (needle || cost) && !entry.matches?.some(match => match.board.id === team.id)) return [];
         const facet = guideFacets(section, team, data);
         const strategy = guideStrategyLabel(section, team, data, entry.teams[0]);
-        const decision = decisions.get(`${section.id}:${team.id}`);
         const group = decision?.group ??
           recommendationGroup(entry.playstyle ?? strategy ?? facet.style, facet.costs, guideRollLevel(section, team));
         if (!group || group === "heroAugment") return [];
-        return [{ entry, team, group, rating, strategy, decision, conditional: true,
+        return [{ entry, team, group, rating, strategy, decision, conditional: !editorial,
           preferred: decision?.status === "recommended" || decision?.status === "conditional",
-          familyId: team.id, note: rating.note, sampleLabel: rating.label }];
+          familyId: team.id, note: editorial ? undefined : fixed?.note, sampleLabel: rating.label }];
       })));
     }
-    return selectRecommendationRoutes(routes, { displayOrder: batch === homeFamilyStats ? recommendations?.displayOrder : undefined });
+    const ordered = batch === homeFamilyStats || routes.some(route => route.sampleLabel === "核心样本");
+    return selectRecommendationRoutes(routes, { displayOrder: ordered ? recommendations?.displayOrder : undefined });
   }
   const currentHomeEvidence = currentRecommendationEvidence(homeFamilyStats, season.id, patch);
   // Decide when to switch data for the whole home, independently of a visitor's filters.
   const currentHomeRoutes = (recommended || showingTrends) && currentHomeEvidence ? homeRoutes(homeFamilyStats, homeEntries) : [];
   const currentHomeReady = currentHomeRoutes.length > 0;
   const recommendationSnapshot = currentHomeReady ? homeFamilyStats : previousDeadline !== undefined ? previousFamilyStats : undefined;
-  const homeSelections = !equipmentQuery && recommended && recommendationSnapshot
-    ? (needle || cost || style ? homeRoutes(recommendationSnapshot, candidatesFor(homeEntries), currentHomeReady)
-      : currentHomeReady && !fixedRecommendations.size ? currentHomeRoutes
-      : homeRoutes(recommendationSnapshot, homeEntries, currentHomeReady))
+  const homeSelections = !equipmentQuery && recommended
+    ? homeRoutes(recommendationSnapshot, needle || cost || style ? candidatesFor(homeEntries) : homeEntries, true)
     : [];
   const recommendationCards: RecommendationCard[] = homeSelections.map(({ entry, exact, team, group, rating, strategy, conditional, decision, note, sampleLabel }) => {
     const { section, data } = entry;
@@ -1005,8 +1023,8 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
     {searching && <p className="site-lookup-message" role="status">正在搜索…</p>}
 
     {recommended && <>
-      {recommendationSnapshot && <PatchRecommendationList stats={recommendationSnapshot} cards={recommendationCards} home={home}
-        previousBuild={!currentHomeReady} />}
+      <PatchRecommendationList stats={recommendationSnapshot ?? homeFamilyStats} cards={recommendationCards} home={home}
+        previousBuild={!!recommendationSnapshot && !currentHomeReady} />
       {!displayedCount && !crossTab.length && needle && showLookup && !equipmentQuery && <div className="empty-inline">{archiveLink}</div>}
       {!displayedCount && !crossTab.length && !showLookup && !searching && (needle || hasFilter ? emptyState : <div className="empty-inline"><p>{currentHomeEvidence ? "暂无符合条件的本版推荐" : "本版体系数据待更新"}</p>
         {archiveLink}

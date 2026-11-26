@@ -5508,6 +5508,290 @@
       "mean": 3.36,
       "topFourRate": 0.7131147540983607,
       "winRate": 0.21311475409836064
+    },
+    {
+      "population": 9,
+      "roster": [
+        "annie",
+        "braum",
+        "galio",
+        "jinx",
+        "lucian",
+        "mel",
+        "shyvana",
+        "smeech",
+        "yuumi"
+      ],
+      "games": 493,
+      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&trait=DA_Jazz19_2&unit=DA_Annie19-1&unit=DA_Braum19-1&unit=DA_Galio19-1&unit=DA_Jinx19-1&unit=DA_Lucian19-1&unit=DA_Mel19-1&unit=DA_Shyvana19-1&unit=DA_Smeech19-1&unit=DA_Yuumi19-1&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "sampleScope": "9级结算 · 固定名单 · 星级与装备不限 · 无纹章、人口装或重复弈子",
+      "conditions": {
+        "kind": "full",
+        "teamId": "00000000-0000-4000-8000-000000001251",
+        "population": 9,
+        "traits": {
+          "jazz": 3
+        }
+      },
+      "placementCounts": [
+        40,
+        55,
+        94,
+        106,
+        91,
+        55,
+        37,
+        15
+      ],
+      "observedOn": "2026-11-26",
+      "mean": 4.1,
+      "topFourRate": 0.5983772819472617,
+      "winRate": 0.08113590263691683
+    },
+    {
+      "population": 8,
+      "roster": [
+        "annie",
+        "braum",
+        "galio",
+        "jinx",
+        "lucian",
+        "mel",
+        "shyvana",
+        "yuumi"
+      ],
+      "games": 774,
+      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&trait=DA_Jazz19_1&unit=DA_Annie19-1&unit=DA_Braum19-1&unit=DA_Galio19-1&unit=DA_Jinx19-1&unit=DA_Lucian19-1&unit=DA_Mel19-1&unit=DA_Shyvana19-1&unit=DA_Yuumi19-1&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "sampleScope": "8级结算 · 固定名单 · 星级与装备不限 · 无纹章、人口装或重复弈子",
+      "conditions": {
+        "kind": "full",
+        "teamId": "00000000-0000-4000-8000-000000001252",
+        "population": 8,
+        "traits": {
+          "jazz": 2
+        }
+      },
+      "placementCounts": [
+        13,
+        22,
+        61,
+        119,
+        156,
+        168,
+        134,
+        101
+      ],
+      "observedOn": "2026-11-26",
+      "mean": 5.49,
+      "topFourRate": 0.2777777777777778,
+      "winRate": 0.016795865633074936
+    },
+    {
+      "population": 9,
+      "roster": [
+        "annie",
+        "braum",
+        "galio",
+        "jinx",
+        "lucian",
+        "mel",
+        "rell",
+        "shyvana",
+        "yuumi"
+      ],
+      "games": 57,
+      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&trait=DA_Jazz19_1&unit=DA_Annie19-1&unit=DA_Braum19-1&unit=DA_Galio19-1&unit=DA_Jinx19-1&unit=DA_Lucian19-1&unit=DA_Mel19-1&unit=DA_Rell19-1&unit=DA_Shyvana19-1&unit=DA_Yuumi19-1&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "sampleScope": "9级结算 · 固定名单 · 星级与装备不限 · 无纹章、人口装或重复弈子",
+      "conditions": {
+        "kind": "full",
+        "teamId": "00000000-0000-4000-8000-000000001253",
+        "population": 9,
+        "traits": {
+          "jazz": 2
+        }
+      },
+      "placementCounts": [
+        2,
+        10,
+        14,
+        10,
+        7,
+        5,
+        5,
+        4
+      ],
+      "observedOn": "2026-11-26",
+      "mean": 4.14,
+      "topFourRate": 0.631578947368421,
+      "winRate": 0.03508771929824561
+    },
+    {
+      "population": 8,
+      "roster": [
+        "annie",
+        "braum",
+        "galio",
+        "jinx",
+        "lucian",
+        "mel",
+        "shyvana",
+        "yuumi"
+      ],
+      "games": 4520,
+      "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&unit=DA_Annie19-1&unit=DA_Braum19-1&unit=DA_Galio19-1&unit=DA_Jinx19-1&unit=DA_Lucian19-1&unit=DA_Mel19-1&unit=DA_Shyvana19-1&unit=DA_Yuumi19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "sampleScope": "八张核心同场 · 结算等级、星级与装备不限",
+      "conditions": {
+        "kind": "core",
+        "teamId": "00000000-0000-4000-8000-000000001251",
+        "coreRoster": [
+          "annie",
+          "braum",
+          "galio",
+          "jinx",
+          "lucian",
+          "mel",
+          "shyvana",
+          "yuumi"
+        ]
+      },
+      "placementCounts": [
+        911,
+        874,
+        730,
+        621,
+        519,
+        411,
+        272,
+        182
+      ],
+      "observedOn": "2026-11-26",
+      "mean": 3.49,
+      "topFourRate": 0.6938053097345133,
+      "winRate": 0.20154867256637168
+    },
+    {
+      "population": 8,
+      "roster": [
+        "gnar",
+        "graves",
+        "olaf",
+        "pyke",
+        "taric",
+        "vayne",
+        "yorick",
+        "zac"
+      ],
+      "games": 35,
+      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&trait=DA_Juggernaut19_2&trait=DA_OceanSong19_1&trait=DA_DemonVision19_1&trait=DA_Renegade19_1&unit=DA_Gnar19-1&unit=DA_Graves19-1&unit=DA_Olaf19-1&unit=DA_Pyke19-1&unit=DA_Taric19-1&unit=DA_Vayne19-1&unit=DA_Yorick19-1&unit=DA_Zac19-1&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "sampleScope": "8级结算 · 固定名单 · 星级与装备不限 · 无纹章、人口装或重复弈子",
+      "conditions": {
+        "kind": "full",
+        "teamId": "00000000-0000-4000-8000-000000001261",
+        "population": 8,
+        "traits": {
+          "juggernaut": 4,
+          "beach-pop": 3,
+          "rock": 3,
+          "renegade": 2
+        }
+      },
+      "placementCounts": [
+        0,
+        0,
+        5,
+        11,
+        5,
+        3,
+        8,
+        3
+      ],
+      "observedOn": "2026-11-26",
+      "mean": 5.2,
+      "topFourRate": 0.45714285714285713,
+      "winRate": 0.0
+    },
+    {
+      "population": 9,
+      "roster": [
+        "gnar",
+        "graves",
+        "olaf",
+        "pyke",
+        "taric",
+        "twisted-fate",
+        "vayne",
+        "yorick",
+        "zac"
+      ],
+      "games": 36,
+      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&trait=DA_Juggernaut19_2&trait=DA_OceanSong19_1&trait=DA_DemonVision19_1&trait=DA_Renegade19_1&unit=DA_Gnar19-1&unit=DA_Graves19-1&unit=DA_Olaf19-1&unit=DA_Pyke19-1&unit=DA_Taric19-1&unit=DA_TwistedFate19-1&unit=DA_Vayne19-1&unit=DA_Yorick19-1&unit=DA_Zac19-1&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "sampleScope": "9级结算 · 固定名单 · 星级与装备不限 · 无纹章、人口装或重复弈子",
+      "conditions": {
+        "kind": "full",
+        "teamId": "00000000-0000-4000-8000-000000001262",
+        "population": 9,
+        "traits": {
+          "juggernaut": 4,
+          "beach-pop": 3,
+          "rock": 3,
+          "renegade": 2
+        }
+      },
+      "placementCounts": [
+        9,
+        7,
+        12,
+        4,
+        2,
+        2,
+        0,
+        0
+      ],
+      "observedOn": "2026-11-26",
+      "mean": 2.69,
+      "topFourRate": 0.8888888888888888,
+      "winRate": 0.25
+    },
+    {
+      "population": 5,
+      "roster": [
+        "graves",
+        "pyke",
+        "vayne",
+        "yorick",
+        "zac"
+      ],
+      "games": 220,
+      "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&trait=DA_Juggernaut19_2&unit=DA_Graves19-1&unit=DA_Pyke19-1&unit=DA_Vayne19-1&unit=DA_Yorick19-1&unit=DA_Zac19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "sampleScope": "五张核心同场 · 4 主宰 · 结算等级、星级与装备不限",
+      "conditions": {
+        "kind": "core",
+        "teamId": "00000000-0000-4000-8000-000000001261",
+        "coreRoster": [
+          "graves",
+          "pyke",
+          "vayne",
+          "yorick",
+          "zac"
+        ],
+        "traits": {
+          "juggernaut": 4
+        }
+      },
+      "placementCounts": [
+        28,
+        50,
+        40,
+        37,
+        24,
+        18,
+        15,
+        8
+      ],
+      "observedOn": "2026-11-26",
+      "mean": 3.6,
+      "topFourRate": 0.7045454545454546,
+      "winRate": 0.12727272727272726
     }
   ],
   "edition": "s19-pbe-19.1",

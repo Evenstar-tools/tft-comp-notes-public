@@ -58,7 +58,7 @@ const guideTitleTraits = [
 
 /** Use for S19 lineup names and titles, not equipment names or player prose. @param {string} title */
 export function displayGuideName(title) {
-  if (title === "爵士派克兔牛") return title;
+  if (["爵士派克兔牛", "爵士金克丝", "四主宰 AD 男枪"].includes(title)) return title;
   return guideTitleTraits.reduce((name, [former, current]) => name.replace(former, current), displayTraitNames(title));
 }
 
