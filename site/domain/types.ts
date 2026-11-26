@@ -68,6 +68,7 @@ export interface BoardSetup {
   pieces: Piece[];
   instrumentPositions?: Partial<Record<BoardInstrumentId, number>>;
 }
+export type SourceGuide = { sectionId: string; teamId: string; href: string; title: string };
 export interface Team extends BoardSetup {
   id: string;
   name: string;
@@ -79,6 +80,7 @@ export interface Team extends BoardSetup {
   revision: number;
   updatedAt: string;
   sectionId?: string;
+  sourceGuide?: SourceGuide;
   posterFormat?: "full" | "quick";
   boardRole?: "variant" | "stage";
   conditions?: TeamCondition[];

@@ -1,8 +1,13 @@
-import type { Team } from "@/domain/types";
-import { createId } from "@/domain/id";
+import type { BoardSetup, BoardStage, PieceLoadout, SourceGuide, Team } from "@/domain/types";
+import { createId } from "../domain/id.ts";
+import { copyBoard } from "../domain/roster-import.ts";
+import { checkedGuideBoardSource, checkedSourceGuide, type GuideBoardSource } from "./guide-board-transfer.ts";
 
 const prefix = "tft-player-team-v1:";
 const backupFormat = "tft-player-teams-v1";
+const draftKey = "tft-player-editor-draft-v1";
+
+type PlayerEditorDraft = { team: Team; stage: BoardStage; guideBoardSource: GuideBoardSource | null };
 
 class PlayerTeamStorageError extends Error {}
 
@@ -24,8 +29,8 @@ function isLoadout(value: unknown): boolean {
     Array.isArray(value.items) && value.items.every(item => typeof item === "string");
 }
 
-function isBoard(value: Record<string, unknown>): boolean {
-  return Array.isArray(value.pieces) && value.pieces.every(piece =>
+function isBoard(value: unknown): value is BoardSetup {
+  return record(value) && Array.isArray(value.pieces) && value.pieces.every(piece =>
     record(piece) && isLoadout(piece) && boardPosition(piece.position) &&
     (piece.alternate === undefined || isLoadout(piece.alternate)),
   ) && (value.instrumentPositions === undefined || (
@@ -33,17 +38,28 @@ function isBoard(value: Record<string, unknown>): boolean {
   ));
 }
 
-function checkedTeam(team: unknown, key: string): Team | undefined {
-  if (!record(team) || typeof team.id !== "string" || prefix + team.id !== key ||
+function isStage(value: unknown): value is BoardStage {
+  return value === "early" || value === "mid" || value === "late";
+}
+
+function checkedTeam(team: unknown, key?: string): Team | undefined {
+  if (!record(team) || typeof team.id !== "string" || !team.id || (key !== undefined && prefix + team.id !== key) ||
       typeof team.name !== "string" || typeof team.category !== "string" ||
       typeof team.notes !== "string" || typeof team.revision !== "number" ||
-      !Number.isSafeInteger(team.revision) || team.revision < 1 ||
+      !Number.isSafeInteger(team.revision) || team.revision < (key === undefined ? 0 : 1) ||
       typeof team.updatedAt !== "string" || !Number.isFinite(Date.parse(team.updatedAt)) ||
-      (team.mainStage !== undefined && team.mainStage !== "early" && team.mainStage !== "mid" && team.mainStage !== "late") ||
+      (team.mainStage !== undefined && !isStage(team.mainStage)) ||
       !isBoard(team)) return;
   if (team.stages !== undefined && (!record(team.stages) ||
-    !Object.values(team.stages).every(stage => record(stage) && isBoard(stage)))) return;
-  return team as unknown as Team;
+    !Object.values(team.stages).every(isBoard))) return;
+  return withCheckedSourceGuide(team as unknown as Team);
+}
+
+function withCheckedSourceGuide(team: Team): Team {
+  if (team.sourceGuide === undefined) return team;
+  const { sourceGuide, ...rest } = team;
+  const source = checkedSourceGuide(sourceGuide);
+  return source ? { ...rest, sourceGuide: source } : rest;
 }
 
 function readTeam(raw: string | null, key: string): Team | undefined {
@@ -77,6 +93,59 @@ export function readPlayerTeams(): Team[] {
   }
 }
 
+export function readPlayerEditorDraft(): PlayerEditorDraft | null {
+  const raw = window.localStorage.getItem(draftKey);
+  if (raw === null) return null;
+  try {
+    const value: unknown = JSON.parse(raw);
+    if (!record(value) || !isStage(value.stage)) return null;
+    const team = checkedTeam(value.team);
+    if (!team) return null;
+    const source = checkedGuideBoardSource(value.guideBoardSource, team.id);
+    const guideBoardSource = source && {
+      draftId: source.draftId, title: source.title, href: source.href, sourceGuide: source.sourceGuide,
+      officialBoard: isBoard(source.officialBoard) ? source.officialBoard : undefined,
+      restoredPlayerTeam: source.restoredPlayerTeam === true,
+      sharedConditions: Array.isArray(source.sharedConditions) ? source.sharedConditions : undefined,
+    };
+    return { team, stage: value.stage, guideBoardSource };
+  } catch {
+    return null;
+  }
+}
+
+export function writePlayerEditorDraft(draft: PlayerEditorDraft) {
+  window.localStorage.setItem(draftKey, JSON.stringify(draft));
+}
+
+function guideView(href: string) {
+  const start = href.indexOf("?");
+  const query = new URLSearchParams(start < 0 ? "" : href.slice(start + 1));
+  return [query.get("stage"), query.get("flex")].join("|");
+}
+
+export function findPlayerGuideTeam(teams: Team[], source: SourceGuide) {
+  const view = guideView(source.href);
+  // readPlayerTeams puts the most recent copy first. Stages and flex previews
+  // share a team ID, but each transfers its own official board.
+  return teams.find(team => team.sourceGuide?.sectionId === source.sectionId &&
+    team.sourceGuide.teamId === source.teamId && guideView(team.sourceGuide.href) === view) ??
+    teams.find(team => !team.sourceGuide && (team.name === source.title || team.name === source.title.slice(0, 80)));
+}
+
+export function samePlayerBoard(left: BoardSetup, right: BoardSetup) {
+  const loadout = (piece: PieceLoadout) => [piece.unitId, piece.stars, piece.items];
+  const pieces = (board: BoardSetup) => [...board.pieces].sort((a, b) => a.position - b.position)
+    .map(piece => [piece.position, loadout(piece), piece.alternate && loadout(piece.alternate)]);
+  return JSON.stringify(pieces(left)) === JSON.stringify(pieces(right)) &&
+    (["maracas", "rainstick", "infernalIdol"] as const).every(id =>
+      left.instrumentPositions?.[id] === right.instrumentPositions?.[id]);
+}
+
+export function resetPlayerGuideBoard(team: Team, official: BoardSetup): Team {
+  return { ...team, instrumentPositions: undefined, ...copyBoard(official) };
+}
+
 export async function savePlayerTeam(current: Team): Promise<Team> {
   const key = prefix + current.id;
   try {
@@ -89,7 +158,7 @@ export async function savePlayerTeam(current: Team): Promise<Team> {
       if ((previous?.revision ?? 0) !== current.revision) {
         throw new PlayerTeamStorageError("这份阵容已在另一页更新或移除，请重新打开本机版本，或将当前棋盘另存为副本。");
       }
-      const saved = { ...current, revision: current.revision + 1, updatedAt: new Date().toISOString() };
+      const saved = withCheckedSourceGuide({ ...current, revision: current.revision + 1, updatedAt: new Date().toISOString() });
       storage.setItem(key, JSON.stringify(saved));
       return saved;
     });
@@ -148,6 +217,7 @@ export async function importPlayerTeams(
           };
           if (source.posterFormat === "full" || source.posterFormat === "quick") imported.posterFormat = source.posterFormat;
           if (typeof source.webTitle === "string") imported.webTitle = source.webTitle;
+          if (source.sourceGuide) imported.sourceGuide = source.sourceGuide;
           const key = prefix + id;
           const value = JSON.stringify(imported);
           storage.setItem(key, value);

@@ -13,6 +13,7 @@ import { ItemIcon } from "./ItemIcon";
 import { GuideBoardZoom } from "./GuideBoardZoom";
 import { UnitDetails } from "./UnitBrowser";
 import { useOwnerSession } from "./OwnerSession";
+import { findPlayerGuideTeam, isPlayerTeamStorageKey, readPlayerTeams, samePlayerBoard } from "./player-team-storage";
 import { sectionTeams } from "@/domain/document-flow";
 import { allBlocks, guideBoardName, guideLink, guideRoute, guideStrategyLabel, oceanGravesUnlockBoardId, primaryFirst, readingNotes, type GuideRole } from "@/domain/guide-reading";
 import { compactGuideParagraph, compactUtilityCopy, hasGuideLinks, rememberGuideCopy } from "@/domain/guide-copy";
@@ -61,11 +62,32 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
   const [showPoster, setShowPoster] = useState(!!openPoster);
   const [posterShare, setPosterShare] = useState(initialPosterShare);
   const [posterHistoryKey, setPosterHistoryKey] = useState(0);
+  const [playerTeams, setPlayerTeams] = useState<Team[]>([]);
+  const [officialView, setOfficialView] = useState<string>();
   const board = useRef<HTMLDivElement>(null);
   const pieceTitle = useRef<HTMLHeadingElement>(null);
   const pieceOrigin = useRef<{ trigger: HTMLButtonElement; top: number } | null>(null);
-  const { session } = useOwnerSession();
+  const { session, error: sessionError } = useOwnerSession();
+  const cloudOwner = session?.isOwner && session.databaseConfigured;
+  const canReadPlayerTeams = !!publicationId && sameEdition(data.id, season.id) && !cloudOwner && (!!session || !!sessionError);
   const team = teams.find(entry => entry.id === selectedTeam) ?? primary;
+  useEffect(() => {
+    if (!canReadPlayerTeams) return;
+    function refreshPlayerTeams() {
+      try { setPlayerTeams(readPlayerTeams()); }
+      catch { setPlayerTeams([]); }
+    }
+    function refreshFromStorage(event: StorageEvent) {
+      if (event.key === null || isPlayerTeamStorageKey(event.key)) refreshPlayerTeams();
+    }
+    refreshPlayerTeams();
+    window.addEventListener("storage", refreshFromStorage);
+    window.addEventListener("pageshow", refreshPlayerTeams);
+    return () => {
+      window.removeEventListener("storage", refreshFromStorage);
+      window.removeEventListener("pageshow", refreshPlayerTeams);
+    };
+  }, [canReadPlayerTeams]);
   const localFamily = useMemo(() => variants ? undefined : groupGuides([section], data, teamPlacement)[0], [variants, section, data]);
   const siblings = useMemo(() => {
     if (!team) return;
@@ -119,8 +141,27 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
   const mainBoardActive = activeStage === mainStage;
   const flexPreview = mainBoardActive ? guideFlexPreview(section.id, team, data) : undefined;
   const showFlex = !!flexPreview && selectedFlex === flexPreview.id;
-  const shownBoard = mainBoardActive ? showFlex ? flexPreview!.liveTeam : team
+  const officialBoard = mainBoardActive ? showFlex ? flexPreview!.liveTeam : team
     : { ...readTeamStage(team, activeStage), id: team.id + "-" + activeStage };
+  function boardViewLink(stage?: BoardStage, flex?: string) {
+    const params = new URLSearchParams({ team: team.id });
+    if (returnTo) params.set("from", returnTo);
+    if (stage && stage !== mainStage) params.set("stage", stage);
+    if (flex) params.set("flex", flex);
+    return guideLink(section.id) + "?" + params;
+  }
+  const guideHref = publicationId ? boardViewLink(activeStage, showFlex ? flexPreview?.id : undefined) : undefined;
+  const editorTitle = [...new Set([section.title, guideBoardName(team), !mainBoardActive ? stageLabels[activeStage] : "",
+    showFlex && flexPreview ? flexPreview.incoming.name + "替" + flexPreview.outgoing.name : ""].filter(Boolean))].join(" · ");
+  const sourceGuide = guideHref && { sectionId: section.id, teamId: team.id, href: guideHref, title: editorTitle };
+  const localTeam = canReadPlayerTeams && sourceGuide ? findPlayerGuideTeam(playerTeams, sourceGuide) : undefined;
+  const hasPlayerBoard = !!localTeam && !samePlayerBoard(localTeam, officialBoard);
+  const showPlayerBoard = hasPlayerBoard && officialView !== guideHref;
+  const shownBoard = showPlayerBoard && localTeam ? {
+    ...officialBoard, pieces: localTeam.pieces, instrumentPositions: localTeam.instrumentPositions,
+  } : officialBoard;
+  const boardData = showPlayerBoard ? season : data;
+  const posterBoard = showFlex || hasPlayerBoard ? shownBoard : team;
   const stageTeams = teams.filter(entry => guideBoardKind(section, entry, primary) === "过渡")
     .sort((a, b) => usedPopulation(a.pieces) - usedPopulation(b.pieces));
   const route = guideRoute(section, teams, team);
@@ -201,9 +242,9 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
   const otherSiblings = siblings?.filter(option => !routeBoardIds.has(option.teamId));
   const stageOptions = (routeBoardIds.has(primary.id) || otherVariants.some(option => option.id === primary.id)
     ? otherStages : [primary, ...otherStages]).filter(option => option.id !== team.id);
-  const active = (entry: Team) => traitCounts(entry.pieces, data.units, data.traits, data.items).filter(trait => traitGroup(trait) === "已开常规");
+  const active = (entry: Team) => traitCounts(entry.pieces, boardData.units, boardData.traits, boardData.items).filter(trait => traitGroup(trait) === "已开常规");
   const counts = active(shownBoard);
-  const name = (id: string) => data.units.find(unit => unit.id === id)?.name ?? id;
+  const name = (id: string) => boardData.units.find(unit => unit.id === id)?.name ?? id;
   const diff = (a: Team, b: Team) => {
     const remaining = b.pieces.map(piece => piece.unitId);
     return a.pieces.flatMap(piece => {
@@ -224,9 +265,10 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
     ?? (kind === "变阵" || kind === "上限" ? primary : undefined);
   const comparisonFrom = prev && (earlierPhase?.label ?? (prev.id === primary.id ? "主阵" : guideBoardName(prev)));
   const comparisonTo = phaseSteps?.[boardPhaseIndex]?.label ?? guideBoardName(team);
-  const changed = prev ? Array.from({ length: 28 }, (_, i) => i).filter(pos => team.pieces.find(p => p.position === pos)?.unitId !== prev.pieces.find(p => p.position === pos)?.unitId) : [];
-  const added = prev ? diff(team, prev) : [];
-  const removed = prev ? diff(prev, team) : [];
+  const comparisonBoard = showPlayerBoard ? shownBoard : team;
+  const changed = prev ? Array.from({ length: 28 }, (_, i) => i).filter(pos => comparisonBoard.pieces.find(p => p.position === pos)?.unitId !== prev.pieces.find(p => p.position === pos)?.unitId) : [];
+  const added = prev ? diff(comparisonBoard, prev) : [];
+  const removed = prev ? diff(prev, comparisonBoard) : [];
   const traitDiff = {
     开出: [] as string[],
     升档: [] as string[],
@@ -258,13 +300,13 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
     ? blocks.find(block => block.id === region.imageId)
     : undefined;
   const piece = shownBoard.pieces.find(entry => entry.instanceId === selectedPiece);
-  const unit = piece && data.units.find(entry => entry.id === piece.unitId);
+  const unit = piece && boardData.units.find(entry => entry.id === piece.unitId);
   const shownRoles = showFlex && flexPreview
     ? notes.roles.map(role => ({ ...role, units: role.units.map(id => id === flexPreview.outgoing.id ? flexPreview.incoming.id : id) }))
     : mainBoardActive ? notes.roles : [];
   const role = unit ? shownRoles.find(entry => entry.units.includes(unit.id)) : undefined;
   const pieceNote = role?.text && unit && augment?.unitId === unit.id
-    ? compactUtilityCopy(role.text, unit.id, shownBoard, data)
+    ? compactUtilityCopy(role.text, unit.id, shownBoard, boardData)
     : role?.text;
   function pickTeam(next: Team, view?: MatchStatsView) {
     setRouteNote("");
@@ -286,13 +328,6 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
       activeTab?.scrollIntoView({ block: "nearest" });
     });
   }
-  function boardViewLink(stage?: BoardStage, flex?: string) {
-    const params = new URLSearchParams({ team: team.id });
-    if (returnTo) params.set("from", returnTo);
-    if (stage && stage !== mainStage) params.set("stage", stage);
-    if (flex) params.set("flex", flex);
-    return guideLink(section.id) + "?" + params;
-  }
   function pickStage(stage: BoardStage) {
     setSelectedStage(stage); setSelectedFlex(undefined); setPiece(""); setZoomed(false);
     if (publicationId) window.history.pushState(window.history.state, "", boardViewLink(stage));
@@ -308,14 +343,10 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
     : kind === "上限" || currentPhase?.label.endsWith("级上限") ||
       (kind === "主阵" && formation && shownPopulation > Number(formation)));
   const boardTitle = cap ? shownPopulation + "级上限棋盘" : shownPopulation + " 人口棋盘";
-  const guideHref = publicationId ? boardViewLink(activeStage, showFlex ? flexPreview?.id : undefined) : undefined;
-  const editorTitle = [...new Set([section.title, guideBoardName(team), !mainBoardActive ? stageLabels[activeStage] : "",
-    showFlex && flexPreview ? flexPreview.incoming.name + "替" + flexPreview.outgoing.name : ""].filter(Boolean))].join(" · ");
   const intro = passages[0]?.source === introText.trim() ? passages[0] : undefined;
   const phaseAdvice = passages.find(passage => passage !== intro && passage.brief && passage.text);
   const opening = intro?.brief && intro.text ? intro : undefined;
   const inStage = kind === "过渡";
-  const cloudOwner = session?.isOwner && session.databaseConfigured;
   const canEditPositions = cloudOwner && publicationId && guideHref && mainBoardActive && !showFlex &&
     sameEdition(data.id, season.id) && !section.reroll?.added.includes(team.id);
   const openingUnderBoard = !simpleStages && (section.reroll || inStage || !!currentChoice);
@@ -380,9 +411,10 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
             <button type="button" className="guide-zoom-trigger guide-board-poster" aria-label="阵容一图流" aria-haspopup="dialog" onClick={() => setShowPoster(true)}>
               <ImageDown size={16} aria-hidden /><span>一图流</span>
             </button>
-            {guideHref && sameEdition(data.id, season.id) && <GuideEditorLink team={shownBoard} title={editorTitle} href={guideHref}
+            {sourceGuide && sameEdition(data.id, season.id) && <GuideEditorLink team={officialBoard} title={editorTitle} href={sourceGuide.href}
+              sourceGuide={sourceGuide}
               owner={cloudOwner} secondary={!!canEditPositions} focusUnit={shownRoles.find(role => role.label === "主C")?.units[0]}
-              sharedConditions={sharedGuideEditorConditions(teams, section.id, canEditPositions || shownBoard.conditions ? team.id : undefined)}
+              sharedConditions={sharedGuideEditorConditions(teams, section.id, canEditPositions || officialBoard.conditions ? team.id : undefined)}
               target={canEditPositions ? { publicationId, sectionId: section.id, teamId: team.id } : undefined} />}
             {canEditPositions && <GuideBoardPositionEditor key={team.id} publicationId={publicationId!}
               sectionId={section.id} teamId={team.id} title={editorTitle} href={guideHref!} />}
@@ -395,12 +427,19 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
             </details>}
           </div>
         </div>
-        <div className="read-board" ref={board}><Board data={data} pieces={shownBoard.pieces} instrumentPositions={shownBoard.instrumentPositions} targeting={null} selectedId={selectedPiece} changedPositions={showFlex && flexPreview ? [flexPreview.position] : mainBoardActive ? changed : undefined}
+        {hasPlayerBoard && <div className="guide-player-board">
+          <span>{showPlayerBoard ? "当前显示你的本机站位" : "当前显示官方原盘"}</span>
+          <button type="button" className="guide-zoom-trigger" onClick={() => {
+            setOfficialView(showPlayerBoard ? guideHref : undefined);
+            setPiece(""); setZoomed(false);
+          }}>{showPlayerBoard ? "查看官方原盘" : "切回我的站位"}</button>
+        </div>}
+        <div className="read-board" ref={board}><Board data={boardData} pieces={shownBoard.pieces} instrumentPositions={shownBoard.instrumentPositions} targeting={null} selectedId={selectedPiece} changedPositions={showFlex && flexPreview ? [flexPreview.position] : mainBoardActive ? changed : undefined}
           onCell={(_, picked, trigger) => selectPiece(picked?.instanceId === selectedPiece ? "" : picked?.instanceId ?? "", trigger)} /></div>
         <div className="guide-board-footer">
           <ul className="read-traits" aria-label="已激活常规羁绊">{counts.map(trait => {
             const label = <><b>{trait.level}{trait.countMode === "stars" && "星"}</b>{trait.name}</>;
-            return <li key={trait.id}>{publicationId && !showFlex
+            return <li key={trait.id}>{publicationId && !showFlex && !showPlayerBoard
               ? <a href={boardTraitLink(trait.id, trait.level, section.id, team.id)} title={"查看" + trait.name + "各档战绩"}>{label}</a>
               : label}</li>;
           })}</ul>
@@ -460,19 +499,19 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
             <button type="button" aria-label="关闭棋子详情" onClick={closePiece}><X size={18} aria-hidden /></button>
           </div>
           {!!piece.items.length && <div className="read-items">{piece.items.map((id,i) => {
-            const item = data.items.find(entry => entry.id === id);
+            const item = boardData.items.find(entry => entry.id === id);
             return item ? <a className="guide-item-link" href={itemLink(id, unit.id, guideHref)} key={i}><ItemIcon item={item} size={30} />{item.name}</a> : <span key={i}>{id}</span>;
           })}</div>}
           {pieceNote && <p>{pieceNote}</p>}
           {unit.id === "teemo" && notes.shortcuts.some(link => link.label === "热力与提莫") &&
             <a href={"#note-" + notes.shortcuts.find(link => link.label === "热力与提莫")!.blockId}>热力与提莫</a>}
-          <UnitDetails embedded unit={unit} traits={data.traits} seasonId={data.id}
+          <UnitDetails embedded unit={unit} traits={boardData.traits} seasonId={boardData.id}
             defaultAugmented={augment?.unitId === unit.id} wornItems={piece.items} />
         </section>}
       </div>
       <aside className="guide-sidebar" aria-label="配装与进场条件">
-        <GuideEquipment key={team.id + activeStage} team={shownBoard} data={data} roles={shownRoles} selectedPiece={selectedPiece}
-          onSelectPiece={selectPiece} guideHref={guideHref} sectionId={section.id} guideStats={!showFlex} />
+        <GuideEquipment key={team.id + activeStage} team={shownBoard} data={boardData} roles={shownRoles} selectedPiece={selectedPiece}
+          onSelectPiece={selectPiece} guideHref={guideHref} sectionId={section.id} guideStats={!showFlex && !showPlayerBoard} />
         {equipmentConditions && <GuideEquipmentConditions conditions={equipmentConditions} guideHref={guideHref} />}
         {referenceConditions && <GuideEquipmentConditions conditions={referenceConditions} guideHref={guideHref}
           anchored={!equipmentConditions} onViewBoard={() => pickTeam(referenceConditions.board)} />}
@@ -489,13 +528,13 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
         </div>}
       </div>
     </div>
-    {showPoster && <GuidePoster key={posterHistoryKey} section={section} team={showFlex ? shownBoard : team} data={data} variants={posterVariants} initialShare={posterShare}
+    {showPoster && <GuidePoster key={posterHistoryKey} section={section} team={posterBoard} data={boardData} variants={posterVariants} initialShare={posterShare}
       boardLink={publicationId ? boardViewLink(activeStage, showFlex ? flexPreview?.id : undefined) : undefined}
       pickVariant={(v, format) => { const next = teams.find(t => t.id === v.teamId);
         if (next && v.sectionId === section.id) pickTeam(next);
         else window.location.assign(posterShareLink(guideLink(v.sectionId, v.teamId, returnTo), format));
       }} close={() => setShowPoster(false)} />}
-    {zoomed && <GuideBoardZoom title={section.title} stage={boardTitle} team={shownBoard} data={data} roles={shownRoles}
+    {zoomed && <GuideBoardZoom title={section.title} stage={boardTitle} team={shownBoard} data={boardData} roles={shownRoles}
       initialPiece={selectedPiece} guideHref={guideHref} changedPositions={showFlex && flexPreview ? [flexPreview.position] : mainBoardActive ? changed : undefined}
       onClose={() => setZoomed(false)} onInspect={picked => {
         setZoomed(false);

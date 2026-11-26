@@ -108,10 +108,10 @@ export const Board = memo(function Board({
     let text = "";
     if (preview?.equipment) {
       text = targetName ? (preview.blocked ? `${targetName}的装备栏已满` : `松手转移装备给${targetName}`) : "拖到另一名棋子身上";
-    } else if (preview?.blocked) text = instrument || preview.alternate ? "拖到空格放置" : "每格可叠放一个替补棋子";
+    } else if (preview?.blocked) text = instrument || preview.alternate ? "拖到空格放置" : "每格最多设置一个替补棋子";
     else if (preview && target == null) text = "拖到棋盘格内放置";
     else if (instrument) text = instrument.id === "infernalIdol" ? `移动${instrument.name}` : `${instrument.name} · 相邻格预览`;
-    else if (targetName) text = sourceName ? `${sourceName}与${targetName}互换` : `松手叠放到${targetName}左上角`;
+    else if (targetName) text = sourceName ? `${sourceName}与${targetName}互换` : `松手设为${targetName}的替补棋子（叠放左上角，没来时可互换）`;
     else if (source === null) text = "松手放置棋子";
     else if (sourceName) text = `移动${sourceName}`;
     dragNote.current.textContent = text;
@@ -157,7 +157,8 @@ export const Board = memo(function Board({
               const position = row * 7 + column;
               const piece = byPosition.get(position);
               const unit = piece && units.get(piece.unitId);
-              const alternate = piece?.alternate && onSwitchAlternate ? units.get(piece.alternate.unitId) : undefined;
+              const alternate = piece?.alternate && units.get(piece.alternate.unitId);
+              const Alternate = onSwitchAlternate ? "button" : "span";
               const instrument = !piece ? instruments.get(position) : undefined;
               const summon = instrument?.id === "infernalIdol" ? instrument : undefined;
               const portrait = unit?.image ?? summon?.image;
@@ -266,19 +267,20 @@ export const Board = memo(function Board({
                     />
                   </svg>
                 </button>
-                {piece && alternate && <button
-                  type="button"
+                {piece && alternate && <Alternate
+                  type={onSwitchAlternate ? "button" : undefined}
+                  role={onSwitchAlternate ? undefined : "img"}
                   className={`board-alternate cost-${alternate.cost}`}
-                  data-board-alternate-slot={position}
+                  data-board-alternate-slot={onSwitchAlternate ? position : undefined}
                   style={{ left: CELL_STYLE[position].left, top: CELL_STYLE[position].top }}
-                  aria-label={`换上${alternate.name}`}
-                  title={`换上${alternate.name} · 拖到空格拆开`}
-                  onClick={() => onSwitchAlternate?.(piece.instanceId)}
+                  aria-label={onSwitchAlternate ? `换上${alternate.name}` : `替补${alternate.name}`}
+                  title={onSwitchAlternate ? `换上${alternate.name} · 拖到空格拆开` : `替补${alternate.name}`}
+                  onClick={onSwitchAlternate ? () => onSwitchAlternate(piece.instanceId) : undefined}
                   onPointerDown={onSplitAlternate ? event => start(event, target => onSplitAlternate(piece.instanceId, target),
                     slot => !slot.classList.contains("is-filled")) : undefined}
                 >
                   <img src={alternate.image} alt="" width={40} height={40} draggable={false} />
-                </button>}
+                </Alternate>}
               </Fragment>;
             })}
           </div>

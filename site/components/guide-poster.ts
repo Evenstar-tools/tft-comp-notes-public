@@ -85,6 +85,7 @@ export async function guidePoster({ section, team, data, format = defaultPosterF
   const instrumentsByBoard = new Map(teams.map(board => [board.id, boardInstruments(board.pieces, data, board.instrumentPositions)]));
   const teamMembers = new Map(teams.map(board => [board.id, guideRoster(board, data, section ? readingNotes(section, board, data).roles : [])]));
   const gear = new Map(teams.map(board => [board.id, posterGear(section, board, data)]));
+  const units = new Map(data.units.map(unit => [unit.id, unit]));
   const items = new Map(data.items.map(item => [item.id, item]));
   const itemImages = new Map(data.items.map(item => [item.id, preferredItemImage(item)]));
   const coverUnit = gear.get(team.id)?.[0]?.unit ?? teamMembers.get(team.id)?.[0]?.unit;
@@ -94,6 +95,7 @@ export async function guidePoster({ section, team, data, format = defaultPosterF
     coverUrl,
     ...namedConditions.map(({ row }) => preferredItemImage(row.item) ?? row.image),
     ...[...teamMembers.values()].flatMap(members => members.map(member => member.unit.image)),
+    ...teams.flatMap(board => board.pieces.map(piece => piece.alternate && units.get(piece.alternate.unitId)?.image)),
     ...teams.flatMap(board => board.pieces.flatMap(piece => piece.items.map(id => itemImages.get(id)))),
     ...[...instrumentsByBoard.values()].flatMap(entries => [...entries.values()].map(entry => entry.image)),
   ]);
@@ -174,6 +176,25 @@ export async function guidePoster({ section, team, data, format = defaultPosterF
           c.fillRect(left - .5, itemTop - .5, size + 1, size + 1);
           c.drawImage(icon, left, itemTop, size, size);
         });
+        const alternate = member.piece.alternate && units.get(member.piece.alternate.unitId);
+        if (alternate) {
+          const radius = w * .125;
+          const left = x + w * .06, upper = top + h * .31;
+          c.beginPath();
+          c.arc(left, upper, radius, 0, 2 * Math.PI);
+          c.fillStyle = "#2e3042";
+          c.fill();
+          const image = images.get(alternate.image);
+          if (image) {
+            c.save();
+            c.clip();
+            drawCover(c, image, left - radius, upper - radius, radius * 2, radius * 2);
+            c.restore();
+          }
+          c.strokeStyle = border[alternate.cost] ?? "#fff";
+          c.lineWidth = 1.5;
+          c.stroke();
+        }
       }
     }
     y += boardHeight + 7;
