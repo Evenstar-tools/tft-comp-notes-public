@@ -105,7 +105,7 @@ export function PatchRecommendationList({ stats, cards, home, previousBuild }: {
                   </div>
                   {hasAdvice ? <dl id={id + "-note"} className="home-patch-advice">
                     {timing && <><dt>时机</dt><dd>{timing}</dd></>}
-                    {upgrade && <><dt>提档</dt><dd>{upgrade}</dd></>}
+                    {upgrade && <><dt>升等</dt><dd>{upgrade}</dd></>}
                   </dl> : note && <p id={id + "-note"}>{note}</p>}
                   {hit && <p className="home-patch-hit">{hit}</p>}
                 </div>
