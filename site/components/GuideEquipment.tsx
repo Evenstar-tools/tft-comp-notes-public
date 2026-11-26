@@ -42,10 +42,12 @@ export function GuideEquipment({ team, data, roles, selectedPiece, onSelectPiece
   function memberButton({ piece, unit, role }: { piece: Piece; unit: Unit; role?: string }) {
     const repeated = members.some(member => member.unit.id === unit.id && member.piece.instanceId !== piece.instanceId);
     const label = unit.name + (repeated ? " · 第 " + (Math.floor(piece.position / 7) + 1) + " 排第 " + (piece.position % 7 + 1) + " 格" : "");
-    return <button className="guide-member-button" type="button" aria-label={label} aria-description={[role, piece.stars + " 星"].filter(Boolean).join(" · ")}
+    const utility = role !== "功能装" && utilities.some(entry => entry.units.includes(unit.id));
+    const description = [role, utility && "功能装", piece.stars + " 星"].filter(Boolean).join(" · ");
+    return <button className="guide-member-button" type="button" aria-label={label} aria-description={description}
       aria-pressed={selectedPiece === piece.instanceId} onClick={event => onSelectPiece(piece.instanceId, event.currentTarget)}>
       <img src={unit.image} width={42} height={42} alt="" loading="lazy" className={"guide-piece-portrait cost-" + unit.cost} />
-      <span><strong title={unit.name}>{unitShortNames[unit.id] ?? unit.name}</strong><small>{role && <>{role} · </>}{piece.stars} 星</small></span>
+      <span><strong title={unit.name}>{unitShortNames[unit.id] ?? unit.name}</strong><small>{description}</small></span>
     </button>;
   }
 

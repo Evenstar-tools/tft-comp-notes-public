@@ -286,6 +286,7 @@ export function guideBody(section: Section, team: Team) {
     return raw ? Number(raw) || "一二三四五六七八九十".indexOf(raw) + 1 : 0;
   };
   const visible = new Set<string>();
+  const shared = new Set<string>();
   for (const content of groups) {
     const heading = content[0] && stageLabel(content[0]) ? content[0] : undefined;
     const label = textKey(heading?.text ?? "");
@@ -307,11 +308,15 @@ export function guideBody(section: Section, team: Team) {
       return includeUnassigned;
     });
     if (heading && (body.length || (includeUnassigned && content.length === 1))) visible.add(heading.id);
-    body.forEach(block => visible.add(block.id));
+    for (const block of body) {
+      visible.add(block.id);
+      if (common) shared.add(block.id);
+    }
   }
   return {
     current: section.blocks.filter(block => visible.has(block.id)),
     remaining: section.blocks.filter(block => !visible.has(block.id) && !isBoardLoadout(block) && block.text !== boardLoadoutHeading),
+    shared,
   };
 }
 
@@ -373,9 +378,11 @@ export function guideStrategyLabel(section: Section, team: Team, data: Season, p
 /** Only explicit rolling instructions count. A final board's population may be higher. */
 export function guideRollLevel(section: Section, team: Team): number | undefined {
   if (section.reroll?.stages.some(stage => stage.teamId === team.id && !stage.boardRole)) return usedPopulation(team.pieces);
-  const paragraphs = authoredParagraphs({ ...section, blocks: guideBody(section, team).current }).map(block => block.text ?? "");
+  const { current } = guideBody(section, team);
+  const paragraphs = authoredParagraphs({ ...section, blocks: current }).map(block => block.text ?? "");
+  const bullets = current.filter(block => block.type === "bullet" || block.type === "ordered").map(block => block.text ?? "");
   const strategy = paragraphs.filter(text => /^(?:打法|运营类型)[：:]/.test(text));
-  for (const text of [team.name, ...strategy, team.notes, ...paragraphs]) {
+  for (const text of [team.name, ...strategy, team.notes, ...paragraphs, ...bullets]) {
     const value = text?.match(rollAtLevel)?.[1] ?? text?.match(stopToRoll)?.[1];
     if (value) return Number(value) || "〇一二三四五六七八九".indexOf(value);
   }
@@ -490,7 +497,8 @@ function boardRoles(section: Section, team: Team, data: Season) {
 
 export function readingNotes(section: Section, team: Team, data?: Season) {
   const blocks = allBlocks(section.blocks);
-  const current = allBlocks(guideBody(section, team).current);
+  const body = guideBody(section, team);
+  const current = allBlocks(body.current);
   const passage = (id: string) => blocks.find(block => block.id === id)?.text?.trim() ?? "";
   const isPrimary = team.id === (section.primaryTeamId ?? section.team?.id ?? section.teams?.[0]?.id);
   const source = isPrimary ? sourceSummary(section) : undefined;
@@ -499,8 +507,9 @@ export function readingNotes(section: Section, team: Team, data?: Season) {
   const roles: GuideRole[] = [];
   const shortcuts: GuideShortcut[] = [];
   const paragraphs = authoredParagraphs({ ...section, blocks: current });
-  const stageIntro = paragraphs.find(block => !/^(?:打法|运营类型|主C|副C|主坦|副坦|功能装|专属强化)[：:]/.test(block.text ?? ""));
-  let opening = source ?? (stageIntro?.text || team.notes) ?? "";
+  const openings = paragraphs.filter(block => !/^(?:打法|运营类型|主C|副C|主坦|副坦|功能装|专属强化)[：:]/.test(block.text ?? ""));
+  const stageIntro = openings.find(block => !body.shared.has(block.id));
+  let opening = source ?? (stageIntro?.text || team.notes || openings[0]?.text || "");
   let stage = "", starHint = "";
   if (originalMain) {
     opening = source ?? sentences(passage(hyperpop.rolling)).find(line => line.includes("来得多")) ?? opening;

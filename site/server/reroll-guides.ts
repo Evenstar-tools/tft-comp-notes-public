@@ -6,7 +6,7 @@ import { applyPublishedBoardEdits, applyPublishedBoardLayouts } from "@/domain/p
 import { editionScope } from "@/domain/version-updates";
 import { correctRerollStars } from "./reroll-stars";
 import type { ContentBlock, Publication } from "@/domain/document";
-import type { BoardInstrumentId, Piece, Season, Team } from "@/domain/types";
+import type { BoardInstrumentId, Piece, PieceLoadout, Season, Team } from "@/domain/types";
 
 type Stage = NonNullable<Publication["sections"][number]["reroll"]>["stages"][number] & {
   pieces?: Omit<Piece, "instanceId">[];
@@ -20,6 +20,7 @@ type BoardEdit = {
   positions?: Record<string, number>;
   originalPositions?: Record<string, number | number[]>;
   items?: Record<string, string[]>;
+  alternates?: Record<string, PieceLoadout>;
   replacements?: Record<string, Pick<Piece, "unitId" | "stars" | "items">>;
   originalItems?: Record<string, string[]>;
   stoneplateHolder?: string;
@@ -72,11 +73,24 @@ function editBoard(team: Team, edit: BoardEdit, data: Season) {
   if (Object.entries(edit.replacements ?? {}).some(([id, replacement]) =>
     team.pieces.filter(piece => piece.unitId === id).length !== 1 ||
     !data.units.some(unit => unit.id === replacement.unitId))) return team;
-  const pieces = edit.positions || edit.items || edit.replacements ? team.pieces.map(piece => {
+  const loadouts = team.pieces.flatMap(piece => piece.alternate ? [piece, piece.alternate] : [piece]);
+  const unitIds = new Set(loadouts.map(piece => piece.unitId));
+  const instanceIds = new Set(loadouts.map(piece => piece.instanceId));
+  let alternateCount = team.pieces.filter(piece => piece.alternate).length;
+  const pieces = edit.positions || edit.items || edit.replacements || edit.alternates ? team.pieces.map(piece => {
     const next = edit.replacements?.[piece.unitId] ? { ...piece, ...edit.replacements[piece.unitId] } : piece;
+    const alternate = edit.alternates?.[next.unitId];
+    const canStack = alternate && !next.alternate && alternateCount < 2 && !unitIds.has(alternate.unitId) &&
+      !instanceIds.has(alternate.instanceId) && data.units.some(unit => unit.id === alternate.unitId);
+    if (canStack) {
+      alternateCount += 1;
+      unitIds.add(alternate.unitId);
+      instanceIds.add(alternate.instanceId);
+    }
     return {
       ...next, position: edit.positions?.[next.unitId] ?? next.position,
       items: edit.items?.[next.unitId] ?? next.items,
+      ...(canStack && { alternate }),
     };
   }) : team.pieces;
   const instrumentPositions = edit.instrumentMoves ? { ...team.instrumentPositions, ...edit.instrumentMoves } : team.instrumentPositions;
@@ -124,7 +138,7 @@ export function includeRerollBoards(snapshot: Publication, current: Season): Pub
       if (next === original) continue;
       teams.set(edit.teamId, next);
       if (edit.notes) advice[edit.teamId] = edit.notes;
-      if (edit.positions || edit.items || edit.replacements || edit.instrumentMoves) corrected.push(edit.teamId);
+      if (edit.positions || edit.items || edit.replacements || edit.alternates || edit.instrumentMoves) corrected.push(edit.teamId);
       if (edit.wording) wording.push(edit.wording);
     }
     for (const [id, team] of teams) {
@@ -137,8 +151,9 @@ export function includeRerollBoards(snapshot: Publication, current: Season): Pub
     }
     const stageTeamIds = [...new Set([...(section.stageTeamIds ?? originals.filter(team => team.boardRole === "stage").map(team => team.id)),
       ...stages.filter(stage => stage.boardRole !== "variant").map(stage => stage.teamId)])];
-    const units = new Set([...teams.values()].flatMap(team => team.pieces.map(piece => piece.unitId)));
-    const items = new Set([...teams.values()].flatMap(team => team.pieces.flatMap(piece => piece.items)));
+    const loadouts = [...teams.values()].flatMap(team => team.pieces.flatMap(piece => piece.alternate ? [piece, piece.alternate] : [piece]));
+    const units = new Set(loadouts.map(piece => piece.unitId));
+    const items = new Set(loadouts.flatMap(piece => piece.items));
     for (const item of current.items) if (items.has(item.id)) for (const part of item.components ?? []) items.add(part);
     return {
       ...section, team: section.team && teams.get(section.team.id), teams: [...teams.values()], stageTeamIds,

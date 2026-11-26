@@ -24,6 +24,7 @@ const scripts = {
 const guides = ["guide-placement", "guide-family-stats", "guide-carry-stats",
   "comp-trends", "patch-recommendations", "patch-recommendation-stats"];
 const profiles = {
+  fast: ["guide-family-stats", "comp-trends"],
   daily: [...archiveModules, ...guides, "trait-stats"],
   catalog: [...archiveModules, "emblem-stats", "trait-stats"],
   guides,
@@ -228,7 +229,7 @@ async function main() {
   } });
   if (values.help) {
     console.log("node scripts/run-data-refresh.mjs --status [--json] | --verify");
-    console.log("node scripts/run-data-refresh.mjs (--profile daily|catalog|guides|all | --module <id> ...) [--catalog <file>] [--archive] [--dry-run]");
+    console.log("node scripts/run-data-refresh.mjs (--profile fast|daily|catalog|guides|all | --module <id> ...) [--catalog <file>] [--archive] [--dry-run]");
     console.log("node scripts/run-data-refresh.mjs --archive [--channel pbe | --channel ranked --patch <ver>] [--dry-run]");
     return;
   }
