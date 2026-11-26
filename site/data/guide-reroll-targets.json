@@ -54,5 +54,13 @@
     }
   },
   "sample-block-0281": { "targets": ["olaf"] },
-  "sample-block-0258": { "targets": ["sett"] }
+  "sample-block-0258": { "targets": ["sett"] },
+  "sample-block-1060": {
+    "targets": [
+      "syndra",
+      "ekko",
+      "braum",
+      "malzahar"
+    ]
+  }
 }

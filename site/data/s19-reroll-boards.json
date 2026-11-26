@@ -2603,5 +2603,70 @@
     "edits": [
       {"teamId": "00000000-0000-4000-8000-000000000006", "positions": {"illaoi": 10}, "stoneplateHolder": "thresh", "originalPositions": {"thresh": 3, "nasus": 2, "illaoi": 4}}
     ]
+  },
+  {
+    "sectionId": "sample-block-1060",
+    "stages": [
+      {
+        "teamId": "00000000-0000-4000-8000-000000001202",
+        "parentTeamId": "00000000-0000-4000-8000-000000001201",
+        "name": "七级双追三",
+        "notes": "4-1 升七先搜辛德拉、艾克两星。临时上佐伊凑第五名开扎克，买到再换回成型盘。稳血后卡 50 金追双三，顺带留布隆、玛尔扎哈。",
+        "boardRole": "stage",
+        "roles": [
+          {
+            "label": "主C",
+            "units": [
+              "syndra"
+            ]
+          },
+          {
+            "label": "主坦",
+            "units": [
+              "ekko"
+            ]
+          },
+          {
+            "label": "功能装",
+            "units": [
+              "braum"
+            ]
+          }
+        ]
+      },
+      {
+        "teamId": "00000000-0000-4000-8000-000000001203",
+        "parentTeamId": "00000000-0000-4000-8000-000000001201",
+        "name": "九级补奈德丽",
+        "notes": "九级补奈德丽收残局。玛尔扎哈没三星又缺法装，换阿狸开 4 编舞师。有海之歌纹章可转五海，开出塔莉垭再冲七海。",
+        "boardRole": "stage",
+        "roles": [
+          {
+            "label": "主C",
+            "units": [
+              "syndra"
+            ]
+          },
+          {
+            "label": "主坦",
+            "units": [
+              "ekko"
+            ]
+          },
+          {
+            "label": "功能装",
+            "units": [
+              "braum"
+            ]
+          },
+          {
+            "label": "副C",
+            "units": [
+              "nidalee"
+            ]
+          }
+        ]
+      }
+    ]
   }
 ]
