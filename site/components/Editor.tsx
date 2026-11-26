@@ -1509,6 +1509,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
             onAdd={addUnit}
             onTrayPick={pickFromTray}
             onTrayDetails={showUnlock}
+            compactFiveRows
             inTeam={inTeam}
             starsInTeam={teamStars}
             filters={browserFilters}
