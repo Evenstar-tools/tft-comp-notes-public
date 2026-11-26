@@ -12,7 +12,8 @@ import { heroAugmentCategory, heroAugmentForGuide, heroAugmentLabel, heroAugment
 import { displayTraitNames } from "@/domain/trait-names.mjs";
 import type { BoardStage, Season, Team } from "@/domain/types";
 import type { ContentBlock, RichElement, Section } from "@/domain/document";
-import type { ReactNode } from "react";
+import { trackGuideView } from "@/lib/analytics";
+import { useEffect, useRef, type ReactNode } from "react";
 
 const legacyHeroAugmentPlacement = /^棋盘均名 · [^\r\n]+。主C三星三件成装，战绩未公开强化选择。$/;
 const placementTableHeaders = ["阵容", "场数", "均名", "前四", "登顶"];
@@ -185,6 +186,12 @@ export function DocumentView({ section, gameData, publicationId, initialTeam, in
   showCategory?: boolean;
   patchAdvice?: GuidePatchAdvice[];
 }) {
+  const reportedGuide = useRef<string | null>(null);
+  useEffect(() => {
+    if (!publicationId || reportedGuide.current === section.id) return;
+    reportedGuide.current = section.id;
+    trackGuideView({ guideId: section.id, mode: "detail", returnTo });
+  }, [publicationId, section.id, returnTo]);
   const folded = new Set(gameData ? Object.values(section.generatedRegions ?? {}).flatMap(region => [region.textId, region.imageId]) : []);
   const augment = heroAugmentForGuide(section);
   const primary = gameData && primaryFirst(sectionTeams(section), section.primaryTeamId)[0];

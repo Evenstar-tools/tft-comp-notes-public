@@ -5,6 +5,8 @@ import { SquarePen } from "lucide-react";
 import type { Team, TeamCondition } from "@/domain/types";
 import { createId } from "@/domain/id";
 import { ownerEditorPath } from "@/domain/links";
+import { extractPublicGuideIdFromHref } from "@/domain/analytics";
+import { trackToolAction } from "@/lib/analytics";
 import { guideBoardTransferKey, type GuideBoardTarget } from "./guide-board-transfer";
 
 export function GuideEditorLink({ team, title, href, focusUnit, secondary = false, owner = false, target, sharedConditions }: {
@@ -21,6 +23,13 @@ export function GuideEditorLink({ team, title, href, focusUnit, secondary = fals
       const id = createId();
       sessionStorage.setItem(guideBoardTransferKey, JSON.stringify({ id, team, title, href, focusUnit, target, sharedConditions }));
       setError("");
+      if (!owner) {
+        trackToolAction({
+          action: "editor_import_guide",
+          guideId: target?.sectionId ?? extractPublicGuideIdFromHref(href),
+          surface: "guide",
+        });
+      }
       window.location.assign((owner ? ownerEditorPath : "/editor") + "?" + new URLSearchParams({ guideBoard: id }));
     } catch {
       setError("无法带入棋盘，请检查浏览器的站点存储设置。");

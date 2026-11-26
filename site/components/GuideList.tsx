@@ -39,6 +39,8 @@ import { GuideStatsTable, guideStatsMetricLabels, type GuideStatsTableRow } from
 import { AD_GRAVES_BOARD_IDS, GUIDE_SECTION_IDS } from "@/domain/guide-identities";
 import { CompTrendPanel } from "./CompTrendPanel";
 import type { CompTrendModel } from "@/domain/comp-trends";
+import { extractPublicGuideIdFromHref, type GuideEntrySource } from "@/domain/analytics";
+import { rememberGuideEntry, trackGuideView, trackSearchResultOpen, trackSearchResults } from "@/lib/analytics";
 
 const backupCategory = "次选";
 const tierLabels = { recommended: "推荐", secondary: backupCategory, review: "待复核" } as const;
@@ -146,9 +148,15 @@ export function GuideList({ sections, heroSections, season = currentSeason, init
   const [scope, setScope] = useState<GuideSearchScope>(initial.scope ?? "all");
   const [exclude, setExclude] = useState(initial.exclude);
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [quickView, setQuickView] = useState<{ key: string; home: string }>();
+  const [quickView, setQuickView] = useState<{ key: string; home: string; guideId: string; previewId: string; source: GuideEntrySource }>();
   const quickAnchor = useRef<{ card: HTMLElement; top: number } | null>(null);
+  const reportedQuickView = useRef<string | null>(null);
+  const libraryRoot = useRef<HTMLDivElement>(null);
   const searchInput = useRef<HTMLInputElement>(null);
+  const [homeComposing, setHomeComposing] = useState(false);
+  const homeComposingRef = useRef(false);
+  const restoredInlineQuery = useRef<string | null>((initial.q ?? "").trim() || null);
+  const lastInlineSearchKey = useRef<string | null>(null);
   const filterPanel = useRef<HTMLDetailsElement>(null);
   const showingTrends = view === "comp-trends";
   const recommended = view === "regular" && sort === "recommended";
@@ -211,6 +219,7 @@ export function GuideList({ sections, heroSections, season = currentSeason, init
       setView(tab);
       setFiltersOpen(false);
       if (tab === "comp-trends") return;
+      restoredInlineQuery.current = (params.q ?? "").trim() || null;
       setQuery(params.q ?? "");
       setSort(defaultSort(tab, params));
       if (params.sort === "mean") setPerformance(familySortFrom(params));
@@ -371,8 +380,9 @@ export function GuideList({ sections, heroSections, season = currentSeason, init
   const choose = (next: Partial<Selections>) => setChoices(previous => ({
     ...previous, [view]: { ...(previous[view] ?? emptyFilters), ...next },
   }));
-  const clearQuery = () => { setQuery(""); setScope("all"); setExclude(undefined); searchInput.current?.focus(); };
+  const clearQuery = () => { restoredInlineQuery.current = null; lastInlineSearchKey.current = null; setQuery(""); setScope("all"); setExclude(undefined); searchInput.current?.focus(); };
   function changeQuery(value: string) {
+    restoredInlineQuery.current = null;
     setQuery(value);
     if (scope !== "all" && !searchUnitIds(homeSearchIntent(value, "all").text, season).size) setScope("all");
   }
@@ -703,6 +713,50 @@ export function GuideList({ sections, heroSections, season = currentSeason, init
     !hasFilter && !displayedCount && !crossTab.length && !equipmentQuery)) : [];
   const showLookup = Boolean(lookupGroups.length || selectedGear);
   const searching = conditions.length === 1 && !displayedCount && !crossTab.length && lookup.phase === "loading";
+
+  useEffect(() => {
+    if (!quickView) {
+      reportedQuickView.current = null;
+      return;
+    }
+    if (quickView.home !== home) return;
+    const token = `${quickView.home}\0${quickView.key}`;
+    if (reportedQuickView.current === token) return;
+    if (!document.getElementById(quickView.previewId)) return;
+    reportedQuickView.current = token;
+    trackGuideView({ guideId: quickView.guideId, mode: "quick_view", source: quickView.source });
+  }, [quickView, home]);
+
+  const inlineLookupPending = Boolean(
+    lookupTerm &&
+    conditions.length === 1 &&
+    (lookup.phase === "loading" ||
+      (lookup.phase === "ready" && (lookup.refreshing || lookup.result.query !== lookupTerm))),
+  );
+  const inlineLookupErrored = Boolean(
+    lookupTerm && conditions.length === 1 && !displayedCount && !crossTab.length && lookup.phase === "error",
+  );
+  const inlineHasResults = displayedCount > 0 || crossTab.length > 0 || showLookup;
+
+  useEffect(() => {
+    if (showingTrends || !needle) {
+      if (!needle) lastInlineSearchKey.current = null;
+      return;
+    }
+    if (homeComposing || homeComposingRef.current || searching || inlineLookupPending || inlineLookupErrored) return;
+    if (restoredInlineQuery.current === needle) {
+      lastInlineSearchKey.current = `${view}\0${needle}\0${scope}\0${exclude ?? ""}`;
+      return;
+    }
+    const queryKey = `${view}\0${needle}\0${scope}\0${exclude ?? ""}`;
+    if (lastInlineSearchKey.current === queryKey) return;
+    const timer = window.setTimeout(() => {
+      if (homeComposingRef.current || lastInlineSearchKey.current === queryKey) return;
+      lastInlineSearchKey.current = queryKey;
+      trackSearchResults(inlineHasResults ? "has_results" : "no_results", "home_inline");
+    }, 260);
+    return () => window.clearTimeout(timer);
+  }, [showingTrends, needle, homeComposing, searching, inlineLookupPending, inlineLookupErrored, inlineHasResults, view, scope, exclude]);
   const relaxed = !displayedCount && !crossTab.length && conditions.length>1 ? conditions.flatMap((term,i)=>{
     const rest=conditions.filter((_,j)=>j!==i);
     return candidatesFor(availableFacets,rest).length ? [{term,rest}] : [];
@@ -842,7 +896,13 @@ export function GuideList({ sections, heroSections, season = currentSeason, init
             eager={eager && index === 0} title={title} controls={previewId} expanded={expanded} strategy={strategy} onToggle={() => {
               const card = document.getElementById("guide-card-" + cardId);
               if (card) quickAnchor.current = { card, top: card.getBoundingClientRect().top };
-              setQuickView(expanded ? undefined : { key: previewKey, home });
+              setQuickView(expanded ? undefined : {
+                key: previewKey,
+                home,
+                guideId: section.id,
+                previewId,
+                source: needle ? "site_search" : recommended ? "home_rec" : "guide_list",
+              });
             }} />
           {expanded && <GuideQuickView id={previewId} team={team} data={data} roles={roles}
             note={quickNote}
@@ -887,7 +947,35 @@ export function GuideList({ sections, heroSections, season = currentSeason, init
     discoveries: trends.discoveries.map(discovery => ({ ...discovery, href: guideFromTrends(discovery.href, home) })),
   };
 
-  return <div className="home-guide-library" data-archive={view === "regular" && !recommended || undefined} data-trends={showingTrends || undefined}>
+  function handleLibraryClickCapture(event: MouseEvent<HTMLDivElement>) {
+    if (event.defaultPrevented) return;
+    const link = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>("a[href]") : null;
+    if (!link) return;
+    const href = link.getAttribute("href");
+    const guideId = extractPublicGuideIdFromHref(href);
+
+    if (needle) {
+      const searchResultSelector = "a[data-search-result], a[data-home-search-result], a.guide-result-main, a.home-patch-card-link";
+      if (link.matches(searchResultSelector)) {
+        const allLinks = Array.from(libraryRoot.current?.querySelectorAll<HTMLAnchorElement>(searchResultSelector) ?? []);
+        const idx = allLinks.indexOf(link);
+        const resultType = link.getAttribute("data-search-result-type") || href || "other";
+        trackSearchResultOpen({
+          resultType,
+          positionOneBased: idx >= 0 ? idx + 1 : 1,
+          surface: "home_inline",
+        });
+      }
+      if (guideId) rememberGuideEntry(guideId, "site_search");
+      return;
+    }
+
+    if (guideId) {
+      rememberGuideEntry(guideId, recommended ? "home_rec" : "guide_list");
+    }
+  }
+
+  return <div ref={libraryRoot} className="home-guide-library" data-archive={view === "regular" && !recommended || undefined} data-trends={showingTrends || undefined} onClickCapture={handleLibraryClickCapture}>
     <HomeGuideBanner patch={patch} />
     {fromItem && <a className="text-link guide-gear-return" href={fromItem}>返回装备图鉴</a>}
     <div className="home-browse-controls">
@@ -918,6 +1006,8 @@ export function GuideList({ sections, heroSections, season = currentSeason, init
           <input ref={searchInput} type="search" aria-label="搜索阵容" placeholder={selectedGear ? "再搜棋子、装备或羁绊" : "搜阵容、棋子或装备"}
             title="多个条件用 +，如 凯尔主C + 羊刀" maxLength={selectedGear ? Math.max(0, 60 - lookupTerm.length - 3) : 60}
             value={selectedGear ? extraGearTerms : query}
+            onCompositionStart={() => { homeComposingRef.current = true; setHomeComposing(true); }}
+            onCompositionEnd={() => { homeComposingRef.current = false; setHomeComposing(false); }}
             onChange={event => {
               const value = event.target.value;
               changeQuery(selectedGear ? lookupTerm + (value ? " + " + value : "") : value);

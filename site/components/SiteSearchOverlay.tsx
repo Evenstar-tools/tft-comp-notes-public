@@ -2,6 +2,8 @@
 
 import { Search, X } from "lucide-react";
 import { useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent, type MouseEvent } from "react";
+import { extractPublicGuideIdFromHref } from "@/domain/analytics";
+import { rememberGuideEntry, trackSearchResultOpen, trackSearchResults } from "@/lib/analytics";
 import { SiteSearchResults, useSiteSearch } from "./SiteSearchResults";
 
 const examples = [
@@ -13,6 +15,7 @@ type SearchVisit = { query: string; exclude?: string; top: number; resultTop?: n
 
 export function SiteSearchOverlay() {
   const [visit, setVisit] = useState<SearchVisit>();
+  const [isComposing, setIsComposing] = useState(false);
   const open = !!visit;
   const search = useSiteSearch(visit?.query ?? "", visit?.exclude);
   const trigger = useRef<HTMLButtonElement>(null);
@@ -20,6 +23,8 @@ export function SiteSearchOverlay() {
   const input = useRef<HTMLInputElement>(null);
   const results = useRef<HTMLDivElement>(null);
   const restore = useRef<SearchVisit | undefined>(undefined);
+  const restoredSearchKey = useRef<string | null>(null);
+  const lastReportedSearchKey = useRef<string | null>(null);
   const originTop = useRef(0);
   const composing = useRef(false);
   const closing = useRef(false);
@@ -30,6 +35,7 @@ export function SiteSearchOverlay() {
       closing.current = false;
       if (saved) originTop.current = saved.top;
       restore.current = saved;
+      restoredSearchKey.current = saved?.query.trim() ? `${saved.query.trim()}\0${saved.exclude ?? ""}` : null;
       setVisit(saved);
     }
     readHistory();
@@ -66,10 +72,36 @@ export function SiteSearchOverlay() {
       .find(link => link.href === saved.href)?.focus({ preventScroll: true });
   }, [search]);
 
+  useEffect(() => {
+    if (!open) {
+      lastReportedSearchKey.current = null;
+      return;
+    }
+    if (isComposing || composing.current) return;
+    const term = visit?.query.trim() ?? "";
+    if (!term || search.phase !== "ready" || search.refreshing || search.result.query !== term) return;
+    const queryKey = `${term}\0${visit?.exclude ?? ""}`;
+    if (restoredSearchKey.current === queryKey) {
+      restoredSearchKey.current = null;
+      lastReportedSearchKey.current = queryKey;
+      return;
+    }
+    if (lastReportedSearchKey.current === queryKey) return;
+    const timer = window.setTimeout(() => {
+      if (composing.current || lastReportedSearchKey.current === queryKey) return;
+      lastReportedSearchKey.current = queryKey;
+      const hasResults = search.result.groups.some(group => group.hits.length > 0);
+      trackSearchResults(hasResults ? "has_results" : "no_results", "overlay");
+    }, 120);
+    return () => window.clearTimeout(timer);
+  }, [open, isComposing, visit?.query, visit?.exclude, search]);
+
   function show() {
     if (open) return;
     const next = { query: "", top: window.scrollY };
     originTop.current = next.top;
+    restoredSearchKey.current = null;
+    lastReportedSearchKey.current = null;
     history.pushState({ ...history.state, siteSearchVisit: next }, "");
     setVisit(next);
   }
@@ -83,6 +115,7 @@ export function SiteSearchOverlay() {
   function refine(changes: Partial<SearchVisit>) {
     if (!visit) return;
     restore.current = undefined;
+    restoredSearchKey.current = null;
     const next = { ...visit, ...changes, resultTop: undefined, href: undefined };
     history.replaceState({ ...history.state, siteSearchVisit: next }, "");
     setVisit(next);
@@ -90,9 +123,22 @@ export function SiteSearchOverlay() {
   }
 
   function rememberResult(event: MouseEvent<HTMLDivElement>) {
-    if (!visit || event.defaultPrevented || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    if (!visit || event.defaultPrevented) return;
     const link = event.target instanceof Element && event.target.closest<HTMLAnchorElement>("a[data-search-result]");
-    if (!link || (link.target && link.target !== "_self")) return;
+    if (!link) return;
+    const links = Array.from(results.current?.querySelectorAll<HTMLAnchorElement>("a[data-search-result]") ?? []);
+    const index = links.indexOf(link);
+    const resultType = link.getAttribute("data-search-result-type") || link.getAttribute("href") || "other";
+    trackSearchResultOpen({
+      resultType,
+      positionOneBased: index >= 0 ? index + 1 : 1,
+      surface: "overlay",
+    });
+    const guideId = extractPublicGuideIdFromHref(link.getAttribute("href"));
+    if (guideId) rememberGuideEntry(guideId, "site_search");
+
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    if (link.target && link.target !== "_self") return;
     history.replaceState({ ...history.state, siteSearchVisit: {
       ...visit, href: link.href, resultTop: results.current?.scrollTop ?? 0,
     } }, "");
@@ -142,8 +188,8 @@ export function SiteSearchOverlay() {
               <input ref={input} type="search" value={visit?.query ?? ""} maxLength={100} autoComplete="off"
                 aria-label="搜索英雄、阵容、装备与羁绊" placeholder="搜阵容、英雄或装备"
                 onChange={event => refine({ query: event.target.value, exclude: undefined })}
-                onCompositionStart={() => { composing.current = true; }}
-                onCompositionEnd={() => { composing.current = false; }} />
+                onCompositionStart={() => { composing.current = true; setIsComposing(true); }}
+                onCompositionEnd={() => { composing.current = false; setIsComposing(false); }} />
             </label>
             <button type="button" aria-label="关闭搜索" title="关闭搜索" onClick={close}><X size={21} aria-hidden /></button>
           </div>

@@ -45,8 +45,8 @@ export function useSiteSearch(query: string, exclude?: string, initial?: SiteSea
 
 type LinkResult = Pick<SiteSearchHit, "id" | "name" | "href" | "image" | "detail" | "category"> & { games?: number; mean?: number };
 
-function ResultLink({ hit, primary, numericColumns = false }: { hit: LinkResult; primary?: boolean; numericColumns?: boolean }) {
-  return <a href={hit.href} className="site-lookup-result" data-search-result data-search-primary={primary || undefined}>
+function ResultLink({ hit, primary, numericColumns = false, resultType }: { hit: LinkResult; primary?: boolean; numericColumns?: boolean; resultType?: string }) {
+  return <a href={hit.href} className="site-lookup-result" data-search-result data-search-result-type={resultType} data-search-primary={primary || undefined}>
     {hit.image && <img src={hit.image} alt="" width={30} height={30} decoding="async" />}
     <span className="site-lookup-label">
       <strong>{hit.name}</strong>
@@ -60,11 +60,11 @@ function ResultLink({ hit, primary, numericColumns = false }: { hit: LinkResult;
   </a>;
 }
 
-function GearResult({ hit, intent, onToggleExclusion }: {
-  hit: SiteSearchHit; intent: SiteSearchResponse["intent"]; onToggleExclusion?: (value: "rakan" | "none") => void;
+function GearResult({ hit, intent, onToggleExclusion, groupKind }: {
+  hit: SiteSearchHit; intent: SiteSearchResponse["intent"]; onToggleExclusion?: (value: "rakan" | "none") => void; groupKind: string;
 }) {
   const gear = hit.gear;
-  if (!gear) return <ResultLink hit={hit} />;
+  if (!gear) return <ResultLink hit={hit} resultType={groupKind} />;
   const hasHolders = gear.holders.length > 0;
   const hasExamples = gear.examples.length > 0;
   const canExclude = gear.type === "emblem" && onToggleExclusion;
@@ -76,17 +76,17 @@ function GearResult({ hit, intent, onToggleExclusion }: {
         type="button" onClick={() => canExclude(gear.exclude === "rakan" ? "none" : "rakan")}>剔除洛</button>}
       {hasHolders && <span className="site-lookup-column-names" aria-hidden="true"><span>均名</span><span>场数</span></span>}
     </header>
-    {gear.holders.slice(0, 3).map((holder, i) => <ResultLink key={holder.id} hit={holder} numericColumns
+    {gear.holders.slice(0, 3).map((holder, i) => <ResultLink key={holder.id} hit={holder} numericColumns resultType="unit"
       primary={i === 0 && (intent === "holders" || (intent === "comps" && !hasExamples))} />)}
   </div>;
   const examples = hasExamples && <div className="site-lookup-evidence">
     <header><h3>实戴阵容</h3></header>
-    {gear.examples.slice(0, 3).map((example, i) => <ResultLink key={example.id} hit={example} primary={i === 0 && intent === "comps"} />)}
+    {gear.examples.slice(0, 3).map((example, i) => <ResultLink key={example.id} hit={example} resultType="guide" primary={i === 0 && intent === "comps"} />)}
   </div>;
   const prioritizeExamples = intent === "comps";
   const hasFooter = (!prioritizeExamples && missingExamples) || !hasHolders || gear.snapshot;
   return <div className="site-lookup-gear">
-    <ResultLink hit={{ ...hit, games: gear.totalGames }} />
+    <ResultLink hit={{ ...hit, games: gear.totalGames }} resultType="item" />
     {prioritizeExamples && missingExamples && <div className="site-lookup-evidence-note">{missingExamples}</div>}
     {(examples || holders) && <div className="site-lookup-evidence-grid" data-single={!(examples && holders) || undefined}>
       {prioritizeExamples ? <>{examples}{holders}</> : <>{holders}{examples}</>}
@@ -121,7 +121,7 @@ export function SiteSearchResults({ search, onToggleExclusion, filter, quiet = f
         const shown = group.kind === "guides" && hero && detail && detail.startsWith(hero.name + " ")
           ? { ...hit, detail: detail.slice(hero.name.length + 1), image: hit.image === hero.image ? undefined : hit.image }
           : hit;
-        return <GearResult key={hit.id} hit={shown} intent={intent} onToggleExclusion={onToggleExclusion} />;
+        return <GearResult key={hit.id} hit={shown} intent={intent} onToggleExclusion={onToggleExclusion} groupKind={group.kind} />;
       })}
     </section>)}
   </div>;

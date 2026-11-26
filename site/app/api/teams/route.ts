@@ -2,7 +2,7 @@ import { apiError, database, requireOwner, ApiError, setting } from "@/server/ac
 import { validateTeam } from "@/server/validate-team";
 import { listTeams } from "@/server/teams";
 import { sectionTeams } from "@/domain/document-flow";
-import { publicGuidePublication } from "@/server/publication";
+import { publicGuidePublication, publishedSnapshot } from "@/server/publication";
 import { includeRerollBoards } from "@/server/reroll-guides";
 import { isEditorialSection, primaryFirst, readingNotes } from "@/domain/guide-reading";
 import { sameEdition } from "@/domain/version-updates";
@@ -43,9 +43,15 @@ export async function GET(request: Request) {
       return Response.json({ choices }, { headers: { "Cache-Control": "no-store" } });
     }
     if (query.has("copy")) {
-      const row = await database().prepare("SELECT body FROM snapshots WHERE id=?").bind(query.get("publication") ?? "").first<{ body: string }>();
-      const snapshot: Publication | null = row ? JSON.parse(row.body) : null;
-      const active = snapshot && snapshot.id === await setting("published_id") ? includeRerollBoards(snapshot, season) : snapshot;
+      const requestedId = query.get("publication") ?? "";
+      const row = await database().prepare("SELECT body FROM snapshots WHERE id=?").bind(requestedId).first<{ body: string }>();
+      let snapshot: Publication | null = row ? JSON.parse(row.body) : null;
+      if (!snapshot) {
+        const current = await publishedSnapshot();
+        if (current && current.id === requestedId) snapshot = current;
+      }
+      const publishedId = await setting("published_id");
+      const active = snapshot && (!publishedId || snapshot.id === publishedId) ? includeRerollBoards(snapshot, season) : snapshot;
       const section = active?.sections.find(entry => entry.id === query.get("section"));
       const team = section && sectionTeams(section).find(entry => entry.id === query.get("copy"));
       if (!team) throw new ApiError(404, "这个发布版本中找不到该阵容");
