@@ -145,6 +145,28 @@ export type RecommendationStat = Pick<GuideFamilyStat, "sectionId" | "name" | "g
   sampleScope?: string;
 };
 
+export type HomeRecommendationRating = RecommendationStat |
+  (Pick<RecommendationStat, "teamId" | "sectionId" | "name" | "carryId"> & { mean?: undefined; games?: undefined });
+
+export type OwnerRecommendationOverride = "pin" | "include" | "exclude";
+
+const homeRecommendationCutoff = 4.40;
+const homeMaxRegular = 12;
+const homeMaxPerGroup = 8;
+const homeMaxHeroAugment = 2;
+
+type HomeRecommendationSample = Pick<GuideFamilyStat, "games" | "mean">;
+
+export function hasHomeRecommendationSample(rating: HomeRecommendationRating): rating is RecommendationStat;
+export function hasHomeRecommendationSample(rating: Partial<HomeRecommendationSample>): rating is HomeRecommendationSample;
+export function hasHomeRecommendationSample({ games, mean }: Partial<HomeRecommendationSample>) {
+  return games !== undefined && mean !== undefined && recommendationTier({ games, mean }) !== "review";
+}
+
+export function homeRecommendationEligible(rating: Partial<HomeRecommendationSample>) {
+  return hasHomeRecommendationSample(rating) && rating.mean <= homeRecommendationCutoff;
+}
+
 export type RecommendationStats = {
   seasonId: string;
   queue: string;
@@ -169,48 +191,62 @@ export function recommendationGroup(style: string, carryCosts: number[], rollLev
       (/慢[搜D]|赌/i.test(style) || (!style && rollLevel !== undefined && rollLevel >= 5 && rollLevel <= 7))) return "reroll";
 }
 
-export function selectRecommendationRoutes<T extends {
-  group: RecommendationGroup; familyId: string; rating: RecommendationStat; conditional?: boolean; preferred?: boolean;
-}>(
-  candidates: T[],
-  { maxRegular = 15, maxHeroAugment = 2, displayOrder = [] }: {
-    maxRegular?: number; maxHeroAugment?: number; displayOrder?: string[];
-  } = {},
-) {
-  const positions = new Map(displayOrder.map((id, index) => [id, index]));
-  const eligible = candidates.filter(({ rating }) => recommendationTier(rating) === "recommended");
-  // When one guide owns multiple parallel variant clusters in the same group (e.g. Graves-Zac axes),
-  // keep the strongest current variant on the home card while preserving the guide's earliest display slot.
-  const guideSlots = new Map<string, number>();
+type HomeRecommendationCandidate = {
+  group: RecommendationGroup;
+  familyId: string;
+  rating: HomeRecommendationRating;
+  override?: OwnerRecommendationOverride;
+  pinOrder?: number;
+};
+
+function compareHomeRoutes(a: HomeRecommendationCandidate, b: HomeRecommendationCandidate) {
+  const aPinned = a.override === "pin", bPinned = b.override === "pin";
+  if (aPinned !== bPinned) return aPinned ? -1 : 1;
+  const pinDifference = aPinned ? (a.pinOrder ?? 0) - (b.pinOrder ?? 0) : 0;
+  if (pinDifference) return pinDifference;
+
+  const aSample = hasHomeRecommendationSample(a.rating) ? a.rating : undefined;
+  const bSample = hasHomeRecommendationSample(b.rating) ? b.rating : undefined;
+  if (aSample && !bSample) return -1;
+  if (bSample && !aSample) return 1;
+  const sampleDifference = aSample && bSample ? aSample.mean - bSample.mean || bSample.games - aSample.games : 0;
+  return sampleDifference || (a.familyId < b.familyId ? -1 : Number(a.familyId > b.familyId));
+}
+
+function homeSelectionPriority(route: HomeRecommendationCandidate) {
+  if (route.override === "pin") return 0;
+  return route.override === "include" && !hasHomeRecommendationSample(route.rating) ? 1 : 2;
+}
+
+export function selectRecommendationRoutes<T extends HomeRecommendationCandidate>(candidates: T[]) {
   const bestByGuideGroup = new Map<string, T>();
-  for (const candidate of eligible) {
-    const key = `${candidate.group}:${candidate.rating.sectionId ?? candidate.familyId}`;
-    const slot = positions.get(candidate.rating.teamId) ?? positions.size;
-    guideSlots.set(key, Math.min(guideSlots.get(key) ?? positions.size, slot));
+  for (const candidate of candidates) {
+    const { override, group, rating } = candidate;
+    if (override === "exclude" || (!override && !homeRecommendationEligible(rating))) continue;
+
+    const key = `${group}:${rating.sectionId}`;
     const current = bestByGuideGroup.get(key);
-    if (!current || candidate.rating.mean < current.rating.mean ||
-        (candidate.rating.mean === current.rating.mean && candidate.rating.games > current.rating.games)) {
-      bestByGuideGroup.set(key, candidate);
-    }
+    if (!current || compareHomeRoutes(candidate, current) < 0) bestByGuideGroup.set(key, candidate);
   }
-  const position = (route: T) =>
-    guideSlots.get(`${route.group}:${route.rating.sectionId ?? route.familyId}`) ?? positions.get(route.rating.teamId) ?? positions.size;
-  const ranked = [...bestByGuideGroup.values()]
-    .sort((a, b) => position(a) - position(b) || Number(!!b.preferred) - Number(!!a.preferred) ||
-      a.rating.mean - b.rating.mean || b.rating.games - a.rating.games);
+
+  const ranked = [...bestByGuideGroup.values()].sort((a, b) =>
+    homeSelectionPriority(a) - homeSelectionPriority(b) || compareHomeRoutes(a, b));
+  const groups: Record<RecommendationGroup, T[]> = { reroll: [], fast8: [], fast9: [], heroAugment: [] };
   const families = new Set<string>();
   const boards = new Set<string>();
-  const slots = { regular: maxRegular, heroAugment: maxHeroAugment };
-  const selected = ranked.filter(({ group, familyId, rating }) => {
-    const pool = group === "heroAugment" ? "heroAugment" : "regular";
-    if (slots[pool] <= 0 || families.has(familyId) || boards.has(rating.teamId)) return false;
-    slots[pool]--;
-    families.add(familyId);
-    boards.add(rating.teamId);
-    return true;
-  });
-  return recommendationGroups.flatMap(({ id }) => selected.filter(route => route.group === id)
-    .sort((a, b) => position(a) - position(b) || Number(!!a.conditional) - Number(!!b.conditional)));
+  let remainingRegular = homeMaxRegular;
+  for (const route of ranked) {
+    const selected = groups[route.group];
+    const isAugment = route.group === "heroAugment";
+    if (isAugment ? selected.length >= homeMaxHeroAugment : remainingRegular === 0 || selected.length >= homeMaxPerGroup) continue;
+    if (families.has(route.familyId) || boards.has(route.rating.teamId)) continue;
+
+    selected.push(route);
+    families.add(route.familyId);
+    boards.add(route.rating.teamId);
+    if (!isAugment) remainingRegular--;
+  }
+  return recommendationGroups.flatMap(({ id }) => groups[id].sort(compareHomeRoutes));
 }
 
 function familyBoardIds(stat: GuideFamilyStat, primaryTeamId?: string) {

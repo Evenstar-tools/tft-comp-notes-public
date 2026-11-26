@@ -89,43 +89,100 @@ test("the gate rejects a bad histogram and a missing history archive", t => {
     [`public/stats-history/${batch.id}/equipment.json：文件缺失`]);
 });
 
-test("the gate validates structured recommendations and accepts legacy notes", t => {
+test("the gate validates active recommendation overrides and accepts ordinary advice beyond the homepage capacity", t => {
   const cwd = fixture(t);
   const file = join(cwd, "data", "patch-recommendations.json");
   const sections = readJson(join(cwd, "data", "public-preview.json")).sections.filter(section => section.team?.id);
-  const entry = ({ id, team }, group, status = "recommended") =>
-    ({ sectionId: id, teamId: team.id, status, note: "来牌顺再玩", group });
+  const entry = (section, group) => ({
+    sectionId: section.id, teamId: section.primaryTeamId ?? section.team.id, status: "recommended", note: "来牌顺再玩", group,
+  });
   const regular = sections.filter(section => section.category !== "英雄强化阵容").slice(0, 16)
-    .map((section, index) => entry(section, ["reroll", "fast8", "fast9"][index % 3], index < 15 ? "recommended" : "avoid"));
-  const heroes = sections.filter(section => section.category === "英雄强化阵容").slice(0, 2)
+    .map((section, index) => entry(section, ["reroll", "fast8", "fast9"][index % 3]));
+  const heroes = sections.filter(section => section.category === "英雄强化阵容").slice(0, 3)
     .map(section => entry(section, "heroAugment"));
-  const { seasonId, build, reviewedAt } = readJson(file);
-  const batch = { seasonId, build, reviewedAt, entries: [...regular, ...heroes],
-    displayOrder: [...regular.slice(0, 15), ...heroes].map(pick => pick.teamId) };
+  const { seasonId, build, reviewedAt, reviewedRollingPatch } = readJson(file);
+  const batch = { seasonId, build, reviewedAt, reviewedRollingPatch, entries: [...regular, ...heroes] };
   writeFileSync(file, JSON.stringify(batch));
   assert.equal(run(cwd, "--verify").status, 0);
 
   const original = structuredClone(batch);
+  const landing = sections.find(section => section.id === "sample-block-1110");
+  const landingPin = { ...entry(landing, "fast8"), teamId: landing.stageTeamIds[0], override: "pin" };
+  writeFileSync(file, JSON.stringify({ ...batch, entries: [...batch.entries, landingPin] }));
+  assert.equal(run(cwd, "--verify").status, 0);
+
+  for (const row of batch.entries) row.override = "include";
   regular[0].timing = ["来牌顺"];
   regular[0].upgrade = "八级稳血\n九级再补";
-  heroes[0].group = "fast8";
-  regular.at(-1).status = "conditional";
-  batch.displayOrder.push(regular[0].teamId);
+  regular[0].override = "unknown";
+  regular[1].pinOrder = 0.5;
+  regular[2].manualBadge = "\n";
+  regular[3].status = "avoid";
+  const followup = sections.find(section => section.id === "sample-block-1060");
+  const transition = { ...entry(followup, "reroll"), teamId: followup.stageTeamIds[0], override: "pin" };
+  batch.entries.push(transition);
+
   writeFileSync(file, JSON.stringify(batch));
   const invalid = run(cwd, "--verify");
   assert.equal(invalid.status, 1);
   const { errors } = JSON.parse(invalid.stdout);
-  for (const expected of [/\.timing/, /\.upgrade/, /\.group.*分类不匹配/, /常规推荐最多 15 套/, /\.displayOrder.*重复/]) {
+  for (const expected of [/\.timing/, /\.upgrade/, /\.override.*须为/, /\.pinOrder/, /\.manualBadge/,
+    /过渡盘/, /次选棋盘/, /常规最多 12 套，英雄强化最多 2 套/]) {
     assert.ok(errors.some(error => expected.test(error)), expected);
   }
 
-  for (const entry of original.entries) {
-    delete entry.timing;
-    delete entry.upgrade;
-    delete entry.group;
-  }
+  heroes[0].group = "fast8";
+  writeFileSync(file, JSON.stringify(batch));
+  assert.ok(JSON.parse(run(cwd, "--verify").stdout).errors.some(error => /\.group.*分类不匹配/.test(error)));
+
+  for (const entry of original.entries) delete entry.group;
   writeFileSync(file, JSON.stringify(original));
   assert.equal(run(cwd, "--verify").status, 0);
+
+  writeFileSync(file, JSON.stringify({ ...original, entries: [] }));
+  assert.equal(run(cwd, "--verify").status, 0);
+});
+
+test("the homepage warns when the current native cohort plus valid overrides has fewer than four regular guides", t => {
+  const cwd = fixture(t);
+  const file = join(cwd, "data", "patch-recommendations.json");
+  const familyFile = join(cwd, "data", "guide-family-stats.json");
+  const raw = readJson(file);
+  const family = readJson(familyFile);
+  const kept = family.rows.filter(row => ["429018", "429003", "429024"].includes(String(row.clusterId)));
+  assert.equal(kept.length, 3);
+  writeFileSync(familyFile, JSON.stringify({ ...family, rows: kept }));
+  const check = (overrides, fields = {}) => {
+    const overrideKeys = new Set(overrides.map(({ teamId }) => teamId));
+    writeFileSync(file, JSON.stringify({ ...raw, ...fields,
+      entries: [...raw.entries.filter(entry => !overrideKeys.has(entry.teamId)), ...overrides],
+    }));
+    const result = run(cwd, "--verify");
+    assert.equal(result.status, 0, result.stdout || result.stderr);
+    return JSON.parse(result.stdout).warnings;
+  };
+  const lowCount = warnings => warnings.find(warning => /本版推荐常规达线及手动入榜仅/.test(warning));
+  assert.match(lowCount(check([])), /仅 2 套/);
+
+  const first = raw.entries.find(entry => entry.sectionId === "sample-block-0338");
+  const second = raw.entries.find(entry => entry.sectionId === "sample-block-0854");
+  const manual = [{ ...first, override: "pin", pinOrder: 1 }, { ...second, override: "include", manualBadge: "站主推荐" }];
+  assert.equal(lowCount(check(manual)), undefined);
+  const jinxAdvice = raw.entries.find(entry => entry.sectionId === "sample-block-1110");
+  const jinx = kept.find(row => row.sectionId === jinxAdvice.sectionId);
+  for (const teamId of [jinx.teamId, jinx.landingTeamId]) {
+    const excluded = { ...jinxAdvice, teamId, override: "exclude" };
+    assert.match(lowCount(check([...manual, excluded])), /仅 3 套/);
+  }
+  const jhinAdvice = raw.entries.find(entry => entry.sectionId === "sample-block-0051");
+  const jhin = kept.find(row => row.sectionId === jhinAdvice.sectionId);
+  const excludedAlias = { ...jhinAdvice, teamId: jhin.sharedTeamIds[0], override: "exclude" };
+  assert.equal(lowCount(check([...manual, excludedAlias])), undefined);
+
+  const { effectiveAt } = readJson(join(cwd, "data", "current-patch.json"));
+  const older = new Date(Date.parse(effectiveAt) - 1000).toISOString();
+  const stale = check(manual, { build: String(Number(raw.build) - 1), reviewedAt: older });
+  assert.match(lowCount(stale), /仅 0 套/);
 });
 
 test("daily dry-run lists every step in order and leaves the checkout unchanged", t => {

@@ -1,5 +1,6 @@
 """Validate the committed statistics and public archive without network access."""
 
+from collections import Counter
 from datetime import date, datetime, timedelta, timezone
 import json
 from math import isfinite
@@ -39,6 +40,9 @@ PRIVATE_ID = re.compile(r"\bdoxc[a-z0-9_]+", re.I)
 REGULAR_GROUPS = {"reroll", "fast8", "fast9"}
 RECOMMENDATION_GROUPS = REGULAR_GROUPS | {"heroAugment"}
 RECOMMENDATION_STATUSES = ("recommended", "conditional", "avoid", "review")
+RECOMMENDATION_OVERRIDES = ("pin", "include", "exclude")
+HOME_MIN_GAMES, HOME_CUTOFF = 100, 4.40
+HOME_MIN_REGULAR, HOME_MAX_REGULAR, HOME_MAX_PER_GROUP, HOME_MAX_HERO = 4, 12, 8, 2
 UTC8 = timezone(timedelta(hours=8))
 
 
@@ -153,7 +157,7 @@ def check_module(module, data, current, effective, aligned_check, warnings, erro
     collection, kind, time_key = MODULES[module]
     records = data.get(collection)
     count = len(records) if isinstance(records, kind) else 0
-    if not count:
+    if not count and not (module == "patch-recommendations" and isinstance(records, list)):
         errors.append(f"{name}：{collection} 缺失、为空或类型错误")
     metadata = data
     if module == "comp-trends":
@@ -281,19 +285,79 @@ def check_history(errors):
     return len(history)
 
 
-def check_recommendation_entries(recommendations, sections, errors):
+def recommendation_board_ids(row, primary):
+    shared = row.get("sharedTeamIds")
+    return [board for board in (row.get("landingTeamId"), row.get("teamId") or primary,
+                                *(shared if isinstance(shared, list) else []))
+            if isinstance(board, str)]
+
+
+def current_recommendation_family(family, recommendations, current, effective, aligned):
+    days = family.get("days")
+    if not aligned or family.get("patch") != current["patch"] or type(days) is not int or days < 1:
+        return False
+    if family.get("spansBuilds"):
+        return (family.get("build") == current["build"]
+                and family.get("patch") == recommendations.get("reviewedRollingPatch"))
+    if family.get("build"):
+        return family["build"] == current["build"]
+    updated = timestamp(family.get("updatedAt"))
+    return updated is not None and (updated - effective).total_seconds() >= days * 86400
+
+
+def validate_recommendation_overrides(entry, active, path, errors):
+    if not active:
+        return
+    override = entry.get("override")
+    if "override" in entry and override not in RECOMMENDATION_OVERRIDES:
+        errors.append(f"{path}.override：须为 pin、include 或 exclude")
+    if "pinOrder" in entry and (override != "pin" or type(entry["pinOrder"]) is not int
+                                or abs(entry["pinOrder"]) > 2**53 - 1):
+        errors.append(f"{path}.pinOrder：仅 pin 可使用，须为有效整数")
+    if "manualBadge" in entry:
+        badge = entry["manualBadge"]
+        if not isinstance(badge, str) or not badge.strip() or len(badge.splitlines()) != 1:
+            errors.append(f"{path}.manualBadge：须为单行有效文字")
+    return override if override in RECOMMENDATION_OVERRIDES else None
+
+
+def check_recommendation_entries(recommendations, family, sections, current, effective,
+                                 patch_ready, family_aligned, warnings, errors):
     name = "data/patch-recommendations.json"
     entries = recommendations.get("entries")
     if not isinstance(entries, list):
         return
-    boards = {
-        (section["id"], team["id"]): section.get("category")
-        for section in sections
-        for team in [section.get("team"), *(section.get("teams") or [])]
-        if isinstance(team, dict) and isinstance(team.get("id"), str)
-    }
-    seen, active, groups = set(), set(), set()
-    regular_guides, hero_guides = set(), set()
+    reviewed = timestamp(recommendations.get("reviewedAt"))
+    active = (patch_ready and recommendations.get("seasonId") == current["seasonId"]
+              and recommendations.get("build") == current["build"] and reviewed is not None and reviewed >= effective)
+    current_family = current_recommendation_family(family, recommendations if active else {},
+                                                   current, effective, family_aligned)
+    boards = {}
+    primaries = {}
+    sections_by_id = {section["id"]: section for section in sections}
+    for section in sections:
+        section_id = section["id"]
+        section_teams = section.get("teams")
+        teams = {
+            team["id"]: team
+            for team in [section.get("team"), *(section_teams if isinstance(section_teams, list) else [])]
+            if isinstance(team, dict) and isinstance(team.get("id"), str)
+        }
+        primary = section.get("primaryTeamId")
+        primaries[section_id] = primary if isinstance(primary, str) else next(iter(teams), None)
+        boards.update({(section_id, team_id): team for team_id, team in teams.items()})
+    rows = family.get("rows")
+    families = []
+    for row in rows if isinstance(rows, list) else []:
+        if not isinstance(row, dict) or not isinstance(row.get("sectionId"), str):
+            continue
+        anchor = row.get("teamId") or primaries.get(row["sectionId"])
+        if isinstance(anchor, str) and (row["sectionId"], anchor) in boards:
+            families.append(row)
+    landing_boards = {(row["sectionId"], row.get("landingTeamId")) for row in families
+                      if isinstance(row.get("landingTeamId"), str)}
+    decisions, excluded, manual = {}, set(), {}
+    seen = set()
     for index, entry in enumerate(entries):
         if not isinstance(entry, dict):
             continue
@@ -309,6 +373,7 @@ def check_recommendation_entries(recommendations, sections, errors):
             if (key == "note" or key in entry) and (not isinstance(value, str) or not value.strip()
                                                    or key != "note" and len(value.splitlines()) != 1):
                 errors.append(f"{path}.{key}：需填写有效文字，结构化建议须为单行")
+        override = validate_recommendation_overrides(entry, active, path, errors)
         if not isinstance(section_id, str) or not isinstance(team_id, str) or (section_id, team_id) not in boards:
             errors.append(f"{path}.teamId：未在对应的公开攻略中找到")
             continue
@@ -317,34 +382,81 @@ def check_recommendation_entries(recommendations, sections, errors):
             errors.append(f"{path}.teamId：同一棋盘只能写一次")
             continue
         seen.add(key)
-        is_hero = boards[key] == "英雄强化阵容"
+        section = sections_by_id[section_id]
+        is_hero = section.get("category") == "英雄强化阵容"
         if valid_group and is_hero != (group == "heroAugment"):
             errors.append(f"{path}.group：与公开攻略的英雄强化分类不匹配")
-        if status in ("recommended", "conditional"):
-            active.add(team_id)
-            if is_hero:
-                hero_guides.add(section_id)
-            else:
-                regular_guides.add((group, section_id))
-                if valid_group:
-                    groups.add(group)
+        if active:
+            decisions[key] = (group if valid_group else None, status)
+            if status in ("avoid", "review") or override == "exclude":
+                excluded.add(key)
+        if override not in ("pin", "include"):
+            continue
+        if key in excluded:
+            errors.append(f"{path}.override：待复核或次选棋盘不能置顶或手动入榜")
+            continue
+        stage_ids = section.get("stageTeamIds")
+        board = boards[key]
+        stage = (team_id in stage_ids if isinstance(stage_ids, list) else board.get("boardRole") == "stage")
+        primary_id = primaries[section_id]
+        main_board = boards.get((section_id, primary_id), {})
+        if stage and team_id != primary_id and key not in landing_boards and board_population(board) <= board_population(main_board):
+            errors.append(f"{path}.override：过渡盘不能置顶或手动入榜")
+            continue
+        manual[key] = ("heroAugment" if is_hero else group if valid_group else None, override)
 
-    regular, hero = len(regular_guides), len(hero_guides)
+    manual_hero = sum(group == "heroAugment" for group, _ in manual.values())
+    manual_regular = len(manual) - manual_hero
+    if manual_regular > HOME_MAX_REGULAR or manual_hero > HOME_MAX_HERO:
+        errors.append(f"{name}：手动入榜常规最多 {HOME_MAX_REGULAR} 套，英雄强化最多 {HOME_MAX_HERO} 套")
+    if sum(group != "heroAugment" and override == "pin" for group, override in manual.values()) > 4:
+        warnings.append(f"{name}：常规置顶超过 4 条，请复核是否仍需保留")
 
-    max_regular, max_hero = 15, 2
-    if regular > max_regular or hero > max_hero:
-        errors.append(f"{name}：常规推荐最多 {max_regular} 套，英雄强化最多 {max_hero} 套")
-    if regular == max_regular and groups and not REGULAR_GROUPS.issubset(groups):
-        errors.append(f"{name}：{max_regular} 套常规推荐须涵盖赌狗、84 和 95")
-    if "displayOrder" in recommendations:
-        order = recommendations["displayOrder"]
-        if not isinstance(order, list) or not all(isinstance(team_id, str) and team_id in active for team_id in order):
-            errors.append(f"{name}.displayOrder：只可引用推荐或有条件的棋盘")
-        elif len(order) != len(set(order)):
-            errors.append(f"{name}.displayOrder：棋盘不得重复")
+    if not patch_ready:
+        return
+    candidates = {(section_id, group) for (section_id, _), (group, _) in manual.items()
+                  if group != "heroAugment"}
+    if current_family:
+        candidates.update(qualified_home_guides(families, primaries, boards, decisions, excluded))
+    # The reader infers the group from the guide when editorial metadata is absent.
+    classified = {section_id for section_id, group in candidates if group is not None}
+    by_group = Counter(group for section_id, group in candidates
+                       if group is not None or section_id not in classified)
+    total = min(HOME_MAX_REGULAR, by_group.pop(None, 0)
+                + sum(min(count, HOME_MAX_PER_GROUP) for count in by_group.values()))
+    if total < HOME_MIN_REGULAR:
+        warnings.append(f"{name}：本版推荐常规达线及手动入榜仅 {total} 套（少于 {HOME_MIN_REGULAR}），请复核")
 
 
-def check_references(recommendations, errors):
+def board_population(board):
+    pieces = board.get("pieces")
+    return sum(2 if piece.get("unitId") == "baron-nashor" else 1
+               for piece in pieces if isinstance(piece, dict)) if isinstance(pieces, list) else 0
+
+
+def qualified_home_guides(families, primaries, boards, decisions, excluded):
+    comparable = [row for row in families if type(row.get("games")) is int and row["games"] >= HOME_MIN_GAMES
+                  and type(row.get("mean")) in (int, float) and 1 <= row["mean"] <= 8]
+    linked = [(row, dict.fromkeys(recommendation_board_ids(row, primaries.get(row["sectionId"]))))
+              for row in comparable]
+    counts = Counter((row["sectionId"], board) for row, keys in linked for board in keys)
+    for row, keys in linked:
+        if row.get("heroAugment") or row["mean"] > HOME_CUTOFF:
+            continue
+        section_id = row["sectionId"]
+        canonical = (row.get("teamId") or primaries.get(section_id), row.get("landingTeamId"))
+        if any((section_id, board) in excluded for board in canonical if isinstance(board, str)):
+            continue
+        eligible = [(section_id, board) for board in keys if counts[(section_id, board)] == 1
+                    and (section_id, board) in boards and (section_id, board) not in excluded]
+        first = next((key for key in eligible if decisions.get(key, (None, None))[1]
+                      in ("recommended", "conditional")), eligible[0] if eligible else None)
+        if first is not None:
+            yield section_id, decisions.get(first, (None, None))[0]
+
+
+def check_references(recommendations, family, current, effective,
+                     patch_ready, family_aligned, warnings, errors):
     preview = read_json("data/public-preview.json", dict, errors)
     sections = preview.get("sections")
     if not isinstance(sections, list) or not sections:
@@ -352,12 +464,14 @@ def check_references(recommendations, errors):
         sections = []
     sections = [section for section in sections if isinstance(section, dict) and isinstance(section.get("id"), str)]
     ids = {section["id"] for section in sections}
-    check_recommendation_entries(recommendations, sections, errors)
+    check_recommendation_entries(recommendations, family, sections, current, effective,
+                                 patch_ready, family_aligned, warnings, errors)
     names = ("data/patch-recommendations.json", "data/guide-family-map.json")
     family_map = read_json(names[1], dict, errors)
     for name, source, key in zip(names, (recommendations, family_map), ("entries", "rows")):
         rows = source.get(key)
-        if not isinstance(rows, list) or not rows or not all(isinstance(row, dict) and "sectionId" in row for row in rows):
+        if (not isinstance(rows, list) or (key == "rows" and not rows)
+                or not all(isinstance(row, dict) and "sectionId" in row for row in rows)):
             errors.append(f"{name}：{key} 缺少攻略章节引用")
         if PRIVATE_ID.search(json.dumps(source, ensure_ascii=False)):
             errors.append(f"{name}：含私有 doxc 前缀 ID")
@@ -372,13 +486,16 @@ def main():
     errors, warnings, modules = [], [], []
     current, effective, valid_patch = current_patch(errors)
     checked = 0
+    family, family_aligned = {}, False
     for module in MODULES:
         data = read_json(f"data/{module}.json", dict, errors)
         modules.append(check_module(module, data, current, effective, valid_patch, warnings, errors))
         if module in DISTRIBUTIONS:
             checked += check_distributions(module, data, errors)
+        if module == "guide-family-stats":
+            family, family_aligned = data, modules[-1]["alignment"] == "aligned"
         if module == "patch-recommendations":
-            check_references(data, errors)
+            check_references(data, family, current, effective, valid_patch, family_aligned, warnings, errors)
     batches = check_history(errors)
     print(json.dumps({
         "ok": not errors, "currentPatch": current, "modules": modules,

@@ -7,13 +7,13 @@ import { season as currentSeason } from "@/data";
 import familyStats from "@/data/guide-family-stats.json";
 import coreStats from "@/data/patch-recommendation-stats.json";
 import { displayGuideName, displayTraitNames } from "@/domain/trait-names.mjs";
-import { canRankRecommendations, compareGuideFamilyPerformance, currentFamilyBatch, currentRecommendationEvidence, familyMetricValue, formatRecommendationMean, guideFamilyBoardIds, guideFamilyRows, previousRecommendationDeadline, recommendationGroup, recommendationTier, selectRecommendationRoutes, type GuideFamilyDirection, type GuideFamilyMetric, type GuideFamilySnapshot, type GuideFamilyStat, type RecommendationGroup, type RecommendationStat } from "@/domain/guide-family-stats";
+import { canRankRecommendations, compareGuideFamilyPerformance, currentFamilyBatch, currentRecommendationEvidence, familyMetricValue, formatRecommendationMean, hasHomeRecommendationSample, homeRecommendationEligible, guideFamilyBoardIds, guideFamilyRows, previousRecommendationDeadline, recommendationGroup, recommendationTier, selectRecommendationRoutes, type GuideFamilyDirection, type GuideFamilyMetric, type GuideFamilySnapshot, type GuideFamilyStat, type HomeRecommendationRating, type RecommendationGroup } from "@/domain/guide-family-stats";
 import { carryMinGames, guideCarryRows } from "@/domain/guide-carry-stats";
 import { sectionTeams } from "@/domain/document-flow";
 import { boardTitle, groupGuides, type GuideFamily } from "@/domain/guide-families";
 import { guideBoardName, guideFacets, guideLink, guidePlaystyle, guideRollLevel, guideRoster, guideRoute, guideStrategyLabel, guideTitleWithoutPlaystyle, matchingGear, parseGuideFilters, primaryFirst, readingNotes, repeatsFormationLabel, type GuideFilters, type GuideSearchScope, type GuideSort } from "@/domain/guide-reading";
 import { rerollEntryTeamId } from "@/domain/reroll-stages";
-import { patchRecommendationLabels, type PatchRecommendation, type PatchRecommendationBatch } from "@/domain/patch-recommendations";
+import { activeHomeRecommendationOverrides, patchRecommendationLabels, type PatchRecommendation, type PatchRecommendationBatch } from "@/domain/patch-recommendations";
 import { homeGuideFilter, matchesGuideStyle, guideWearerQuery, searchPhaseNote, splitGuideConditions, guideSearchKey, guideStyleKey } from "@/domain/guide-search";
 import { equippedGuideRoutes, familyNameMatches, homeSearchIntent, matchHomeGuide, searchUnitIds } from "@/domain/home-guide-search";
 import { itemAliases } from "@/domain/roster-import";
@@ -123,7 +123,7 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
   initialSearch?: SiteSearchResponse;
   recommendations?: PatchRecommendationBatch;
   artifactRanking?: ReactNode;
-  patch?: { build: string; label: string; updateId: string; effectiveAt: string };
+  patch?: { seasonId: string; build: string; label: string; updateId: string; effectiveAt: string };
   fromItem?: string;
   checkedAt: number;
 }) {
@@ -329,10 +329,13 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
   const costs = [...new Set([...availableFacets.flatMap(entry => entry.costOptions), ...(cost ? [cost] : [])])].sort((a,b) => a-b);
   const fixedRecommendations = new Map((recommendations?.fixedBoardRecommendations ?? []).map(record => [record.teamId, record]));
   const decisions = new Map((recommendations?.entries ?? []).map(record => [`${record.sectionId}:${record.teamId}`, record]));
+  const homeOverrides = new Map(activeHomeRecommendationOverrides(recommendations, patch)
+    .map(record => [`${record.sectionId}:${record.teamId}`, record]));
   function canShowBoard(section: Section, team: Team) {
     if (!recommended && !showingTrends) return true;
-    const status = decisions.get(`${section.id}:${team.id}`)?.status;
-    return status !== "review" && status !== "avoid";
+    const key = `${section.id}:${team.id}`;
+    const status = decisions.get(key)?.status;
+    return status !== "review" && status !== "avoid" && homeOverrides.get(key)?.override !== "exclude";
   }
   const nextSelections = (target: View) => {
     if (target === "comp-trends") return emptyFilters;
@@ -554,79 +557,100 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
     label: name, id: name === backupCategory ? "backup-guides" : "guide-group-" + index,
   })) : [];
 
-  type HomeEntry = typeof visible[number] & { matches?: Candidate["matches"] };
+  type HomeEntry = typeof library.regular[number] & { matches?: Candidate["matches"] };
   type HomeSelection = {
-    entry: HomeEntry; team: Team; group: RecommendationGroup; familyId: string; rating: RecommendationStat;
+    entry: HomeEntry; team: Team; group: RecommendationGroup; familyId: string; rating: HomeRecommendationRating;
     strategy?: string; exact?: Candidate["matches"][number]; decision?: PatchRecommendation;
-    conditional: boolean; preferred: boolean; sampleLabel?: string; note?: string; upgradeTeam?: Team;
+    override?: PatchRecommendation["override"]; pinOrder?: number; upgradeTeam?: Team;
   };
-  function homeRoutes(batch: GuideFamilySnapshot | undefined, entries: HomeEntry[], includeFixed = false) {
-    const routes = batch ? entries.flatMap<HomeSelection>(entry => {
+
+  function homeRouteContext(entry: HomeEntry, team: Team) {
+    const { section, data } = entry;
+    const isHero = section.category === heroAugmentCategory;
+    const exact = entry.matches?.find(match => match.board.id === team.id);
+    const facet = guideFacets(section, team, data);
+    const strategy = guideStrategyLabel(section, team, data, entry.teams[0]);
+    const decision = decisions.get(`${section.id}:${team.id}`);
+    const inferredGroup = recommendationGroup(entry.playstyle ?? strategy ?? facet.style, facet.costs, guideRollLevel(section, team));
+    const group = isHero ? "heroAugment" : decision?.group ?? inferredGroup;
+    if (!group || (!isHero && group === "heroAugment")) return;
+    return { group, strategy: !isHero && inferredGroup && group !== inferredGroup ? undefined : strategy, exact, decision };
+  }
+
+  function homeRouteCandidates(batch: GuideFamilySnapshot | undefined, entries: HomeEntry[], useOwnerOverrides: boolean): HomeSelection[] {
+    return entries.flatMap(entry => {
       const { section, data } = entry;
       const isHero = section.category === heroAugmentCategory;
-      const families = batch === homeFamilyStats ? entry.rows : guideFamilyRows(batch, data.id, section.id, entry.teams);
-      return families.flatMap(({ stat, team: anchor, boards }) => {
-        if (isHero !== Boolean(stat.heroAugment)) return [];
-        const eligible = boards.filter(board => canShowBoard(section, board) && families.filter(row =>
-          row.boards.some(option => option.id === board.id)).length === 1 &&
-          (!entry.matches || (!needle && !cost) || entry.matches.some(match => match.board.id === board.id)));
-        const editorial = eligible.find(board => {
-          const status = decisions.get(`${section.id}:${board.id}`)?.status;
-          return status === "recommended" || status === "conditional";
-        });
-        const team = editorial ?? eligible[0];
+      const families = !batch ? [] : batch === homeFamilyStats ? entry.rows : guideFamilyRows(batch, data.id, section.id, entry.teams);
+      const allows = (board: Team) => canShowBoard(section, board) &&
+        (!entry.matches || entry.matches.some(match => match.board.id === board.id));
+      function ownerOverride(board: Team) {
+        if (!useOwnerOverrides) return;
+        const record = homeOverrides.get(`${section.id}:${board.id}`);
+        if (record?.override !== "pin" && record?.override !== "include") return;
+        // A native landing board can be a formation even if the share route calls it a phase.
+        if (guideBoardKind(section, board, entry.teams[0]) === "过渡" &&
+            !entry.rows.some(row => row.stat.landingTeamId === board.id)) return;
+        return record;
+      }
+
+      const routes = families.flatMap<HomeSelection>(({ stat, team: anchor, boards }) => {
+        if (isHero !== Boolean(stat.heroAugment) || !canShowBoard(section, anchor) ||
+            boards.some(board => board.id === stat.landingTeamId && !canShowBoard(section, board))) return [];
+        const eligible = boards.filter(board => allows(board) && families.filter(row =>
+          row.boards.some(option => option.id === board.id)).length === 1);
+        const team = eligible.filter(board => ownerOverride(board)?.override === "pin")
+          .sort((a, b) => (ownerOverride(a)?.pinOrder ?? 0) - (ownerOverride(b)?.pinOrder ?? 0))[0] ??
+          eligible.find(board => ownerOverride(board)?.override === "include") ??
+          eligible.find(board => {
+            const status = decisions.get(`${section.id}:${board.id}`)?.status;
+            return status === "recommended" || status === "conditional";
+          }) ?? eligible[0];
         if (!team) return [];
-        const exact = entry.matches?.find(match => match.board.id === team.id);
-        const facet = guideFacets(section, team, data);
-        const strategy = guideStrategyLabel(section, team, data, entry.teams[0]);
-        const decision = decisions.get(`${section.id}:${team.id}`);
-        const inferredGroup = recommendationGroup(entry.playstyle ?? strategy ?? facet.style, facet.costs, guideRollLevel(section, team));
-        const group = isHero ? "heroAugment" : decision?.group ?? inferredGroup;
-        if (!group || (!isHero && group === "heroAugment")) return [];
-        const conditional = decision?.status === "conditional";
+        const context = homeRouteContext(entry, team);
+        if (!context) return [];
+        const override = ownerOverride(team);
         const rating = { ...stat, teamId: team.id, carryId: stat.carryIds[0] };
-        const upgradeTeam = group === "fast8" && stat.landingTeamId === team.id && eligible.includes(anchor) &&
+        const upgradeTeam = context.group === "fast8" && stat.landingTeamId === team.id && eligible.includes(anchor) &&
           usedPopulation(anchor.pieces) > usedPopulation(team.pieces) ? anchor : undefined;
-        return [{ entry, team, group, rating, strategy: !isHero && inferredGroup && group !== inferredGroup ? undefined : strategy,
-          exact, decision, conditional, upgradeTeam,
-          preferred: decision?.status === "recommended" || conditional, familyId: String(stat.clusterId) }];
+        return [{ entry, team, rating, familyId: String(stat.clusterId), ...context,
+          override: override?.override, pinOrder: override?.pinOrder, upgradeTeam }];
       });
-    }) : [];
-    if (includeFixed && fixedRecommendations.size) {
-      routes.push(...entries.flatMap(entry => entry.teams.flatMap(team => {
-        const { section, data } = entry;
-        const decision = decisions.get(`${section.id}:${team.id}`);
-        const rating = fixedRecommendations.get(team.id);
-        if (!rating || section.category === heroAugmentCategory || entry.familyBoards.has(team.id) || !canShowBoard(section, team) ||
-          (needle || cost) && !entry.matches?.some(match => match.board.id === team.id)) return [];
-        const facet = guideFacets(section, team, data);
-        const strategy = guideStrategyLabel(section, team, data, entry.teams[0]);
-        const group = decision?.group ??
-          recommendationGroup(entry.playstyle ?? strategy ?? facet.style, facet.costs, guideRollLevel(section, team));
-        if (!group || group === "heroAugment") return [];
-        return [{ entry, team, group, rating, strategy, decision, conditional: true,
-          preferred: decision?.status === "recommended" || decision?.status === "conditional",
-          familyId: team.id, note: rating.note, sampleLabel: rating.label }];
-      })));
-    }
-    return selectRecommendationRoutes(routes, { displayOrder: batch === homeFamilyStats ? recommendations?.displayOrder : undefined });
+
+      if (useOwnerOverrides) for (const team of entry.teams) {
+        const override = ownerOverride(team);
+        if (!override || !allows(team) || routes.some(route => route.team.id === team.id)) continue;
+        const context = homeRouteContext(entry, team);
+        if (!context) continue;
+        const rating = { sectionId: section.id, teamId: team.id, name: boardTitle(section, team) };
+        routes.push({ entry, team, rating, familyId: team.id, ...context, override: override.override, pinOrder: override.pinOrder });
+      }
+      return routes;
+    });
   }
+
   const currentHomeEvidence = currentRecommendationEvidence(homeFamilyStats, season.id, patch, recommendations?.reviewedRollingPatch);
-  // Decide when to switch data for the whole home, independently of a visitor's filters.
-  const currentHomeRoutes = (recommended || showingTrends) && currentHomeEvidence ? homeRoutes(homeFamilyStats, homeEntries) : [];
-  const currentHomeReady = currentHomeRoutes.length > 0;
-  const recommendationSnapshot = currentHomeReady ? homeFamilyStats : previousDeadline !== undefined ? previousFamilyStats : undefined;
-  const homeSelections = !equipmentQuery && recommended
-    ? homeRoutes(recommendationSnapshot, needle || cost || style ? candidatesFor(homeEntries) : homeEntries, currentHomeReady)
+  // Choose the batch independently of a visitor's search or filters.
+  const currentHomeCandidates = recommended || showingTrends
+    ? homeRouteCandidates(currentHomeEvidence ? homeFamilyStats : undefined, homeEntries, true) : [];
+  const currentHomeRoutes = selectRecommendationRoutes(currentHomeCandidates);
+  const currentHomeReady = currentHomeEvidence || currentHomeRoutes.length > 0;
+  const recommendationSnapshot = currentHomeReady ? (currentHomeEvidence ? homeFamilyStats : undefined)
+    : previousDeadline !== undefined ? previousFamilyStats : undefined;
+  const filteredHome = Boolean(needle || cost || style);
+  const homeCandidates = !equipmentQuery && recommended
+    ? currentHomeReady && !filteredHome ? currentHomeCandidates
+      : homeRouteCandidates(recommendationSnapshot, filteredHome ? candidatesFor(homeEntries) : homeEntries, currentHomeReady)
     : [];
-  const recommendationCards: RecommendationCard[] = homeSelections.map(({ entry, exact, team, group, rating, strategy, decision, note, sampleLabel, upgradeTeam }) => {
+  const homeSelections = homeCandidates === currentHomeCandidates ? currentHomeRoutes : selectRecommendationRoutes(homeCandidates);
+  const recommendationCards: RecommendationCard[] = homeSelections.map(({ entry, exact, team, group, rating, strategy, decision, upgradeTeam, familyId }) => {
     const { section, data } = entry;
     const notes = readingNotes(section, team, data);
     const primary = entry.teams[0]?.id === team.id;
     const [original, short] = shortOpenings[guideTitleWithoutPlaystyle(section.title, entry.playstyle)] ?? [];
     const advice = decision?.status === "recommended" || decision?.status === "conditional" ? decision.note : undefined;
     const authoredOpening = displayOpening(notes.opening);
-    const opening = note ?? advice ?? (primary && authoredOpening.trim() === original ? short : homeOpening(authoredOpening, rating.name));
+    const opening = advice ?? (primary && authoredOpening.trim() === original ? short : homeOpening(authoredOpening, rating.name));
     const roles = notes.roles;
     const roster = guideRoster(team, data, roles);
     const lineup: RecommendationCard["avatars"] = roster.map(({ unit, role }) => ({
@@ -663,31 +687,29 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
     for (const phase of route) {
       const board = phase.team;
       if (!board || board.id === team.id || usedPopulation(board.pieces) >= population || stages.has(board.id)) continue;
-      if (decisions.get(`${section.id}:${board.id}`)?.status === "avoid") continue;
+      if (!canShowBoard(section, board)) continue;
       if ((needle || cost) && !entry.matches?.some(match => match.board.id === board.id)) continue;
       stages.set(board.id, { team: board, label: phase.label });
     }
     const upgradeChoice = upgradeTeam && guide?.choices?.find(choice => choice.team?.id === upgradeTeam.id);
     if (upgradeChoice?.team) stages.set(upgradeChoice.team.id, { team: upgradeChoice.team, label: upgradeChoice.label });
-    if (oceanGraves) {
-      for (const row of entry.rows) {
-        if (recommendationTier(row.stat) !== "recommended") continue;
-        const alt = row.boards.find(board => board.id !== team.id && !stages.has(board.id) &&
-          decisions.get(`${section.id}:${board.id}`)?.status !== "avoid" &&
-          !row.boards.some(board => board.id === team.id));
-        if (!alt) continue;
-        const altRoles = readingNotes(section, alt, data).roles;
-        const altSecId = altRoles.find(role => role.label === "副C")?.units[0];
-        const altSecName = altSecId ? data.units.find(unit => unit.id === altSecId)?.name : undefined;
-        const shortName = guideBoardName(alt).replace(/^[一二三四五六七八九十\d]+(?:级|人口)\s*·\s*/, "");
-        const label = altSecName && !shortName.includes(altSecName) ? `${shortName} · ${altSecName}` : shortName;
-        stages.set(alt.id, { team: alt, label });
-      }
+    for (const alternative of homeCandidates) {
+      const board = alternative.team;
+      if (alternative.entry.section.id !== section.id || alternative.group !== group ||
+          alternative.familyId === familyId || board.id === team.id || stages.has(board.id) ||
+          !homeRecommendationEligible(alternative.rating)) continue;
+      const secondaryId = readingNotes(section, board, data).roles.find(role => role.label === "副C")?.units[0];
+      const secondaryName = secondaryId && data.units.find(unit => unit.id === secondaryId)?.name;
+      const name = guideBoardName(board).replace(/^[一二三四五六七八九十\d]+(?:级|人口)\s*·\s*/, "");
+      const label = secondaryName && !name.includes(secondaryName) ? `${name} · ${secondaryName}` : name;
+      stages.set(board.id, { team: board, label });
     }
     const conditions = guideEquipmentConditions(section, entry.teams, data, patch?.build, team)?.rows
       .filter(condition => team.conditions || condition.featured || condition.kind === "required");
     return {
-      group, rating, team, title: guideTitleWithoutPlaystyle(displayGuideName(rating.name), entry.playstyle), avatars, opening: displayOpening(opening), sampleLabel,
+      group, rating, team, title: guideTitleWithoutPlaystyle(displayGuideName(rating.name), entry.playstyle), avatars, opening: displayOpening(opening),
+      manualBadge: decision?.manualBadge,
+      manualReason: !hasHomeRecommendationSample(rating) && decision ? displayTraitNames(decision.note) : undefined,
       timing: decision?.timing && displayTraitNames(decision.timing),
       upgrade: decision?.upgrade && displayTraitNames(decision.upgrade),
       entryTeamId: !oceanGraves && (!needle || exact?.namedFamily) ? rerollEntryTeamId(section, team.id) : undefined,
@@ -1133,7 +1155,7 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
     {searching && <p className="site-lookup-message" role="status">正在搜索…</p>}
 
     {recommended && <>
-      <PatchRecommendationList stats={recommendationSnapshot ?? homeFamilyStats} cards={recommendationCards} home={home}
+      <PatchRecommendationList stats={recommendationSnapshot} cards={recommendationCards} home={home}
         previousBuild={!!recommendationSnapshot && !currentHomeReady} />
       {!displayedCount && !crossTab.length && needle && showLookup && !equipmentQuery && <div className="empty-inline">{archiveLink}</div>}
       {!displayedCount && !crossTab.length && !showLookup && !searching && (needle || hasFilter ? emptyState : <div className="empty-inline"><p>{currentHomeEvidence ? "暂无符合条件的本版推荐" : "本版体系数据待更新"}</p>

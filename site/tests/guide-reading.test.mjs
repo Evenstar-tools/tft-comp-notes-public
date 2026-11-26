@@ -5,7 +5,7 @@ import { primaryFirst, matchGuideTeams, sourceSummary, complementItems, guideFac
 import { displayGuideName, displayTraitNames } from "../domain/trait-names.mjs";
 import { comboStarMask, comboTierCounts } from "../domain/combo-tiers.ts";
 import { guideStyleKey, guideWearerQuery, homeGuideFilter, matchOpeningSearch, openingSearch, searchPhaseNote } from "../domain/guide-search.ts";
-import { canRankRecommendations, compareGuideFamilyPerformance, currentFamilyBatch, currentRecommendationEvidence, previousRecommendationDeadline, familyMetricValue, formatRecommendationMean, guideFamilyRows, recommendationGroup, recommendationTier, selectRecommendationRoutes } from "../domain/guide-family-stats.ts";
+import { canRankRecommendations, compareGuideFamilyPerformance, currentFamilyBatch, currentRecommendationEvidence, previousRecommendationDeadline, familyMetricValue, formatRecommendationMean, guideFamilyRows, hasHomeRecommendationSample, recommendationGroup, recommendationTier, selectRecommendationRoutes } from "../domain/guide-family-stats.ts";
 import { posterShareLink, readPosterShare, validItemLibraryReturn } from "../domain/links.ts";
 import { compactGuideParagraph, compactUtilityCopy, rememberGuideCopy } from "../domain/guide-copy.ts";
 import { heroGuideIndex } from "../domain/hero-guides.ts";
@@ -417,48 +417,65 @@ test("archive filters migrate old links without assigning today's tier from a Fe
   assert.equal(parseGuideFilters({category:"自定义旧目录"}).category, undefined);
 });
 
-test("home recommendations keep five reroll, eight fast-eight, two fast-nine and two augment routes", () => {
-  const route = (group, index, overrides = {}) => ({
-    group, familyId: group + index,
-    rating: { teamId: group + index, mean: 4 + index / 100, games: 500, carryId: "ahri", topFourRate: .613, winRate: .17, ...overrides },
-  });
-  const reroll = Array.from({ length: 5 }, (_, i) => route("reroll", i));
-  const fast8 = Array.from({ length: 7 }, (_, i) => route("fast8", i));
-  const fast9 = Array.from({ length: 2 }, (_, i) => route("fast9", i));
-  const hero = Array.from({ length: 3 }, (_, i) => route("heroAugment", i));
-  const authored = { ...route("fast8", 7), conditional: true, decision: { timing: "有法装再进", upgrade: "八级找双两星" } };
-  const fixed = { ...route("fast8", 8), sampleLabel: "固定终盘", preferred: true };
-  const other = [
-    { ...route("fast8", 9), familyId: fast8[0].familyId },
-    route("fast9", 3, { games: 99 }),
-    route("fast8", 10, { mean: 4.51 }),
-    route("fast8", 11, { mean: 4.1 }),
-  ];
-  const entries = [...reroll, ...fast8, authored, fixed, ...fast9, ...hero, ...other];
-  const displayOrder = [authored.rating.teamId, ...[...reroll, ...fast8, ...fast9].map(r => r.rating.teamId)];
-  const selected = selectRecommendationRoutes(entries, { displayOrder });
-  assert.deepEqual(selected, [...reroll, authored, ...fast8, ...fast9, ...hero.slice(0, 2)]);
-  assert.deepEqual(selected[5].decision, { timing: "有法装再进", upgrade: "八级找双两星" });
-  assert.equal(selected[5].rating.topFourRate, .613);
-  assert.equal(selected[5].rating.winRate, .17);
-  assert.ok(selectRecommendationRoutes(entries, { displayOrder: displayOrder.slice(0, -1) }).includes(fixed));
+function homeRoute(group, id, mean, games = 500, sectionId = id) {
+  const rating = { sectionId, teamId: id, name: id };
+  if (mean !== undefined) Object.assign(rating, { mean, games, url: "https://example.com/sample" });
+  return { group, familyId: id, rating };
+}
 
-  // Multiple parallel variants under one guide collapse to one card driven by the strongest current mean.
-  const ocean = { group: "fast8", familyId: "429028", rating: { sectionId: "sample-block-0251", teamId: "ocean", mean: 4.23, games: 15000 } };
-  const juggernaut = { group: "fast8", familyId: "429016", rating: { sectionId: "sample-block-0251", teamId: "jugg", mean: 4.38, games: 3600 } };
-  const otherGuide = { group: "fast8", familyId: "429024", rating: { sectionId: "sample-block-0219", teamId: "kayle", mean: 4.41, games: 16000 } };
-  assert.deepEqual(
-    selectRecommendationRoutes([ocean, juggernaut, otherGuide], { displayOrder: ["ocean", "kayle"] }).map(r => r.rating.teamId),
-    ["ocean", "kayle"],
-  );
-  // If 4-Juggernaut overtakes Beach Pop in a later patch, it wins the single Graves-Zac slot automatically.
-  const strongerJugg = { ...juggernaut, rating: { ...juggernaut.rating, mean: 4.05 } };
-  assert.deepEqual(
-    selectRecommendationRoutes([ocean, strongerJugg, otherGuide], { displayOrder: ["ocean", "kayle"] }).map(r => r.rating.teamId),
-    ["jugg", "kayle"],
-  );
-  assert.deepEqual(selectRecommendationRoutes([fast8[0], ...other.slice(0, 3)]), [fast8[0]]);
-  assert.deepEqual(selectRecommendationRoutes(hero, { maxHeroAugment: 1 }), [hero[0]]);
+test("home uses the exact 4.40 cutoff, leaving the archive tier at 4.50 and accepting a short list", () => {
+  const borderline = homeRoute("fast8", "borderline", 4.40, 100);
+  const roundDown = homeRoute("fast8", "rounding", 4.4008);
+  const shortSample = homeRoute("fast8", "short", 4.05, 99);
+  const weak = homeRoute("reroll", "weak", 4.42);
+  const best = homeRoute("reroll", "best", 3.91);
+  assert.deepEqual(selectRecommendationRoutes([borderline, roundDown, shortSample, weak, best]), [best, borderline]);
+  assert.equal(recommendationTier(roundDown.rating), "recommended");
+  assert.equal(recommendationTier(weak.rating), "recommended");
+});
+
+test("home selection budgets twelve regular cards, at most eight per group, and two independent augment cards", () => {
+  const reroll = [homeRoute("reroll", "reroll-b", 4.21), homeRoute("reroll", "reroll-a", 4.20)];
+  const fastEight = Array.from({ length: 12 }, (_, i) => homeRoute("fast8", "eight-" + i, 3.90 + i / 100));
+  const fastNine = [homeRoute("fast9", "nine-a", 4.22), homeRoute("fast9", "nine-b", 4.24)];
+  const augments = Array.from({ length: 3 }, (_, i) => homeRoute("heroAugment", "augment-" + i, 3.80 + i / 100));
+  const rows = [...reroll, ...fastEight, ...augments, ...fastNine].reverse();
+  assert.deepEqual(selectRecommendationRoutes(rows), [reroll[1], reroll[0], ...fastEight.slice(0, 8), ...fastNine, ...augments.slice(0, 2)]);
+  const manual = { ...homeRoute("reroll", "manual"), override: "include" };
+  assert.deepEqual(selectRecommendationRoutes([manual, ...rows]),
+    [reroll[1], reroll[0], manual, ...fastEight.slice(0, 8), fastNine[0], ...augments.slice(0, 2)]);
+});
+
+test("home chooses the strongest branch for one guide slot and breaks ties by games then cluster ID", () => {
+  const guides = "sample-block-0251";
+  const ocean = homeRoute("fast8", "429028", 4.23, 15000, guides);
+  const juggernaut = homeRoute("fast8", "429016", 4.38, 3600, guides);
+  const other = homeRoute("fast8", "429002", 4.23, 15000);
+  assert.deepEqual(selectRecommendationRoutes([ocean, juggernaut, other]), [other, ocean]);
+
+  const stronger = { ...juggernaut, rating: { ...juggernaut.rating, mean: 4.05 } };
+  assert.deepEqual(selectRecommendationRoutes([ocean, stronger, other]), [stronger, other]);
+  const moreGames = { ...juggernaut, rating: { ...juggernaut.rating, mean: 4.23, games: 15001 } };
+  assert.deepEqual(selectRecommendationRoutes([ocean, other, moreGames]), [moreGames, other]);
+
+  const sharedBoard = { ...other, rating: { ...other.rating, sectionId: "other", teamId: "429028", mean: 4.44 }, override: "include" };
+  assert.deepEqual(selectRecommendationRoutes([ocean, sharedBoard]), [ocean]);
+});
+
+test("owner exceptions pin a branch, reject excluded boards, and display manual cards after scored cards", () => {
+  const auto = homeRoute("fast8", "automatic", 3.85);
+  const excluded = { ...homeRoute("fast8", "excluded", 3.70), override: "exclude" };
+  const alternatePin = { ...homeRoute("fast8", "pinned-branch", 4.42, 340, "automatic"), override: "pin", pinOrder: 2 };
+  const manualPin = { ...homeRoute("fast8", "manual-pin"), override: "pin", pinOrder: 1 };
+  const included = { ...homeRoute("fast8", "manual-include"), override: "include" };
+  const manualSameSection = { ...homeRoute("fast8", "manual-same", undefined, undefined, "automatic"), override: "include" };
+  const small = { ...homeRoute("fast8", "small-sample", 4.12, 99), override: "include" };
+  const independentlyScored = homeRoute("fast8", "scored", 3.90);
+  assert.deepEqual(selectRecommendationRoutes([manualSameSection, excluded, auto]), [auto]);
+  assert.deepEqual(selectRecommendationRoutes([included, excluded, auto, small, independentlyScored, alternatePin, manualPin]),
+    [manualPin, alternatePin, independentlyScored, included, small]);
+  assert.equal(hasHomeRecommendationSample(small.rating), false);
+  assert.equal(hasHomeRecommendationSample(alternatePin.rating), true);
 });
 
 test("the authoring-only introduction stays off the home index, and an introduction with reader content stays visible", () => {
