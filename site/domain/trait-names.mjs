@@ -58,6 +58,7 @@ const guideTitleTraits = [
 
 /** Use for S19 lineup names and titles, not equipment names or player prose. @param {string} title */
 export function displayGuideName(title) {
+  if (title === "爵士摇滚阿萝拉阿利斯塔") return title;
   return guideTitleTraits.reduce((name, [former, current]) => name.replace(former, current), displayTraitNames(title));
 }
 

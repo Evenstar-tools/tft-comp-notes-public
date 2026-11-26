@@ -194,6 +194,11 @@ export const oceanGravesUnlockBoardId = "00000000-0000-4000-8000-000000000062";
 
 export function guideRoute(section: Section, teams: Team[], current: Team): { phases: RouteStep[]; choices?: RouteStep[]; opening?: string } | undefined {
   const oceanGraves = section.id === oceanGravesGuideId;
+  if (section.id === "sample-block-1090") {
+    const steps = primaryFirst(teams, section.primaryTeamId)
+      .map(team => ({ label: guideBoardName(team), text: "", team }));
+    return { phases: steps.slice(0, 1), choices: steps.slice(1) };
+  }
   if (section.id === "sample-block-1060") {
     const phases = [...teams].sort((a, b) => usedPopulation(a.pieces) - usedPopulation(b.pieces))
       .map(team => ({ label: guideBoardName(team), text: "", team }));

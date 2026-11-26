@@ -1670,5 +1670,61 @@
       "TFT_Item_FrozenHeart"
     ],
     "tankItems": []
+  },
+  {
+    "sectionId": "sample-block-1090",
+    "teamId": "00000000-0000-4000-8000-000000001241",
+    "board": "八级成型",
+    "carryId": "aurora",
+    "tankId": "alistar",
+    "anchorIds": [
+      "alistar",
+      "bard",
+      "galio",
+      "locke",
+      "mel",
+      "pyke",
+      "swain"
+    ],
+    "anchorStars": {
+      "alistar": 2
+    },
+    "traits": {},
+    "carryItems": [
+      "TFT_Item_SpearOfShojin",
+      "TFT_Item_StatikkShiv",
+      "TFT_Item_RabadonsDeathcap"
+    ],
+    "tankItems": [
+      "TFT_Item_GargoyleStoneplate",
+      "TFT_Item_WarmogsArmor",
+      "TFT_Item_Redemption"
+    ]
+  },
+  {
+    "sectionId": "sample-block-1090",
+    "teamId": "00000000-0000-4000-8000-000000001241",
+    "board": "八级成型",
+    "carryId": "alistar",
+    "tankId": "aurora",
+    "anchorIds": [
+      "aurora",
+      "bard",
+      "galio",
+      "locke",
+      "mel",
+      "pyke",
+      "swain"
+    ],
+    "anchorStars": {
+      "aurora": 2
+    },
+    "traits": {},
+    "carryItems": [
+      "TFT_Item_GargoyleStoneplate",
+      "TFT_Item_WarmogsArmor",
+      "TFT_Item_Redemption"
+    ],
+    "tankItems": []
   }
 ]
