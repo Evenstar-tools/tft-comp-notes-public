@@ -12,7 +12,7 @@ const resolver = registerHooks({
     }
   },
 });
-const { getPublishedPatchRecommendations, readablePatchIntroduction, sectionsAfterPartialPublish } =
+const { activeHomeRecommendationOverrides, applyHomeRecommendationOverrides, getPublishedPatchRecommendations, readablePatchIntroduction, sectionsAfterPartialPublish } =
   await import("../domain/patch-recommendations.ts");
 resolver.deregister();
 
@@ -64,6 +64,21 @@ test("Feishu notes opt in explicitly, keep order, resolve rich links, and can cl
   assert.deepEqual(readablePatchIntroduction(draft, result.batch.summary).blocks[0].children.map(block => block.text),
     ["环境观察", "先看物理装。", "先看过渡质量。", "别空城等格温。"]);
   assert.equal(draft.blocks[0].children.length, 8);
+});
+
+test("homepage owner actions expire at the build boundary and carry configured recommendations into the public feed", () => {
+  const published = parse([intro(header, entry()), guide()]).batch;
+  const override = { sectionId: guideId, teamId: board, status: "recommended", override: "pin",
+    pinOrder: 2, manualBadge: "站主推荐", note: "开局有羊刀再进。" };
+  const configured = { ...published, entries: [override] };
+  assert.deepEqual(activeHomeRecommendationOverrides(configured, { seasonId: edition, build }), [override]);
+  assert.deepEqual(activeHomeRecommendationOverrides(configured, { seasonId: edition, build: "next" }), []);
+  assert.deepEqual(activeHomeRecommendationOverrides(configured, { seasonId: "s19-live", build }), []);
+  const [merged] = applyHomeRecommendationOverrides(published, configured);
+  assert.equal(merged.override, "pin");
+  assert.equal(merged.pinOrder, 2);
+  assert.equal(merged.note, override.note);
+  assert.deepEqual(applyHomeRecommendationOverrides({ ...published, build: "next" }, configured), published.entries);
 });
 
 test("the new secondary label and previously published label select the same category", () => {

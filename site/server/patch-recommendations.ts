@@ -3,7 +3,7 @@ import initialRecommendations from "@/data/patch-recommendations.json";
 import type { Publication } from "@/domain/document";
 import { recommendationTier } from "@/domain/guide-family-stats";
 import { sectionTeams } from "@/domain/document-flow";
-import { getPublishedPatchRecommendations, type PatchRecommendationBatch } from "@/domain/patch-recommendations";
+import { applyHomeRecommendationOverrides, getPublishedPatchRecommendations, type PatchRecommendationBatch } from "@/domain/patch-recommendations";
 import { sameEdition } from "@/domain/version-updates";
 
 export function currentPatchRecommendations(publication: Publication | null): PatchRecommendationBatch | undefined {
@@ -17,12 +17,13 @@ export function currentPatchRecommendations(publication: Publication | null): Pa
   const batch = published.declared ? published.batch : defaults;
   if (!batch) return;
   const boardsByGuide = new Map(publication.sections.map(guide => [guide.id, new Set(sectionTeams(guide).map(team => team.id))]));
-  const entries = batch.entries.filter(record => boardsByGuide.get(record.sectionId)?.has(record.teamId));
+  const configured = batch === defaults ? batch.entries : applyHomeRecommendationOverrides(batch, defaults);
+  const entries = configured.filter(record => boardsByGuide.get(record.sectionId)?.has(record.teamId));
   const fixedBoardRecommendations = defaults?.fixedBoardRecommendations?.filter(record =>
     boardsByGuide.get(record.sectionId)?.has(record.teamId) &&
     Date.parse(record.checkedAt) >= patchStart && recommendationTier(record) === "recommended" &&
     !entries.some(entry => entry.sectionId === record.sectionId && entry.teamId === record.teamId &&
       (entry.status === "avoid" || entry.status === "review")));
-  return { ...batch, displayOrder: defaults?.displayOrder, fixedBoardRecommendations, entries,
-    ...(entries.length !== batch.entries.length && { summary: undefined }) };
+  return { ...batch, fixedBoardRecommendations, entries,
+    ...(entries.length !== configured.length && { summary: undefined }) };
 }

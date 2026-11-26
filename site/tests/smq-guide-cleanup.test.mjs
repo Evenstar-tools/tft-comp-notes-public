@@ -7,7 +7,7 @@ import { legacyGuideDestination } from "../domain/legacy-guide-redirects.ts";
 import { rerollEntryTeamId } from "../domain/reroll-stages.ts";
 import { traitCounts, traitGroup, usedPopulation } from "../domain/team.ts";
 import { findPlacement } from "../domain/guide-placement.ts";
-import { guideFamilyBoardIds, guideFamilyRows, recommendationTier } from "../domain/guide-family-stats.ts";
+import { guideFamilyBoardIds, guideFamilyRows, homeRecommendationEligible, recommendationTier } from "../domain/guide-family-stats.ts";
 import { migrateS19GuideSnapshot } from "../server/s19-guide-cleanup.ts";
 
 const json = path => JSON.parse(readFileSync(new URL(path, import.meta.url), "utf8"));
@@ -194,7 +194,7 @@ test("native fast-nine ratings drive recommendations while filtered samples rema
     assert.equal(pick.status, status);
     assert.equal(pick.group, "fast9");
     assert.deepEqual(pick.sources, [family.stat.url]);
-    assert.equal(picks.displayOrder.includes(team.id), tier === "recommended");
+    assert.equal(homeRecommendationEligible(family.stat), tier === "recommended");
     const carries = readingNotes(section, team, preview.season).roles.find(role => role.label === "主C").units;
     assert.deepEqual(family.stat.carryIds, carries);
     if (suffix === "0214") continue;
@@ -224,7 +224,7 @@ test("Jazz Jinx shares one native rating from the fast-eight landing to the nine
   assert.equal(usedPopulation(landing.pieces), 8);
   assert.ok(landing.pieces.every(piece => piece.unitId !== "smeech"));
   assert.equal(pick.teamId, landing.id);
-  assert.ok(picks.displayOrder.includes(landing.id));
+  assert.ok(homeRecommendationEligible(family.stat));
   assert.deepEqual(pick.sources, [family.stat.url]);
 
   const small = { ...batch, rows: [], smallSamples: [{ ...family.stat, games: 99 }] };

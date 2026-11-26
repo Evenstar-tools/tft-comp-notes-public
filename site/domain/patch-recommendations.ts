@@ -1,7 +1,7 @@
 import type { ContentBlock, Section } from "./document";
 import { readableSection, sectionTeams } from "./document-flow";
 import { isEditorialSection } from "./guide-reading";
-import type { RecommendationGroup } from "./guide-family-stats";
+import type { OwnerRecommendationOverride, RecommendationGroup } from "./guide-family-stats";
 import { isVersionUpdate, sameEdition } from "./version-updates";
 
 export type PatchRecommendation = {
@@ -10,6 +10,9 @@ export type PatchRecommendation = {
   status: "recommended" | "conditional" | "avoid" | "review";
   note: string;
   group?: RecommendationGroup;
+  override?: OwnerRecommendationOverride;
+  pinOrder?: number;
+  manualBadge?: string;
   timing?: string;
   upgrade?: string;
   sources?: string[];
@@ -37,10 +40,31 @@ export type PatchRecommendationBatch = {
   reviewedRollingPatch?: string;
   window?: { start: string; end: string };
   summary?: string;
+  /** @deprecated Homepage ordering is derived from the current system statistics. */
   displayOrder?: string[];
   fixedBoardRecommendations?: FixedBoardRecommendation[];
   entries: PatchRecommendation[];
 };
+
+export function activeHomeRecommendationOverrides(batch?: PatchRecommendationBatch, patch?: { seasonId: string; build: string }) {
+  if (!batch || !patch || batch.seasonId !== patch.seasonId || batch.build !== patch.build) return [];
+  return batch.entries.filter(entry => entry.override);
+}
+
+export function applyHomeRecommendationOverrides(batch: PatchRecommendationBatch, defaults?: PatchRecommendationBatch) {
+  const key = (entry: PatchRecommendation) => `${entry.sectionId}:${entry.teamId}`;
+  const entries = new Map(batch.entries.map(entry => [key(entry), entry]));
+  for (const override of activeHomeRecommendationOverrides(defaults, batch)) {
+    const id = key(override);
+    const current = entries.get(id);
+    entries.set(id, current ? {
+      ...current, group: override.group ?? current.group,
+      override: override.override, pinOrder: override.pinOrder, manualBadge: override.manualBadge,
+      note: override.note, sources: override.sources ?? current.sources,
+    } : override);
+  }
+  return [...entries.values()];
+}
 
 export type PatchRecommendationRead = { declared: boolean; batch?: PatchRecommendationBatch; issues: string[] };
 
