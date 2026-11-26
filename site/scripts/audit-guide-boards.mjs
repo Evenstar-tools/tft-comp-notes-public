@@ -131,20 +131,28 @@ function linksCurrentFixedSample(block) {
   });
 }
 
+const videoDomain = /(?<![\w.-])(?:[\w-]+\.)*(?:bilibili\.com|b23\.tv|youtube\.com|youtu\.be|douyin\.com)(?![\w-]|\.[\w-])/i;
+
 export function auditGuideCopy(section) {
-  const passages = [...allBlocks(section.blocks).map(block => ({ blockId: block.id, text: block.text, linkedSample: linksCurrentFixedSample(block) })),
+  const passages = [...allBlocks(section.blocks).map(block => ({
+    blockId: block.id,
+    text: block.text,
+    linkedSample: linksCurrentFixedSample(block),
+    richText: block.elements?.flatMap(({ text_run, mention_doc }) => [
+      text_run?.content, text_run?.text_element_style?.link?.url, mention_doc?.url,
+    ]),
+  })),
     ...sectionTeams(section).map(team => ({ teamId: team.id, text: team.notes })),
     ...(section.reroll?.stages ?? []).map(stage => ({ teamId: stage.teamId, text: stage.notes })),
     ...Object.entries(section.reroll?.advice ?? {}).map(([teamId, text]) => ({ teamId, text }))];
   const oldUnlock = /薇恩[^。！？\n]{0,24}(?:打满|打|挂满|战斗|上场)[^。！？\n]{0,12}[三3]\s*回合|(?:打满|打|挂满|战斗|上场)[^。！？\n]{0,12}[三3]\s*回合[^。！？\n]{0,24}(?:开|解锁)[^。！？\n]{0,4}薇恩/;
   const oldStats = /(?:\bPBE\s*)?\b19\.1[a-z]?\b[^。！？\n]{0,40}\d[\d,，]*\s*场|棋盘均名\s*·/i;
-  return passages.flatMap(({ text, linkedSample, ...source }) => {
-    if (!text) return [];
-    return [
-      ...(oldUnlock.test(text) ? [{ rule: "obsolete-unlock", severity: "error", message: "正文仍有薇恩旧版三回合解锁说明", ...source }] : []),
-      ...(!linkedSample && oldStats.test(text) ? [{ rule: "obsolete-stats", severity: "error", message: "正文仍有写死的旧战绩", ...source }] : []),
-    ];
-  });
+  return passages.flatMap(({ text = "", linkedSample, richText = [], ...source }) => [
+    ...(oldUnlock.test(text) ? [{ rule: "obsolete-unlock", severity: "error", message: "正文仍有薇恩旧版三回合解锁说明", ...source }] : []),
+    ...(!linkedSample && oldStats.test(text) ? [{ rule: "obsolete-stats", severity: "error", message: "正文仍有写死的旧战绩", ...source }] : []),
+    ...([text, ...richText].some(value => value && videoDomain.test(value))
+      ? [{ rule: "video-link", severity: "error", message: "正文仍有视频平台外链", ...source }] : []),
+  ]);
 }
 
 export function auditGuidePublication(publication, recommendations, { sectionIds = featuredGuideIds, overrides = [], current = season } = {}) {

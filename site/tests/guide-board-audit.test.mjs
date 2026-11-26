@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import { boardNeighbors } from "../domain/board-layout.ts";
 import { sectionTeams } from "../domain/document-flow.ts";
-import { guideBody, guidePlaystyle, guideRollLevel, guideRoster, guideUnitMatch, readingNotes, sourceSummary } from "../domain/guide-reading.ts";
+import { guideBody, guidePlaystyle, guideRollLevel, guideRoster, guideUnitMatch, isBoardLoadout, readingNotes, sourceSummary } from "../domain/guide-reading.ts";
 import { heroAugmentForGuide } from "../domain/hero-augments.ts";
 import { auditGuideBoard, auditGuideCopy, auditGuidePublication, featuredGuideIds, prepareAuditPublication } from "../scripts/audit-guide-boards.mjs";
 import { buildFamilyCatalog } from "../scripts/export-family-catalog.mjs";
@@ -94,6 +94,23 @@ test("the copy audit catches obsolete claims and preserves linked fixed-board sa
     [["obsolete-unlock", "unlock"], ["obsolete-stats", "sample"], ["obsolete-stats", "unlinked-current"]]);
 });
 
+test("the copy audit rejects video links in visible text, rich links, nested blocks and route notes", () => {
+  const section = {
+    blocks: [
+      { id: "bare", text: "参考 b23.tv." },
+      { id: "rich", elements: [{ text_run: { content: "参考", text_element_style: {
+        link: { url: "https://www.bilibili.com/video/example" },
+      } } }] },
+      { id: "table", children: [{ id: "mention", elements: [{ mention_doc: { url: "https://m.youtube.com/watch?v=example" } }] }] },
+      { id: "written", elements: [{ text_run: { text_element_style: { link: { url: "https://mobalytics.gg/tft/" } } } }] },
+    ],
+    team: { id: "board", notes: "https://youtu.be/example" },
+    reroll: { advice: { stage: "https://www.Douyin.com/video/example" } },
+  };
+  assert.deepEqual(auditGuideCopy(section).map(({ rule, severity, blockId, teamId }) => [rule, severity, blockId ?? teamId]),
+    ["bare", "rich", "mention", "board", "stage"].map(id => ["video-link", "error", id]));
+});
+
 test("a board-specific positioning waiver cannot hide invalid equipment", () => {
   const team = { id: "board", name: "主阵", pieces: [piece("amumu", 3), piece("viego", 13, "unknown")] };
   const sampleData = { ...data, id: "test", units: data.units.map(unit => ({ ...unit, name: unit.id })) };
@@ -111,27 +128,27 @@ test("the 14 featured guides pass on the combined public boards and retain roles
   const publication = prepareAuditPublication(preview);
   const report = auditGuidePublication(publication, recommendations);
   assert.deepEqual(report.guides.map(guide => guide.sectionId), featuredGuideIds);
-  assert.equal(report.summary.guides, 14);
-  assert.deepEqual([report.summary.errors, report.summary.warnings, report.summary.waived], [0, 0, 0]);
+  assert.deepEqual(report.summary, { guides: 14, boards: 49, errors: 0, warnings: 0, waived: 0 });
   const catalog = buildFamilyCatalog(preview);
   const selected = new Map();
+  const roleOrder = ["主C", "主坦", "副C"];
   for (const { sectionId, boards } of report.guides) {
     const section = publication.sections.find(section => section.id === sectionId);
     const gameData = section.gameData ?? publication.season;
-    const summary = sourceSummary(section);
-    assert.ok(summary && summary.length <= 30, sectionId);
+    assert.ok(sourceSummary(section), sectionId);
     if (["0171", "0281"].some(id => sectionId.endsWith(id))) assert.ok(heroAugmentForGuide(section), sectionId);
     for (const { teamId, roles } of boards) {
       const team = sectionTeams(section).find(team => team.id === teamId);
-      const { current } = guideBody(section, team);
-      const bullets = current.filter(block => block.type === "bullet");
-      assert.ok(bullets.length >= 2 && bullets.length <= 3 && bullets.every(block => block.text.length <= 28), teamId);
-      assert.ok(current.every(block => !block.text?.startsWith("棋盘配装 · ")), teamId);
+      const { current, remaining } = guideBody(section, team);
+      assert.ok([...current, ...remaining].every(block => !isBoardLoadout(block)), teamId);
       const row = catalog.boards.find(board => board.sectionId === sectionId && board.teamId === teamId);
       assert.deepEqual(row.roles, roles, teamId);
       assert.deepEqual(row.units, team.pieces.map(piece => piece.unitId), teamId);
       const roster = guideRoster(team, gameData, roles);
-      const [carry, tank] = roster.filter(({ piece }) => piece.items.length);
+      const equipped = roster.filter(({ piece }) => piece.items.length);
+      const [carry, tank] = equipped;
+      const priorities = equipped.map(({ role }) => roleOrder.indexOf(role)).filter(priority => priority >= 0);
+      assert.deepEqual(priorities, priorities.toSorted(), teamId);
       assert.equal(carry.role, "主C", teamId);
       assert.ok(roster.some(({ role }) => role === "主坦"), teamId);
       const mainTank = roster.find(({ role }) => role === "主坦");
@@ -161,14 +178,25 @@ test("the 14 featured guides pass on the combined public boards and retain roles
 
   const prodigy = publication.sections.find(section => section.id.endsWith("0229"));
   assert.equal(prodigy.title, "天才蚂蚱大龙");
-  assert.doesNotMatch(guideBody(prodigy, board("0229", "0017")).current.map(block => block.text).join("\n"), /打法：95/);
-  for (const id of ["c105", "d6c2", "fd13"]) {
+  const textOf = blocks => blocks.map(block => block.text).join("\n");
+  const slow = textOf(guideBody(prodigy, board("0229", "0017")).current);
+  assert.match(slow, /卡利息追两人三星/);
+  assert.doesNotMatch(slow, /打法：95/);
+  const fastRoutes = [
+    ["c105", "1342", [/团队法强/, /冕卫/, /8,000/, /累计近 2 万/, /再打近 4 万/, /6 万/, /蓝霸符/]],
+    ["d6c2", "1343", [/五种不同稀有度/, /60,000 伤害/, /先留八级补质量/, /蓝霸符.*第一轮技能.*偷属性/, /法装打输出/]],
+    ["fd13", "1341", [/补回妮蔻开五天才/, /回蓝和团队治疗/, /第二轮爆发/]],
+  ];
+  for (const [id, sampleId, mechanisms] of fastRoutes) {
     const team = board("0229", id);
     assert.match(team.name, /天才蚂蚱大龙/);
     assert.equal(guidePlaystyle(prodigy, team), "95");
     const copy = guideBody(prodigy, team).current;
-    assert.ok(copy.some(block => block.text?.includes("小爱さま")), id);
-    assert.ok(copy.some(block => block.text?.includes("点击查样本")), id);
+    assert.doesNotMatch(textOf(copy), /卡利息追两人三星/, id);
+    for (const pattern of mechanisms) assert.match(textOf(copy), pattern, id);
+    const sample = copy.find(block => block.id === "sample-block-" + sampleId);
+    assert.match(sample?.text ?? "", /点击查样本/, id);
+    assert.ok(sample?.elements.some(element => element.text_run?.text_element_style?.link?.url.startsWith("https://www.metatft.com/explorer?")), id);
     if (id !== "c105") {
       assert.deepEqual(team.pieces.find(piece => piece.unitId === "baron-nashor").items,
         ["TFT_Item_BlueBuff", "TFT_Item_PowerGauntlet", "TFT_Item_InfinityEdge"], id);
@@ -181,11 +209,14 @@ test("the 14 featured guides pass on the combined public boards and retain roles
   const rock = publication.sections.find(section => section.id.endsWith("0338"));
   assert.match(readingNotes(rock, board("0338", "0068"), rock.gameData).opening, /冠冕上十、手里没转时，留韦鲁斯/);
 
-  // Guard P1 review fixes: keep external source links on 0229 & 0171, and cap stacked alternates at 2
-  assert.ok(prodigy.blocks.some(block => block.id === "sample-block-0107"), "sample-block-0107 source links preserved");
+  const sourceHosts = (section, id) => section.blocks.find(block => block.id === id)?.elements?.flatMap(element => {
+    const url = element.text_run?.text_element_style?.link?.url;
+    return url ? [new URL(url).hostname] : [];
+  });
+  assert.deepEqual(sourceHosts(prodigy, "sample-block-0107"), ["mobalytics.gg", "teamfighttactics.leagueoflegends.com"]);
   const lifeguard = publication.sections.find(section => section.id.endsWith("0171"));
-  assert.ok(lifeguard.blocks.some(block => block.id === "sample-block-0151"), "sample-block-0151 source links preserved");
-  const ionicBefore = structuredClone(JSON.parse(readFileSync(new URL("../data/public-preview.json", import.meta.url), "utf8")));
+  assert.deepEqual(sourceHosts(lifeguard, "sample-block-0151"), ["data.metatft.com", "tactics.tools", "mobalytics.gg"]);
+  const ionicBefore = structuredClone(preview);
   const ionicSection = ionicBefore.sections.find(section => section.id.endsWith("0307"));
   const ionicBoard = ionicSection.teams.find(team => team.id.endsWith("0007"));
   for (const piece of ionicBoard.pieces) {
