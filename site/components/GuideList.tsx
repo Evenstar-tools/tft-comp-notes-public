@@ -83,8 +83,8 @@ const shortOpenings: Record<string, readonly [source: string, short: string]> = 
   "五杀天使": ["炸弹人带羊刀，纳尔带肉。七级上纳尔、奥拉夫、死歌、炸弹人开天使，八级天使、约里克两星接装。不同名五杀合计 9 星开铁男，没开先用乌鸦，开了换铁男，九级补回乌鸦。", "七级开天使，八级找天使和约里克两星。"],
   "双电子泽丽": ["速九跳九。高血高经济时，八级用现成打工盘过渡，直上九搜泽丽和蒙多。青龙刀、无尽先给芸阿娜，两星凯尔或卢锡安接装。优先两星泽丽；女枪先两星就上她和卢锡安。蒙多两星再接蕾欧娜的肉装。", "八级用现成打工盘过渡，存钱直上九找泽丽和蒙多。"],
   "七海之歌扎克男枪": ["奥拉夫带男枪装，鳄鱼带两件肉装开艾希。七级上五个不同的海之歌或主唱开扎克，塔里克只算一个。八级搜男枪、扎克，谁两星谁接装，留一张空装鳄鱼。", "七级凑五个不同的海之歌或主唱开扎克，八级找扎克、男枪两星。"],
-  "史密奇95": ["饮血、血手、泰坦先合给战士打工。八级先稳血，九级摆八个非唯一羁绊开史密奇。上限看两星主坦和先来的副 C。", "八级稳血，九级开八个非唯一羁绊解锁。"],
-  "爵士乐史密奇": ["九级同时开出至少 8 个非唯一羁绊，确认解锁后再 D 史密奇。五杀线优先，烬先两星走四爵士，亚索早到走真伤。", "五杀优先，烬先两星走四爵士，亚索早到走真伤。"],
+  "史密奇95": ["饮血、血手、泰坦先合给战士打工。八级先稳血，九级开九个非唯一羁绊再搜史密奇。上限看两星主坦和先来的副 C。", "八级稳血，九级开九个非唯一羁绊解锁。"],
+  "爵士乐史密奇": ["九级同时开出至少 9 个非唯一羁绊，确认解锁后再 D 史密奇。五杀线优先，烬先两星走四爵士，亚索早到走真伤。", "五杀优先，烬先两星走四爵士，亚索早到走真伤。"],
   "三爵士乐女枪泽丽": ["女枪或泽丽谁先二星谁先接装。第二套输出装和前排齐备再做双 C，有战士装且已开锁时，补史密奇从边路切进去。", "女枪或泽丽谁先两星谁接装，装备够再做双 C。"],
   "K/DA转芬妮": ["有 K/DA 纹章再走。二阶段选秀前刷 4 次解锁芬妮。金铲铲加大棒可合纹章。", "有 K/DA 转再走，二阶段选秀前刷 4 次开芬妮。"],
   "K/DA毒舞莉莉娅": ["2-1 拿到莉莉娅专属，先合离子或正义。五级先拼双护卫、五颗 K/DA 星。", "五级追莉莉娅，先合离子或正义。"],
@@ -294,7 +294,8 @@ export function GuideList({ sections, heroSections, season, initial = {}, initia
   const familyDataEnd = Date.parse(familyStats.updatedAt);
   const patchStart = patch ? Date.parse(patch.effectiveAt) : NaN;
   const familyWindowNote = familyDataEnd < patchStart ? "上一版快照"
-    : homeFamilyStats.build === patch?.build && patch?.build ? "仅当前构建"
+    : familyStats.spansBuilds ? "采样窗口跨版本更新"
+    : familyStats.build === patch?.build && patch?.build ? "仅当前构建"
     : familyDataEnd - familyStats.days * 86400000 < patchStart ? "采样窗口跨版本更新" : undefined;
   const [expiredAt, setExpiredAt] = useState(0);
   const now = Math.max(checkedAt, expiredAt);

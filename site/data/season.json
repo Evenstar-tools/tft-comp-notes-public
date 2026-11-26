@@ -193,15 +193,15 @@
         "liliya",
         "lly"
       ],
-      "ability": "治疗280/350/550生命值并打击目标位置，对1格圆形范围内的敌人造成120/180/270魔法伤害和持续5秒的10%弱化。\n弱化：降低造成的伤害",
+      "ability": "治疗305/375/575/775生命值并打击目标位置，对1格圆形范围内的敌人造成120/180/270魔法伤害和持续5秒的10%弱化。\n弱化：降低造成的伤害",
       "splashImage": "/assets/datatft/lillia-splash.jpg",
       "imageSource": "https://www.datatft.com/database/unit?id=919876&race=&job=&cost=&role=&q=#unit",
       "abilityName": "我们爱你们，K/DA",
       "mana": "40/100",
       "abilitySource": {
-        "label": "MetaTFT PBE 5995286",
-        "url": "https://www.metatft.com/new-set#Units",
-        "updatedAt": "2026.11.19"
+        "label": "MetaTFT PBE 19.1.0.6035832",
+        "url": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json",
+        "updatedAt": "2026-11-26"
       }
     },
     {
@@ -310,9 +310,10 @@
       "abilityName": "美妙回响",
       "mana": "30/90",
       "abilitySource": {
-        "label": "MetaTFT PBE 5995286",
-        "url": "https://www.metatft.com/new-set#Units",
-        "updatedAt": "2026.11.19"
+        "label": "MetaTFT PBE 19.1.0.6035832",
+        "url": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json",
+        "updatedAt": "2026-11-26",
+        "note": "感恩节补丁修复了护盾异常。"
       }
     },
     {
@@ -444,15 +445,15 @@
         "anni",
         "an"
       ],
-      "ability": "获得持续4秒的350/400/550护盾。释放一道锥形火焰，造成80/120/180魔法伤害和持续4秒的1%灼烧和重伤。",
+      "ability": "获得持续4秒的325/375/525/700护盾。释放一道锥形火焰，造成80/120/180魔法伤害和持续4秒的1%灼烧和重伤。",
       "splashImage": "/assets/datatft/annie-splash.jpg",
       "imageSource": "https://www.datatft.com/database/unit?id=919001&race=&job=&cost=&role=&q=#unit",
       "abilityName": "就是我们点的火",
       "mana": "20/80",
       "abilitySource": {
-        "label": "MetaTFT PBE 19.1.0.6014015",
+        "label": "MetaTFT PBE 19.1.0.6035832",
         "url": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json",
-        "updatedAt": "2026-11-22"
+        "updatedAt": "2026-11-26"
       }
     },
     {
@@ -567,15 +568,15 @@
         "gulajiasi",
         "gljs"
       ],
-      "ability": "在5秒内变得活力四射，从而每秒回复(2%最大生命值＋56/61/68%法强)生命值并且攻击造成(6%最大生命值＋60/80/100%法强)额外魔法伤害。\n每有一名3星【K/DA】友军，这两个效果都会提升15%。",
+      "ability": "在5秒内变得活力四射，从而每秒回复(2%最大生命值＋60/66/74/85%法强)生命值并且攻击造成(6%最大生命值＋60/80/100%法强)额外魔法伤害。\n每有一名3星【K/DA】友军，这两个效果都会提升12%。",
       "splashImage": "/assets/datatft/gragas-splash.jpg",
       "imageSource": "https://www.datatft.com/database/unit?id=919079&race=&job=&cost=&role=&q=#unit",
       "abilityName": "粉丝欢闹",
       "mana": "30/80",
       "abilitySource": {
-        "label": "MetaTFT PBE 5995286",
-        "url": "https://www.metatft.com/new-set#Units",
-        "updatedAt": "2026.11.19"
+        "label": "MetaTFT PBE 19.1.0.6035832",
+        "url": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json",
+        "updatedAt": "2026-11-26"
       }
     },
     {
@@ -594,15 +595,15 @@
         "eluoyi",
         "ely"
       ],
-      "ability": "主动：治疗275/325/525生命值并在一条长2格的直线上造成 120/180/270魔法伤害。\n任务：在玩家战斗期间施放技能时，你每拥有10金币，【俄洛伊】就会获得2名望，每次获得名望最大值出现在70金币。在185名望时，【俄洛伊】晋升为白金认证，从而获得15%伤害减免，并且每次施放技能时转而掉落1金币。\n【俄洛伊】晋升为白金认证！",
+      "ability": "主动：治疗300/350/550/900生命值并在一条长2格的直线上造成 120/180/270魔法伤害。\n任务：在玩家战斗期间施放技能时，你每拥有10金币，【俄洛伊】就会获得2名望，每次获得名望最大值出现在70金币。在185名望时，【俄洛伊】晋升为白金认证，从而获得15%伤害减免，并且每次施放技能时转而掉落1金币。\n【俄洛伊】晋升为白金认证！",
       "splashImage": "/assets/datatft/illaoi-splash.jpg",
       "imageSource": "https://www.datatft.com/database/unit?id=919420&race=&job=&cost=&role=&q=#unit",
       "abilityName": "金曲版税",
       "mana": "30/90",
       "abilitySource": {
-        "label": "11 月 23 日 PBE 更新",
-        "url": "https://x.com/TheTruexy/status/2124948130936541578",
-        "updatedAt": "2026.11.23"
+        "label": "MetaTFT PBE 19.1.0.6035832",
+        "url": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json",
+        "updatedAt": "2026-11-26"
       }
     },
     {
@@ -678,15 +679,15 @@
         "luxian",
         "lxa"
       ],
-      "ability": "冲刺至附近的一个格子，随后向目标射出两发子弹，每发造成(85/130/200%攻击力＋8/12/18%法强)物理伤害。",
+      "ability": "冲刺至附近的一个格子，随后向目标射出两发子弹，每发造成(90/135/205/350%攻击力＋8/12/18%法强)物理伤害。",
       "splashImage": "/assets/datatft/lucian-splash.jpg",
       "imageSource": "https://www.datatft.com/database/unit?id=919236&race=&job=&cost=&role=&q=#unit",
       "abilityName": "冷酷追击",
       "mana": "0/20",
       "abilitySource": {
-        "label": "11 月 23 日 PBE 更新",
-        "url": "https://x.com/TheTruexy/status/2124948130936541578",
-        "updatedAt": "2026.11.23"
+        "label": "MetaTFT PBE 19.1.0.6035832",
+        "url": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json",
+        "updatedAt": "2026-11-26"
       }
     },
     {
@@ -882,15 +883,15 @@
         "shamila",
         "sml"
       ],
-      "ability": "被动：【莎弥拉】对敌人造成暴击时，目标会被沉醉7秒。\n主动：向当前目标射出10发子弹，每发造成(4/6/9%法强＋38/57/86%攻击力)伤害。\n陷入【沉醉】的敌人会为【古典乐】弈子提供加成。",
+      "ability": "被动：【莎弥拉】对敌人造成暴击时，目标会被沉醉7秒。\n主动：向当前目标射出10发子弹，每发造成(4/6/9%法强＋31/47/70/119%攻击力)伤害。\n陷入【沉醉】的敌人会为【古典乐】弈子提供加成。",
       "splashImage": "/assets/datatft/samira-splash.jpg",
       "imageSource": "https://www.datatft.com/database/unit?id=919360&race=&job=&cost=&role=&q=#unit",
       "abilityName": "子弹与玫瑰",
       "mana": "0/55",
       "abilitySource": {
-        "label": "11 月 23 日 PBE 更新",
-        "url": "https://x.com/TheTruexy/status/2124948130936541578",
-        "updatedAt": "2026.11.23"
+        "label": "MetaTFT PBE 19.1.0.6035832",
+        "url": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json",
+        "updatedAt": "2026-11-26"
       },
       "unlock": {
         "text": "让一名「古典」「叛逆者」或「花式射手」弈子携带 2 件装备。",
@@ -928,9 +929,10 @@
       "abilityName": "宠粉直播",
       "mana": "0/50",
       "abilitySource": {
-        "label": "11 月 23 日 PBE 更新",
-        "url": "https://x.com/TheTruexy/status/2124948130936541578",
-        "updatedAt": "2026.11.23"
+        "label": "MetaTFT PBE 19.1.0.6035832",
+        "url": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json",
+        "updatedAt": "2026-11-26",
+        "note": "感恩节补丁降低了生成高价值弈子的概率。"
       },
       "unlock": {
         "text": "在第 2 阶段选秀开始前，刷新商店 4 次。",
@@ -1024,15 +1026,15 @@
         "bade",
         "bd"
       ],
-      "ability": "被动：获得【旅者号角】。在被装备的状态下，施放技能会生成经验值并且攻击会提供额外法力值。\n主动：召唤一波木灵，对命中的敌人造成245/365/590魔法伤害，每穿过一个敌人，造成的伤害就会降低30%。",
+      "ability": "被动：获得【旅者号角】。在被装备的状态下，施放技能会生成经验值并且攻击会提供额外法力值。\n主动：召唤一波木灵，对命中的敌人造成265/400/650魔法伤害，每穿过一个敌人，造成的伤害就会降低30%。",
       "splashImage": "/assets/datatft/bard-splash.jpg",
       "imageSource": "https://www.datatft.com/database/unit?id=919432&race=&job=&cost=&role=&q=#unit",
       "abilityName": "来与我共嗡",
       "mana": "20/80",
       "abilitySource": {
-        "label": "11 月 23 日 PBE 更新",
-        "url": "https://x.com/TheTruexy/status/2124948130936541578",
-        "updatedAt": "2026.11.23"
+        "label": "MetaTFT PBE 19.1.0.6035832",
+        "url": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json",
+        "updatedAt": "2026-11-26"
       }
     },
     {
@@ -1081,15 +1083,15 @@
         "beileiya",
         "bly"
       ],
-      "ability": "治疗100/150/200生命值，并向3格内相距最远的敌人踢出一份零食。冲向它，在1格区域内造成95/145/230物理伤害。\n随后大快朵颐，在接下来的3次攻击中获得200%攻击速度，并将这些攻击替换为斩击，造成80/120/190物理伤害。",
+      "ability": "治疗80/120/160生命值，并向3格内相距最远的敌人踢出一份零食。冲向它，在1格区域内造成95/145/230物理伤害。\n随后大快朵颐，在接下来的3次攻击中获得200%攻击速度，并将这些攻击替换为斩击，造成80/120/190物理伤害。\n基础护甲和魔抗各为 45。",
       "splashImage": "/assets/datatft/briar-splash.jpg",
       "imageSource": "https://www.datatft.com/database/unit?id=919233&race=&job=&cost=&role=&q=#unit",
       "abilityName": "零食噬击",
       "mana": "0/30",
       "abilitySource": {
-        "label": "MetaTFT PBE 19.1.0.6014015",
+        "label": "MetaTFT PBE 19.1.0.6035832",
         "url": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json",
-        "updatedAt": "2026-11-22"
+        "updatedAt": "2026-11-26"
       }
     },
     {
@@ -1108,15 +1110,15 @@
         "delaiwen",
         "dlw"
       ],
-      "ability": "向目标投掷一张巨大的旋转唱片，造成155/235/370物理伤害。唱片会留下一个持续3秒的漩涡，使1格内的敌人每秒分摊130/200/310物理伤害。",
+      "ability": "向目标投掷一张巨大的旋转唱片，造成155/235/370物理伤害。唱片会留下一个持续3秒的漩涡，使1格内的敌人每秒分摊（125/190/300%攻击力＋15/25/35%法强）物理伤害。",
       "splashImage": "/assets/datatft/draven-splash.jpg",
       "imageSource": "https://www.datatft.com/database/unit?id=919119&race=&job=&cost=&role=&q=#unit",
       "abilityName": "你让我团团转(就像把飞斧)",
       "mana": "0/60",
       "abilitySource": {
-        "label": "MetaTFT PBE 5995286",
-        "url": "https://www.metatft.com/new-set#Units",
-        "updatedAt": "2026.11.19"
+        "label": "MetaTFT PBE 19.1.0.6035832",
+        "url": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json",
+        "updatedAt": "2026-11-26"
       }
     },
     {
@@ -1238,10 +1240,10 @@
       "abilityName": "在你的世界！",
       "mana": "70/140",
       "abilitySource": {
-        "label": "MetaTFT PBE 5995286",
-        "url": "https://www.metatft.com/new-set#Units",
-        "updatedAt": "2026.11.19",
-        "note": "据当前英文说明翻译"
+        "label": "MetaTFT PBE 19.1.0.6035832",
+        "url": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json",
+        "updatedAt": "2026-11-26",
+        "note": "感恩节补丁修复了护盾异常。"
       }
     },
     {
@@ -1314,15 +1316,15 @@
         "saina",
         "sn"
       ],
-      "ability": "轰击目标，造成(175/265/420%攻击力＋25/35/60%法强)物理伤害并标记该目标。如果其已被标记，则转而将它引爆，造成额外伤害。\n在引爆或击杀被标记的敌人后，获得持续到战斗结束的8%伤害增幅。",
+      "ability": "轰击目标，造成(175/265/450%攻击力＋25/35/60%法强)物理伤害并标记该目标。如果其已被标记，则转而将它引爆，造成额外伤害。\n在引爆或击杀被标记的敌人后，获得持续到战斗结束的8%伤害增幅。",
       "splashImage": "/assets/datatft/senna-splash.jpg",
       "imageSource": "https://www.datatft.com/database/unit?id=919235&race=&job=&cost=&role=&q=#unit",
       "abilityName": "混响消亡",
       "mana": "0/20",
       "abilitySource": {
-        "label": "11 月 23 日 PBE 更新",
-        "url": "https://x.com/TheTruexy/status/2124948130936541578",
-        "updatedAt": "2026.11.23"
+        "label": "MetaTFT PBE 19.1.0.6035832",
+        "url": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json",
+        "updatedAt": "2026-11-26"
       }
     },
     {
@@ -1369,15 +1371,15 @@
         "xindela",
         "xdl"
       ],
-      "ability": "向当前目标扣杀一记排球，造成330/495/790魔法伤害。它会弹射到目标身后装备最少的那个敌人，造成110/165/265魔法伤害。",
+      "ability": "向当前目标扣杀一记排球，造成350/525/850魔法伤害。它会弹射到目标身后装备最少的那个敌人，造成110/165/265魔法伤害。",
       "splashImage": "/assets/datatft/syndra-splash.jpg",
       "imageSource": "https://www.datatft.com/database/unit?id=919134&race=&job=&cost=&role=&q=#unit",
       "abilityName": "发球时间",
       "mana": "0/30",
       "abilitySource": {
-        "label": "MetaTFT PBE 5995286",
-        "url": "https://www.metatft.com/new-set#Units",
-        "updatedAt": "2026.11.19"
+        "label": "MetaTFT PBE 19.1.0.6035832",
+        "url": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json",
+        "updatedAt": "2026-11-26"
       }
     },
     {
@@ -1433,15 +1435,15 @@
         "foyege",
         "fyg"
       ],
-      "ability": "在目标周围召唤 10 把基础剑。短暂延迟后刺穿目标，每把剑造成（28/42/67%攻击力＋3/5/7%法强）物理伤害。每参与击杀 8 次，永久增加一把剑。",
+      "ability": "在目标周围召唤 10 把基础剑。短暂延迟后刺穿目标，每把剑造成（26/40/63%攻击力＋3/5/7%法强）物理伤害。每参与击杀 8 次，永久增加一把剑。",
       "splashImage": "/assets/datatft/viego-splash.jpg",
       "imageSource": "https://www.datatft.com/database/unit?id=919234&race=&job=&cost=&role=&q=#unit",
       "abilityName": "特别对待",
       "mana": "0/40",
       "abilitySource": {
-        "label": "MetaTFT PBE 19.1.0.6014015",
+        "label": "MetaTFT PBE 19.1.0.6035832",
         "url": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json",
-        "updatedAt": "2026-11-22"
+        "updatedAt": "2026-11-26"
       }
     },
     {
@@ -1598,15 +1600,15 @@
         "gailun",
         "gl"
       ],
-      "ability": "治疗(300/350/2400%法强＋12%最大生命值)生命值，然后向当前目标发射一道波纹，对命中的敌人造成70/105/2800物理伤害和持续4秒的10%弱化。\n弱化：降低造成的伤害",
+      "ability": "治疗(350/400/2400%法强＋12%最大生命值)生命值，然后向当前目标发射一道波纹，对命中的敌人造成70/105/2800物理伤害和持续4秒的10%弱化。\n弱化：降低造成的伤害",
       "splashImage": "/assets/datatft/garen-splash.jpg",
       "imageSource": "https://www.datatft.com/database/unit?id=919086&race=&job=&cost=&role=&q=#unit",
       "abilityName": "真理之剑",
       "mana": "30/100",
       "abilitySource": {
-        "label": "11 月 23 日 PBE 更新",
-        "url": "https://x.com/TheTruexy/status/2124948130936541578",
-        "updatedAt": "2026.11.23"
+        "label": "MetaTFT PBE 19.1.0.6035832",
+        "url": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json",
+        "updatedAt": "2026-11-26"
       }
     },
     {
@@ -1652,15 +1654,15 @@
         "jin",
         "j"
       ],
-      "ability": "被动：将1%额外攻击速度转化为0.8%物理加成。\n攻击会召唤小提琴发起同步攻击，造成27/41/124物理伤害并使该目标沉醉4秒。每第4次攻击将获得强化，造成(80/120/744%攻击力＋14/21/104%法强)物理伤害，并重置小提琴。\n从第4个序列开始，所有小提琴将持续存在，【烬】获得无限距离，并且攻击会贯穿，每命中一个目标，造成的伤害就会降低60%。",
+      "ability": "被动：将1%额外攻击速度转化为0.8%物理加成。\n攻击会召唤小提琴发起同步攻击，造成25/38/124物理伤害并使该目标沉醉4秒。每第4次攻击将获得强化，造成(80/120/744%攻击力＋14/21/104%法强)物理伤害，并重置小提琴。\n从第4个序列开始，所有小提琴将持续存在，【烬】获得无限距离，并且攻击会贯穿，每命中一个目标，造成的伤害就会降低60%。",
       "splashImage": "/assets/datatft/jhin-splash.jpg",
       "imageSource": "https://www.datatft.com/database/unit?id=919202&race=&job=&cost=&role=&q=#unit",
       "abilityName": "弦乐四重奏",
       "mana": "4/4",
       "abilitySource": {
-        "label": "MetaTFT PBE 5995286",
-        "url": "https://www.metatft.com/new-set#Units",
-        "updatedAt": "2026.11.19"
+        "label": "MetaTFT PBE 19.1.0.6035832",
+        "url": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json",
+        "updatedAt": "2026-11-26"
       }
     },
     {
@@ -1790,15 +1792,15 @@
         "lk",
         "Locke（译名待核）"
       ],
-      "ability": "被动：攻击造成45/68/500额外魔法伤害。敌人身上的每个标记都会使【洛克】对其造成的所有伤害提高15%。\n主动：向4格内相距最远的敌人投掷3枚驱魔大钉，每枚造成15/22/400魔法伤害，并标记所有命中的敌人。然后，传送到该敌人身边，造成125/185/2500魔法伤害。",
+      "ability": "被动：攻击造成50/75/500额外魔法伤害。敌人身上的每个标记都会使【洛克】对其造成的所有伤害提高15%。\n主动：向4格内相距最远的敌人投掷3枚驱魔大钉，每枚造成15/22/400魔法伤害，并标记所有命中的敌人。然后，传送到该敌人身边，造成125/185/2500魔法伤害。",
       "splashImage": "/assets/datatft/locke-splash.jpg",
       "imageSource": "https://www.datatft.com/database/unit?id=919805&race=&job=&cost=&role=&q=#unit",
       "abilityName": "逐罪 (驱魔大钉之歌)",
       "mana": "0/25",
       "abilitySource": {
-        "label": "11 月 23 日 PBE 更新",
-        "url": "https://x.com/TheTruexy/status/2124948130936541578",
-        "updatedAt": "2026.11.23"
+        "label": "MetaTFT PBE 19.1.0.6035832",
+        "url": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json",
+        "updatedAt": "2026-11-26"
       }
     },
     {
@@ -1817,15 +1819,15 @@
         "meier",
         "me"
       ],
-      "ability": "发射30/30/60枚飞弹，由3个相距最近的敌人分摊，每枚飞弹造成19/29/200魔法伤害，并施加一层【蓝调】。每拥有3层【蓝调】，敌人受到的该技能伤害就会增加5%。",
+      "ability": "发射30/30/60枚飞弹，射向 3 名相距最近的敌人，当前目标承担 70% 的导弹伤害，每枚飞弹造成19/29/200魔法伤害，并施加一层【蓝调】。每拥有3层【蓝调】，敌人受到的该技能伤害就会增加5%。\n基础攻速为 0.80。",
       "splashImage": "/assets/datatft/mel-splash.jpg",
       "imageSource": "https://www.datatft.com/database/unit?id=919800&race=&job=&cost=&role=&q=#unit",
       "abilityName": "蓝调之锁链",
       "mana": "0/40",
       "abilitySource": {
-        "label": "11 月 23 日 PBE 更新",
-        "url": "https://x.com/TheTruexy/status/2124948130936541578",
-        "updatedAt": "2026.11.23"
+        "label": "MetaTFT PBE 19.1.0.6035832",
+        "url": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json",
+        "updatedAt": "2026-11-26"
       }
     },
     {
@@ -2058,15 +2060,15 @@
         "yongen",
         "ye"
       ],
-      "ability": "被动：技能依赖攻击力与法强中的较高者。普攻造成 55/82/123 物理伤害。\n主动：对目标及最多 2 名附近敌人快速挥击 10/10/30 次，每次造成 38/57/350 物理伤害。随后斩击当前目标，造成 185/280/1500 物理伤害。\n心之钢升级：挥击次数多 2 次，且无视 25% 护甲。",
+      "ability": "被动：技能依赖攻击力与法强中的较高者。普攻造成 58/87/130.5 物理伤害。\n主动：对目标及最多 2 名附近敌人快速挥击 10/10/30 次，每次造成 40/60/350 物理伤害。随后斩击当前目标，造成 185/280/1500 物理伤害。\n心之钢升级：挥击次数多 2 次，且无视 25% 护甲。",
       "splashImage": "/assets/datatft/yone-splash.jpg",
       "imageSource": "https://www.datatft.com/database/unit?id=919777&race=&job=&cost=&role=&q=#unit",
       "abilityName": "两面",
       "mana": "0/50",
       "abilitySource": {
-        "label": "11 月 23 日 PBE 更新",
-        "url": "https://x.com/TheTruexy/status/2124948130936541578",
-        "updatedAt": "2026.11.23"
+        "label": "MetaTFT PBE 19.1.0.6035832",
+        "url": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json",
+        "updatedAt": "2026-11-26"
       }
     },
     {
@@ -2220,15 +2222,15 @@
         "akali（zhenshishanghai）",
         "akl（zssh）"
       ],
-      "ability": "B面被动：每参与击杀4次，获得1/1/10玩家生命值。\n主动：快速斩击当前目标，造成520/780/9999魔法伤害，对坦克额外造成50%伤害。在施放技能的状态下，获得25%伤害减免并且无法被攻击选作目标。\n随后，闪烁越过目标并投掷一枚炸弹，造成620/930/9999魔法伤害，该伤害由2/2/8格内的所有敌人分摊。",
+      "ability": "B面被动：每参与击杀4次，获得1/1/10玩家生命值。\n主动：快速斩击当前目标，造成520/780/9999魔法伤害，对坦克额外造成50%伤害。在施放技能的状态下，获得25%伤害减免并且无法被攻击选作目标。\n随后，闪烁越过目标并投掷一枚炸弹，造成560/875/9999魔法伤害，该伤害由2/2/8格内的所有敌人分摊。",
       "splashImage": "/assets/datatft/akali-true-damage-splash.jpg",
       "imageSource": "https://www.datatft.com/database/unit?id=919953&race=&job=&cost=&role=&q=#unit",
       "abilityName": "多米诺式击杀",
       "mana": "0/50",
       "abilitySource": {
-        "label": "11 月 23 日 PBE 更新",
-        "url": "https://x.com/TheTruexy/status/2124948130936541578",
-        "updatedAt": "2026.11.23"
+        "label": "MetaTFT PBE 19.1.0.6035832",
+        "url": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json",
+        "updatedAt": "2026-11-26"
       },
       "unlock": {
         "text": "另一形态的阿卡丽尚未解锁时，累计获得 320 点「真实伤害」珠光贵气。",
@@ -2258,16 +2260,15 @@
         "efeiliusi",
         "efls"
       ],
-      "ability": "被动：每攻击 4 次获得一把飞轮刃，最多 15 把。每把飞轮刃使普攻额外造成 7/10/200 物理伤害。飞轮刃叠满后获得 30/30/500% 攻击力和无限射程。\n主动：向最近的 3 名敌人发射弹体，造成 (280/420/3000%攻击力＋60/90/300%法强) 物理伤害。弹体分裂成 16 发，每发对路径上的敌人造成 51/76.5/3300 物理伤害。获得 75% 攻速，持续 4 秒。\n心之钢升级：开战时自带 5 把飞轮刃。",
+      "ability": "被动：每攻击 4 次获得一把飞轮刃，最多 15 把。每把飞轮刃使普攻额外造成 7/10/200 物理伤害。飞轮刃叠满后获得 30/30/500% 攻击力和无限射程。\n主动：向最近的 3 名敌人发射弹体，造成 (315/475/3000%攻击力＋60/90/300%法强) 物理伤害。弹体分裂成 16 发，每发对路径上的敌人造成 56.25/84.75/3300 物理伤害。获得 75% 攻速，持续 4 秒。\n心之钢升级：开战时自带 5 把飞轮刃。",
       "splashImage": "/assets/datatft/aphelios-splash.jpg",
       "imageSource": "https://www.datatft.com/database/unit?id=919523&race=&job=&cost=&role=&q=#unit",
       "abilityName": "“邦呀 邦呀 邦呀”",
       "mana": "40/180",
       "abilitySource": {
-        "label": "MetaTFT PBE 5995286",
-        "url": "https://www.metatft.com/new-set#Units",
-        "updatedAt": "2026.11.19",
-        "note": "据当前英文说明翻译"
+        "label": "MetaTFT PBE 19.1.0.6035832",
+        "url": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json",
+        "updatedAt": "2026-11-26"
       },
       "unlock": {
         "text": "上场 2 星拉露恩或 2 星永恩。",
@@ -2365,15 +2366,15 @@
         "jiana",
         "jn"
       ],
-      "ability": "向附近至多3个敌人释放天龙，每只天龙造成155/250/9999魔法伤害。\n施放第4/4/1次技能后，天风将席卷全场，在45秒内对所有敌人造成1800/2700/9000魔法伤害。",
+      "ability": "向附近至多3个敌人释放天龙，每只天龙造成155/250/9999魔法伤害。\n施放第4/4/1次技能后，天风将席卷全场，在45秒内对所有敌人造成1950/3000/9000魔法伤害。",
       "splashImage": "/assets/datatft/janna-splash.jpg",
       "imageSource": "https://www.datatft.com/database/unit?id=919040&race=&job=&cost=&role=&q=#unit",
       "abilityName": "天风赞歌",
       "mana": "0/45",
       "abilitySource": {
-        "label": "MetaTFT PBE 5995286",
-        "url": "https://www.metatft.com/new-set#Units",
-        "updatedAt": "2026.11.19"
+        "label": "MetaTFT PBE 19.1.0.6035832",
+        "url": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json",
+        "updatedAt": "2026-11-26"
       },
       "unlock": {
         "text": "霞在场时，累计获得 25 金币的利息。",
@@ -2508,15 +2509,15 @@
         "naideli",
         "ndl"
       ],
-      "ability": "猛扑派对：对敌人们猛扑4/4/99次，每次造成125/185/2000魔法伤害，每次猛扑的伤害提升40/40/75%。\n生命之舞：治疗325/500/2000。随后对当前目标投掷标枪，造成360/540/3000魔法伤害并在其周围散落3朵花。花朵会在短暂延迟后，对半径1格内的敌人造成80/120/500魔法伤害。\n在美洲狮形态下施放【猛扑派对】，在人类形态下施放【生命之舞】。",
+      "ability": "猛扑派对：对敌人们猛扑4/4/99次，每次造成140/210/2000魔法伤害，每次猛扑的伤害提升40/40/75%。\n生命之舞：治疗325/500/2000。随后对当前目标投掷标枪，造成360/540/3000魔法伤害并在其周围散落3朵花。花朵会在短暂延迟后，对半径1格内的敌人造成80/120/500魔法伤害。\n在美洲狮形态下施放【猛扑派对】，在人类形态下施放【生命之舞】。",
       "splashImage": "/assets/datatft/nidalee-splash.jpg",
       "imageSource": "https://www.datatft.com/database/unit?id=919076&race=&job=&cost=&role=&q=#unit",
       "abilityName": "猛扑派对/生命之舞",
       "mana": "20/45",
       "abilitySource": {
-        "label": "11 月 23 日 PBE 更新",
-        "url": "https://x.com/TheTruexy/status/2124948130936541578",
-        "updatedAt": "2026.11.23"
+        "label": "MetaTFT PBE 19.1.0.6035832",
+        "url": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json",
+        "updatedAt": "2026-11-26"
       }
     },
     {
@@ -2565,15 +2566,15 @@
         "paike",
         "pk"
       ],
-      "ability": "被动：每当一名敌人生命值低于10/10/93%时，立即对其施放技能，然后冲刺回当前目标。\n主动：对目标造成320/515/4000物理伤害，并对一个X型区域内的敌人们造成100/150/800伤害。处决任何生命值低于10/10/93%的敌人。",
+      "ability": "被动：每当一名敌人生命值低于10/10/93%时，立即对其施放技能，然后冲刺回当前目标。\n主动：对目标造成320/515/4000物理伤害，并对一个X型区域内的敌人们造成100/150/800伤害。处决任何生命值低于10/10/93%的敌人。\n基础攻速为 0.85。",
       "splashImage": "/assets/datatft/pyke-splash.jpg",
       "imageSource": "https://www.datatft.com/database/unit?id=919555&race=&job=&cost=&role=&q=#unit",
       "abilityName": "赐你处决",
       "mana": "0/30",
       "abilitySource": {
-        "label": "MetaTFT PBE 19.1.0.6014015",
+        "label": "MetaTFT PBE 19.1.0.6035832",
         "url": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json",
-        "updatedAt": "2026-11-22"
+        "updatedAt": "2026-11-26"
       },
       "unlock": {
         "text": "7 级及以上，战斗结束时，持有至少 85 金币。",
@@ -2712,15 +2713,15 @@
         "cuisite",
         "cst"
       ],
-      "ability": "被动：开战时为商店里的每名弈子抽一张牌。本回合刷新过商店才发奖励。同点数牌有 1 或 2 张给 1/1/100 金币，3 张给随机弈子，4 张给神秘宝箱，5 张给皇家神秘宝箱。\n主动：接下来的 5 次普攻获得 100% 攻速并改为发射卡牌，对目标造成 100/150/2000 魔法伤害，对附近两名敌人造成 30/45/1000 魔法伤害。",
+      "ability": "被动：开战时为商店里的每名弈子抽一张牌。本回合刷新过商店才发奖励。同点数牌有 1 或 2 张给 1/1/100 金币，3 张给随机弈子，4 张给神秘宝箱，5 张给皇家神秘宝箱。\n主动：接下来的 5 次普攻获得 100% 攻速并改为发射卡牌，对目标造成 110/165/2000 魔法伤害，对附近两名敌人造成 30/45/1000 魔法伤害。",
       "splashImage": "/assets/datatft/twisted-fate-splash.jpg",
       "imageSource": "https://www.datatft.com/database/unit?id=919004&race=&job=&cost=&role=&q=#unit",
       "abilityName": "百搭可塔朵",
       "mana": "0/50",
       "abilitySource": {
-        "label": "MetaTFT PBE 19.1.0.6014015",
+        "label": "MetaTFT PBE 19.1.0.6035832",
         "url": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json",
-        "updatedAt": "2026-11-22"
+        "updatedAt": "2026-11-26"
       }
     },
     {
@@ -2767,15 +2768,15 @@
         "fulajimier",
         "fljme"
       ],
-      "ability": "被动：获得30/30/100%全能吸血。处于减益状态的敌人陷入沉醉。\n主动：对3个相距最近的敌人造成120/180/999魔法伤害和持续3秒的沉醉。\n每第5/5/1次施放技能时，会在棋盘上掉落一盏吊灯。吊灯会对所有敌人造成400/640/9999魔法伤害，敌人每远离爆炸中心一格，这个伤害就会降低10%。\n减益：灼烧、重伤、魔抗击碎、护甲击碎、破法、弱化、缓速、易损",
+      "ability": "被动：获得30/30/100%全能吸血。处于减益状态的敌人陷入沉醉。\n主动：对3个相距最近的敌人造成120/180/999魔法伤害和持续3秒的沉醉。\n每第5/5/1次施放技能时，会在棋盘上掉落一盏吊灯。吊灯会对所有敌人造成400/640/9999魔法伤害，敌人每远离爆炸中心一格，这个伤害就会降低10%。\n减益：灼烧、重伤、魔抗击碎、护甲击碎、破法、弱化、缓速、易损\n客户端推荐装备改用正义之手替代莫雷洛秘典。",
       "splashImage": "/assets/datatft/vladimir-splash.jpg",
       "imageSource": "https://www.datatft.com/database/unit?id=919008&race=&job=&cost=&role=&q=#unit",
       "abilityName": "歌剧魅影",
       "mana": "0/40",
       "abilitySource": {
-        "label": "11 月 23 日 PBE 更新",
-        "url": "https://x.com/TheTruexy/status/2124948130936541578",
-        "updatedAt": "2026.11.23"
+        "label": "MetaTFT PBE 19.1.0.6035832",
+        "url": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json",
+        "updatedAt": "2026-11-26"
       },
       "unlock": {
         "text": "8 级及以上，战场前两排合计只放 1 名弈子。",
@@ -2803,15 +2804,15 @@
         "zeli",
         "zl"
       ],
-      "ability": "在棋盘上冲刺，向当前目标连续发射 6 道激光。每道激光对命中的敌人造成物理伤害，无视其 40% 护甲。\n每道伤害：135/200/1000% 攻击力＋30/45/500% 法强。",
+      "ability": "在棋盘上冲刺，向当前目标连续发射 6 道激光。每道激光对命中的敌人造成物理伤害，无视其 40% 护甲。\n每道伤害：125/190/1000% 攻击力＋30/45/500% 法强。",
       "splashImage": "/assets/datatft/zeri-splash.jpg",
       "imageSource": "https://www.datatft.com/database/unit?id=919221&race=&job=&cost=&role=&q=#unit",
       "abilityName": "午夜镭射",
       "mana": "0/150",
       "abilitySource": {
-        "label": "11 月 23 日 PBE 更新",
-        "url": "https://x.com/TheTruexy/status/2124948130936541578",
-        "updatedAt": "2026.11.23"
+        "label": "MetaTFT PBE 19.1.0.6035832",
+        "url": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json",
+        "updatedAt": "2026-11-26"
       }
     },
     {
@@ -2829,22 +2830,23 @@
         "nashennanjue",
         "nsnj"
       ],
-      "ability": "召唤一支8人乐团和一只【即兴先锋】，将所有敌人击飞1秒，并造成550/825/2475物理伤害和650/1000/3000魔法伤害，由所有敌人分摊。\n每个小兵攻击4次，每次攻击造成33/50/250物理伤害。",
+      "ability": "召唤一支8人乐团和一只【即兴先锋】，将所有敌人击飞1秒，并造成550/825/2475物理伤害和650/1000/3000魔法伤害，由所有敌人分摊。\n每个小兵攻击4次，每次攻击造成35/55/250物理伤害。",
       "splashImage": "/assets/datatft/baron-nashor-splash.jpg",
       "imageSource": "https://www.datatft.com/database/unit?id=919981&race=&job=&cost=&role=&q=#unit",
       "abilityName": "乐团成团",
       "mana": "80/120",
       "abilitySource": {
-        "label": "11 月 23 日 PBE 更新",
-        "url": "https://x.com/TheTruexy/status/2124948130936541578",
-        "updatedAt": "2026.11.23"
+        "label": "MetaTFT PBE 19.1.0.6035832",
+        "url": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json",
+        "updatedAt": "2026-11-26",
+        "note": "感恩节补丁略微降低了商店出现男爵乐器的概率。"
       },
       "unlock": {
         "text": "在商店集齐 5 种稀有度的神秘乐器，并让最强的玛尔扎哈累计造成 60,000 点伤害。",
         "raw": "Collect all 5 members of Baron's ensemble.\nDeal 60000 damage with your strongest Malzahar.",
-        "note": "",
+        "note": "感恩节补丁略微降低了商店出现男爵乐器的概率。",
         "source": {
-          "label": "MetaTFT · Riot PBE 19.1.0.6014015",
+          "label": "MetaTFT · Riot PBE 19.1.0.6035832",
           "url": "https://data.metatft.com/lookups/TFTSet19_pbe_en_us.json"
         }
       }
@@ -2910,16 +2912,16 @@
       "abilityName": "节奏上扬",
       "mana": "0/4",
       "abilitySource": {
-        "label": "MetaTFT PBE 5995286",
-        "url": "https://www.metatft.com/new-set#Units",
-        "updatedAt": "2026.11.19"
+        "label": "MetaTFT PBE 19.1.0.6035832",
+        "url": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json",
+        "updatedAt": "2026-11-26"
       },
       "unlock": {
-        "text": "9 级及以上，同时激活至少 8 个非唯一羁绊。",
-        "raw": "Have 8 or more non-unique traits active",
+        "text": "9 级及以上，同时激活至少 9 个非唯一羁绊。",
+        "raw": "Activate 9 or more non-unique traits.",
         "note": "",
         "source": {
-          "label": "MetaTFT · Riot PBE 19.1.0.6014015",
+          "label": "MetaTFT · Riot PBE 19.1.0.6035832",
           "url": "https://data.metatft.com/lookups/TFTSet19_pbe_en_us.json"
         }
       }
@@ -2940,23 +2942,22 @@
         "suona",
         "sn"
       ],
-      "ability": "被动：娑娜免疫控制且不会普攻。每 3 秒回复 30/30/100 法力，对最近的 3/3/10 名敌人造成 120/180/1000 魔法伤害，并给 2/2/5 名友军各施加 40/65/9999 护盾，持续 3/3/10 秒。\n主动：释放音波，对全体敌人造成共计 1500/2400/9999999 魔法伤害，由敌人分摊，并将他们晕眩 2/2/30 秒。友军分摊 250/450/99999 护盾，持续 5/5/10 秒。",
+      "ability": "被动：娑娜免疫控制且不会普攻。每 3 秒回复 30/30/100 法力，对最近的 3/3/10 名敌人造成 120/180/1000 魔法伤害，并给 2/2/5 名友军各施加 40/65/9999 护盾，持续 3/3/10 秒。\n主动：释放音波，对全体敌人造成共计 1650/2600/9999999 魔法伤害，由敌人分摊，并将他们晕眩 2/2/30 秒。友军分摊 250/500/99999 护盾，持续 5/5/10 秒。",
       "splashImage": "/assets/datatft/sona-splash.jpg",
       "imageSource": "https://www.datatft.com/database/unit?id=919037&race=&job=&cost=&role=&q=#unit",
       "abilityName": "客串：娑娜",
       "mana": "0/220",
       "abilitySource": {
-        "label": "MetaTFT PBE 5995286",
-        "url": "https://www.metatft.com/new-set#Units",
-        "updatedAt": "2026.11.19",
-        "note": "据当前英文说明翻译"
+        "label": "MetaTFT PBE 19.1.0.6035832",
+        "url": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json",
+        "updatedAt": "2026-11-26"
       },
       "unlock": {
-        "text": "10 级及以上，让「合奏」弈子在玩家对战中累计获得 15 次灵感。",
-        "raw": "Collab Champions are inspired 15 times during player combat.",
+        "text": "10 级及以上，让「合奏」弈子在玩家对战中累计获得 20 次灵感。",
+        "raw": "Collab champions are inspired 20 times during player combat.",
         "note": "",
         "source": {
-          "label": "MetaTFT · Riot PBE 19.1.0.6014015",
+          "label": "MetaTFT · Riot PBE 19.1.0.6035832",
           "url": "https://data.metatft.com/lookups/TFTSet19_pbe_en_us.json"
         },
         "traitIds": [
@@ -2994,7 +2995,7 @@
         5,
         7
       ],
-      "description": "获得可放置的乐器，用来强化相邻的友军。被强化的友军会周期性回复一部分生命值。 被强化的海滩流行英雄会获得攻击速度，并周期性回复法力。 (3) 1 件乐器；额外攻击速度、法力回复 (5) 2 件乐器；额外攻击速度、法力回复 (7) 并且周期性吹来一阵海风，治疗海滩流行英雄并为其提供法力。",
+      "description": "摆放乐器来强化相邻友军。受强化的友军每 3 秒回复 2% 生命值，受强化的海之歌弈子还会获得攻速并回复法力。\n（3）获得 1 件乐器。受强化的海之歌弈子获得 25% 攻速，每 3 秒回复 5 法力。\n（5）获得 2 件乐器。受强化的海之歌弈子获得 45% 攻速，每 3 秒回复 9 法力。\n（7）受强化的海之歌弈子获得 45% 攻速。每 10 秒吹来海风，为海之歌弈子回复 20% 生命值和 30 法力。",
       "image": "/assets/traits/beach-pop.svg",
       "dynamic": false,
       "provisional": true,
@@ -3175,7 +3176,7 @@
         3,
         4
       ],
-      "description": "古风英雄会获得属性，并随你的玩家等级成长。 (2) 额外攻击力与法术强度，外加每级护甲与魔法抗性。 (3) 以及每级额外生命值。 (4) 在两张可装备于古风英雄的卷轴（Scrolls）中选择。其中一张卷轴会开启通往 11 级的危险之路。",
+      "description": "国风弈子获得随玩家等级增长的属性。\n（2）每个玩家等级提供 2% 攻击力和法术强度，以及 2 点护甲和魔抗。\n（3）每个玩家等级额外提供 2% 生命值。\n（4）二选一获得国风专属卷轴。灵兽画卷开启升到 11 级的路径，每胜获得 4 经验，10 级时每胜获得 200 经验。",
       "image": "/assets/traits/gu-feng.svg",
       "dynamic": false,
       "provisional": true,
@@ -3195,7 +3196,7 @@
         5,
         7
       ],
-      "description": "(1) 心之钢成员会为你的队伍提供增益。 (3) 选择 1 个「偏好」（Bias），强化他们的技能。 (5) 选择第 2 个「偏好」。 (7) 心之钢英雄会额外获得一部分当前已激活的心之钢增益。 (7) 心之钢英雄会额外获得一部分当前已激活的心之钢增益。（原文重复渲染一次） 棱彩：系好安全带——心之钢回来了（HEARTSTEEL IS BACK）！ 瑟提：生命值 凯隐：攻击力 伊泽瑞尔：暴击率 克桑特：护甲与魔法抗性 阿露涅：法术强度 永恩：全能吸血 厄斐琉斯：攻击速度 纹章：耐久（Emblem: Durability） 娑娜：治疗与护盾效果提升",
+      "description": "每名不同的心之钢弈子都能为全队提供一项增益。提高羁绊档位，还能选择成员强化其技能。\n（1）已上场的心之钢成员为全队提供各自的增益。\n（3）选择第一名本命成员，强化其技能。\n（5）再选择第二名本命成员。\n（7）心之钢弈子额外获得已激活心之钢增益的 120%。专属棱彩任务需要造成 200,000 物理伤害和 100,000 魔法伤害，以及减免 150,000 伤害。完成任务后触发乐队回归。",
       "image": "/assets/trait-heartsteel.svg",
       "dynamic": false,
       "provisional": true,
@@ -3270,7 +3271,7 @@
         7,
         10
       ],
-      "description": "粉丝会周期性为离子火花成员欢呼并送上礼物。离子火花成员获得生命值。 (3) 额外生命值；信件（Letters），可恢复生命值并提供攻击速度 (5) 额外生命值；个性化礼物，提供攻击力或法术强度 (7) 额外生命值；玩家对战结束后周期性获得金币与一件消耗品！ (10) 粉丝冲上舞台！（Fans rush the stage!）",
+      "description": "成员获得生命值。每 4 秒，粉丝向成员送出一轮信件或礼物。\n（3）获得 100 生命值。每封信回复 2% 生命值并提供 8% 攻速。\n（5）获得 225 生命值。专属礼物提供 22% 攻击力或法术强度。\n（7）获得 400 生命值。每打完两场玩家对战获得金币和一个消耗品。\n（10）完成专属棱彩任务后，粉丝冲上舞台，造成波次伤害。",
       "image": "/assets/trait-ionicspark.svg",
       "dynamic": false,
       "provisional": true,
@@ -3309,7 +3310,7 @@
         15,
         21
       ],
-      "description": "K/DA 英雄会根据其总星级发布新歌。战斗开始时以及一段延迟后，他们会按自己拥有的每首歌获得强化。 (3) POP/STARS：最大法力值降低。 (5) DRUM GO DUM：基于最大生命值的护盾。 (7) VILLAIN：随时间衰减的攻击速度。 (10) I'LL SHOW YOU：增强此前所有效果。 (13) WATCH ME：短暂眩晕所有敌人。 (15) FIRESTARTER：敌人随时间受到基于其最大生命值的魔法伤害。 (21) GIRLS：K/DA 成员升华为 4 星。",
+      "description": "K/DA 弈子的总星级每到一档便解锁一首歌。开战时和 8 秒后，K/DA 弈子各获得一次已解锁的歌曲效果。\n（3）《POP/STARS》使最大法力值降低 10%。\n（5）《DRUM GO DUM》提供相当于 12% 最大生命值的护盾，持续 8 秒。\n（7）《VILLAIN》提供 45% 攻速，在 8 秒内衰减。\n（10）《I’LL SHOW YOU》将此前歌曲的效果提高到 1.25 倍。\n（13）《WATCH ME》使全体敌人晕眩 0.8 秒。\n（15）《FIRESTARTER》在 8 秒内造成相当于敌人 10% 最大生命值的魔法伤害。\n（21）取得专属棱彩任务并达到 21 星后，《GIRLS》使 K/DA 成员升到四星。",
       "image": "/assets/traits/k-da.svg",
       "dynamic": false,
       "provisional": true,
@@ -3382,7 +3383,7 @@
         5,
         7
       ],
-      "description": "五杀摇滚成员获得攻击力与法术强度。 最先降到某个生命值阈值以下的若干名敌人会被处决，并在原地召唤一名友方食尸鬼（ghoul）。 (3) 额外攻击力与法术强度，处决固定数量的敌人 (5) 额外攻击力与法术强度，处决固定数量的敌人 (7) 额外攻击力与法术强度，处决固定数量的敌人。第一个阵亡的敌人改为召唤「铁处女」（Iron Maiden）。 (7) 额外攻击力与法术强度。MOSH PIT（死墙）！！！！！！！",
+      "description": "成员获得攻击力和法术强度。前几名低于 10% 生命值的敌人会被处决，并在原地召唤友军食尸鬼。\n（3）获得 15% 攻击力和法术强度，可处决 2 名敌人。\n（5）获得 30% 攻击力和法术强度，可处决 3 名敌人。\n（7）获得 35% 攻击力和法术强度，可处决 4 名敌人。首名阵亡敌人改为召唤铁娘子。棱彩任务要求光明使者完成 55 次击杀，并升到 10 级。",
       "image": "/assets/trait-pentakill.svg",
       "dynamic": false,
       "provisional": true,
@@ -3422,7 +3423,7 @@
         5,
         7
       ],
-      "description": "(3) 召唤「地狱偶像」（Infernal Idol）。 (4) 他会按摇滚英雄造成伤害的一定比例治疗。 (5) 施法时，他会向敌人最密集的方向发射一次巨大冲击！ (7) 他在存活期间会周期性放出电矢轰击附近敌人，把摇滚英雄造成伤害的一部分作为魔法伤害重复一次。 「地狱偶像」会根据你的摇滚英雄星级变强。",
+      "description": "召唤地狱偶像。上场的摇滚恶魔星级越高，偶像越强。\n（3）召唤地狱偶像。\n（4）摇滚恶魔造成伤害时，偶像回复相当于该伤害 10% 的生命值。\n（5）偶像起始／最大法力变为 30／80。每第三次攻击改为重击，造成 110% 攻击力的物理伤害并回复相当于 85% 法强的生命值。施法的冲击波造成 450 魔法伤害。\n（7）偶像重击伤害提高到 175% 攻击力，治疗提高到 120% 法强，冲击波伤害提高到 650。每存活 3 秒发射 2 道电击，重复摇滚恶魔伤害的 18%。",
       "image": "/assets/traits/rock.svg",
       "dynamic": false,
       "provisional": true,
@@ -3472,7 +3473,7 @@
         3,
         5
       ],
-      "description": "处于 A 面时，赢得玩家对战可获得「Bling」。处于 B 面时，输掉对局可获得「Bling」。 周期性可以选择把「Bling」兑换成奖励，或选择「继续上升」（Keep Rising）。",
+      "description": "A 面靠获胜积攒珠光贵气，B 面靠落败积攒。每 4 回合可兑换奖励或继续累积，羁绊效果取决于当前唱片面。\n（3）A 面提供 18% 额外真实伤害，每次击杀得 2 珠光贵气，获胜再得 15。B 面落败得 20，每连败一场再加 4，获胜损失当前珠光贵气的 20%。\n（5）A 面提供 30% 额外真实伤害，每次击杀得 4 珠光贵气，获胜再得 20。B 面每回合战斗后回复 2 点玩家生命值并获得 2 经验。双人模式的 5 真实伤害改为 0 治疗、3 经验。棱彩任务遇到错误胜负时，最多保留 1 次有效重叠进度。完成任务后，A 面提高珠光贵气收益，B 面击杀会掉金币。",
       "image": "/assets/trait-truedamage.svg",
       "dynamic": false,
       "provisional": true,
@@ -4383,8 +4384,8 @@
     "PBE 解锁条件以当前构建的商店标记与任务为准。"
   ],
   "unlockRelease": {
-    "build": "19.1.0.6028987",
-    "date": "2026-11-25",
-    "guideUrl": "https://x.com/TheTruexy/status/2125291417765572776"
+    "build": "19.1.0.6035832",
+    "date": "2026-11-26",
+    "guideUrl": "https://bsky.app/profile/truexy-bot.bsky.social/post/3n35nkji6lr2w"
   }
 }

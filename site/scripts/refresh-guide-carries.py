@@ -183,7 +183,7 @@ def main():
     if not any(r["games"] >= 100 and r["completedGames"] > 0 for r in rows):
         raise ValueError("No usable anchor sample. Keeping previous file.")
     out = {"seasonId":season["id"],"queue":"PBE","patch":patch + window["b_patch"],"build":build,
-           "window":"热补后","days":3,"minGames":100,
+           "window":f"近三天 · {patch}{window['b_patch']} 滚动","days":3,"minGames":100,
            "updatedAt":datetime.now(timezone.utc).isoformat(timespec="seconds"),"rows":rows}
     with NamedTemporaryFile(mode="w", encoding="utf-8", newline="\n", dir=args.out.parent, delete=False) as f:
         json.dump(out, f, ensure_ascii=False, separators=(",",":"), allow_nan=False)

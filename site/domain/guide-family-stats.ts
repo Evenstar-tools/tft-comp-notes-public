@@ -27,6 +27,7 @@ export interface GuideFamilyBatch {
   updatedAt: string;
   totalFinishes?: number;
   build?: string;
+  spansBuilds?: boolean;
   rows: GuideFamilyStat[];
 }
 
@@ -51,7 +52,7 @@ export function formatRecommendationMean(mean: number): string {
 }
 
 export type GuideFamilySnapshot = GuideFamilyBatch & { sourceUrl: string };
-type FamilyBatchMetadata = Pick<GuideFamilyBatch, "seasonId" | "queue" | "patch" | "days" | "updatedAt" | "build">;
+type FamilyBatchMetadata = Pick<GuideFamilyBatch, "seasonId" | "queue" | "patch" | "days" | "updatedAt" | "build" | "spansBuilds">;
 type FamilyPatch = { seasonId?: string; build?: string; label: string; effectiveAt: string };
 const day = 24 * 60 * 60 * 1000;
 const recommendationGrace = day / 2;
@@ -78,7 +79,7 @@ export function currentFamilyBatch(
 }
 
 export function currentRecommendationEvidence(batch: FamilyBatchMetadata, seasonId: string, patch?: FamilyPatch) {
-  if (!patch || !currentFamilyBatch(batch, seasonId, patch)) return false;
+  if (!patch || batch.spansBuilds || !currentFamilyBatch(batch, seasonId, patch)) return false;
   return batch.build ? batch.build === patch.build :
     Date.parse(batch.updatedAt) - batch.days * day >= Date.parse(patch.effectiveAt);
 }

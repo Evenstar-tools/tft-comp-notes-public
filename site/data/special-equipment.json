@@ -1,5 +1,5 @@
 {
-  "build": "19.1.0.6014015",
+  "build": "19.1.0.6035832",
   "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json",
   "items": [
     {
@@ -748,7 +748,7 @@
       "category": "radiant",
       "image": "/assets/items/DA_BloodthirsterRadiant.webp",
       "name": "光明版饮血剑",
-      "description": "每场战斗一次。生命值降至60%时，获得相当于50%最大生命值的护盾，并在此后获得30%额外全能吸血，持续到战斗结束。",
+      "description": "每场战斗一次。生命值降至50%时，获得相当于50%最大生命值的护盾，并在此后获得30%额外全能吸血，持续到战斗结束。",
       "stats": [
         {
           "label": "物理加成",
@@ -807,11 +807,11 @@
       "category": "radiant",
       "image": "/assets/items/DA_CrownguardRadiant.webp",
       "name": "光明版冕卫",
-      "description": "战斗开始时获得20%最大生命值的护盾，持续8秒。携带者受到的治疗和护盾效果提高25%。",
+      "description": "战斗开始时获得30%最大生命值的护盾，持续8秒。携带者受到的治疗和护盾效果提高50%。",
       "stats": [
         {
           "label": "生命值",
-          "value": "+100"
+          "value": "+200"
         },
         {
           "label": "法术加成",
@@ -1220,11 +1220,11 @@
       "stats": [
         {
           "label": "物理加成",
-          "value": "+30%"
+          "value": "+35%"
         },
         {
           "label": "法术加成",
-          "value": "+30%"
+          "value": "+35%"
         },
         {
           "label": "法力回复",
@@ -1279,15 +1279,15 @@
       "category": "radiant",
       "image": "/assets/items/DA_SteraksGageRadiant.webp",
       "name": "光明版斯特拉克的挑战护手",
-      "description": "在40%生命值时，获得相当于携带者40%最大生命值的护盾值，在4秒内快速衰减。",
+      "description": "在60%生命值时，获得相当于携带者80%最大生命值的护盾值，在6秒内快速衰减。",
       "stats": [
         {
           "label": "生命值",
-          "value": "+300"
+          "value": "+600"
         },
         {
           "label": "物理加成",
-          "value": "+45%"
+          "value": "+90%"
         }
       ]
     },
@@ -1321,15 +1321,15 @@
       "category": "radiant",
       "image": "/assets/items/DA_SunfireCape_Radiant.webp",
       "name": "光明版日炎斗篷",
-      "description": "获得8%最大生命值。\n\n每过2秒，对2格内的一名敌人施加持续10秒的1%灼烧效果和33%重伤效果。\n\n灼烧：每秒造成目标一部分最大生命值的真实伤害\n重伤：降低受到的治疗效果。",
+      "description": "获得16%最大生命值。\n\n每过2秒，对2格内的一名敌人施加持续10秒的2%灼烧效果和33%重伤效果。\n\n灼烧：每秒造成目标一部分最大生命值的真实伤害\n重伤：降低受到的治疗效果。",
       "stats": [
         {
           "label": "生命值",
-          "value": "+150"
+          "value": "+300"
         },
         {
           "label": "护甲",
-          "value": "+20"
+          "value": "+40"
         }
       ]
     },
@@ -1397,7 +1397,7 @@
       "stats": [
         {
           "label": "生命值",
-          "value": "+1200"
+          "value": "+1300"
         }
       ]
     }
@@ -1405,7 +1405,7 @@
   "recipes": {
     "emblem-arcanist": {
       "name": "法师纹章",
-      "description": "携带者获得【法师】羁绊。",
+      "description": "携带者获得【法师】羁绊。\n击杀时获得10法力值。",
       "stats": [
         {
           "label": "法术加成",
@@ -1416,11 +1416,11 @@
         "TFT_Item_FryingPan",
         "TFT_Item_NeedlesslyLargeRod"
       ],
-      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_en_us.json"
     },
     "emblem-bodyguard": {
       "name": "护卫纹章",
-      "description": "携带者获得【护卫】羁绊。",
+      "description": "携带者获得【护卫】羁绊。\n获得相当于总护甲20%的物理加成和相当于总魔抗20%的法术加成。",
       "stats": [
         {
           "label": "护甲",
@@ -1435,7 +1435,7 @@
         "TFT_Item_FryingPan",
         "TFT_Item_ChainVest"
       ],
-      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_en_us.json"
     },
     "emblem-rock": {
       "name": "摇滚恶魔纹章",
@@ -1458,11 +1458,11 @@
         "TFT_Item_Spatula",
         "TFT_Item_SparringGloves"
       ],
-      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_en_us.json"
     },
     "emblem-frontman": {
       "name": "主唱纹章",
-      "description": "携带者获得【主唱】羁绊。",
+      "description": "携带者获得【主唱】羁绊。\n每过5秒，下次攻击会造成相当于自身最大生命值12%的魔法伤害。",
       "stats": [
         {
           "label": "生命值",
@@ -1473,11 +1473,11 @@
         "TFT_Item_FryingPan",
         "TFT_Item_GiantsBelt"
       ],
-      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_en_us.json"
     },
     "emblem-heartsteel": {
       "name": "心之钢纹章",
-      "description": "携带者获得【心之钢】羁绊。\n\n偏好效果：获得每个【心之钢】加成的125%。",
+      "description": "携带者获得【心之钢】羁绊。\n获得心之钢每项本命加成的125%。",
       "stats": [
         {
           "label": "护甲",
@@ -1489,56 +1489,52 @@
         },
         {
           "label": "物理加成",
-          "value": "+10%"
+          "value": "+15%"
         },
         {
           "label": "法术加成",
-          "value": "+10%"
+          "value": "+15%"
         }
       ],
       "components": [
         "TFT_Item_Spatula",
         "TFT_Item_ChainVest"
       ],
-      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_en_us.json"
     },
     "emblem-hitmaker": {
       "name": "音乐制作人纹章",
-      "description": "携带者获得【制作人】羁绊。",
+      "description": "携带者获得【音乐制作人】羁绊。\n携带者额外成为一名大腕枪手。",
       "stats": [
         {
           "label": "物理加成",
-          "value": "+10%"
+          "value": "+25%"
         }
       ],
       "components": [
         "TFT_Item_FryingPan",
         "TFT_Item_BFSword"
       ],
-      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_en_us.json"
     },
     "emblem-illbeats": {
       "name": "大触打击乐纹章",
       "description": "携带者获得【大触打击乐】羁绊。",
       "stats": [
         {
-          "label": "护甲",
-          "value": "+0"
-        },
-        {
-          "label": "魔抗",
-          "value": "+0"
+          "label": "生命值",
+          "value": "+300"
         },
         {
           "label": "攻速",
-          "value": "+15%"
+          "value": "+20%"
         }
       ],
       "components": [
         "TFT_Item_Spatula",
         "TFT_Item_GiantsBelt"
       ],
-      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_en_us.json"
     },
     "emblem-ionic-spark": {
       "name": "离子火花纹章",
@@ -1561,7 +1557,7 @@
         "TFT_Item_Spatula",
         "TFT_Item_NegatronCloak"
       ],
-      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_en_us.json"
     },
     "emblem-k-da": {
       "name": "K/DA纹章",
@@ -1569,41 +1565,45 @@
       "stats": [
         {
           "label": "生命值",
-          "value": "+150"
+          "value": "+100"
         },
         {
           "label": "物理加成",
-          "value": "+15%"
+          "value": "+10%"
         },
         {
           "label": "法术加成",
-          "value": "+15%"
+          "value": "+10%"
         }
       ],
       "components": [
         "TFT_Item_Spatula",
         "TFT_Item_NeedlesslyLargeRod"
       ],
-      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_en_us.json"
     },
     "emblem-slayer": {
       "name": "舞者纹章",
-      "description": "携带者获得【舞者】羁绊。",
+      "description": "携带者获得【舞者】羁绊。\n根据目标已损失的生命值，最多额外造成40%伤害。",
       "stats": [
         {
-          "label": "物理加成",
-          "value": "+0%"
+          "label": "护甲",
+          "value": "+20"
         },
         {
-          "label": "法术加成",
-          "value": "+0%"
+          "label": "魔抗",
+          "value": "+20"
+        },
+        {
+          "label": "攻速",
+          "value": "+15%"
         }
       ],
       "components": [
         "TFT_Item_FryingPan",
         "TFT_Item_NegatronCloak"
       ],
-      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_en_us.json"
     },
     "emblem-beach-pop": {
       "name": "海之歌纹章",
@@ -1622,7 +1622,7 @@
         "TFT_Item_Spatula",
         "TFT_Item_TearOfTheGoddess"
       ],
-      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_en_us.json"
     },
     "emblem-pentakill": {
       "name": "五杀乐队纹章",
@@ -1645,11 +1645,11 @@
         "TFT_Item_Spatula",
         "TFT_Item_BFSword"
       ],
-      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_en_us.json"
     },
     "emblem-prodigy": {
       "name": "天才纹章",
-      "description": "携带者获得【天才】羁绊。\n\n施放技能时，每消耗10法力值，就会获得1%最大生命值。",
+      "description": "携带者获得【天才】羁绊。\n施放技能时，每消耗10法力值，获得1%最大生命值。",
       "stats": [
         {
           "label": "生命值",
@@ -1664,30 +1664,26 @@
         "TFT_Item_FryingPan",
         "TFT_Item_TearOfTheGoddess"
       ],
-      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_en_us.json"
     },
     "emblem-renegade": {
       "name": "非主流纹章",
-      "description": "携带者获得【非主流】羁绊。",
+      "description": "携带者获得【非主流】羁绊。\n暴击有50%几率造成40%额外暴击伤害。",
       "stats": [
         {
           "label": "暴击率",
           "value": "+20%"
-        },
-        {
-          "label": "暴击伤害",
-          "value": "+0%"
         }
       ],
       "components": [
         "TFT_Item_FryingPan",
         "TFT_Item_SparringGloves"
       ],
-      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_en_us.json"
     },
     "emblem-swiftstriker": {
       "name": "迅击鼓手纹章",
-      "description": "携带者获得【迅击鼓手】羁绊。",
+      "description": "携带者获得【迅击鼓手】羁绊。\n普攻附带12–50点额外真实伤害，伤害随阶段提升。",
       "stats": [
         {
           "label": "攻速",
@@ -1698,11 +1694,11 @@
         "TFT_Item_FryingPan",
         "TFT_Item_RecurveBow"
       ],
-      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_en_us.json"
     },
     "emblem-classical": {
       "name": "古典乐纹章",
-      "description": "携带者获得【古典乐】羁绊，其技能会使命中的敌人陷入迷醉，持续3秒。\n\n陷入迷醉的敌人会为【古典乐】弈子提供加成。",
+      "description": "携带者获得【古典乐】羁绊。\n技能命中的敌人陷入迷醉，持续3秒。陷入迷醉的敌人会为古典乐弈子提供加成。",
       "stats": [
         {
           "label": "护甲",
@@ -1721,7 +1717,7 @@
         "TFT_Item_Spatula",
         "TFT_Item_RecurveBow"
       ],
-      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
+      "sourceUrl": "https://data.metatft.com/lookups/TFTSet19_pbe_en_us.json"
     }
   }
 }

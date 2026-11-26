@@ -393,6 +393,9 @@ test("home recommendations retain the previous verified batch only until 12 hour
   assert.equal(previousRecommendationDeadline(refreshed, seasonId, patch, rollout), undefined);
   const verified = { ...refreshed, build: "6018196", patch: "19.1b" };
   assert.equal(currentRecommendationEvidence(verified, seasonId, patch), true);
+  const mixed = { ...verified, spansBuilds: true };
+  assert.equal(currentFamilyBatch(mixed, seasonId, patch), true);
+  assert.equal(currentRecommendationEvidence(mixed, seasonId, patch), false);
   assert.equal(currentRecommendationEvidence({ ...verified, build: "6014015" }, seasonId, patch), false);
   assert.equal(currentRecommendationEvidence({ ...verified, updatedAt: previous.updatedAt }, seasonId, patch), false);
   const fullWindow = { ...refreshed, updatedAt: "2026-11-27T01:05:32Z" };

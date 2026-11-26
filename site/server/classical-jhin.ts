@@ -19,7 +19,7 @@ const magicBoards = new Set([
 ]);
 const handoff = "蓝霸符、鬼书、大天使齐了，一星吸血鬼就接装，优先于两星梅尔。";
 const loadout = "副C：弗拉基米尔。蓝霸符、鬼书、大天使。";
-const variantNotes = "八级烬和前排两星稳血后再上九。凑 8 个常规羁绊解锁史密奇，上场开三爵士，烬继续主 C。";
+const variantNotes = "八级烬和前排两星稳血后再上九。借四爵士开锁盘过渡，用凯隐临时替卡蜜尔，凑九个非唯一羁绊。史密奇上场开三爵士，烬继续主 C。";
 const textBlock = (id: string, text: string): ContentBlock => ({ id, type: "text", text });
 
 function markFirstBatch(block: ContentBlock) {
