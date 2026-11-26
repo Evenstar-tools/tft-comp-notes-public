@@ -25,7 +25,8 @@ function fixture(t) {
     cpSync(join(site, "scripts", name), join(cwd, "scripts", name));
   }
   for (const name of ["data", "public/stats-history"]) {
-    cpSync(join(site, name), join(cwd, name), { recursive: true });
+    // Keep the JS copy path for Windows workspaces with non-ASCII directory names.
+    cpSync(join(site, name), join(cwd, name), { recursive: true, filter: () => true });
   }
   return cwd;
 }

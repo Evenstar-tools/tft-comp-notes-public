@@ -4688,7 +4688,7 @@
       ],
       "games": 4520,
       "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&unit=DA_Annie19-1&unit=DA_Braum19-1&unit=DA_Galio19-1&unit=DA_Jinx19-1&unit=DA_Lucian19-1&unit=DA_Mel19-1&unit=DA_Shyvana19-1&unit=DA_Yuumi19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
-      "sampleScope": "八张核心同场 · 结算等级、星级与装备不限",
+      "sampleScope": "八张指定棋子同场（含加里奥、梅尔、悠米） · 结算等级、星级与装备不限",
       "conditions": {
         "kind": "core",
         "teamId": "00000000-0000-4000-8000-000000001251",

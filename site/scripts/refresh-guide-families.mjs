@@ -15,7 +15,7 @@ const out = resolve(arg("--output") || siteSnapshot);
 const trendOutput = arg("--trends") || (out === siteSnapshot ? resolve(root, "data/comp-trends.json") : undefined);
 const reviewPath = resolve(arg("--review") || resolve(root, "outputs/family-review/review.json"));
 const historyPath = resolve(arg("--history") || resolve(dirname(reviewPath), "family-history.json"));
-const catalogUrl = "https://tft.example.com/api/guides/catalog";
+const catalogPath = arg("--catalog") || resolve(root, "outputs/family-review/catalog.json");
 const previousReviewPath = arg("--previous-review");
 const readJson = async (file) => JSON.parse(await readFile(file, "utf8"));
 async function writeJson(file, value) {
@@ -73,6 +73,11 @@ if (currentPatch.seasonId !== "s19-pbe" || !/^\d+$/.test(currentPatch.build) ||
   throw Error("请先核实当前 PBE 构建、补丁和生效时间。");
 }
 const patch = cohort.patch + cohort.bPatch;
+const catalog = await readJson(catalogPath);
+if (catalog.seasonId !== season.id || !catalog.boards?.length) throw Error("缺少当前赛季公开攻略目录，保留上一批。");
+const publicBoards = catalog.boards.filter(b => b.edition === season.id);
+const publicBoardById = new Map(publicBoards.map(board => [board.teamId, board]));
+if (!publicBoards.length) throw Error("当前攻略目录与站点版本不一致。");
 const { stats, model, statsUrl } = await capture(cohort);
 if (stats.filter_adjustment || stats.tft_set !== bindings.set || model.tft_set !== bindings.set ||
     [stats.queue_id,model.queue_id].some(q=>q?.toUpperCase()!==bindings.queue) ||
@@ -83,11 +88,6 @@ if (stats.filter_adjustment || stats.tft_set !== bindings.set || model.tft_set !
 }
 const groups = model.results.data.cluster_details;
 const history = await readJson(historyPath).catch(e=>{if(e.code==="ENOENT") return {}; throw e});
-const catalog = arg("--catalog") ? await readJson(arg("--catalog")) : await fetchJson(catalogUrl);
-if (catalog.seasonId !== season.id || !catalog.boards?.length) throw Error("缺少当前赛季公开攻略目录，保留上一批。");
-const publicBoards = catalog.boards.filter(b => b.edition === season.id);
-const publicBoardById = new Map(publicBoards.map(board => [board.teamId, board]));
-if (!publicBoards.length) throw Error("当前攻略目录与站点版本不一致。");
 async function fetchJson(url) {
   const res = await fetch(url, {signal:AbortSignal.timeout(30000)});
   if (!res.ok) throw Error(url+" "+res.status);
@@ -145,7 +145,11 @@ for (const b of bindings.rows) {
   const compatible = ids.filter(id => {
     const board = publicBoardById.get(id);
     const carries = board?.roles.filter(role => role.label === "主C" || role.label === "主输出").flatMap(role => role.units) ?? [];
-    return board?.sectionId === info.sectionId && board.special === anchor.special && !board.emblems?.length && board.kind !== "过渡"
+    // An explicitly selected fast-eight landing can be a guide stage that adds one unit at nine.
+    const eightToNine = id === info.landingTeamId && board?.units.length === 8 && anchor.units.length === 9 &&
+      board.units.every(unit => anchor.units.includes(unit));
+    return board?.sectionId === info.sectionId && board.special === anchor.special && !board.emblems?.length &&
+      (board.kind !== "过渡" || eightToNine)
       && carries.some(id => info.carryIds.includes(id))
       && (!anchor.rollLevel || !board.rollLevel || anchor.rollLevel === board.rollLevel);
   });

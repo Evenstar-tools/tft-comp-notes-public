@@ -29,6 +29,7 @@ export interface GuideFamilyBatch {
   build?: string;
   spansBuilds?: boolean;
   rows: GuideFamilyStat[];
+  smallSamples?: GuideFamilyStat[];
 }
 
 const placementCutoff = 4.5;
@@ -78,8 +79,12 @@ export function currentFamilyBatch(
       !source[2] || !current[2] || source[2].toLowerCase() === current[2].toLowerCase()));
 }
 
-export function currentRecommendationEvidence(batch: FamilyBatchMetadata, seasonId: string, patch?: FamilyPatch) {
-  if (!patch || batch.spansBuilds || !currentFamilyBatch(batch, seasonId, patch)) return false;
+export function currentRecommendationEvidence(
+  batch: FamilyBatchMetadata, seasonId: string, patch?: FamilyPatch, reviewedRollingPatch?: string,
+) {
+  if (!patch || !currentFamilyBatch(batch, seasonId, patch)) return false;
+  // A reviewed rolling cohort can keep the same source patch across a Riot hotfix.
+  if (batch.spansBuilds) return !!patch.build && batch.build === patch.build && batch.patch === reviewedRollingPatch;
   return batch.build ? batch.build === patch.build :
     Date.parse(batch.updatedAt) - batch.days * day >= Date.parse(patch.effectiveAt);
 }
@@ -192,13 +197,26 @@ export function selectRecommendationRoutes<T extends {
     .sort((a, b) => position(a) - position(b) || Number(!!a.conditional) - Number(!!b.conditional)));
 }
 
+function familyBoardIds(stat: GuideFamilyStat, primaryTeamId?: string) {
+  return [stat.landingTeamId, stat.teamId ?? primaryTeamId, ...(stat.sharedTeamIds ?? [])];
+}
+
+// Membership still matters when a native sample is too small or its batch is stale.
+export function guideFamilyBoardIds(batch: GuideFamilyBatch, seasonId: string, sectionId: string, primaryTeamId?: string) {
+  if (batch.seasonId !== seasonId) return new Set<string>();
+  return new Set([...batch.rows, ...(batch.smallSamples ?? [])]
+    .filter(stat => stat.sectionId === sectionId)
+    .flatMap(stat => familyBoardIds(stat, primaryTeamId))
+    .filter(id => id !== undefined));
+}
+
 export function guideFamilyRows(batch: GuideFamilyBatch, seasonId: string, sectionId: string, teams: Team[]) {
   if (batch.seasonId !== seasonId || !batch.patch || !batch.updatedAt || batch.days < 1) return [];
   return batch.rows.flatMap(stat => {
     if (stat.sectionId !== sectionId || recommendationTier(stat) === "review") return [];
     const team = stat.teamId ? teams.find(t => t.id === stat.teamId) : teams[0];
     if (!team) return [];
-    const ids = new Set([stat.landingTeamId, team.id, ...(stat.sharedTeamIds ?? [])]);
+    const ids = new Set(familyBoardIds(stat, team.id));
     const boards = [...ids].flatMap(id => teams.find(option => option.id === id) ?? []);
     return [{ stat, team, boards }];
   });

@@ -34,6 +34,7 @@ export type PatchRecommendationBatch = {
   seasonId: string;
   build: string;
   reviewedAt: string;
+  reviewedRollingPatch?: string;
   window?: { start: string; end: string };
   summary?: string;
   displayOrder?: string[];

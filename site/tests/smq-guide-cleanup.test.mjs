@@ -6,7 +6,7 @@ import { guidePlaystyle, guideRoute, guideSectionWithCurrentNames, readingNotes 
 import { legacyGuideDestination } from "../domain/legacy-guide-redirects.ts";
 import { traitCounts, traitGroup, usedPopulation } from "../domain/team.ts";
 import { findPlacement } from "../domain/guide-placement.ts";
-import { recommendationTier } from "../domain/guide-family-stats.ts";
+import { guideFamilyBoardIds, guideFamilyRows, recommendationTier } from "../domain/guide-family-stats.ts";
 import { migrateS19GuideSnapshot } from "../server/s19-guide-cleanup.ts";
 
 const json = path => JSON.parse(readFileSync(new URL(path, import.meta.url), "utf8"));
@@ -113,21 +113,59 @@ test("published guide data resolves every section and board reference", () => {
   assert.ok(placements.find(row => row.conditions?.teamId === board(classical, "1138").id).games >= 617);
 });
 
-test("authored fast-nine samples resolve against the actual published boards", () => {
+test("native fast-nine ratings drive recommendations while filtered samples remain available on the board", () => {
   const batch = json("../data/guide-placement.json");
+  const families = json("../data/guide-family-stats.json");
   const picks = json("../data/patch-recommendations.json");
-  for (const suffix of ["0235", "0275"]) {
+  for (const [suffix, clusterId, tier, status] of [
+    ["0235", "429055", "secondary", "avoid"],
+    ["0275", "429004", "recommended", "recommended"],
+    ["0214", "429021", "recommended", "conditional"],
+  ]) {
     const section = guide(suffix);
     const team = section.team;
     const pick = picks.entries.find(entry => entry.sectionId === section.id && entry.teamId === team.id);
-    const records = batch.records.filter(row => row.conditions?.kind === "core" && pick?.sources.includes(row.url));
+    const [family] = guideFamilyRows(families, preview.season.id, section.id, sectionTeams(section));
+    assert.equal(family.stat.clusterId, clusterId);
+    assert.equal(family.team.id, team.id);
+    assert.equal(recommendationTier(family.stat), tier);
+    assert.equal(pick.status, status);
+    assert.equal(pick.group, "fast9");
+    assert.deepEqual(pick.sources, [family.stat.url]);
+    assert.equal(picks.displayOrder.includes(team.id), tier === "recommended");
+    const carries = readingNotes(section, team, preview.season).roles.find(role => role.label === "主C").units;
+    assert.deepEqual(family.stat.carryIds, carries);
+    if (suffix === "0214") continue;
+    const records = batch.records.filter(row => row.conditions?.kind === "core" && row.conditions.teamId === team.id);
     const traitLevels = Object.fromEntries(active(team.pieces).map(trait => [trait.id, trait.level]));
     const sample = findPlacement({ ...batch, records }, team.pieces.map(piece => piece.unitId), usedPopulation(team.pieces), {
       edition: preview.season.id, teamId: team.id, traitLevels, pieces: team.pieces,
     });
-    assert.equal(pick.group, "fast9");
     assert.equal(sample?.build, picks.build);
     assert.equal(sample?.conditions?.population, 9);
     assert.equal(recommendationTier(sample), "recommended");
+    assert.ok(sample.mean < family.stat.mean);
   }
+});
+
+test("Jazz Jinx shares one native rating from the fast-eight landing to the nine-unit upgrade", () => {
+  const section = guide("1110");
+  const teams = sectionTeams(section);
+  const [landing, anchor] = ["1252", "1251"].map(id => board(section, id));
+  const batch = json("../data/guide-family-stats.json");
+  const picks = json("../data/patch-recommendations.json");
+  const [family] = guideFamilyRows(batch, preview.season.id, section.id, teams);
+  const pick = picks.entries.find(entry => entry.sectionId === section.id);
+  assert.equal(family.stat.clusterId, "429018");
+  assert.equal(family.team.id, anchor.id);
+  assert.deepEqual(family.boards.map(team => team.id), [landing.id, anchor.id]);
+  assert.equal(usedPopulation(landing.pieces), 8);
+  assert.ok(landing.pieces.every(piece => piece.unitId !== "smeech"));
+  assert.equal(pick.teamId, landing.id);
+  assert.ok(picks.displayOrder.includes(landing.id));
+  assert.deepEqual(pick.sources, [family.stat.url]);
+
+  const small = { ...batch, rows: [], smallSamples: [{ ...family.stat, games: 99 }] };
+  assert.deepEqual(guideFamilyRows(small, preview.season.id, section.id, teams), []);
+  assert.deepEqual([...guideFamilyBoardIds(small, preview.season.id, section.id, anchor.id)], [landing.id, anchor.id]);
 });

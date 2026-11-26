@@ -25,7 +25,7 @@ export type RecommendationCard = {
 };
 
 export function PatchRecommendationList({ stats, cards, home, previousBuild }: {
-  stats: Pick<GuideFamilyBatch, "patch" | "queue" | "days" | "updatedAt">;
+  stats: Pick<GuideFamilyBatch, "patch" | "queue" | "days" | "updatedAt" | "spansBuilds">;
   cards: RecommendationCard[];
   home: string;
   previousBuild?: boolean;
@@ -40,6 +40,7 @@ export function PatchRecommendationList({ stats, cards, home, previousBuild }: {
   const updatedSample = <p className="home-patch-sample">
     {previousBuild ? <>{hasCurrentCore ? "含上一版参考" : "上一版参考"} · {stats.queue} {stats.patch} · </> : "数据更新 "}
     <time dateTime={stats.updatedAt} title="北京时间">{beijingDateTime.format(new Date(stats.updatedAt))}</time>
+    {stats.spansBuilds && " · 采样窗口跨热补"}
   </p>;
 
   return <div className="home-patch-recommendations">

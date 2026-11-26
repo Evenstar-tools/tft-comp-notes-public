@@ -118,6 +118,32 @@
       ]
     },
     {
+      "clusterId": "429018",
+      "sourceName": "Arcanist Shyvana",
+      "name": "爵士金克丝",
+      "sectionId": "sample-block-1110",
+      "teamId": "00000000-0000-4000-8000-000000001251",
+      "carryIds": [
+        "jinx"
+      ],
+      "url": "https://www.metatft.com/pbe-comps#DA_Arcanist19-DA_Shyvana19",
+      "landingTeamId": "00000000-0000-4000-8000-000000001252",
+      "sharedTeamIds": [
+        "00000000-0000-4000-8000-000000001252"
+      ],
+      "representativeUnits": [
+        "DA_Annie19",
+        "DA_Braum19",
+        "DA_Galio19",
+        "DA_Jinx19",
+        "DA_Lucian19",
+        "DA_Mel19",
+        "DA_Shyvana19",
+        "DA_Smeech19",
+        "DA_Yuumi19"
+      ]
+    },
+    {
       "clusterId": "429024",
       "sourceName": "Pentakill Kayle",
       "name": "五杀天使",
@@ -143,6 +169,28 @@
         "DA_Olaf19",
         "DA_Swain19",
         "DA_Viego19",
+        "DA_Yorick19"
+      ]
+    },
+    {
+      "clusterId": "429004",
+      "sourceName": "Pentakill Kayle Mel",
+      "name": "三爵士五杀史密奇",
+      "sectionId": "sample-block-0275",
+      "teamId": "00000000-0000-4000-8000-000000000082",
+      "carryIds": [
+        "smeech"
+      ],
+      "url": "https://www.metatft.com/pbe-comps#DA_Pentakill19-DA_Kayle19-DA_Mel19",
+      "representativeUnits": [
+        "DA_Bard19",
+        "DA_Camille19",
+        "DA_Galio19",
+        "DA_Kayle19",
+        "DA_Mel19",
+        "DA_Olaf19",
+        "DA_Smeech19",
+        "DA_Swain19",
         "DA_Yorick19"
       ]
     },
@@ -236,12 +284,12 @@
       "url": "https://www.metatft.com/pbe-comps#DA_Heavenscale19-DA_Xayah19",
       "representativeUnits": [
         "DA_Alune19",
-        "DA_Aphelios19",
         "DA_DrMundo19",
         "DA_Janna19",
         "DA_KSante19",
         "DA_LeeSin19",
         "DA_Leona19",
+        "DA_MissFortune19",
         "DA_Wukong19",
         "DA_Xayah19"
       ]

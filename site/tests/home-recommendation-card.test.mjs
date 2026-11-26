@@ -24,7 +24,7 @@ test("the recommendation card shows only mean placement and exposes the full sam
 
   const html = renderToStaticMarkup(createElement(exports.PatchRecommendationList, {
     home: "/",
-    stats: { patch: "19.1c", queue: "PBE", updatedAt: "2026-11-26T00:00:00Z", days: 3 },
+    stats: { patch: "19.1c", queue: "PBE", updatedAt: "2026-11-26T00:00:00Z", days: 3, spansBuilds: true },
     cards: [{
       group: "fast9", title: "速九阵容", team: { id: "board" },
       rating: { sectionId: "guide", mean: 3.41, games: 1234, topFourRate: .681, winRate: .215, sampleScope: "9 级结算" },
@@ -35,6 +35,7 @@ test("the recommendation card shows only mean placement and exposes the full sam
   assert.match(html, /aria-label="平均排名 3\.41 · 前四 68\.1% · 登顶 21\.5% · 1,234 场 · 核心样本 · 9 级结算"/);
   assert.match(html, /<span class="home-patch-mean-label">均名<\/span> <b>3\.41<\/b><\/span>/);
   const visibleText = html.replace(/<[^>]+>/g, "");
+  assert.match(visibleText, /采样窗口跨热补/);
   assert.match(visibleText, /时机血量和经济都高再上九/);
   assert.doesNotMatch(visibleText, /有条件|前四|登顶|[\d,]+\s*场/);
 });
