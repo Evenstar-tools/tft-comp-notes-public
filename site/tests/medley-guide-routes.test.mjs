@@ -1,6 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { registerHooks } from "node:module";
+import { buildMedleyFits } from "../domain/medley-fit.ts";
 
 // Give the existing guide-family imports the resolution Next provides.
 const resolver = registerHooks({
@@ -30,7 +32,7 @@ test("medley only compares stages with their authored terminal board", () => {
     ],
   } };
   const routes = medleyGuideRoutes([guide], season, season);
-  assert.deepEqual(routes.map(route => [route.teamId, route.stageHref]), [
+  assert.deepEqual(routes.filter(route => route.stageHref).map(route => [route.teamId, route.stageHref]), [
     ["main", "/guides/guide?team=main-stage"],
     ["parallel", "/guides/guide?team=parallel-stage"],
   ]);
@@ -42,8 +44,34 @@ test("an embedded midgame board links to its exact stage and conditional or out-
   const gated = { ...section([{ ...final, conditions: [{ kind: "required", augmentId: "special" }] }]), id: "gated" };
   const old = { ...regular, id: "old", gameData: { ...season, id: "s18-live" } };
   const routes = medleyGuideRoutes([regular, gated, old], season, season);
-  assert.equal(routes.length, 1);
+  assert.equal(routes.length, 2);
   assert.equal(routes[0].stageHref, "/guides/guide?team=final&stage=mid");
   assert.equal(routes[0].opening.length, 6);
   assert.equal(routes[0].final.length, 8);
+  assert.equal(routes[1].stageHref, undefined);
+  assert.deepEqual(routes[1].opening, []);
+});
+
+test("published reviewed transitions prove Guinsoo Gnar, Shojin Zoe and the ninth-level Vi check", () => {
+  const readData = name => JSON.parse(readFileSync(new URL("../data/" + name, import.meta.url), "utf8"));
+  const { sections, season: publicationSeason } = readData("public-preview.json");
+  const current = readData("season.json");
+  const { groups } = readData("medley-groups.json");
+  const routes = medleyGuideRoutes(sections, publicationSeason, current);
+  const fits = buildMedleyFits(groups, routes, current.units, current.items);
+  const renata = fits[18].find(fit => fit.finalHref.endsWith("000046"));
+  assert.equal(renata.score, 3);
+  assert.deepEqual(renata.finalIds, ["lillia", "renata-glasc", "vi"]);
+  assert.deepEqual(renata.lateIds, ["vi"]);
+  assert.ok(renata.stageHref.endsWith("000111"));
+  const gnar = fits[28].find(fit => fit.handoff?.fromId === "gnar");
+  assert.deepEqual(gnar.handoff, {
+    fromId: "gnar", toId: "kai-sa", itemIds: ["TFT_Item_GuinsoosRageblade", "TFT_Item_RunaansHurricane"], source: "guide",
+  });
+  const opening = routes.find(route => route.guideOpening && route.stageHref === gnar.stageHref && route.finalHref === gnar.finalHref);
+  assert.ok(!opening.opening.find(piece => piece.unitId === "kai-sa").items.includes("TFT_Item_GuinsoosRageblade"));
+  const zoe = fits[13].find(fit => fit.handoff?.fromId === "zoe");
+  assert.ok(zoe.handoff.itemIds.includes("TFT_Item_SpearOfShojin"));
+  assert.ok(zoe.finalHref.endsWith("001085"));
+  assert.ok(zoe.stageHref.endsWith("001126"));
 });
