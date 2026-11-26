@@ -1,7 +1,7 @@
 "use client";
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
 import { request } from "./api";
-type Session = { signedIn: boolean; isOwner: boolean; loginConfigured: boolean };
+type Session = { signedIn: boolean; isOwner: boolean; loginConfigured: boolean; databaseConfigured: boolean };
 const Context = createContext<{ session: Session | null; error: string; refresh: () => Promise<void> }>({ session: null, error: "", refresh: async () => {} });
 export function OwnerSession({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);

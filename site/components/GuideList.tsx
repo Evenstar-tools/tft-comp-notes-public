@@ -632,7 +632,8 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
       unit, role: role === "主输出" || role === "主C" ? "主C" : role === "主坦" ? "主坦" : undefined,
     }));
     const population = usedPopulation(team.pieces);
-    const preferred = recommendationSecondaryCarries.get(section.id);
+    const oceanGraves = section.id === GUIDE_SECTION_IDS.oceanGraves;
+    const preferred = !oceanGraves || primary ? recommendationSecondaryCarries.get(section.id) : undefined;
     const currentSecondary = roster.find(({ unit, role }) => preferred ? unit.id === preferred.unitId : role === "副C")?.unit;
     const laterBoard = preferred && !currentSecondary ? entry.teams.find(board =>
       board.id === preferred.boardId && board.pieces.some(piece => piece.unitId === preferred.unitId)) : undefined;
@@ -671,7 +672,7 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
       group, rating, team, title: guideTitleWithoutPlaystyle(displayGuideName(rating.name), entry.playstyle), avatars, opening: displayOpening(opening), sampleLabel,
       timing: decision?.timing && displayTraitNames(decision.timing),
       upgrade: decision?.upgrade && displayTraitNames(decision.upgrade),
-      entryTeamId: primary && (!needle || exact?.namedFamily) ? section.reroll?.entryTeamId : undefined,
+      entryTeamId: !oceanGraves && primary && (!needle || exact?.namedFamily) ? section.reroll?.entryTeamId : undefined,
       stages: [...stages.values()],
       conditions,
       strategy,

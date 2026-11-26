@@ -18,15 +18,22 @@ export async function setSetting(key: string, value: string) {
     .run();
 }
 export class ApiError extends Error {
-  constructor(
-    public status: number,
-    message: string,
-  ) {
+  readonly status: number;
+
+  constructor(status: number, message: string) {
     super(message);
+    this.status = status;
   }
 }
+export function databaseConfigured() {
+  return Boolean(process.env.DATABASE_URL?.trim());
+}
+export function requireDatabase() {
+  if (!databaseConfigured()) throw new ApiError(503, "云端数据库尚未配置，暂无法读写云端数据");
+}
 async function ownerIdentity() {
-  return { userId: await setting("owner_id") || defaultOwnerId, displayName: "站主" };
+  const userId = databaseConfigured() ? await setting("owner_id") || defaultOwnerId : defaultOwnerId;
+  return { userId, displayName: "站主" };
 }
 export async function requireOwner(request?: Request) {
   if (request && !["GET", "HEAD"].includes(request.method)) assertSameOrigin(request);

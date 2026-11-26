@@ -3,7 +3,7 @@ import type { Piece, Season, Team, Unit } from "./types";
 import { unitSearchNames } from "./unit-search.mjs";
 import { rerollRoute } from "./reroll-stages.ts";
 import { guideBoardKind, usedPopulation } from "./team.ts";
-import { AD_GRAVES_BOARD_IDS, GUIDE_SECTION_IDS, HYPERPOP_BLOCK_IDS } from "./guide-identities.ts";
+import { AD_GRAVES_BOARD_IDS, GUIDE_SECTION_IDS, HYPERPOP_BLOCK_IDS, PYKE_GRAVES_BOARD_ID } from "./guide-identities.ts";
 import { sourceSectionTitle } from "./source-category-display.ts";
 import { displayGuideName } from "./trait-names.mjs";
 
@@ -201,7 +201,7 @@ export function guideRoute(section: Section, teams: Team[], current: Team): { ph
     return { phases: steps.slice(0, 1), choices: steps.slice(1) };
   }
   if (guide === GUIDE_SECTION_IDS.classicalJhin || guide === GUIDE_SECTION_IDS.threeJazzSmeech ||
-      guide === GUIDE_SECTION_IDS.altPykeGraves || guide === GUIDE_SECTION_IDS.jazzPykeAurora) {
+      guide === GUIDE_SECTION_IDS.jazzPykeAurora) {
     const [primary] = primaryFirst(teams, section.primaryTeamId);
     const phases = teams.filter(team => team === primary || section.stageTeamIds?.includes(team.id))
       .sort((a, b) => usedPopulation(a.pieces) - usedPopulation(b.pieces));
@@ -245,6 +245,14 @@ export function guideRoute(section: Section, teams: Team[], current: Team): { ph
     ].filter(step => step.team || step.text) };
   }
   if (oceanGraves) {
+    if (AD_GRAVES_BOARD_IDS.some(id => id === current.id)) {
+      const [landing, upgrade] = AD_GRAVES_BOARD_IDS.map(id => teams.find(team => team.id === id));
+      return {
+        phases: landing ? [phase(guideBoardName(landing), landing, "")] : [],
+        choices: upgrade ? [phase(guideBoardName(upgrade), upgrade, "")] : [],
+      };
+    }
+    if (current.id === PYKE_GRAVES_BOARD_ID) return { phases: [] };
     const find = (id: string) => teams.find(team => team.id === id);
     const step = (label: string, id: string, prefix: string) => phase(label, find(id) ?? board(prefix), section.reroll?.advice[id]);
     return {
@@ -325,7 +333,7 @@ function playstyleCode(style?: string) {
 }
 
 export function guidePlaystyle(section: Section, team?: Team): "84" | "95" | undefined {
-  if (section.id === GUIDE_SECTION_IDS.altPykeGraves && AD_GRAVES_BOARD_IDS.some(id => id === team?.id)) return "84";
+  if (section.id === GUIDE_SECTION_IDS.oceanGraves && team?.id === PYKE_GRAVES_BOARD_ID) return "95";
   const style = authoredStrategy(section);
   if (style === "84" || style === "95") return style;
   return playstyleCode(style);

@@ -2335,7 +2335,8 @@
           "maracas": 8,
           "infernalIdol": 26
         }
-      }
+      },
+      {"teamId": "00000000-0000-4000-8000-000000000093", "positions": {"qiyana": 11, "yorick": 12}, "stoneplateHolder": "zac", "originalPositions": {"zac": 3, "qiyana": 1, "vi": 2, "yorick": 4}, "originalInstruments": {"maracas": 16}}
     ],
     "entryTeamId": "00000000-0000-4000-8000-000000000075",
     "hiddenLegacy": [
@@ -2404,13 +2405,6 @@
     ],
     "edits": [
       {"teamId": "00000000-0000-4000-8000-000000000003", "positions": {"galio": 10}, "stoneplateHolder": "leona", "originalPositions": {"leona": 3, "renekton": 1, "galio": 5}}
-    ]
-  },
-  {
-    "sectionId": "sample-block-0452",
-    "stages": [],
-    "edits": [
-      {"teamId": "00000000-0000-4000-8000-000000000093", "positions": {"qiyana": 11, "yorick": 12}, "stoneplateHolder": "zac", "originalPositions": {"zac": 3, "qiyana": 1, "vi": 2, "yorick": 4}, "originalInstruments": {"maracas": 16}}
     ]
   },
   {

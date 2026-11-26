@@ -15,6 +15,8 @@ import currentPatch from "@/data/current-patch.json";
 import { readPosterShare, validItemLibraryReturn } from "@/domain/links";
 import { boardStages } from "@/domain/team-stages";
 import { legacyGuideDestination } from "@/domain/legacy-guide-redirects";
+import { databaseConfigured } from "@/server/access";
+import { hasOwnerSession } from "@/server/owner-session";
 export const metadata = { title: "阵容笔记" };
 export const dynamic = "force-dynamic";
 export default async function Guide({
@@ -43,6 +45,10 @@ export default async function Guide({
   }
   const family = groupGuides(live!.sections, live!.season, teamPlacement).find(group => group.sections.some(s => s.id === id));
   const preferred = family?.lead.section.id === id ? family.lead.team : undefined;
+  const entryTeam = section.reroll?.entryTeamId ?? preferred?.id;
+  const defaultTeam = entryTeam && section.reroll?.added.includes(entryTeam) && databaseConfigured() && await hasOwnerSession()
+    ? section.primaryTeamId ?? section.team?.id ?? entryTeam
+    : entryTeam;
   const variants = Object.fromEntries((family?.boards ?? []).filter(b => b.section.id === id)
     .map(b => [b.team.id, familyVariants(family!, b.team.id)]));
   const patchAdvice = currentPatchRecommendations(live)?.entries.filter(entry => entry.sectionId === id).map(entry => ({
@@ -52,7 +58,7 @@ export default async function Guide({
   return (
     <div className="reading-page">
       <DocumentView section={section} gameData={section.gameData ?? live!.season} publicationId={live!.id}
-        initialTeam={typeof team === "string" ? team : section.reroll?.entryTeamId ?? preferred?.id}
+        initialTeam={typeof team === "string" ? team : undefined} defaultTeam={defaultTeam}
         initialStage={boardStages.find(option => option === stage)} initialFlex={typeof flex === "string" ? flex : undefined}
         variants={variants} openPoster={poster === "1"} returnTo={returnTo}
         initialPosterShare={poster === "1" ? readPosterShare(posterFormat, posterStages) : undefined} patchAdvice={patchAdvice} />

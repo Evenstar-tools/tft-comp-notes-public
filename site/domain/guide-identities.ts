@@ -24,8 +24,6 @@ export const GUIDE_SECTION_IDS = {
   rockVayne: "sample-block-0338",
   /** 高能流行芬妮&炸弹 */
   hyperpopSeraphine: "sample-block-0420",
-  /** 非主流派克男枪 */
-  altPykeGraves: "sample-block-0452",
   /** 爵士金克丝 */
   jazzJinx: "sample-block-1110",
   /** 探戈爵士卡牌 95 */
@@ -44,6 +42,8 @@ export const AD_GRAVES_BOARD_IDS = [
   "00000000-0000-4000-8000-000000001261",
   "00000000-0000-4000-8000-000000001262",
 ] as const;
+
+export const PYKE_GRAVES_BOARD_ID = "00000000-0000-4000-8000-000000000093";
 
 export const LEGACY_FOLDER_IDS = {
   /** 次选成熟阵容 -> 八级运营 */

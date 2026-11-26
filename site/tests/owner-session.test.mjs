@@ -1,15 +1,54 @@
 import assert from "node:assert/strict";
+import { registerHooks } from "node:module";
 import test from "node:test";
 import {
   acceptsOwnerCode,
   checkOwnerLoginRateLimit,
   clearOwnerLoginFailures,
+  defaultOwnerId,
   newOwnerSession,
   ownerLoginConfigured,
+  ownerCookieName,
   recordOwnerLoginFailure,
   validOwnerSession,
 } from "../server/owner-session.ts";
 import { database, getDatabaseClient } from "../server/runtime-db.ts";
+
+test("authenticated owner resolves without a database and cloud access returns 503", async () => {
+  const previousUrl = process.env.DATABASE_URL;
+  const previousCode = process.env.OWNER_ACCESS_CODE;
+  process.env.OWNER_ACCESS_CODE = "test-code";
+  const token = newOwnerSession();
+  const headers = "data:text/javascript," + encodeURIComponent(
+    `export const cookies = () => new Map([[ "${ownerCookieName}", { value: "${token}" } ]]);`
+  );
+  const hooks = registerHooks({
+    resolve(specifier, context, nextResolve) {
+      if (specifier === "next/headers") return nextResolve(headers, context);
+      if (["./runtime-db", "./owner-session"].includes(specifier)) return nextResolve(specifier + ".ts", context);
+      return nextResolve(specifier, context);
+    },
+  });
+  try {
+    const { apiError, requireDatabase, requireOwner } = await import("../server/access.ts");
+    for (const url of [undefined, "  "]) {
+      if (url === undefined) delete process.env.DATABASE_URL;
+      else process.env.DATABASE_URL = url;
+      assert.deepEqual(await requireOwner(), { userId: defaultOwnerId, displayName: "站主" });
+      assert.throws(requireDatabase, error => {
+        assert.equal(apiError(error).status, 503);
+        assert.equal(error.message, "云端数据库尚未配置，暂无法读写云端数据");
+        return true;
+      });
+    }
+  } finally {
+    hooks.deregister();
+    if (previousUrl === undefined) delete process.env.DATABASE_URL;
+    else process.env.DATABASE_URL = previousUrl;
+    if (previousCode === undefined) delete process.env.OWNER_ACCESS_CODE;
+    else process.env.OWNER_ACCESS_CODE = previousCode;
+  }
+});
 
 test("owner session accepts 6-character passcodes and rejects shorter codes", () => {
   const prevCode = process.env.OWNER_ACCESS_CODE;
