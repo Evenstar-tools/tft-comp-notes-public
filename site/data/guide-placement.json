@@ -5345,6 +5345,169 @@
       "mean": 5.5,
       "topFourRate": 0.16666666666666666,
       "winRate": 0.0
+    },
+    {
+      "population": 8,
+      "roster": [
+        "alistar",
+        "aurora",
+        "bard",
+        "galio",
+        "locke",
+        "mel",
+        "pyke",
+        "swain"
+      ],
+      "games": 38,
+      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&trait=DA_DemonVision19_1&trait=DA_Jazz19_1&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Alistar19-1&unit=DA_Aurora19-1&unit=DA_Bard19-1&unit=DA_Galio19-1&unit=DA_Locke19-1&unit=DA_Mel19-1&unit=DA_Pyke19-1&unit=DA_Swain19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "sampleScope": "8级结算 · 固定名单 · 星级不限 · 无纹章、人口装或重复弈子",
+      "conditions": {
+        "kind": "full",
+        "teamId": "00000000-0000-4000-8000-000000001241",
+        "population": 8,
+        "traits": {
+          "rock": 3,
+          "jazz": 2
+        }
+      },
+      "placementCounts": [
+        3,
+        3,
+        4,
+        10,
+        3,
+        9,
+        5,
+        1
+      ],
+      "observedOn": "2026-11-26",
+      "mean": 4.55,
+      "topFourRate": 0.5263157894736842,
+      "winRate": 0.07894736842105263
+    },
+    {
+      "population": 9,
+      "roster": [
+        "alistar",
+        "aurora",
+        "bard",
+        "galio",
+        "locke",
+        "mel",
+        "pyke",
+        "rell",
+        "swain"
+      ],
+      "games": 7,
+      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&trait=DA_DemonVision19_1&trait=DA_Jazz19_1&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Alistar19-1&unit=DA_Aurora19-1&unit=DA_Bard19-1&unit=DA_Galio19-1&unit=DA_Locke19-1&unit=DA_Mel19-1&unit=DA_Pyke19-1&unit=DA_Rell19-1&unit=DA_Swain19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "sampleScope": "9级结算 · 固定名单 · 星级不限 · 无纹章、人口装或重复弈子",
+      "conditions": {
+        "kind": "full",
+        "teamId": "00000000-0000-4000-8000-000000001242",
+        "population": 9,
+        "traits": {
+          "rock": 3,
+          "jazz": 2
+        }
+      },
+      "placementCounts": [
+        2,
+        1,
+        1,
+        1,
+        2,
+        0,
+        0,
+        0
+      ],
+      "observedOn": "2026-11-26",
+      "mean": 3.0,
+      "topFourRate": 0.7142857142857143,
+      "winRate": 0.2857142857142857
+    },
+    {
+      "population": 9,
+      "roster": [
+        "alistar",
+        "aurora",
+        "bard",
+        "galio",
+        "locke",
+        "mel",
+        "pyke",
+        "smeech",
+        "swain"
+      ],
+      "games": 8,
+      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&trait=DA_DemonVision19_1&trait=DA_Jazz19_2&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Alistar19-1&unit=DA_Aurora19-1&unit=DA_Bard19-1&unit=DA_Galio19-1&unit=DA_Locke19-1&unit=DA_Mel19-1&unit=DA_Pyke19-1&unit=DA_Smeech19-1&unit=DA_Swain19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "sampleScope": "9级结算 · 固定名单 · 星级不限 · 无纹章、人口装或重复弈子",
+      "conditions": {
+        "kind": "full",
+        "teamId": "00000000-0000-4000-8000-000000001243",
+        "population": 9,
+        "traits": {
+          "rock": 3,
+          "jazz": 3
+        }
+      },
+      "placementCounts": [
+        2,
+        3,
+        0,
+        1,
+        0,
+        0,
+        2,
+        0
+      ],
+      "observedOn": "2026-11-26",
+      "mean": 3.25,
+      "topFourRate": 0.75,
+      "winRate": 0.25
+    },
+    {
+      "population": 8,
+      "roster": [
+        "alistar",
+        "aurora",
+        "bard",
+        "galio",
+        "locke",
+        "mel",
+        "pyke",
+        "swain"
+      ],
+      "games": 122,
+      "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&unit=DA_Alistar19-1&unit=DA_Aurora19-1&unit=DA_Bard19-1&unit=DA_Galio19-1&unit=DA_Locke19-1&unit=DA_Mel19-1&unit=DA_Pyke19-1&unit=DA_Swain19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "sampleScope": "八张核心同场 · 结算等级、星级与装备不限",
+      "conditions": {
+        "kind": "core",
+        "teamId": "00000000-0000-4000-8000-000000001241",
+        "coreRoster": [
+          "alistar",
+          "aurora",
+          "bard",
+          "galio",
+          "locke",
+          "mel",
+          "pyke",
+          "swain"
+        ]
+      },
+      "placementCounts": [
+        26,
+        26,
+        17,
+        18,
+        14,
+        10,
+        9,
+        2
+      ],
+      "observedOn": "2026-11-26",
+      "mean": 3.36,
+      "topFourRate": 0.7131147540983607,
+      "winRate": 0.21311475409836064
     }
   ],
   "edition": "s19-pbe-19.1",
