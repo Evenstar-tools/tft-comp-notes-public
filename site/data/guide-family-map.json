@@ -583,6 +583,91 @@
         "DA_Yorick19",
         "DA_Zac19"
       ]
+    },
+    {
+      "clusterId": "429002",
+      "sourceName": "Slayer Viego Amumu",
+      "name": "六舞者佛耶戈",
+      "sectionId": "sample-block-0243",
+      "teamId": "3356f4a8-25be-44b1-a0bf-702e866cfa63",
+      "carryIds": [
+        "viego",
+        "briar"
+      ],
+      "url": "https://www.metatft.com/pbe-comps#DA_Mosher19-DA_Viego19-DA_Amumu19",
+      "representativeUnits": [
+        "DA_Amumu19",
+        "DA_Briar19",
+        "DA_Camille19",
+        "DA_Garen19",
+        "DA_Kayn19",
+        "DA_Viego19",
+        "DA_Yasuo19",
+        "DA_Yone19"
+      ]
+    },
+    {
+      "clusterId": "429016",
+      "sourceName": "Juggernaut Graves",
+      "name": "四主宰 AD 男枪",
+      "sectionId": "sample-block-0452",
+      "teamId": "00000000-0000-4000-8000-000000001261",
+      "carryIds": [
+        "graves"
+      ],
+      "url": "https://www.metatft.com/pbe-comps#DA_Juggernaut19-DA_Graves19",
+      "representativeUnits": [
+        "DA_Graves19",
+        "DA_Kayle19",
+        "DA_Locke19",
+        "DA_Olaf19",
+        "DA_Pyke19",
+        "DA_Taric19",
+        "DA_Yorick19",
+        "DA_Zac19"
+      ]
+    },
+    {
+      "clusterId": "429010",
+      "sourceName": "Bite Marks Elise",
+      "name": "咬痕伊莉丝",
+      "sectionId": "sample-block-0273",
+      "teamId": "00000000-0000-4000-8000-000000000103",
+      "carryIds": [
+        "elise"
+      ],
+      "url": "https://www.metatft.com/pbe-comps#DA_Elise19_HeroAugment",
+      "representativeUnits": [
+        "DA_Annie19",
+        "DA_Aurora19",
+        "DA_Elise19",
+        "DA_Gwen19",
+        "DA_Jinx19",
+        "DA_Shyvana19",
+        "DA_Swain19",
+        "DA_Tibbers19"
+      ]
+    },
+    {
+      "clusterId": "429023",
+      "sourceName": "Dancin' n' Prancin' Lillia",
+      "name": "K/DA毒舞莉莉娅",
+      "sectionId": "sample-block-0020",
+      "teamId": "00000000-0000-4000-8000-000000000091",
+      "carryIds": [
+        "lillia"
+      ],
+      "url": "https://www.metatft.com/pbe-comps#DA_Lillia19_HeroAugment",
+      "representativeUnits": [
+        "DA_19_Ahri",
+        "DA_AkaliKDA19",
+        "DA_Evelynn19",
+        "DA_Gragas19",
+        "DA_Kaisa19",
+        "DA_Leona19",
+        "DA_Lillia19",
+        "DA_Neeko19"
+      ]
     }
   ]
 }

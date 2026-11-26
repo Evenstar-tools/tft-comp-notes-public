@@ -95,13 +95,13 @@ test("the gate validates structured recommendations and accepts legacy notes", t
   const sections = readJson(join(cwd, "data", "public-preview.json")).sections.filter(section => section.team?.id);
   const entry = ({ id, team }, group, status = "recommended") =>
     ({ sectionId: id, teamId: team.id, status, note: "来牌顺再玩", group });
-  const regular = sections.filter(section => section.category !== "英雄强化阵容").slice(0, 15)
-    .map((section, index) => entry(section, ["reroll", "fast8", "fast9"][index % 3], index < 14 ? "recommended" : "avoid"));
+  const regular = sections.filter(section => section.category !== "英雄强化阵容").slice(0, 16)
+    .map((section, index) => entry(section, ["reroll", "fast8", "fast9"][index % 3], index < 15 ? "recommended" : "avoid"));
   const heroes = sections.filter(section => section.category === "英雄强化阵容").slice(0, 2)
     .map(section => entry(section, "heroAugment"));
   const { seasonId, build, reviewedAt } = readJson(file);
   const batch = { seasonId, build, reviewedAt, entries: [...regular, ...heroes],
-    displayOrder: [...regular.slice(0, 14), ...heroes].map(pick => pick.teamId) };
+    displayOrder: [...regular.slice(0, 15), ...heroes].map(pick => pick.teamId) };
   writeFileSync(file, JSON.stringify(batch));
   assert.equal(run(cwd, "--verify").status, 0);
 
@@ -115,7 +115,7 @@ test("the gate validates structured recommendations and accepts legacy notes", t
   const invalid = run(cwd, "--verify");
   assert.equal(invalid.status, 1);
   const { errors } = JSON.parse(invalid.stdout);
-  for (const expected of [/\.timing/, /\.upgrade/, /\.group.*分类不匹配/, /常规推荐最多 14 套/, /\.displayOrder.*重复/]) {
+  for (const expected of [/\.timing/, /\.upgrade/, /\.group.*分类不匹配/, /常规推荐最多 15 套/, /\.displayOrder.*重复/]) {
     assert.ok(errors.some(error => expected.test(error)), expected);
   }
 

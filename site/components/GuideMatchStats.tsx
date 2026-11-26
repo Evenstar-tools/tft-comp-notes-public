@@ -83,11 +83,11 @@ export function GuideMatchStats({ id, stage, team, teams, section, edition, augm
   const { rating, related, carry, rows, rare, groups, formation, reference } = evidenceFor(team);
   const populatedViews = views.filter(([value]) => groups[value].some(sample => sample.games > 0));
   const visibleViews = populatedViews.length > 0 ? populatedViews : views;
-  const preferredView = view ?? (heroGuide ? "board" : (["family", "board", "carry"] as const)
-    .find(type => groups[type].some(sample => sample.games > 0)) ?? "board");
+  const preferredView = view ?? (["family", "board", "carry"] as const)
+    .find(type => groups[type].some(sample => sample.games > 0)) ?? "board";
   const activeView = visibleViews.some(([value]) => value === preferredView) ? preferredView : visibleViews[0][0];
   const scopeNote = activeView === "family"
-    ? "同套体系含不同等级和变阵的整体结算样本。"
+    ? (heroGuide ? "该英雄强化体系的整体结算样本。" : "同套体系含不同等级和变阵的整体结算样本。")
     : activeView === "carry"
       ? "按棋子、星级或装备筛选，各组场数可能重叠。"
       : heroGuide

@@ -6,7 +6,6 @@ import { guideRerollTargets } from "@/domain/reroll-targets";
 import { season as currentSeason } from "@/data";
 import familyStats from "@/data/guide-family-stats.json";
 import coreStats from "@/data/patch-recommendation-stats.json";
-import placementBatch from "@/data/guide-placement.json";
 import { displayGuideName, displayTraitNames } from "@/domain/trait-names.mjs";
 import { canRankRecommendations, compareGuideFamilyPerformance, currentFamilyBatch, currentRecommendationEvidence, familyMetricValue, formatRecommendationMean, guideFamilyBoardIds, guideFamilyRows, previousRecommendationDeadline, recommendationGroup, recommendationTier, selectRecommendationRoutes, type GuideFamilyDirection, type GuideFamilyMetric, type GuideFamilySnapshot, type GuideFamilyStat, type RecommendationGroup, type RecommendationStat } from "@/domain/guide-family-stats";
 import { carryMinGames, guideCarryRows } from "@/domain/guide-carry-stats";
@@ -28,7 +27,7 @@ import { HomeGuideBanner } from "./GuideNavigation";
 import { SiteSearchResults, useSiteSearch } from "./SiteSearchResults";
 import { siteSearchIntent, type SiteSearchResponse } from "@/domain/site-search";
 import { sameEdition } from "@/domain/version-updates";
-import { guideBoardKind, teamPlacement } from "./GuidePlacement";
+import { guideBoardKind, recommendationBoardSample } from "./GuidePlacement";
 import { formationCoreResult } from "./GuideFormationStats";
 import { PatchRecommendationList, type RecommendationCard } from "./PatchRecommendationList";
 import { GuideConditionIcon } from "./GuideEquipmentConditions";
@@ -36,7 +35,7 @@ import { guideConditionName, guideConditionsAnchor, guideEquipmentConditions } f
 import { HomeGearSearch, isHomeGear } from "./HomeGearSearch";
 import { GuideCardBoard, GuideQuickView } from "./GuideCardBoard";
 import { GuideStatsTable, guideStatsMetricLabels, type GuideStatsTableRow } from "./GuideStatsTable";
-import { AD_GRAVES_BOARD_IDS, GUIDE_SECTION_IDS } from "@/domain/guide-identities";
+import { GUIDE_SECTION_IDS } from "@/domain/guide-identities";
 import { CompTrendPanel } from "./CompTrendPanel";
 import { decodeHomeGuideIndex } from "@/lib/home-guide-index";
 import { extractPublicGuideIdFromHref, type GuideEntrySource } from "@/domain/analytics";
@@ -52,14 +51,6 @@ type Choices = Partial<Record<View, Selections>>;
 type FamilySort = { metric: GuideFamilyMetric; direction: GuideFamilyDirection };
 const emptyFilters = { category: "", style: "", cost: 0 };
 const archiveViews = [["category", "攻略卡片"], ["mean", "战绩对照"]] as const;
-const boardSampleTeams = new Set([
-  "00000000-0000-4000-8000-000000001251",
-  "00000000-0000-4000-8000-000000001252",
-  "00000000-0000-4000-8000-000000001253",
-  "00000000-0000-4000-8000-000000000105",
-  "00000000-0000-4000-8000-000000000082",
-  ...AD_GRAVES_BOARD_IDS,
-]);
 const recommendationSecondaryCarries = new Map<string, { unitId: string; boardId: string }>([
   [GUIDE_SECTION_IDS.oceanGraves, { unitId: "taliyah", boardId: "00000000-0000-4000-8000-000000000076" }],
   [GUIDE_SECTION_IDS.kdaNeeko, { unitId: "akali-kda", boardId: "00000000-0000-4000-8000-000000000039" }],
@@ -337,18 +328,6 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
   const costs = [...new Set([...availableFacets.flatMap(entry => entry.costOptions), ...(cost ? [cost] : [])])].sort((a,b) => a-b);
   const fixedRecommendations = new Map((recommendations?.fixedBoardRecommendations ?? []).map(record => [record.teamId, record]));
   const decisions = new Map((recommendations?.entries ?? []).map(record => [`${record.sectionId}:${record.teamId}`, record]));
-  function boardSample(section: Section, team: Team, scope: "fixed" | "core") {
-    if (!boardSampleTeams.has(team.id) || placementBatch.build !== patch?.build) return;
-    const sample = teamPlacement(team, section, scope);
-    if (sample?.conditions?.teamId !== team.id || sample.sourcePeriod || sample.mean === undefined ||
-      sample.topFourRate === undefined || sample.winRate === undefined) return;
-    return {
-      sectionId: section.id, teamId: team.id, name: section.title, url: sample.url, games: sample.games,
-      mean: sample.mean, topFourRate: sample.topFourRate, winRate: sample.winRate,
-      label: scope === "core" ? "核心样本" : "固定盘",
-      sampleScope: [sample.patch, sample.window, sample.sampleScope].filter(Boolean).join(" · "),
-    };
-  }
   function canShowBoard(section: Section, team: Team) {
     if (!recommended && !showingTrends) return true;
     const status = decisions.get(`${section.id}:${team.id}`)?.status;
@@ -510,7 +489,11 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
     core?: boolean; fixedSample?: string; routeName?: string; clusterId?: GuideFamilyStat["clusterId"]; routes?: Team[]; cardId: string; tier: ReturnType<typeof recommendationTier> };
   const results = ranked || recommended ? [] : grouped.flatMap<Card>(entry => {
     const primaryCard = { ...entry, cardId: entry.section.id, tier: "review" as const };
-    if (isHeroList) return [primaryCard];
+    if (isHeroList) {
+      const rows = hasCurrentStats ? entry.rows.filter(({ stat, boards }) =>
+        stat.heroAugment && boards.some(board => board.id === entry.team?.id)) : [];
+      return [{ ...primaryCard, rating: rows.length === 1 ? rows[0].stat : undefined }];
+    }
     const cards: Card[] = [];
     for (const route of [entry, ...entry.siblings]) {
       const focus = route.team;
@@ -537,7 +520,8 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
       const core = hasCurrentCore && route.data.id === coreStats.seasonId ? coreStats.rows.find(row =>
         row.sectionId === route.section.id && row.teamId === focus?.id) : undefined;
       const boardRating = focus && (fixedRecommendations.get(focus.id) ??
-        boardSample(route.section, focus, "fixed") ?? boardSample(route.section, focus, "core"));
+        recommendationBoardSample(focus, route.section, "fixed", patch?.build) ??
+        recommendationBoardSample(focus, route.section, "core", patch?.build));
       const rating = core ?? boardRating;
       if (route !== entry && !rating) continue;
       cards.push({ ...entry, ...route, tier: boardTier(route.section, focus, rating), core: !!core,

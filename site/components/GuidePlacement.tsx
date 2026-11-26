@@ -1,6 +1,7 @@
 import batch from "@/data/guide-placement.json";
 import { season } from "@/data";
 import { findPlacement, placementEvidenceKind, type PlacementBatch, type PlacementRating } from "@/domain/guide-placement";
+import { AD_GRAVES_BOARD_IDS } from "@/domain/guide-identities";
 import { oceanGravesGuideId, oceanGravesUnlockBoardId } from "@/domain/guide-reading";
 import { traitCounts, usedPopulation } from "@/domain/team";
 import { heroAugmentCategory, heroAugmentForGuide } from "@/domain/hero-augments";
@@ -17,6 +18,16 @@ const scopedBatches = new Map(placementScopes.map(scope => [scope, {
 }]));
 const completedCategories = new Set(["completed", "artifact", "radiant", "support"]);
 const percent = new Intl.NumberFormat("zh-CN", { style: "percent", maximumFractionDigits: 1 });
+const boardSampleTeams = new Set([
+  "00000000-0000-4000-8000-000000001251",
+  "00000000-0000-4000-8000-000000001252",
+  "00000000-0000-4000-8000-000000001253",
+  "00000000-0000-4000-8000-000000000105",
+  "00000000-0000-4000-8000-000000000082",
+  "752a22a6-a1e1-4c6a-b4ab-a66ae4fc3b80",
+  "83cebafb-502e-4f5d-8a17-db9871730b44",
+  ...AD_GRAVES_BOARD_IDS,
+]);
 
 export function teamPlacement(team: Team, section: Section, scope?: PlacementScope) {
   const augment = heroAugmentForGuide(section);
@@ -34,6 +45,19 @@ export function teamPlacement(team: Team, section: Section, scope?: PlacementSco
       !/ThiefsGloves/i.test(item.id)).map(item => item.id)) : undefined,
     pieces: team.pieces,
   });
+}
+
+export function recommendationBoardSample(team: Team, section: Section, scope: "fixed" | "core", build?: string) {
+  if (!boardSampleTeams.has(team.id) || placementBatch.build !== build) return;
+  const sample = teamPlacement(team, section, scope);
+  if (sample?.conditions?.teamId !== team.id || sample.sourcePeriod || sample.mean === undefined ||
+    sample.topFourRate === undefined || sample.winRate === undefined) return;
+  return {
+    sectionId: section.id, teamId: team.id, name: section.title, url: sample.url, games: sample.games,
+    mean: sample.mean, topFourRate: sample.topFourRate, winRate: sample.winRate,
+    label: scope === "core" ? "核心样本" : "固定盘",
+    sampleScope: [sample.patch, sample.window, sample.sampleScope].filter(Boolean).join(" · "),
+  };
 }
 
 export { guideBoardKind } from "@/domain/team";

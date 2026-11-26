@@ -28,6 +28,10 @@ export const GUIDE_SECTION_IDS = {
   altPykeGraves: "sample-block-0452",
   /** 爵士金克丝 */
   jazzJinx: "sample-block-1110",
+  /** 探戈爵士卡牌 95 */
+  tangoJazzTwistedFate: "sample-block-1180",
+  /** 三心之钢三经纪月男 95 */
+  heartsteelManagerAphelios: "sample-block-1181",
   threeJazzSmeech: "sample-block-0275",
   jazzPykeAurora: "sample-block-1090",
   /** K/DA妮蔻 */
