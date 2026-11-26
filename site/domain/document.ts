@@ -52,7 +52,7 @@ export interface Section {
   generatedRegions?: Record<string, { textId: string; imageId: string }>;
   reroll?: {
     entryTeamId?: string;
-    stages: { teamId: string; name: string; notes: string; boardRole?: Team["boardRole"]; parentTeamId?: string; equivalentStageId?: string; roles?: { label: string; units: string[] }[] }[];
+    stages: { teamId: string; name: string; notes: string; boardRole?: Team["boardRole"]; parentTeamId?: string; entry?: true; equivalentStageId?: string; roles?: { label: string; units: string[] }[] }[];
     advice: Record<string, string>;
     added: string[];
     corrected: string[];

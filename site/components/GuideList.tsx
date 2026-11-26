@@ -12,6 +12,7 @@ import { carryMinGames, guideCarryRows } from "@/domain/guide-carry-stats";
 import { sectionTeams } from "@/domain/document-flow";
 import { boardTitle, groupGuides, type GuideFamily } from "@/domain/guide-families";
 import { guideBoardName, guideFacets, guideLink, guidePlaystyle, guideRollLevel, guideRoster, guideRoute, guideStrategyLabel, guideTitleWithoutPlaystyle, matchingGear, parseGuideFilters, primaryFirst, readingNotes, repeatsFormationLabel, type GuideFilters, type GuideSearchScope, type GuideSort } from "@/domain/guide-reading";
+import { rerollEntryTeamId } from "@/domain/reroll-stages";
 import { patchRecommendationLabels, type PatchRecommendation, type PatchRecommendationBatch } from "@/domain/patch-recommendations";
 import { homeGuideFilter, matchesGuideStyle, guideWearerQuery, searchPhaseNote, splitGuideConditions, guideSearchKey, guideStyleKey } from "@/domain/guide-search";
 import { equippedGuideRoutes, familyNameMatches, homeSearchIntent, matchHomeGuide, searchUnitIds } from "@/domain/home-guide-search";
@@ -91,7 +92,7 @@ const shortOpenings: Record<string, readonly [source: string, short: string]> = 
   "K/DA转芬妮": ["有 K/DA 纹章再走。二阶段选秀前刷 4 次解锁芬妮。金铲铲加大棒可合纹章。", "有 K/DA 转再走，二阶段选秀前刷 4 次开芬妮。"],
   "K/DA毒舞莉莉娅": ["2-1 拿到莉莉娅专属，先合离子或正义。五级先拼双护卫、五颗 K/DA 星。", "五级追莉莉娅，先合离子或正义。"],
   "救生员鳄鱼": ["2-1 拿到雷克顿专属，有大剑、反曲弓或锁子甲再走。雷克顿先穿两件装备开艾希，未解锁前用佐伊凑三海之歌。", "鳄鱼先穿两件开艾希，六级追三。"],
-  "骑熊安妮": ["2-1 拿到安妮专属才走。先做纳什或法爆，看到提伯斯就买。强化已解锁提伯斯，低星熊没成型时让内瑟斯扛。", "先合纳什或法爆，五级追安妮三星。"],
+  "骑熊安妮": ["2-1 拿到安妮专属才走。先做纳什或法爆，看到提伯斯就买。强化已解锁提伯斯，低星熊没成型时让内瑟斯扛。", "先合纳什或法爆，六级追安妮三星。"],
   "咬痕伊莉丝": ["2-1 拿齿痕。伊莉丝张数多、大棒能合装时走。五级同追伊莉丝和瑟提，尽早开 3 离子火花积攒格温的欢呼。", "伊莉丝多、大棒能合装时，五级同追伊莉丝和瑟提。"],
 };
 
@@ -672,7 +673,7 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
       group, rating, team, title: guideTitleWithoutPlaystyle(displayGuideName(rating.name), entry.playstyle), avatars, opening: displayOpening(opening), sampleLabel,
       timing: decision?.timing && displayTraitNames(decision.timing),
       upgrade: decision?.upgrade && displayTraitNames(decision.upgrade),
-      entryTeamId: !oceanGraves && primary && (!needle || exact?.namedFamily) ? section.reroll?.entryTeamId : undefined,
+      entryTeamId: !oceanGraves && (!needle || exact?.namedFamily) ? rerollEntryTeamId(section, team.id) : undefined,
       stages: [...stages.values()],
       conditions,
       strategy,
@@ -766,8 +767,8 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
       const review = reviewFor(section.id, team?.id);
       const rating = review ? undefined : matchedRating;
       const formation = rating && !core && !fixedSample && team ? formationCoreResult(team, data.id, patch?.build) : undefined;
-      const useGuideEntry = team?.id === primary?.id && (!needle || matches.some(match => match.board.id === team?.id && match.namedFamily));
-      const link = guideLink(section.id, (useGuideEntry ? section.reroll?.entryTeamId : undefined) ?? team?.id,
+      const useGuideEntry = team && (!needle || matches.some(match => match.board.id === team.id && match.namedFamily));
+      const link = guideLink(section.id, (useGuideEntry ? rerollEntryTeamId(section, team.id) : undefined) ?? team?.id,
         homeGuideReturn(home, cardId, team?.id));
       const notes = team && readingNotes(section, team, data);
       const roles = notes?.roles ?? [];
@@ -785,6 +786,7 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
       const chaseTargets = team ? guideRerollTargets(section.id, team.id, stage?.parentTeamId) : [];
       const namedRoute = routes?.length && matches.some(match => match.board.id === team?.id && match.namedFamily);
       const hasRoutes = routes && routes.length > 1;
+      const landingBoard = routes?.find(board => board.id === section.reroll?.entryTeamId);
       const population = team && usedPopulation(team.pieces);
       const titleShowsPopulation = needle && alternative &&
         [...title.normalize("NFKC").matchAll(/[\d一二两三四五六七八九十]+\s*(?:人口|级)/g)].some(([label]) => {
@@ -896,9 +898,13 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
         {routes && routes.length > 1 && <nav className="guide-lineup-routes" aria-label={section.title + "的棋盘"}>
           {routes.map(board => {
             const routeReview = board.id !== team?.id && reviewFor(section.id, board.id);
+            const level = usedPopulation(board.pieces);
+            let role = guideBoardKind(section, board, primary);
+            if (landingBoard?.id === board.id) role = "主阵";
+            else if (landingBoard && board.id === primary.id && level > usedPopulation(landingBoard.pieces)) role = "上限";
             return <a key={board.id} data-home-board={board.id}
               href={guideLink(section.id, board.id, homeGuideReturn(home, cardId, board.id))}>
-              <span>{usedPopulation(board.pieces)} 级{guideBoardKind(section, board, primary)}</span>
+              <span>{level} 级{role}</span>
               {guideBoardName(board).split("·").at(-1)?.trim()}
               {routeReview && <span className="guide-review-badge" title={routeReview.note}>待复核</span>}
             </a>;

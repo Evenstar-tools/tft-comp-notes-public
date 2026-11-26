@@ -2,6 +2,12 @@ import type { Section } from "./document";
 import { sectionTeams } from "./document-flow.ts";
 import type { Team } from "./types";
 
+export function rerollEntryTeamId(section: Section, teamId: string) {
+  const { reroll } = section;
+  if (teamId === (section.primaryTeamId ?? sectionTeams(section)[0]?.id)) return reroll?.entryTeamId;
+  return reroll?.stages.find(stage => stage.entry && stage.parentTeamId === teamId)?.teamId;
+}
+
 export function rerollRoute(section: Section, current: Team) {
   const guide = section.reroll;
   if (!guide) return;
