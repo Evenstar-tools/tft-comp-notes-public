@@ -1,8 +1,7 @@
 import { publicGuidePublication } from "@/server/publication";
 import { season as currentSeason } from "@/data";
 import { readableSection, sectionTeams } from "@/domain/document-flow";
-import type { ContentBlock, Section } from "@/domain/document";
-import type { Season } from "@/domain/types";
+import { homeGuidePreview } from "@/domain/home-guide-preview";
 import { guideLink, isEditorialSection, parseGuideFilters } from "@/domain/guide-reading";
 import { guideNavigationHref } from "@/domain/guide-navigation";
 import { guideWearerQuery, splitGuideConditions } from "@/domain/guide-search";
@@ -21,24 +20,6 @@ import { performSiteSearch } from "@/server/site-search";
 import "./home-recommendations.css";
 
 export const dynamic = "force-dynamic";
-
-function slimBlocksForHome(blocks: ContentBlock[]): ContentBlock[] {
-  return blocks.map(block => {
-    const { elements: _elements, children, ...rest } = block;
-    void _elements;
-    return children?.length ? { ...rest, children: slimBlocksForHome(children) } : rest;
-  });
-}
-
-function slimSectionForHome(section: Section, homeSeason: Season): Section {
-  const { gameData, ...rest } = section;
-  const keepGameData = gameData && !sameEdition(gameData.id, homeSeason.id);
-  return {
-    ...rest,
-    ...(keepGameData ? { gameData } : {}),
-    blocks: slimBlocksForHome(section.blocks),
-  };
-}
 
 export default async function Home({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const [live, query] = await Promise.all([publicGuidePublication(), searchParams]);
@@ -60,8 +41,8 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
     days: [], tracks: [], patches: [], discoveries: [],
   });
   const homeSeason = live && sameEdition(live.season.id, currentSeason.id) ? currentSeason : live?.season;
-  const homeRegularGuides = homeSeason ? regularGuides.map(section => slimSectionForHome(section, homeSeason)) : regularGuides;
-  const homeHeroGuides = homeSeason ? heroGuides.map(section => slimSectionForHome(section, homeSeason)) : heroGuides;
+  const homeRegularGuides = homeSeason ? regularGuides.map(section => homeGuidePreview(section, homeSeason)) : regularGuides;
+  const homeHeroGuides = homeSeason ? heroGuides.map(section => homeGuidePreview(section, homeSeason)) : heroGuides;
   return (
     <div className="home-library">
       {live && homeSeason && guides.length ? (
