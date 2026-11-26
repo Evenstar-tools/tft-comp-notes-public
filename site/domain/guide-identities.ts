@@ -30,6 +30,10 @@ export const GUIDE_SECTION_IDS = {
   hyperpopSeraphine: "sample-block-0420",
   /** 非主流派克男枪 */
   altPykeGraves: "sample-block-0452",
+  /** 爵士金克丝 */
+  jazzJinx: "sample-block-1110",
+  /** 四主宰 AD 男枪 */
+  adGraves: "sample-block-1120",
   /** K/DA妮蔻 */
   kdaNeeko: "sample-block-0464",
   /** K/DA伊芙琳&卡莎 */

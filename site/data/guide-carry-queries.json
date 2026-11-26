@@ -1726,5 +1726,119 @@
       "TFT_Item_Redemption"
     ],
     "tankItems": []
+  },
+  {
+    "sectionId": "sample-block-1110",
+    "teamId": "00000000-0000-4000-8000-000000001251",
+    "board": "九级史密奇",
+    "carryId": "jinx",
+    "tankId": "shyvana",
+    "anchorIds": [
+      "annie",
+      "braum",
+      "galio",
+      "lucian",
+      "mel",
+      "shyvana",
+      "yuumi"
+    ],
+    "anchorStars": {
+      "shyvana": 2
+    },
+    "traits": {},
+    "carryItems": [
+      "TFT_Item_GuinsoosRageblade",
+      "TFT_Item_InfinityEdge",
+      "TFT_Item_LastWhisper"
+    ],
+    "tankItems": [
+      "TFT_Item_GargoyleStoneplate",
+      "TFT_Item_WarmogsArmor",
+      "TFT_Item_Redemption"
+    ]
+  },
+  {
+    "sectionId": "sample-block-1110",
+    "teamId": "00000000-0000-4000-8000-000000001251",
+    "board": "九级史密奇",
+    "carryId": "shyvana",
+    "tankId": "jinx",
+    "anchorIds": [
+      "annie",
+      "braum",
+      "galio",
+      "jinx",
+      "lucian",
+      "mel",
+      "yuumi"
+    ],
+    "anchorStars": {
+      "jinx": 2
+    },
+    "traits": {},
+    "carryItems": [
+      "TFT_Item_GargoyleStoneplate",
+      "TFT_Item_WarmogsArmor",
+      "TFT_Item_Redemption"
+    ],
+    "tankItems": []
+  },
+  {
+    "sectionId": "sample-block-1120",
+    "teamId": "00000000-0000-4000-8000-000000001261",
+    "board": "八级成型",
+    "carryId": "graves",
+    "tankId": "zac",
+    "anchorIds": [
+      "pyke",
+      "vayne",
+      "yorick",
+      "zac"
+    ],
+    "anchorStars": {
+      "zac": 2
+    },
+    "traits": {
+      "juggernaut": 4
+    },
+    "carryItems": [
+      "TFT_Item_UnstableConcoction",
+      "TFT_Item_GuardianAngel",
+      "TFT_Item_PowerGauntlet"
+    ],
+    "tankItems": [
+      "TFT_Item_GargoyleStoneplate",
+      "TFT_Item_Redemption",
+      "TFT_Item_SpectralGauntlet"
+    ]
+  },
+  {
+    "sectionId": "sample-block-1120",
+    "teamId": "00000000-0000-4000-8000-000000001261",
+    "board": "八级成型",
+    "carryId": "vayne",
+    "tankId": "zac",
+    "anchorIds": [
+      "graves",
+      "pyke",
+      "yorick",
+      "zac"
+    ],
+    "anchorStars": {
+      "zac": 2
+    },
+    "traits": {
+      "juggernaut": 4
+    },
+    "carryItems": [
+      "TFT_Item_GuinsoosRageblade",
+      "TFT_Item_RunaansHurricane",
+      "TFT_Item_InfinityEdge"
+    ],
+    "tankItems": [
+      "TFT_Item_GargoyleStoneplate",
+      "TFT_Item_Redemption",
+      "TFT_Item_SpectralGauntlet"
+    ]
   }
 ]

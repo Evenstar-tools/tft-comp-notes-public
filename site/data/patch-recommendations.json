@@ -4,10 +4,10 @@
   "reviewedAt": "2026-11-26T00:26:23.865Z",
   "displayOrder": [
     "00000000-0000-4000-8000-000000000089",
-    "00000000-0000-4000-8000-000000000039",
     "00000000-0000-4000-8000-000000000071",
     "00000000-0000-4000-8000-000000000044",
     "00000000-0000-4000-8000-000000000059",
+    "00000000-0000-4000-8000-000000001251",
     "00000000-0000-4000-8000-000000000078",
     "00000000-0000-4000-8000-000000000007",
     "00000000-0000-4000-8000-000000001158",
@@ -34,7 +34,7 @@
     {
       "sectionId": "sample-block-0464",
       "teamId": "00000000-0000-4000-8000-000000000039",
-      "status": "conditional",
+      "status": "review",
       "group": "reroll",
       "note": "妮蔻、莉莉娅来得特别多且能做回蓝和肉装再进。新构建两小时核心均名 4.97。五级追妮蔻三星，莉莉娅或酒桶先三星就接肉。",
       "timing": "妮蔻、莉莉娅来得特别多且能做回蓝和肉装再进。",
@@ -78,6 +78,18 @@
       "upgrade": "八级烬和锤石双两星，稳血后升九补女枪。",
       "sources": [
         "https://www.metatft.com/pbe-comps#DA_Virtuosos19-DA_Thresh19"
+      ]
+    },
+    {
+      "sectionId": "sample-block-1110",
+      "teamId": "00000000-0000-4000-8000-000000001251",
+      "status": "recommended",
+      "group": "fast8",
+      "note": "物理装顺，八级搜金克丝、希瓦娜两星。稳血即上九，原盘直接解锁史密奇。",
+      "timing": "物理装顺，八级搜金克丝、希瓦娜两星。",
+      "upgrade": "稳血即上九，原盘直接解锁史密奇。",
+      "sources": [
+        "https://www.metatft.com/explorer?tab=units&set=TFTSet19&unit=DA_Annie19-1&unit=DA_Braum19-1&unit=DA_Galio19-1&unit=DA_Jinx19-1&unit=DA_Lucian19-1&unit=DA_Mel19-1&unit=DA_Shyvana19-1&unit=DA_Yuumi19-1&queue=PBE&patch=19.1&b_patch=c&days=3"
       ]
     },
     {

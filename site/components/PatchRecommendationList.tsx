@@ -37,8 +37,9 @@ export function PatchRecommendationList({ stats, cards, home, previousBuild }: {
   })).filter(group => group.entries.length > 0);
   const showJumps = groups.length > 1;
   const showMeta = previousBuild || showJumps;
+  const hasCurrentCore = cards.some(card => card.sampleLabel === "核心样本");
   const updatedSample = <p className="home-patch-sample">
-    {previousBuild ? <>上一版参考 · {stats.queue} {stats.patch} · </> : "数据更新 "}
+    {previousBuild ? <>{hasCurrentCore ? "含上一版参考" : "上一版参考"} · {stats.queue} {stats.patch} · </> : "数据更新 "}
     <time dateTime={stats.updatedAt} title="北京时间">{beijingDateTime.format(new Date(stats.updatedAt))}</time>
   </p>;
 
@@ -69,7 +70,8 @@ export function PatchRecommendationList({ stats, cards, home, previousBuild }: {
               rating.topFourRate >= 0 && rating.topFourRate <= 1 ? (rating.topFourRate * 100).toFixed(1) + "%" : undefined;
             const shownStrategy = repeatsFormationLabel(label, strategy) ? undefined : strategy;
             return <article key={id} id={id} className="home-patch-card">
-              <a href={href} data-home-board={team.id} className="home-patch-card-link"
+              <a href={href} data-home-board={team.id} className={"home-patch-card-link" +
+                (sampleLabel === "核心样本" ? " home-patch-card-link--core" : "")}
                 aria-labelledby={id + "-title"} aria-describedby={[id + "-roles", shownStrategy && id + "-strategy",
                   (hasAdvice || note) && id + "-note", id + "-mean"].filter(Boolean).join(" ")}>
                 <div className="home-patch-avatars" id={id + "-roles"}>
