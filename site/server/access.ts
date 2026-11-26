@@ -42,8 +42,13 @@ export async function currentOwner() {
 }
 export function assertSameOrigin(request: Request) {
   const origin = request.headers.get("origin");
-  const expected = new URL(process.env.SITE_ORIGIN || request.url).origin;
-  if (!origin || origin !== expected) throw new ApiError(403, "请求来源不匹配");
+  const allowed = new Set<string>([new URL(request.url).origin]);
+  for (const item of (process.env.SITE_ORIGIN || "").split(",")) {
+    const trimmed = item.trim();
+    if (!trimmed) continue;
+    try { allowed.add(new URL(trimmed).origin); } catch {}
+  }
+  if (!origin || !allowed.has(origin)) throw new ApiError(403, "请求来源不匹配");
 }
 export function apiError(error: unknown) {
   if (error instanceof ApiError)
