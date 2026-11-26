@@ -225,11 +225,89 @@ test("the trend chart spans the same observed dates for the ten latest-ranked co
   }
 });
 
-test("the high-cost filter includes seven-cost carries and begins on a shared metric observation", () => {
+test("the high-cost filter includes seven-cost carries and keeps the full archive for every metric", () => {
   const days = ["a","b","c","d"];
   const track = (cost, from) => ({ cost, points: days.slice(from).map(at => ({ at, mean: 4, pickRate: at === "b" ? null : 0.15 })) });
   const five = track(5, 0), seven = track(7, 1);
   const tracks = [five, seven, track(4, 0)];
-  assert.deepEqual(selectTrendWindow(tracks, "cost:5", days, "mean"), { tracks: [five, seven], days: days.slice(1) });
-  assert.deepEqual(selectTrendWindow(tracks, "cost:5", days, "pickRate"), { tracks: [five, seven], days: days.slice(2) });
+  assert.deepEqual(selectTrendWindow(tracks, "cost:5", days, "mean"), { tracks: [five, seven], days });
+  assert.deepEqual(selectTrendWindow(tracks, "cost:5", days, "pickRate"), { tracks: [five, seven], days });
+});
+
+test("late entries retain the six-day axis and single-day entries only fill vacant Top 10 slots", () => {
+  const days = Array.from({ length: 6 }, (_, i) => `2026-11-${21 + i}T12:00:00Z`);
+  const track = (id, start, end = days.length) => ({
+    id, points: days.slice(start, end).map(at => ({ at, strength: 0.5 })),
+  });
+  const singleton = track("singleton", 5);
+  const recent = track("recent", 4);
+  const historic = Array.from({ length: 9 }, (_, index) => track("historic-" + index, 0));
+  const inactive = track("inactive", 0, 5);
+  assert.deepEqual(selectTrendWindow([singleton, recent, inactive, ...historic], "top", days, "strength"),
+    { tracks: [recent, ...historic], days });
+  assert.deepEqual(selectTrendWindow([singleton, recent, ...historic.slice(0, 8)], "top", days, "strength"),
+    { tracks: [recent, ...historic.slice(0, 8), singleton], days });
+  assert.deepEqual(selectTrendWindow([singleton], "top", days, "strength"), { tracks: [singleton], days });
+});
+
+test("impact uses all qualified daily samples, weights observed finishes and counts identical cluster bindings once", () => {
+  const [batch] = archive.batches;
+  const point = (clusterId, games, mean, winRate, topFourRate) => ({
+    batchId: batch.id, clusterId, games, mean, winRate, topFourRate,
+  });
+  const lead = point("lead", 200, 4, .25, .5);
+  const other = point("other", 100, 4.8, .1, .4);
+  const series = [
+    { ...classical, points: [lead] },
+    { ...classical, id: "same-cluster", points: [lead] },
+    { ...classical, id: "other", points: [other] },
+    { ...classical, id: "unlinked", sectionId: "no-current-guide", points: [point("unlinked", 200, 4, .1, .5)] },
+    { ...classical, id: "small-sample", points: [point("small", 99, 1, 1, 1)] },
+  ];
+  const trend = build({ ...archive, batches: [batch], series });
+  const latest = id => trend.tracks.find(track => track.id === id)?.points[0];
+  assert.equal(latest(classical.id).winShare, 50 / 80);
+  assert.equal(latest(classical.id).top4Share, 100 / 240);
+  assert.equal(latest("same-cluster").strength, latest(classical.id).strength);
+  assert.ok(Math.abs(latest(classical.id).strength - .825) < 1e-12);
+  assert.equal(latest("other").winShare, 10 / 80);
+  assert.equal(latest("other").top4Share, 40 / 240);
+  assert.ok(Math.abs(latest("other").strength - (.35 * .2 ** .65 + .30 * .4 ** .65 + .35 * .1)) < 1e-12);
+  assert.equal(latest("small-sample"), undefined);
+  assert.equal(latest("unlinked"), undefined);
+});
+
+test("zero totals leave shares unavailable and strength stays bounded", () => {
+  const [batch] = archive.batches;
+  const sample = classical.points[0];
+  const series = [{ ...classical, points: [{ ...sample, mean: 2, winRate: 0, topFourRate: 0 }] }];
+  const [point] = build({ ...archive, batches: [batch], series }).tracks[0].points;
+  assert.equal(point.winShare, null);
+  assert.equal(point.top4Share, null);
+  assert.equal(point.strength, .35);
+  const [strong] = build({ ...archive, batches: [batch], series: [
+    { ...classical, points: [{ ...sample, mean: 2 }] },
+  ] }).tracks[0].points;
+  assert.ok(strong.strength <= 1 && Math.abs(strong.strength - 1) < 1e-12);
+});
+
+test("daily observations remain available beyond the previous 20-day chart limit", () => {
+  const batches = Array.from({ length: 23 }, (_, i) => ({
+    ...archive.batches[0], id: "day-" + i, capturedAt: new Date(Date.UTC(2026, 10, i + 1, 12)).toISOString(),
+  }));
+  const series = [{ ...classical, points: batches.map(batch => ({ ...classical.points[0], batchId: batch.id })) }];
+  assert.deepEqual(build({ ...archive, batches, series }).days, batches.map(batch => batch.capturedAt));
+});
+
+test("strength rising and falling filters follow the four-observation delta threshold", () => {
+  const days = ["2026-11-23T12:00:00Z", "2026-11-24T12:00:00Z", "2026-11-25T12:00:00Z", "2026-11-26T12:00:00Z"];
+  const make = (id, values) => ({
+    id, points: days.map((at, i) => ({ at, strength: values[i], mean: 4.2 })),
+  });
+  const rising = make("rising", [0.50, 0.58, 0.68, 0.80]);
+  const flat = make("flat", [0.40, 0.41, 0.40, 0.41]);
+  const falling = make("falling", [0.75, 0.60, 0.45, 0.35]);
+  assert.deepEqual(selectTrendWindow([falling, flat, rising], "up", days, "strength").tracks.map(t => t.id), ["rising"]);
+  assert.deepEqual(selectTrendWindow([falling, flat, rising], "down", days, "strength").tracks.map(t => t.id), ["falling"]);
+  assert.deepEqual(selectTrendWindow([flat, falling, rising], "top", days, "strength").tracks.map(t => t.id), ["rising", "flat", "falling"]);
 });
