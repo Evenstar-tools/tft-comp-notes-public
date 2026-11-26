@@ -1,13 +1,13 @@
 {
   "seasonId": "s19-pbe",
   "build": "6035832",
-  "reviewedAt": "2026-11-26T03:48:40Z",
+  "reviewedAt": "2026-11-26T06:53:07.444Z",
   "displayOrder": [
     "00000000-0000-4000-8000-000000000089",
     "00000000-0000-4000-8000-000000000071",
     "00000000-0000-4000-8000-000000000044",
     "00000000-0000-4000-8000-000000000059",
-    "00000000-0000-4000-8000-000000001251",
+    "00000000-0000-4000-8000-000000001252",
     "00000000-0000-4000-8000-000000000076",
     "00000000-0000-4000-8000-000000000078",
     "00000000-0000-4000-8000-000000000007",
@@ -15,7 +15,6 @@
     "00000000-0000-4000-8000-000000001158",
     "00000000-0000-4000-8000-000000000067",
     "00000000-0000-4000-8000-000000000104",
-    "00000000-0000-4000-8000-000000000105",
     "00000000-0000-4000-8000-000000000082",
     "00000000-0000-4000-8000-000000000002",
     "00000000-0000-4000-8000-000000000097"
@@ -84,14 +83,14 @@
     },
     {
       "sectionId": "sample-block-1110",
-      "teamId": "00000000-0000-4000-8000-000000001251",
+      "teamId": "00000000-0000-4000-8000-000000001252",
       "status": "recommended",
       "group": "fast8",
       "note": "物理装顺，八级搜金克丝、希瓦娜两星。稳血即上九，原盘直接解锁史密奇。",
       "timing": "物理装顺，八级搜金克丝、希瓦娜两星。",
       "upgrade": "稳血即上九，原盘直接解锁史密奇。",
       "sources": [
-        "https://www.metatft.com/explorer?tab=units&set=TFTSet19&unit=DA_Annie19-1&unit=DA_Braum19-1&unit=DA_Galio19-1&unit=DA_Jinx19-1&unit=DA_Lucian19-1&unit=DA_Mel19-1&unit=DA_Shyvana19-1&unit=DA_Yuumi19-1&queue=PBE&patch=19.1&b_patch=c&days=3"
+        "https://www.metatft.com/pbe-comps#DA_Arcanist19-DA_Shyvana19"
       ]
     },
     {
@@ -171,24 +170,22 @@
       "teamId": "00000000-0000-4000-8000-000000000104",
       "status": "conditional",
       "group": "fast9",
-      "note": "物理装、早来霞且有高血经济时走。新构建两小时核心 367 场，均名 3.57。八级用两星霞和前排稳血。灵兽画卷每胜经验下调，稳住后再上九补悟空、迦娜和李青。",
+      "note": "物理装、早来霞且高血高经济时走。八级用两星霞和前排稳血。灵兽画卷每胜经验下调，稳住后再上九补悟空、迦娜和李青。",
       "timing": "物理装、早来霞且高血高经济时走。",
       "upgrade": "八级用两星霞和前排稳血。灵兽画卷每胜经验下调，稳住后再上九补悟空、迦娜和李青。",
       "sources": [
-        "https://www.metatft.com/explorer?set=TFTSet19&tab=units&trait=DA_Heavenscale19_3&unit=DA_Xayah19-1&unit=DA_Wukong19-1&queue=PBE&patch=19.1&b_patch=c&days=0.08333333333333333"
+        "https://www.metatft.com/pbe-comps#DA_Heavenscale19-DA_Xayah19"
       ]
     },
     {
       "sectionId": "sample-block-0235",
       "teamId": "00000000-0000-4000-8000-000000000105",
-      "status": "recommended",
-      "note": "物理装能连胜过渡，血量和经济都高再上九。八级用凯尔或卢锡安打工稳血，直上九搜两星泽丽和蒙多接装。",
+      "status": "avoid",
+      "note": "体系均名超过 4.50，放次选。已经走到九级且血量、经济都够，再搜两星泽丽和蒙多接装。",
       "sources": [
-        "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=9&trait=DA_EDM19_1&unit=DA_Zeri19-1_2&unit=DA_DrMundo19-1&queue=PBE&patch=19.1&b_patch=c&days=0.25"
+        "https://www.metatft.com/pbe-comps#DA_Jazz19-DA_Leona19"
       ],
-      "group": "fast9",
-      "timing": "物理装能连胜过渡，血量和经济都高再上九。",
-      "upgrade": "八级用凯尔或卢锡安打工稳血，直上九搜两星泽丽和蒙多接装。"
+      "group": "fast9"
     },
     {
       "sectionId": "sample-block-0275",
@@ -199,7 +196,7 @@
       "timing": "八级五杀爵士能稳血、经济够上九时走。",
       "upgrade": "八级原盘有 8 个非唯一羁绊。九级补任一心之钢凑满 9 个，解锁 7 费史密奇后换下心之钢。",
       "sources": [
-        "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=9&trait=DA_Jazz19_2&trait=DA_Pentakill19_1&unit=DA_Smeech19-1&unit=DA_Kayle19-1&queue=PBE&patch=19.1&b_patch=c&days=0.25"
+        "https://www.metatft.com/pbe-comps#DA_Pentakill19-DA_Kayle19-DA_Mel19"
       ]
     },
     {
@@ -245,5 +242,6 @@
       ]
     }
   ],
-  "summary": "体系表现来自 19.1c 近三天滚动窗口。四古典烬领跑常规体系。四国风霞、双电子泽丽和三爵士五杀史密奇在 6035832 构建有达线样本，血量和经济够再走速九。"
+  "summary": "推荐按 MetaTFT 19.1c 近三天体系战绩，采样窗口跨热补。爵士金克丝八级搜两星稳血，四国风霞和三爵士五杀史密奇有血量和经济再上九。双电子泽丽列入次选。",
+  "reviewedRollingPatch": "19.1c"
 }
