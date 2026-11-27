@@ -7,27 +7,34 @@ import familyStats from "@/data/guide-family-stats.json";
 import { itemWearers } from "@/data/item-wearers";
 import { specialItemWearers } from "@/data/special-item-wearers";
 import coreStats from "@/data/patch-recommendation-stats.json";
+import { boardSearchQuery, type BoardSearchQuery } from "@/domain/board-search-query";
 import type { Publication, Section } from "@/domain/document";
 import { readableSection, sectionTeams } from "@/domain/document-flow";
 import { itemName, itemTerms } from "@/domain/gear-library";
-import { gearSampleMinimum } from "@/domain/gear-wearer";
+import { currentWearerSnapshot, gearSampleMinimum } from "@/domain/gear-wearer";
 import { boardTitle } from "@/domain/guide-families";
-import { canRankRecommendations, currentFamilyBatch, guideFamilyRows, recommendationTier } from "@/domain/guide-family-stats";
-import { guideBoardName, guideLink, isEditorialSection, primaryFirst } from "@/domain/guide-reading";
-import { guideSearchKey, guideTraitNames, openingSearch } from "@/domain/guide-search";
+import { canRankRecommendations, currentFamilyBatch, currentRecommendationEvidence, guideFamilyRows, recommendationGroup, recommendationTier } from "@/domain/guide-family-stats";
+import { guideBoardName, guideFacets, guideLink, guidePlaystyle, guideRollLevel, guideUnitMatch, isEditorialSection, primaryFirst, readingNotes, sourceSummary } from "@/domain/guide-reading";
+import { guideSearchKey, guideTraitNames, guideWearerQuery, homeGuideFilter, openingSearch } from "@/domain/guide-search";
 import { heroAugmentCategory, heroAugmentForGuide } from "@/domain/hero-augments";
+import { heroAugmentSearchQuery } from "@/domain/hero-augment-search";
 import { equippedGuideRoutes, homeSearchIntent, matchHomeGuide } from "@/domain/home-guide-search";
 import { emblemLink, itemLink } from "@/domain/links";
+import { emblemSearchNames } from "@/domain/item-search";
+import { patchRecommendationLabels } from "@/domain/patch-recommendations";
 import {
-  indexedEmblemTerms, rankedWearers, searchNameRank, siteSearchIntent,
-  type BoardHit, type SearchGearDetail, type SiteSearchGroup, type SiteSearchHit, type SiteSearchResponse,
+  equipmentWearerLimit, hasSevenCostUnit, indexedEmblemTerms, rankedWearerEvidence, searchLevelToken, searchNameRank, searchQueryLimit,
+  searchStrategies, selectEquipmentTerminals, siteSearchIntent, siteSearchLevel,
+  type BoardHit, type CarryHit, type SearchGearDetail, type SiteSearchContext, type SiteSearchGroup, type SiteSearchHit, type SiteSearchResponse,
 } from "@/domain/site-search";
 import type { Item, Team, Unit } from "@/domain/types";
-import { guideBoardKind } from "@/domain/team";
+import { guideBoardKind, traitCounts, usedPopulation } from "@/domain/team";
 import { displayGuideName } from "@/domain/trait-names.mjs";
 import { unitSearchNames } from "@/domain/unit-search.mjs";
 import { isVersionUpdate, sameEdition } from "@/domain/version-updates";
 import { recommendationBoardSample } from "@/components/GuidePlacement";
+import { boardSearchEvidence, currentSearchPlacements, fixedSearchSample } from "./board-search-evidence";
+import { heroAugmentSearchHit } from "./hero-augment-search";
 import { currentPatchRecommendations } from "./patch-recommendations";
 import { publicGuidePublication } from "./publication";
 
@@ -47,12 +54,8 @@ const traitIndex = season.traits.map(trait => ({
 }));
 const itemIndex = season.items.map(item => {
   const trait = item.traitId && traitMap.get(item.traitId);
-  let terms = itemTerms(item);
-  if (trait) terms = indexedEmblemTerms(terms, guideTraitNames(trait));
-  if (item.category === "radiant") {
-    const base = terms.filter(name => !name.startsWith("光明"));
-    terms = [itemName(item), item.name, ...base.flatMap(name => ["光明" + name, "光明版" + name])];
-  }
+  const names = itemTerms(item);
+  const terms = trait ? indexedEmblemTerms(names, emblemSearchNames(item, trait)) : names;
   const type = item.traitId ? "纹章" : item.category === "artifact" ? "神器" :
     item.category === "support" ? "辅助装" : item.category === "radiant" ? "光明装" : "装备";
   return { item, terms, hit:{ id:item.id, name:itemName(item), href:itemLink(item.id), image:item.image, detail:type } };
@@ -71,8 +74,7 @@ function searchGuides(live: Publication | null) {
   const withCores = current && canRankRecommendations(coreStats, live.season.id, currentPatch);
   const recommendations = currentPatchRecommendations(live);
   const fixed = new Map(recommendations?.fixedBoardRecommendations?.map(row => [row.teamId, row]));
-  const reviewed = new Set(recommendations?.entries.filter(row => row.status === "review")
-    .map(row => row.sectionId + ":" + row.teamId));
+  const decisions = new Map(recommendations?.entries.map(row => [row.sectionId + ":" + row.teamId, row]));
   const cores = new Map((withCores ? coreStats.rows : []).map(row => [row.sectionId + ":" + row.teamId, row]));
   const labels = { recommended: "推荐", secondary: "次选", review: "待复核" };
   return live.sections.filter(section => readableSection(section) && !isEditorialSection(section) && !isVersionUpdate(section)).map(section => {
@@ -93,11 +95,12 @@ function searchGuides(live: Publication | null) {
       if (!tiers.size) tiers.add(recommendationTier(core ?? fixed.get(board.id) ??
         recommendationBoardSample(board, section, "fixed", build) ?? recommendationBoardSample(board, section, "core", build)));
       const [tier] = tiers;
-      const label = section.category === heroAugmentCategory ? "英雄强化" : reviewed.has(id) ? "待复核" :
+      const status = decisions.get(id)?.status;
+      const label = section.category === heroAugmentCategory ? "英雄强化" : status === "review" || status === "avoid" ? patchRecommendationLabels[status] :
         tiers.size > 1 ? "全部攻略" : labels[tier];
       return [board.id, label] as const;
     }));
-    return { section, teams, families, familiesByBoard, boardLabels };
+    return { section, teams, families, familiesByBoard, boardLabels, decisions };
   });
 }
 
@@ -106,8 +109,95 @@ type Context = {
   guides: SearchGuide[];
   extra: ReturnType<typeof siteSearchIntent>;
   exclusion?: string;
+  level?: number;
+  includeSeven: boolean;
   live: Publication | null;
 };
+
+function exactUnits(term: string) {
+  return heroIndex.filter(row => searchNameRank(key(term), row.terms) === 3).map(row => row.hit.id);
+}
+
+function boardRule(raw: string) {
+  const negative = /^(?:排除|剔除|不含|不看)\s*/.exec(raw);
+  const term = raw.slice(negative?.[0].length ?? 0).replace(/^(?:包含|含)\s*/, "");
+  const wearer = guideWearerQuery(term);
+  const ids = exactUnits(wearer?.unit ?? term);
+  const stars = openingSearch(term, season);
+  const trait = homeGuideFilter(displayGuideName(term.replace(/^至少\s*|\s*羁绊$/g, ""))
+    .replace(/([\d一二三四五六七八九十])离子$/, "$1离子火花"), season);
+  const items = wearer ? searchRows(itemIndex, key(wearer.item)).filter(row => row.rank === 3).map(row => row.item.id) : [];
+  let matches: ((board: Team, data: Publication["season"], guide: SearchGuide) => boolean) | undefined;
+  if (wearer && ids.length && items.length) {
+    matches = (board, data, guide) => board.pieces.some(piece => ids.includes(piece.unitId) && piece.items.some(id => items.includes(id)) &&
+      (!wearer.carry || mainCarry(guide, board, data, piece.unitId)));
+  } else if (stars?.kind === "star" && stars.unitIds.length) {
+    matches = board => board.pieces.some(piece => stars.unitIds.includes(piece.unitId) && piece.stars === stars.stars);
+  } else if (trait?.kind === "trait") {
+    matches = (board, data) => traitCounts(board.pieces, data.units, data.traits, data.items).some(row => row.active &&
+      trait.ids.includes(row.id) && (term.startsWith("至少") ? row.level >= trait.value : row.level === trait.value));
+  } else if (!wearer && ids.length) {
+    matches = board => board.pieces.some(piece => ids.includes(piece.unitId));
+  } else if (!wearer) {
+    const traits = traitIndex.filter(row => searchNameRank(key(term), row.terms) === 3);
+    if (traits.length) matches = (board, data) => traitCounts(board.pieces, data.units, data.traits, data.items)
+      .some(row => row.active && traits.some(trait => trait.hit.id === row.id));
+  }
+  if (matches) return { matches, excluded: Boolean(negative), label: negative ? `排除 ${term}` : term };
+}
+
+function boardResults(query: string, request: BoardSearchQuery, context: Context): SiteSearchResponse | undefined {
+  const terms = request.terms ?? [];
+  const rules = terms.map(boardRule);
+  const queryContext: SiteSearchContext = { level: request.level, boardLookup: {
+    group: request.group, sectionId: request.sectionId, terms: request.terms, rollLevel: request.rollLevel,
+  } };
+  const conditions = [request.group && searchStrategies[request.group], request.level && `${request.level} 级`,
+    request.rollLevel && `${request.rollLevel} 级搜牌`, ...rules.map((rule, index) => rule?.label ?? terms[index])].filter(isText);
+  const result = { query, intent: "browse" as const, context: queryContext, conditions, groups: [] };
+  if (rules.some(rule => !rule)) return { ...result, answer: "有条件未识别。可用英雄名、三星英雄、羁绊档位或「英雄携带装备」，用 + 连接。" };
+
+  const requestedName = request.name && key(displayGuideName(request.name));
+  const nameMatches = (value: string) => key(displayGuideName(value)) === requestedName;
+  let guideFound = false;
+  const candidates = context.guides.flatMap(guide => {
+    const { section, teams, families } = guide;
+    const data = section.gameData ?? context.live?.season ?? season;
+    const primary = teams[0];
+    if (!primary || !sameEdition(data.id, currentPatch.seasonId) || section.category === heroAugmentCategory ||
+        (request.sectionId && request.sectionId !== section.id)) return [];
+    const named = !requestedName || [section.title, ...families.flatMap(({ stat }) => [stat.name, ...(stat.aliases ?? [])])].some(nameMatches);
+    if (named || teams.some(team => nameMatches(guideBoardName(team)))) guideFound = true;
+    let options = teams.filter(team => named || nameMatches(guideBoardName(team)));
+    options = options.filter(team => {
+      const level = usedPopulation(team.pieces);
+      if (request.level !== undefined && level !== request.level) return false;
+      if (request.level === undefined && request.rollLevel === undefined && guideBoardKind(section, team, primary) === "过渡") return false;
+      const facets = guideFacets(section, team, data);
+      const primaryFacets = team === primary ? facets : guideFacets(section, primary, data);
+      const roll = guideRollLevel(section, team) ?? guideRollLevel(section, primary);
+      const strategy = recommendationGroup(guidePlaystyle(section, team) ?? (facets.style || primaryFacets.style),
+        facets.costs.length ? facets.costs : primaryFacets.costs, roll);
+      return (!request.group || request.group === strategy) && (request.rollLevel === undefined || request.rollLevel === roll) &&
+        rules.every(rule => rule && rule.matches(team, data, guide) !== rule.excluded);
+    });
+    const team = options[0];
+    if (!team) return [];
+    const family = guide.familiesByBoard.get(team.id)?.[0]?.stat;
+    const tier = isRejected(guide, team) ? 2 : { recommended: 0, secondary: 1, review: 2 }[recommendationTier(family)];
+    return [{ guide, team, data, family, tier }];
+  }).sort((a, b) => a.tier - b.tier || (a.family?.mean ?? 9) - (b.family?.mean ?? 9));
+  if (requestedName && !guideFound) return;
+  if (requestedName && candidates[0]) queryContext.boardLookup!.sectionId = candidates[0].guide.section.id;
+  const hits = candidates.slice(0, limit).map(({ guide, team, data, family }) => {
+    const detail = `${usedPopulation(team.pieces)} 级 · ${guideBoardName(team)}`;
+    return { ...guideHit(guide, team, detail), evidence: boardSearchEvidence(guide.section, team, data.id, family) };
+  });
+  return hits.length ? { ...result, groups: [{ kind: "guides", title: request.group ? `${searchStrategies[request.group]} 阵容` : "阵容攻略", hits }] }
+    : { ...result, answer: "暂无符合这些条件的已发布棋盘。" };
+}
+
+function isText(value: unknown): value is string { return typeof value === "string" && Boolean(value); }
 
 function searchRows<T extends { hit: SiteSearchHit; terms: string[] }>(rows: T[], term: string) {
   return rows.map(row => ({ ...row, rank:searchNameRank(term, row.terms) }))
@@ -167,12 +257,84 @@ function equippedBoards(item: Item, context: Context) {
   const isCurrent = (section: Section) => context.live && sameEdition((section.gameData ?? context.live.season).id,season.id);
   return context.guides.filter(({section}) => isCurrent(section)).flatMap(guide => {
     const { section, teams } = guide;
-    return equippedGuideRoutes(section, teams, teams, item.id, unitMap, context.exclusion, context.extra.lowCosts).map(({board, wearers, population}) => {
-      const label = [...new Set(wearers.map(unit => unit.name))].join("、");
-      const stage = board.id === teams[0].id ? population + "级" : guideBoardName(board);
-      return guideHit(guide, board, stage + " · " + label + "携带", wearers[0]);
-    });
+    const candidates = teams.filter(board => (context.level === undefined || context.level === usedPopulation(board.pieces)) &&
+      !hasSevenCostUnit(board.pieces, unitMap) && !isRejected(guide, board) && !board.pieces.some(piece => piece.unitId === context.exclusion));
+    return equippedGuideRoutes(section, teams, candidates, item.id, unitMap, context.exclusion, context.extra.lowCosts)
+      .map(({board, wearers, population}) => {
+        const label = [...new Set(wearers.map(unit => unit.name))].join("、");
+        return guideHit(guide, board, `${population}级 · ${label}携带`, wearers[0]);
+      });
   }).slice(0, limit);
+}
+
+function isRejected(guide: SearchGuide, board: Team) {
+  const status = guide.decisions.get(guide.section.id + ":" + board.id)?.status;
+  return status === "avoid" || status === "review";
+}
+
+function mainCarry(guide: SearchGuide, board: Team, data: Publication["season"], unitId: string, familyCarry = false) {
+  const piece = board.pieces.find(piece => piece.unitId === unitId);
+  const unit = data.units.find(unit => unit.id === unitId);
+  if (!piece || !unit) return false;
+  const roles = readingNotes(guide.section, board, data).roles;
+  return guideUnitMatch(piece, unit, roles, data.items, { familyCarry, transition: false, sampled: false }).mainCarry;
+}
+
+function openingTip(guide: SearchGuide, board: Team, data: Publication["season"]) {
+  const note = guide.decisions.get(`${guide.section.id}:${board.id}`)?.note || sourceSummary(guide.section) ||
+    readingNotes(guide.section, guide.teams[0], data).opening || readingNotes(guide.section, board, data).opening;
+  return note.replace(/^【[^】]+】\s*/, "").split(/(?<=[。！？])|[；;]/, 1)[0].trim();
+}
+
+function gearRoutes(item: Item, context: Context, sampled: ReadonlySet<string>, qualified: ReadonlySet<string>, currentBatch: boolean) {
+  const publication = context.live;
+  const familyReady = publication && currentRecommendationEvidence(familyStats, publication.season.id, currentPatch,
+    currentPatchRecommendations(publication)?.reviewedRollingPatch);
+  const terminalsReady = Boolean(currentBatch && publication && familyReady && currentSearchPlacements(publication.season.id));
+  const backups = new Map<string, string>();
+  const terminals = context.guides.flatMap(guide => {
+    const { section, teams, families } = guide;
+    const data = section.gameData ?? publication?.season ?? season;
+    if (!currentBatch || !sameEdition(data.id, currentPatch.seasonId) || section.category === heroAugmentCategory || !teams[0]) return [];
+    const boards = new Map(teams.flatMap(board => {
+      const population = usedPopulation(board.pieces);
+      if (context.level !== undefined && population !== context.level || hasSevenCostUnit(board.pieces, unitMap) ||
+          guideBoardKind(section, board, teams[0]) === "过渡" || isRejected(guide, board) ||
+          board.pieces.some(piece => piece.unitId === context.exclusion)) return [];
+      const wearers = board.pieces.filter(piece => sampled.has(piece.unitId) && piece.items.includes(item.id)).map(piece => piece.unitId);
+      if (!wearers.length) return [];
+      for (const id of wearers) {
+        if (!backups.has(id) && mainCarry(guide, board, data, id)) backups.set(id, guideLink(section.id, board.id));
+      }
+      return [[board.id, { board, wearers, population }] as const];
+    }));
+    if (!terminalsReady || !boards.size) return [];
+    return families.flatMap(({ stat, team, boards: familyBoards }) => {
+      if (recommendationTier(stat) !== "recommended" || stat.heroAugment || isRejected(guide, team)) return [];
+      const options = familyBoards.flatMap(familyBoard => {
+        const entry = boards.get(familyBoard.id);
+        if (!entry) return [];
+        const { board, population, wearers } = entry;
+        const carryIds = wearers.filter(id => qualified.has(id) && stat.carryIds.includes(id) && mainCarry(guide, board, data, id, true));
+        if (!carryIds.length) return [];
+        const fixed = fixedSearchSample(section, board, data.id);
+        if (fixed?.mean === undefined || recommendationTier({ games: fixed.games, mean: fixed.mean, winRate: fixed.winRate }) !== "recommended") return [];
+        return [{ board, population, carryIds, fixed: { ...fixed, mean: fixed.mean } }];
+      });
+      const original = options.find(entry => entry.board.id === stat.landingTeamId) ?? options.find(entry => entry.board.id === team.id) ?? options[0];
+      if (!original) return [];
+      const best = options.filter(entry => entry.population === original.population && entry.fixed.scope === original.fixed.scope &&
+        entry.fixed.roster !== original.fixed.roster && entry.fixed.mean < original.fixed.mean &&
+        original.carryIds.every(id => entry.carryIds.includes(id)))
+        .sort((a, b) => a.fixed.mean - b.fixed.mean || b.fixed.games - a.fixed.games)[0] ?? original;
+      const carries = best.carryIds.flatMap(id => unitMap.get(id) ?? []);
+      const tip = openingTip(guide, best.board, data);
+      return [{ ...guideHit(guide, best.board, `${best.population}级 · ${carries.map(unit => unit.name).join("、")}主C`, carries[0]),
+        name: displayGuideName(stat.name), familyId: String(stat.clusterId), carryIds: best.carryIds,
+        mean: stat.mean, games: stat.games, category: "推荐", advice: tip }];
+    });
+  });
+  return { terminals: selectEquipmentTerminals(terminals), backups, terminalsReady };
 }
 
 function gearDetails(item: Item, context: Context): SearchGearDetail {
@@ -193,44 +355,125 @@ function gearDetails(item: Item, context: Context): SearchGearDetail {
   } : sampled ? {
     href: sampled.url, label:[samples.source,samples.version,samples.window,samples.date].join(" · "),
   } : undefined;
+  const rows = (entry?.holders ?? sampled?.rows ?? []).filter(eligible);
+  const displayMinimum = gearSampleMinimum(item.category, pbe, minGames);
+  const ranked = rankedWearerEvidence(rows.filter(row => context.includeSeven || unitMap.get(row.unitId)?.cost !== 7), minGames, displayMinimum);
+  const wearerHit = ({ unitId, games, mean }: typeof ranked.holders[number], href?: string): CarryHit => {
+    const unit = unitMap.get(unitId)!;
+    return { id: unit.id, name: unit.name, image: unit.image, games, mean,
+      href: href ?? (item.traitId ? emblemLink(item.traitId, unit.id, excluded) : itemLink(item.id, unit.id)) };
+  };
+  const currentBatch = entry ? context.live !== null && sameEdition(context.live.season.id, currentPatch.seasonId) &&
+    emblemSnapshot.patch === currentPatch.metaTftPatch.patch + currentPatch.metaTftPatch.bPatch &&
+    Date.parse(emblemSnapshot.updatedAt) >= Date.parse(currentPatch.effectiveAt) : Boolean(sampled && currentWearerSnapshot(samples, currentPatch));
+  const candidateRows = rows.filter(row => row.games > 0 && unitMap.get(row.unitId)?.cost !== 7);
+  const candidates = rankedWearerEvidence(candidateRows, displayMinimum, displayMinimum, Infinity);
+  const qualified = candidates.order === "mean" ? candidates.holders : [];
+  const represented = new Set(qualified.map(row => row.unitId));
+  const ordered = [...qualified, ...candidateRows.filter(row => !represented.has(row.unitId)).sort((a, b) => b.games - a.games)
+    .map(row => ({ unitId: row.unitId, games: row.games, mean: undefined }))];
+  const { terminals, backups, terminalsReady } = gearRoutes(item, context,
+    new Set(ordered.map(row => row.unitId)), represented, currentBatch);
+
+  const carries: CarryHit[] = [];
+  const chosen = new Set<string>();
+  const chosenTerminals = new Set<string>();
+  for (const terminal of terminals) for (const id of terminal.carryIds) {
+    if (chosen.has(id) || carries.length >= equipmentWearerLimit) continue;
+    const row = ordered.find(row => row.unitId === id);
+    if (row) {
+      chosen.add(id);
+      chosenTerminals.add(terminal.id);
+      carries.push(wearerHit(row, terminal.href));
+    }
+  }
+  for (const row of ordered) {
+    const href = backups.get(row.unitId);
+    if (!href || chosen.has(row.unitId) || carries.length >= equipmentWearerLimit) continue;
+    carries.push({ ...wearerHit(row, href), detail: "攻略配装" });
+  }
+  for (const terminal of terminals) {
+    if (chosenTerminals.size >= 4) break;
+    chosenTerminals.add(terminal.id);
+  }
+  const examples = terminals.filter(board => chosenTerminals.has(board.id)).map(({ familyId, carryIds, ...board }) => board);
+  const matching = !examples.length ? equippedBoards(item, context) : [];
+  const routeNote = examples.length ? undefined : !context.live ? "暂时读不到阵容笔记。" :
+    !terminalsReady && (rows.length > 0 || matching.length > 0) ? "当前构建的战绩批次尚未齐备。" :
+    context.level !== undefined || excluded || context.extra.lowCosts ? "当前条件下暂无合格的实戴终盘。" :
+    matching.length ? "已有实戴棋盘，当前暂无达到推荐门槛的终盘。" : "暂无实戴这件装备的已发布棋盘。";
   return {
     type: item.traitId ? "emblem" : item.category === "artifact" ? "artifact" : "item",
-    holders: rankedWearers((entry?.holders ?? sampled?.rows ?? []).filter(eligible), minGames, gearSampleMinimum(item.category, pbe, minGames))
-      .flatMap(row => {
-        const unit = unitMap.get(row.unitId);
-        return unit ? [{ id:unit.id,name:unit.name,image:unit.image,games:row.games,mean:row.mean,
-          href:item.traitId ? emblemLink(item.traitId,unit.id,excluded) : itemLink(item.id,unit.id) }] : [];
-      }),
+    holders: ranked.holders.map(row => wearerHit(row)), holderOrder: ranked.order, carries,
     examplesAvailable: Boolean(context.live),
-    examples: equippedBoards(item, context),
+    examples, routeNote, includeSeven: context.includeSeven,
+    stageBoards: matching,
     totalGames: entry?.games ?? sampled?.totalGames,
     snapshot,
     exclude: excluded,
   };
 }
 
-export async function performSiteSearch(input: string, exclude?: string, publication?: Publication | null): Promise<SiteSearchResponse> {
-  const query = input.trim().slice(0,80);
+const gearLevel = new RegExp(`(?:^|\\s*的?\\s*)${searchLevelToken}(?:的?(?:阵容|终盘|棋盘))?(?:呢|吗)?$`);
+const gearFollowup = new RegExp(`^(?:那(?:就|只看|再看|看)?|再看|只看|看)?\\s*${searchLevelToken}(?:的?(?:阵容|终盘|棋盘))?(?:呢|吗)?[？?。]*$`);
+
+export async function performSiteSearch(input: string, exclude?: string, publication?: Publication | null,
+  { previous, includeSeven }: { previous?: SiteSearchContext; includeSeven?: boolean } = {},
+): Promise<SiteSearchResponse> {
+  const query = input.trim().slice(0, searchQueryLimit);
   const extra = siteSearchIntent(query);
   const term = key(extra.text);
-  if (!term) return { query, intent:extra.intent, groups:[] };
+  if (!query) return { query, intent:extra.intent, groups:[] };
+  const filterFollowup = gearFollowup.test(query.normalize("NFKC")) || !term && Boolean(extra.excluded || extra.lowCosts) ||
+    /^(?:那|再|然后|接着|这件)/.test(query) && /给谁|谁带|阵容|排除|低费|终盘/.test(query);
+  const inherited = Boolean(filterFollowup && previous?.item && itemIndex.some(row => row.item.id === previous.item));
+  const level = siteSearchLevel(query) ?? (inherited ? previous?.level : undefined);
+  const excludeByName = extra.excluded && exactUnits(extra.excluded)[0];
+  const invalidExclusion = extra.excluded && !excludeByName;
+  const exclusion = exclude === "none" ? undefined : exclude && unitMap.has(exclude) ? exclude :
+    excludeByName || (inherited ? previous?.exclude : undefined);
+  const include = includeSeven ?? (inherited && previous?.includeSeven === true);
+  const lowCosts = extra.lowCosts || Boolean(inherited && previous?.lowCosts);
   const live = publication === undefined ? await publicGuidePublication().catch(() => null) : publication;
   const context: Context = {
-    guides: searchGuides(live),
-    extra,
-    exclusion: exclude === "none" ? undefined : exclude && unitMap.has(exclude) ? exclude : extra.excluded
-      ? heroIndex.find(row => searchNameRank(key(extra.excluded!), row.terms) === 3)?.hit.id : undefined,
-    live,
+    guides: searchGuides(live), extra: { ...extra, lowCosts }, live, exclusion, level, includeSeven: include,
   };
 
-  const guideIntent = homeSearchIntent(extra.text, "all");
+  const boardQuery = boardSearchQuery(query, previous);
+  if (boardQuery && (boardQuery.group || boardQuery.terms?.length || boardQuery.inherited)) {
+    const result = boardResults(query, boardQuery, context);
+    if (result) return result;
+  }
+
+  const requestedAugment = heroAugmentSearchQuery(query, season.units, previous);
+  const augmentHits = requestedAugment?.augments.flatMap(augment => heroAugmentSearchHit(augment, live, requestedAugment) ?? []) ?? [];
+  const exactHeroLookup = exactUnits(query).length > 0;
+  if (requestedAugment && augmentHits.length && !exactHeroLookup) {
+    const [augment] = requestedAugment.augments;
+    const conditions = [!requestedAugment.browse && augment.label,
+      requestedAugment.level && `${requestedAugment.level} 级`, requestedAugment.picksOnly && "强化实选"].filter(isText);
+    return { query, intent: "browse", conditions, context: requestedAugment.browse ? undefined : { augmentId: augment.id, level: requestedAugment.level },
+      groups: [{ kind: "augments", title: "英雄强化", hits: augmentHits }] };
+  }
+
+  if (invalidExclusion && exclude !== "none") return { query, intent: extra.intent, groups: [], context: previous,
+    answer: `未识别要排除的棋子「${extra.excluded}」。可以输入英雄的正式名称。` };
+
+  const lookupText = extra.text.replace(gearLevel, "").trim();
+  const guideIntent = homeSearchIntent(lookupText || extra.text, "all");
   const opening = openingSearch(guideIntent.text, season);
   const explicitEmblems = opening?.kind === "emblem" ? new Set(opening.itemIds) : new Set<string>();
-  const namedItems = searchRows(itemIndex, term);
+  const namedItems = searchRows(itemIndex, key(lookupText));
+  const exactGear = namedItems.filter(row => row.rank === 3);
   const basedOnEmblem = explicitEmblems.size ? itemIndex.filter(row => explicitEmblems.has(row.item.id)).map(row => ({ ...row, rank:3 })) : [];
-  const singleGear = basedOnEmblem.length ? basedOnEmblem : namedItems.filter(row => row.rank === 3);
+  const carriedItem = inherited && !exactGear.length ? itemIndex.find(row => row.item.id === previous?.item) : undefined;
+  const singleGear = exactGear.length ? exactGear : basedOnEmblem.length ? basedOnEmblem : carriedItem ? [{ ...carriedItem, rank: 3 }] : [];
   const gearRows = singleGear.length ? singleGear : namedItems;
   const knownGear = singleGear.map(row => row.item);
+  if (boardQuery && !singleGear.length) {
+    const result = boardResults(query, boardQuery, context);
+    if (result) return result;
+  }
   const stars = guideIntent.scope === "all" && opening?.kind === "star" ? new Set(opening.unitIds) : undefined;
   const heroRows = stars?.size
     ? heroIndex.filter(row => stars.has(row.hit.id)).map(row => ({ ...row, rank: 3 }))
@@ -263,5 +506,16 @@ export async function performSiteSearch(input: string, exclude?: string, publica
       : [gear, guideGroup, heroGroup, traitGroup, augmentGroup])
     : directHero ? [heroGroup,guideGroup,traitGroup,gear,augmentGroup]
     : [guideGroup,heroGroup,traitGroup,gear,augmentGroup];
-  return { query, intent:extra.intent, groups:groups.filter(group => group.hits.length) };
+  const item = singleGear.length === 1 && gear.hits[0]?.gear ? knownGear[0] : undefined;
+  const conditions = item && [itemName(item), level && `${level} 级`, exclusion && `排除 ${unitMap.get(exclusion)?.name ?? exclusion}`,
+    lowCosts && "只看 1–3 费"].filter(isText);
+  const filteredGroups = (carriedItem ? [gear] : exactHeroLookup && augmentHits.length
+    ? [{ kind: "augments" as const, title: "英雄强化", hits: augmentHits }, ...groups.filter(group => group.kind !== "augments")]
+    : groups).filter(group => group.hits.length);
+  if (exactHeroLookup && requestedAugment && augmentHits.length === 1) {
+    const [augment] = requestedAugment.augments;
+    return { query, intent: extra.intent, groups: filteredGroups, context: { augmentId: augment.id }, conditions: [augment.label] };
+  }
+  return { query, intent:extra.intent, groups:filteredGroups, ...(item && { conditions,
+    context: { item: item.id, level, exclude: exclusion || undefined, lowCosts, includeSeven: include } }) };
 }

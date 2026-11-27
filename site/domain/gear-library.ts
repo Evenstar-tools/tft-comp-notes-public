@@ -3,6 +3,7 @@ import { itemReference } from "@/data/item-reference";
 import emblemSnapshot from "@/data/emblem-stats.json";
 import { emblemItemId } from "./links";
 import { gearWearerMatches, type GearOrder } from "./gear-wearer";
+import { emblemSearchNames, makeItemSearchTerms } from "./item-search";
 import { itemAliases } from "./roster-import";
 import { legacyEmblemNames } from "./trait-names.mjs";
 import type { Item } from "./types";
@@ -88,11 +89,11 @@ for (const [alias, name] of Object.entries({ ...legacyEmblemNames, ...itemAliase
   entries.push(alias);
   aliases.set(name, entries);
 }
-export function itemTerms(item: Item) {
+export const itemTerms = makeItemSearchTerms(season.items, item => {
   const name = itemName(item);
   const officialName = itemReference.items[item.id]?.name ?? item.name;
-  return [name, officialName, item.name, ...(aliases.get(item.name) ?? []), ...(aliases.get(officialName.replace(/^光明版/, "")) ?? [])];
-}
+  return [name, officialName, item.name, ...(aliases.get(item.name) ?? []), ...(aliases.get(officialName) ?? [])];
+});
 
 function matchingParts(item: Item, term: string) {
   return [...new Set(recipeParts(item))].filter(part => itemTerms(part).some(name => normalize(name).includes(term)));
@@ -131,7 +132,7 @@ export function emblemMatches(id: string, query: string) {
   const trait = traitMap.get(id);
   const item = itemMap.get(emblemItemId(id));
   const itemNames = item ? [...itemTerms(item), ...recipeParts(item).flatMap(itemTerms)] : [];
-  return [...itemNames, trait?.name, trait?.gameName, trait?.nameEn, ...(trait?.aliases ?? [])]
+  return [...itemNames, ...(item && trait ? emblemSearchNames(item, trait) : [])]
     .some(text => text && normalizeEmblem(text).includes(term));
 }
 

@@ -1,0 +1,26 @@
+.hero-augment-search-card { min-width: 0; }
+.hero-augment-search-title { background: var(--raised); }
+.hero-augment-search-section { padding: 9px; }
+.hero-augment-search-section h3 { margin: 0 0 6px; font-size: .875rem; }
+.hero-augment-search-section h3 small { margin-inline-start: 5px; color: var(--muted); font-weight: 400; }
+.hero-augment-search-roster, .hero-augment-search-traits, .hero-augment-search-loadouts, .hero-augment-search-items {
+  list-style: none; padding: 0; margin: 0;
+}
+.hero-augment-search-roster, .hero-augment-search-traits, .hero-augment-search-items { display: flex; flex-wrap: wrap; gap: 6px 10px; }
+.hero-augment-search-roster { margin-top: 8px; }
+.hero-augment-search-roster li { display: grid; justify-items: center; gap: 2px; color: var(--muted); font-size: .75rem; }
+.hero-augment-search-roster img { border: 1px solid var(--unit-cost, var(--line)); border-radius: 4px; object-fit: cover; }
+.hero-augment-search-roster li[data-carry] { color: var(--text); font-weight: 650; }
+.hero-augment-search-traits li, .hero-augment-search-items a { display: inline-flex; align-items: center; gap: 4px; font-size: .8rem; }
+.hero-augment-search-items img { border-radius: 3px; object-fit: cover; }
+.hero-augment-search-loadouts > li { border-top: 1px solid var(--line); padding-block: 6px; }
+.hero-augment-search-loadout { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; font-size: .8rem; }
+.hero-augment-search-sample { color: var(--muted); font-size: .76rem; }
+.hero-augment-search-sample strong { color: var(--accent); margin-inline-start: 6px; }
+.hero-augment-search-note { margin: 5px 9px; color: var(--muted); font-size: .8125rem; overflow-wrap: anywhere; }
+.hero-augment-search-loadouts .hero-augment-search-note { margin-inline: 0; }
+.hero-augment-search-conditions { padding: 6px 9px; border-top: 1px solid var(--line); color: var(--muted); font-size: .8125rem; }
+.hero-augment-search-conditions summary { color: var(--text); cursor: pointer; }
+.hero-augment-search-conditions ul { margin: 6px 0; padding-inline-start: 1.25rem; }
+.hero-augment-search-sources { display: flex; flex-wrap: wrap; gap: 5px 12px; }
+.hero-augment-search-items a, .hero-augment-search-sources a { color: var(--accent); overflow-wrap: anywhere; }
