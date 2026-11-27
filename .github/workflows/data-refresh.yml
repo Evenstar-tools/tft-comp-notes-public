@@ -1,9 +1,10 @@
 name: Data refresh
 
 on:
+  # Stagger refreshes away from GitHub Actions peak load at the top of the hour.
   schedule:
-    - cron: '0 1 * * *'
-    - cron: '0 13 * * *'
+    - cron: '53 2 * * *'
+    - cron: '17 13 * * *'
   workflow_dispatch:
     inputs:
       profile:
@@ -45,8 +46,8 @@ jobs:
           DISPATCH_PROFILE: ${{ inputs.profile }}
         run: |
           case "$GITHUB_EVENT_NAME:$SCHEDULE" in
-            'schedule:0 1 * * *') profile=daily ;;
-            'schedule:0 13 * * *') profile=fast ;;
+            'schedule:53 2 * * *') profile=daily ;;
+            'schedule:17 13 * * *') profile=fast ;;
             'workflow_dispatch:') profile="$DISPATCH_PROFILE" ;;
             *) echo 'Unexpected refresh trigger'; exit 1 ;;
           esac
