@@ -74,7 +74,10 @@ def main() -> None:
                 name = f"{tier}/{key}"
                 dest = ROOT / "public/assets/augment-icons" / f"{name}.webp"
                 dest.parent.mkdir(parents=True, exist_ok=True)
-                render(source, tier).save(dest, lossless=True)
+                art = render(source, tier)
+                # 128 px covers the 34 px catalog icons and their high-density displays.
+                art.thumbnail((128, 128), Image.Resampling.LANCZOS)
+                art.save(dest, "WEBP", quality=90, method=6)
                 outputs.append(name)
             return outputs
         except (OSError, ValueError) as error:
