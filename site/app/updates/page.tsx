@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import { ArrowUpRight } from "lucide-react";
 import { DocumentView } from "@/components/DocumentView";
 import { PatchExplorer } from "@/components/PatchExplorer";
 import { PatchReadingLink } from "@/components/PatchReadingLink";
@@ -10,8 +9,8 @@ import { augmentArtPath } from "@/data/augment-art";
 import augmentCatalog from "@/data/augment-catalog.json";
 import bundledItems from "@/data/item-art.json";
 import { patchReferences } from "@/data/patch-notes";
-import { chapterMatchesPatch, publishedPatchCallouts, type PatchReference } from "@/domain/patch-reference";
-import { patchRecommendationLabels, readablePatchIntroduction } from "@/domain/patch-recommendations";
+import { chapterMatchesPatch, patchGuideImpactLabels, publishedPatchCallouts, splitHighlightLine, type PatchReference } from "@/domain/patch-reference";
+import { readablePatchIntroduction } from "@/domain/patch-recommendations";
 import { recommendationBoardTitle } from "@/domain/guide-families";
 import { sectionTeams } from "@/domain/document-flow";
 import { guideLink, guideRoster, readingNotes } from "@/domain/guide-reading";
@@ -85,9 +84,9 @@ export default async function VersionUpdates({ searchParams }: { searchParams: P
     : undefined;
   const callouts = patch && publishedPatchCallouts(intro && readablePatchIntroduction(intro), patch);
   const highlights = callouts?.highlights.length ? callouts.highlights : patch?.highlights;
-  const currentSummary = sameBuild ? recommendation?.summary : undefined;
-  const observations = callouts?.observation.length ? callouts.observation : patch?.observation ? [patch.observation] : [];
-  const evidence = sameBuild ? recommendation?.entries.filter(record => record.sources?.length) ?? [] : [];
+  const patchObservations = Array.isArray(patch?.observation) ? patch.observation : patch?.observation ? [patch.observation] : [];
+  const observations = callouts?.observation.length ? callouts.observation : patchObservations;
+  const impacts = patch?.impacts ?? [];
   const placementBatch = placement as PlacementBatch;
   const sampledBoards = placementBatch.records.flatMap(row => {
     const note = row.boardObservation;
@@ -100,12 +99,12 @@ export default async function VersionUpdates({ searchParams }: { searchParams: P
   const hasChanges = patch && Object.keys(patch.groups).length > 0;
   const observationStats = patch?.observationStats;
   const showObservation = !current?.chapter && (observations.length > 0 || !!observationStats?.length);
-  const hasDetails = showObservation || evidence.length > 0 || sampledBoards.length > 0;
+  const hasDetails = showObservation || impacts.length > 0 || sampledBoards.length > 0;
   const sections = [
     ...(hasChanges ? [{ anchor: "patch-changes", label: "改动明细" }] : []),
     ...(showObservation ? [{ anchor: "patch-environment", label: "环境观察" }] : []),
     ...(sampledBoards.length ? [{ anchor: "eight-board-samples", label: "八级棋盘实测" }] : []),
-    ...(evidence.length ? [{ anchor: "patch-recommendations", label: "阵容观察" }] : []),
+    ...(impacts.length ? [{ anchor: "patch-recommendations", label: "阵容观察" }] : []),
   ];
   const source = (patch || isOfficialEdition(season.id)) && <div className="patch-edition-line">
     {patch && <time dateTime={patch.date} title={patch.dateLabel + " · " + patch.build}>{patch.date}</time>}
@@ -139,8 +138,10 @@ export default async function VersionUpdates({ searchParams }: { searchParams: P
           </> : <>
             <h2>{patchTitle(current.title, patch?.date)}</h2>
             {leadTools}
-            {!!highlights?.length && <ul className="patch-summary">{highlights.map(line => <li key={line}>{line}</li>)}</ul>}
-            {currentSummary && <p className="patch-current-summary">{currentSummary}</p>}
+            {!!highlights?.length && <ul className="patch-summary">{highlights.map(line => {
+              const { label, text } = splitHighlightLine(line);
+              return <li key={line}>{label && <><strong>{label}</strong>：</>}{text}</li>;
+            })}</ul>}
           </>}
         </section>
         {owner && patch && sameEdition(patch.edition, "s19-pbe") && <LobbyObservation key={patch.id + (lobby ?? "")}
@@ -159,11 +160,12 @@ export default async function VersionUpdates({ searchParams }: { searchParams: P
                 </tr>)}</tbody>
               </table>}
               {observations.map(line => <p key={line}>{line}</p>)}</section>}
-            {!!evidence.length && <section className="patch-board-observation patch-recommendations" id="patch-recommendations">
+            {!!impacts.length && <section className="patch-board-observation patch-recommendations" id="patch-recommendations">
               <h3>阵容观察</h3>
-              <ul>{evidence.map(({ sources = [], ...record }) => {
+              <ul>{impacts.map(record => {
                 const guide = samePublication?.sections.find(section => section.id === record.sectionId);
-                const team = guide && sectionTeams(guide).find(board => board.id === record.teamId);
+                const teams = guide ? sectionTeams(guide) : [];
+                const team = record.teamId ? teams.find(board => board.id === record.teamId) : teams[0];
                 if (!guide || !team) return null;
                 const data = guide.gameData ?? season;
                 const lead = guideRoster(team, data, readingNotes(guide, team, data).roles)[0]?.unit;
@@ -176,7 +178,7 @@ export default async function VersionUpdates({ searchParams }: { searchParams: P
                   ...boardDetails].filter(Boolean).join(" · ");
                 const titleLabel = familyVariant ? guide.title : title;
                 const from = versionUpdateLink(current.id, { query: q, category, anchor: "patch-recommendations" });
-                return <li className="patch-recommendation" key={team.id}>
+                return <li className="patch-recommendation" key={record.sectionId + ":" + team.id}>
                   <div className="patch-recommendation-heading">
                     {lead && <img className={"patch-recommendation-portrait cost-" + lead.cost}
                       src={lead.image} width={34} height={34} alt="" />}
@@ -184,16 +186,9 @@ export default async function VersionUpdates({ searchParams }: { searchParams: P
                       <h4><PatchReadingLink href={guideLink(guide.id, team.id, from)} aria-label={boardLabel ? titleLabel + " · " + boardLabel : undefined}>
                         {titleLabel}
                       </PatchReadingLink></h4>
-                      <span className="patch-status" data-status={record.status}>{patchRecommendationLabels[record.status]}</span>
+                      <span className="patch-status" data-status={record.direction}>{patchGuideImpactLabels[record.direction]}</span>
                       {boardLabel && <small className="patch-board-variant">{boardLabel}</small>}
                     </div>
-                    <div className="patch-sample-links">{sources.map((url, index) => {
-                      const label = sources.length === 1 ? "战绩" : `战绩 ${index + 1}`;
-                      return <a key={url} className="patch-source" href={url} target="_blank" rel="noreferrer"
-                        aria-label={titleLabel + (boardLabel ? " · " + boardLabel : "") + " · " + label}>
-                        {label}<ArrowUpRight size={12} aria-hidden />
-                      </a>;
-                    })}</div>
                   </div>
                   <p>{record.note}</p>
                 </li>;
