@@ -1,4 +1,4 @@
-type GuideSlugs = { slug: string; boards: Record<string, string> };
+type GuideSlugs = { slug: string; boards: Record<string, string>; searchAliases?: Record<string, string[]> };
 
 // Public URL names are permanent. Existing section and board IDs remain the data keys.
 const guideSlugs: Record<string, GuideSlugs> = {
@@ -27,7 +27,7 @@ const guideSlugs: Record<string, GuideSlugs> = {
     "00000000-0000-4000-8000-000000000096": "lv6",
     "00000000-0000-4000-8000-000000000098": "lv8-jazz",
   } },
-  "sample-block-0229": { slug: "prodigy-baron", boards: {
+  "sample-block-0229": { slug: "prodigy-baron", searchAliases: { "95-lv9": ["大龙95", "95大龙", "速九大龙"] }, boards: {
     "00000000-0000-4000-8000-000000000005": "lv7-open",
     "00000000-0000-4000-8000-000000000017": "lv7",
     "00000000-0000-4000-8000-000000000071": "lv9-reroll",
@@ -87,7 +87,7 @@ const guideSlugs: Record<string, GuideSlugs> = {
     "00000000-0000-4000-8000-000000000105": "95-lv9",
     "00000000-0000-4000-8000-000000001275": "lv9-jazz",
   } },
-  "sample-block-0251": { slug: "ocean-graves", boards: {
+  "sample-block-0251": { slug: "ocean-graves", searchAliases: { "4-jugg-graves": ["四主宰男枪"] }, boards: {
     "00000000-0000-4000-8000-000000000030": "lv9-ocean-pyke",
     "00000000-0000-4000-8000-000000000062": "lv7-zac",
     "00000000-0000-4000-8000-000000000075": "lv8-ashe",
@@ -122,7 +122,7 @@ const guideSlugs: Record<string, GuideSlugs> = {
     "00000000-0000-4000-8000-000000000072": "lv5",
     "00000000-0000-4000-8000-000000000091": "lv8",
   } },
-  "sample-block-0171": { slug: "lifeguard-renekton", boards: {
+  "sample-block-0171": { slug: "lifeguard-renekton", searchAliases: { "lv8-ashe": ["救生员鳄鱼艾希"] }, boards: {
     "00000000-0000-4000-8000-000000000002": "lv8",
     "00000000-0000-4000-8000-000000000032": "lv6-seraphine",
     "00000000-0000-4000-8000-000000000079": "lv6",
@@ -207,7 +207,7 @@ const guideSlugs: Record<string, GuideSlugs> = {
     "83cebafb-502e-4f5d-8a17-db9871730b44": "95-lv9",
     "3f5c63e5-1ea1-4310-bbc0-9871308b936d": "95-lv8",
   } },
-  "arcanist-taliyah-vladimir": { slug: "arcanist-taliyah-vladimir", boards: {
+  "arcanist-taliyah-vladimir": { slug: "arcanist-taliyah-vladimir", searchAliases: { "lv8": ["隆吸水"] }, boards: {
     "14d668d4-7d3a-4445-a5b5-bfcfc6aa555b": "lv8",
   } },
   "mosher-yasuo-yone": { slug: "mosher-yasuo-yone", boards: {
@@ -229,7 +229,7 @@ const guideSlugs: Record<string, GuideSlugs> = {
     "9c60581e-2adb-400b-be09-8e04fb2bdef2": "lv6",
     "69b58664-27f4-4404-b4fb-1475fe1583ff": "lv8",
   } },
-  "true-damage-senna": { slug: "true-damage-senna", boards: {
+  "true-damage-senna": { slug: "true-damage-senna", searchAliases: { "lv7": ["真伤赛娜"] }, boards: {
     "cfd4c9e6-f92d-4fd6-819b-486ec2461c03": "lv7",
     "3f69e13a-ddcf-4d24-9a6d-1c0d5e1df4cb": "lv8",
   } },
@@ -237,7 +237,7 @@ const guideSlugs: Record<string, GuideSlugs> = {
     "adc7fda0-b310-467b-98dd-3bd0134610cf": "lv7",
     "6308c680-360d-4afe-8326-bdd5b4622582": "lv8",
   } },
-  "ionic-prodigy-lux": { slug: "ionic-prodigy-lux", boards: {
+  "ionic-prodigy-lux": { slug: "ionic-prodigy-lux", searchAliases: { "lv6": ["离子拉克丝"] }, boards: {
     "a281cc9a-3387-42fb-b9e6-0146139e1069": "lv6",
     "7ca75194-155a-4f65-9d18-c27d7c8738dd": "lv8",
   } },
@@ -262,6 +262,11 @@ export function resolveGuideSectionId(idOrSlug: string): string {
 export function boardPublicSlug(sectionId: string, teamId: string): string {
   const guide = mappedSlug(guideSlugs, sectionId);
   return (guide && mappedSlug(guide.boards, teamId)) ?? teamId;
+}
+
+export function guideBoardSearchAliases(sectionId: string, teamId: string): readonly string[] {
+  const aliases = mappedSlug(guideSlugs, sectionId)?.searchAliases;
+  return (aliases && mappedSlug(aliases, boardPublicSlug(sectionId, teamId))) ?? [];
 }
 
 export function resolveBoardTeamId(sectionId: string, teamOrSlug: string | undefined): string | undefined {

@@ -4457,17 +4457,17 @@
           "elements": [
             {
               "text_run": {
-                "content": "PBE 19.1c 近三天 · 八人口固定盘 23 场。点击查样本。",
+                "content": "八级过渡盘 · 点击查样本。",
                 "text_element_style": {
                   "link": {
-                    "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Neeko19-1&unit=DA_Lux19-1&unit=DA_Malzahar19-1&unit=DA_Ekko19-1&unit=DA_Alune19-1&unit=DA_Annie19-1&unit=DA_Swain19-1&unit=DA_Shyvana19-1&trait=DA_Prodigy19_4&queue=PBE&patch=19.1&b_patch=c&days=3"
+                    "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Alune19-1&unit=DA_Annie19-1&unit=DA_Ekko19-1&unit=DA_Lux19-1&unit=DA_Malzahar19-1&unit=DA_Neeko19-1&unit=DA_Shyvana19-1&unit=DA_Swain19-1&queue=PBE&patch=19.1&b_patch=c&days=3"
                   }
                 }
               }
             }
           ],
           "level": 0,
-          "text": "PBE 19.1c 近三天 · 八人口固定盘 23 场。点击查样本。"
+          "text": "八级过渡盘 · 点击查样本。"
         },
         {
           "id": "sample-block-1334",
@@ -4531,17 +4531,17 @@
           "elements": [
             {
               "text_run": {
-                "content": "PBE 19.1c 近三天 · 九人口作者成型盘 8 场。点击查样本。",
+                "content": "九级成型盘 · 点击查样本。",
                 "text_element_style": {
                   "link": {
-                    "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Lux19-1&unit=DA_Malzahar19-1&unit=DA_Ekko19-1&unit=DA_Alune19-1&unit=DA_Annie19-1&unit=DA_Swain19-1&unit=DA_Shyvana19-1&unit=DA_BaronNashor19-1&queue=PBE&patch=19.1&b_patch=c&days=3"
+                    "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Alune19-1&unit=DA_Annie19-1&unit=DA_BaronNashor19-1&unit=DA_Ekko19-1&unit=DA_Lux19-1&unit=DA_Malzahar19-1&unit=DA_Shyvana19-1&unit=DA_Swain19-1&queue=PBE&patch=19.1&b_patch=c&days=3"
                   }
                 }
               }
             }
           ],
           "level": 0,
-          "text": "PBE 19.1c 近三天 · 九人口作者成型盘 8 场。点击查样本。"
+          "text": "九级成型盘 · 点击查样本。"
         },
         {
           "id": "sample-block-1338",
@@ -4591,17 +4591,17 @@
           "elements": [
             {
               "text_run": {
-                "content": "PBE 19.1c 近三天 · 固定完整名单、无转职或额外人口装，十人口固定盘仅 2 场。点击查样本。",
+                "content": "十级上限盘 · 点击查样本。",
                 "text_element_style": {
                   "link": {
-                    "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=10&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Neeko19-1&unit=DA_Lux19-1&unit=DA_Malzahar19-1&unit=DA_Ekko19-1&unit=DA_Alune19-1&unit=DA_Annie19-1&unit=DA_Swain19-1&unit=DA_Shyvana19-1&unit=DA_BaronNashor19-1&trait=DA_Prodigy19_4&queue=PBE&patch=19.1&b_patch=c&days=3"
+                    "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=10&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Alune19-1&unit=DA_Annie19-1&unit=DA_BaronNashor19-1&unit=DA_Ekko19-1&unit=DA_Lux19-1&unit=DA_Malzahar19-1&unit=DA_Neeko19-1&unit=DA_Shyvana19-1&unit=DA_Swain19-1&queue=PBE&patch=19.1&b_patch=c&days=3"
                   }
                 }
               }
             }
           ],
           "level": 0,
-          "text": "PBE 19.1c 近三天 · 固定完整名单、无转职或额外人口装，十人口固定盘仅 2 场。点击查样本。"
+          "text": "十级上限盘 · 点击查样本。"
         },
         {
           "id": "sample-block-0229-references",

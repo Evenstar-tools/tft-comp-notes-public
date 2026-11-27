@@ -1,8 +1,14 @@
 import type { Season, Team } from "./types";
+import { guideBoardSearchAliases } from "./guide-slugs.ts";
 import { unitSearchNames } from "./unit-search.mjs";
 
 export const guideSearchKey = (line: string) => line.normalize("NFKC").toLowerCase().replace(/[\s·'’()./&_-]/g, "");
 const key = guideSearchKey;
+
+export function guideBoardBySearchAlias<T extends Pick<Team, "id">>(sectionId: string, boards: readonly T[], query: string) {
+  const term = key(query);
+  return term ? boards.find(board => guideBoardSearchAliases(sectionId, board.id).some(alias => key(alias) === term)) : undefined;
+}
 
 export function splitGuideConditions(text: string) {
   return [...new Set(text.split(/\s*[+＋]\s*(?=[^+＋\s])/).map(part => part.trim()).filter(Boolean))].slice(0, 5);

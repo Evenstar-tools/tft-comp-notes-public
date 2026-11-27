@@ -1,7 +1,10 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { boardSearchQuery } from "../domain/board-search-query.ts";
-import { guideSearchKey } from "../domain/guide-search.ts";
+import { guideBoardBySearchAlias, guideSearchKey } from "../domain/guide-search.ts";
+import { boardPublicSlug } from "../domain/guide-slugs.ts";
+import publication from "../data/public-preview.json" with { type: "json" };
+import rerollBoards from "../data/s19-reroll-boards.json" with { type: "json" };
 import { heroAugmentSearchQuery } from "../domain/hero-augment-search.ts";
 import { emblemSearchNames, makeItemSearchTerms } from "../domain/item-search.ts";
 import { hasSevenCostUnit, indexedEmblemTerms, rankedWearerEvidence, rankedWearers, requiresSearchSubmit,
@@ -40,6 +43,27 @@ test("community names resolve the current item IDs and keep radiant aliases spec
   const names = indexedEmblemTerms([emblem.name], emblemSearchNames(emblem, trait));
   assert.equal(searchNameRank(guideSearchKey("五杀摇滚转职"), names), 3);
   assert.equal(searchNameRank(guideSearchKey("五杀乐队徽章"), names), 3);
+});
+
+test("catalog nicknames resolve a published board without intercepting generic subjects", () => {
+  const cases = [
+    ["true-damage-senna", "真伤赛娜", "lv7"],
+    ["ionic-prodigy-lux", "离子拉克丝", "lv6"],
+    ["arcanist-taliyah-vladimir", "隆吸水", "lv8"],
+    ["sample-block-0229", "大龙 ９５", "95-lv9"],
+    ["sample-block-0251", "四主宰男枪", "4-jugg-graves"],
+    ["sample-block-0171", "救生员鳄鱼艾希", "lv8-ashe"],
+  ];
+  for (const [sectionId, query, slug] of cases) {
+    const section = publication.sections.find(section => section.id === sectionId);
+    const stages = rerollBoards.find(guide => guide.sectionId === sectionId)?.stages ?? [];
+    const boards = [...(section.teams ?? [section.team]), ...stages.map(({ teamId: id }) => ({ id }))];
+    const board = guideBoardBySearchAlias(sectionId, boards, query);
+    assert.equal(boardPublicSlug(sectionId, board?.id ?? ""), slug, query);
+    assert.equal(guideBoardBySearchAlias(sectionId, boards.filter(candidate => candidate.id !== board.id), query), undefined);
+  }
+  const renekton = publication.sections.find(section => section.id === "sample-block-0171");
+  assert.equal(guideBoardBySearchAlias(renekton.id, renekton.teams, "救生员鳄鱼"), undefined);
 });
 
 test("seven-cost detection checks the complete on-board roster, including off-carries", () => {

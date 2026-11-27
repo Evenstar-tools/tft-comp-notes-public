@@ -15,7 +15,7 @@ import { currentWearerSnapshot, gearSampleMinimum } from "@/domain/gear-wearer";
 import { boardTitle } from "@/domain/guide-families";
 import { canRankRecommendations, currentFamilyBatch, currentRecommendationEvidence, guideFamilyRows, recommendationGroup, recommendationTier } from "@/domain/guide-family-stats";
 import { guideBoardName, guideFacets, guideLink, guidePlaystyle, guideRollLevel, guideUnitMatch, isEditorialSection, primaryFirst, readingNotes, sourceSummary } from "@/domain/guide-reading";
-import { guideSearchKey, guideTraitNames, guideWearerQuery, homeGuideFilter, openingSearch } from "@/domain/guide-search";
+import { guideBoardBySearchAlias, guideSearchKey, guideTraitNames, guideWearerQuery, homeGuideFilter, openingSearch } from "@/domain/guide-search";
 import { heroAugmentCategory, heroAugmentForGuide } from "@/domain/hero-augments";
 import { heroAugmentSearchQuery } from "@/domain/hero-augment-search";
 import { equippedGuideRoutes, homeSearchIntent, matchHomeGuide } from "@/domain/home-guide-search";
@@ -443,6 +443,14 @@ export async function performSiteSearch(input: string, exclude?: string, publica
   if (boardQuery && (boardQuery.group || boardQuery.terms?.length || boardQuery.inherited)) {
     const result = boardResults(query, boardQuery, context);
     if (result) return result;
+  }
+
+  if (!boardQuery && extra.intent === "browse" && !extra.excluded && !extra.lowCosts) {
+    const hits = context.guides.flatMap(guide => {
+      const board = guideBoardBySearchAlias(guide.section.id, guide.teams, term);
+      return board ? [guideHit(guide, board)] : [];
+    }).slice(0, limit);
+    if (hits.length) return { query, intent: "browse", groups: [{ kind: "guides", title: "阵容攻略", hits }] };
   }
 
   const requestedAugment = heroAugmentSearchQuery(query, season.units, previous);

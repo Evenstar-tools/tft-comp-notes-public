@@ -1,7 +1,7 @@
 import type { Section } from "./document";
 import { authoredParagraphs, guideBody, guideUnitMatch, readingNotes, type GuideSearchScope } from "./guide-reading";
 import type { GuideFamilyStat } from "./guide-family-stats";
-import { guideSearchKey, guideStyleKey, guideTraitNames, guideWearerQuery, homeGuideFilter, matchOpeningSearch, openingSearch } from "./guide-search";
+import { guideBoardBySearchAlias, guideSearchKey, guideStyleKey, guideTraitNames, guideWearerQuery, homeGuideFilter, matchOpeningSearch, openingSearch } from "./guide-search";
 import { traitCounts, usedPopulation } from "./team";
 import type { Season, Team, Unit } from "./types";
 import { unitSearchNames } from "./unit-search.mjs";
@@ -106,6 +106,9 @@ export function matchHomeGuide(query: string, { section, data, catalog, teams, s
       return hits.slice(0, 1);
     }).sort((a, b) => b.rank - a.rank);
   }
+  const aliasedBoard = guideBoardBySearchAlias(section.id, teams, query);
+  if (aliasedBoard) return [entry(aliasedBoard, 6)];
+
   const filter = homeGuideFilter(query, catalog);
   if (filter?.kind === "population") {
     return teams.filter(board => usedPopulation(board.pieces) === filter.value).map(board => entry(board, 3));
