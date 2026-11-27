@@ -1,5 +1,8 @@
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
+import { readFileSync } from "node:fs";
 import test from "node:test";
+import { fileURLToPath } from "node:url";
 import { changedDataFiles, preflightReason, verifyAlignment } from "../scripts/check-auto-refresh.mjs";
 
 const current = {
@@ -13,6 +16,26 @@ const upstream = {
   build: 6035832, patch: "19.1c", lookupPatch: "19.1", model: 429,
   sampledAt: Date.parse("2026-11-26T09:30:00Z"), warnings: [],
 };
+
+test("the scheduled fast profile refreshes the two snapshots allowed by the publisher", () => {
+  const site = new URL("../", import.meta.url);
+  const plan = execFileSync(process.execPath, ["scripts/run-data-refresh.mjs", "--profile", "fast", "--dry-run"],
+    { cwd: fileURLToPath(site), encoding: "utf8" });
+  assert.match(plan, /1\. guide-family-stats \+ comp-trends .*\r?\n2\. data:verify /);
+  assert.doesNotMatch(plan, /hero-stats|guide-placement/);
+});
+
+test("scheduled and manual runs use the protected-PR refresh entry point", () => {
+  const workflow = readFileSync(new URL("../../.github/workflows/data-refresh.yml", import.meta.url), "utf8");
+  assert.match(workflow, /cron: '0 1 \* \* \*'/);
+  assert.match(workflow, /cron: '0 13 \* \* \*'/);
+  assert.match(workflow, /'schedule:0 1 \* \* \*'\) profile=daily/);
+  assert.match(workflow, /'schedule:0 13 \* \* \*'\) profile=fast/);
+  assert.match(workflow, /workflow_dispatch:/);
+  assert.match(workflow, /run-conditional-refresh\.mjs --profile "\$PROFILE" --dry-run/);
+  assert.match(workflow, /GH_TOKEN: \$\{\{ secrets\.DATA_REFRESH_TOKEN \}\}/);
+  assert.doesNotMatch(workflow, /git push|scripts\/run-data-refresh\.mjs|scripts\/publish-auto-refresh\.mjs/);
+});
 
 test("scheduled refresh can proceed only with the confirmed patch, build, model and fresh sample", () => {
   const check = overrides => preflightReason(current, family, { upstream: { ...upstream, ...overrides } });

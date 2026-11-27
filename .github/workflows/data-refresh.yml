@@ -1,0 +1,86 @@
+name: Data refresh
+
+on:
+  schedule:
+    - cron: '0 1 * * *'
+    - cron: '0 13 * * *'
+  workflow_dispatch:
+    inputs:
+      profile:
+        description: 采集配置
+        type: choice
+        options: [fast, daily, all]
+        default: fast
+        required: true
+      dry_run:
+        description: 仅核查上游与采集计划
+        type: boolean
+        default: false
+
+concurrency:
+  group: data-refresh-main
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  refresh:
+    if: github.repository == 'Evenstar-tools/tft-comp-notes-public' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        shell: bash
+        working-directory: site
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+      - name: Select refresh plan
+        id: plan
+        env:
+          SCHEDULE: ${{ github.event.schedule }}
+          DISPATCH_PROFILE: ${{ inputs.profile }}
+        run: |
+          case "$GITHUB_EVENT_NAME:$SCHEDULE" in
+            'schedule:0 1 * * *') profile=daily ;;
+            'schedule:0 13 * * *') profile=fast ;;
+            'workflow_dispatch:') profile="$DISPATCH_PROFILE" ;;
+            *) echo 'Unexpected refresh trigger'; exit 1 ;;
+          esac
+          case "$profile" in fast|daily|all) ;; *) exit 1 ;; esac
+          printf 'profile=%s\n' "$profile" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Python collector dependencies
+        if: inputs.dry_run != true && steps.plan.outputs.profile != 'fast'
+        run: python -m pip install requests beautifulsoup4
+      - name: Install Playwright Chromium
+        if: inputs.dry_run != true
+        run: |
+          version=$(node -p "require('./package-lock.json').packages['node_modules/playwright'].version")
+          npx --yes "playwright@$version" install --with-deps chromium
+      - name: Preview conditional refresh
+        if: inputs.dry_run == true
+        env:
+          PROFILE: ${{ steps.plan.outputs.profile }}
+        run: node scripts/run-conditional-refresh.mjs --profile "$PROFILE" --dry-run
+      - name: Run conditional refresh and publish verified data
+        if: inputs.dry_run != true
+        env:
+          PROFILE: ${{ steps.plan.outputs.profile }}
+          GH_TOKEN: ${{ secrets.DATA_REFRESH_TOKEN }}
+        run: |
+          : "${GH_TOKEN:?Configure DATA_REFRESH_TOKEN for candidate PR checks}"
+          gh auth setup-git --hostname github.com
+          git config --local user.name 'github-actions[bot]'
+          git config --local user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          node scripts/run-conditional-refresh.mjs --profile "$PROFILE"

@@ -30,20 +30,27 @@ const [
   import("../server/reroll-guides.ts"), import("../server/s19-guide-cleanup.ts"),
 ]).finally(() => resolver.deregister());
 
+export { season as currentGuideSeason };
+
+export function prepareFamilyPublication(snapshot, current = season) {
+  const publication = includeRerollBoards(migrateS19GuideSnapshot(structuredClone(snapshot)), current);
+  const sections = publication.sections.map(section => {
+    const hasTeams = sectionTeams(section).length > 0;
+    const edition = (section.gameData ?? publication.season).id;
+    if (hasTeams && sameEdition(edition, current.id)) refreshWebDetails(section);
+    return edition.startsWith("s19-") && (section.kind === "guide" || hasTeams)
+      ? guideSectionWithCurrentNames(section) : section;
+  });
+  return { ...publication, sections };
+}
+
 export function buildFamilyCatalog(snapshot) {
   if (snapshot?.season?.id !== season.id || !Array.isArray(snapshot.sections) ||
       !Number.isFinite(Date.parse(snapshot.publishedAt))) {
     throw new Error("公开快照与 season.json 的赛季不一致或缺少发布时间");
   }
-  const publication = includeRerollBoards(migrateS19GuideSnapshot(structuredClone(snapshot)), season);
-  const sections = publication.sections.map(section => {
-    const hasTeams = sectionTeams(section).length > 0;
-    const edition = (section.gameData ?? publication.season).id;
-    if (hasTeams && sameEdition(edition, season.id)) refreshWebDetails(section);
-    return edition.startsWith("s19-") && (section.kind === "guide" || hasTeams)
-      ? guideSectionWithCurrentNames(section) : section;
-  });
-  const boards = guideCatalog(sections, publication.season);
+  const publication = prepareFamilyPublication(snapshot);
+  const boards = guideCatalog(publication.sections, publication.season);
   if (!boards.some(board => board.edition === season.id)) throw new Error("公开快照缺少同版攻略棋盘");
   return { seasonId: publication.season.id, publishedAt: publication.publishedAt, boards };
 }

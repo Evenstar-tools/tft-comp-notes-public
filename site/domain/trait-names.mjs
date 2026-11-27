@@ -44,6 +44,7 @@ export const legacyEmblemNames = {
 
 /** @type {ReadonlyArray<readonly [RegExp, string]>} */
 const guideTitleTraits = [
+  [/大龙焚决/g, "天才蚂蚱大龙"],
   [/(?:酷炫|炫酷)(?:节拍)?/g, illbeatsName],
   [/疾风(?:射手)?/g, "迅击鼓手"],
   [/花式(?!射手)/g, "花式射手"],
