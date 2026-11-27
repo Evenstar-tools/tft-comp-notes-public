@@ -66,16 +66,22 @@ export function HeroProfile({ unit, guides, statsContent, returnHref, backLabel,
         {unit.splashImage && <a className="hero-profile-art" href={unit.splashImage}
           target="_blank" rel="noreferrer" aria-label="查看高清原画" title="查看高清原画"><ArrowUpRight size={17} aria-hidden /></a>}
       </header>
+      <nav className="hero-profile-jump" aria-label="定位英雄资料">
+        <a href="#hero-skill">技能</a>
+        {!enhanced && <a href="#hero-data">实战数据</a>}
+        <a href="#hero-gear">配装</a>
+      </nav>
       <div className="hero-profile-columns">
         <div className="hero-profile-context">
           <div className="hero-profile-reference">
             <UnitDetails unit={unit} embedded action={enhanced ? undefined : boardContext} showAugmentGear={false}
-              augmented={enhanced} onAugmentedChange={value => onAugmentChange(value ? augment?.id ?? "" : "")} />
+              skillSectionId="hero-skill" augmented={enhanced}
+              onAugmentedChange={value => onAugmentChange(value ? augment?.id ?? "" : "")} />
           </div>
           {editorHref && <a className="hero-profile-build-link" href={editorHref}><SquarePen size={16} aria-hidden />用此英雄构建阵容</a>}
         </div>
         {enhanced ? <div className="hero-profile-evidence">
-          <div className="hero-profile-gear"><HeroAugmentGear augment={augment} /></div>
+          <div className="hero-profile-gear" id="hero-gear" tabIndex={-1}><HeroAugmentGear augment={augment} /></div>
           {!!related?.length && <div className="hero-profile-support hero-profile-performance">{boardContext}</div>}
         </div> : <div className="hero-profile-evidence">
           {statsContent}

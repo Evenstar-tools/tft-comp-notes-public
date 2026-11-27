@@ -30,7 +30,8 @@ export function WearerExclusion({ units, excluded, onChange }: {
       <Combobox.InputGroup className="wearer-exclude-field">
         <UserMinus size={17} aria-hidden="true" className="wearer-exclude-icon" />
         <Combobox.Input aria-label="剔除棋子，最多两个" autoComplete="off" spellCheck={false}
-          placeholder={full ? "已剔除 2 个" : selected.length ? "再剔除一个" : "剔除棋子（最多 2 个）"} />
+          placeholder="剔除棋子" />
+        {!!selected.length && <span className="wearer-exclude-count" aria-hidden="true">{selected.length}/{maxExcludedWearers}</span>}
       </Combobox.InputGroup>
       {!!selected.length && <Combobox.Chips className="wearer-exclude-chips" aria-label="已剔除棋子">
         {selected.map(unit => <Combobox.Chip className="wearer-exclude-chip" key={unit.id}>

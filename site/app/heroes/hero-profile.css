@@ -228,6 +228,16 @@
 .hero-profile-reference .ability-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px; font-size: 13px; }
 .hero-profile-reference .mana { color: var(--muted); font-size: 12px; }
 .hero-profile-build-link { justify-self: start; }
+.hero-profile-jump { display: none; }
+@media (max-width: 760px) {
+  .hero-profile-jump { display: flex; gap: 6px; }
+  .hero-profile-jump a {
+    display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding-inline: 12px;
+    border: 1px solid var(--line); border-radius: 6px; background: var(--panel); color: var(--accent);
+    font-size: 13px; font-weight: 650;
+  }
+  .hero-profile :is(#hero-skill, #hero-data, #hero-gear) { scroll-margin-block-start: 12px; }
+}
 @media (min-width: 941px) {
   .hero-profile-performance { padding-block: 12px; }
   .hero-profile-performance .hero-stat-sources[open] {

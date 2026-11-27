@@ -163,9 +163,8 @@
   margin-block-end: 6px;
 }
 .guide-detail-page .guide-variant-strip-head > h3 { margin: 0; font-size: .875rem; font-weight: 700; }
-.guide-detail-page .guide-variant-strip-head > small { color: var(--muted); font-size: .75rem; }
-.guide-detail-page .guide-variant-strip-head .guide-variant-strip-hint,
-.guide-detail-page .guide-variant-strip-count { display: none; }
+.guide-detail-page .guide-mobile-variant-toggle,
+.guide-detail-page .guide-mobile-core { display: none; }
 
 .guide-detail-page .guide-variant-strip-list {
   display: grid;
@@ -495,32 +494,43 @@
 }
 
 @media (max-width: 760px) {
-  .guide-detail-page .guide-variant-strip:is([data-count="1"], [data-count="2"]) > .guide-variant-strip-list {
+  .guide-detail-page .guide-variant-strip-head,
+  .guide-detail-page .guide-variant-strip[data-mobile-open="false"] > .guide-variant-strip-list { display: none; }
+  .guide-detail-page .guide-mobile-variant-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
+    min-height: 44px;
+    padding: 6px 10px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--panel);
+    color: var(--text);
+    font-size: .875rem;
+    text-align: start;
+    white-space: normal;
+  }
+  .guide-detail-page .guide-mobile-variant-toggle > span:first-child { min-width: 0; }
+  .guide-detail-page .guide-mobile-variant-toggle small { display: block; color: var(--muted); font-size: .75rem; }
+  .guide-detail-page .guide-mobile-variant-toggle strong { display: block; overflow-wrap: anywhere; }
+  .guide-detail-page .guide-mobile-variant-toggle > span:last-child { display: inline-flex; flex: none; gap: 4px; align-items: center; color: var(--accent); }
+  .guide-detail-page .guide-mobile-variant-toggle[aria-expanded="true"] svg { transform: rotate(180deg); }
+  .guide-detail-page .guide-variant-strip[data-count] > .guide-variant-strip-list {
     grid-template-columns: minmax(0, 1fr);
-  }
-  .guide-detail-page .guide-variant-strip:not([data-count="1"], [data-count="2"]) > .guide-variant-strip-head {
-    display: flex;
-    align-items: baseline;
-    gap: 4px;
-  }
-  .guide-detail-page .guide-variant-strip-head .guide-variant-strip-hint { display: block; margin-inline-start: auto; }
-  .guide-detail-page .guide-variant-strip:not([data-count="1"], [data-count="2"]) .guide-variant-strip-count { display: inline; }
-  .guide-detail-page .guide-variant-strip:not([data-count="1"], [data-count="2"]) > .guide-variant-strip-list {
-    display: flex;
     gap: 0;
-    overflow-x: auto;
-    scroll-snap-type: x proximity;
-    scrollbar-width: none;
+    margin-block-start: 4px;
   }
-  .guide-detail-page .guide-variant-strip-list::-webkit-scrollbar { display: none; }
-  .guide-detail-page .guide-variant-strip-list > li { scroll-snap-align: start; }
-  .guide-detail-page .guide-variant-strip:not([data-count="1"], [data-count="2"]) > .guide-variant-strip-list > li {
-    flex: 0 0 min(260px, 72vw);
+  .guide-detail-page .guide-mobile-core {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px 10px;
+    margin-block: 5px 3px;
+    color: var(--text);
+    font-size: .8125rem;
   }
-  .guide-detail-page .guide-variant-strip:not([data-count="1"], [data-count="2"]) > .guide-variant-strip-list > li + li {
-    border-inline-start: 1px solid var(--guide-soft-line);
-  }
-  .guide-detail-page .guide-variant-strip:not([data-count="1"], [data-count="2"]) .guide-variant-option { align-items: start; align-content: start; }
+  .guide-detail-page .guide-mobile-core b { color: var(--accent); }
   .guide-detail-page .guide-variant-strip + .reader-layout { margin-block-start: 10px; }
 }
 
@@ -536,11 +546,14 @@
   .guide-detail-page .guide-board-actions .guide-editor-link {
     justify-content: center;
     width: 100%;
-    min-height: 36px;
-    padding-inline: 8px;
-    font-size: .8125rem;
+    min-height: 44px;
+    padding-inline: 4px;
+    gap: 4px;
+    font-size: .8rem;
     white-space: nowrap;
   }
+  .guide-detail-page .guide-board-actions svg { width: 14px; height: 14px; }
+  .guide-detail-page .guide-board-actions .guide-editor-link > span { display: inline; }
   .guide-detail-page .guide-board-actions .guide-editor-action { display: flex; }
   .guide-detail-page .guide-phases > button + button::before { content: none; }
   .guide-detail-page .reader-play,

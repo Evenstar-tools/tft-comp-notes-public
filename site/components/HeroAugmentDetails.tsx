@@ -39,13 +39,14 @@ export function HeroAugmentGear({ augment, wornItems }: { augment: HeroAugment; 
   </section>;
 }
 
-export function HeroSkill({ unit, augment, defaultAugmented = false, augmented, onAugmentedChange, showGear = true, wornItems }: {
+export function HeroSkill({ unit, augment, defaultAugmented = false, augmented, onAugmentedChange, showGear = true, sectionId, wornItems }: {
   unit: Unit;
   augment?: HeroAugment;
   defaultAugmented?: boolean;
   augmented?: boolean;
   onAugmentedChange?: (value: boolean) => void;
   showGear?: boolean;
+  sectionId?: string;
   wornItems?: string[];
 }) {
   const [localAugmented, setLocalAugmented] = useState(defaultAugmented);
@@ -55,7 +56,7 @@ export function HeroSkill({ unit, augment, defaultAugmented = false, augmented, 
   const mana = enhanced ? enhanced.startingMana + "/" + enhanced.maxMana : unit.mana;
   const role = enhanced?.role ?? augment?.baseRole;
   return <>
-    <section className="detail-section hero-skill">
+    <section className="detail-section hero-skill" id={sectionId} tabIndex={sectionId ? -1 : undefined}>
       <div className="hero-skill-heading">
         <h3>技能</h3>
         {augment && <div className="hero-skill-switch" role="group" aria-label="技能形态">

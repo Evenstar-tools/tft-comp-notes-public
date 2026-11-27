@@ -571,3 +571,9 @@
     gap: 9px 6px;
   }
 }
+
+.combos-quick-toggle { display: none; }
+@media (max-width: 640px) {
+  .combos-quick-toggle { display: inline-flex; align-items: center; justify-self: start; min-height: 40px; padding-inline: 10px; border: 1px solid var(--line); border-radius: 6px; color: var(--accent); }
+  .combos-quick[data-mobile-collapsed] { display: none; }
+}

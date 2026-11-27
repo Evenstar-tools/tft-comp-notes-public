@@ -213,7 +213,7 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
     }
     navigate(entry.id, targetGroup ?? group, nextFilters);
     if (showDetail && window.matchMedia("(max-width: 760px)").matches) {
-      requestAnimationFrame(() => detail.current?.scrollIntoView({ block: "nearest" }));
+      requestAnimationFrame(() => detail.current?.scrollIntoView({ block: "start" }));
     }
   }
 
@@ -412,7 +412,7 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
           </li>;
         })}</ul>
       </> : <GearCategoryEmpty {...categoryProps} onClear={clearSearch} />)}
-    </section> : <div className="gear-library">
+    </section> : <div className="gear-library" data-detail-entry={Boolean(itemId && itemMap.has(itemId)) || undefined}>
       <aside className="gear-index" id="gear-rankings" aria-label="选择装备">
         {search}
         {visible.length ? <div className="gear-index-list" data-view={group} ref={list}>
@@ -422,7 +422,7 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
         </div> : <GearCategoryEmpty {...categoryProps} onClear={clearSearch} />}
       </aside>
       {item && <section className="gear-detail" ref={detail} aria-labelledby="gear-item-name">
-        <a className="gear-back-to-index text-link" href="#gear-rankings">↑ 装备列表</a>
+        <a className="gear-back-to-index text-link" href="#gear-rankings">装备列表</a>
         {archiveMessage}
         <ItemReading key={item.id} item={item} wearer={wearer} filters={filters} uses={examples[item.id] ?? []} onRecipe={openItem} equipment={equipment} period={period?.id}
           onWearer={(event, unit) => openWearer(event, item.id, unit)} wearerHref={unit => wearerLink(item.id, unit)}
@@ -455,6 +455,11 @@ function ItemReading({ item, wearer, filters, uses, onRecipe, onWearer, wearerHr
   const buildsId = useId();
   const wearerTitle = useId();
   const buildsPanel = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!buildsOpen || !window.matchMedia("(max-width: 760px)").matches) return;
+    const frame = requestAnimationFrame(() => buildsPanel.current?.scrollIntoView({ block: "start" }));
+    return () => cancelAnimationFrame(frame);
+  }, [buildsOpen]);
   const radiant = item.category === "radiant";
   const special = item.category === "artifact" || item.category === "support";
   const cookRecipe = isCookRecipe(item);
@@ -535,7 +540,8 @@ function ItemReading({ item, wearer, filters, uses, onRecipe, onWearer, wearerHr
     setBuildsRevision(revision => revision + 1);
     setBuildsOpen(true);
     requestAnimationFrame(() => {
-      buildsPanel.current?.scrollIntoView({ block: "nearest" });
+      const mobile = window.matchMedia("(max-width: 760px)").matches;
+      buildsPanel.current?.scrollIntoView({ block: mobile ? "start" : "nearest" });
       buildsPanel.current?.focus({ preventScroll: true });
     });
   }

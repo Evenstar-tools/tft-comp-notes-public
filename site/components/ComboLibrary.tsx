@@ -229,6 +229,7 @@ export function ComboLibrary() {
     ),
   );
   const [query, setQuery] = useState("");
+  const [showMobileQuickUnits, setShowMobileQuickUnits] = useState(false);
   const searchInput = useRef<HTMLInputElement>(null);
   const [data, setData] = useState<Partial<Record<Group, Row[]>>>({});
   const [failure, setFailure] = useState("");
@@ -479,8 +480,11 @@ export function ComboLibrary() {
             {purpose === "bronze" && <a className="combos-text-link" href="/augments?q=终身黄铜">强化效果</a>}
           </div>
         </div>
-        {!!quickUnits.length && (
-          <div className="combos-quick" role="group" aria-label="高频多羁绊拼图">
+        {!!quickUnits.length && <>
+          {heldIds.length > 0 && <button className="combos-quick-toggle" type="button" aria-controls="combos-quick"
+            aria-expanded={showMobileQuickUnits} onClick={() => setShowMobileQuickUnits(open => !open)}>常用棋子</button>}
+          <div id="combos-quick" className="combos-quick" role="group" aria-label="高频多羁绊拼图"
+            data-mobile-collapsed={heldIds.length > 0 && !showMobileQuickUnits || undefined}>
             <span>高频多羁绊拼图（一键加手牌）</span>
             {quickUnits.map(({ index, unit }) => (
               <button
@@ -496,7 +500,7 @@ export function ComboLibrary() {
               </button>
             ))}
           </div>
-        )}
+        </>}
       </section>
       <div className="combos-list-head">
         <strong aria-live="polite">

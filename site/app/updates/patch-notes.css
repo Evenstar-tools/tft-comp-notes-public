@@ -160,3 +160,14 @@
   .patch-copy-change {width:40px;height:40px}
   .patch-object header img {width:28px;height:28px}
 }
+
+.patch-editions-mobile { display: none; }
+@media (max-width: 720px) {
+  .patch-page .patch-index { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 8px; align-items: center; }
+  .patch-page .patch-index h1 { margin: 0; }
+  .patch-page .patch-editions-desktop { display: none; }
+  .patch-editions-mobile { display: block; }
+  .patch-editions-mobile summary { padding: 10px; border: 1px solid var(--line); border-radius: 6px; color: var(--accent); }
+  .patch-editions-mobile[open] { display: grid; grid-column: 1 / -1; grid-row: 2; }
+  .patch-editions-mobile[open] summary { justify-self: end; margin-block: 5px; }
+}

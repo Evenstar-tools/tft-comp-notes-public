@@ -117,15 +117,20 @@ export default async function VersionUpdates({ searchParams }: { searchParams: P
     {sections.map(({ anchor, label }) => <a key={anchor} href={"#" + anchor}>{label}</a>)}
   </nav>;
   const leadTools = (source || sectionLinks) && <div className="patch-lead-tools">{source}{sectionLinks}</div>;
+  const renderEdition = (version: (typeof versions)[number]) => <PatchReadingLink key={version.id}
+    href={versionUpdateLink(version.id, { query: q, category })} aria-current={version.id === current?.id ? "page" : undefined}>
+    {version.reference && <time dateTime={version.reference.date}>{version.reference.date.slice(5).replace("-", ".")}</time>}
+    <span>{patchTitle(version.title, version.reference?.date)}</span>
+  </PatchReadingLink>;
   return <div className="patch-page">
     {current ? <div className="patch-layout">
       <aside className="patch-index">
         <h1>版本更新</h1>
-        <nav className="patch-editions" aria-label="版本列表">{versions.map(version => <PatchReadingLink key={version.id}
-          href={versionUpdateLink(version.id, { query: q, category })} aria-current={version.id === current.id ? "page" : undefined}>
-          {version.reference && <time dateTime={version.reference.date}>{version.reference.date.slice(5).replace("-", ".")}</time>}
-          <span>{patchTitle(version.title, version.reference?.date)}</span>
-        </PatchReadingLink>)}</nav>
+        <nav className="patch-editions patch-editions-desktop" aria-label="版本列表">{versions.map(renderEdition)}</nav>
+        <details className="patch-editions-mobile">
+          <summary>历史版本</summary>
+          <nav className="patch-editions" aria-label="历史版本">{versions.map(renderEdition)}</nav>
+        </details>
       </aside>
       <div className="patch-content">
         <section id="patch-announcement" aria-label="公告与导读">

@@ -173,6 +173,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
   const incomingDraft = guideBoardId ? pendingGuide?.source?.team : copyQuery ? (sourceCopy?.query === copyQuery ? sourceCopy.team : null) : comboDraft;
   const handledImport = useRef<string | null>(null);
   const [comboOrigin, setComboOrigin] = useState("");
+  const [sourceOpen, setSourceOpen] = useState(false);
   const [guideBoardSource, setGuideBoardSource] = useState<GuideBoardSource | null>(null);
   const guideTarget = ownerMode ? guideBoardSource?.target : undefined;
   const [wantedForm, setWantedForm] = useState<string | null>(null);
@@ -211,6 +212,30 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
   }, [mobileTool, quickOpen, rightPane]);
   const [mobileReplace, setMobileReplace] = useState(false);
   const [commandsOpen, setCommandsOpen] = useState(false);
+  const [boardToolsOpen, setBoardToolsOpen] = useState(false);
+  const boardToolsRoot = useRef<HTMLDivElement>(null);
+  const boardToolsButton = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (!boardToolsOpen) return;
+    function dismiss(event: PointerEvent) {
+      if (event.target instanceof Node && !boardToolsRoot.current?.contains(event.target)) setBoardToolsOpen(false);
+    }
+    function escape(event: KeyboardEvent) {
+      if (event.key !== "Escape") return;
+      setBoardToolsOpen(false);
+      boardToolsButton.current?.focus();
+    }
+    document.addEventListener("pointerdown", dismiss);
+    document.addEventListener("keydown", escape);
+    return () => {
+      document.removeEventListener("pointerdown", dismiss);
+      document.removeEventListener("keydown", escape);
+    };
+  }, [boardToolsOpen]);
+  function restoreBoardToolFocus(trigger: HTMLButtonElement | null) {
+    const visible = trigger?.getClientRects().length ? trigger : boardToolsButton.current;
+    visible?.focus({ preventScroll: true });
+  }
   const commandRoot = useRef<HTMLDivElement>(null);
   const commandButton = useRef<HTMLButtonElement>(null);
   useEffect(() => {
@@ -1011,13 +1036,15 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
       {showPoster && <GuidePoster team={draftTeam} data={season} close={() => setShowPoster(false)}
         setDefault={posterFormat => commit(prev => ({...prev, posterFormat}))} />}
       <h1 className="sr-only">阵容构建器</h1>
-      {guideBoardSource && <div className="editor-guide-source">
-        <div><strong>来自{guideBoardSource.title}</strong><small aria-live="polite">{guideTarget
+      {guideBoardSource && <div className="editor-guide-source" data-mobile-open={sourceOpen || undefined}>
+        <div className="editor-guide-source-title"><strong>来自{guideBoardSource.title}</strong><small aria-live="polite">{guideTarget
           ? guidePublished ? "已发布到原棋盘" : known && !dirty ? "副本已保存 · 原棋盘待发布" : "原棋盘待发布"
           : ownerMode ? known && !dirty ? "副本已保存到云端" : "云端副本草稿"
           : known && !dirty ? guideBoardSource.restoredPlayerTeam ? "· 已恢复本机站位" : "已保存在本机"
           : "本地草稿"}</small></div>
-        <div className="editor-guide-source-actions">
+        <button type="button" className="btn ghost editor-guide-source-toggle" aria-label="棋盘来源" aria-expanded={sourceOpen}
+          aria-controls="editor-guide-source-actions" onClick={() => setSourceOpen(!sourceOpen)}><ChevronDown size={16} aria-hidden /></button>
+        <div className="editor-guide-source-actions" id="editor-guide-source-actions">
           {priorGuideCopy && guideBoardSource && <button type="button" className="btn secondary sm" disabled={!!busy} onClick={() => {
             const source = { ...guideBoardSource, draftId: priorGuideCopy.id, published: undefined };
             storeGuideBoardSource(source);
@@ -1428,40 +1455,50 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
                   </button>;
                 })}
               </div>
-              <button ref={quickTrigger} type="button" className="btn secondary sm quick-trigger" aria-expanded={quickOpen} aria-controls="quick-import" onClick={() => {
-                setPivotsOpen(false);
-                setQuickOpen(!quickOpen);
-                if (!quickOpen) requestAnimationFrame(() => {
-                  const panel = document.getElementById("quick-import");
-                  panel?.querySelector<HTMLElement>("textarea, input")?.focus({ preventScroll: true });
-                  panel?.scrollIntoView({ block: "nearest" });
-                });
-              }}>快速导入</button>
-              {ownerMode && <button ref={pivotTrigger} type="button" className="btn secondary sm pivot-trigger" aria-controls="board-pivots" aria-expanded={pivotsOpen}
-                onClick={() => {
-                  if (!pivotsOpen) { setCollapsed(false); setQuickOpen(false); }
-                  setPivotsOpen(!pivotsOpen);
-                }}>找转阵</button>}
-              <button type="button" className="btn secondary sm editor-conditions-trigger" aria-haspopup="dialog"
-                onClick={() => setConditionsOpen(true)}>定阵条件{conditionCount ? <span aria-hidden>{conditionCount}</span> : null}</button>
               {mobileReplace && <span className="panel-hint">{replaceHint}</span>}
-              <div className="editor-stage-actions" role="group" aria-label="当前阶段操作">
-                <button type="button" className="btn ghost sm stage-swap" disabled={!population}
-                  aria-pressed={mobileReplace} onClick={toggleReplace}>{mobileReplace ? "取消换人" : "换人"}</button>
-                <button type="button" className="btn ghost sm tb-stage-clear" disabled={!team.pieces.length}
-                  onClick={clearBoard} title={`清空${stageLabels[stage]}棋盘，可撤销`}>
-                  <Eraser size={15} aria-hidden />清空棋盘
-                </button>
+              <div className="editor-board-tools" ref={boardToolsRoot}>
+                <button ref={boardToolsButton} type="button" className="btn secondary sm editor-board-tools-trigger"
+                  aria-label="更多棋盘操作" aria-controls="editor-board-tools-panel" aria-expanded={boardToolsOpen}
+                  onClick={() => setBoardToolsOpen(!boardToolsOpen)}>更多<ChevronDown size={12} aria-hidden /></button>
+                <div className="editor-board-tools-panel" id="editor-board-tools-panel" data-mobile-open={boardToolsOpen || undefined}>
+                  <button ref={quickTrigger} type="button" className="btn secondary sm quick-trigger" aria-expanded={quickOpen} aria-controls="quick-import" onClick={() => {
+                    setBoardToolsOpen(false);
+                    setPivotsOpen(false);
+                    setQuickOpen(!quickOpen);
+                    if (!quickOpen) requestAnimationFrame(() => {
+                      const panel = document.getElementById("quick-import");
+                      panel?.querySelector<HTMLElement>("textarea, input")?.focus({ preventScroll: true });
+                      panel?.scrollIntoView({ block: "nearest" });
+                    });
+                  }}>快速导入</button>
+                  {ownerMode && <button ref={pivotTrigger} type="button" className="btn secondary sm pivot-trigger" aria-controls="board-pivots" aria-expanded={pivotsOpen}
+                    onClick={() => {
+                      setBoardToolsOpen(false);
+                      if (!pivotsOpen) { setCollapsed(false); setQuickOpen(false); }
+                      setPivotsOpen(!pivotsOpen);
+                    }}>找转阵</button>}
+                  <button type="button" className="btn secondary sm editor-conditions-trigger" aria-haspopup="dialog"
+                    onClick={() => { setBoardToolsOpen(false); setConditionsOpen(true); }}>定阵条件{conditionCount ? <span aria-hidden>{conditionCount}</span> : null}</button>
+                  <div className="editor-stage-actions" role="group" aria-label="当前阶段操作">
+                    <button type="button" className="btn ghost sm stage-swap" disabled={!population}
+                      aria-pressed={mobileReplace} onClick={() => { setBoardToolsOpen(false); toggleReplace(); }}>{mobileReplace ? "取消换人" : "换人"}</button>
+                    <button type="button" className="btn ghost sm tb-stage-clear" disabled={!team.pieces.length}
+                      onClick={() => { setBoardToolsOpen(false); clearBoard(); }} title={`清空${stageLabels[stage]}棋盘，可撤销`}>
+                      <Eraser size={15} aria-hidden />清空棋盘
+                    </button>
+                  </div>
+                  <button
+                    type="button"
+                    className="btn ghost icon sm editor-collapse-board"
+                    onClick={() => { setBoardToolsOpen(false); setCollapsed(!collapsed); setPivotsOpen(false); }}
+                    aria-label={collapsed ? "展开棋盘" : "收起棋盘"}
+                    title={collapsed ? "展开棋盘" : "收起棋盘"}
+                  >
+                    {collapsed ? <PanelTopOpen size={15} aria-hidden /> : <PanelTopClose size={15} aria-hidden />}
+                    <span>{collapsed ? "展开棋盘" : "收起棋盘"}</span>
+                  </button>
+                </div>
               </div>
-              <button
-                type="button"
-                className="btn ghost icon sm"
-                onClick={() => { setCollapsed(!collapsed); setPivotsOpen(false); }}
-                aria-label={collapsed ? "展开棋盘" : "收起棋盘"}
-                title={collapsed ? "展开棋盘" : "收起棋盘"}
-              >
-                {collapsed ? <PanelTopOpen size={15} aria-hidden /> : <PanelTopClose size={15} aria-hidden />}
-              </button>
             </header>
             {previousImport && previousImport.id !== team.id && <button type="button" className="btn ghost sm quick-previous"
               onClick={() => open(previousImport, "已打开上一草稿")}>打开上一草稿</button>}
@@ -1470,7 +1507,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
             ) : (
               <div className={"board-layout" + (pivotsOpen ? " with-pivots" : "")}>
                 {pivotsOpen ? <BoardPivots pieces={team.pieces} onClose={() => {
-                  setPivotsOpen(false); pivotTrigger.current?.focus({ preventScroll: true });
+                  setPivotsOpen(false); restoreBoardToolFocus(pivotTrigger.current);
                 }} /> : <div className="tracker-col">
                   <TraitTracker counts={counts} selectedTraitIds={browserFilters.traitIds}
                     focusTraitIds={traitFocus?.traitIds} onToggleTrait={toggleTrait} compact />
@@ -1506,7 +1543,12 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
           </section>}
           {!matrixMode && <div className="editor-mobile-tools" role="group" aria-label="编辑面板">
             <button type="button" aria-pressed={mobileTool === "units"} onClick={() => setMobileTool("units")}>棋子</button>
-            <button type="button" aria-pressed={mobileTool === "gear"} onClick={() => { setMobileTool("gear"); setMobileReplace(false); setReplacement(null); }}>配装</button>
+            <button type="button" aria-pressed={mobileTool === "gear" && rightPane === "equipment"} onClick={() => {
+              setRightPane("equipment"); setMobileTool("gear"); setMobileReplace(false); setReplacement(null);
+            }}>配装</button>
+            <button type="button" disabled={!selected} aria-pressed={mobileTool === "gear" && rightPane === "details"} onClick={() => {
+              setRightPane("details"); setMobileTool("gear"); setMobileReplace(false); setReplacement(null);
+            }}>资料</button>
             <button type="button" aria-pressed={mobileTool === "traits"} onClick={() => { setCollapsed(false); setMobileTool("traits"); setMobileReplace(false); setReplacement(null); }}>羁绊</button>
           </div>}
           <UnitBrowser
@@ -1530,12 +1572,12 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
             onFillStage={source => {
               commit(prev => ({ ...prev, pieces: source.pieces, instrumentPositions: source.instrumentPositions }));
               setPieceSelection(null); setSelectedId(null); setWantedForm(null); setReplacement(null); setMobileReplace(false);
-              setQuickOpen(false); quickTrigger.current?.focus({ preventScroll: true });
+              setQuickOpen(false); restoreBoardToolFocus(quickTrigger.current);
               notify({ kind: "ok", text: `已填入${stageLabels[stage]}棋盘，可撤销。` });
             }}
             dirty={dirty} busy={!!busy} onClose={() => {
             setQuickOpen(false);
-            quickTrigger.current?.focus({ preventScroll: true });
+            restoreBoardToolFocus(quickTrigger.current);
           }} onImport={draft => {
             void run("save", async () => {
               const current = draftRef.current;
@@ -1543,7 +1585,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
               setPreviousImport(meaningful(prior) ? prior : undefined);
               activate(draft, "已建立草稿");
               setQuickOpen(false); setReceipt(null);
-              quickTrigger.current?.focus({ preventScroll: true });
+              restoreBoardToolFocus(quickTrigger.current);
             });
           }} /> : <>
           {!matrixMode && <SelectionSheet
