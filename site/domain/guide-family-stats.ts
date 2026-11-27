@@ -249,7 +249,7 @@ export function selectRecommendationRoutes<T extends HomeRecommendationCandidate
   return recommendationGroups.flatMap(({ id }) => groups[id].sort(compareHomeRoutes));
 }
 
-function familyBoardIds(stat: GuideFamilyStat, primaryTeamId?: string) {
+export function familyBoardIds(stat: GuideFamilyStat, primaryTeamId?: string) {
   return [stat.landingTeamId, stat.teamId ?? primaryTeamId, ...(stat.sharedTeamIds ?? [])];
 }
 

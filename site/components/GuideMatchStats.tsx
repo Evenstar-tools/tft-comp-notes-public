@@ -89,7 +89,7 @@ export function GuideMatchStats({ id, stage, team, teams, section, edition, augm
     .find(type => groups[type].some(sample => sample.games > 0)) ?? "board";
   const activeView = visibleViews.some(([value]) => value === preferredView) ? preferredView : visibleViews[0][0];
   const scopeNote = activeView === "family"
-    ? (heroGuide ? "该英雄强化体系的整体结算样本。" : "同套体系含不同等级和变阵的整体结算样本。")
+    ? (heroGuide ? "该英雄强化体系的整体结算样本。" : "该体系在各结算人口的整体样本。")
     : activeView === "carry"
       ? "按棋子、星级或装备筛选，各组场数可能重叠。"
       : heroGuide
