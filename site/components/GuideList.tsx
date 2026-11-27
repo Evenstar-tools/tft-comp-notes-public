@@ -459,7 +459,7 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
     if (!hits.length) return [];
     return [{ stat, team:hits[0].board, boards:hits.map(hit => hit.board) }];
   });
-  const boardTier = (section: Section, team: Team | undefined, stat?: Pick<GuideFamilyStat, "games" | "mean">) =>
+  const boardTier = (section: Section, team: Team | undefined, stat?: Pick<GuideFamilyStat, "games" | "mean"> & { winRate?: number }) =>
     decisions.get(`${section.id}:${team?.id}`)?.status === "review" ? "review" : recommendationTier(stat);
   const statsRows: GuideStatsTableRow[] = ranked ? candidates.flatMap(entry =>
     matchingRows(entry).filter(({team, stat}) => !tierFilter ||

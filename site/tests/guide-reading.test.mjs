@@ -343,7 +343,10 @@ test("archive and homepage use the same sample threshold and exact placement cut
   assert.equal(recommendationTier(row), "recommended");
   assert.equal(recommendationTier({ ...row, mean: 4.49 }), "recommended");
   assert.equal(recommendationTier({ ...row, mean: 4.503923 }), "secondary");
-  for (const missing of [undefined, { ...row, games: 99 }, { ...row, games: 100.1 },
+  assert.equal(recommendationTier({ ...row, mean: 4.85, winRate: 0.149 }), "secondary");
+  assert.equal(recommendationTier({ ...row, mean: 4.85, winRate: 0.15 }), "recommended");
+  assert.equal(recommendationTier({ ...row, mean: 4.85, winRate: 0.185 }), "recommended");
+  for (const missing of [undefined, { ...row, games: 99, winRate: 0.2 }, { ...row, games: 100.1 },
     { ...row, mean: NaN }, { ...row, mean: 0 }, { ...row, mean: 9 }]) {
     assert.equal(recommendationTier(missing), "review");
   }
@@ -433,10 +436,12 @@ test("home uses the exact 4.40 cutoff, leaving the archive tier at 4.50 and acce
   const roundDown = homeRoute("fast8", "rounding", 4.4008);
   const shortSample = homeRoute("fast8", "short", 4.05, 99);
   const weak = homeRoute("reroll", "weak", 4.42);
+  const highCap = { ...homeRoute("fast9", "high-cap", 4.85, 10000), rating: { ...homeRoute("fast9", "high-cap", 4.85, 10000).rating, winRate: 0.185 } };
   const best = homeRoute("reroll", "best", 3.91);
-  assert.deepEqual(selectRecommendationRoutes([borderline, roundDown, shortSample, weak, best]), [best, borderline]);
+  assert.deepEqual(selectRecommendationRoutes([borderline, roundDown, shortSample, weak, highCap, best]), [best, borderline]);
   assert.equal(recommendationTier(roundDown.rating), "recommended");
   assert.equal(recommendationTier(weak.rating), "recommended");
+  assert.equal(recommendationTier(highCap.rating), "recommended");
 });
 
 test("home selection shares twelve slots across regular, augment and manual recommendations", () => {

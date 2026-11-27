@@ -32,13 +32,18 @@ export interface GuideFamilyBatch {
   smallSamples?: GuideFamilyStat[];
 }
 
-const placementCutoff = 4.5;
+export const placementCutoff = 4.5;
+export const highWinRateCutoff = 0.15;
 export type RecommendationTier = "recommended" | "secondary" | "review";
 
-export function recommendationTier(stat?: Pick<GuideFamilyStat, "games" | "mean">): RecommendationTier {
+export function recommendationTier(
+  stat?: Pick<GuideFamilyStat, "games" | "mean"> & { winRate?: number },
+): RecommendationTier {
   if (!stat || !Number.isSafeInteger(stat.games) || stat.games < 100 ||
       !Number.isFinite(stat.mean) || stat.mean < 1 || stat.mean > 8) return "review";
-  return stat.mean <= placementCutoff ? "recommended" : "secondary";
+  const highWinRate = stat.winRate !== undefined && Number.isFinite(stat.winRate) &&
+    stat.winRate >= highWinRateCutoff && stat.winRate <= 1;
+  return stat.mean <= placementCutoff || highWinRate ? "recommended" : "secondary";
 }
 
 export function formatRecommendationMean(mean: number): string {

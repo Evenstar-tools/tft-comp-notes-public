@@ -110,9 +110,13 @@ test("the copy audit catches obsolete claims and preserves linked fixed-board sa
     { id: "correct", text: "七级不同名摇滚或花式棋子合计五星开薇恩。" },
     { id: "linked-current", text: sampleCopy, elements: [{ text_run: { text_element_style: { link: { url: sampleURL } } } }] },
     { id: "unlinked-current", text: sampleCopy },
+    { id: "threshold-tag", text: "【特殊运营门槛】高经济速九局才进。" },
   ];
   assert.deepEqual(auditGuideCopy({ blocks }).map(({ rule, blockId }) => [rule, blockId]),
-    [["obsolete-unlock", "unlock"], ["obsolete-stats", "sample"], ["obsolete-stats", "unlinked-current"]]);
+    [["obsolete-unlock", "unlock"], ["obsolete-stats", "sample"], ["obsolete-stats", "unlinked-current"], ["bracket-threshold-tag", "threshold-tag"]]);
+  for (const section of preview.sections) {
+    assert.deepEqual(auditGuideCopy(section).filter(issue => issue.rule === "bracket-threshold-tag"), [], section.id);
+  }
 });
 
 test("the copy audit rejects video links in visible text, rich links, nested blocks and route notes", () => {
