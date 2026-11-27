@@ -84,25 +84,29 @@
 .aug-icon:has(img:not([hidden])) > svg { visibility: hidden; }
 .aug-identity { min-width: 0; }
 .aug-card-name { display: block; font-size: 16px; font-weight: 750; line-height: 1.35; }
-.aug-card-tags,.aug-card-rounds { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
-.aug-card-tags { margin-top: 4px; }
-.aug-round { background: var(--bg); border: 1px solid var(--line); color: var(--muted); font-variant-numeric: tabular-nums; }
-.aug-tier { border-radius: 4px; font-size: 12px; line-height: 1.5; white-space: nowrap; font-weight: 600; padding: 2px 6px; }
+.aug-card-tags,.aug-card-rounds { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.aug-card-tags { margin-top: 3px; }
+.aug-round { background: transparent; border: 0; color: var(--muted); font-variant-numeric: tabular-nums; }
+.aug-tier { border-radius: 4px; font-size: 13px; line-height: 1.4; white-space: nowrap; font-weight: 700; padding: 2px 6px; }
 .aug-tier.silver,.aug-icon.silver { background: light-dark(#e6eaeb,#343c40); color: light-dark(#415157,#d3e5e9); }
 .aug-tier.gold,.aug-icon.gold { background: light-dark(#f2e5c9,#40351f); color: light-dark(#775410,#e6cc90); }
 .aug-tier.prismatic,.aug-icon.prismatic { background: light-dark(#eae1f0,#3a3045); color: light-dark(#6a427d,#ddc3ec); }
-.aug-card .aug-tier,.aug-round { padding: 1px 7px; border-radius: 999px; font-size: 12px; line-height: 1.5; white-space: nowrap; }
-.aug-card .aug-tier { border: 1px solid color-mix(in srgb, currentColor 25%, transparent); }
-.aug-card-stat { display: grid; justify-items: end; gap: 2px; font-variant-numeric: tabular-nums; }
-.aug-card-stat-note { color: var(--muted); font-size: 12px; line-height: 1.35; white-space: nowrap; }
+.aug-card .aug-tier,.aug-round { padding: 0; border: 0; border-radius: 0; background: transparent; font-size: 13px; line-height: 1.4; white-space: nowrap; }
+.aug-card .aug-tier.silver { color: light-dark(#4d5e6d, #b8c9d9); }
+.aug-card .aug-tier.gold { color: light-dark(#8a5f14, #eac87b); }
+.aug-card .aug-tier.prismatic { color: light-dark(#764498, #d3a6f5); }
+.aug-card-rounds::before { content: "·"; color: var(--line); margin-inline-end: 2px; }
+.aug-round + .aug-round::before { content: "/"; color: var(--line); margin-inline-end: 4px; }
+.aug-card-stat { display: grid; justify-items: end; gap: 1px; font-variant-numeric: tabular-nums; }
+.aug-card-stat-note { color: var(--muted); font-size: 12.5px; line-height: 1.35; white-space: nowrap; }
 .aug-stat-badge {
-  display: grid; justify-items: end; min-width: 49px; padding: 3px 7px; border-radius: 7px;
-  border: 1px solid color-mix(in srgb, currentColor 25%, transparent);
-  background: var(--raised); color: var(--muted); font-size: 12px; line-height: 1.35; white-space: nowrap;
+  display: inline-flex; align-items: baseline; justify-content: flex-end; gap: 4px; padding: 0;
+  border: 0; border-radius: 0; background: transparent; color: var(--muted);
+  font-size: 13px; line-height: 1.35; white-space: nowrap;
 }
-.aug-stat-badge strong { font-size: 13px; font-weight: 750; }
-.aug-stat-badge.strong { background: light-dark(#e8f3eb, #203a30); color: light-dark(#256344, #a4dfbd); }
-.aug-stat-badge.good { background: light-dark(#f8eedc, #3e3221); color: light-dark(#795019, #efcd90); }
+.aug-stat-badge strong { font-size: 15.5px; font-weight: 750; }
+.aug-stat-badge.strong { background: transparent; color: light-dark(#256344, #9ae0b6); }
+.aug-stat-badge.good { background: transparent; color: light-dark(#845716, #efcd90); }
 .aug-card-effect { color: var(--muted); font-size: 14px; line-height: 1.6; white-space: pre-line; }
 .aug-card-effect strong { color: var(--text); font-weight: 700; }
 .aug-card-role { display: block; margin-bottom: 2px; }

@@ -104,15 +104,15 @@
 .gear-item-identity {min-width:0;overflow-wrap:anywhere;}
 .gear-detail-heading h2 {margin:0 0 5px;font-size:clamp(1.25rem,3cqi,1.5rem);line-height:1.25;}
 .gear-detail-placement {flex:none;margin-inline-start:auto;text-align:end;font-variant-numeric:tabular-nums;}
-.gear-item-tags,.gear-attributes {display:flex;align-items:center;flex-wrap:wrap;gap:5px;}
+.gear-item-tags,.gear-attributes {display:flex;align-items:center;flex-wrap:wrap;gap:6px 14px;}
 .gear-attributes {margin:0;}
 .gear-attributes div,.gear-item-category {
-  display:inline-flex;align-items:baseline;gap:4px;padding:2px 7px;
-  border:1px solid var(--gear-gold-line);border-radius:6px;background:var(--gear-gold-bg);
-  color:var(--accent);font-size:.8125rem;font-weight:600;line-height:1.4;
+  display:inline-flex;align-items:baseline;gap:5px;padding:0;
+  border:0;border-radius:0;background:transparent;
+  color:var(--muted);font-size:.9375rem;font-weight:500;line-height:1.4;
 }
-.gear-attributes dd {margin:0;font-weight:750;font-variant-numeric:tabular-nums;}
-.gear-item-category {border-color:var(--gear-soft-line);background:var(--gear-soft);color:var(--muted);}
+.gear-attributes dd {margin:0;color:var(--accent);font-size:1rem;font-weight:750;font-variant-numeric:tabular-nums;}
+.gear-item-category {color:var(--muted);font-size:.875rem;font-weight:600;}
 .gear-effect {white-space:pre-line;line-height:1.65;margin:10px 0 0;}
 .gear-glossary,.gear-glossary p,.gear-empty {margin:6px 0 0;color:var(--muted);font-size:.875rem;}
 .gear-glossary p {white-space:pre-line;}
@@ -192,11 +192,12 @@
 }
 .gear-games-track span {display:block;block-size:100%;border-radius:inherit;background:var(--gold);}
 .gear-wearer-mean {
-  display:inline-flex;justify-content:center;min-inline-size:2.5rem;padding:3px 4px;
-  border:1px solid transparent;border-radius:6px;background:var(--raised);color:var(--muted);font-weight:750;
+  display:inline-block;min-inline-size:2.4rem;padding:0;
+  border:0;border-radius:0;background:transparent;color:var(--muted);
+  font-size:.975rem;font-weight:750;text-align:end;font-variant-numeric:tabular-nums;
 }
-.gear-wearer-mean[data-tone=good] {border-color:var(--gear-green-line);background:var(--gear-green-bg);color:var(--gear-green);}
-.gear-wearer-mean[data-tone=mid] {border-color:var(--gear-gold-line);background:var(--gear-gold-bg);color:var(--accent);}
+.gear-wearer-mean[data-tone=good] {color:var(--gear-green);}
+.gear-wearer-mean[data-tone=mid] {color:var(--accent);}
 .gear-wearers-table tbody .gear-wearer-action td {padding-block:2px;border-radius:8px;white-space:normal;}
 .gear-wearer-action td > div {display:flex;flex-wrap:wrap;gap:1px 14px;}
 .gear-wearer-action :is(a,button) {

@@ -276,13 +276,13 @@
 .medley-pool-kicker { display: flex; align-items: center; gap: 7px; }
 .medley-group-num {
   font-family: ui-monospace, Consolas, monospace;
-  font-size: .8rem;
-  font-weight: 750;
+  font-size: .92rem;
+  font-weight: 800;
   color: var(--accent);
-  background: var(--m-accent-bg);
-  border: 1px solid var(--m-accent-line);
-  padding: 1px 8px;
-  border-radius: 5px;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  border-radius: 0;
   white-space: nowrap;
 }
 .medley-pool-back {
@@ -415,18 +415,20 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  height: 25px;
-  padding: 0 9px;
-  border-radius: 6px;
-  font-size: .76rem;
-  font-weight: 700;
+  height: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  font-size: .875rem;
+  font-weight: 750;
   white-space: nowrap;
 }
-.medley-tier-pill.is-compact { height: 22px; padding: 0 7px; }
-.medley-tier-pill.s3 { background: var(--accent); color: var(--on-accent); }
-.medley-tier-pill.s2 { background: var(--m-ok-bg); color: var(--m-ok); border: 1px solid var(--m-ok-line); }
-.medley-tier-pill.s1 { background: var(--m-ok-soft); color: var(--m-ok); border: 1px solid var(--m-ok-line); }
-.medley-tier-pill.s0 { background: var(--m-subtle); color: var(--muted); border: 1px solid var(--line); }
+.medley-tier-pill.is-compact { height: auto; padding: 0; }
+.medley-tier-pill.s3 { color: var(--accent); }
+.medley-tier-pill.s2 { color: var(--m-ok); }
+.medley-tier-pill.s1 { color: var(--m-ok); }
+.medley-tier-pill.s0 { color: var(--muted); }
 
 .medley-signal-dots { display: inline-flex; align-items: center; gap: 3px; }
 .medley-signal-dots i {
@@ -452,13 +454,18 @@
 }
 .medley-fit-name-btn:hover { background: transparent; color: var(--accent); }
 .medley-pop-tag {
-  font-size: .73rem;
+  font-size: .82rem;
   color: var(--muted);
-  background: var(--m-subtle);
-  border: 1px solid var(--m-line-soft);
-  padding: 1px 8px;
-  border-radius: 999px;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  border-radius: 0;
   font-weight: 550;
+}
+.medley-pop-tag::before {
+  content: "·";
+  margin-inline-end: 6px;
+  color: var(--line);
 }
 
 .medley-fit-actions { display: flex; align-items: center; gap: 7px; flex: none; }
@@ -568,47 +575,52 @@
   display: block;
 }
 
-/* 3-Check Adaptive Proof Chips */
+/* 3-Check Clean Typography Strip (no boxed badges) */
 .medley-checks-strip {
   display: flex;
-  align-items: stretch;
-  gap: 8px;
+  align-items: center;
+  gap: 8px 18px;
   flex-wrap: wrap;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--m-subtle);
 }
 .medley-check-chip {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  min-height: 36px;
-  padding: 5px 11px;
-  border-radius: 8px;
-  border: 1px solid var(--m-line-soft);
-  background: var(--m-subtle);
+  gap: 7px;
+  min-height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
   color: var(--muted);
-  font-size: .79rem;
+  font-size: .85rem;
+}
+.medley-check-chip + .medley-check-chip {
+  padding-inline-start: 16px;
+  border-inline-start: 1px solid var(--m-line-soft);
 }
 .medley-check-chip.met {
-  background: var(--m-ok-soft);
-  border-color: var(--m-ok-line);
+  background: transparent;
   color: var(--text);
 }
 .medley-check-chip.met-gold {
-  background: var(--m-warn-bg);
-  border-color: var(--m-warn-line);
+  background: transparent;
   color: var(--text);
 }
 .medley-check-icon {
-  width: 18px;
-  height: 18px;
+  width: 17px;
+  height: 17px;
   border-radius: 999px;
   display: grid;
   place-items: center;
   flex: none;
-  background: var(--raised);
+  background: transparent;
   color: var(--muted);
 }
-.medley-check-chip.met .medley-check-icon { background: var(--m-ok); color: light-dark(#fff, #0e1913); }
-.medley-check-chip.met-gold .medley-check-icon { background: var(--accent); color: var(--on-accent); }
+.medley-check-chip.met .medley-check-icon { background: transparent; color: var(--m-ok); }
+.medley-check-chip.met-gold .medley-check-icon { background: transparent; color: var(--accent); }
 .medley-check-title { font-weight: 700; white-space: nowrap; }
 .medley-check-chip.met .medley-check-title { color: var(--m-ok); }
 .medley-check-chip.met-gold .medley-check-title { color: var(--accent); }
@@ -618,12 +630,10 @@
   gap: 5px;
   flex-wrap: wrap;
   color: var(--m-text-2);
-  font-size: .77rem;
-  padding-left: 7px;
-  border-left: 1px solid var(--m-line-soft);
+  font-size: .84rem;
+  padding-left: 4px;
+  border-left: 0;
 }
-.medley-check-chip.met .medley-check-detail { border-left-color: var(--m-ok-line); }
-.medley-check-chip.met-gold .medley-check-detail { border-left-color: var(--m-warn-line); }
 
 .medley-mini-unit { display: inline-flex; align-items: center; gap: 4px; font-weight: 650; color: var(--text); }
 .medley-mini-unit img {
@@ -741,10 +751,10 @@
 .medley-gc-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .medley-gc-left { display: flex; align-items: center; gap: 8px; }
 .medley-gc-sub { font-size: .88rem; font-weight: 700; }
-.medley-gc-badge { font-size: .73rem; font-weight: 700; padding: 1px 8px; border-radius: 999px; white-space: nowrap; }
-.medley-gc-badge.is-gold { background: var(--accent); color: var(--on-accent); }
-.medley-gc-badge.is-ok { background: var(--m-ok-bg); color: var(--m-ok); border: 1px solid var(--m-ok-line); }
-.medley-gc-badge.is-none { background: var(--m-subtle); color: var(--muted); }
+.medley-gc-badge { font-size: .82rem; font-weight: 700; padding: 0; border: 0; border-radius: 0; background: transparent; white-space: nowrap; }
+.medley-gc-badge.is-gold { color: var(--accent); }
+.medley-gc-badge.is-ok { color: var(--m-ok); }
+.medley-gc-badge.is-none { color: var(--muted); font-weight: 500; }
 
 .medley-gc-roster { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; }
 .medley-gc-roster.five { grid-template-columns: repeat(5, minmax(0, 1fr)); }
@@ -918,5 +928,6 @@
   .medley-pool-unit { width: 58px; }
   .medley-pool-unit .medley-avatar { width: 44px; height: 44px; }
   .medley-check-chip { width: 100%; }
+  .medley-check-chip + .medley-check-chip { padding-inline-start: 0; border-inline-start: 0; padding-top: 6px; border-top: 1px solid var(--m-line-soft); }
   .medley-extra-row { flex-direction: column; align-items: flex-start; }
 }

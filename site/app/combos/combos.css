@@ -53,13 +53,18 @@
 
 .combos-goal,
 .combos-smeech {
-  padding: 2px 8px;
-  border: 1px solid var(--combo-amber-line);
-  border-radius: 999px;
-  background: var(--combo-amber-bg);
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
   color: var(--accent);
-  font-size: 12px;
+  font-size: 13.5px;
   font-weight: 700;
+}
+.combos-goal::before {
+  content: "·";
+  color: var(--line);
+  margin-inline-end: 6px;
 }
 
 .combos-modes {
@@ -373,23 +378,25 @@
 .combos-count {
   display: inline-flex;
   align-items: baseline;
-  gap: 4px;
+  gap: 3px;
   margin: 0;
-  padding: 3px 8px;
-  border-radius: 7px;
-  background: var(--accent);
-  color: var(--on-accent);
-  font-size: 13px;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--accent);
+  font-size: 14px;
   font-weight: 750;
   white-space: nowrap;
 }
 
-.combos-count strong { font-size: 18px; line-height: 1; }
+.combos-count strong { font-size: 22px; line-height: 1; font-variant-numeric: tabular-nums; }
 
 .combos-smeech {
-  border-color: var(--combo-pine-line);
-  background: var(--combo-pine-bg);
+  border: 0;
+  background: transparent;
   color: var(--combo-pine);
+  font-size: 13.5px;
+  font-weight: 700;
   white-space: nowrap;
 }
 
@@ -498,23 +505,24 @@
 .combos-traits {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
+  gap: 4px 12px;
   margin: 0;
-  padding: 0;
+  padding: 2px 2px 0;
   list-style: none;
 }
 
 .combos-traits li {
-  padding: 2px 6px;
-  border: 1px solid var(--combo-soft-line);
-  border-radius: 6px;
-  background: var(--combo-subtle);
-  font-size: 12px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  font-size: 13px;
   font-weight: 600;
+  color: var(--text);
   white-space: nowrap;
 }
 
-.combos-traits b { color: var(--accent); font-variant-numeric: tabular-nums; }
+.combos-traits b { color: var(--accent); font-weight: 750; font-variant-numeric: tabular-nums; margin-inline-end: 2px; }
 
 .combos-traits .is-bronze {
   border-color: var(--combo-amber-line);
