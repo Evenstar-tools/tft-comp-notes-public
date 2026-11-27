@@ -8,6 +8,7 @@ import { season, unitMap } from "@/data";
 import { augmentArtPath } from "@/data/augment-art";
 import augmentCatalog from "@/data/augment-catalog.json";
 import bundledItems from "@/data/item-art.json";
+import familyStats from "@/data/guide-family-stats.json";
 import { patchReferences } from "@/data/patch-notes";
 import { chapterMatchesPatch, patchGuideImpactLabels, publishedPatchCallouts, splitHighlightLine, type PatchReference } from "@/domain/patch-reference";
 import { readablePatchIntroduction } from "@/domain/patch-recommendations";
@@ -111,6 +112,8 @@ export default async function VersionUpdates({ searchParams }: { searchParams: P
     <a className="patch-source" href={patch?.source.url ?? officialPatchNotes} target="_blank" rel="noreferrer">
       {patch?.source.name ?? "Riot 公告"}
     </a>
+    {sameBuild && familyStats.spansBuilds && familyStats.build === currentPatch.build && sameEdition(familyStats.seasonId, season.id) &&
+      <span>近 {familyStats.days} 天战绩跨构建</span>}
   </div>;
   const sectionLinks = (sections.length > 1 || sections.length === 1 && (hasChanges || current?.chapter)) &&
     <nav className="patch-section-nav" aria-label="版本页章节">

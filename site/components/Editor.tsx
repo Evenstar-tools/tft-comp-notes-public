@@ -901,7 +901,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
       }
       if (mod || event.altKey) return;
       if (event.key === "Escape") {
-        if (event.target instanceof Node && commandRoot.current?.contains(event.target)) return;
+        if (event.target instanceof Node && (commandRoot.current?.contains(event.target) || boardToolsRoot.current?.contains(event.target))) return;
         setPieceSelection(null);
         setSelectedId(null);
         setReplacement(null);
