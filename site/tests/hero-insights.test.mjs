@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { commonHeroItems, rankHeroes } from "../domain/hero-insights.ts";
+import { commonHeroItems, heroCostRankTone, rankHeroes } from "../domain/hero-insights.ts";
 
 test("ranks forms independently within the same cost and excludes thin samples", () => {
   const result = (mean, games = 100) => ({ games, mean, top4Rate: 0.5, winRate: 0.1 });
@@ -31,4 +31,16 @@ test("keeps complete items with enough wearer samples, ranked separately per for
     "akali-kda": [{ itemId: "gloves", games: 200 }, { itemId: "edge", games: 100, mean: 4.06, rate: 0.28, placementDelta: -0.17 }],
     "akali-true-damage": [{ itemId: "edge", games: 120 }],
   });
+});
+
+test("heroCostRankTone highlights top/bottom third within same cost and leaves small pools neutral", () => {
+  assert.equal(heroCostRankTone(undefined), undefined);
+  assert.equal(heroCostRankTone({ place: 1, total: 2 }), undefined);
+  assert.equal(heroCostRankTone({ place: 1, total: 3 }), "strong");
+  assert.equal(heroCostRankTone({ place: 2, total: 3 }), undefined);
+  assert.equal(heroCostRankTone({ place: 3, total: 3 }), "weak");
+  assert.equal(heroCostRankTone({ place: 7, total: 22 }), "strong");
+  assert.equal(heroCostRankTone({ place: 8, total: 22 }), undefined);
+  assert.equal(heroCostRankTone({ place: 15, total: 22 }), undefined);
+  assert.equal(heroCostRankTone({ place: 16, total: 22 }), "weak");
 });
