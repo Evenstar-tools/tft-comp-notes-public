@@ -276,7 +276,12 @@
   .aug-full-grid.aug-full-compact :is(th,td):first-child,
   .aug-full-grid.aug-full-compact .aug-full-english { width: 27%; }
  .aug-full-compact tbody :is(th,td) { padding-inline: 6px; }
+ .aug-full-compact tbody th { padding-inline: 9px; }
+ .aug-full-compact .aug-stat-name { display: grid; justify-items: start; row-gap: 3px; }
+ .aug-full-compact .aug-stat-effect { min-height: 34px; padding-block: 2px; font-size: .9375rem; line-height: 1.4; text-wrap: pretty; }
  .aug-full-compact thead button { padding-inline: 5px; gap: 3px; white-space: nowrap; }
  .aug-full-compact thead svg { flex: none; }
  .aug-full-scroll { max-height: 68svh; }
+ .aug-stats-pending { display: grid; justify-content: start; row-gap: 12px; }
+ .aug-stats-pending .aug-unavailable { line-height: 1.55; }
 }

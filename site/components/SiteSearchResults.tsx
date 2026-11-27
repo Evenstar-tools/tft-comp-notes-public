@@ -90,10 +90,13 @@ function GearResult({ hit, intent, onToggleExclusion, onToggleSeven, groupKind }
   </div> : <ResultLink hit={hit} resultType={groupKind} />;
   const hasHolders = gear.holders.length > 0;
   const columns = <span className="site-lookup-column-names" aria-hidden="true"><span>均名</span><span>场数</span></span>;
+  const snapshotLabel = gear.snapshot?.label.match(/^(.*?)(\d{4}-\d{2}-\d{2})$/);
   return <div className="site-lookup-gear">
     <ResultLink hit={{ ...hit, games: gear.totalGames }} resultType="item" />
     <div className="site-lookup-gear-meta">
-      {gear.snapshot && <a className="site-lookup-source" href={gear.snapshot.href}>{gear.snapshot.label}</a>}
+      {gear.snapshot && <a className="site-lookup-source" href={gear.snapshot.href}>
+        {snapshotLabel ? <>{snapshotLabel[1]}<time dateTime={snapshotLabel[2]}>{snapshotLabel[2]}</time></> : gear.snapshot.label}
+      </a>}
       {onToggleSeven && <button type="button" aria-pressed={gear.includeSeven} onClick={() => onToggleSeven(!gear.includeSeven)}>包含 7 费</button>}
       {!onToggleSeven && gear.type === "emblem" && onToggleExclusion && <button type="button" aria-pressed={gear.exclude === "rakan"}
         onClick={() => onToggleExclusion(gear.exclude === "rakan" ? "none" : "rakan")}>剔除洛</button>}

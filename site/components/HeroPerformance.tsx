@@ -75,13 +75,13 @@ export function HeroResultsTable({ stats, units, selectedId, onSelect, sort, set
       <HeroStatSources stats={stats} />
     </div>
     {rows.length ? <div className="hero-results-scroll" ref={scroll}>
-      <table className="hero-results-table" aria-label="英雄战绩">
-        <thead><tr>
-          <th scope="col">英雄</th>
+      <table className="hero-results-table" aria-label="英雄战绩" role="table">
+        <thead role="rowgroup"><tr role="row">
+          <th scope="col" className="hero-result-heading" role="columnheader">英雄</th>
           {dataColumns.map(({ field, label, order }) => {
             const active = field === sort.field;
             return <Fragment key={field}>
-              <th scope="col" aria-sort={active ? sort.order : undefined}>
+              <th scope="col" role="columnheader" aria-sort={active ? sort.order : undefined}>
                 <button type="button" onClick={() => {
                   setSort({ field, order: active ? (sort.order === "ascending" ? "descending" : "ascending") : order });
                   if (scroll.current) scroll.current.scrollTop = 0;
@@ -90,18 +90,18 @@ export function HeroResultsTable({ stats, units, selectedId, onSelect, sort, set
                   {active && (sort.order === "ascending" ? <ArrowUp size={12} aria-hidden /> : <ArrowDown size={12} aria-hidden />)}
                 </button>
               </th>
-              {field === "mean" && <th scope="col" className="hero-result-rank">同费名次</th>}
+              {field === "mean" && <th scope="col" className="hero-result-rank" role="columnheader">同费名次</th>}
             </Fragment>;
           })}
         </tr></thead>
-        <tbody>{rows.map(unit => {
+        <tbody role="rowgroup">{rows.map(unit => {
           const row = sampleByHero[unit.id];
           const rank = ranks.get(unit.id);
           const locked = hasUnlockCondition(unit);
           const { base, form } = unitLabel(unit);
           const selected = unit.id === selectedId;
-          return <tr key={unit.id} className={selected ? "is-selected" : undefined}>
-            <th scope="row">
+          return <tr key={unit.id} className={selected ? "is-selected" : undefined} role="row">
+            <th scope="row" role="rowheader">
               <button type="button" className={`hero-result-open cost-${unit.cost}`} aria-pressed={selected}
                 aria-label={`${unit.name}，${unit.cost}费${locked ? "，需要解锁" : ""}`} onClick={() => onSelect(unit.id)}>
                 <span className="hero-result-avatar" aria-hidden="true">
@@ -114,13 +114,13 @@ export function HeroResultsTable({ stats, units, selectedId, onSelect, sort, set
                 </span>
               </button>
             </th>
-            <td className="hero-result-mean">{rank && row ? row.mean.toFixed(2) : "—"}
+            <td className="hero-result-mean" role="cell">{rank && row ? row.mean.toFixed(2) : "—"}
               {rank && <small className="hero-result-mobile-rank" title={`同费第 ${rank.place} / ${rank.total}`}><span>同费 </span>{rank.place}/{rank.total}</small>}
             </td>
-            <td className="hero-result-rank" title={rank ? `同费第 ${rank.place} / ${rank.total}` : undefined}>{rank ? `${rank.place}/${rank.total}` : "—"}</td>
-            <td>{rank && row ? percent(row.top4Rate) : "—"}</td>
-            <td>{rank && row ? percent(row.winRate) : "—"}</td>
-            <td title={row && exactGames.format(row.games)}>{row ? shortGames.format(row.games) : "—"}</td>
+            <td className="hero-result-rank" role="cell" title={rank ? `同费第 ${rank.place} / ${rank.total}` : undefined}>{rank ? `${rank.place}/${rank.total}` : "—"}</td>
+            <td role="cell">{rank && row ? percent(row.top4Rate) : "—"}</td>
+            <td role="cell">{rank && row ? percent(row.winRate) : "—"}</td>
+            <td role="cell" title={row && exactGames.format(row.games)}>{row ? shortGames.format(row.games) : "—"}</td>
           </tr>;
         })}</tbody>
       </table>

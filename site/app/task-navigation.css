@@ -143,4 +143,7 @@ body:has(.site-search-dialog[open]) {overflow:hidden}
   .site-search-dialog-results {flex:1}
   .site-search-bar {padding-top:max(10px,env(safe-area-inset-top))}
   .site-search-examples button {min-height:44px}
+  .task-reference .task-menu-panel {padding:12px;column-gap:14px}
+  .task-nav .task-menu-panel a {min-height:44px;font-size:.9375rem}
+  .site-search-dialog-results {padding-block-start:16px}
 }
