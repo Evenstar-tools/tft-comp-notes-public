@@ -5805,6 +5805,290 @@
       "mean": 4.07,
       "topFourRate": 0.635483870967742,
       "winRate": 0.017204301075268817
+    },
+    {
+      "sectionId": "true-damage-senna",
+      "population": 7,
+      "roster": [
+        "akali-true-damage",
+        "braum",
+        "ekko",
+        "kennen",
+        "lucian",
+        "senna",
+        "yasuo"
+      ],
+      "games": 2497,
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&unit=DA_Senna19-1_3_3&unit=DA_Ekko19-1_3&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "observedOn": "2026-11-27",
+      "sampleScope": "赛娜三星三件 · 艾克三星同场",
+      "conditions": {
+        "teamId": "cfd4c9e6-f92d-4fd6-819b-486ec2461c03",
+        "kind": "core",
+        "coreRoster": [
+          "ekko",
+          "senna"
+        ],
+        "units": [
+          {
+            "unitId": "senna",
+            "stars": 3,
+            "items": 3
+          },
+          {
+            "unitId": "ekko",
+            "stars": 3
+          }
+        ]
+      },
+      "placementCounts": [
+        460,
+        471,
+        462,
+        405,
+        294,
+        237,
+        119,
+        49
+      ],
+      "mean": 3.41,
+      "topFourRate": 0.7200640768922707,
+      "winRate": 0.184221065278334
+    },
+    {
+      "sectionId": "true-damage-senna",
+      "population": 8,
+      "roster": [
+        "akali-true-damage",
+        "braum",
+        "ekko",
+        "kennen",
+        "leona",
+        "miss-fortune",
+        "senna",
+        "yasuo"
+      ],
+      "games": 6410,
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&unit=DA_Senna19-1_3_3&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "observedOn": "2026-11-27",
+      "sampleScope": "赛娜三星三件 · 真实伤害全样本",
+      "conditions": {
+        "teamId": "3f69e13a-ddcf-4d24-9a6d-1c0d5e1df4cb",
+        "kind": "core",
+        "coreRoster": [
+          "senna"
+        ],
+        "units": [
+          {
+            "unitId": "senna",
+            "stars": 3,
+            "items": 3
+          }
+        ]
+      },
+      "placementCounts": [
+        950,
+        982,
+        1079,
+        1016,
+        888,
+        739,
+        495,
+        261
+      ],
+      "mean": 3.84,
+      "topFourRate": 0.6282371294851794,
+      "winRate": 0.1482059282371295
+    },
+    {
+      "sectionId": "jazz-bard",
+      "population": 7,
+      "roster": [
+        "bard",
+        "galio",
+        "jax",
+        "k-sante",
+        "lucian",
+        "mel",
+        "swain"
+      ],
+      "games": 716,
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&trait=DA_Jazz19_2&unit=DA_Bard19-1_3_3&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "observedOn": "2026-11-27",
+      "sampleScope": "3爵士乐 · 巴德三星三件",
+      "conditions": {
+        "teamId": "adc7fda0-b310-467b-98dd-3bd0134610cf",
+        "kind": "core",
+        "coreRoster": [
+          "bard"
+        ],
+        "traits": {
+          "jazz": 3
+        },
+        "units": [
+          {
+            "unitId": "bard",
+            "stars": 3,
+            "items": 3
+          }
+        ]
+      },
+      "placementCounts": [
+        103,
+        117,
+        103,
+        91,
+        100,
+        91,
+        81,
+        30
+      ],
+      "mean": 4.0,
+      "topFourRate": 0.5782122905027933,
+      "winRate": 0.14385474860335196
+    },
+    {
+      "sectionId": "jazz-bard",
+      "population": 8,
+      "roster": [
+        "bard",
+        "galio",
+        "jax",
+        "k-sante",
+        "locke",
+        "lucian",
+        "mel",
+        "swain"
+      ],
+      "games": 592,
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&unit=DA_Bard19-1_3_3&unit=DA_Galio19-1_3&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "observedOn": "2026-11-27",
+      "sampleScope": "巴德三星三件 · 加里奥三星同场",
+      "conditions": {
+        "teamId": "6308c680-360d-4afe-8326-bdd5b4622582",
+        "kind": "core",
+        "coreRoster": [
+          "bard",
+          "galio"
+        ],
+        "units": [
+          {
+            "unitId": "bard",
+            "stars": 3,
+            "items": 3
+          },
+          {
+            "unitId": "galio",
+            "stars": 3
+          }
+        ]
+      },
+      "placementCounts": [
+        127,
+        132,
+        95,
+        86,
+        74,
+        36,
+        34,
+        8
+      ],
+      "mean": 3.22,
+      "topFourRate": 0.7432432432432432,
+      "winRate": 0.21452702702702703
+    },
+    {
+      "sectionId": "ionic-prodigy-lux",
+      "population": 6,
+      "roster": [
+        "annie",
+        "braum",
+        "ekko",
+        "lux",
+        "malzahar",
+        "shyvana"
+      ],
+      "games": 3139,
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&unit=DA_Lux19-1_3_3&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "observedOn": "2026-11-27",
+      "sampleScope": "拉克丝三星三件 · 全样本",
+      "conditions": {
+        "teamId": "a281cc9a-3387-42fb-b9e6-0146139e1069",
+        "kind": "core",
+        "coreRoster": [
+          "lux"
+        ],
+        "units": [
+          {
+            "unitId": "lux",
+            "stars": 3,
+            "items": 3
+          }
+        ]
+      },
+      "placementCounts": [
+        305,
+        488,
+        632,
+        550,
+        482,
+        362,
+        232,
+        88
+      ],
+      "mean": 3.91,
+      "topFourRate": 0.6291812679197196,
+      "winRate": 0.09716470213443772
+    },
+    {
+      "sectionId": "ionic-prodigy-lux",
+      "population": 8,
+      "roster": [
+        "annie",
+        "braum",
+        "ekko",
+        "karthus",
+        "lux",
+        "olaf",
+        "shyvana",
+        "zac"
+      ],
+      "games": 1241,
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&unit=DA_Lux19-1_3_3&unit=DA_Annie19-1_3&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "observedOn": "2026-11-27",
+      "sampleScope": "拉克丝三星三件 · 安妮三星同场",
+      "conditions": {
+        "teamId": "7ca75194-155a-4f65-9d18-c27d7c8738dd",
+        "kind": "core",
+        "coreRoster": [
+          "annie",
+          "lux"
+        ],
+        "units": [
+          {
+            "unitId": "lux",
+            "stars": 3,
+            "items": 3
+          },
+          {
+            "unitId": "annie",
+            "stars": 3
+          }
+        ]
+      },
+      "placementCounts": [
+        114,
+        240,
+        282,
+        220,
+        171,
+        128,
+        63,
+        23
+      ],
+      "mean": 3.68,
+      "topFourRate": 0.6897663174858985,
+      "winRate": 0.09186140209508462
     }
   ],
   "edition": "s19-pbe-19.1",
