@@ -4452,6 +4452,24 @@
           ]
         },
         {
+          "id": "sample-block-1342",
+          "type": "text",
+          "elements": [
+            {
+              "text_run": {
+                "content": "八级过渡盘 · 点击查样本。",
+                "text_element_style": {
+                  "link": {
+                    "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Alune19-1&unit=DA_Annie19-1&unit=DA_Ekko19-1&unit=DA_Lux19-1&unit=DA_Malzahar19-1&unit=DA_Neeko19-1&unit=DA_Shyvana19-1&unit=DA_Swain19-1&queue=PBE&patch=19.1&b_patch=c&days=3"
+                  }
+                }
+              }
+            }
+          ],
+          "level": 0,
+          "text": "八级过渡盘 · 点击查样本。"
+        },
+        {
           "id": "sample-block-1334",
           "type": "heading",
           "elements": [
@@ -4508,6 +4526,24 @@
           "text": "九级下妮蔻，空出两人口上男爵，保四天才。希瓦娜单顶，斯维因或艾克在后面接力拖时间。男爵先做蓝霸符，第一轮技能越早放越早偷属性；刚解锁时可直接继承启动装和法装，技能暴击很重要（法爆等暴击装先用），后面再找物理装（无尽、破防链枷）替换。"
         },
         {
+          "id": "sample-block-1343",
+          "type": "text",
+          "elements": [
+            {
+              "text_run": {
+                "content": "九级成型盘 · 点击查样本。",
+                "text_element_style": {
+                  "link": {
+                    "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Alune19-1&unit=DA_Annie19-1&unit=DA_BaronNashor19-1&unit=DA_Ekko19-1&unit=DA_Lux19-1&unit=DA_Malzahar19-1&unit=DA_Shyvana19-1&unit=DA_Swain19-1&queue=PBE&patch=19.1&b_patch=c&days=3"
+                  }
+                }
+              }
+            }
+          ],
+          "level": 0,
+          "text": "九级成型盘 · 点击查样本。"
+        },
+        {
           "id": "sample-block-1338",
           "type": "heading",
           "elements": [
@@ -4548,6 +4584,24 @@
           ],
           "level": 0,
           "text": "九级已稳住，血量和经济都有余再升十。补回妮蔻开五天才，用额外回蓝和团队治疗（类似科技枪）撑到玛尔扎哈、男爵打第二轮爆发。"
+        },
+        {
+          "id": "sample-block-1341",
+          "type": "text",
+          "elements": [
+            {
+              "text_run": {
+                "content": "十级上限盘 · 点击查样本。",
+                "text_element_style": {
+                  "link": {
+                    "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=10&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Alune19-1&unit=DA_Annie19-1&unit=DA_BaronNashor19-1&unit=DA_Ekko19-1&unit=DA_Lux19-1&unit=DA_Malzahar19-1&unit=DA_Neeko19-1&unit=DA_Shyvana19-1&unit=DA_Swain19-1&queue=PBE&patch=19.1&b_patch=c&days=3"
+                  }
+                }
+              }
+            }
+          ],
+          "level": 0,
+          "text": "十级上限盘 · 点击查样本。"
         },
         {
           "id": "sample-block-0229-references",
