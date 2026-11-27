@@ -5094,6 +5094,104 @@
       "mean": 3.6,
       "topFourRate": 0.6868713605082054,
       "winRate": 0.13525674960296452
+    },
+    {
+      "population": 8,
+      "roster": [
+        "alistar",
+        "aurora",
+        "bard",
+        "galio",
+        "locke",
+        "mel",
+        "pyke",
+        "swain"
+      ],
+      "games": 915,
+      "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&unit=DA_Aurora19-1&unit=DA_Alistar19-1&unit=DA_Pyke19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "observedOn": "2026-11-27",
+      "placementCounts": [
+        145,
+        151,
+        144,
+        110,
+        98,
+        110,
+        91,
+        66
+      ],
+      "mean": 3.97,
+      "topFourRate": 0.6010928961748634,
+      "winRate": 0.15846994535519127,
+      "sampleScope": "三核心 · 阿萝拉、阿利斯塔、派克",
+      "conditions": {
+        "kind": "core",
+        "teamId": "00000000-0000-4000-8000-000000001241",
+        "coreRoster": [
+          "alistar",
+          "aurora",
+          "pyke"
+        ]
+      }
+    },
+    {
+      "population": 8,
+      "roster": [
+        "alistar",
+        "aurora",
+        "bard",
+        "galio",
+        "locke",
+        "mel",
+        "pyke",
+        "swain"
+      ],
+      "games": 116,
+      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Alistar19-1&unit=DA_Aurora19-1&unit=DA_Bard19-1&unit=DA_Galio19-1&unit=DA_Locke19-1&unit=DA_Mel19-1&unit=DA_Pyke19-1&unit=DA_Swain19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "observedOn": "2026-11-27",
+      "placementCounts": [
+        8,
+        10,
+        9,
+        18,
+        11,
+        30,
+        19,
+        11
+      ],
+      "mean": 5.03,
+      "topFourRate": 0.3879310344827586,
+      "winRate": 0.06896551724137931
+    },
+    {
+      "population": 9,
+      "roster": [
+        "alistar",
+        "aurora",
+        "bard",
+        "galio",
+        "locke",
+        "mel",
+        "pyke",
+        "rell",
+        "swain"
+      ],
+      "games": 62,
+      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Alistar19-1&unit=DA_Aurora19-1&unit=DA_Bard19-1&unit=DA_Galio19-1&unit=DA_Locke19-1&unit=DA_Mel19-1&unit=DA_Pyke19-1&unit=DA_Rell19-1&unit=DA_Swain19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "observedOn": "2026-11-27",
+      "placementCounts": [
+        13,
+        18,
+        13,
+        12,
+        3,
+        2,
+        1,
+        0
+      ],
+      "mean": 2.74,
+      "topFourRate": 0.9032258064516129,
+      "winRate": 0.20967741935483872
     }
   ],
   "edition": "s19-pbe-19.1",
