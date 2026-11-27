@@ -26,7 +26,8 @@ export async function editablePublishedBoard(publicationId: string, sectionId: s
   const team = renderedSection && sectionTeams(renderedSection).find(entry => entry.id === teamId);
   if (!team) throw new ApiError(404, "此章节没有对应的可发布棋盘");
   const publication = snapshot.sections.includes(section) ? snapshot : migrated;
-  return { publication, source, team, repository, edition };
+  const useBoardOverride = repository || !!publication.boardOverrides?.some(edit => edit.sectionId === sectionId && edit.teamId === teamId);
+  return { publication, source, team, repository, useBoardOverride, edition };
 }
 
 type EditableBoard = Awaited<ReturnType<typeof editablePublishedBoard>>;
@@ -36,7 +37,7 @@ function requireCurrentBoard({ repository, team }: EditableBoard, expectedBoard?
     throw new ApiError(409, "公开棋盘已有新版本，请返回攻略后重新打开");
 }
 
-async function publishRepositoryBoard({ publication, team, edition }: EditableBoard, sectionId: string, content: PublishedBoardContent) {
+async function publishBoardOverride({ publication, team, edition, repository }: EditableBoard, sectionId: string, content: PublishedBoardContent) {
   const base = publication.boardOverrides?.length
     ? includeRerollBoards({ ...publication, boardOverrides: undefined }, season).sections.find(section => section.id === sectionId)
     : undefined;
@@ -53,7 +54,9 @@ async function publishRepositoryBoard({ publication, team, edition }: EditableBo
     publishedAt: new Date().toISOString(),
     boardOverrides,
   };
-  await installPublication(revision);
+  await installPublication(repository ? revision : {
+    ...publication, id: revision.id, previousId: revision.previousId, publishedAt: revision.publishedAt, boardOverrides,
+  });
   return { publicationId: revision.id, team: { ...team, ...content } };
 }
 
@@ -69,7 +72,7 @@ function checkPositions({ pieces, instrumentPositions }: BoardSetup) {
 
 export async function publishBoardPositions(publicationId: string, sectionId: string, submitted: BoardSetup & { id: string }, expectedBoard?: string) {
   const current = await editablePublishedBoard(publicationId, sectionId, submitted.id);
-  const { publication, source, team, repository } = current;
+  const { publication, source, team, useBoardOverride } = current;
   requireCurrentBoard(current, expectedBoard);
   checkPositions(submitted);
   const layout = boardLayout(submitted);
@@ -82,7 +85,7 @@ export async function publishBoardPositions(publicationId: string, sectionId: st
         return !sameLoadout(piece.alternate, previous.alternate);
       })) throw new ApiError(400, "单棋盘发布只支持修改站位，棋子、星级与配装必须一致");
   if (sameBoardLayout(layout, boardLayout(team))) return { publicationId, team };
-  if (repository) return publishRepositoryBoard(current, sectionId, publishedBoardContent(applyBoardLayout(team, layout)));
+  if (useBoardOverride) return publishBoardOverride(current, sectionId, publishedBoardContent(applyBoardLayout(team, layout)));
   const layouts = publishedBoardLayouts(publication.sections, publication.boardLayouts)
     .filter(edit => edit.sectionId !== sectionId || edit.teamId !== team.id);
   const next = {
@@ -98,7 +101,7 @@ export async function publishBoardPositions(publicationId: string, sectionId: st
 
 export async function publishBoardFormation(publicationId: string, sectionId: string, submitted: PublishedBoardContent & { id: string }, expectedBoard?: string) {
   const current = await editablePublishedBoard(publicationId, sectionId, submitted.id);
-  const { publication, source, team, repository } = current;
+  const { publication, source, team, useBoardOverride } = current;
   requireCurrentBoard(current, expectedBoard);
   if (!submitted.pieces.length) throw new ApiError(400, "棋盘至少需要一枚棋子");
   validateBoard(submitted);
@@ -106,7 +109,7 @@ export async function publishBoardFormation(publicationId: string, sectionId: st
   checkPositions(submitted);
   const content = publishedBoardContent(submitted);
   if (boardContentVersion(content) === boardContentVersion(team)) return { publicationId, team };
-  if (repository) return publishRepositoryBoard(current, sectionId, content);
+  if (useBoardOverride) return publishBoardOverride(current, sectionId, content);
   const contents = publishedBoardEdits(publication.sections, publication.boardEdits)
     .filter(edit => edit.sectionId !== sectionId || edit.teamId !== team.id);
   const layouts = publishedBoardLayouts(publication.sections, publication.boardLayouts)

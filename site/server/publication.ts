@@ -444,6 +444,8 @@ export async function publishSections(
   if (boardLayouts.length) publication.boardLayouts = boardLayouts;
   const boardEdits = publishedBoardEdits(combined, previous?.boardEdits);
   if (boardEdits.length) publication.boardEdits = boardEdits;
+  const boardOverrides = previous?.boardOverrides?.filter(edit => combined.some(section => section.id === edit.sectionId));
+  if (boardOverrides?.length) publication.boardOverrides = boardOverrides;
   await installPublication(publication, draftId);
   return publication;
 }
