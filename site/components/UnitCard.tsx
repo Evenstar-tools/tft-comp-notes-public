@@ -1,4 +1,5 @@
 "use client";
+import { GameIconImage } from "./GameIconImage";
 import { memo } from "react";
 import { Check, Lock, Plus } from "lucide-react";
 import { Tooltip } from "radix-ui";
@@ -65,7 +66,7 @@ export const UnitCard = memo(function UnitCard({
         <span className="unit-visual">
           <span className="unit-art">
             {src ? (
-              <img
+              <GameIconImage
                 src={src}
                 alt=""
                 width={w}

@@ -13,6 +13,7 @@
 .wrangler/
 .sites-runtime/
 node_modules/
+site/.editor-art/
 _work/
 .DS_Store
 Thumbs.db

@@ -1,4 +1,5 @@
 "use client";
+import { GameIconImage } from "./GameIconImage";
 import { useState } from "react";
 import type { Item } from "@/domain/types";
 import { bundledItemImage } from "@/domain/item-art";
@@ -29,7 +30,7 @@ export function ItemIcon({
       {(item?.name ?? "?").slice(0, 1)}
     </span>
   ) : (
-    <img
+    <GameIconImage
       className={iconClassName}
       src={source}
       alt=""
