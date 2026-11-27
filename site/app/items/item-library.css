@@ -8,7 +8,7 @@
   --gear-green: light-dark(#255c3d,#a4dfb6);
   --gear-shadow: 0 1px 2px light-dark(#2226200a,#0003);
 }
-.gear-heading {align-items:center;justify-content:flex-start;gap:8px 16px;margin-bottom:14px;}
+.gear-heading {align-items:center;justify-content:flex-start;flex-wrap:wrap;gap:8px 16px;margin-bottom:14px;}
 .gear-heading h1 {margin:0;}
 .gear-release-controls {min-width:0;margin-inline-start:auto;}
 .gear-catalog-tabs {order:3;flex:1 0 100%;min-width:0;}
@@ -350,6 +350,11 @@
 @media (min-width:581px) {
   .gear-reverse[data-rate] { --gear-columns: minmax(0, 1fr) minmax(5.5rem, 8rem) repeat(2,minmax(3rem, 6rem)); }
   .gear-reverse[data-wins][data-rate] { --gear-columns: minmax(0, 1fr) minmax(5.5rem, 8rem) repeat(3,minmax(3.5rem, 6rem)); }
+}
+@media (min-width:581px) and (max-width:760px) {
+  .gear-reverse { --gear-columns: minmax(0, 1fr) repeat(2, 4rem); }
+  .gear-reverse:is([data-wins],[data-rate]) { --gear-columns: minmax(0, 1fr) repeat(3, 4rem); }
+  .gear-reverse[data-wins][data-rate] { --gear-columns: minmax(0, 1fr) repeat(4, 4rem); }
 }
 @media (max-width:860px) {
   .gear-rank-head {display:none;}

@@ -733,6 +733,7 @@
   gap: 14px;
 }
 .medley-group-card {
+  min-inline-size: 0;
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: 12px;
@@ -768,8 +769,8 @@
   border: 1px solid transparent;
 }
 .medley-gc-unit.is-matched { background: var(--m-accent-bg); border-color: var(--m-accent-line); }
-.medley-gc-unit .medley-avatar { width: 42px; height: 42px; }
-.medley-gc-unit span { font-size: .74rem; font-weight: 550; text-align: center; line-height: 1.2; white-space: nowrap; }
+.medley-gc-unit .medley-avatar { width: min(42px, 100%); height: auto; aspect-ratio: 1; }
+.medley-gc-unit > span { font-size: .74rem; font-weight: 550; text-align: center; line-height: 1.2; overflow-wrap: anywhere; }
 
 .medley-gc-foot {
   display: flex;
@@ -915,7 +916,7 @@
 @media (max-width: 960px) {
   .medley-pool-strip { grid-template-columns: 1fr; gap: 12px; position: static; }
   .medley-pool-fixed { padding-left: 0; padding-top: 10px; border-left: 0; border-top: 1px dashed var(--line); }
-  .medley-groups-grid { grid-template-columns: 1fr; }
+  .medley-groups-grid { grid-template-columns: minmax(0, 1fr); }
   .medley-how-panel { grid-template-columns: 1fr; }
   .medley-roster-strip,
   .medley-roster-strip.pop-8 { grid-template-columns: repeat(5, minmax(0, 1fr)); }

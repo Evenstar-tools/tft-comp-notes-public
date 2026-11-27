@@ -424,9 +424,20 @@
 .guide-detail-page .guide-match-details > .guide-match-stats { margin-block: 0 4px; border: 0; }
 
 @media (max-width: 960px) {
-  .guide-detail-page .guide-reader .reader-layout { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .guide-detail-page .guide-reader .reader-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  }
   .guide-detail-page .guide-board-options > .guide-family-fold { margin-inline-start: 0; }
-  .guide-detail-page .guide-family-fold > ul { inset-inline: 0 auto; }
+  .guide-detail-page .guide-board-options > .guide-family-fold[open] { flex-basis: 100%; }
+  .guide-detail-page .guide-family-fold > ul {
+    position: static;
+    width: min(320px, 100%);
+    margin-block-start: 6px;
+    box-shadow: none;
+  }
 }
 
 @media (max-width: 600px) {
