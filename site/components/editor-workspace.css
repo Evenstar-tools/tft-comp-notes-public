@@ -412,14 +412,32 @@
   .editor .workspace .board-layout:not(.with-pivots) { grid-template-columns: 118px minmax(0, 1fr); }
   .editor .workspace .panel-head { flex-wrap: wrap; }
 }
+.editor .tb-identity .team-name-mobile { display: none; }
 @media (max-width: 760px) {
   .editor .editor-toolbar {
     display: grid;
     grid-template-columns: minmax(90px, 1.3fr) auto minmax(68px, 1fr);
     align-items: stretch;
-    gap: 5px;
+    gap: 7px;
     padding-bottom: 8px;
   }
+  .editor .editor-toolbar .tb-identity { flex-wrap: wrap; gap: 3px 10px; }
+  .editor .tb-identity input.team-name-input { display: none; }
+  .editor .tb-identity .team-name-mobile {
+    display: block;
+    field-sizing: content;
+    flex: 1 0 100%;
+    width: 100%;
+    min-height: 42px;
+    max-height: calc(3lh + 12px);
+    padding: 5px 7px;
+    resize: none;
+    font-size: 1.125rem;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+  }
+  .editor .tb-identity .team-name-mobile:is(:hover,:focus) { padding-inline-start: 7px; }
+  .editor .tb-identity .save-state { font-size: .8125rem; }
   .editor .tb-commands { display: block; position: relative; min-width: 0; }
   .editor .editor-toolbar :is(.tb-mobile-menu,.tb-save) {
     display: flex;
@@ -431,7 +449,7 @@
     padding: 3px 8px;
     gap: 4px;
     white-space: nowrap;
-    font-size: 13px;
+    font-size: 14px;
   }
   .editor .editor-toolbar .tb-history { display: flex; align-items: center; gap: 4px; }
   .editor .editor-toolbar .tb-history .btn {
@@ -539,12 +557,11 @@
     top: var(--masthead-height);
     z-index: 4;
     display: flex;
-    padding: 4px;
+    padding: 1px 0;
     background: var(--panel);
-    border: 1px solid var(--line);
-    border-radius: 6px;
+    border-block-end: 1px solid var(--line);
   }
-  .editor .editor-mobile-tools button { min-height: 36px; }
+  .editor .editor-mobile-tools button { min-height: 42px; font-size: .875rem; }
   .editor .editor-mobile-tools button:disabled { opacity: .55; }
   .editor .workspace:not(.matrix-workspace):not(.has-quick-import):not([data-editor-tool="units"]) .unit-browser,
   .editor .workspace:not(.matrix-workspace):not(.has-quick-import):not([data-editor-tool="gear"]) .workspace-side { display: none; }
@@ -567,6 +584,19 @@
   .editor .workspace:not(.matrix-workspace) .unit-browser { min-height: 0; }
   .editor .workspace:not(.matrix-workspace) .browser-toolbar { flex-wrap: nowrap; }
   .editor .workspace:not(.matrix-workspace) .browser-toolbar .search-field { flex-basis: auto; }
+  .editor .workspace:not(.matrix-workspace) .browser-filters > .chip-group {
+    display: grid;
+    flex-basis: 100%;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 2px;
+  }
+  .editor .workspace:not(.matrix-workspace) .browser-filters .cost-chip {
+    justify-content: center;
+    min-height: 32px;
+    padding-inline: 2px;
+    gap: 4px;
+    font-size: .8125rem;
+  }
   .editor .editor-unit-tray { max-height: min(31dvh, 254px); }
   .editor .editor-unit-tray .cost-group { display: block; }
   .editor .editor-unit-tray .cost-heading { min-height: auto; margin-bottom: 4px !important; }
@@ -590,35 +620,34 @@
   .editor .tb-publish-board .guide-save-full,.editor .tb-publish-board svg {display:none;}
   .editor .tb-publish-board .guide-save-compact {display:inline;}
   .editor-guide-source {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 1px 5px;
-    margin: 0 0 7px;
-    padding: 2px 4px 2px 9px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 8px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
   }
-  .editor-guide-source > .editor-guide-source-title { display: block; }
-  .editor-guide-source-title strong {
-    display: block;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .editor-guide-source > .editor-guide-source-title > small,
+  .editor-guide-source > .editor-guide-source-title,
   .editor-guide-source > .editor-guide-source-actions { display: none; }
-  .editor-guide-source[data-mobile-open] .editor-guide-source-title strong { white-space: normal; }
+  .editor-guide-source[data-mobile-open] > .editor-guide-source-title { display: block; flex: 0 0 100%; order: 1; }
+  .editor-guide-source[data-mobile-open] .editor-guide-source-title strong { overflow-wrap: anywhere; }
   .editor-guide-source[data-mobile-open] .editor-guide-source-title > small { display: block; }
   .editor-guide-source[data-mobile-open] > .editor-guide-source-actions {
     display: flex;
-    grid-column: 1 / -1;
+    flex: 0 0 100%;
+    order: 2;
     justify-content: flex-start;
     padding-block: 3px 4px;
   }
   .editor .btn.editor-guide-source-toggle {
     display: inline-flex;
-    width: 36px;
-    min-height: 36px;
-    padding: 0;
-    justify-content: center;
+    width: auto;
+    min-height: 38px;
+    padding: 0 5px 0 0;
+    gap: 6px;
+    color: var(--muted);
+    font-size: .875rem;
   }
   .editor-guide-source-toggle[aria-expanded="true"] > svg { rotate: .5turn; }
 }

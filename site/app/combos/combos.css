@@ -564,6 +564,9 @@
   .combos-result { padding: 12px; }
 
   .combos-picker { width: 100%; }
+  .combos-filters { gap: 7px 10px; }
+  .combos-select select { min-height: 40px; font-size: .875rem; }
+  .combos-check { min-height: 34px; padding-inline: 0 2px; gap: 6px; border: 0; font-size: .875rem; font-weight: 500; }
   .combos-quick > span { flex-basis: 100%; }
 
   .combos-roster {

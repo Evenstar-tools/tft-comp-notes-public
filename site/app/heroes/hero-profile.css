@@ -230,11 +230,11 @@
 .hero-profile-build-link { justify-self: start; }
 .hero-profile-jump { display: none; }
 @media (max-width: 760px) {
-  .hero-profile-jump { display: flex; gap: 6px; }
+  .hero-profile-jump { display: flex; flex-wrap: wrap; gap: 8px; }
   .hero-profile-jump a {
     display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding-inline: 12px;
     border: 1px solid var(--line); border-radius: 6px; background: var(--panel); color: var(--accent);
-    font-size: 13px; font-weight: 650;
+    font-size: 14px; font-weight: 600;
   }
   .hero-profile :is(#hero-skill, #hero-data, #hero-gear) { scroll-margin-block-start: 12px; }
 }
@@ -266,7 +266,7 @@
   .hero-profile.is-augmented .hero-profile-build-link { order: 4; }
 }
 @media (max-width: 600px) {
-  .hero-profile { gap: 12px; }
+  .hero-profile { gap: 14px; }
   .hero-profile-banner { min-height: 126px; padding: 16px 14px; }
   .hero-profile-portrait { width: 53px; height: 53px; }
   .hero-profile-title { position: relative; padding-inline-end: 22px; }
@@ -287,6 +287,9 @@
   .hero-profile-picker select { width: clamp(144px, 43vw, 192px); min-height: 42px; }
   .hero-profile-back { min-height: 42px; padding-right: 0; }
   .hero-profile-performance, .hero-profile-reference { padding: 12px; }
+  .hero-profile-reference .unit-details p { margin-block: 8px; font-size: .9375rem; line-height: 1.7; }
+  .hero-profile-reference .ability-head { gap: 6px 12px; font-size: .9375rem; }
+  .hero-profile-reference .mana { font-size: .8125rem; }
   .hero-profile-performance .hero-metric-strip > div { padding-inline: 3px; }
   .hero-profile-performance .hero-metric-strip dd { font-size: 17px; }
   .hero-profile-performance .hero-metric-strip dt { font-size: 11px; }

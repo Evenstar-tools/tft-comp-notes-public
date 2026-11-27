@@ -8,6 +8,7 @@ import {
   useMemo,
   useRef,
   useState,
+  type ChangeEvent,
   type ReactNode,
 } from "react";
 import {
@@ -1014,6 +1015,15 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
     </>
   ) : undefined;
 
+  const teamNameField = {
+    "aria-label": "阵容名称",
+    value: team.name,
+    maxLength: 80,
+    onChange: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const name = event.currentTarget.value.replace(/\r?\n/g, " ");
+      commit(prev => ({ ...prev, name }));
+    },
+  };
   return (
     <EditorArtContext.Provider value={editorArt}><div className="editor">
       {!ownerMode && <input
@@ -1043,7 +1053,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
           : known && !dirty ? guideBoardSource.restoredPlayerTeam ? "· 已恢复本机站位" : "已保存在本机"
           : "本地草稿"}</small></div>
         <button type="button" className="btn ghost editor-guide-source-toggle" aria-label="棋盘来源" aria-expanded={sourceOpen}
-          aria-controls="editor-guide-source-actions" onClick={() => setSourceOpen(!sourceOpen)}><ChevronDown size={16} aria-hidden /></button>
+          aria-controls="editor-guide-source-actions" onClick={() => setSourceOpen(!sourceOpen)}>棋盘来源<ChevronDown size={16} aria-hidden /></button>
         <div className="editor-guide-source-actions" id="editor-guide-source-actions">
           {priorGuideCopy && guideBoardSource && <button type="button" className="btn secondary sm" disabled={!!busy} onClick={() => {
             const source = { ...guideBoardSource, draftId: priorGuideCopy.id, published: undefined };
@@ -1127,15 +1137,14 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
       <fieldset className="editor-lock" disabled={initializingPlayer || !!busy || !!restore || !!pendingOpen} aria-busy={initializingPlayer || !!busy}>
       <div className="editor-toolbar">
         <div className="tb-group tb-identity">
-          <input
-            className="team-name-input"
-            aria-label="阵容名称"
-            value={team.name}
-            maxLength={80}
-            onChange={(event) =>
-              commit((prev) => ({ ...prev, name: event.target.value }))
-            }
-          />
+          <input className="team-name-input" {...teamNameField} />
+          <textarea className="team-name-input team-name-mobile" rows={2} {...teamNameField}
+            onKeyDown={event => {
+              if (event.key === "Enter" && !event.nativeEvent.isComposing) {
+                event.preventDefault();
+                event.currentTarget.blur();
+              }
+            }} />
           <span className="select-field">
             <select
               aria-label="草稿分类"
