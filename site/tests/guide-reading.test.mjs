@@ -279,7 +279,9 @@ test("a ranked family opens its reviewed board and never transfers a missing var
   assert.deepEqual(guideFamilyRows({...jinx,rows:[{...jinx.rows[0],games:99}]},"S19","jinx",boards),[]);
   const small = { ...jinx, rows: [], smallSamples: [{ ...jinx.rows[0], games: 99 }] };
   assert.deepEqual(guideFamilyRows(small, "S19", "jinx", boards), []);
-  assert.equal(guideFamilyRows(small, "S19", "jinx", boards, { includeSmallSamples: true })[0].stat.games, 99);
+  const countOnly = guideFamilyRows(small, "S19", "jinx", boards, { includeSmallSamples: true })[0];
+  assert.equal(countOnly.stat.games, 99);
+  assert.deepEqual(countOnly.boards, [boards[1]]);
   const variants = [{id:"another-cap"},{id:"new-carry"}];
   const reviewed = {...jinx,rows:[{...jinx.rows[0],sharedTeamIds:["another-cap","retired","eight"]}]};
   assert.deepEqual(guideFamilyRows(reviewed,"S19","jinx",[...variants,...boards])[0].boards.map(t=>t.id),

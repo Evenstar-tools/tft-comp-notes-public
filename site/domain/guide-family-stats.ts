@@ -270,7 +270,8 @@ export function guideFamilyRows(batch: GuideFamilyBatch, seasonId: string, secti
     if (stat.sectionId !== sectionId || (!countOnly && recommendationTier(stat) === "review")) return [];
     const team = stat.teamId ? teams.find(t => t.id === stat.teamId) : teams[0];
     if (!team) return [];
-    const ids = new Set(familyBoardIds(stat, team.id));
+    // The collector has not checked alternate board links for count-only samples.
+    const ids = new Set(countOnly ? [team.id] : familyBoardIds(stat, team.id));
     const boards = [...ids].flatMap(id => teams.find(option => option.id === id) ?? []);
     return [{ stat, team, boards }];
   });
