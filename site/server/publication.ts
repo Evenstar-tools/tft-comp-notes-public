@@ -4,7 +4,8 @@ import { allBlocks, authoredParagraphs, guideSectionWithCurrentNames, isEditoria
 import { guideExecutionUnitIds } from "@/domain/guide-execution";
 import { isVersionUpdate, sameEdition } from "@/domain/version-updates";
 import { getPublishedPatchRecommendations, sectionsAfterPartialPublish } from "@/domain/patch-recommendations";
-import { publishedBoardEdits, publishedBoardLayouts } from "@/domain/published-board-layout";
+import { boardContentVersion, publishedBoardContent, publishedBoardEdits, publishedBoardLayouts, type PublishedBoardOverride } from "@/domain/published-board-layout";
+import { isRepositoryBoardRevision, publicationWithBoardRevision, type PublicationRecord } from "@/domain/publication-record";
 import currentPatch from "@/data/current-patch.json";
 import type {
   ContentBlock,
@@ -46,13 +47,66 @@ async function publishedSnapshotId(): Promise<string | null> {
   return row?.value ?? null;
 }
 
+function legacyRepositoryOverrides(base: Publication, legacy: Publication): PublishedBoardOverride[] {
+  if (!sameEdition(base.season.id, legacy.season.id)) return [];
+  const key = ({ sectionId, teamId }: { sectionId: string; teamId: string }) => JSON.stringify([sectionId, teamId]);
+  const bundled = new Set([...(base.boardEdits ?? []), ...(base.boardLayouts ?? [])].map(key));
+  const edits = publishedBoardEdits(base.sections, legacy.boardEdits).filter(change => !bundled.has(key(change)));
+  const layouts = publishedBoardLayouts(base.sections, legacy.boardLayouts).filter(change => !bundled.has(key(change)));
+  if (!edits.length && !layouts.length) return [];
+  const original = includeRerollBoards(migrateS19GuideSnapshot(base), season);
+  const changed = includeRerollBoards(migrateS19GuideSnapshot({
+    ...base, boardEdits: [...(base.boardEdits ?? []), ...edits], boardLayouts: [...(base.boardLayouts ?? []), ...layouts],
+  }), season);
+  const affected = new Set([...edits, ...layouts].map(key));
+  return original.sections.flatMap(section => {
+    const updated = changed.sections.find(entry => entry.id === section.id);
+    if (!updated) return [];
+    return sectionTeams(section).flatMap(source => {
+      if (!affected.has(key({ sectionId: section.id, teamId: source.id }))) return [];
+      const team = sectionTeams(updated).find(entry => entry.id === source.id);
+      return team && boardContentVersion(team) !== boardContentVersion(source) ? [{
+        sectionId: section.id, teamId: source.id, edition: section.gameData?.id ?? original.season.id,
+        source: publishedBoardContent(source), content: publishedBoardContent(team),
+      }] : [];
+    });
+  });
+}
+
+type PublishedSource = { publication: Publication; repository: boolean };
+
+async function storedPublication(id?: string): Promise<PublishedSource | null> {
+  const row = await database().prepare(
+    "SELECT body, EXISTS(SELECT 1 FROM settings WHERE key IN ('document_draft','edgeone_import_mode')) AS has_document FROM snapshots WHERE id=COALESCE(?, (SELECT value FROM settings WHERE key='published_id'))",
+  ).bind(id ?? null).first<{ body: string; has_document: number }>();
+  if (!row) return null;
+  const record = JSON.parse(row.body) as PublicationRecord;
+  if (isRepositoryBoardRevision(record)) {
+    return { publication: publicationWithBoardRevision(await bundlePreviewSnapshot(), record), repository: true };
+  }
+  // Older board writes stored a complete copy, without the draft or archive used for document publications.
+  if (!row.has_document && record.previousId && (record.boardEdits?.length || record.boardLayouts?.length)) {
+    const base = await bundlePreviewSnapshot();
+    const boardOverrides = legacyRepositoryOverrides(base, record);
+    return { publication: publicationWithBoardRevision(base, {
+      kind: "repository-board-revision", id: record.id, previousId: record.previousId, publishedAt: record.publishedAt, boardOverrides,
+    }), repository: true };
+  }
+  return { publication: record, repository: false };
+}
+
+export async function publishedSnapshotSource(): Promise<PublishedSource> {
+  const saved = hasDatabase() ? await storedPublication() : null;
+  return saved ?? { publication: await bundlePreviewSnapshot(), repository: true };
+}
+
 // Index pages only need the published chapters and boards. Reading the full guide also restores legacy media bindings.
-export async function publishedSnapshot(): Promise<Publication | null> {
-  if (!hasDatabase()) return bundlePreviewSnapshot();
-  const row = await database()
-    .prepare("SELECT body FROM snapshots WHERE id=(SELECT value FROM settings WHERE key='published_id')")
-    .first<{ body: string }>();
-  return row ? JSON.parse(row.body) as Publication : bundlePreviewSnapshot();
+export async function publishedSnapshot(): Promise<Publication> {
+  return (await publishedSnapshotSource()).publication;
+}
+
+export async function publicationById(id: string): Promise<Publication | null> {
+  return (await storedPublication(id))?.publication ?? null;
 }
 export async function livePublication(): Promise<Publication | null> {
   if (!hasDatabase()) {
@@ -390,11 +444,13 @@ export async function publishSections(
   if (boardLayouts.length) publication.boardLayouts = boardLayouts;
   const boardEdits = publishedBoardEdits(combined, previous?.boardEdits);
   if (boardEdits.length) publication.boardEdits = boardEdits;
+  const boardOverrides = previous?.boardOverrides?.filter(edit => combined.some(section => section.id === edit.sectionId));
+  if (boardOverrides?.length) publication.boardOverrides = boardOverrides;
   await installPublication(publication, draftId);
   return publication;
 }
 
-export async function installPublication(publication: Publication, draftId?: string) {
+export async function installPublication(publication: PublicationRecord, draftId?: string) {
   const db = database();
   const previousId = publication.previousId ?? null;
   const currentId = await publishedSnapshotId();

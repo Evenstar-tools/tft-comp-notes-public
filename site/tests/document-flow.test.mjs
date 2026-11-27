@@ -1,7 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { attachBoundRegions, duplicatePublishedTeam, reviewIssues, sectionChanges, sameGeneratedSection, isBoardCaption, feishuBoardIssue, attachSectionTeam, findSection, readableSection, sectionTeams, splitSections } from "../domain/document-flow.ts";
-import { applyPublishedBoardEdits, applyPublishedBoardLayouts, boardLayout, publishedBoardContent, publishedBoardEdits, publishedBoardLayouts } from "../domain/published-board-layout.ts";
+import { applyBoardOverrides, applyPublishedBoardEdits, applyPublishedBoardLayouts, boardLayout, publishedBoardContent, publishedBoardEdits, publishedBoardLayouts } from "../domain/published-board-layout.ts";
+import { publicationWithBoardRevision } from "../domain/publication-record.ts";
 
 const entry = (id, level, title) => ({ id, level, title, content: { id, type: level ? "heading" : "text", text: title } });
 const team = (id, unit) => ({ id, name:id, pieces:[{unitId:unit}], revision:1 });
@@ -47,6 +48,32 @@ test("published positions win over reading corrections for one board and yield t
   assert.equal(updated.sections[1], other);
   assert.deepEqual(publishedBoardLayouts(publication.sections, boardLayouts), boardLayouts);
   assert.deepEqual(publishedBoardLayouts([renderedSection, other], boardLayouts), []);
+});
+
+test("a repository board revision follows new guide content and yields when the original board changes", () => {
+  const team = { id: "board", name: "新版棋盘", pieces: [{ instanceId: "one", unitId: "jinx", position: 24, stars: 2, items: [] }],
+    instrumentPositions: { maracas: 3 }, conditions: [{ kind: "option", augmentId: "small-squad" }] };
+  const edited = { ...team, pieces: [{ ...team.pieces[0], position: 26, items: ["red"] }],
+    instrumentPositions: undefined, conditions: undefined };
+  const variant = { id: "variant", pieces: [] };
+  const current = { id: "new-base", publishedAt: "2026-11-27T00:00:00Z", season: { id: "s19-pbe-19.1c" },
+    sections: [{ id: "guide", title: "新版正文", team, teams: [team, variant] }, { id: "new-guide" }] };
+  const revision = { kind: "repository-board-revision", id: "edit", previousId: "old-base", publishedAt: "2026-11-26T00:00:00Z",
+    boardOverrides: [{ sectionId: "guide", teamId: team.id, edition: "s19-pbe-19.1b",
+      source: publishedBoardContent(team), content: publishedBoardContent(edited) }] };
+  const live = publicationWithBoardRevision(current, JSON.parse(JSON.stringify(revision)));
+  const display = applyBoardOverrides(live);
+  assert.equal(display.id, "edit");
+  assert.equal(display.publishedAt, current.publishedAt);
+  assert.equal(display.sections[0].title, "新版正文");
+  assert.equal(display.sections[1], current.sections[1]);
+  assert.deepEqual(display.sections[0].teams, [edited, variant]);
+  assert.deepEqual(display.sections[0].team, edited);
+
+  const official = { ...team, pieces: [{ ...team.pieces[0], stars: 3 }] };
+  const updated = { ...live, sections: [{ ...current.sections[0], team: official, teams: [official, variant] }] };
+  assert.equal(applyBoardOverrides(updated).sections[0].team, official);
+  assert.equal(applyBoardOverrides({ ...live, season: { id: "s19-live-19.1" } }).sections[0].team, team);
 });
 
 test("category headings keep stable identities but only real content can be published", () => {

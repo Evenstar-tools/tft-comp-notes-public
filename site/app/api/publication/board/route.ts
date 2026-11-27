@@ -15,6 +15,7 @@ const target = z.object({ publication: identifier, section: identifier, team: id
 const submission = z.object({
   publicationId: identifier,
   sectionId: identifier,
+  expectedBoard: z.string().min(1).max(32768).optional(),
   team: z.object({
     id: identifier,
     pieces: z.array(loadout.extend({ position, alternate: loadout.optional() })).min(1).max(28),
@@ -51,8 +52,8 @@ export async function POST(request: Request) {
     requireDatabase();
     const parsed = submission.safeParse(await request.json().catch(() => null));
     if (!parsed.success) throw new ApiError(400, "棋盘格式不正确");
-    const { publicationId, sectionId, team } = parsed.data;
-    return Response.json(await publishBoardPositions(publicationId, sectionId, team), { headers });
+    const { publicationId, sectionId, team, expectedBoard } = parsed.data;
+    return Response.json(await publishBoardPositions(publicationId, sectionId, team, expectedBoard), { headers });
   } catch (error) {
     return apiError(error);
   }
@@ -64,8 +65,8 @@ export async function PUT(request: Request) {
     requireDatabase();
     const parsed = formation.safeParse(await request.json().catch(() => null));
     if (!parsed.success) throw new ApiError(400, "棋盘格式不正确");
-    const { publicationId, sectionId, team } = parsed.data;
-    return Response.json(await publishBoardFormation(publicationId, sectionId, team), { headers });
+    const { publicationId, sectionId, team, expectedBoard } = parsed.data;
+    return Response.json(await publishBoardFormation(publicationId, sectionId, team, expectedBoard), { headers });
   } catch (error) {
     return apiError(error);
   }

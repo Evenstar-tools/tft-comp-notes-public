@@ -42,7 +42,7 @@ import { draftCategoryLabel, draftCategoryValue, sourceSectionTitle } from "@/do
 import { guideLink } from "@/domain/guide-reading";
 import { moveBoardInstrument } from "@/domain/board-instruments";
 import { conditionKey, editableTeamConditions, sharedGuideEditorConditions } from "@/domain/guide-equipment-conditions";
-import { publishedBoardContent } from "@/domain/published-board-layout";
+import { boardContentVersion, publishedBoardContent } from "@/domain/published-board-layout";
 import type { HeroItemSample, HeroItemSource } from "@/domain/hero-insights";
 import { unlockText } from "@/domain/unlocks";
 import { feishuSection, manageLink } from "@/domain/links";
@@ -433,7 +433,8 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
     if (guide && board) {
       if (ownerMode && guide.target) draft.pieces = board.pieces;
       source = {
-        draftId: draft.id, title: guide.title, href: guide.href, target: ownerMode ? guide.target : undefined,
+        draftId: draft.id, title: guide.title, href: guide.href,
+        target: ownerMode && guide.target ? { ...guide.target, expectedBoard: boardContentVersion(board) } : undefined,
         sharedConditions: guide.sharedConditions, sourceGuide: guide.sourceGuide,
         ...(!ownerMode && {
           officialBoard: { pieces: board.pieces, instrumentPositions: board.instrumentPositions },
@@ -780,15 +781,19 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
       throw new Error("请在带入的阶段编辑原棋盘。新增的阶段可单独保存到云端副本。");
     if (!current.pieces.length) throw new Error("棋盘至少需要一枚棋子");
     const board = publishedBoardContent(await save(current));
-    const { publicationId } = await request<{ publicationId: string }>("/api/publication/board", {
+    const { publicationId, team: publishedTeam } = await request<{ publicationId: string; team: Team }>("/api/publication/board", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         publicationId: guideTarget.publicationId, sectionId: guideTarget.sectionId,
+        expectedBoard: guideTarget.expectedBoard,
         team: { id: guideTarget.teamId, ...board },
       }),
     });
-    const source = { ...guideBoardSource, target: { ...guideTarget, publicationId }, published: JSON.stringify(board) };
+    const source = { ...guideBoardSource,
+      target: { ...guideTarget, publicationId, expectedBoard: boardContentVersion(publishedTeam) },
+      published: boardContentVersion(board),
+    };
     storeGuideBoardSource(source);
     setGuideBoardSource(source);
     notify({ kind: "ok", text: "已发布到原棋盘" });
