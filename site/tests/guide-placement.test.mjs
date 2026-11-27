@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { augmentBoardSamples, byBestMean, findPlacement, fixedBoardPlacementDetail, formationComparisonFor, heroAugmentSortingMinGames, isLowWinRate, orderByPlacement, placementEvidenceKind, placementSortTier, remainingPlacements } from "../domain/guide-placement.ts";
+import { augmentBoardSamples, byBestMean, findPlacement, fixedBoardPlacementDetail, formationComparisonFor, formationSourcePeriod, heroAugmentSortingMinGames, isLowWinRate, orderByPlacement, placementEvidenceKind, placementSortTier, remainingPlacements } from "../domain/guide-placement.ts";
 
 test("legacy co-occurrence keeps its own scope even when the query lists all units", () => {
   const url = "https://www.metatft.com/explorer?level=9&unit=DA_Kayle19-1&tab=";
@@ -17,6 +17,17 @@ test("a formation comparison attaches only to the exact roster, level and editio
   assert.equal(formationComparisonFor([group], "s19-pbe-19.1", ["smeech", "kayle", "bard"], 2), undefined);
   assert.equal(formationComparisonFor([group], "s19-pbe-19.1", ["smeech", "kayle"], 3), undefined);
   assert.equal(formationComparisonFor([group], "s19-19.1", ["smeech", "kayle"], 2), undefined);
+});
+
+test("historical formation evidence names its recorded build instead of the current build", () => {
+  const current = { patch: "19.1c", build: "6037882" };
+  assert.deepEqual(formationSourcePeriod({
+    patch: "PBE 19.1b", build: "6018196", window: "仅当前构建", windowHours: 72,
+  }, current), { patch: "PBE 19.1b", window: "构建 6018196", historical: true });
+  assert.equal(formationSourcePeriod({ patch: "PBE 19.1c", build: "6035832", windowHours: 6 }, current).historical, true);
+  assert.equal(formationSourcePeriod({ patch: "PBE 19.1c", windowHours: 72 }, current).historical, false);
+  assert.equal(formationSourcePeriod({ patch: "Ranked 19.1", build: "6037882", windowHours: 72 },
+    { patch: "19.1", build: "6037882" }).historical, false);
 });
 
 test("splitting a nested condition subtracts each rank and rejects incompatible buckets", () => {
