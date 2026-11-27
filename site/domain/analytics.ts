@@ -41,7 +41,7 @@ export type EntryChannel =
 
 export type GuideViewMode = "detail" | "quick_view";
 export type GuideEntrySource = "home_rec" | "guide_list" | "site_search" | "direct" | "other";
-export type SearchSurface = "overlay" | "home_inline";
+export type SearchSurface = "overlay" | "home_inline" | "find";
 export type SearchResultState = "has_results" | "no_results";
 export type SearchResultType = "guide" | "unit" | "item" | "trait" | "augment" | "other";
 export type RankBucket = "1" | "2-3" | "4-10" | "11+";
@@ -162,7 +162,7 @@ const TOOL_ACTIONS = new Set<string>([
 const TOOL_SURFACES = new Set<string>(["combos", "poster", "guide", "editor"]);
 const GUIDE_MODES = new Set<string>(["detail", "quick_view"]);
 const GUIDE_SOURCES = new Set<string>(["home_rec", "guide_list", "site_search", "direct", "other"]);
-const SEARCH_SURFACES = new Set<string>(["overlay", "home_inline"]);
+const SEARCH_SURFACES = new Set<string>(["overlay", "home_inline", "find"]);
 const SEARCH_STATES = new Set<string>(["has_results", "no_results"]);
 const SEARCH_TYPES = new Set<string>(["guide", "unit", "item", "trait", "augment", "other"]);
 const RANK_BUCKETS = new Set<string>(["1", "2-3", "4-10", "11+"]);
