@@ -427,7 +427,11 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
   }) : [];
   const isHeroList = view === "hero-augments";
   const ranked = sort === "mean" && view === "regular";
-  const candidates = equipmentQuery && !ranked ? [] : candidatesFor(visible);
+  const comparisonEntries = ranked && hasCurrentStats ? visible.map(entry => ({
+    ...entry,
+    rows: guideFamilyRows(familyStats, entry.data.id, entry.section.id, entry.teams, { includeSmallSamples: true }),
+  })) : visible;
+  const candidates = equipmentQuery && !ranked ? [] : candidatesFor(comparisonEntries);
   const seen = new Set<string>();
   type Candidate = (typeof candidates)[number];
   type Result = Candidate & { siblings: Candidate[]; family?: GuideFamily };
@@ -460,7 +464,12 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
   const statsRows: GuideStatsTableRow[] = ranked ? candidates.flatMap(entry =>
     matchingRows(entry).filter(({team, stat}) => !tierFilter ||
       tierLabels[boardTier(entry.section, team, hasCurrentStats ? stat : undefined)] === tierFilter).map(match => ({ ...match, entry }))
-  ).sort((a, b) => compareGuideFamilyPerformance(a.stat, b.stat, performance.metric, performance.direction, familyStats.totalFinishes))
+  ).sort((a, b) => {
+    const leftCountOnly = a.stat.games < 100, rightCountOnly = b.stat.games < 100;
+    if (leftCountOnly && rightCountOnly) return b.stat.games - a.stat.games;
+    if (leftCountOnly !== rightCountOnly) return leftCountOnly ? 1 : -1;
+    return compareGuideFamilyPerformance(a.stat, b.stat, performance.metric, performance.direction, familyStats.totalFinishes);
+  })
     .map(({ stat, team, entry }) => {
       const { section, data, playstyle } = entry;
       const notes = readingNotes(section, team, data);
@@ -484,9 +493,10 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
           <img className={"cost-" + unit.cost} src={unit.image} alt={unit.name} width={38} height={38} loading="lazy" />
           <span aria-hidden="true">{unit.id === "renata-glasc" ? "烈娜塔" : unit.name.split(" · ")[0]}</span>
         </span>),
-        games: stat.games, mean: stat.mean,
-        pickRate: familyMetricValue(stat, "pickRate", familyStats.totalFinishes),
-        topFourRate: familyMetricValue(stat, "topFourRate"), winRate: familyMetricValue(stat, "winRate"),
+        games: stat.games, mean: stat.games < 100 ? null : stat.mean,
+        pickRate: stat.games < 100 ? null : familyMetricValue(stat, "pickRate", familyStats.totalFinishes),
+        topFourRate: stat.games < 100 ? null : familyMetricValue(stat, "topFourRate"),
+        winRate: stat.games < 100 ? null : familyMetricValue(stat, "winRate"),
       };
     }) : [];
   type Card = Result & { rating?: Pick<GuideFamilyStat, "mean" | "games" | "name" | "topFourRate" | "winRate">;
