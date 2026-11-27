@@ -34,31 +34,24 @@ function safeUrl(url: string) {
 }
 function Elements({ elements = [], start = 0 }: { elements?: RichElement[]; start?: number }) {
   let remaining = start;
-  return (
-    <>
-      {elements.map((element, index) => {
-        const run = element.text_run;
-        const content = run?.content ?? element.mention_doc?.title ?? "[此行内内容暂不支持]";
-        let child: ReactNode = content.slice(remaining).replace(/^【阵容构建器 · [0-9a-f-]{36}】\r?\n/i, "");
-        remaining = Math.max(0, remaining - content.length);
-        if (!child) return null;
-        const style = run?.text_element_style;
-        if (style?.bold) child = <strong>{child}</strong>;
-        if (style?.italic) child = <em>{child}</em>;
-        if (style?.underline) child = <u>{child}</u>;
-        if (style?.strikethrough) child = <s>{child}</s>;
-        const url = style?.link?.url ?? element.mention_doc?.url;
-        const href = url ? safeUrl(url) : undefined;
-        if (href)
-          child = (
-            <a href={href} target="_blank" rel="noreferrer">
-              {child}
-            </a>
-          );
-        return <span key={index}>{child}</span>;
-      })}
-    </>
-  );
+  const children: ReactNode[] = [];
+  for (const [index, element] of elements.entries()) {
+    const run = element.text_run;
+    const content = run?.content ?? element.mention_doc?.title ?? "[此行内内容暂不支持]";
+    let child: ReactNode = content.slice(remaining).replace(/^【阵容构建器 · [0-9a-f-]{36}】\r?\n/i, "");
+    remaining = Math.max(0, remaining - content.length);
+    if (!child) continue;
+    const style = run?.text_element_style;
+    if (style?.bold) child = <strong>{child}</strong>;
+    if (style?.italic) child = <em>{child}</em>;
+    if (style?.underline) child = <u>{child}</u>;
+    if (style?.strikethrough) child = <s>{child}</s>;
+    const url = style?.link?.url ?? element.mention_doc?.url;
+    const href = url ? safeUrl(url) : undefined;
+    if (href) child = <a href={href} target="_blank" rel="noreferrer">{child}</a>;
+    children.push(<span key={index}>{child}</span>);
+  }
+  return <>{children}</>;
 }
 function Block({ block, folded, start = 0, replacement }: { block: ContentBlock; folded: Set<string>; start?: number; replacement?: string }) {
   const children = block.children?.map((child) => (
@@ -181,9 +174,10 @@ function Block({ block, folded, start = 0, replacement }: { block: ContentBlock;
       );
   }
 }
-export function DocumentView({ section, gameData, publicationId, initialTeam, defaultTeam, initialStage, initialFlex, variants, openPoster, initialPosterShare, returnTo, showCategory = true, patchAdvice }: {
+export function DocumentView({ section, gameData, publicationId, initialTeam, defaultTeam, initialStage, initialFlex, variants, systems, openPoster, initialPosterShare, returnTo, showCategory = true, patchAdvice }: {
   section: Section; gameData?: Season; publicationId?: string; initialTeam?: string; defaultTeam?: string; initialStage?: BoardStage; initialFlex?: string; returnTo?: string;
   variants?: Record<string, import("@/domain/guide-families").PosterVariant[]>; openPoster?: boolean; initialPosterShare?: import("@/domain/links").PosterShare;
+  systems?: import("@/domain/guide-variant-strip").GuideSystem[];
   showCategory?: boolean;
   patchAdvice?: GuidePatchAdvice[];
 }) {
@@ -317,7 +311,7 @@ export function DocumentView({ section, gameData, publicationId, initialTeam, de
     <article className={primary ? "document-view with-guide-board" : "document-view"}>
       {primary && gameData ? <GuideTeams key={section.id + (section.primaryTeamId ?? "")} section={section} data={gameData} initialTeam={initialTeam} defaultTeam={defaultTeam}
         initialStage={initialStage} initialFlex={initialFlex} publicationId={publicationId} returnTo={returnTo} renderHeader={teamHeader} renderNotes={selectedText}
-        variants={variants} openPoster={openPoster} initialPosterShare={initialPosterShare} patchAdvice={patchAdvice} /> : header(sourceSectionTitle(section))}
+        variants={variants} systems={systems} openPoster={openPoster} initialPosterShare={initialPosterShare} patchAdvice={patchAdvice} /> : header(sourceSectionTitle(section))}
       {!primary && section.blocks.map((block) => (
         <Block key={block.id} block={block} folded={folded} />
       ))}

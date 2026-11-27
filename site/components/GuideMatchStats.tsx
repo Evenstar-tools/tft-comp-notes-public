@@ -2,7 +2,7 @@
 
 import familyData from "@/data/guide-family-stats.json";
 import type { Section } from "@/domain/document";
-import { guideFamilyRows, type GuideFamilyBatch, type GuideFamilyStat } from "@/domain/guide-family-stats";
+import { guideFamilyRows, type GuideFamilyBatch, type GuideFamilySmallSample } from "@/domain/guide-family-stats";
 import { guideBoardName } from "@/domain/guide-reading";
 import { displayGuideName } from "@/domain/trait-names.mjs";
 import type { Team } from "@/domain/types";
@@ -12,14 +12,14 @@ import { GuideDistribution } from "./GuideDistribution";
 import { formationEvidence, GuideFormationFamilyReference, GuideFormationStats } from "./GuideFormationStats";
 import { PlacementBadge, PlacementMethod, PlacementRates, rankedOceanBoards, teamPlacement } from "./GuidePlacement";
 
-const family = familyData as GuideFamilyBatch & { smallSamples?: GuideFamilyStat[] };
+const family = familyData as GuideFamilyBatch;
 const views = [["family", "体系战绩"], ["board", "固定终盘"], ["carry", "核心与装备"]] as const;
 export type MatchStatsView = typeof views[number][0];
 const number = new Intl.NumberFormat("zh-CN");
 const percent = new Intl.NumberFormat("zh-CN", { style: "percent", maximumFractionDigits: 1 });
 
 function FamilyStats({ rows, rare }: {
-  rows: ReturnType<typeof guideFamilyRows>; rare: GuideFamilyStat[];
+  rows: ReturnType<typeof guideFamilyRows>; rare: GuideFamilySmallSample[];
 }) {
   if (!rows.length && !rare.length) return <p className="muted">这张棋盘暂无对应的体系战绩。</p>;
   return <div className="guide-carry-samples guide-family-results">
@@ -36,7 +36,7 @@ function FamilyStats({ rows, rare }: {
       </dl>
     </li>)}</ul>}
     {rare.map(stat => <p key={stat.clusterId}><a href={stat.url} target="_blank" rel="noreferrer">{displayGuideName(stat.name)} · {number.format(stat.games)} 场
-      {stat.games === 1 && Number.isInteger(stat.mean) && stat.mean >= 1 && stat.mean <= 8 ? ` · 第 ${stat.mean} 名` : ""} ↗</a></p>)}
+      {stat.games === 1 && stat.mean !== null && Number.isInteger(stat.mean) && stat.mean >= 1 && stat.mean <= 8 ? ` · 第 ${stat.mean} 名` : ""} ↗</a></p>)}
   </div>;
 }
 
@@ -89,7 +89,7 @@ export function GuideMatchStats({ id, stage, team, teams, section, edition, augm
     .find(type => groups[type].some(sample => sample.games > 0)) ?? "board";
   const activeView = visibleViews.some(([value]) => value === preferredView) ? preferredView : visibleViews[0][0];
   const scopeNote = activeView === "family"
-    ? (heroGuide ? "该英雄强化体系的整体结算样本。" : "同套体系含不同等级和变阵的整体结算样本。")
+    ? (heroGuide ? "该英雄强化体系的整体结算样本。" : "该体系在各结算人口的整体样本。")
     : activeView === "carry"
       ? "按棋子、星级或装备筛选，各组场数可能重叠。"
       : heroGuide

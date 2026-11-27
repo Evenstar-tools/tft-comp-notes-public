@@ -22,7 +22,7 @@ export function matchBoundCluster(binding, group, unitIds) {
   if (!removed.length && !added.length) {
     return { ok: true, status: "exact", roster, added, removed };
   }
-  const unmapped = roster.some(apiId => !unitIds?.has(apiId));
+  const unmapped = [...roster, ...expected].some(apiId => !unitIds?.get(apiId));
   const expectedUnitIds = new Set(expected.map(apiId => unitIds?.get(apiId)).filter(Boolean));
   const rosterUnitIds = new Set(roster.map(apiId => unitIds?.get(apiId)).filter(Boolean));
   const carries = binding?.carryIds ?? [];
@@ -32,6 +32,11 @@ export function matchBoundCluster(binding, group, unitIds) {
   const shared = expected.length - removed.length;
   const minShared = Math.max(5, Math.min(expected.length, roster.length) - 2);
   if (!unmapped && carriesIntact && removed.length <= 2 && added.length <= 2 && shared >= minShared) {
+    const profile = unitIds ? sourceProfile(group, unitIds) : { builds: [] };
+    const damageDealers = new Set(profile.builds.filter(b => b.role === "输出").map(b => b.unitId).filter(Boolean));
+    if (damageDealers.size > 0 && !carries.some(id => damageDealers.has(id))) {
+      return { ok: false, status: "changed", reason: "代表棋盘与主C配装有变", roster, added, removed };
+    }
     return { ok: true, status: "drift", reason: "代表棋盘微调（已兼容保留）", roster, added, removed };
   }
   return { ok: false, status: "changed", reason: "代表棋盘有变", roster, added, removed };

@@ -5871,7 +5871,7 @@
       "games": 6410,
       "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&unit=DA_Senna19-1_3_3&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
-      "sampleScope": "赛娜三星三件 · 真实伤害全样本",
+      "sampleScope": "赛娜三星三件全样本",
       "conditions": {
         "teamId": "3f69e13a-ddcf-4d24-9a6d-1c0d5e1df4cb",
         "kind": "core",

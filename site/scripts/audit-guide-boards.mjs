@@ -4,15 +4,21 @@ import { parseArgs } from "node:util";
 import { currentGuideSeason as season, prepareFamilyPublication as prepareAuditPublication } from "./export-family-catalog.mjs";
 import currentPatch from "../data/current-patch.json" with { type: "json" };
 import { boardNeighbors } from "../domain/board-layout.ts";
-import { sectionTeams } from "../domain/document-flow.ts";
-import { allBlocks, readingNotes } from "../domain/guide-reading.ts";
-import { sameEdition } from "../domain/version-updates.ts";
+import { readableSection, sectionTeams } from "../domain/document-flow.ts";
+import { allBlocks, isEditorialSection, readingNotes } from "../domain/guide-reading.ts";
+import { isVersionUpdate, sameEdition } from "../domain/version-updates.ts";
 
 export { prepareAuditPublication };
 
 export const featuredGuideIds = [
   "0243", "0420", "0229", "1020", "1110", "0051", "0338", "0307", "0251", "0854", "0006", "0275", "0171", "0281",
 ].map(id => "sample-block-" + id);
+
+export function allGuideIds(publication) {
+  return publication.sections
+    .filter(section => readableSection(section) && !isEditorialSection(section) && !isVersionUpdate(section))
+    .map(section => section.id);
+}
 
 const stoneplate = "TFT_Item_GargoyleStoneplate";
 const spectral = "TFT_Item_SpectralGauntlet";
@@ -195,12 +201,14 @@ export function auditGuidePublication(publication, recommendations, { sectionIds
 
 function main() {
   const { values } = parseArgs({ options: { strict: { type: "boolean" }, json: { type: "boolean" },
-    guide: { type: "string", multiple: true }, overrides: { type: "string" } } });
+    all: { type: "boolean" }, guide: { type: "string", multiple: true }, overrides: { type: "string" } } });
   const read = name => JSON.parse(readFileSync(new URL(`../data/${name}.json`, import.meta.url), "utf8"));
   const overrides = values.overrides ? JSON.parse(readFileSync(values.overrides, "utf8")) : [];
   if (!Array.isArray(overrides)) throw new Error("站位豁免文件须为 JSON 数组");
-  const report = auditGuidePublication(prepareAuditPublication(read("public-preview")), read("patch-recommendations"), {
-    sectionIds: values.guide && [...new Set(values.guide)], overrides,
+  const publication = prepareAuditPublication(read("public-preview"));
+  const sectionIds = values.all ? allGuideIds(publication) : values.guide && [...new Set(values.guide)];
+  const report = auditGuidePublication(publication, read("patch-recommendations"), {
+    sectionIds, overrides,
   });
   const { summary } = report;
   if (values.json) console.log(JSON.stringify(report, null, 2));

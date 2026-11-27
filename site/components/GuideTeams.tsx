@@ -34,7 +34,8 @@ import { heroAugmentForGuide, heroAugmentCategory, omitRepeatedHeroEntry } from 
 import familyStats from "@/data/guide-family-stats.json";
 import { guideFamilyRows } from "@/domain/guide-family-stats";
 import type { Section } from "@/domain/document";
-import { familyVariants, groupGuides, type PosterVariant } from "@/domain/guide-families";
+import { boardRosterChange, familyVariants, groupGuides, type PosterVariant } from "@/domain/guide-families";
+import { guidePromotionRows, guideSystemDisplayBoards, guideSystemPhases, guideSystemSample, systemMeanTone, type GuideSystem } from "@/domain/guide-variant-strip";
 import type { BoardStage, Season, Team } from "@/domain/types";
 import { season } from "@/data";
 import { sameEdition } from "@/domain/version-updates";
@@ -46,11 +47,12 @@ export type GuidePatchAdvice = { teamId: string; note: string; label: string; hr
 const percent = new Intl.NumberFormat("zh-CN", { style: "percent", maximumFractionDigits: 1 });
 const sampleScopes = { fixed: "固定终盘", core: "核心样本", lineup: "名单共现", augment: "强化样本" };
 
-export function GuideTeams({ section, data, initialTeam, defaultTeam, initialStage, initialFlex, publicationId, returnTo, renderHeader, renderNotes, variants, openPoster, initialPosterShare, patchAdvice }: {
+export function GuideTeams({ section, data, initialTeam, defaultTeam, initialStage, initialFlex, publicationId, returnTo, renderHeader, renderNotes, variants, systems, openPoster, initialPosterShare, patchAdvice }: {
   section: Section; data: Season; initialTeam?: string; defaultTeam?: string; publicationId?: string; returnTo?: string; renderHeader?: (team: Team, performance?: ReactNode) => ReactNode;
   initialStage?: BoardStage; initialFlex?: string;
   renderNotes?: (team: Team, passages: GuidePassage[], roles: GuideRole[]) => ReactNode;
   variants?: Record<string, PosterVariant[]>; openPoster?: boolean; initialPosterShare?: PosterShare;
+  systems?: GuideSystem[];
   patchAdvice?: GuidePatchAdvice[];
 }) {
   const teams = primaryFirst(sectionTeams(section), section.primaryTeamId);
@@ -138,6 +140,10 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
     return () => window.removeEventListener("keydown", dismissOnEscape);
   }, [selectedPiece, closePiece]);
   if (!team) return null;
+  const currentSystem = systems?.find(system => system.sectionId === section.id && system.boardIds.includes(team.id));
+  const systemBoards = currentSystem ? teams.filter(board => currentSystem.boardIds.includes(board.id)) : teams;
+  const systemEntry = currentSystem && systemBoards.find(board => board.id === currentSystem.teamId);
+  const displayedSystemBoards = currentSystem ? guideSystemDisplayBoards(section, systemBoards, team) : systemBoards;
   const formationId = rerollRoute(section, team)?.final.id ?? team.id;
   const siblings = variants?.[team.id] ?? variants?.[formationId] ?? (localFamily && familyVariants(localFamily, formationId));
   const mainStage = team.mainStage ?? "late";
@@ -169,13 +175,15 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
   const kind = guideBoardKind(section, team, primary);
   const mainRoute = !route && section.reroll && kind === "变阵" ? guideRoute(section, teams, primary) : undefined;
   const reviewedPhases = reviewedGuidePhases(section.id, teams, data);
-  const phaseSteps = reviewedPhases ?? route?.phases;
-  const linkedPhases = phaseSteps ?? mainRoute?.phases.filter(step => step.team) ?? [];
+  const authoredPhases = reviewedPhases ?? route?.phases;
+  const fallbackPhases = (!currentSystem || systemBoards.includes(primary)) ? mainRoute?.phases.filter(step => step.team) : undefined;
+  const phaseSteps = systemEntry ? guideSystemPhases(displayedSystemBoards, systemEntry, team, authoredPhases ?? fallbackPhases ?? []) : authoredPhases;
+  const linkedPhases = phaseSteps ?? fallbackPhases ?? [];
   const firstPhases = linkedPhases.length > 3 && linkedPhases.at(-1)?.team
     ? [...linkedPhases.slice(0, 2), linkedPhases.at(-1)!] : linkedPhases.slice(0, 3);
   const remainingPhases = linkedPhases.filter(step => !firstPhases.includes(step));
   const linkedChoices = route?.choices ?? mainRoute?.choices ?? [];
-  const compactChoices = linkedChoices.some(choice => choice.team?.boardRole === "variant");
+  const compactChoices = !detailView && linkedChoices.some(choice => choice.team?.boardRole === "variant");
   const alternatives = teams.filter(option => !stageTeams.includes(option));
   const oceanBoards = teams.some(board => board.id === oceanGravesUnlockBoardId)
     ? teams.filter(board => board.id !== oceanGravesUnlockBoardId) : undefined;
@@ -194,8 +202,10 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
   const inlineAugment = augment && equipmentConditions?.rows.some(row => row.id === augment.id);
   const augmentUnitName = inlineAugment ? data.units.find(unit => unit.id === augment.unitId)?.name : undefined;
   const heroGuide = !!augment || section.category === heroAugmentCategory;
-  const familyRows = guideFamilyRows(familyStats, data.id, section.id, teams)
-    .filter(({ stat }) => Boolean(stat.heroAugment) === heroGuide);
+  const familyRows = systems ? systems.flatMap(system => {
+    const anchor = system.sectionId === section.id && teams.find(board => board.id === system.teamId);
+    return anchor && system.stat ? [{ stat: system.stat, team: anchor, boards: teams.filter(board => system.boardIds.includes(board.id)) }] : [];
+  }) : guideFamilyRows(familyStats, data.id, section.id, teams).filter(({ stat }) => Boolean(stat.heroAugment) === heroGuide);
   const matchingFamily = familyRows.filter(row => row.boards.some(board => board.id === team.id));
   const overall = matchingFamily.length === 1 ? matchingFamily[0].stat : undefined;
   const showMatchStats = mainBoardActive && !showFlex;
@@ -211,12 +221,14 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
   const patch = placement?.patch ?? familyStats.patch;
   const windowLabel = placement?.window ?? "近 " + familyStats.days + " 天";
   const mean = overview ? overview.mean : undefined;
+  const meanLabel = overall ? "均名" : placement?.referencesAugment ? "同装均名"
+    : evidence === "core" ? "核心均名" : evidence === "lineup" ? "名单共现均名" : evidence === "augment" ? "强化均名"
+      : placement ? `${placement.population}级结算均名` : "均名";
   const topFour = overview && overview.topFourRate !== undefined && mean !== undefined && !placement?.referencesAugment
     ? percent.format(overview.topFourRate) : undefined;
   const win = overview && overview.winRate !== undefined && mean !== undefined && !placement?.referencesAugment
     ? percent.format(overview.winRate) : undefined;
-  const tone = placement?.tone ?? (mean === undefined ? "limited" : mean <= placementBatch.greenThrough ? "strong"
-    : mean >= placementBatch.redFrom ? "weak" : "middle");
+  const tone = overall ? systemMeanTone(mean) : (placement?.tone ?? systemMeanTone(mean));
   function openMatchStats() {
     if (matchDetails.current) matchDetails.current.open = true;
     setSampleView(evidence === "core" || evidence === "lineup" ? "carry" : placement ? "board" : "family");
@@ -228,7 +240,7 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
   const routeBoardIds = new Set([...linkedPhases, ...linkedChoices].map(step => step.team?.id));
   const otherStages = stageTeams.filter(option => !routeBoardIds.has(option.id) &&
     !section.reroll?.stages.some(stage => stage.teamId === option.id));
-  const simpleStages = !oceanBoards && !linkedPhases.length && !linkedChoices.length &&
+  const simpleStages = !systemEntry && !oceanBoards && !linkedPhases.length && !linkedChoices.length &&
     otherStages.length > 0 && otherStages.length < 3 && teams.length === otherStages.length + 1;
   const simpleBoards = [...otherStages, primary];
   const notes = readingNotes(section, team, data);
@@ -261,12 +273,13 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
     rememberGuideCopy(text, seenCopy);
     passages.push({ source, text, brief: !linked && !text.includes("\n") && text.length <= 90, blockId: block?.id, linked });
   }
-  const otherVariants = alternatives.filter(option => !routeBoardIds.has(option.id) && !siblings?.some(s => s.teamId === option.id));
+  const otherVariants = alternatives.filter(option => !routeBoardIds.has(option.id));
+  const separateVariants = otherVariants.filter(option => !siblings?.some(s => s.teamId === option.id));
   const stagedVariants = !!section.reroll && linkedPhases.length > 0 && !linkedChoices.length &&
-    otherVariants.length > 0 && otherVariants.every(option => guideBoardKind(section, option, primary) === "变阵");
+    separateVariants.length > 0 && separateVariants.every(option => guideBoardKind(section, option, primary) === "变阵");
   const compactControls = compactChoices || stagedVariants;
   const otherSiblings = siblings?.filter(option => !routeBoardIds.has(option.teamId));
-  const stageOptions = (routeBoardIds.has(primary.id) || otherVariants.some(option => option.id === primary.id)
+  const stageOptions = (routeBoardIds.has(primary.id) || separateVariants.some(option => option.id === primary.id)
     ? otherStages : [primary, ...otherStages]).filter(option => option.id !== team.id);
   const active = (entry: Team) => traitCounts(entry.pieces, boardData.units, boardData.traits, boardData.items).filter(trait => traitGroup(trait) === "已开常规");
   const counts = active(shownBoard);
@@ -416,7 +429,7 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
   function phaseButton(step: (typeof linkedPhases)[number]) {
     const detail = "detail" in step && typeof step.detail === "string" ? step.detail : undefined;
     const label = compactChoices ? step.label.replace(/ · .*$/, "") : step.label;
-    return <button type="button" key={step.label} aria-label={compactChoices ? step.label : undefined}
+    return <button type="button" key={step.team?.id ?? step.label} aria-label={compactChoices ? step.label : undefined}
       aria-pressed={currentStep(step)}
       onClick={() => step.team ? pickTeam(step.team) : setRouteNote(step.label)}>
       {detailView ? stepLabel(label, linkedPhases.indexOf(step), detail)
@@ -433,10 +446,73 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
       {detailView ? stepLabel(stageLabels[stage], index) : stageLabels[stage]}
     </button>)}
   </div>;
-  const familyControls = !!otherSiblings?.length && <details className="guide-family-fold"><summary>同套变种（{otherSiblings.length}）</summary>
+  const familyControls = !detailView && !!otherSiblings?.length && <details className="guide-family-fold"><summary>同套变种（{otherSiblings.length}）</summary>
     <ul className="guide-variant-links poster-variant-links">{otherSiblings.map(v => <li key={v.teamId}><a href={guideLink(v.sectionId, v.teamId, returnTo)}
-      onClick={e => { if (!publicationId) { const next = teams.find(t => t.id === v.teamId); if (next) { e.preventDefault(); pickTeam(next); } } }}>
+      onClick={e => { const next = teams.find(t => t.id === v.teamId); if (next) { e.preventDefault(); pickTeam(next); } }}>
       <span>{v.title}{v.change && <small className="poster-change">{v.change}</small>}</span></a></li>)}</ul></details>;
+  function optionStats(stat: ReturnType<typeof guideSystemSample>, scope?: string, source?: string) {
+    return <span className="guide-variant-option-stats" title={source}>
+      <span className="guide-variant-mean-line">{scope && <small>{scope}</small>}
+        <strong data-tone={stat.tone} aria-label={stat.mean === "—" ? undefined : `均名 ${stat.mean}`}>{stat.mean}</strong>
+      </span>
+      <small>{stat.sample}</small>
+    </span>;
+  }
+  function renderVariantStrip() {
+    if (!systems || systems.length < 2) return null;
+    return <nav className="guide-variant-strip" aria-label="同套变种" data-count={systems.length}>
+      <div className="guide-variant-strip-head">
+        <h3>同套变种<span className="guide-variant-strip-count">（{systems.length}）</span></h3>
+        {systems.length >= 3 && <small className="guide-variant-strip-hint" aria-hidden>左滑对比 →</small>}
+      </div>
+      <ul className="guide-variant-strip-list" role="list">{systems.map(system => {
+        const board = system.sectionId === section.id ? teams.find(option => option.id === system.teamId) : undefined;
+        const current = system === currentSystem;
+        const swap = !current && board ? boardRosterChange(systemEntry ?? team, board, data) : undefined;
+        const change = swap?.describe() || system.change;
+        const sample = guideSystemSample(system.stat);
+        const source = system.stat && `${system.stat.sourceName} · ${familyStats.patch} · 近 ${familyStats.days} 天`;
+        const contents = <>
+          <span className="guide-variant-option-copy">
+            <strong>{system.title}</strong>{current && <small className="guide-variant-current">当前</small>}
+            {change && <small className="guide-variant-change" title={change}>{swap?.describe(3) || change}</small>}
+          </span>
+          {optionStats(sample, undefined, source)}
+        </>;
+        return <li key={system.sectionId + ":" + system.teamId}>{board
+          ? <button type="button" className="guide-variant-option" aria-pressed={current} onClick={() => pickTeam(board)}>{contents}</button>
+          : <a className="guide-variant-option" href={guideLink(system.sectionId, system.teamId, returnTo)}>{contents}</a>}
+        </li>;
+      })}</ul>
+    </nav>;
+  }
+  function renderPromotionComparison() {
+    if (!currentSystem) return null;
+    const rows = guidePromotionRows(displayedSystemBoards, board => teamPlacement(board, section, "fixed") ??
+      (heroGuide ? teamPlacement(board, section, "augment") : undefined), placementBatch);
+    if (rows.length < 2) return null;
+    return <section className="guide-promotion-comparison" aria-label="上人口与补卡对照">
+      <h3>上人口与补卡对照</h3>
+      <p>同套棋盘停级和升人口后的结算名次，仅用于比较补卡。</p>
+      <ul role="list">{rows.map(({ board, label, stat, scope, source }) => {
+        const current = mainBoardActive && !showFlex && board.id === team.id;
+        return <li key={board.id}>
+          <button type="button" className="guide-variant-option" aria-pressed={current}
+            onClick={() => {
+              if (board.id !== team.id) pickTeam(board);
+              else if (showFlex) toggleFlex();
+              else if (!mainBoardActive) pickStage(mainStage);
+            }}>
+            <span className="guide-variant-option-copy">
+              <small className="guide-promotion-level">{label}</small>
+              <strong>{guideBoardName(board)}</strong>{current && <small className="guide-variant-current">当前</small>}
+            </span>
+            {optionStats(stat, scope, source)}
+          </button>
+        </li>;
+      })}</ul>
+    </section>;
+  }
   const boardActions = <div className="guide-board-actions">
     <button type="button" className="guide-zoom-trigger guide-board-zoom" aria-label="放大棋盘" title="放大棋盘" aria-haspopup="dialog" onClick={() => setZoomed(true)}>
       <Maximize2 size={16} aria-hidden />{detailView && <span>放大棋盘</span>}
@@ -465,7 +541,7 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
     {style && <span className="guide-playstyle-tag" title="打法">{style}</span>}
     {mean !== undefined ? <div className="guide-title-stats">
       <a className="guide-title-mean" data-tone={tone} href={"#" + sampleId} onClick={openMatchStats} title={scope + " · " + patch + " · " + windowLabel}>
-        均名 <strong>{mean.toFixed(2)}</strong>
+        {meanLabel} <strong>{mean.toFixed(2)}</strong>
       </a>
       {topFour && <span>前四率 <strong>{topFour}</strong></span>}
     </div> : performance}
@@ -484,7 +560,7 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
       ))}</dl>
     </details>}
   </details>;
-  const matchStats = showMatchStats && <GuideMatchStats key={team.id} id={sampleId} team={team} teams={teams} section={section}
+  const matchStats = showMatchStats && <GuideMatchStats key={team.id} id={sampleId} team={team} teams={displayedSystemBoards} section={section}
     stage={inStage} edition={data.id} augmentName={augment?.name}
     heroGuide={heroGuide} familyRows={familyRows} view={sampleView} onSelectView={setSampleView} onPickTeam={selectSampleTeam} />;
   const conditions = <>
@@ -529,7 +605,7 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
   return <>{renderHeader?.(team, detailView ? headerTools : performance)}<section className={`guide-reader${section.reroll ? " guide-reroll" : ""}`} aria-label="阵容棋盘与运营">
     {!detailView && simpleStageControls}
     {!detailView && openingLine}
-    {oceanBoards ? <div className="guide-board-options" role="group" aria-label="阵容方案">
+    {!detailView && oceanBoards ? <div className="guide-board-options" role="group" aria-label="阵容方案">
       <div className="guide-variants guide-ocean-choices">{oceanBoards.map(board => {
         const name = guideBoardName(board);
         const stage = name.match(/^(\d+级[^·]*?)\s*·\s*(.+)$/);
@@ -538,7 +614,6 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
           <span className="guide-variant-name">{stage?.[2] ?? name}</span>
         </button>;
       })}</div>
-      {detailView && authoredStageControls}
     </div> : <div className={`guide-board-options${compactControls ? " guide-board-options--compact" : ""}${reviewedPhases ? " guide-board-options--reviewed" : ""}`}>
       {detailView && simpleStageControls}
       {!!firstPhases.length && <div className="stage-options guide-phases" role="group" aria-label="运营阶段">{firstPhases.map(phaseButton)}</div>}
@@ -546,19 +621,20 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
       {!!remainingPhases.length && <details className="guide-extra-phases" open={detailView && remainingPhases.some(currentStep) || undefined}><summary>其他运营阶段</summary>
         <div className="stage-options">{remainingPhases.map(phaseButton)}</div>
       </details>}
-      {!!linkedChoices.length && <nav className="guide-variants guide-route-choices" aria-label="选择成型阵容">
+      {!detailView && !!linkedChoices.length && <nav className="guide-variants guide-route-choices" aria-label="选择成型阵容">
         {linkedChoices.map(({label, team: option}) => option &&
           <button key={option.id} type="button" aria-label={compactChoices ? label : undefined} aria-pressed={option.id === team.id} onClick={() => pickTeam(option)}>
             <strong>{compactChoices ? label.replace(/^\d+级\s*·\s*/, "") : label}</strong>
           </button>)}
       </nav>}
-      {!simpleStages && otherVariants.some(option => option.id !== team.id) && <nav className={stagedVariants ? "guide-variants guide-route-choices" : "guide-variants"} aria-label="选择阵容方案">{otherVariants.map(option =>
+      {!detailView && !simpleStages && separateVariants.some(option => option.id !== team.id) && <nav className={stagedVariants ? "guide-variants guide-route-choices" : "guide-variants"} aria-label="选择阵容方案">{separateVariants.map(option =>
         <button key={option.id} type="button" aria-pressed={option.id === team.id} onClick={() => pickTeam(option)}>
           {!stagedVariants && <span className="guide-variant-kind">{guideBoardKind(section, option, primary)}</span>}
           <span className="guide-variant-name">{guideBoardName(option)}</span>
         </button>)}</nav>}
       {familyControls}
     </div>}
+    {detailView && renderVariantStrip()}
     <div className="reader-layout">
       <div className="reader-play">
         {!detailView && authoredStageControls}
@@ -583,6 +659,7 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
           })}</ul>
         </div>
         {nextStageCard}
+        {detailView && renderPromotionComparison()}
         {flexPreview && <div className="guide-flex-slot" aria-label="灵活位">
           <strong className="guide-flex-label">{showFlex ? "替换预览" : "灵活位"}</strong>
           <span className="guide-flex-swap">
@@ -609,9 +686,9 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
         </div>}
         {!detailView && stageComparison}
         {!route && notes.stage && !stageTeams.length && <button className="guide-stage-toggle" type="button" aria-expanded={showStage} onClick={() => setStage(!showStage)}>八人口过渡</button>}
-        {!oceanBoards && !simpleStages && !!otherStages.length && stageOptions.length === 1 && <button type="button" className="guide-stage-toggle"
+        {!currentSystem && !oceanBoards && !simpleStages && !!otherStages.length && stageOptions.length === 1 && <button type="button" className="guide-stage-toggle"
           onClick={() => pickTeam(stageOptions[0])}>{guideBoardName(stageOptions[0])}</button>}
-        {!oceanBoards && !simpleStages && !!otherStages.length && stageOptions.length > 1 && <details className="guide-stage-list">
+        {!currentSystem && !oceanBoards && !simpleStages && !!otherStages.length && stageOptions.length > 1 && <details className="guide-stage-list">
           <summary>其他过渡棋盘</summary>
           <div className="stage-options">{stageOptions.map(step => <button type="button" key={step.id} onClick={() => pickTeam(step)}>{step.id === primary.id ? "主阵" : guideBoardName(step)}</button>)}</div>
         </details>}

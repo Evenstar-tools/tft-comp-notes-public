@@ -82,4 +82,17 @@ test("代表盘兼容 1–2 张挂件微调，主 C 丢失或大幅换阵必须�
     units_string: "DA_Briar19, DA_Viego19, DA_Yasuo19, DA_Yone19, DA_Galio19, DA_Gragas19, DA_Olaf19, DA_Swain19",
   }, unitIds);
   assert.equal(majorRewrite.ok, false);
+
+  // Undefined unit mapping or carry-role takeover during drift -> must reject
+  const unmappedIds = new Map([...unitIds, ["DA_Mystery19", undefined]]);
+  assert.equal(matchBoundCluster(viegoBinding, {
+    units_string: "DA_Amumu19, DA_Briar19, DA_Camille19, DA_Mystery19, DA_Kayn19, DA_Viego19, DA_Yasuo19, DA_Yone19",
+  }, unmappedIds).ok, false);
+
+  const hijackedCarry = matchBoundCluster(viegoBinding, {
+    units_string: "DA_Amumu19, DA_Briar19, DA_Camille19, DA_Kayn19, DA_Viego19, DA_Yasuo19, DA_Yone19",
+    builds: [{ unit: "DA_Yasuo19", num_items: 3, buildName: ["DA_InfinityEdge", "DA_HandOfJustice", "DA_Bloodthirster"], count: 500 }],
+  }, unitIds);
+  assert.equal(hijackedCarry.ok, false);
+  assert.equal(hijackedCarry.reason, "代表棋盘与主C配装有变");
 });

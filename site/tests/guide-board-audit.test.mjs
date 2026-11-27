@@ -5,7 +5,7 @@ import { boardNeighbors } from "../domain/board-layout.ts";
 import { sectionTeams } from "../domain/document-flow.ts";
 import { guideBody, guidePlaystyle, guideRollLevel, guideRoster, guideUnitMatch, isBoardLoadout, readingNotes, sourceSummary } from "../domain/guide-reading.ts";
 import { heroAugmentForGuide } from "../domain/hero-augments.ts";
-import { auditGuideBoard, auditGuideCopy, auditGuidePublication, featuredGuideIds, prepareAuditPublication } from "../scripts/audit-guide-boards.mjs";
+import { allGuideIds, auditGuideBoard, auditGuideCopy, auditGuidePublication, featuredGuideIds, prepareAuditPublication } from "../scripts/audit-guide-boards.mjs";
 import { buildFamilyCatalog } from "../scripts/export-family-catalog.mjs";
 
 const preview = readData("public-preview");
@@ -252,4 +252,18 @@ test("the 14 featured guides pass on the combined public boards and retain roles
   const mergedIonic = prepareAuditPublication(ionicBefore).sections.find(section => section.id.endsWith("0307"));
   const mergedBoard = sectionTeams(mergedIonic).find(team => team.id.endsWith("0007"));
   assert.ok(mergedBoard.pieces.filter(piece => piece.alternate).length <= 2, "editBoard must never exceed 2 alternates");
+});
+
+test("every published guide passes strict board and copy compliance with zero errors and warnings", () => {
+  const publication = prepareAuditPublication(preview);
+  const sectionIds = allGuideIds(publication);
+  assert.ok(sectionIds.length >= 40);
+  const report = auditGuidePublication(publication, recommendations, { sectionIds });
+  const findings = report.guides.flatMap(guide => [
+    ...guide.issues.map(issue => `${guide.sectionId} ${guide.title} [${issue.rule}] ${issue.message}`),
+    ...guide.boards.flatMap(board => board.issues.map(issue => `${guide.sectionId} ${board.name ?? board.teamId} [${issue.rule}] ${issue.message}`)),
+  ]);
+  assert.deepEqual(findings, []);
+  assert.equal(report.summary.errors, 0);
+  assert.equal(report.summary.warnings, 0);
 });

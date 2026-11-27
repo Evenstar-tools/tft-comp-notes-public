@@ -113,7 +113,7 @@ function homeOpening(text: string, title: string, augment?: ReturnType<typeof he
       break;
     }
   }
-  return text.match(/^[^。！；\n]+[。！；]?/)?.[0].trim() ?? "";
+  return (text.match(/^[^。！；\n]+[。！；]?/)?.[0].trim() ?? "").replace(/；$/, "。");
 }
 
 const homeFamilyStats: GuideFamilySnapshot & { previous?: GuideFamilySnapshot } = familyStats;
@@ -1043,7 +1043,7 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
             {selectedGear.image && <img src={selectedGear.image} alt="" width={21} height={21} />}
             <span className="home-gear-chip-label">{selectedGear.name}</span><X size={12} aria-hidden />
           </button>}
-          <input ref={searchInput} type="search" aria-label="搜索阵容" placeholder={selectedGear ? "再搜棋子、装备或羁绊" : "搜阵容、棋子或装备"}
+          <input ref={searchInput} type="search" aria-label="搜索阵容" placeholder={selectedGear ? "再搜棋子、装备" : "搜阵容、棋子"}
             title="多个条件用 +，如 凯尔主C + 羊刀" maxLength={selectedGear ? Math.max(0, 60 - lookupTerm.length - 3) : 60}
             value={selectedGear ? extraGearTerms : query}
             onCompositionStart={() => { homeComposingRef.current = true; setHomeComposing(true); }}

@@ -81,11 +81,26 @@ test("the Classical Jhin track keeps both samples across the 427 to 428 change a
   assert.equal(track.delta, undefined);
   assert.ok(trend.patches.some(patch => patch.at === latest.effectiveAt && patch.href === "/updates?entry=pbe-6018196"));
   assert.ok(trend.patches.every(patch => patch.label !== earlier.patch + " 首批"));
-  const revisit = { ...latest, id: "same-patch", build: "new-build", effectiveAt: latest.capturedAt,
-    capturedAt: new Date(Date.parse(latest.capturedAt) + 3_600_000).toISOString() };
-  assert.deepEqual(build({ ...archive, batches: [...batches, revisit] }, season, {
-    build: revisit.build, effectiveAt: revisit.effectiveAt, updateId: "new-build",
-  }).patches, [{ at: latest.effectiveAt, label: latest.patch + " 实装", href: "/updates?entry=new-build" }]);
+});
+
+test("the patch debut links to its own build when subsequent builds reuse the patch label", () => {
+  const debut = {
+    ...hotfix, id: "initial-19.1c", patch: "19.1c", build: "6028987",
+    capturedAt: "2026-11-25T02:12:31.746Z", effectiveAt: "2026-11-24T23:36:09Z",
+    patchUrl: "https://matches3.metatft.com/PBE1_4536967443.json",
+  };
+  const later = {
+    ...debut, id: "later-19.1c", build: "6037882",
+    capturedAt: "2026-11-27T01:43:16.176Z", effectiveAt: "2026-11-26T03:29:46Z",
+    patchUrl: "https://matches3.metatft.com/PBE1_4537316014.json",
+  };
+  const active = { build: later.build, effectiveAt: later.effectiveAt, updateId: "pbe-6035832" };
+  assert.deepEqual(build({ ...archive, batches: [debut, later] }, season, active).patches, [
+    { at: debut.effectiveAt, label: "19.1c 实装", href: "/updates?entry=pbe-6028987" },
+  ]);
+  assert.deepEqual(build({ ...archive, batches: [later] }, season, active).patches, [
+    { at: later.effectiveAt, label: "19.1c 实装", href: later.patchUrl },
+  ]);
 });
 
 test("a missing sample rules out the delta until the following comparable batch", () => {

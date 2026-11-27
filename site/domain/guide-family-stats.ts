@@ -19,6 +19,12 @@ export interface GuideFamilyStat {
   url: string;
 }
 
+export type GuideFamilySmallSample = Omit<GuideFamilyStat, "mean" | "winRate" | "topFourRate"> & {
+  mean: number | null;
+  winRate: number | null;
+  topFourRate: number | null;
+};
+
 export interface GuideFamilyBatch {
   seasonId: string;
   queue: string;
@@ -29,7 +35,7 @@ export interface GuideFamilyBatch {
   build?: string;
   spansBuilds?: boolean;
   rows: GuideFamilyStat[];
-  smallSamples?: GuideFamilyStat[];
+  smallSamples?: GuideFamilySmallSample[];
 }
 
 export const placementCutoff = 4.5;
@@ -37,11 +43,11 @@ export const highWinRateCutoff = 0.15;
 export type RecommendationTier = "recommended" | "secondary" | "review";
 
 export function recommendationTier(
-  stat?: Pick<GuideFamilyStat, "games" | "mean"> & { winRate?: number },
+  stat?: Pick<GuideFamilySmallSample, "games" | "mean"> & { winRate?: number | null },
 ): RecommendationTier {
   if (!stat || !Number.isSafeInteger(stat.games) || stat.games < 100 ||
-      !Number.isFinite(stat.mean) || stat.mean < 1 || stat.mean > 8) return "review";
-  const highWinRate = stat.winRate !== undefined && Number.isFinite(stat.winRate) &&
+      stat.mean === null || !Number.isFinite(stat.mean) || stat.mean < 1 || stat.mean > 8) return "review";
+  const highWinRate = stat.winRate !== undefined && stat.winRate !== null && Number.isFinite(stat.winRate) &&
     stat.winRate >= highWinRateCutoff && stat.winRate <= 1;
   return stat.mean <= placementCutoff || highWinRate ? "recommended" : "secondary";
 }
@@ -254,7 +260,7 @@ export function selectRecommendationRoutes<T extends HomeRecommendationCandidate
   return recommendationGroups.flatMap(({ id }) => groups[id].sort(compareHomeRoutes));
 }
 
-function familyBoardIds(stat: GuideFamilyStat, primaryTeamId?: string) {
+export function familyBoardIds(stat: Pick<GuideFamilySmallSample, "teamId" | "landingTeamId" | "sharedTeamIds">, primaryTeamId?: string) {
   return [stat.landingTeamId, stat.teamId ?? primaryTeamId, ...(stat.sharedTeamIds ?? [])];
 }
 
@@ -269,7 +275,7 @@ export function guideFamilyBoardIds(batch: GuideFamilyBatch, seasonId: string, s
 
 export function guideFamilyRows(batch: GuideFamilyBatch, seasonId: string, sectionId: string, teams: Team[], { includeSmallSamples = false } = {}) {
   if (batch.seasonId !== seasonId || !batch.patch || !batch.updatedAt || batch.days < 1) return [];
-  const rows = includeSmallSamples ? [...batch.rows, ...(batch.smallSamples ?? [])] : batch.rows;
+  const rows: GuideFamilySmallSample[] = includeSmallSamples ? [...batch.rows, ...(batch.smallSamples ?? [])] : batch.rows;
   return rows.flatMap(stat => {
     const countOnly = includeSmallSamples && Number.isSafeInteger(stat.games) && stat.games > 0 && stat.games < 100;
     if (stat.sectionId !== sectionId || (!countOnly && recommendationTier(stat) === "review")) return [];
@@ -278,6 +284,6 @@ export function guideFamilyRows(batch: GuideFamilyBatch, seasonId: string, secti
     // The collector has not checked alternate board links for count-only samples.
     const ids = new Set(countOnly ? [team.id] : familyBoardIds(stat, team.id));
     const boards = [...ids].flatMap(id => teams.find(option => option.id === id) ?? []);
-    return [{ stat, team, boards }];
+    return [{ stat: stat as GuideFamilyStat, team, boards }];
   });
 }

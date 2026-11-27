@@ -78,6 +78,10 @@ export function GuideStatsTable({ rows, metric, direction, onSort }: {
               {sampleLimit && <span className="guide-stats-sample-tag" data-limit={sampleLimit}>{`<${sampleLimit} 场`}</span>}
               {row.style && <span className="guide-playstyle-tag">{row.style}</span>}
             </div>
+            <div className="guide-stats-mobile-meta">
+              <span data-tier={row.tier}>{tierLabels[row.tier]}</span>
+              <span>{gameFormat.format(row.games)} 场</span>
+            </div>
             {row.note && <p>{row.note}</p>}
           </th>
           <td className="guide-stats-units" role="cell"><div className="guide-stats-portraits">{row.units}</div></td>

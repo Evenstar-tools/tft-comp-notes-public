@@ -148,11 +148,25 @@ test("auto-refresh continuity blocks dropped bindings, baseline losses, and inco
   };
   assert.doesNotThrow(() => verifyFamilyContinuity(baseline, smallZeri, { bindings }));
 
-  // Trend batch missing one regular comp's point -> hard fail
+  // Trend batch missing one regular comp's point -> hard fail even if comp-trends.json was not staged (checkTrends: false, familyChanged: true)
   const incompleteTrend = { ...trend, series: trend.series.slice(1) };
   assert.throws(() => verifyFamilyContinuity(baseline, candidate, {
-    bindings, trend: incompleteTrend, checkTrends: true, familyChanged: true,
+    bindings, trend: incompleteTrend, checkTrends: false, familyChanged: true,
   }), /缺少活跃体系采样点.*sample-block-0243:t-viego/);
+
+  // Binding model mismatch must throw instead of silently degrading
+  assert.throws(() => verifyFamilyContinuity(baseline, candidate, {
+    bindings: { ...bindings, model: 430 },
+  }), /候选体系模型与绑定映射表不一致/);
+
+  // Cross-subpatch early refresh with <4 qualified rows (rest in smallSamples) must not false-trip
+  const earlyNextPatch = {
+    ...candidate,
+    patch: "19.1d",
+    rows: baseRows.slice(0, 2),
+    smallSamples: baseRows.slice(2).map(r => ({ ...r, games: 20 })),
+  };
+  assert.doesNotThrow(() => verifyFamilyContinuity(baseline, earlyNextPatch, { bindings }));
 });
 
 test("refresh alert probe flags missing bound clusters and homepage recommendations without needing local review.json", () => {
