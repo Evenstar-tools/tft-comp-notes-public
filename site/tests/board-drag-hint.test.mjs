@@ -26,6 +26,7 @@ test("a bench drop explains the alternate action and the limit per slot", () => 
     ["@/domain/board-instruments", { boardInstruments: () => new Map() }],
     ["@/domain/board-layout", { BOARD_WIDTH: 7, BOARD_HEIGHT: 4, HEX_WIDTH: 1, HEX_HEIGHT: 1, hexPosition: () => ({ x: 0, y: 0 }) }],
     ["./ItemIcon", { ItemIcon: () => null }],
+    ["./GameIconImage", { GameIconImage: () => null }],
     ["./Glyphs", { Stars: () => null }],
   ]);
   const exports = {};

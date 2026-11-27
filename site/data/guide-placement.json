@@ -5551,6 +5551,544 @@
       "mean": 4.23,
       "topFourRate": 0.5299539170506913,
       "winRate": 0.12903225806451613
+    },
+    {
+      "sectionId": "arcanist-mel-vladimir",
+      "population": 9,
+      "roster": [
+        "annie",
+        "dr-mundo",
+        "leona",
+        "mel",
+        "nasus",
+        "nunu-willump",
+        "rell",
+        "swain",
+        "vladimir"
+      ],
+      "games": 4510,
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&trait=DA_Arcanist19_2&unit=DA_Mel19-1&unit=DA_Vladimir19-1&unit=DA_Rell19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "observedOn": "2026-11-27",
+      "sampleScope": "4法师 · 梅尔、弗拉基米尔与芮尔同场",
+      "conditions": {
+        "teamId": "1c424859-acec-469d-afda-be5244334c5d",
+        "kind": "core",
+        "coreRoster": [
+          "mel",
+          "rell",
+          "vladimir"
+        ],
+        "traits": {
+          "arcanist": 4
+        }
+      },
+      "placementCounts": [
+        496,
+        663,
+        684,
+        760,
+        623,
+        596,
+        462,
+        226
+      ],
+      "mean": 4.13,
+      "topFourRate": 0.5771618625277162,
+      "winRate": 0.10997782705099779
+    },
+    {
+      "sectionId": "arcanist-mel-vladimir",
+      "population": 9,
+      "roster": [
+        "annie",
+        "dr-mundo",
+        "leona",
+        "mel",
+        "nasus",
+        "nunu-willump",
+        "rell",
+        "swain",
+        "vladimir"
+      ],
+      "games": 419,
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=comps&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Annie19-1&unit=DA_DrMundo19-1&unit=DA_Leona19-1&unit=DA_Mel19-1&unit=DA_Nasus19-1&unit=DA_Nunu19-1&unit=DA_Rell19-1&unit=DA_Swain19-1&unit=DA_Vladimir19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "observedOn": "2026-11-27",
+      "sampleScope": "9级无转职固定9人 · 四法师梅尔吸血鬼",
+      "conditions": {
+        "teamId": "1c424859-acec-469d-afda-be5244334c5d",
+        "kind": "fixed",
+        "population": 9,
+        "emblems": 0
+      },
+      "placementCounts": [
+        46,
+        58,
+        73,
+        99,
+        64,
+        46,
+        21,
+        12
+      ],
+      "mean": 3.86,
+      "topFourRate": 0.6587112171837709,
+      "winRate": 0.10978520286396182
+    },
+    {
+      "sectionId": "renegade-qiyana-samira",
+      "population": 6,
+      "roster": [
+        "ekko",
+        "evelynn",
+        "kennen",
+        "nasus",
+        "qiyana",
+        "samira"
+      ],
+      "games": 1340,
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&unit=DA_Qiyana19-1_3&unit=DA_Samira19-1_3&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "observedOn": "2026-11-27",
+      "sampleScope": "奇亚娜三星 · 莎弥拉三星同场",
+      "conditions": {
+        "teamId": "9c60581e-2adb-400b-be09-8e04fb2bdef2",
+        "kind": "core",
+        "coreRoster": [
+          "qiyana",
+          "samira"
+        ],
+        "units": [
+          {
+            "unitId": "qiyana",
+            "stars": 3
+          },
+          {
+            "unitId": "samira",
+            "stars": 3
+          }
+        ]
+      },
+      "placementCounts": [
+        170,
+        199,
+        236,
+        215,
+        187,
+        152,
+        128,
+        53
+      ],
+      "mean": 3.96,
+      "topFourRate": 0.6119402985074627,
+      "winRate": 0.12686567164179105
+    },
+    {
+      "sectionId": "renegade-qiyana-samira",
+      "population": 8,
+      "roster": [
+        "aurora",
+        "ekko",
+        "evelynn",
+        "graves",
+        "kennen",
+        "nasus",
+        "qiyana",
+        "samira"
+      ],
+      "games": 51,
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=comps&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Aurora19-1&unit=DA_Ekko19-1&unit=DA_Evelynn19-1&unit=DA_Graves19-1&unit=DA_Kennen19-1&unit=DA_Nasus19-1&unit=DA_Qiyana19-1&unit=DA_Samira19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "observedOn": "2026-11-27",
+      "sampleScope": "8级无转职固定8人 · 五非主流奇亚娜莎弥拉",
+      "conditions": {
+        "teamId": "69b58664-27f4-4404-b4fb-1475fe1583ff",
+        "kind": "fixed",
+        "population": 8,
+        "emblems": 0
+      },
+      "placementCounts": [
+        3,
+        5,
+        5,
+        10,
+        12,
+        10,
+        6,
+        0
+      ],
+      "mean": 4.51,
+      "topFourRate": 0.45098039215686275,
+      "winRate": 0.058823529411764705
+    },
+    {
+      "sectionId": "sample-block-0171",
+      "population": 8,
+      "roster": [
+        "ashe",
+        "galio",
+        "illaoi",
+        "renekton",
+        "swain",
+        "taric",
+        "zac",
+        "zoe"
+      ],
+      "games": 6769,
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&unit=DA_Renekton19-1_3_3&unit=DA_Ashe19-1_3_3&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "observedOn": "2026-11-27",
+      "sampleScope": "雷克顿三星三件 · 艾希三星三件同场",
+      "conditions": {
+        "teamId": "d78a44d5-edd8-4481-8efb-35333087cd33",
+        "kind": "core",
+        "coreRoster": [
+          "ashe",
+          "renekton"
+        ],
+        "units": [
+          {
+            "unitId": "renekton",
+            "stars": 3,
+            "items": 3
+          },
+          {
+            "unitId": "ashe",
+            "stars": 3,
+            "items": 3
+          }
+        ]
+      },
+      "placementCounts": [
+        595,
+        1381,
+        1571,
+        1311,
+        895,
+        597,
+        303,
+        116
+      ],
+      "mean": 3.61,
+      "topFourRate": 0.717683557394002,
+      "winRate": 0.08790072388831438
+    },
+    {
+      "sectionId": "sample-block-0171",
+      "population": 8,
+      "roster": [
+        "ashe",
+        "galio",
+        "illaoi",
+        "renekton",
+        "swain",
+        "taric",
+        "zac",
+        "zoe"
+      ],
+      "games": 930,
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=comps&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Ashe19-1&unit=DA_Galio19-1&unit=DA_Illaoi19-1&unit=DA_Renekton19-1&unit=DA_Swain19-1&unit=DA_Taric19-1&unit=DA_Zac19-1&unit=DA_Zoe19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "observedOn": "2026-11-27",
+      "sampleScope": "8级无转职固定8人 · 鳄鱼艾希双C",
+      "conditions": {
+        "teamId": "d78a44d5-edd8-4481-8efb-35333087cd33",
+        "kind": "fixed",
+        "population": 8,
+        "emblems": 0
+      },
+      "placementCounts": [
+        16,
+        96,
+        247,
+        232,
+        194,
+        95,
+        32,
+        18
+      ],
+      "mean": 4.07,
+      "topFourRate": 0.635483870967742,
+      "winRate": 0.017204301075268817
+    },
+    {
+      "sectionId": "true-damage-senna",
+      "population": 7,
+      "roster": [
+        "akali-true-damage",
+        "braum",
+        "ekko",
+        "kennen",
+        "lucian",
+        "senna",
+        "yasuo"
+      ],
+      "games": 2497,
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&unit=DA_Senna19-1_3_3&unit=DA_Ekko19-1_3&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "observedOn": "2026-11-27",
+      "sampleScope": "赛娜三星三件 · 艾克三星同场",
+      "conditions": {
+        "teamId": "cfd4c9e6-f92d-4fd6-819b-486ec2461c03",
+        "kind": "core",
+        "coreRoster": [
+          "ekko",
+          "senna"
+        ],
+        "units": [
+          {
+            "unitId": "senna",
+            "stars": 3,
+            "items": 3
+          },
+          {
+            "unitId": "ekko",
+            "stars": 3
+          }
+        ]
+      },
+      "placementCounts": [
+        460,
+        471,
+        462,
+        405,
+        294,
+        237,
+        119,
+        49
+      ],
+      "mean": 3.41,
+      "topFourRate": 0.7200640768922707,
+      "winRate": 0.184221065278334
+    },
+    {
+      "sectionId": "true-damage-senna",
+      "population": 8,
+      "roster": [
+        "akali-true-damage",
+        "braum",
+        "ekko",
+        "kennen",
+        "leona",
+        "miss-fortune",
+        "senna",
+        "yasuo"
+      ],
+      "games": 6410,
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&unit=DA_Senna19-1_3_3&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "observedOn": "2026-11-27",
+      "sampleScope": "赛娜三星三件全样本",
+      "conditions": {
+        "teamId": "3f69e13a-ddcf-4d24-9a6d-1c0d5e1df4cb",
+        "kind": "core",
+        "coreRoster": [
+          "senna"
+        ],
+        "units": [
+          {
+            "unitId": "senna",
+            "stars": 3,
+            "items": 3
+          }
+        ]
+      },
+      "placementCounts": [
+        950,
+        982,
+        1079,
+        1016,
+        888,
+        739,
+        495,
+        261
+      ],
+      "mean": 3.84,
+      "topFourRate": 0.6282371294851794,
+      "winRate": 0.1482059282371295
+    },
+    {
+      "sectionId": "jazz-bard",
+      "population": 7,
+      "roster": [
+        "bard",
+        "galio",
+        "jax",
+        "k-sante",
+        "lucian",
+        "mel",
+        "swain"
+      ],
+      "games": 716,
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&trait=DA_Jazz19_2&unit=DA_Bard19-1_3_3&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "observedOn": "2026-11-27",
+      "sampleScope": "3爵士乐 · 巴德三星三件",
+      "conditions": {
+        "teamId": "adc7fda0-b310-467b-98dd-3bd0134610cf",
+        "kind": "core",
+        "coreRoster": [
+          "bard"
+        ],
+        "traits": {
+          "jazz": 3
+        },
+        "units": [
+          {
+            "unitId": "bard",
+            "stars": 3,
+            "items": 3
+          }
+        ]
+      },
+      "placementCounts": [
+        103,
+        117,
+        103,
+        91,
+        100,
+        91,
+        81,
+        30
+      ],
+      "mean": 4.0,
+      "topFourRate": 0.5782122905027933,
+      "winRate": 0.14385474860335196
+    },
+    {
+      "sectionId": "jazz-bard",
+      "population": 8,
+      "roster": [
+        "bard",
+        "galio",
+        "jax",
+        "k-sante",
+        "locke",
+        "lucian",
+        "mel",
+        "swain"
+      ],
+      "games": 592,
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&unit=DA_Bard19-1_3_3&unit=DA_Galio19-1_3&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "observedOn": "2026-11-27",
+      "sampleScope": "巴德三星三件 · 加里奥三星同场",
+      "conditions": {
+        "teamId": "6308c680-360d-4afe-8326-bdd5b4622582",
+        "kind": "core",
+        "coreRoster": [
+          "bard",
+          "galio"
+        ],
+        "units": [
+          {
+            "unitId": "bard",
+            "stars": 3,
+            "items": 3
+          },
+          {
+            "unitId": "galio",
+            "stars": 3
+          }
+        ]
+      },
+      "placementCounts": [
+        127,
+        132,
+        95,
+        86,
+        74,
+        36,
+        34,
+        8
+      ],
+      "mean": 3.22,
+      "topFourRate": 0.7432432432432432,
+      "winRate": 0.21452702702702703
+    },
+    {
+      "sectionId": "ionic-prodigy-lux",
+      "population": 6,
+      "roster": [
+        "annie",
+        "braum",
+        "ekko",
+        "lux",
+        "malzahar",
+        "shyvana"
+      ],
+      "games": 3139,
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&unit=DA_Lux19-1_3_3&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "observedOn": "2026-11-27",
+      "sampleScope": "拉克丝三星三件 · 全样本",
+      "conditions": {
+        "teamId": "a281cc9a-3387-42fb-b9e6-0146139e1069",
+        "kind": "core",
+        "coreRoster": [
+          "lux"
+        ],
+        "units": [
+          {
+            "unitId": "lux",
+            "stars": 3,
+            "items": 3
+          }
+        ]
+      },
+      "placementCounts": [
+        305,
+        488,
+        632,
+        550,
+        482,
+        362,
+        232,
+        88
+      ],
+      "mean": 3.91,
+      "topFourRate": 0.6291812679197196,
+      "winRate": 0.09716470213443772
+    },
+    {
+      "sectionId": "ionic-prodigy-lux",
+      "population": 8,
+      "roster": [
+        "annie",
+        "braum",
+        "ekko",
+        "karthus",
+        "lux",
+        "olaf",
+        "shyvana",
+        "zac"
+      ],
+      "games": 1241,
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&unit=DA_Lux19-1_3_3&unit=DA_Annie19-1_3&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "observedOn": "2026-11-27",
+      "sampleScope": "拉克丝三星三件 · 安妮三星同场",
+      "conditions": {
+        "teamId": "7ca75194-155a-4f65-9d18-c27d7c8738dd",
+        "kind": "core",
+        "coreRoster": [
+          "annie",
+          "lux"
+        ],
+        "units": [
+          {
+            "unitId": "lux",
+            "stars": 3,
+            "items": 3
+          },
+          {
+            "unitId": "annie",
+            "stars": 3
+          }
+        ]
+      },
+      "placementCounts": [
+        114,
+        240,
+        282,
+        220,
+        171,
+        128,
+        63,
+        23
+      ],
+      "mean": 3.68,
+      "topFourRate": 0.6897663174858985,
+      "winRate": 0.09186140209508462
     }
   ],
   "edition": "s19-pbe-19.1",

@@ -1,7 +1,9 @@
+import { patchReferences } from "../data/patch-notes.ts";
 import { familyPickRate } from "./guide-family-stats.ts";
 import { canonicalGuidePath } from "./guide-slugs.ts";
 import type { Season } from "./types";
 import { displayGuideName, displayTraitNames } from "./trait-names.mjs";
+import { versionUpdateLink } from "./version-updates.ts";
 
 export type TrendPoint = {
   at: string; games: number; mean: number; topFourRate: number; winRate: number;
@@ -11,7 +13,7 @@ export type TrendPoint = {
 };
 export type TrendMetric = keyof Pick<TrendPoint, "strength" | "mean" | "winShare" | "top4Share" | "pickRate">;
 export type TrendTrack = {
-  id: string; name: string; href?: string; image?: string; cost?: number;
+  id: string; name: string; href?: string; image?: string; cost?: number; costs: number[];
   recommended: boolean; recommendedKey?: string; delta?: number; points: TrendPoint[];
 };
 export type TrendPatch = { at: string; label: string; href?: string };
@@ -49,13 +51,15 @@ const trendDay = (date: string) => Math.floor(Date.parse(date) / dayMs);
 
 export function selectTrendWindow(tracks: TrendTrack[], filter: string, days: string[], metric: TrendMetric) {
   const latest = days.at(-1);
+  const costFilter = filter.startsWith("cost:") ? Number(filter.slice(5)) : undefined;
   const higherIsBetter = metric !== "mean";
   const threshold = metric === "strength" ? 0.025 : 0.005;
   const latestValue = (track: TrendTrack) => track.points.at(-1)?.[metric] ?? null;
   const change = (track: TrendTrack) => {
     const last = track.points.at(-1)!;
     const recent = track.points.slice(-4).filter(point =>
-      point[metric] !== null && (metric !== "mean" || point.board?.name === last.board?.name));
+      point[metric] !== null && (metric !== "mean" ||
+        (point.board?.name === last.board?.name && point.board?.href === last.board?.href)));
     if (recent.length < 2) return 0;
     const raw = (last[metric] as number) - (recent[0][metric] as number);
     return higherIsBetter ? raw : -raw;
@@ -66,15 +70,17 @@ export function selectTrendWindow(tracks: TrendTrack[], filter: string, days: st
     if (filter === "up") return change(track) > threshold;
     if (filter === "down") return change(track) < -threshold;
     if (filter === "recommended") return track.recommended;
-    if (filter.startsWith("cost:")) return track.cost !== undefined && Math.min(track.cost, 5) === Number(filter.slice(5));
+    if (costFilter !== undefined) return track.costs.includes(costFilter);
     return true;
   });
   if (filter === "up") candidates.sort((a, b) => change(b) - change(a));
   else if (filter === "down") candidates.sort((a, b) => change(a) - change(b));
-  else if (filter === "top" && higherIsBetter) {
+  else if ((filter === "top" || costFilter !== undefined) && higherIsBetter) {
     candidates.sort((a, b) => (latestValue(b) ?? -Infinity) - (latestValue(a) ?? -Infinity));
   }
   const limit = filter === "recommended" ? 6 : 10;
+  if (costFilter !== undefined) return { tracks: candidates, days };
+  if (filter === "top" && metric === "strength") return { tracks: candidates.slice(0, limit), days };
   const dates = new Set(days);
   const multiDay: TrendTrack[] = [], singleDay: TrendTrack[] = [];
   for (const track of candidates) {
@@ -100,7 +106,7 @@ function qualified(point: RankSample) {
 }
 
 function impactTotals(batchId: string, series: ReadonlyMap<string, HistoryTrack["points"][number]>[]) {
-  const totals = { wins: 0, top4s: 0, maxWins: 0, maxTop4s: 0 };
+  const totals = { wins: 0, top4s: 0 };
   const seen = new Set<string>();
   for (const samples of series) {
     const sample = samples.get(batchId);
@@ -115,24 +121,23 @@ function impactTotals(batchId: string, series: ReadonlyMap<string, HistoryTrack[
     const top4s = sample.games * sample.topFourRate;
     totals.wins += wins;
     totals.top4s += top4s;
-    totals.maxWins = Math.max(totals.maxWins, wins);
-    totals.maxTop4s = Math.max(totals.maxTop4s, top4s);
   }
   return totals;
 }
 
-const clampUnit = (value: number) => Math.max(0, Math.min(1, value));
+const clamp01 = (value: number) => Math.max(0, Math.min(1, value));
 
 function impactMetrics(sample: RankSample, totals: ReturnType<typeof impactTotals>) {
   const wins = sample.games * sample.winRate;
   const top4s = sample.games * sample.topFourRate;
   const winShare = totals.wins > 0 ? wins / totals.wins : null;
   const top4Share = totals.top4s > 0 ? top4s / totals.top4s : null;
-  // The daily denominator cancels when dividing a share by the largest share.
-  const wsNorm = totals.maxWins > 0 ? (wins / totals.maxWins) ** 0.65 : 0;
-  const t4Norm = totals.maxTop4s > 0 ? (top4s / totals.maxTop4s) ** 0.65 : 0;
-  const avpNorm = clampUnit((5 - sample.mean) / (5 - 3));
-  const strength = clampUnit(0.35 * wsNorm + 0.30 * t4Norm + 0.35 * avpNorm);
+  const avpNorm = clamp01((4.90 - sample.mean) / 1.40);
+  const winNorm = clamp01((sample.winRate - 0.06) / 0.18);
+  const top4Norm = clamp01((sample.topFourRate - 0.42) / 0.26);
+  const quality = 0.55 * avpNorm + 0.25 * winNorm + 0.20 * top4Norm;
+  const volNorm = clamp01(Math.log10(Math.max(100, sample.games) / 100) / 3);
+  const strength = clamp01(0.82 * quality + 0.18 * volNorm * avpNorm);
   return { strength, winShare, top4Share };
 }
 
@@ -185,9 +190,11 @@ export function buildCompTrendModel(history: CompTrendHistory, season: Season, b
     const current = previousIndex === batches.length - 1;
     const delta = current && before && now.segment === before.segment ? now.mean - before.mean : undefined;
     const currentPoint = current ? pointIndex.get(latest.id) : undefined;
-    const carry = series.carryIds.map(id => unitIndex.get(id)).find(unit => unit !== undefined);
+    const carries = series.carryIds.flatMap(id => unitIndex.get(id) ?? []);
+    const [carry] = carries;
+    const costs = [...new Set(carries.map(unit => Math.min(5, unit.cost)))].sort((a, b) => a - b);
     return [{
-      id: series.id, name: displayGuideName(series.name), href, image: carry?.image, cost: carry?.cost, points, delta,
+      id: series.id, name: displayGuideName(series.name), href, image: carry?.image, cost: carry?.cost, costs, points, delta,
       recommended: current && active?.build === latest.build && now.mean <= 4.5,
       recommendedKey: currentPoint?.clusterId === undefined ? undefined : String(currentPoint.clusterId),
     }];
@@ -196,40 +203,44 @@ export function buildCompTrendModel(history: CompTrendHistory, season: Season, b
     // Members are explicitly curated variants. Each day retains one real board and its own sample.
     const members = family.members.flatMap(id => tracks.find(track => track.id === id) ?? []);
     if (members.length < 2) continue;
-    const daily = new Map<string, TrendPoint>();
+    const daily = new Map<string, { member: TrendTrack; point: TrendPoint }>();
     for (const member of members) {
       for (const point of member.points) {
-        if (!daily.has(point.at)) daily.set(point.at, { ...point, board: { name: member.name, href: member.href } });
+        if (!daily.has(point.at)) daily.set(point.at, { member, point });
       }
     }
-    const points = [...daily.values()].sort((a, b) => a.at.localeCompare(b.at));
-    const last = points.at(-1)!;
-    const current = members.find(member => member.points.some(point => point.at === last.at))!;
+    const readings = [...daily.values()].sort((a, b) => Date.parse(a.point.at) - Date.parse(b.point.at));
+    const current = readings.at(-1)!.member;
+    const previous = readings.at(-2);
+    const points = readings.map(({ member, point }) => ({ ...point, board: { name: member.name, href: member.href } }));
     for (const member of members) tracks.splice(tracks.indexOf(member), 1);
-    const previous = points.at(-2);
     tracks.push({ ...current, id: family.members[0], name: family.name, points,
-      delta: previous?.board?.href === last.board?.href && previous?.at === current.points.at(-2)?.at ? current.delta : undefined });
+      delta: previous?.member === current && previous.point === current.points.at(-2) ? current.delta : undefined });
   }
   tracks.sort((a, b) => {
     const ap = a.points[a.points.length - 1], bp = b.points[b.points.length - 1];
     return Date.parse(bp.at) - Date.parse(ap.at) || ap.mean - bp.mean || bp.games - ap.games || a.id.localeCompare(b.id);
   });
   const verifiedPatches = new Map<string, TrendPatch>();
-  const verifiedLabels = new Set<string>();
   const observedLabels = new Map<string, HistoryBatch>();
+  const referencesByBuild = new Map(patchReferences.filter(reference => era(reference.edition) === currentEra)
+    .map(reference => [reference.build.split(".").at(-1), reference.id]));
+  const activeReference = active && patchReferences.find(reference => reference.id === active.updateId);
   for (const batch of archive) {
     if (!observedLabels.has(batch.patch)) observedLabels.set(batch.patch, batch);
     const effectiveAt = batch.effectiveAt ?? (active?.build === batch.build ? active?.effectiveAt : undefined);
-    if (!effectiveAt) continue;
-    verifiedLabels.add(batch.patch);
-    const localPatch = active && active.build === batch.build ? "/updates?entry=" + encodeURIComponent(active.updateId) : undefined;
-    verifiedPatches.set(batch.build ?? effectiveAt, {
+    if (!effectiveAt || !Number.isFinite(Date.parse(effectiveAt))) continue;
+    const previous = verifiedPatches.get(batch.patch);
+    if (previous && Date.parse(previous.at) <= Date.parse(effectiveAt)) continue;
+    const updateId = referencesByBuild.get(batch.build ?? undefined) ??
+      (active?.build === batch.build && !activeReference ? active.updateId : undefined);
+    verifiedPatches.set(batch.patch, {
       at: effectiveAt, label: batch.patch + " 实装",
-      href: localPatch ?? batch.patchUrl,
+      href: updateId ? versionUpdateLink(updateId) : batch.patchUrl,
     });
   }
   const patches = [...verifiedPatches.values(), ...[...observedLabels.values()].flatMap(batch =>
-    batch === archive[0] || verifiedLabels.has(batch.patch) ? [] : [{
+    batch === archive[0] || verifiedPatches.has(batch.patch) ? [] : [{
       at: batch.capturedAt, label: batch.patch + " 首批", href: batch.patchUrl,
     }],
   )].sort((a, b) => Date.parse(a.at) - Date.parse(b.at));
@@ -262,6 +273,6 @@ export function buildCompTrendModel(history: CompTrendHistory, season: Season, b
   const scope = [history.source, currentEra.replace("-", " ").toUpperCase(), "近 " + latest.windowDays + " 天滚动样本"].join(" · ");
   return {
     scope, days: batches.map(batch => batch.capturedAt), tracks, patches, discoveries,
-    note: "每天取归档的最后一批滚动样本。各阵容从首个实测日开始，缺少样本的日期留空。古典乐烬按当日构筑取样。涨跌比较近四个观测日内同构筑的均名。",
+    note: "每天取归档的最后一批滚动样本，缺样日无读数。换盘保留当天的构筑和样本。Top 10 按最新观测日的综合表现排序。",
   };
 }

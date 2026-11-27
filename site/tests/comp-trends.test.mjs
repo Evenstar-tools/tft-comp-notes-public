@@ -81,9 +81,26 @@ test("the Classical Jhin track keeps both samples across the 427 to 428 change a
   assert.equal(track.delta, undefined);
   assert.ok(trend.patches.some(patch => patch.at === latest.effectiveAt && patch.href === "/updates?entry=pbe-6018196"));
   assert.ok(trend.patches.every(patch => patch.label !== earlier.patch + " 首批"));
-  const revisit = { ...latest, id: "same-patch", build: null, effectiveAt: undefined,
-    capturedAt: new Date(Date.parse(latest.capturedAt) + 3_600_000).toISOString() };
-  assert.deepEqual(build({ ...archive, batches: [...batches, revisit] }).patches.map(patch => patch.label), [latest.patch + " 实装"]);
+});
+
+test("the patch debut links to its own build when subsequent builds reuse the patch label", () => {
+  const debut = {
+    ...hotfix, id: "initial-19.1c", patch: "19.1c", build: "6028987",
+    capturedAt: "2026-11-25T02:12:31.746Z", effectiveAt: "2026-11-24T23:36:09Z",
+    patchUrl: "https://matches3.metatft.com/PBE1_4536967443.json",
+  };
+  const later = {
+    ...debut, id: "later-19.1c", build: "6037882",
+    capturedAt: "2026-11-27T01:43:16.176Z", effectiveAt: "2026-11-26T03:29:46Z",
+    patchUrl: "https://matches3.metatft.com/PBE1_4537316014.json",
+  };
+  const active = { build: later.build, effectiveAt: later.effectiveAt, updateId: "pbe-6035832" };
+  assert.deepEqual(build({ ...archive, batches: [debut, later] }, season, active).patches, [
+    { at: debut.effectiveAt, label: "19.1c 实装", href: "/updates?entry=pbe-6028987" },
+  ]);
+  assert.deepEqual(build({ ...archive, batches: [later] }, season, active).patches, [
+    { at: later.effectiveAt, label: "19.1c 实装", href: later.patchUrl },
+  ]);
 });
 
 test("a missing sample rules out the delta until the following comparable batch", () => {
@@ -217,40 +234,47 @@ test("the trend chart spans the same observed dates for the ten latest-ranked co
   assert.deepEqual(top.tracks, trend.tracks.slice(0, 10));
   assert.deepEqual(top.days, trend.days);
   const jhin = top.tracks.find(t => t.name === "古典乐烬");
+  assert.deepEqual(jhin.points.map(p => p.at), dates.map(date => date + "T15:00:00Z"));
   assert.equal(jhin.points[0].board.name, variants[0]);
   assert.equal(jhin.points.at(-1).board.name, variants[1]);
+  assert.equal(jhin.points[0].mean, series[0].points[0].mean);
+  assert.equal(jhin.points.at(-1).mean, series[1].points.at(-1).mean);
   for (const track of top.tracks) {
     assert.ok(track.points.some(p => p.at === top.days[0]));
     assert.equal(track.points.at(-1).at, top.days.at(-1));
   }
 });
 
-test("the high-cost filter includes seven-cost carries and keeps the full archive for every metric", () => {
-  const days = ["a","b","c","d"];
-  const track = (cost, from) => ({ cost, points: days.slice(from).map(at => ({ at, mean: 4, pickRate: at === "b" ? null : 0.15 })) });
-  const five = track(5, 0), seven = track(7, 1);
-  const tracks = [five, seven, track(4, 0)];
-  assert.deepEqual(selectTrendWindow(tracks, "cost:5", days, "mean"), { tracks: [five, seven], days });
-  assert.deepEqual(selectTrendWindow(tracks, "cost:5", days, "pickRate"), { tracks: [five, seven], days });
+test("all equipped carries match their fee tiers, including seven-cost carries and ties within a tier", () => {
+  const series = [{ ...classical, carryIds: ["jhin", "missing", "baron-nashor", "miss-fortune", "seraphine", "jhin"] }];
+  const units = [...season.units, { id: "baron-nashor", cost: 7 }, { id: "miss-fortune", cost: 5 }, { id: "seraphine", cost: 2 }];
+  const { tracks, days } = build({ ...archive, series }, { ...season, units });
+  assert.equal(tracks[0].cost, 4);
+  assert.equal(tracks[0].image, season.units[0].image);
+  assert.deepEqual(tracks[0].costs, [2, 4, 5]);
+  for (const cost of [2, 4, 5]) {
+    assert.deepEqual(selectTrendWindow(tracks, `cost:${cost}`, days, "mean"), { tracks, days });
+  }
+  assert.deepEqual(selectTrendWindow(tracks, "cost:1", days, "strength"), { tracks: [], days });
+  const many = Array.from({ length: 11 }, (_, i) => ({ ...tracks[0], id: `track-${i}` }));
+  assert.deepEqual(selectTrendWindow(many, "cost:5", days, "strength"), { tracks: many, days });
 });
 
-test("late entries retain the six-day axis and single-day entries only fill vacant Top 10 slots", () => {
+test("late entries retain the six-day axis and qualify by latest strength, even with one day", () => {
   const days = Array.from({ length: 6 }, (_, i) => `2026-11-${21 + i}T12:00:00Z`);
-  const track = (id, start, end = days.length) => ({
-    id, points: days.slice(start, end).map(at => ({ at, strength: 0.5 })),
+  const track = (id, start, strength, end = days.length) => ({
+    id, points: days.slice(start, end).map(at => ({ at, strength })),
   });
-  const singleton = track("singleton", 5);
-  const recent = track("recent", 4);
-  const historic = Array.from({ length: 9 }, (_, index) => track("historic-" + index, 0));
-  const inactive = track("inactive", 0, 5);
+  const singleton = track("singleton", 5, 0.8);
+  const recent = track("recent", 4, 0.6);
+  const historic = Array.from({ length: 9 }, (_, index) => track("historic-" + index, 0, 0.5));
+  const inactive = track("inactive", 0, 0.9, 5);
   assert.deepEqual(selectTrendWindow([singleton, recent, inactive, ...historic], "top", days, "strength"),
-    { tracks: [recent, ...historic], days });
-  assert.deepEqual(selectTrendWindow([singleton, recent, ...historic.slice(0, 8)], "top", days, "strength"),
-    { tracks: [recent, ...historic.slice(0, 8), singleton], days });
+    { tracks: [singleton, recent, ...historic.slice(0, 8)], days });
   assert.deepEqual(selectTrendWindow([singleton], "top", days, "strength"), { tracks: [singleton], days });
 });
 
-test("impact uses all qualified daily samples, weights observed finishes and counts identical cluster bindings once", () => {
+test("strength uses fixed thresholds while daily shares count identical cluster bindings once", () => {
   const [batch] = archive.batches;
   const point = (clusterId, games, mean, winRate, topFourRate) => ({
     batchId: batch.id, clusterId, games, mean, winRate, topFourRate,
@@ -269,24 +293,28 @@ test("impact uses all qualified daily samples, weights observed finishes and cou
   assert.equal(latest(classical.id).winShare, 50 / 80);
   assert.equal(latest(classical.id).top4Share, 100 / 240);
   assert.equal(latest("same-cluster").strength, latest(classical.id).strength);
-  assert.ok(Math.abs(latest(classical.id).strength - .825) < 1e-12);
+  assert.ok(Math.abs(latest(classical.id).strength - .557001266865721) < 1e-12);
   assert.equal(latest("other").winShare, 10 / 80);
   assert.equal(latest("other").top4Share, 40 / 240);
-  assert.ok(Math.abs(latest("other").strength - (.35 * .2 ** .65 + .30 * .4 ** .65 + .35 * .1)) < 1e-12);
+  assert.ok(Math.abs(latest("other").strength - .077769841269841) < 1e-12);
   assert.equal(latest("small-sample"), undefined);
   assert.equal(latest("unlinked"), undefined);
+
+  const [isolated] = build({ ...archive, batches: [batch], series: [{ ...classical, points: [lead] }] }).tracks;
+  assert.equal(isolated.points[0].strength, latest(classical.id).strength);
+  assert.equal(isolated.points[0].winShare, 1);
 });
 
 test("zero totals leave shares unavailable and strength stays bounded", () => {
   const [batch] = archive.batches;
   const sample = classical.points[0];
-  const series = [{ ...classical, points: [{ ...sample, mean: 2, winRate: 0, topFourRate: 0 }] }];
+  const series = [{ ...classical, points: [{ ...sample, games: 100, mean: 2, winRate: 0, topFourRate: 0 }] }];
   const [point] = build({ ...archive, batches: [batch], series }).tracks[0].points;
   assert.equal(point.winShare, null);
   assert.equal(point.top4Share, null);
-  assert.equal(point.strength, .35);
+  assert.ok(Math.abs(point.strength - .451) < 1e-12);
   const [strong] = build({ ...archive, batches: [batch], series: [
-    { ...classical, points: [{ ...sample, mean: 2 }] },
+    { ...classical, points: [{ ...sample, games: 100_000, mean: 2, winRate: .30, topFourRate: .75 }] },
   ] }).tracks[0].points;
   assert.ok(strong.strength <= 1 && Math.abs(strong.strength - 1) < 1e-12);
 });

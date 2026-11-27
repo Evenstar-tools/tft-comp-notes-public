@@ -101,7 +101,7 @@ export function appendCompTrendBatch(history, input, { review, patch, unitNames,
   else output.batches[previous] = { ...output.batches[previous], ...Object.fromEntries(
     Object.entries(batch).filter(([, value]) => value !== null && value !== undefined)) };
   output.batches.sort((a, b) => a.capturedAt.localeCompare(b.capturedAt) || a.id.localeCompare(b.id));
-  const timeByBatch = new Map(output.batches.map(entry => [entry.id, entry.capturedAt]));
+  const batchById = new Map(output.batches.map(entry => [entry.id, entry]));
   const seriesById = new Map(output.series.map(entry => [entry.id, entry]));
   const touchedSeries = new Set();
   const heroClusters = new Set(input.rows.filter(row => row.heroAugment).map(row => String(row.clusterId)));
@@ -124,14 +124,21 @@ export function appendCompTrendBatch(history, input, { review, patch, unitNames,
     touchedSeries.add(seriesId);
     const entry = seriesById.get(seriesId);
     const top = entry?.points.at(-1);
-    const newest = !top || timeByBatch.get(top.batchId) <= capturedAt;
+    const lastBatch = top && batchById.get(top.batchId);
+    const newest = !top || lastBatch?.capturedAt <= capturedAt;
     const series = entry ?? { id: seriesId, sectionId: row.sectionId, points: [] };
-    if (newest) Object.assign(series, { teamId: row.teamId, name: row.name, carryIds: [...row.carryIds] });
+    if (newest) {
+      const sameCluster = lastBatch?.model === input.model && top?.clusterId === String(row.clusterId);
+      const sameBoard = row.teamId && entry?.teamId === row.teamId;
+      const retainedCarries = sameCluster && sameBoard ? entry.carryIds : [];
+      const carryIds = [...new Set([...row.carryIds, ...retainedCarries])];
+      Object.assign(series, { teamId: row.teamId, name: row.name, carryIds });
+    }
     const record = { batchId: id, clusterId: String(row.clusterId), ...point };
     const existing = series.points.findIndex(value => value.batchId === id);
     if (existing < 0) series.points.push(record);
     else series.points[existing] = record;
-    series.points.sort((a, b) => timeByBatch.get(a.batchId).localeCompare(timeByBatch.get(b.batchId)));
+    series.points.sort((a, b) => batchById.get(a.batchId).capturedAt.localeCompare(batchById.get(b.batchId).capturedAt));
     seriesById.set(seriesId, series);
   }
   output.series = [...seriesById.values()].sort((a, b) => a.id.localeCompare(b.id));
@@ -139,7 +146,7 @@ export function appendCompTrendBatch(history, input, { review, patch, unitNames,
     const discovered = reviewDiscoveries(review, input, id, unitNames, archiveSnapshot);
     if (discovered.length) {
       output.discoveries = [...output.discoveries.filter(entry => entry.batchId !== id), ...discovered];
-      output.discoveries.sort((a, b) => timeByBatch.get(b.batchId).localeCompare(timeByBatch.get(a.batchId)) ||
+      output.discoveries.sort((a, b) => batchById.get(b.batchId).capturedAt.localeCompare(batchById.get(a.batchId).capturedAt) ||
         a.mean - b.mean || b.games - a.games || a.id.localeCompare(b.id));
     }
   }
