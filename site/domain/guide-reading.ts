@@ -12,6 +12,11 @@ export function allBlocks(blocks: ContentBlock[]): ContentBlock[] {
   return blocks.flatMap(block => [block, ...allBlocks(block.children ?? [])]);
 }
 
+export function ownerGuideDefaultBoard(section: Section, teamId: string | undefined) {
+  if (!teamId || !section.reroll?.added?.includes(teamId)) return teamId;
+  return section.primaryTeamId ?? section.team?.id ?? teamId;
+}
+
 export function guideSectionWithCurrentNames(section: Section): Section {
   const renameTeam = (team: Team): Team => ({
     ...team,

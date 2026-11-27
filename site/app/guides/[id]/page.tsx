@@ -3,6 +3,7 @@ import { publicGuidePublication } from "@/server/publication";
 import { DocumentView } from "@/components/DocumentView";
 import { familyVariants, groupGuides } from "@/domain/guide-families";
 import { teamPlacement } from "@/components/GuidePlacement";
+import { recommendationTier } from "@/domain/guide-family-stats";
 import { guideSystems, rankGuideSystems } from "@/domain/guide-variant-strip";
 import { canonicalGuidePath } from "@/domain/guide-slugs";
 import { isVersionUpdate, publishedVersionUpdates, versionUpdateLink } from "@/domain/version-updates";
@@ -10,7 +11,7 @@ import { season } from "@/data";
 import { validHomeReturn } from "@/lib/home-position";
 import { validHeroReturn } from "@/domain/library-navigation";
 import { validAugmentReturn } from "@/domain/augment-library";
-import { validVersionReturn } from "@/domain/guide-reading";
+import { ownerGuideDefaultBoard, validVersionReturn } from "@/domain/guide-reading";
 import { currentPatchRecommendations } from "@/server/patch-recommendations";
 import { patchRecommendationLabels } from "@/domain/patch-recommendations";
 import currentPatch from "@/data/current-patch.json";
@@ -54,8 +55,9 @@ export default async function Guide({
   const preferred = family?.lead.section.id === section.id ? family.lead.team : undefined;
   const variants = Object.fromEntries((family?.boards ?? []).filter(b => b.section.id === section.id)
     .map(b => [b.team.id, familyVariants(family!, b.team.id)]));
+  const recommendations = currentPatchRecommendations(live);
   const systemsFor = (candidate: typeof section) => guideSystems(candidate, familyStats,
-    (candidate.gameData ?? live.season).id, currentPatch, placementBatch.minGames);
+    (candidate.gameData ?? live.season).id, currentPatch, placementBatch.minGames, recommendations?.reviewedRollingPatch);
   const localSystems = systemsFor(section);
   const siblings = Object.values(variants).flat().filter(variant => variant.sectionId !== section.id);
   const siblingSystems = (family?.sections ?? []).filter(candidate => candidate.id !== section.id).flatMap(candidate =>
@@ -64,15 +66,18 @@ export default async function Guide({
       return sibling ? [{ ...system, change: sibling.change }] : [];
     }));
   const systems = rankGuideSystems([...localSystems, ...siblingSystems]);
-  const best = systems[0]?.stat ? systems[0] : undefined;
-  if (team === undefined && best && best.sectionId !== section.id && !initialStage && !initialFlex && !linkParams.poster) {
-    redirect(canonicalGuidePath(best.sectionId, best.teamId, linkParams));
+  const best = systems.find(system => recommendationTier(system.stat) === "recommended");
+  const bestLocal = localSystems.find(system => recommendationTier(system.stat) === "recommended");
+  const siblingEntry = team === undefined && !initialStage && !initialFlex && !linkParams.poster && !linkParams.stats &&
+    best && best.sectionId !== section.id ? live.sections.find(candidate => candidate.id === best.sectionId) : undefined;
+  const defaultSection = siblingEntry ?? section;
+  const entryTeam = siblingEntry ? best?.teamId : bestLocal?.teamId ?? section.reroll?.entryTeamId ?? preferred?.id;
+  const ownerBoard = ownerGuideDefaultBoard(defaultSection, entryTeam);
+  const defaultTeam = !teamId && ownerBoard !== entryTeam && databaseConfigured() && await hasOwnerSession() ? ownerBoard : entryTeam;
+  if (siblingEntry) {
+    redirect(canonicalGuidePath(siblingEntry.id, defaultTeam, linkParams));
   }
-  const bestLocal = localSystems[0]?.stat ? localSystems[0].teamId : undefined;
-  const entryTeam = section.reroll?.entryTeamId ?? preferred?.id;
-  const defaultTeam = bestLocal ?? (entryTeam && section.reroll?.added.includes(entryTeam) && databaseConfigured() && await hasOwnerSession()
-    ? section.primaryTeamId ?? section.team?.id ?? entryTeam : entryTeam);
-  const patchAdvice = currentPatchRecommendations(live)?.entries.filter(entry => entry.sectionId === section.id).map(entry => ({
+  const patchAdvice = recommendations?.entries.filter(entry => entry.sectionId === section.id).map(entry => ({
     teamId: entry.teamId, note: entry.note, label: "本版 · " + patchRecommendationLabels[entry.status],
     href: versionUpdateLink(currentPatch.updateId, { anchor: entry.sources?.length ? "patch-recommendations" : undefined }),
   }));

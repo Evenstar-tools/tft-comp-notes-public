@@ -3,10 +3,9 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { registerHooks } from "node:module";
 import { sectionTeams } from "../domain/document-flow.ts";
-import { guidePromotionRows, guideSystemPhases, guideSystemSample, guideSystems, rankGuideSystems, systemMeanTone } from "../domain/guide-variant-strip.ts";
-import { findPlacement, placementEvidenceKind } from "../domain/guide-placement.ts";
+import { guidePromotionRows, guideSystemDisplayBoards, guideSystemPhases, guideSystemSample, guideSystems, rankGuideSystems, systemMeanTone } from "../domain/guide-variant-strip.ts";
 import { GUIDE_SECTION_IDS } from "../domain/guide-identities.ts";
-import { traitCounts, usedPopulation } from "../domain/team.ts";
+import { usedPopulation } from "../domain/team.ts";
 
 // Apply the same site-authored boards as the guide route, including those absent from the public snapshot.
 const resolver = registerHooks({
@@ -27,25 +26,56 @@ resolver.deregister();
 
 const read = name => JSON.parse(readFileSync(new URL("../data/" + name + ".json", import.meta.url), "utf8"));
 const season = read("season");
-const family = read("guide-family-stats");
-const patch = read("current-patch");
-const placement = read("guide-placement");
-const fixed = { ...placement, records: placement.records.filter(row => placementEvidenceKind(row) === "fixed") };
 const publication = includeRerollBoards(migrateS19GuideSnapshot(read("public-preview")), season);
 const id = suffix => "00000000-0000-4000-8000-00000000" + suffix;
+const patch = { seasonId: "s19-pbe", label: "PBE 19.1c", build: "6037882", effectiveAt: "2026-11-26T03:29:46Z" };
+const placement = { minGames: 100, greenThrough: 3.4, redFrom: 4.25 };
+const metatft = "https://www.metatft.com/explorer?tab=comps";
+const {
+  oceanGraves, classicalJhin, jazzJinx, edmZeri, hyperpopSeraphine, pentakillKayle,
+} = GUIDE_SECTION_IDS;
+const row = (sectionId, suffix, name, mean, overrides = {}) => ({
+  sectionId, teamId: id(suffix), clusterId: suffix, name, mean, games: 500, topFourRate: 0.55,
+  winRate: 0.12, sourceName: "MetaTFT", carryIds: [], url: metatft, ...overrides,
+});
+// Keep all numerical inputs fixed while exercising the site's authored board IDs and stages.
+const family = {
+  seasonId: publication.season.id, queue: "PBE", patch: "19.1c", build: patch.build, days: 3,
+  updatedAt: "2026-11-27T14:48:18Z",
+  rows: [
+    row(oceanGraves, "0076", "七海洋扎克男枪", 4.15, { landingTeamId: id("0075") }),
+    row(oceanGraves, "1261", "四主宰 AD 男枪", 4.34),
+    row(oceanGraves, "0102", "五海洋三离子男枪", 4.38),
+    row(oceanGraves, "0093", "五非主流派克男枪", 4.42),
+    row(classicalJhin, "0059", "四古典烬", 3.78, { sharedTeamIds: [id("0034")] }),
+    row(jazzJinx, "1251", "爵士金克丝", 3.62, { landingTeamId: id("1252") }),
+    row("sample-block-0407", "1177", "编舞佛耶戈德莱文", 4.49),
+    row("sample-block-0407", "0029", "四酷炫德莱文", 4.63),
+    row(edmZeri, "0105", "双电子泽丽", 4.85),
+    row(hyperpopSeraphine, "0089", "四主唱高能炸弹", 4.18),
+    row("sample-block-0171", "0002", "救生员鳄鱼", 3.75, { heroAugment: true }),
+    row("sample-block-0064", "0012", "电能凯南", 4.38, { heroAugment: true, landingTeamId: id("0045") }),
+    row(pentakillKayle, "0019", "五杀天使", 4.42, { landingTeamId: id("0064") }),
+  ],
+};
+const settlementMeans = {
+  [id("1138")]: 2.93, [id("0034")]: 3.99, [id("0083")]: 3.99, [id("0059")]: 5.30,
+  [id("1251")]: 4.04, [id("1253")]: 4.40, [id("1252")]: 5.54,
+};
+function rate(board) {
+  const mean = settlementMeans[board.id];
+  if (mean === undefined) return;
+  return { population: usedPopulation(board.pieces), games: 500, mean, topFourRate: 0.6, url: metatft };
+}
 
-function guide(sectionId, batch = family) {
+function guide(sectionId, batch = family, reviewedRollingPatch) {
   const section = publication.sections.find(section => section.id === sectionId);
   assert.ok(section);
   const teams = sectionTeams(section);
   const data = section.gameData ?? publication.season;
-  const systems = guideSystems(section, batch, data.id, patch, placement.minGames);
+  const systems = guideSystems(section, batch, data.id, patch, placement.minGames, reviewedRollingPatch);
   const boards = system => teams.filter(board => system.boardIds.includes(board.id));
-  const rate = board => findPlacement(fixed, board.pieces.map(piece => piece.unitId), usedPopulation(board.pieces), {
-    edition: data.id, teamId: board.id, pieces: board.pieces, requireBoundFull: section.reroll?.added.includes(board.id),
-    traitLevels: Object.fromEntries(traitCounts(board.pieces, data.units, data.traits, data.items).map(({ id, level }) => [id, level])),
-  });
-  return { systems, boards, rate, comparison: system => guidePromotionRows(boards(system), rate, placement) };
+  return { systems, boards, comparison: system => guidePromotionRows(boards(system), rate, placement) };
 }
 
 test("Graves ranks independent clusters and keeps Twisted Fate in the AD route", () => {
@@ -106,11 +136,65 @@ test("other authored branches retain independent cores and choose the best valid
   const { systems: kayle, comparison } = guide(GUIDE_SECTION_IDS.pentakillKayle);
   assert.deepEqual(kayle.map(system => system.teamId), ["0064", "0106"].map(id));
   assert.deepEqual(comparison(kayle[0]).map(row => row.board.id), ["0019", "0064"].map(id));
-  const { systems: graves } = guide(GUIDE_SECTION_IDS.oceanGraves, { ...family, build: "stale" });
-  assert(graves.every(system => !system.stat));
-  assert(graves.find(system => system.teamId === id("1261")).boardIds.includes(id("1262")));
   const sister = { ...zeri[0], sectionId: "cross-guide", stat: { ...zeri[0].stat, mean: 3.7 } };
   assert.equal(rankGuideSystems([...zeri, sister])[0], sister);
+});
+
+test("Kennen opens the authored five-level reroll board within its system", () => {
+  const { systems } = guide("sample-block-0064");
+  assert.equal(systems.length, 1);
+  assert.equal(systems[0].teamId, id("0040"));
+  assert(systems[0].boardIds.includes(id("0045")));
+  assert.equal(systems[0].stat.name, "电能凯南");
+});
+
+test("K/DA Seraphine shows each stage once while an existing legacy link still selects its board", () => {
+  const section = publication.sections.find(entry => entry.id === "sample-block-0367");
+  assert.ok(section);
+  const { systems, boards } = guide(section.id);
+  const system = systems.find(entry => entry.boardIds.includes(id("0033")));
+  assert.ok(system);
+  const allBoards = boards(system);
+  const current = allBoards.find(board => board.id === id("0086"));
+  const early = allBoards.find(board => board.id === id("0033"));
+  assert.ok(current && early);
+  const displayed = guideSystemDisplayBoards(section, allBoards, current);
+  assert(!displayed.some(board => [id("0033"), id("0115")].includes(board.id)));
+  assert(displayed.some(board => board.id === id("0055")));
+  const phases = guideSystemPhases(displayed, current, current, []);
+  assert.equal(phases.filter(({ team }) => usedPopulation(team.pieces) === 5).length, 1);
+
+  const viewedByLegacyLink = guideSystemDisplayBoards(section, allBoards, early);
+  assert(viewedByLegacyLink.includes(early));
+  assert(!viewedByLegacyLink.includes(current));
+  assert.equal(guideSystemPhases(viewedByLegacyLink, current, early, [])[0].team.id, early.id);
+});
+
+test("only current reviewed stats with proper percentages can rank a system", () => {
+  const { systems: stale } = guide(oceanGraves, { ...family, build: "stale" });
+  assert(stale.every(system => !system.stat));
+  assert(stale.find(system => system.teamId === id("1261")).boardIds.includes(id("1262")));
+
+  const rolling = { ...family, spansBuilds: true };
+  assert(guide(oceanGraves, rolling).systems.every(system => !system.stat));
+  assert.equal(guide(oceanGraves, rolling, "19.1c").systems[0].stat.name, "七海洋扎克男枪");
+
+  for (const rate of [NaN, -0.2, 1.01, 0.7]) {
+    const malformed = { ...family, rows: [{ ...family.rows[0], winRate: rate }, ...family.rows.slice(1)] };
+    assert.equal(guide(oceanGraves, malformed).systems[0].stat.name, "四主宰 AD 男枪");
+  }
+});
+
+test("a count-only cluster cannot claim another board or supply its preferred landing", () => {
+  const small = row(oceanGraves, "0119", "小样本", 1.5, {
+    games: 12, landingTeamId: id("0030"), sharedTeamIds: [id("0030"), id("0075")],
+  });
+  const { systems } = guide(oceanGraves, { ...family, smallSamples: [small] });
+  const cluster = systems.find(system => system.teamId === id("0119"));
+  assert.deepEqual(cluster.boardIds, [id("0119")]);
+  assert.equal(cluster.stat, undefined);
+  assert(systems.some(system => system.teamId === id("0030")));
+  assert.equal(systems[0].teamId, id("0075"));
 });
 
 test("promotion metrics reject core or lineup records, keep small samples gray and suppress unfit top-four rates", () => {

@@ -35,7 +35,7 @@ import familyStats from "@/data/guide-family-stats.json";
 import { guideFamilyRows } from "@/domain/guide-family-stats";
 import type { Section } from "@/domain/document";
 import { boardRosterChange, familyVariants, groupGuides, type PosterVariant } from "@/domain/guide-families";
-import { guidePromotionRows, guideSystemPhases, guideSystemSample, systemMeanTone, type GuideSystem } from "@/domain/guide-variant-strip";
+import { guidePromotionRows, guideSystemDisplayBoards, guideSystemPhases, guideSystemSample, systemMeanTone, type GuideSystem } from "@/domain/guide-variant-strip";
 import type { BoardStage, Season, Team } from "@/domain/types";
 import { season } from "@/data";
 import { sameEdition } from "@/domain/version-updates";
@@ -143,6 +143,7 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
   const currentSystem = systems?.find(system => system.sectionId === section.id && system.boardIds.includes(team.id));
   const systemBoards = currentSystem ? teams.filter(board => currentSystem.boardIds.includes(board.id)) : teams;
   const systemEntry = currentSystem && systemBoards.find(board => board.id === currentSystem.teamId);
+  const displayedSystemBoards = currentSystem ? guideSystemDisplayBoards(section, systemBoards, team) : systemBoards;
   const formationId = rerollRoute(section, team)?.final.id ?? team.id;
   const siblings = variants?.[team.id] ?? variants?.[formationId] ?? (localFamily && familyVariants(localFamily, formationId));
   const mainStage = team.mainStage ?? "late";
@@ -176,7 +177,7 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
   const reviewedPhases = reviewedGuidePhases(section.id, teams, data);
   const authoredPhases = reviewedPhases ?? route?.phases;
   const fallbackPhases = (!currentSystem || systemBoards.includes(primary)) ? mainRoute?.phases.filter(step => step.team) : undefined;
-  const phaseSteps = systemEntry ? guideSystemPhases(systemBoards, systemEntry, team, authoredPhases ?? fallbackPhases ?? []) : authoredPhases;
+  const phaseSteps = systemEntry ? guideSystemPhases(displayedSystemBoards, systemEntry, team, authoredPhases ?? fallbackPhases ?? []) : authoredPhases;
   const linkedPhases = phaseSteps ?? fallbackPhases ?? [];
   const firstPhases = linkedPhases.length > 3 && linkedPhases.at(-1)?.team
     ? [...linkedPhases.slice(0, 2), linkedPhases.at(-1)!] : linkedPhases.slice(0, 3);
@@ -487,7 +488,7 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
   }
   function renderPromotionComparison() {
     if (!currentSystem) return null;
-    const rows = guidePromotionRows(systemBoards, board => teamPlacement(board, section, "fixed") ??
+    const rows = guidePromotionRows(displayedSystemBoards, board => teamPlacement(board, section, "fixed") ??
       (heroGuide ? teamPlacement(board, section, "augment") : undefined), placementBatch);
     if (rows.length < 2) return null;
     return <section className="guide-promotion-comparison" aria-label="上人口与补卡对照">
@@ -559,7 +560,7 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
       ))}</dl>
     </details>}
   </details>;
-  const matchStats = showMatchStats && <GuideMatchStats key={team.id} id={sampleId} team={team} teams={systemBoards} section={section}
+  const matchStats = showMatchStats && <GuideMatchStats key={team.id} id={sampleId} team={team} teams={displayedSystemBoards} section={section}
     stage={inStage} edition={data.id} augmentName={augment?.name}
     heroGuide={heroGuide} familyRows={familyRows} view={sampleView} onSelectView={setSampleView} onPickTeam={selectSampleTeam} />;
   const conditions = <>

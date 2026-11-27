@@ -1,6 +1,6 @@
 import type { Section } from "./document";
 import { sectionTeams } from "./document-flow.ts";
-import { currentFamilyBatch, familyBoardIds, type GuideFamilyBatch, type GuideFamilyStat } from "./guide-family-stats.ts";
+import { currentRecommendationEvidence, familyBoardIds, recommendationTier, type GuideFamilyBatch, type GuideFamilyStat } from "./guide-family-stats.ts";
 import { fixedBoardPlacementDetail, placementEvidenceKind, type PlacementBatch, type PlacementRating } from "./guide-placement.ts";
 import { guideBoardName, primaryFirst } from "./guide-reading.ts";
 import { heroAugmentForGuide, heroAugmentCategory } from "./hero-augments.ts";
@@ -34,14 +34,17 @@ export function rankGuideSystems(systems: GuideSystem[]) {
 }
 
 export function guideSystems(section: Section, batch: GuideFamilyBatch, edition: string,
-  patch: Parameters<typeof currentFamilyBatch>[2], minGames: number): GuideSystem[] {
+  patch: Parameters<typeof currentRecommendationEvidence>[2], minGames: number, reviewedRollingPatch?: string): GuideSystem[] {
   const teams = primaryFirst(sectionTeams(section), section.primaryTeamId);
   const primary = teams[0];
   if (!primary) return [];
   const byId = new Map(teams.map(board => [board.id, board]));
   const hero = !!heroAugmentForGuide(section) || section.category === heroAugmentCategory;
-  const rows = batch.seasonId === edition ? [...batch.rows, ...(batch.smallSamples ?? [])]
-    .filter(row => row.sectionId === section.id && !!row.heroAugment === hero) : [];
+  const sameGuide = (row: Pick<GuideFamilyStat, "sectionId" | "heroAugment">) =>
+    batch.seasonId === edition && row.sectionId === section.id && !!row.heroAugment === hero;
+  const rows = batch.rows.filter(row => sameGuide(row) && recommendationTier(row) !== "review" && row.games >= minGames &&
+    Number.isFinite(row.winRate) && Number.isFinite(row.topFourRate) && row.winRate >= 0 &&
+    row.winRate <= row.topFourRate && row.topFourRate <= 1);
   const owners = new Map<string, Group>();
   const groups: Group[] = [];
   function add(group: Group, board: Team | undefined) {
@@ -71,6 +74,11 @@ export function guideSystems(section: Section, batch: GuideFamilyBatch, edition:
     if (board.id !== parent && byId.has(parent) && (stage ? stage.boardRole !== "variant"
       : section.stageTeamIds?.includes(board.id) || board.boardRole === "stage")) parents.set(board.id, parent);
   }
+  // A count-only sample can identify its own board, but the authored route still owns its stages.
+  for (const row of (batch.smallSamples ?? []).filter(sameGuide)) {
+    const board = row.teamId && byId.get(row.teamId);
+    if (board && !parents.has(board.id) && !owners.has(board.id)) create(board);
+  }
   function attachStages() {
     let previous: number;
     do {
@@ -98,17 +106,27 @@ export function guideSystems(section: Section, batch: GuideFamilyBatch, edition:
   }
   for (const board of teams) assign(board);
 
-  const validBatch = currentFamilyBatch(batch, edition, patch);
+  const validBatch = currentRecommendationEvidence(batch, edition, patch, reviewedRollingPatch);
   return rankGuideSystems(groups.map(({ anchor, boards, row }) => {
-    const preferred = [row?.landingTeamId, rerollEntryTeamId(section, anchor.id), primary.id, anchor.id];
+    const preferred = [rerollEntryTeamId(section, anchor.id), rerollEntryTeamId(section, primary.id),
+      row?.landingTeamId, primary.id, anchor.id];
     const entry = preferred.map(id => boards.find(board => board.id === id)).find(Boolean) ?? anchor;
     const name = guideBoardName(anchor);
     const branch = name.replace(/^[一二三四五六七八九十\d]+(?:级|人口)(?:上限|成型|稳血)?\s*(?:[·｜]\s*)?/, "");
     const title = row?.name || branch || (anchor.id === primary.id ? section.title : name);
-    const stat = validBatch && row && Number.isSafeInteger(row.games) && row.games >= minGames &&
-      Number.isFinite(row.mean) && row.mean >= 1 && row.mean <= 8 ? row : undefined;
+    const stat = validBatch ? row : undefined;
     return { sectionId: section.id, teamId: entry.id, boardIds: boards.map(board => board.id), title, ...(stat && { stat }) };
   }));
+}
+
+export function guideSystemDisplayBoards(section: Section, boards: Team[], current: Team) {
+  const ids = new Set(boards.map(board => board.id));
+  const equivalents = new Map(section.reroll?.stages.flatMap(stage =>
+    stage.boardRole !== "variant" && stage.equivalentStageId && ids.has(stage.equivalentStageId)
+      ? [[stage.teamId, stage.equivalentStageId] as const] : []));
+  // An existing legacy link still shows that board in place of its canonical stage.
+  const replaced = equivalents.get(current.id);
+  return boards.filter(board => board.id === current.id || (board.id !== replaced && !equivalents.has(board.id)));
 }
 
 export function guideSystemPhases(boards: Team[], entry: Team, current: Team, authored: Phase[]) {
