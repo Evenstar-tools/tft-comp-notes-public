@@ -200,10 +200,18 @@
   border: 0;
   border-radius: 0;
 }
+.editor .unit-art > .editor-icon-art,
+.editor .board-avatar > .editor-icon-art,
+.editor .board-alternate > .editor-icon-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
 .editor .editor-unit-tray .unit-card.is-selected .unit-visual {
   outline: 2px solid var(--selection-ring);
   outline-offset: 1px;
 }
+.editor .board-alternate > .editor-icon-art { border-radius: 50%; pointer-events: none; }
 .editor .editor-unit-tray .unit-name {
   position: absolute;
   inset: auto 0 0;
@@ -285,7 +293,7 @@
 }
 .editor .workspace .piece-editor { gap: 7px; padding: 8px; }
 .editor .workspace:not(.matrix-workspace) .piece-head { margin-bottom: 6px; }
-.editor .workspace .piece-head img { width: 35px; height: 35px; }
+.editor .workspace .piece-head :is(img, .editor-icon-art) { width: 35px; height: 35px; }
 .editor .workspace .stars-control .stars { color: var(--gold); }
 .editor .workspace :is(.stars-control, .item-slots) { margin-bottom: 0; }
 .editor .workspace .stars-control button { min-height: 31px; }

@@ -1,4 +1,5 @@
 "use client";
+import { GameIconImage } from "./GameIconImage";
 import { Fragment, memo, useCallback, useMemo, useRef, useState } from "react";
 import { useBoardDrag, type BoardDragPreview } from "@/hooks/use-board-drag";
 import { Plus } from "lucide-react";
@@ -208,7 +209,7 @@ export const Board = memo(function Board({
                   <span className="board-surface">
                     {portrait ? (
                       <span className="board-avatar">
-                        <img
+                        <GameIconImage
                           src={portrait}
                           alt=""
                           width={96}
@@ -279,7 +280,7 @@ export const Board = memo(function Board({
                   onPointerDown={onSplitAlternate ? event => start(event, target => onSplitAlternate(piece.instanceId, target),
                     slot => !slot.classList.contains("is-filled")) : undefined}
                 >
-                  <img src={alternate.image} alt="" width={40} height={40} draggable={false} />
+                  <GameIconImage src={alternate.image} alt="" width={40} height={40} draggable={false} />
                 </Alternate>}
               </Fragment>;
             })}

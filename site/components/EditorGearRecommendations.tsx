@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { ArrowUpRight, Info } from "lucide-react";
 import { itemMap, season } from "@/data";
+import currentPatch from "@/data/current-patch.json";
 import buildSource from "@/data/conditional-gear-unit-ids.json";
 import { itemName } from "@/domain/gear-library";
 import type { HeroItemSample, HeroItemSource } from "@/domain/hero-insights";
@@ -25,6 +26,25 @@ type BuildSample = {
   sourceUrl: string;
 };
 
+const freshFor = 2 * 60_000;
+const keepFor = 15 * 60_000;
+type CachedBuilds = { at: number; sample: BuildSample };
+
+function readCachedBuilds(key: string): CachedBuilds | undefined {
+  try {
+    const raw = sessionStorage.getItem(key);
+    if (!raw) return;
+    const entry: CachedBuilds = JSON.parse(raw);
+    const age = Date.now() - entry.at;
+    if (Number.isFinite(age) && age >= 0 && age < keepFor && Array.isArray(entry.sample?.rows)
+        && entry.sample.rows.every(row => Array.isArray(row.items) && row.items.length === 3
+          && typeof row.games === "number" && (row.mean === null || typeof row.mean === "number"))
+        && typeof entry.sample.asOf === "string"
+        && new URL(entry.sample.sourceUrl).origin === "https://www.metatft.com") return entry;
+    sessionStorage.removeItem(key);
+  } catch { /* Storage can be unavailable in restricted browser sessions. */ }
+}
+
 export function EditorGearRecommendations({ unit, items, gearSource, onEquip, onApplyBuild }: {
   unit: Unit;
   items: readonly HeroItemSample[];
@@ -36,10 +56,15 @@ export function EditorGearRecommendations({ unit, items, gearSource, onEquip, on
   const [attempt, setAttempt] = useState(0);
   const [result, setResult] = useState<{ key: string; sample: BuildSample | null }>();
   const supportsBuilds = season.id.startsWith(`s19-pbe-${buildSource.patch}.`) && Object.hasOwn(buildSource.units, unit.id);
-  const key = `${unit.id}/${stars}/${attempt}`;
+  const key = `tft-editor-builds/v1/${season.id}/${currentPatch.build}/${unit.id}/${stars}`;
 
   useEffect(() => {
     if (!supportsBuilds) return;
+    const cached = readCachedBuilds(key);
+    if (cached) {
+      setResult({ key, sample: cached.sample });
+      if (Date.now() - cached.at < freshFor) return;
+    }
     const controller = new AbortController();
     const query = new URLSearchParams({ unit: unit.id, stars: String(stars) });
     fetch("/api/gear-builds?" + query, { signal: controller.signal })
@@ -47,13 +72,17 @@ export function EditorGearRecommendations({ unit, items, gearSource, onEquip, on
         if (!response.ok) throw new Error("Build samples unavailable");
         const sample: BuildSample = await response.json();
         if (!Array.isArray(sample.rows)) throw new Error("Invalid build samples");
-        if (!controller.signal.aborted) setResult({ key, sample });
+        if (controller.signal.aborted) return;
+        setResult({ key, sample });
+        try {
+          sessionStorage.setItem(key, JSON.stringify({ at: Date.now(), sample }));
+        } catch { /* The current result is usable without browser storage. */ }
       })
       .catch(() => {
-        if (!controller.signal.aborted) setResult({ key, sample: null });
+        if (!controller.signal.aborted && !cached) setResult({ key, sample: null });
       });
     return () => controller.abort();
-  }, [key, stars, supportsBuilds, unit.id]);
+  }, [attempt, key, stars, supportsBuilds, unit.id]);
 
   const current = result?.key === key ? result : undefined;
   const common = items.flatMap(sample => {
