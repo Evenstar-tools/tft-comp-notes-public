@@ -10,10 +10,6 @@ from tempfile import NamedTemporaryFile
 from urllib.parse import parse_qsl, urlsplit
 from guide_stats_window import current_window, scoped_url
 
-import requests
-from requests.adapters import HTTPAdapter
-from urllib3.util.retry import Retry
-
 DATA = Path(__file__).resolve().parents[1] / "data"
 BATCH = DATA / "guide-placement.json"
 CORE = "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=8&unit=DA_RenataGlasc19-1_3_3&unit=DA_Nasus19-1"
@@ -46,6 +42,9 @@ def fetch_counts(url):
                 params.append(("unit_tier_numitems_unique", value if suffix.count("_") == 2 else value + "_.*"))
         else:
             raise ValueError(f"Unrecognised query parameter {key}={value}")
+    import requests
+    from requests.adapters import HTTPAdapter
+    from urllib3.util.retry import Retry
     with requests.Session() as session:
         session.mount("https://", HTTPAdapter(max_retries=Retry(total=2, backoff_factor=0.5, status_forcelist=[429, 502, 503, 504])))
         response = session.get(BASE + ("exact_units_traits2" if exact else "total"), params=params, timeout=(8, 25))
@@ -69,6 +68,50 @@ def fetch_counts(url):
             raise ValueError(f"Placement counts differ from total games: {url}")
         counts = [total + n for total, n in zip(counts, buckets)]
     return counts
+
+
+def apply_refreshed_counts(records, snapshots, observed, *, hours=None, build=None, now_iso=None):
+    preserved = []
+    unexpected_zero_active = 0
+    for r in records:
+        counts = snapshots[r["url"]]
+        total = sum(counts)
+        prev_games = r.get("games", 0)
+        if total == 0 and hours is None and isinstance(prev_games, int) and prev_games > 0:
+            preserved.append(r["url"])
+            if prev_games >= 20:
+                unexpected_zero_active += 1
+            continue
+        r.update(placementCounts=counts, games=total, observedOn=observed)
+        if hours is not None:
+            r.update(windowHours=hours, build=build, checkedAt=now_iso)
+        if total:
+            r.update(mean=round(sum(i * n for i, n in enumerate(counts, 1)) / total, 2),
+                     topFourRate=sum(counts[:4]) / total, winRate=counts[0] / total)
+        else:
+            for field in ("mean", "winRate", "topFourRate"):
+                r.pop(field, None)
+    if unexpected_zero_active >= 3:
+        raise ValueError(f"Multiple active board filters ({unexpected_zero_active}) unexpectedly returned 0 games; keeping previous snapshot")
+    return preserved
+
+
+def apply_auxiliary_counts(comparisons, formation, formation_groups, snapshots, observed, now_iso):
+    for sample in comparisons:
+        counts = snapshots[sample["url"]]
+        if sum(counts) == 0 and sum(sample.get("placementCounts") or []) > 0:
+            continue
+        sample.update(placementCounts=counts, observedOn=observed)
+    updated_formation = False
+    for sample in formation:
+        counts = snapshots[sample["url"]]
+        if sum(counts) == 0 and sum(sample.get("placementCounts") or []) > 0:
+            continue
+        sample["placementCounts"] = counts
+        updated_formation = True
+    if updated_formation or not formation:
+        for group in formation_groups:
+            group["checkedAt"] = now_iso
 
 
 def main():
@@ -126,33 +169,19 @@ def main():
         raise ValueError("The S19 anchor sample is empty; keeping the previous snapshot")
     now = datetime.now(timezone.utc)
     observed = now.date().isoformat()
-    for r in records:
-        counts = snapshots[r["url"]]
-        total = sum(counts)
-        r.update(placementCounts=counts, games=total, observedOn=observed)
-        if args.hours is not None:
-            r.update(windowHours=args.hours, build=build, checkedAt=now.isoformat(timespec="seconds"))
-        if total:
-            r.update(mean=round(sum(i * n for i, n in enumerate(counts, 1)) / total, 2),
-                     topFourRate=sum(counts[:4]) / total, winRate=counts[0] / total)
-        else:
-            for field in ("mean", "winRate", "topFourRate"):
-                r.pop(field, None)
+    now_iso = now.isoformat(timespec="seconds")
+    preserved = apply_refreshed_counts(records, snapshots, observed, hours=args.hours, build=build, now_iso=now_iso)
     if core:
         batch["date"] = observed
         batch["renataNasusReference"] = {"url": core, "observedOn": observed, "placementCounts": snapshots[core]}
-    for sample in comparisons:
-        sample.update(placementCounts=snapshots[sample["url"]], observedOn=observed)
-    for sample in formation:
-        sample["placementCounts"] = snapshots[sample["url"]]
-    for group in formation_groups:
-        group["checkedAt"] = now.isoformat(timespec="seconds")
+    apply_auxiliary_counts(comparisons, formation, formation_groups, snapshots, observed, now_iso)
     with NamedTemporaryFile(mode="w", encoding="utf-8", newline="\n", dir=args.out.parent, delete=False) as tmp:
         json.dump(batch, tmp, ensure_ascii=False, indent=2, allow_nan=False)
         tmp.write("\n")
     os.replace(tmp.name, args.out)
     reference = " and the level-eight Renata/Nasus reference" if core else ""
-    print(f"Refreshed {len(records)} board filters{reference}, {observed}.")
+    kept_note = f" ({len(preserved)} zero-count sample(s) preserved previous observation)" if preserved else ""
+    print(f"Refreshed {len(records)} board filters{reference}, {observed}{kept_note}.")
 
 
 if __name__ == "__main__":

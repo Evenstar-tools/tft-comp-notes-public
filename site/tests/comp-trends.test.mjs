@@ -311,3 +311,29 @@ test("strength rising and falling filters follow the four-observation delta thre
   assert.deepEqual(selectTrendWindow([falling, flat, rising], "down", days, "strength").tracks.map(t => t.id), ["falling"]);
   assert.deepEqual(selectTrendWindow([flat, falling, rising], "top", days, "strength").tracks.map(t => t.id), ["rising", "flat", "falling"]);
 });
+
+test("appendCompTrendBatch rejects malformed >=100-game regular rows while skipping small samples", () => {
+  const baseInput = {
+    seasonId: archive.seasonId, set: archive.set, queue: archive.queue, source: archive.source,
+    sourceUrl: archive.sourceUrl, patch: "19.1c", model: 429, days: 3, updatedAt: "2026-11-26T12:00:00Z",
+  };
+  // Small sample (<100 games) is cleanly skipped without error
+  const withSmall = appendCompTrendBatch(archive, {
+    ...baseInput,
+    rows: [
+      { ...classical, clusterId: "429003", games: 180, mean: 4.1, topFourRate: 0.55, winRate: 0.14 },
+      { ...classical, clusterId: "429099", teamId: "small-team", games: 42, mean: 3.9, topFourRate: 0.6, winRate: 0.2 },
+    ],
+  });
+  assert.ok(!withSmall.series.some(s => s.teamId === "small-team"));
+
+  // Malformed qualified regular row (>=100 games but missing sectionId or invalid winRate > topFourRate) throws instead of silent gap
+  assert.throws(() => appendCompTrendBatch(archive, {
+    ...baseInput,
+    rows: [{ ...classical, sectionId: "", clusterId: "429003", games: 180, mean: 4.1, topFourRate: 0.55, winRate: 0.14 }],
+  }), /字段缺失或指标异常/);
+  assert.throws(() => appendCompTrendBatch(archive, {
+    ...baseInput,
+    rows: [{ ...classical, clusterId: "429003", games: 180, mean: 4.1, topFourRate: 0.30, winRate: 0.50 }],
+  }), /字段缺失或指标异常/);
+});

@@ -62,7 +62,7 @@ function strongUncollected({ family, trends, batch, review }) {
   return [...clues.values()].sort((a, b) => a.mean - b.mean || b.games - a.games || a.id.localeCompare(b.id));
 }
 
-export function summarizeRefresh({ current, trends, family, review, upstream, modules = [], profile, refreshOutcome }) {
+export function summarizeRefresh({ current, trends, family, bindings, recommendations, review, upstream, modules = [], profile, refreshOutcome }) {
   const batch = freshest(trends.batches ?? []);
   const latestSample = [family.updatedAt, batch?.capturedAt].filter(value => time(value))
     .sort((a, b) => time(b) - time(a))[0] ?? null;
@@ -89,6 +89,43 @@ export function summarizeRefresh({ current, trends, family, review, upstream, mo
     alerts.push(`检测到较新的构建 ${build}（当前 ${current.build}），需核对实装和样本`);
   }
   if (model !== undefined) alerts.push(`检测到较新的体系模型 ${model}（当前 ${knownModel}），需复核绑定`);
+  if (bindings && Array.isArray(bindings.rows)) {
+    const mapModel = int(bindings.model);
+    if (Number.isSafeInteger(mapModel) && Number.isSafeInteger(knownModel) && mapModel !== knownModel) {
+      alerts.push(`体系映射模型 ${mapModel} 与当前战绩模型 ${knownModel} 不一致`);
+    } else {
+      const present = new Set([...(family.rows ?? []), ...(family.smallSamples ?? [])]
+        .filter(row => row?.clusterId !== undefined && row?.clusterId !== null)
+        .map(row => String(row.clusterId)));
+      const missing = bindings.rows.filter(row => !present.has(String(row.clusterId)));
+      if (missing.length) {
+        const preview = missing.slice(0, 5).map(row => `${row.clusterId} ${row.name || row.sectionId}`).join("、");
+        alerts.push(`有 ${missing.length} 条已绑定体系缺失战绩（${preview}）`);
+      }
+    }
+  }
+  if (recommendations && Array.isArray(recommendations.entries) &&
+      recommendations.seasonId === current.seasonId && String(recommendations.build) === String(current.build)) {
+    const boundSections = bindings && Array.isArray(bindings.rows)
+      ? new Set(bindings.rows.map(row => row.sectionId))
+      : null;
+    const activeFamilySections = new Set((family.rows ?? []).map(row => row.sectionId));
+    const missingRecommended = [...new Set(recommendations.entries
+      .filter(entry => entry.status === "recommended" && !entry.override &&
+        (!boundSections || boundSections.has(entry.sectionId)) &&
+        !activeFamilySections.has(entry.sectionId))
+      .map(entry => entry.sectionId))];
+    if (missingRecommended.length) {
+      alerts.push(`有 ${missingRecommended.length} 条首页推荐阵容缺少有效体系战绩（${missingRecommended.join("、")}）`);
+    }
+  }
+  if (usableReview?.review?.length) {
+    const broken = usableReview.review.filter(entry => /本批没有原分组|主盘已变|^代表棋盘有变$/.test(entry.reason ?? ""));
+    if (broken.length) {
+      const preview = broken.slice(0, 5).map(entry => `${entry.id} ${entry.guide || ""}`.trim()).join("、");
+      alerts.push(`本批有 ${broken.length} 条已绑定体系未通过代表盘校验（${preview}）`);
+    }
+  }
   if (clues.length) alerts.push(`有 ${clues.length} 条未收录强阵待复核（至少 100 场，均名 ≤ 4.40）`);
   if (refreshOutcome === "failure") alerts.push("本轮采集失败，查看工作流日志和复核清单");
 
@@ -178,11 +215,19 @@ export async function checkUpstream(family, fetcher = fetch) {
 const defaultRepoSlug = "Evenstar-tools/tft-comp-notes-public";
 const inspectionIssueTitle = "[数据巡检] 待核对新补丁或新阵容线索";
 
+function resolveGithubToken(useCliFallback) {
+  const envToken = process.env.GH_TOKEN || process.env.GITHUB_TOKEN;
+  if (envToken) return envToken.trim();
+  if (!useCliFallback) return "";
+  const probe = spawnSync("gh", ["auth", "token"], { encoding: "utf8", timeout: 3000 });
+  return probe.status === 0 ? probe.stdout.trim() : "";
+}
+
 export async function checkGithubAlerts(repoSlug = defaultRepoSlug, fetcher = fetch) {
   const alerts = [];
   const warnings = [];
   const headers = { Accept: "application/vnd.github+json" };
-  const token = process.env.GH_TOKEN || process.env.GITHUB_TOKEN;
+  const token = resolveGithubToken(fetcher === fetch);
   if (token) headers.Authorization = "Bearer " + token;
   try {
     const res = await fetcher(`https://api.github.com/repos/${repoSlug}/issues?state=open&per_page=30`, {
@@ -245,17 +290,19 @@ async function main() {
     profile: { type: "string" }, "refresh-outcome": { type: "string" },
   } });
   const readJson = async path => JSON.parse(await readFile(new URL(path, site), "utf8"));
-  const [current, trends, family, review] = await Promise.all([
+  const optionalJson = path => readJson(path).catch(error => {
+    if (error.code !== "ENOENT") throw error;
+  });
+  const [current, trends, family, bindings, recommendations, review] = await Promise.all([
     readJson("data/current-patch.json"), readJson("data/comp-trends.json"), readJson("data/guide-family-stats.json"),
-    readJson("outputs/family-review/review.json").catch(error => {
-      if (error.code !== "ENOENT") throw error;
-    }),
+    optionalJson("data/guide-family-map.json"), optionalJson("data/patch-recommendations.json"),
+    optionalJson("outputs/family-review/review.json"),
   ]);
   const [upstream, github] = await Promise.all([
     values["check-upstream"] ? checkUpstream(family) : undefined,
     values["check-github"] ? checkGithubAlerts(values.repo || defaultRepoSlug) : undefined,
   ]);
-  const report = summarizeRefresh({ current, trends, family, review, upstream,
+  const report = summarizeRefresh({ current, trends, family, bindings, recommendations, review, upstream,
     modules: changedModules(), profile: values.profile, refreshOutcome: values["refresh-outcome"] });
   if (github) {
     report.alerts.push(...github.alerts);

@@ -1,5 +1,5 @@
 import { spawnSync } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { isDeepStrictEqual, parseArgs } from "node:util";
 
@@ -83,6 +83,62 @@ export function verifyAlignment(files, summary) {
   }
 }
 
+export function verifyFamilyContinuity(baseline, candidate, { bindings, trend, checkTrends = false, familyChanged = false } = {}) {
+  if (time(candidate.updatedAt) < time(baseline.updatedAt)) {
+    throw new Error("候选体系样本早于已发布批次");
+  }
+  if (candidate.model !== baseline.model) {
+    throw new Error("自动提交不能切换体系模型");
+  }
+  const presentIds = new Set([...(candidate.rows ?? []), ...(candidate.smallSamples ?? [])]
+    .filter(row => row?.clusterId !== undefined && row?.clusterId !== null)
+    .map(row => String(row.clusterId)));
+  const boundIds = bindings?.model === candidate.model && Array.isArray(bindings.rows)
+    ? new Set(bindings.rows.map(row => String(row.clusterId)))
+    : null;
+  if (boundIds) {
+    const missingBound = [...boundIds].filter(id => !presentIds.has(id));
+    if (missingBound.length) {
+      throw new Error("候选体系战绩缺少已绑定分组：" + missingBound.join("、"));
+    }
+  }
+  if (baseline.patch === candidate.patch) {
+    const baselineIds = [...(baseline.rows ?? []), ...(baseline.smallSamples ?? [])]
+      .filter(row => row?.clusterId !== undefined && row?.clusterId !== null)
+      .map(row => String(row.clusterId))
+      .filter(id => !boundIds || boundIds.has(id));
+    const dropped = baselineIds.filter(id => !presentIds.has(id));
+    if (dropped.length) {
+      throw new Error("候选体系战绩较已发布基线丢失分组：" + dropped.join("、"));
+    }
+  }
+  if ((baseline.rows?.length ?? 0) >= 4 && (candidate.rows?.length ?? 0) < 4) {
+    throw new Error("候选合格体系数量异常骤降");
+  }
+  if (checkTrends && trend) {
+    if (!Array.isArray(trend.batches) || !trend.batches.length) {
+      throw new Error("候选趋势文件缺少批次记录");
+    }
+    const newest = trend.batches.reduce((latest, batch) => time(batch.capturedAt) > time(latest.capturedAt) ? batch : latest);
+    if (newest.model !== baseline.model) {
+      throw new Error("自动提交不能切换体系模型");
+    }
+    if (familyChanged && time(newest.capturedAt) !== time(candidate.updatedAt)) {
+      throw new Error("候选趋势最新批次与体系战绩采样时间不一致");
+    }
+    const recordedSeries = new Set((trend.series ?? [])
+      .filter(series => (series.points ?? []).some(point => point.batchId === newest.id))
+      .map(series => series.id));
+    const missingSeries = (candidate.rows ?? [])
+      .filter(row => !row.heroAugment && Number.isSafeInteger(row.games) && row.games >= 100)
+      .map(row => [row.sectionId, row.teamId || row.clusterId].join(":"))
+      .filter(id => !recordedSeries.has(id));
+    if (missingSeries.length) {
+      throw new Error("候选趋势批次缺少活跃体系采样点：" + missingSeries.join("、"));
+    }
+  }
+}
+
 function verify(profile) {
   const changed = changedDataFiles(git("status", "--porcelain=v1", "-z", "--untracked-files=all", "--no-renames"), profile);
   const files = changed.filter(path => {
@@ -93,14 +149,15 @@ function verify(profile) {
   verifyAlignment(files, JSON.parse(run(process.execPath, ["scripts/run-data-refresh.mjs", "--status", "--json"], site)));
   const baseline = readPublishedFamily();
   const family = readJson(dataUrl("guide-family-stats.json"));
-  if (time(family.updatedAt) < time(baseline.updatedAt)) {
-    throw new Error("候选体系样本早于已发布批次");
-  }
+  const mapFile = dataUrl("guide-family-map.json");
+  const bindings = existsSync(mapFile) ? readJson(mapFile) : undefined;
   const trend = readJson(dataUrl("comp-trends.json"));
-  const newest = trend.batches.reduce((latest, batch) => time(batch.capturedAt) > time(latest.capturedAt) ? batch : latest);
-  if (family.model !== baseline.model || (files.includes("site/data/comp-trends.json") && newest.model !== baseline.model)) {
-    throw new Error("自动提交不能切换体系模型");
-  }
+  verifyFamilyContinuity(baseline, family, {
+    bindings,
+    trend,
+    checkTrends: files.includes("site/data/comp-trends.json"),
+    familyChanged: files.includes("site/data/guide-family-stats.json"),
+  });
   console.log("已核对可发布文件 " + files.join("、"));
   return null;
 }
