@@ -4,7 +4,7 @@ import { readFile } from "node:fs/promises";
 import { setTimeout as delay } from "node:timers/promises";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { parseArgs } from "node:util";
-import { preflightReason } from "./check-auto-refresh.mjs";
+import { preflightReason, readPublishedFamily } from "./check-auto-refresh.mjs";
 import { checkUpstream } from "./check-refresh-alerts.mjs";
 
 const repository = "Evenstar-tools/tft-comp-notes-public";
@@ -153,9 +153,9 @@ async function main() {
   }
   console.log(`已创建候选 PR ${url}`);
   await waitForChecks(url, branch, head);
-  const [current, family] = await Promise.all(["current-patch", "guide-family-stats"].map(async name =>
-    JSON.parse(await readFile(new URL(`../data/${name}.json`, import.meta.url), "utf8"))));
-  const reason = preflightReason(current, family, { upstream: await checkUpstream(family) });
+  const current = JSON.parse(await readFile(new URL("../data/current-patch.json", import.meta.url), "utf8"));
+  const publishedFamily = readPublishedFamily(base);
+  const reason = preflightReason(current, publishedFamily, { upstream: await checkUpstream(publishedFamily) });
   if (reason) throw new Error(`候选 PR 已保留，合并前来源条件变化。 ${reason}`);
   requireCurrentMain(base);
   gh("pr", "merge", url, "--squash", "--match-head-commit", head);
