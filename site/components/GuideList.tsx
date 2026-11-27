@@ -129,6 +129,12 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
 }) {
   const { sections, heroSections, trends } = useMemo(() => decodeHomeGuideIndex(index), [index]);
   const initialView = filterView(initial.view);
+  const [archiveReady, setArchiveReady] = useState(() =>
+    initialView !== "regular" || initial.sort !== "category" || Boolean(initial.q || initial.category || initial.style || initial.cost));
+  useLayoutEffect(() => {
+    // Expand the directory from the existing index before return links restore scroll.
+    if (!archiveReady) setArchiveReady(true);
+  }, [archiveReady]);
   const [view, setView] = useState<View>(initialView);
   const [query, setQuery] = useState(initial.q ?? "");
   const [choices, setChoices] = useState<Choices>({
@@ -1179,7 +1185,13 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
       }))} />
     </>}
     {!recommended && groups.length > 0 && <div className="guide-sections">{groups.map(([name, entries], index) => {
-      const cards = renderCards(entries, name, index === 0);
+      const preview = archiveReady ? entries : entries.slice(0, index === 0 ? 6 : 2);
+      const cards = renderCards(preview, name, index === 0);
+      const textLinks = !archiveReady && preview.length < entries.length && <noscript>
+        <ul>{entries.slice(preview.length).map(({ section, team, cardId }) => <li key={cardId}>
+          <a href={guideLink(section.id, team?.id, homeGuideReturn(home, cardId, team?.id))}>{section.title}</a>
+        </li>)}</ul>
+      </noscript>;
       const headingId = "guide-group-" + index;
       return name ? <section key={name} id={name === backupCategory ? "backup-guides" : undefined} className="guide-section"
         aria-labelledby={headingId} data-hero-conditions={heroConditionGroup || undefined}>
@@ -1188,7 +1200,8 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
           {groupLinks.map(group => <a key={group.id} href={"#" + group.id} onClick={event => { event.currentTarget.closest("details")!.open = false; }}>{group.label}</a>)}
         </div></details>}
         {cards}
-      </section> : <Fragment key={name}>{cards}</Fragment>;
+        {textLinks}
+      </section> : <Fragment key={name}>{cards}{textLinks}</Fragment>;
     })}</div>}
     {!recommended && !displayedCount && !searching && (ranked || (!crossTab.length && !showLookup)) && emptyState}
     </>}
