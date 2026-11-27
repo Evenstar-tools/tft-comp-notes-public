@@ -145,7 +145,7 @@
  .aug-tools select { min-width: 0; flex: 1 0 42%; }
  .aug-heading { gap: 8px 16px; }
  .aug-pair { display: flex; flex-direction: column; }
- .aug-card { min-height: 56px; padding: 8px 11px; }
+ .aug-card { min-height: 64px; padding: 11px 12px; }
  .aug-card-effect { display: none; }
  .aug-effect .aug-hero-effect-mobile { display: block; }
  .aug-sort-segments { flex: 1 1 100%; }
@@ -153,9 +153,15 @@
  .aug-detail-with-stats { grid-template-columns: minmax(0, 1fr); gap: 10px; }
  .aug-evidence { border-inline-start: 0; border-block-start: 1px solid var(--line); padding: 10px 0 0; }
 }
+@media (max-width: 580px) {
+ .aug-filter-card { gap: 12px; padding: 0 0 12px; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: transparent; }
+ .aug-filter-card .aug-search { background: var(--panel); }
+ .aug-filter-facets { display: grid; gap: 4px; padding-top: 0; border: 0; }
+ .aug-filter-label { line-height: 36px; font-size: .875rem; }
+ .aug-filter-chip { min-height: 36px; padding-inline: 7px; font-size: .875rem; }
+ .aug-filter-chip[aria-pressed=false] { border-color: transparent; background: transparent; }
+}
 @media (max-width: 400px) {
- .aug-filter-card { padding: 10px; }
- .aug-filter-chip { padding-inline: 6px; }
  .aug-card-head,.aug-card-identity,.aug-card-aside { gap: 6px; }
  .aug-card-aside { margin-inline-start: auto; }
 }

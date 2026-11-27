@@ -175,7 +175,12 @@
 @media (max-width: 400px) {
   .home-guide-library .home-patch-tabs { gap: 0; justify-content: space-between; }
   .home-guide-library .home-patch-tabs a { padding-inline: 5px; }
-  .home-patch-card-link { gap: 4px 7px; padding: 8px 10px; }
+  .home-patch-cards { gap: 9px; }
+  .home-patch-card-link { grid-template-columns: minmax(0, 1fr) max-content; gap: 7px 10px; padding: 12px; }
+  .home-patch-title { grid-column: 1; }
+  .home-patch-card-link > :is(.home-patch-mean, .home-patch-manual-badge) { grid-column: 2; }
+  .home-patch-avatars { grid-column: 1 / -1; grid-row: 2; gap: 6px; }
+  .home-patch-advice, .home-patch-card-copy p { line-height: 1.55; }
   .home-patch-conditions { margin-inline: 10px; }
-  .home-patch-avatars img { width: 28px; height: 28px; }
+  .home-patch-avatars img { width: 32px; height: 32px; }
 }

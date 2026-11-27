@@ -197,8 +197,8 @@
 }
 @media (max-width: 700px) {
   .comp-trend-panel { padding: 13px 12px 0; }
-  .comp-trend-header { position: relative; gap: 5px 10px; margin-block-end: 8px; }
-  .comp-trend-sources { order: 1; column-gap: 8px; }
+  .comp-trend-header { position: relative; gap: 8px 12px; margin-block-end: 10px; }
+  .comp-trend-sources { order: 1; column-gap: 10px; margin-inline-start: 0; }
   .comp-trend-filter-label { order: 2; }
   .comp-trend-method { position: static; }
   .comp-trend-method > div { inset-inline: 0; width: auto; max-width: none; }
@@ -207,6 +207,8 @@
   .comp-trend-legend { padding: 6px 0 5px; border-inline-start: 0; border-top: 1px solid var(--line); }
   .comp-trend-legend ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2px 5px; }
   .comp-trend-discovery-group ul { grid-template-columns: minmax(0, 1fr); }
+  .comp-trend-caption { padding-inline-start: 0; font-size: .8125rem; row-gap: 8px; }
+  .comp-trend-legend li button { min-height: 38px; }
 }
 @media (max-width: 460px) {
   .comp-trend-legend ul { grid-template-columns: minmax(0, 1fr); }
@@ -219,6 +221,6 @@
 .comp-trend-mobile-picker { display: none; }
 @media (max-width: 700px) {
   .comp-trend-mobile-picker { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 10px; margin-block: 4px; }
-  .comp-trend-mobile-picker select { min-width: 0; flex: 1 1 150px; min-height: 36px; }
+  .comp-trend-mobile-picker select { min-width: 0; flex: 1 1 150px; min-height: 44px; font-size: .875rem; }
   .comp-trend-mobile-picker output { color: var(--accent); font-size: .875rem; font-weight: 650; font-variant-numeric: tabular-nums; }
 }

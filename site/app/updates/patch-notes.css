@@ -163,6 +163,9 @@
 
 .patch-editions-mobile { display: none; }
 @media (max-width: 720px) {
+  .patch-summary,.patch-current-summary { padding: 12px; font-size: .9375rem; line-height: 1.72; }
+  .patch-summary li + li { margin-block-start: 8px; }
+  .patch-lead-tools { row-gap: 8px; margin-block: 8px 14px; }
   .patch-page .patch-index { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 8px; align-items: center; }
   .patch-page .patch-index h1 { margin: 0; }
   .patch-page .patch-editions-desktop { display: none; }

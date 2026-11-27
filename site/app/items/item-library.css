@@ -384,12 +384,16 @@
   .gear-rank-tools select {width:100%;}
   .gear-rank-identity {gap:5px;font-size:.9375rem;}
   .gear-rank-identity .item-icon {width:28px!important;height:28px!important;}
+  .gear-rank-row {gap:6px;padding-block:10px 12px;}
   .gear-rank-toggle {gap:8px;}
-  .gear-rank-holders {gap:6px;}
-  .gear-pick-kind {align-self:start;margin-top:3px;}
-  .gear-holder {grid-template-columns:19px minmax(0,1fr);column-gap:4px;font-size:.8125rem;}
-  .gear-holder img {width:19px;height:19px;grid-row:auto;}
-  .gear-holder small {grid-column:1/-1;font-size:.75rem;}
+  .gear-rank-holders {grid-template-columns:auto minmax(0,1fr);column-gap:12px;padding-block:4px 0;}
+  .gear-pick-kind {grid-row:1 / span 3;align-self:start;padding-block-start:8px;font-size:.8125rem;}
+  .gear-holder {
+    grid-column:2;grid-template-columns:22px minmax(0,1fr) auto;column-gap:6px;
+    width:100%;min-height:34px;font-size:.875rem;line-height:1.4;
+  }
+  .gear-holder img {width:22px;height:22px;grid-row:auto;align-self:center;}
+  .gear-holder small {font-size:.8125rem;text-align:end;font-variant-numeric:tabular-nums;}
   .gear-reverse { --gear-columns: minmax(0, 1fr) 3.6rem 3.2rem; }
   .gear-reverse[data-wins] { --gear-columns: minmax(0, 1fr) 3.6rem 3.2rem 3.2rem; }
   .gear-reverse-head,.gear-reverse-toggle { padding-inline: 9px; gap: 5px; }
