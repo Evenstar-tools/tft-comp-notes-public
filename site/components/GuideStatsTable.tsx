@@ -46,7 +46,7 @@ export function GuideStatsTable({ rows, metric, direction, onSort }: {
 }) {
   const order = direction === "asc" ? "ascending" : "descending";
 
-  return <table className="guide-stats-table" aria-label="阵容战绩对照" role="table">
+  return <table className="guide-stats-table" aria-label="阵容数据对照" role="table">
     <colgroup>
       <col />
       <col className="guide-stats-units-column" />

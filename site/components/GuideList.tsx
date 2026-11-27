@@ -51,7 +51,7 @@ type Selections = { category: string; style: string; cost: number };
 type Choices = Partial<Record<View, Selections>>;
 type FamilySort = { metric: GuideFamilyMetric; direction: GuideFamilyDirection };
 const emptyFilters = { category: "", style: "", cost: 0 };
-const archiveViews = [["category", "攻略卡片"], ["mean", "战绩对照"]] as const;
+const archiveViews = [["category", "攻略卡片"], ["mean", "数据对照"]] as const;
 const recommendationSecondaryCarries = new Map<string, { unitId: string; boardId: string }>([
   [GUIDE_SECTION_IDS.oceanGraves, { unitId: "taliyah", boardId: "00000000-0000-4000-8000-000000000076" }],
   [GUIDE_SECTION_IDS.kdaNeeko, { unitId: "akali-kda", boardId: "00000000-0000-4000-8000-000000000039" }],
