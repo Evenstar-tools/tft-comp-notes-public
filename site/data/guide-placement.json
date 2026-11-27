@@ -3628,38 +3628,6 @@
       "sectionId": "sample-block-0051"
     },
     {
-      "population": 5,
-      "roster": [
-        "annie",
-        "elise",
-        "kobuko",
-        "yunara",
-        "ziggs"
-      ],
-      "games": 6,
-      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=5&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Annie19-1&unit=DA_Elise19-1&unit=DA_Kobuko19-1&unit=DA_Yunara19-1&unit=DA_Ziggs19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
-      "conditions": {
-        "kind": "full",
-        "teamId": "00000000-0000-4000-8000-000000000016",
-        "population": 5
-      },
-      "sampleScope": "固定名单 · 不限星级与装备 · 无纹章、人口装或重复棋子",
-      "observedOn": "2026-11-27",
-      "placementCounts": [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        6
-      ],
-      "mean": 8.0,
-      "topFourRate": 0.0,
-      "winRate": 0.0
-    },
-    {
       "population": 8,
       "roster": [
         "gnar",
@@ -5192,6 +5160,193 @@
       "mean": 2.74,
       "topFourRate": 0.9032258064516129,
       "winRate": 0.20967741935483872
+    },
+    {
+      "population": 5,
+      "roster": [
+        "annie",
+        "elise",
+        "kobuko",
+        "yunara",
+        "ziggs"
+      ],
+      "games": 0,
+      "placementCounts": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&queue=PBE&patch=19.1&b_patch=c&days=3&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&level=5&unit=DA_Annie19-1&unit=DA_Elise19-1_3&unit=DA_Kobuko19-1&unit=DA_Yunara19-1_3_3&unit=DA_Ziggs19-1",
+      "sourcePeriod": {
+        "patch": "19.1c",
+        "window": "近 3 天"
+      },
+      "observedOn": "2026-11-27",
+      "conditions": {
+        "kind": "full",
+        "teamId": "00000000-0000-4000-8000-000000000016",
+        "population": 5,
+        "units": [
+          {
+            "unitId": "yunara",
+            "stars": 3,
+            "items": 3
+          },
+          {
+            "unitId": "elise",
+            "stars": 3
+          }
+        ]
+      }
+    },
+    {
+      "population": 6,
+      "roster": [
+        "elise",
+        "annie",
+        "tibbers",
+        "jax",
+        "yunara",
+        "lux"
+      ],
+      "games": 1,
+      "placementCounts": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&queue=PBE&patch=19.1&b_patch=c&days=3&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&level=6&unit=DA_Elise19-1_3&unit=DA_Annie19-1&unit=DA_Tibbers19-1&unit=DA_Jax19-1&unit=DA_Yunara19-1_3_3&unit=DA_Lux19-1",
+      "sourcePeriod": {
+        "patch": "19.1c",
+        "window": "近 3 天"
+      },
+      "observedOn": "2026-11-27",
+      "conditions": {
+        "kind": "full",
+        "teamId": "f17f1c69-ba22-4477-9680-8fa09b4b6b66",
+        "population": 6,
+        "units": [
+          {
+            "unitId": "yunara",
+            "stars": 3,
+            "items": 3
+          },
+          {
+            "unitId": "elise",
+            "stars": 3
+          }
+        ]
+      },
+      "mean": 7.0,
+      "topFourRate": 0.0,
+      "winRate": 0.0
+    },
+    {
+      "population": 7,
+      "roster": [
+        "elise",
+        "annie",
+        "tibbers",
+        "jax",
+        "yunara",
+        "lux",
+        "shyvana"
+      ],
+      "games": 1,
+      "placementCounts": [
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&queue=PBE&patch=19.1&b_patch=c&days=3&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&level=7&unit=DA_Elise19-1_3&unit=DA_Annie19-1&unit=DA_Tibbers19-1&unit=DA_Jax19-1&unit=DA_Yunara19-1_3_3&unit=DA_Lux19-1&unit=DA_Shyvana19-1",
+      "sourcePeriod": {
+        "patch": "19.1c",
+        "window": "近 3 天"
+      },
+      "observedOn": "2026-11-27",
+      "conditions": {
+        "kind": "full",
+        "teamId": "b5bce8cb-2f60-45ac-a99c-35b3e44bfabe",
+        "population": 7,
+        "units": [
+          {
+            "unitId": "yunara",
+            "stars": 3,
+            "items": 3
+          },
+          {
+            "unitId": "elise",
+            "stars": 3
+          }
+        ]
+      },
+      "mean": 4.0,
+      "topFourRate": 1.0,
+      "winRate": 0.0
+    },
+    {
+      "population": 8,
+      "roster": [
+        "elise",
+        "annie",
+        "tibbers",
+        "jax",
+        "yunara",
+        "lux",
+        "shyvana",
+        "gwen"
+      ],
+      "games": 7,
+      "placementCounts": [
+        1,
+        0,
+        0,
+        5,
+        1,
+        0,
+        0,
+        0
+      ],
+      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&queue=PBE&patch=19.1&b_patch=c&days=3&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&level=8&unit=DA_Elise19-1_3&unit=DA_Annie19-1&unit=DA_Tibbers19-1&unit=DA_Jax19-1&unit=DA_Yunara19-1_3_3&unit=DA_Lux19-1&unit=DA_Shyvana19-1&unit=DA_Gwen19-1",
+      "sourcePeriod": {
+        "patch": "19.1c",
+        "window": "近 3 天"
+      },
+      "observedOn": "2026-11-27",
+      "conditions": {
+        "kind": "full",
+        "teamId": "323e2a9e-0573-4d84-8389-846a29659e7e",
+        "population": 8,
+        "units": [
+          {
+            "unitId": "yunara",
+            "stars": 3,
+            "items": 3
+          },
+          {
+            "unitId": "elise",
+            "stars": 3
+          }
+        ]
+      },
+      "mean": 3.714,
+      "topFourRate": 0.8571428571428571,
+      "winRate": 0.14285714285714285
     }
   ],
   "edition": "s19-pbe-19.1",
@@ -5298,6 +5453,256 @@
           ],
           "label": "双核三星",
           "scope": "同四张 · 佛耶戈、贝蕾亚三星 · 不限人口"
+        }
+      ]
+    },
+    {
+      "sectionId": "sample-block-0203",
+      "teamId": "f17f1c69-ba22-4477-9680-8fa09b4b6b66",
+      "coreRoster": [
+        "elise",
+        "annie",
+        "tibbers",
+        "jax",
+        "yunara",
+        "lux"
+      ],
+      "samples": [
+        {
+          "label": "6级 · 3离子",
+          "scope": "双三星 · 芸阿娜三件 · 无纹章、人口装",
+          "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&queue=PBE&patch=19.1&b_patch=c&days=3&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&level=6&unit=DA_Yunara19-1_3_3&unit=DA_Elise19-1_3&trait=DA_IonicSpark19_1",
+          "observedOn": "2026-11-27",
+          "placementCounts": [
+            0,
+            0,
+            0,
+            0,
+            2,
+            5,
+            8,
+            8
+          ]
+        },
+        {
+          "label": "6级 · 5离子",
+          "scope": "双三星 · 芸阿娜三件 · 无纹章、人口装",
+          "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&queue=PBE&patch=19.1&b_patch=c&days=3&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&level=6&unit=DA_Yunara19-1_3_3&unit=DA_Elise19-1_3&trait=DA_IonicSpark19_2",
+          "observedOn": "2026-11-27",
+          "placementCounts": [
+            0,
+            0,
+            1,
+            1,
+            3,
+            8,
+            5,
+            5
+          ]
+        }
+      ]
+    },
+    {
+      "sectionId": "sample-block-0203",
+      "teamId": "b5bce8cb-2f60-45ac-a99c-35b3e44bfabe",
+      "coreRoster": [
+        "elise",
+        "annie",
+        "tibbers",
+        "jax",
+        "yunara",
+        "lux",
+        "shyvana"
+      ],
+      "samples": [
+        {
+          "label": "7级 · 3离子",
+          "scope": "双三星 · 芸阿娜三件 · 无纹章、人口装",
+          "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&queue=PBE&patch=19.1&b_patch=c&days=3&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&level=7&unit=DA_Yunara19-1_3_3&unit=DA_Elise19-1_3&trait=DA_IonicSpark19_1",
+          "observedOn": "2026-11-27",
+          "placementCounts": [
+            0,
+            5,
+            4,
+            12,
+            24,
+            25,
+            9,
+            6
+          ]
+        },
+        {
+          "label": "7级 · 5离子",
+          "scope": "双三星 · 芸阿娜三件 · 无纹章、人口装",
+          "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&queue=PBE&patch=19.1&b_patch=c&days=3&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&level=7&unit=DA_Yunara19-1_3_3&unit=DA_Elise19-1_3&trait=DA_IonicSpark19_2",
+          "observedOn": "2026-11-27",
+          "placementCounts": [
+            0,
+            1,
+            3,
+            15,
+            10,
+            13,
+            13,
+            3
+          ]
+        },
+        {
+          "label": "7级 · 7离子",
+          "scope": "双三星 · 芸阿娜三件 · 无纹章、人口装",
+          "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&queue=PBE&patch=19.1&b_patch=c&days=3&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&level=7&unit=DA_Yunara19-1_3_3&unit=DA_Elise19-1_3&trait=DA_IonicSpark19_3",
+          "observedOn": "2026-11-27",
+          "placementCounts": [
+            1,
+            0,
+            4,
+            8,
+            7,
+            15,
+            10,
+            7
+          ]
+        }
+      ]
+    },
+    {
+      "sectionId": "sample-block-0203",
+      "teamId": "323e2a9e-0573-4d84-8389-846a29659e7e",
+      "coreRoster": [
+        "elise",
+        "annie",
+        "tibbers",
+        "jax",
+        "yunara",
+        "lux",
+        "shyvana",
+        "gwen"
+      ],
+      "samples": [
+        {
+          "label": "8级 · 3离子",
+          "scope": "双三星 · 芸阿娜三件 · 无纹章、人口装",
+          "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&queue=PBE&patch=19.1&b_patch=c&days=3&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&level=8&unit=DA_Yunara19-1_3_3&unit=DA_Elise19-1_3&trait=DA_IonicSpark19_1",
+          "observedOn": "2026-11-27",
+          "placementCounts": [
+            4,
+            14,
+            36,
+            44,
+            34,
+            27,
+            22,
+            5
+          ]
+        },
+        {
+          "label": "8级 · 5离子",
+          "scope": "双三星 · 芸阿娜三件 · 无纹章、人口装",
+          "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&queue=PBE&patch=19.1&b_patch=c&days=3&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&level=8&unit=DA_Yunara19-1_3_3&unit=DA_Elise19-1_3&trait=DA_IonicSpark19_2",
+          "observedOn": "2026-11-27",
+          "placementCounts": [
+            0,
+            7,
+            19,
+            14,
+            13,
+            12,
+            1,
+            0
+          ]
+        },
+        {
+          "label": "8级 · 7离子",
+          "scope": "双三星 · 芸阿娜三件 · 无纹章、人口装",
+          "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&queue=PBE&patch=19.1&b_patch=c&days=3&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&level=8&unit=DA_Yunara19-1_3_3&unit=DA_Elise19-1_3&trait=DA_IonicSpark19_3",
+          "observedOn": "2026-11-27",
+          "placementCounts": [
+            5,
+            9,
+            23,
+            36,
+            30,
+            20,
+            12,
+            5
+          ]
+        }
+      ]
+    },
+    {
+      "sectionId": "sample-block-0203",
+      "teamId": "00000000-0000-4000-8000-000000000016",
+      "coreRoster": [
+        "annie",
+        "elise",
+        "kobuko",
+        "yunara",
+        "ziggs"
+      ],
+      "samples": [
+        {
+          "label": "6级结算",
+          "scope": "芸阿娜三星三件 · 无纹章、人口装",
+          "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&queue=PBE&patch=19.1&b_patch=c&days=3&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&level=6&unit=DA_Yunara19-1_3_3",
+          "observedOn": "2026-11-27",
+          "placementCounts": [
+            0,
+            0,
+            3,
+            4,
+            11,
+            29,
+            38,
+            42
+          ]
+        },
+        {
+          "label": "7级结算",
+          "scope": "芸阿娜三星三件 · 无纹章、人口装",
+          "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&queue=PBE&patch=19.1&b_patch=c&days=3&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&level=7&unit=DA_Yunara19-1_3_3",
+          "observedOn": "2026-11-27",
+          "placementCounts": [
+            2,
+            10,
+            27,
+            62,
+            96,
+            122,
+            79,
+            50
+          ]
+        },
+        {
+          "label": "8级结算",
+          "scope": "芸阿娜三星三件 · 无纹章、人口装",
+          "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&queue=PBE&patch=19.1&b_patch=c&days=3&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&level=8&unit=DA_Yunara19-1_3_3",
+          "observedOn": "2026-11-27",
+          "placementCounts": [
+            18,
+            55,
+            132,
+            182,
+            181,
+            135,
+            95,
+            42
+          ]
+        },
+        {
+          "label": "9级结算",
+          "scope": "芸阿娜三星三件 · 无纹章、人口装",
+          "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&queue=PBE&patch=19.1&b_patch=c&days=3&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&level=9&unit=DA_Yunara19-1_3_3",
+          "observedOn": "2026-11-27",
+          "placementCounts": [
+            57,
+            90,
+            103,
+            121,
+            92,
+            53,
+            22,
+            7
+          ]
         }
       ]
     }

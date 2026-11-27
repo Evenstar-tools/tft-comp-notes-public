@@ -112,6 +112,9 @@ const guideSlugs: Record<string, GuideSlugs> = {
   "sample-block-0203": { slug: "ionic-yunara", boards: {
     "00000000-0000-4000-8000-000000000016": "lv5",
     "00000000-0000-4000-8000-000000000069": "lv5-no-kobuko",
+    "f17f1c69-ba22-4477-9680-8fa09b4b6b66": "lv6-5-ionic",
+    "b5bce8cb-2f60-45ac-a99c-35b3e44bfabe": "lv7-shyvana",
+    "323e2a9e-0573-4d84-8389-846a29659e7e": "lv8-7-ionic",
   } },
   "sample-block-0020": { slug: "kda-lillia", boards: {
     "00000000-0000-4000-8000-000000000038": "lv8-6-bodyguard",

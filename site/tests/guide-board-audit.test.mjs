@@ -23,6 +23,27 @@ function readData(name) {
   return JSON.parse(readFileSync(new URL(`../data/${name}.json`, import.meta.url), "utf8"));
 }
 
+test("every published board equips its main carries and tanks", () => {
+  const publication = prepareAuditPublication(preview);
+  const incomplete = [];
+  for (const section of publication.sections) {
+    const gameData = section.gameData ?? publication.season;
+    for (const team of sectionTeams(section)) {
+      const roster = guideRoster(team, gameData, readingNotes(section, team, gameData).roles);
+      const label = section.title + " / " + team.name;
+      const carries = roster.filter(member => ["主C", "主输出", "前期输出"].includes(member.role));
+      const tanks = roster.filter(member => member.role === "主坦");
+      if (!carries.length || !tanks.length) incomplete.push(label + " 缺主C或主坦");
+      for (const { piece, unit } of [...carries, ...tanks]) {
+        const valid = piece.items.every(id => gameData.items.some(item => item.id === id && item.category !== "component"));
+        const full = piece.items.length === 3 || (piece.items.length === 1 && piece.items[0] === "TFT_Item_ThiefsGloves");
+        if (!full || !valid) incomplete.push(label + " / " + unit.name);
+      }
+    }
+  }
+  assert.deepEqual(incomplete, []);
+});
+
 function piece(unitId, position, ...items) {
   return { unitId, instanceId: unitId, position, stars: 2, items };
 }
