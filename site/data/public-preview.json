@@ -512,11 +512,11 @@
         {
           "id": "sample-block-1061",
           "type": "text",
-          "text": "辛德拉、艾克来得早走七级慢搜；双三成型立刻升八／九，别死停七级。",
+          "text": "【特殊运营门槛】4-1 七级上五名不同海之歌或主宰解锁扎克（塔里克只算 1 名）；辛德拉、艾克双三成型或 5-1 稳血必须立刻升八／九（绝不死停七级），辛德拉别做青龙刀。",
           "elements": [
             {
               "text_run": {
-                "content": "辛德拉、艾克来得早走七级慢搜；双三成型立刻升八／九，别死停七级。"
+                "content": "【特殊运营门槛】4-1 七级上五名不同海之歌或主宰解锁扎克（塔里克只算 1 名）；辛德拉、艾克双三成型或 5-1 稳血必须立刻升八／九（绝不死停七级），辛德拉别做青龙刀。"
               }
             }
           ]
@@ -8159,31 +8159,12 @@
           "elements": [
             {
               "text_run": {
-                "content": "六级四保镖，烈娜塔和狗头一起 D。",
-                "text_element_style": {
-                  "bold": true,
-                  "inline_code": false,
-                  "italic": false,
-                  "strikethrough": false,
-                  "underline": false
-                }
-              }
-            },
-            {
-              "text_run": {
-                "content": " 狗头扛得住、选秀前四 D 开了芬妮，就用芬妮换辛德拉。烈娜塔三星就升七补阿狸。",
-                "text_element_style": {
-                  "bold": false,
-                  "inline_code": false,
-                  "italic": false,
-                  "strikethrough": false,
-                  "underline": false
-                }
+                "content": "【特殊运营门槛】想走芬妮分支需 2-4 选秀前刷 4 次解锁芬妮（狗头扛得住再换辛德拉）。六级四护卫同追烈娜塔和内瑟斯，烈娜塔三星立刻升七补阿狸。"
               }
             }
           ],
           "level": 0,
-          "text": "六级四保镖，烈娜塔和狗头一起 D。 狗头扛得住、选秀前四 D 开了芬妮，就用芬妮换辛德拉。烈娜塔三星就升七补阿狸。"
+          "text": "【特殊运营门槛】想走芬妮分支需 2-4 选秀前刷 4 次解锁芬妮（狗头扛得住再换辛德拉）。六级四护卫同追烈娜塔和内瑟斯，烈娜塔三星立刻升七补阿狸。"
         },
         {
           "id": "sample-block-0703",
@@ -10157,43 +10138,12 @@
           "elements": [
             {
               "text_run": {
-                "content": "鳄鱼带两件肉装开艾希，",
-                "text_element_style": {
-                  "bold": false,
-                  "inline_code": false,
-                  "italic": false,
-                  "strikethrough": false,
-                  "underline": false
-                }
-              }
-            },
-            {
-              "text_run": {
-                "content": "六级追艾希、鳄鱼三星",
-                "text_element_style": {
-                  "bold": true,
-                  "inline_code": false,
-                  "italic": false,
-                  "strikethrough": false,
-                  "underline": false
-                }
-              }
-            },
-            {
-              "text_run": {
-                "content": "，海洋乐器贴艾希。巴德、加里奥没齐先用芸阿娜、瑟提。选秀前四 D 开了芬妮、鳄鱼扛得住，六级可下贾克斯上芬妮，七级再补回三疾风。",
-                "text_element_style": {
-                  "bold": false,
-                  "inline_code": false,
-                  "italic": false,
-                  "strikethrough": false,
-                  "underline": false
-                }
+                "content": "【特殊运营门槛】雷克顿先穿两件肉装解锁艾希，海之歌乐器必须贴艾希；若 2-4 选秀前刷 4 次开了芬妮且鳄鱼扛得住，六级可下贾克斯上芬妮、七级再补回三迅击。"
               }
             }
           ],
           "level": 0,
-          "text": "鳄鱼带两件肉装开艾希，六级追艾希、鳄鱼三星，海洋乐器贴艾希。巴德、加里奥没齐先用芸阿娜、瑟提。选秀前四 D 开了芬妮、鳄鱼扛得住，六级可下贾克斯上芬妮，七级再补回三疾风。"
+          "text": "【特殊运营门槛】雷克顿先穿两件肉装解锁艾希，海之歌乐器必须贴艾希；若 2-4 选秀前刷 4 次开了芬妮且鳄鱼扛得住，六级可下贾克斯上芬妮、七级再补回三迅击。"
         },
         {
           "id": "sample-block-0539",
@@ -10966,11 +10916,11 @@
         {
           "id": "sample-block-1091",
           "type": "text",
-          "text": "高经济开派克，八级成型，九级补芮尔开 2 R&B 吃鸡。",
+          "text": "【特殊运营门槛】高经济局七级起战后留 85 金币解锁派克，并给术师或射手穿一件锁子甲解锁阿利斯塔；八级阿萝拉、牛头两星稳血上九补芮尔开 2 R&B。",
           "elements": [
             {
               "text_run": {
-                "content": "高经济开派克，八级成型，九级补芮尔开 2 R&B 吃鸡。"
+                "content": "【特殊运营门槛】高经济局七级起战后留 85 金币解锁派克，并给术师或射手穿一件锁子甲解锁阿利斯塔；八级阿萝拉、牛头两星稳血上九补芮尔开 2 R&B。"
               }
             }
           ]
@@ -11327,43 +11277,12 @@
           "elements": [
             {
               "text_run": {
-                "content": "青龙刀、无尽先给芸阿娜，两星凯尔或卢锡安接装。",
-                "text_element_style": {
-                  "bold": false,
-                  "inline_code": false,
-                  "italic": false,
-                  "strikethrough": false,
-                  "underline": false
-                }
-              }
-            },
-            {
-              "text_run": {
-                "content": "八级掉大血就先 D 前排",
-                "text_element_style": {
-                  "bold": true,
-                  "inline_code": false,
-                  "italic": false,
-                  "strikethrough": false,
-                  "underline": false
-                }
-              }
-            },
-            {
-              "text_run": {
-                "content": "，稳住再上九。优先两星泽丽；女枪先两星就上她和卢锡安。蒙多两星再接蕾欧娜的肉装。",
-                "text_element_style": {
-                  "bold": false,
-                  "inline_code": false,
-                  "italic": false,
-                  "strikethrough": false,
-                  "underline": false
-                }
+                "content": "【特殊运营门槛】高经济速九局，七级先上四名不同五杀或迅击鼓手开凯尔打工过渡；八级掉大血先 D 前排稳血再上九，三爵士变阵九级凑满 9 非唯一羁绊开史密奇。"
               }
             }
           ],
           "level": 0,
-          "text": "青龙刀、无尽先给芸阿娜，两星凯尔或卢锡安接装。八级掉大血就先 D 前排，稳住再上九。优先两星泽丽；女枪先两星就上她和卢锡安。蒙多两星再接蕾欧娜的肉装。"
+          "text": "【特殊运营门槛】高经济速九局，七级先上四名不同五杀或迅击鼓手开凯尔打工过渡；八级掉大血先 D 前排稳血再上九，三爵士变阵九级凑满 9 非唯一羁绊开史密奇。"
         },
         {
           "id": "sample-block-0078",
@@ -13814,7 +13733,7 @@
           "elements": [
             {
               "text_run": {
-                "content": "有 K/DA 纹章再走。二阶段选秀前刷 4 次解锁芬妮。金铲铲加大棒可合纹章。",
+                "content": "【特殊运营门槛】必须有 K/DA 纹章（金铲铲加大棒可合）且 2-4 选秀前刷 4 次解锁芬妮；6 级靠三名不同 K/DA 或非主流开伊芙琳，7 级冲 15 星高档。",
                 "text_element_style": {
                   "bold": false,
                   "inline_code": false,
@@ -13826,7 +13745,7 @@
             }
           ],
           "level": 0,
-          "text": "有 K/DA 纹章再走。二阶段选秀前刷 4 次解锁芬妮。金铲铲加大棒可合纹章。"
+          "text": "【特殊运营门槛】必须有 K/DA 纹章（金铲铲加大棒可合）且 2-4 选秀前刷 4 次解锁芬妮；6 级靠三名不同 K/DA 或非主流开伊芙琳，7 级冲 15 星高档。"
         },
         {
           "id": "sample-block-0308",
@@ -14952,7 +14871,7 @@
           "elements": [
             {
               "text_run": {
-                "content": "2-1 拿到莉莉娅专属，先合离子或正义。五级先拼双保镖、五颗 K/DA 星。",
+                "content": "【特殊运营门槛】2-1 拿专属强化 Dancin' n' Prancin' 且先合离子或正义；莉莉娅站第二排避开首轮集火、凯南先扛，五级先拼双护卫与 5 星 K/DA。",
                 "text_element_style": {
                   "bold": false,
                   "inline_code": false,
@@ -14964,7 +14883,7 @@
             }
           ],
           "level": 0,
-          "text": "2-1 拿到莉莉娅专属，先合离子或正义。五级先拼双保镖、五颗 K/DA 星。"
+          "text": "【特殊运营门槛】2-1 拿专属强化 Dancin' n' Prancin' 且先合离子或正义；莉莉娅站第二排避开首轮集火、凯南先扛，五级先拼双护卫与 5 星 K/DA。"
         },
         {
           "id": "sample-block-0249",
@@ -16524,7 +16443,7 @@
           "elements": [
             {
               "text_run": {
-                "content": "2-1 拿到安妮专属才走。先做纳什或法爆，看到提伯斯就买。强化已解锁提伯斯，低星熊没成型时让内瑟斯扛。",
+                "content": "【特殊运营门槛】2-1 拿专属强化 Tibbers! I Can't See the Stage 才走（强化自带解锁提伯斯）；低星熊未成型前先让内瑟斯扛，安妮三星且熊两星再上八。",
                 "text_element_style": {
                   "bold": false,
                   "inline_code": false,
@@ -16536,7 +16455,7 @@
             }
           ],
           "level": 0,
-          "text": "2-1 拿到安妮专属才走。先做纳什或法爆，看到提伯斯就买。强化已解锁提伯斯，低星熊没成型时让内瑟斯扛。"
+          "text": "【特殊运营门槛】2-1 拿专属强化 Tibbers! I Can't See the Stage 才走（强化自带解锁提伯斯）；低星熊未成型前先让内瑟斯扛，安妮三星且熊两星再上八。"
         },
         {
           "id": "sample-block-0292",
@@ -17180,7 +17099,7 @@
           "elements": [
             {
               "text_run": {
-                "content": "2-1 拿 Bite Marks。伊莉丝张数多、大棒能合装时走。五级同追伊莉丝和瑟提，尽早开 3 离子火花积攒格温的欢呼。",
+                "content": "【特殊运营门槛】2-1 拿专属强化 Bite Marks 且大棒能合装再走；五级同追伊莉丝和瑟提，尽早开 3 离子火花攒满 250 次欢呼解锁格温。",
                 "text_element_style": {
                   "bold": false,
                   "inline_code": false,
@@ -17192,7 +17111,7 @@
             }
           ],
           "level": 0,
-          "text": "2-1 拿 Bite Marks。伊莉丝张数多、大棒能合装时走。五级同追伊莉丝和瑟提，尽早开 3 离子火花积攒格温的欢呼。"
+          "text": "【特殊运营门槛】2-1 拿专属强化 Bite Marks 且大棒能合装再走；五级同追伊莉丝和瑟提，尽早开 3 离子火花攒满 250 次欢呼解锁格温。"
         },
         {
           "id": "sample-block-0109",
@@ -17840,7 +17759,7 @@
           "elements": [
             {
               "text_run": {
-                "content": "2-1 拿 He's Electric。蓝霸能早合、凯南来得多就打。五级同追一费凯南和莉莉娅，尽早让凯南拿击杀。",
+                "content": "【特殊运营门槛】2-1 拿专属强化 He's Electric 且蓝霸符能早合；五级开 3 真实伤害 A 面抢胜，同追凯南和莉莉娅并尽早让凯南拿击杀永久叠真伤。",
                 "text_element_style": {
                   "bold": false,
                   "inline_code": false,
@@ -17852,7 +17771,7 @@
             }
           ],
           "level": 0,
-          "text": "2-1 拿 He's Electric。蓝霸能早合、凯南来得多就打。五级同追一费凯南和莉莉娅，尽早让凯南拿击杀。"
+          "text": "【特殊运营门槛】2-1 拿专属强化 He's Electric 且蓝霸符能早合；五级开 3 真实伤害 A 面抢胜，同追凯南和莉莉娅并尽早让凯南拿击杀永久叠真伤。"
         },
         {
           "id": "sample-block-0066",
@@ -19148,7 +19067,7 @@
           "elements": [
             {
               "text_run": {
-                "content": "2-1 拿到 Punch Line 就留瑟提、伊莉丝和心之钢。先做饮血或泰坦，瑟提站主坦后侧近身打拳。",
+                "content": "【特殊运营门槛】2-1 拿专属强化 Punch Line 且有饮血或泰坦散件；瑟提站主坦后侧靠队友压血再进场处决收拳，五级先开三心之钢、双安可稳血。",
                 "text_element_style": {
                   "bold": false,
                   "inline_code": false,
@@ -19160,7 +19079,7 @@
             }
           ],
           "level": 0,
-          "text": "2-1 拿到 Punch Line 就留瑟提、伊莉丝和心之钢。先做饮血或泰坦，瑟提站主坦后侧近身打拳。"
+          "text": "【特殊运营门槛】2-1 拿专属强化 Punch Line 且有饮血或泰坦散件；瑟提站主坦后侧靠队友压血再进场处决收拳，五级先开三心之钢、双安可稳血。"
         },
         {
           "id": "sample-block-0013",
@@ -20210,43 +20129,12 @@
           "elements": [
             {
               "text_run": {
-                "content": "炸弹人带羊刀，纳尔带肉。七级上纳尔、奥拉夫、死歌、炸弹人开天使，八级天使、约里克两星接装。",
-                "text_element_style": {
-                  "bold": false,
-                  "inline_code": false,
-                  "italic": false,
-                  "strikethrough": false,
-                  "underline": false
-                }
-              }
-            },
-            {
-              "text_run": {
-                "content": "不同名五杀合计 10 星开铁男",
-                "text_element_style": {
-                  "bold": true,
-                  "inline_code": false,
-                  "italic": false,
-                  "strikethrough": false,
-                  "underline": false
-                }
-              }
-            },
-            {
-              "text_run": {
-                "content": "，没开先用乌鸦，开了换铁男，九级补回乌鸦。",
-                "text_element_style": {
-                  "bold": false,
-                  "inline_code": false,
-                  "italic": false,
-                  "strikethrough": false,
-                  "underline": false
-                }
+                "content": "【特殊运营门槛】七级上四名不同五杀或迅击鼓手开凯尔；不同名五杀合计 10 星才能解锁莫德凯撒（没开先用斯维因顶，开了立刻换铁男、九级补回斯维因，别死停过渡盘）。"
               }
             }
           ],
           "level": 0,
-          "text": "炸弹人带羊刀，纳尔带肉。七级上纳尔、奥拉夫、死歌、炸弹人开天使，八级天使、约里克两星接装。不同名五杀合计 10 星开铁男，没开先用乌鸦，开了换铁男，九级补回乌鸦。"
+          "text": "【特殊运营门槛】七级上四名不同五杀或迅击鼓手开凯尔；不同名五杀合计 10 星才能解锁莫德凯撒（没开先用斯维因顶，开了立刻换铁男、九级补回斯维因，别死停过渡盘）。"
         },
         {
           "id": "sample-block-0512",
@@ -25348,11 +25236,11 @@
         {
           "id": "sample-block-1185",
           "type": "text",
-          "text": "羊刀法装开局。八级用两星阿狸、希瓦娜稳血，跳过一星崔斯特，存钱上九。",
+          "text": "【特殊运营门槛】羊刀法装开局，八级靠两星阿狸、希瓦娜稳血跳过一星崔斯特直接存钱上九；崔斯特上场后每回合至少刷一次商店触发被动领奖励。",
           "elements": [
             {
               "text_run": {
-                "content": "羊刀法装开局。八级用两星阿狸、希瓦娜稳血，跳过一星崔斯特，存钱上九。"
+                "content": "【特殊运营门槛】羊刀法装开局，八级靠两星阿狸、希瓦娜稳血跳过一星崔斯特直接存钱上九；崔斯特上场后每回合至少刷一次商店触发被动领奖励。"
               }
             }
           ]
@@ -25706,11 +25594,11 @@
         {
           "id": "sample-block-1193",
           "type": "text",
-          "text": "物理装开局，七级上四名不同的心之钢或天才弈子，解锁拉露恩。",
+          "text": "【特殊运营门槛】七级上四名不同心之钢或天才开拉露恩，八级找两星拉露恩解锁厄斐琉斯；三心之钢选厄斐琉斯做本命带五把飞轮刃站聚光灯，不硬凑高心之钢。",
           "elements": [
             {
               "text_run": {
-                "content": "物理装开局，七级上四名不同的心之钢或天才弈子，解锁拉露恩。"
+                "content": "【特殊运营门槛】七级上四名不同心之钢或天才开拉露恩，八级找两星拉露恩解锁厄斐琉斯；三心之钢选厄斐琉斯做本命带五把飞轮刃站聚光灯，不硬凑高心之钢。"
               }
             }
           ]
