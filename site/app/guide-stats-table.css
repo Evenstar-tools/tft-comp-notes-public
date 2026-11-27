@@ -59,6 +59,22 @@
 }
 .guide-stats-title a:is(:hover, :focus-visible) { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
 .guide-stats-title .guide-playstyle-tag { font-size: .75rem; }
+.guide-stats-sample-tag {
+  flex: none;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--raised);
+  color: var(--muted);
+  font-size: .75rem;
+  font-weight: 600;
+  line-height: 1.3;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.guide-stats-sample-tag[data-limit="100"] {
+  background: var(--stats-active);
+  color: var(--accent);
+}
 .guide-stats-identity p { margin: 3px 0 0; color: var(--muted); font-size: .8125rem; font-weight: 400; line-height: 1.45; }
 .guide-stats-table .guide-stats-units { padding-inline-end: 8px; }
 .guide-stats-portraits { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 3px; }

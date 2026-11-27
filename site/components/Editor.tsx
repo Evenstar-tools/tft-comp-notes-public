@@ -1,4 +1,6 @@
 "use client";
+import { GameIconImage, EditorArtContext } from "./GameIconImage";
+import { editorArt } from "./editor-art";
 import {
   memo,
   useCallback,
@@ -963,7 +965,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
   }
   const sheetSummary: ReactNode = pieceUnit ? (
     <>
-      <img src={pieceUnit.image} alt="" width={32} height={32} decoding="async" />
+      <GameIconImage src={pieceUnit.image} alt="" width={32} height={32} decoding="async" />
       <span>
         <strong>{pieceUnit.name}</strong>
         <small>
@@ -974,7 +976,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
     </>
   ) : selected ? (
     <>
-      <img src={selected.image} alt="" width={32} height={32} decoding="async" />
+      <GameIconImage src={selected.image} alt="" width={32} height={32} decoding="async" />
       <span>
         <strong>{selected.name}</strong>
         <small>{selected.cost} 费</small>
@@ -983,7 +985,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
   ) : undefined;
 
   return (
-    <div className="editor">
+    <EditorArtContext.Provider value={editorArt}><div className="editor">
       {!ownerMode && <input
         ref={backupInput}
         type="file"
@@ -1210,7 +1212,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
                             {entry.pieces.slice(0, 4).map((p) => {
                               const unit = unitMap.get(p.unitId);
                               return unit && (
-                                <img key={p.instanceId} src={unit.image} alt="" width={20} height={20} decoding="async" />
+                                <GameIconImage key={p.instanceId} src={unit.image} alt="" width={20} height={20} decoding="async" />
                               );
                             })}
                           </span>
@@ -1604,7 +1606,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
           </button>
         </div>
       )}
-    </div>
+    </div></EditorArtContext.Provider>
   );
 }
 
@@ -1690,7 +1692,7 @@ const PieceEditor = memo(function PieceEditor({
   return (
     <section className={`piece-editor cost-${unit.cost}`} aria-label="棋盘上的棋子">
       <header className="piece-head">
-        <img src={unit.image} alt="" width={40} height={40} decoding="async" />
+        <GameIconImage src={unit.image} alt="" width={40} height={40} decoding="async" />
         <span>
           <strong>{unit.name}</strong>
           <small>{cellName(piece.position)}</small>
