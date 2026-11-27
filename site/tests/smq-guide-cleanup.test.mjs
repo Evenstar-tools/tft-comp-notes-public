@@ -226,8 +226,11 @@ test("fast-nine picks retain their reviewed family bindings and board-specific c
     assert.equal(pick.status, status);
     assert.equal(pick.group, "fast9");
     assert.deepEqual(pick.sources, [binding.url]);
-    const carries = readingNotes(section, team, preview.season).roles.find(role => role.label === "主C").units;
+    const roles = readingNotes(section, team, preview.season).roles;
+    const carries = roles.filter(role => role.label === "主C" || role.label === "副C").flatMap(role =>
+      role.units.filter(id => team.pieces.some(piece => piece.unitId === id && piece.items.length)));
     assert.deepEqual(binding.carryIds, carries);
+    assert.deepEqual(families.rows.find(row => row.clusterId === clusterId).carryIds, carries);
     // A provider can change its representative board without changing the model ID.
     for (const family of guideFamilyRows(families, preview.season.id, section.id, sectionTeams(section))) {
       assert.equal(family.stat.clusterId, clusterId);
