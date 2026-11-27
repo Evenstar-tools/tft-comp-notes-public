@@ -5,19 +5,7 @@
   "nodeVersion": "22.17.1",
   "headers": [
     {
-      "source": "/assets/items/*.webp",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=14400" }]
-    },
-    {
-      "source": "/assets/traits/*.webp",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=14400" }]
-    },
-    {
-      "source": "/assets/datatft/*-portrait.jpg",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=14400" }]
-    },
-    {
-      "source": "/assets/augment-icons/*",
+      "source": "/assets/*",
       "headers": [{ "key": "Cache-Control", "value": "public, max-age=14400" }]
     }
   ]
