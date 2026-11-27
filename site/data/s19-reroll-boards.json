@@ -313,7 +313,7 @@
       }
     ],
     "edits": [
-      {"teamId": "00000000-0000-4000-8000-000000000103", "positions": {"annie": 9, "shyvana": 12}, "stoneplateHolder": "sett", "originalPositions": {"sett": 1, "braum": 2, "annie": 3, "shyvana": 5}}
+      {"teamId": "00000000-0000-4000-8000-000000000103", "positions": {"annie": 9, "shyvana": 11, "gwen": 12}, "stoneplateHolder": "sett", "originalPositions": {"sett": 1, "braum": 2, "annie": 3, "shyvana": 5}}
     ]
   },
   {
@@ -516,10 +516,10 @@
       {"teamId": "00000000-0000-4000-8000-000000000113", "originalPositions": {"neeko": 22}, "positions": {"neeko": 21}},
       {"teamId": "00000000-0000-4000-8000-000000000053", "originalPositions": {"neeko": 22}, "positions": {"neeko": 21}},
       {"teamId": "00000000-0000-4000-8000-000000000039", "originalPositions": {"neeko": 22}, "positions": {"neeko": 21}},
-      {"teamId": "00000000-0000-4000-8000-000000000114", "positions": {"lillia": 7}, "stoneplateHolder": "gragas", "originalPositions": {"gragas": 3, "lillia": 1, "leona": 4}},
-      {"teamId": "00000000-0000-4000-8000-000000000113", "positions": {"leona": 8}, "stoneplateHolder": "lillia", "originalPositions": {"lillia": 3, "leona": 2, "gragas": 4}},
+      {"teamId": "00000000-0000-4000-8000-000000000114", "positions": {"lillia": 7, "leona": 1}, "stoneplateHolder": "gragas", "originalPositions": {"gragas": 3, "lillia": 1, "leona": 4}},
+      {"teamId": "00000000-0000-4000-8000-000000000113", "positions": {"leona": 8, "gragas": 1}, "stoneplateHolder": "lillia", "originalPositions": {"lillia": 3, "leona": 2, "gragas": 4}},
       {"teamId": "00000000-0000-4000-8000-000000000053", "positions": {"kennen": 10}, "stoneplateHolder": "lillia", "originalPositions": {"lillia": 3, "kennen": 4, "gragas": 2}},
-      {"teamId": "00000000-0000-4000-8000-000000000039", "positions": {"leona": 8}, "stoneplateHolder": "lillia", "originalPositions": {"lillia": 3, "leona": 2, "gragas": 4}}
+      {"teamId": "00000000-0000-4000-8000-000000000039", "positions": {"leona": 8, "gragas": 1}, "stoneplateHolder": "lillia", "originalPositions": {"lillia": 3, "leona": 2, "gragas": 4}}
     ]
   },
   {
@@ -1112,19 +1112,19 @@
           {
             "unitId": "vi",
             "stars": 1,
-            "position": 2,
+            "position": 9,
             "items": []
           },
           {
             "unitId": "lillia",
             "stars": 2,
-            "position": 3,
+            "position": 10,
             "items": []
           },
           {
             "unitId": "k-sante",
             "stars": 2,
-            "position": 4,
+            "position": 11,
             "items": []
           },
           {
@@ -1190,7 +1190,7 @@
           {
             "unitId": "gragas",
             "stars": 1,
-            "position": 0,
+            "position": 8,
             "items": []
           },
           {
@@ -1206,19 +1206,19 @@
           {
             "unitId": "vi",
             "stars": 2,
-            "position": 2,
+            "position": 9,
             "items": []
           },
           {
             "unitId": "lillia",
             "stars": 2,
-            "position": 3,
+            "position": 10,
             "items": []
           },
           {
             "unitId": "k-sante",
             "stars": 2,
-            "position": 4,
+            "position": 11,
             "items": []
           },
           {
@@ -1280,7 +1280,7 @@
       {
         "teamId": "00000000-0000-4000-8000-000000000044",
         "originalPositions": {"tibbers": 1, "garen": 2, "nasus": 3, "k-sante": 4, "leona": 5, "lillia": 6, "jax": 14, "renata-glasc": 21},
-        "positions": {"nasus": 2, "garen": 3, "tibbers": 6, "lillia": 27},
+        "positions": {"nasus": 2, "garen": 10, "k-sante": 11, "tibbers": 6, "lillia": 27},
         "notes": "烈娜塔和狗头六级追三。贾克斯来得多一起追三，三件套齐了打双 C。",
         "wording": {
           "before": "优先烈娜塔三星、狗头三星；贾克斯有饮血和泰坦再留牌追三。",
@@ -3131,8 +3131,8 @@
       }
     ],
     "edits": [
-      {"teamId": "00000000-0000-4000-8000-000000000064", "positions": {"locke": 9, "viego": 10}, "stoneplateHolder": "yorick", "originalPositions": {"yorick": 2, "locke": 3, "viego": 4, "olaf": 5}},
-      {"teamId": "00000000-0000-4000-8000-000000000019", "positions": {"locke": 9, "viego": 10}, "stoneplateHolder": "yorick", "originalPositions": {"yorick": 2, "locke": 3, "viego": 4, "olaf": 5, "swain": 6}},
+      {"teamId": "00000000-0000-4000-8000-000000000064", "positions": {"locke": 9, "viego": 10, "olaf": 0}, "stoneplateHolder": "yorick", "originalPositions": {"yorick": 2, "locke": 3, "viego": 4, "olaf": 5}},
+      {"teamId": "00000000-0000-4000-8000-000000000019", "positions": {"locke": 9, "viego": 10, "swain": 0}, "stoneplateHolder": "yorick", "originalPositions": {"yorick": 2, "locke": 3, "viego": 4, "olaf": 5, "swain": 6}},
       {
         "teamId": "00000000-0000-4000-8000-000000000106",
         "originalPositions": {
@@ -3147,7 +3147,7 @@
       {
         "teamId": "00000000-0000-4000-8000-000000000106",
         "positions": {
-          "yorick": 5,
+          "yorick": 1,
           "olaf": 7,
           "taric": 8
         },
@@ -3165,7 +3165,7 @@
       {
         "teamId": "00000000-0000-4000-8000-000000000120",
         "positions": {
-          "yorick": 5,
+          "yorick": 1,
           "olaf": 7,
           "taric": 8
         },

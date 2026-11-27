@@ -315,6 +315,8 @@
 .hero-metric-strip > div + div { border-inline-start: 1px solid var(--line); }
 .hero-metric-strip dt, .hero-metric-strip small { color: var(--muted); font-size: 11px; line-height: 1.45; }
 .hero-metric-strip dd { margin: 3px 0 0; color: var(--text); font-size: clamp(14px, 1.4vw, 20px); font-weight: 650; line-height: 1.2; }
+.hero-metric-strip dd[data-tone="strong"] { color: light-dark(#216242, #85d8a3); }
+.hero-metric-strip dd[data-tone="weak"] { color: light-dark(#a3373e, #ff9ba3); }
 .hero-metric-strip small { display: block; font-weight: 400; }
 .hero-common-items ul {
   display: grid;

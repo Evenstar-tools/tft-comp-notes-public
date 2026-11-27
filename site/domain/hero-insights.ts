@@ -27,6 +27,14 @@ export function rankHeroes(
   return ranks;
 }
 
+export function heroCostRankTone(rank?: { place: number; total: number }): "strong" | "weak" | undefined {
+  if (!rank || !Number.isSafeInteger(rank.place) || !Number.isSafeInteger(rank.total) || rank.total < 3) return undefined;
+  const cutoff = Math.max(1, Math.round(rank.total / 3));
+  if (rank.place <= cutoff) return "strong";
+  if (rank.place > rank.total - cutoff) return "weak";
+  return undefined;
+}
+
 export function commonHeroItems(
   items: ReadonlyMap<string, Item>,
   samples: Record<string, { rows: { unitId: string; games: number; mean?: number | null; rate?: number | null; placementDelta?: number }[] }>,
