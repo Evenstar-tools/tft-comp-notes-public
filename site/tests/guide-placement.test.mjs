@@ -26,6 +26,8 @@ test("historical formation evidence names its recorded build instead of the curr
   }, current), { patch: "PBE 19.1b", window: "构建 6018196", historical: true });
   assert.equal(formationSourcePeriod({ patch: "PBE 19.1c", build: "6035832", windowHours: 6 }, current).historical, true);
   assert.equal(formationSourcePeriod({ patch: "PBE 19.1c", windowHours: 72 }, current).historical, false);
+  assert.equal(formationSourcePeriod({ patch: "Ranked 19.1", build: "6037882", windowHours: 72 },
+    { patch: "19.1", build: "6037882" }).historical, false);
 });
 
 test("splitting a nested condition subtracts each rank and rejects incompatible buckets", () => {

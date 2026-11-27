@@ -88,7 +88,7 @@ export function formationSourcePeriod(
   current: { patch: string; build: string },
 ) {
   const patch = sample.patch ?? "补丁未记录";
-  const historical = patch.replace(/^PBE\s+/i, "") !== current.patch ||
+  const historical = patch.replace(/^(?:PBE|Ranked)\s+/i, "") !== current.patch ||
     Boolean(sample.build && sample.build !== current.build);
   const window = sample.window === "仅当前构建"
     ? (sample.build ? "构建 " + sample.build : "构建未记录")
