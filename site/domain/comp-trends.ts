@@ -1,7 +1,9 @@
+import { patchReferences } from "../data/patch-notes.ts";
 import { familyPickRate } from "./guide-family-stats.ts";
 import { canonicalGuidePath } from "./guide-slugs.ts";
 import type { Season } from "./types";
 import { displayGuideName, displayTraitNames } from "./trait-names.mjs";
+import { versionUpdateLink } from "./version-updates.ts";
 
 export type TrendPoint = {
   at: string; games: number; mean: number; topFourRate: number; winRate: number;
@@ -221,17 +223,20 @@ export function buildCompTrendModel(history: CompTrendHistory, season: Season, b
   });
   const verifiedPatches = new Map<string, TrendPatch>();
   const observedLabels = new Map<string, HistoryBatch>();
-  const activeLabel = active && archive.find(batch => batch.build === active.build)?.patch;
-  const activePatchHref = active && "/updates?entry=" + encodeURIComponent(active.updateId);
+  const referencesByBuild = new Map(patchReferences.filter(reference => era(reference.edition) === currentEra)
+    .map(reference => [reference.build.split(".").at(-1), reference.id]));
+  const activeReference = active && patchReferences.find(reference => reference.id === active.updateId);
   for (const batch of archive) {
     if (!observedLabels.has(batch.patch)) observedLabels.set(batch.patch, batch);
     const effectiveAt = batch.effectiveAt ?? (active?.build === batch.build ? active?.effectiveAt : undefined);
     if (!effectiveAt || !Number.isFinite(Date.parse(effectiveAt))) continue;
     const previous = verifiedPatches.get(batch.patch);
     if (previous && Date.parse(previous.at) <= Date.parse(effectiveAt)) continue;
+    const updateId = referencesByBuild.get(batch.build ?? undefined) ??
+      (active?.build === batch.build && !activeReference ? active.updateId : undefined);
     verifiedPatches.set(batch.patch, {
       at: effectiveAt, label: batch.patch + " 实装",
-      href: batch.patch === activeLabel ? activePatchHref : batch.patchUrl,
+      href: updateId ? versionUpdateLink(updateId) : batch.patchUrl,
     });
   }
   const patches = [...verifiedPatches.values(), ...[...observedLabels.values()].flatMap(batch =>
