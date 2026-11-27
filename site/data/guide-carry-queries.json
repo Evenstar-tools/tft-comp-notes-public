@@ -156,30 +156,6 @@
   },
   {
     "sectionId": "sample-block-0464",
-    "teamId": "00000000-0000-4000-8000-000000000009",
-    "board": "八级 · 伊芙琳",
-    "carryId": "neeko",
-    "tankId": "lillia",
-    "anchorIds": [
-      "lillia",
-      "evelynn",
-      "varus",
-      "kai-sa"
-    ],
-    "traits": {},
-    "carryItems": [
-      "TFT_Item_SpearOfShojin",
-      "TFT_Item_JeweledGauntlet",
-      "TFT_Item_PowerGauntlet"
-    ],
-    "tankItems": [
-      "TFT_Item_GargoyleStoneplate",
-      "TFT_Item_WarmogsArmor",
-      "TFT_Item_Redemption"
-    ]
-  },
-  {
-    "sectionId": "sample-block-0464",
     "teamId": "00000000-0000-4000-8000-000000000114",
     "board": "八级 · 无卡莎阿狸",
     "carryId": "neeko",
@@ -221,78 +197,6 @@
     "tankItems": [
       "TFT_Item_GargoyleStoneplate",
       "TFT_Item_WarmogsArmor",
-      "TFT_Item_Redemption"
-    ]
-  },
-  {
-    "sectionId": "sample-block-0122",
-    "teamId": "00000000-0000-4000-8000-000000000028",
-    "board": "八级 · 四保镖",
-    "carryId": "renata-glasc",
-    "tankId": "nasus",
-    "anchorIds": [
-      "nasus",
-      "jax"
-    ],
-    "traits": {
-      "bodyguard": 4
-    },
-    "carryItems": [
-      "TFT_Item_SpearOfShojin",
-      "TFT_Item_ArchangelsStaff",
-      "TFT_Item_HextechGunblade"
-    ],
-    "tankItems": [
-      "TFT_Item_WarmogsArmor",
-      "TFT_Item_GargoyleStoneplate",
-      "TFT_Item_Redemption"
-    ]
-  },
-  {
-    "sectionId": "sample-block-0122",
-    "teamId": "00000000-0000-4000-8000-000000000065",
-    "board": "六保镖 · 芬妮",
-    "carryId": "renata-glasc",
-    "tankId": "nasus",
-    "anchorIds": [
-      "nasus",
-      "seraphine"
-    ],
-    "traits": {
-      "bodyguard": 6
-    },
-    "carryItems": [
-      "TFT_Item_SpearOfShojin",
-      "TFT_Item_ArchangelsStaff",
-      "TFT_Item_HextechGunblade"
-    ],
-    "tankItems": [
-      "TFT_Item_WarmogsArmor",
-      "TFT_Item_GargoyleStoneplate",
-      "TFT_Item_Redemption"
-    ]
-  },
-  {
-    "sectionId": "sample-block-0122",
-    "teamId": "00000000-0000-4000-8000-000000000111",
-    "board": "六保镖 · 盖伦",
-    "carryId": "renata-glasc",
-    "tankId": "nasus",
-    "anchorIds": [
-      "nasus",
-      "garen"
-    ],
-    "traits": {
-      "bodyguard": 6
-    },
-    "carryItems": [
-      "TFT_Item_SpearOfShojin",
-      "TFT_Item_ArchangelsStaff",
-      "TFT_Item_HextechGunblade"
-    ],
-    "tankItems": [
-      "TFT_Item_WarmogsArmor",
-      "TFT_Item_GargoyleStoneplate",
       "TFT_Item_Redemption"
     ]
   },
@@ -564,29 +468,6 @@
     ]
   },
   {
-    "sectionId": "sample-block-0203",
-    "teamId": "00000000-0000-4000-8000-000000000109",
-    "board": "五级 · 芬妮",
-    "carryId": "yunara",
-    "tankId": "elise",
-    "anchorIds": [
-      "elise",
-      "ziggs",
-      "seraphine"
-    ],
-    "traits": {
-      "ionic-spark": 3
-    },
-    "carryItems": [
-      "TFT_Item_GuinsoosRageblade",
-      "TFT_Item_LastWhisper"
-    ],
-    "tankItems": [
-      "TFT_Item_GargoyleStoneplate",
-      "TFT_Item_WarmogsArmor"
-    ]
-  },
-  {
     "sectionId": "sample-block-0327",
     "teamId": "00000000-0000-4000-8000-000000000054",
     "board": "六级慢搜",
@@ -595,31 +476,6 @@
     "anchorIds": [
       "renekton",
       "jax",
-      "bard"
-    ],
-    "traits": {
-      "beach-pop": 3
-    },
-    "carryItems": [
-      "TFT_Item_GuinsoosRageblade",
-      "TFT_Item_LastWhisper",
-      "TFT_Item_RunaansHurricane"
-    ],
-    "tankItems": [
-      "TFT_Item_GargoyleStoneplate",
-      "TFT_Item_WarmogsArmor",
-      "TFT_Item_RedBuff"
-    ]
-  },
-  {
-    "sectionId": "sample-block-0327",
-    "teamId": "00000000-0000-4000-8000-000000000010",
-    "board": "六级 · 芬妮",
-    "carryId": "ashe",
-    "tankId": "renekton",
-    "anchorIds": [
-      "renekton",
-      "seraphine",
       "bard"
     ],
     "traits": {

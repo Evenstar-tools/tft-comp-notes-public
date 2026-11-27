@@ -6045,7 +6045,7 @@
           "elements": [
             {
               "text_run": {
-                "content": "8级 · 同侧集火",
+                "content": "八级 · 四安可成型",
                 "text_element_style": {
                   "bold": false,
                   "inline_code": false,
@@ -6057,7 +6057,7 @@
             }
           ],
           "level": 3,
-          "text": "8级 · 同侧集火"
+          "text": "八级 · 四安可成型"
         },
         {
           "id": "sample-block-0707",
@@ -6175,50 +6175,6 @@
           ],
           "level": 0,
           "text": "TFTAcademy 同侧原盘"
-        },
-        {
-          "id": "sample-block-0629",
-          "type": "text",
-          "elements": [
-            {
-              "text_run": {
-                "content": "棋盘配装 · 8级 · 同侧集火",
-                "text_element_style": {
-                  "bold": true,
-                  "inline_code": false,
-                  "italic": false,
-                  "strikethrough": false,
-                  "underline": false
-                }
-              }
-            },
-            {
-              "text_run": {
-                "content": "\n主C：伊泽瑞尔。无尽之刃、蓝霸符、强袭者的链枷。\n主坦：内瑟斯。石像鬼石板甲、冕卫、狂徒铠甲。\n副C：卢锡安。朔极之矛、红霸符、最后的轻语。\n",
-                "text_element_style": {
-                  "bold": false,
-                  "inline_code": false,
-                  "italic": false,
-                  "strikethrough": false,
-                  "underline": false
-                }
-              }
-            },
-            {
-              "text_run": {
-                "content": "功能装：卢锡安。红霸符挂重伤，轻语补破甲。",
-                "text_element_style": {
-                  "bold": false,
-                  "inline_code": false,
-                  "italic": false,
-                  "strikethrough": false,
-                  "underline": false
-                }
-              }
-            }
-          ],
-          "level": 0,
-          "text": "棋盘配装 · 8级 · 同侧集火\n主C：伊泽瑞尔。无尽之刃、蓝霸符、强袭者的链枷。\n主坦：内瑟斯。石像鬼石板甲、冕卫、狂徒铠甲。\n副C：卢锡安。朔极之矛、红霸符、最后的轻语。\n功能装：卢锡安。红霸符挂重伤，轻语补破甲。"
         }
       ],
       "kind": "guide",
@@ -6436,85 +6392,6 @@
             {
               "instanceId": "00000000-0000-4000-8000-000000000936",
               "unitId": "jhin",
-              "position": 27,
-              "stars": 2,
-              "items": []
-            }
-          ]
-        },
-        {
-          "id": "00000000-0000-4000-8000-000000000123",
-          "name": "8级 · 同侧集火",
-          "category": "待分类",
-          "notes": "",
-          "revision": 1,
-          "updatedAt": "2026-11-23T04:49:26.702Z",
-          "sectionId": "sample-block-0254",
-          "pieces": [
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000694",
-              "unitId": "nasus",
-              "position": 2,
-              "stars": 3,
-              "items": [
-                "TFT_Item_GargoyleStoneplate",
-                "TFT_Item_Crownguard",
-                "TFT_Item_WarmogsArmor"
-              ]
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000001004",
-              "unitId": "sett",
-              "position": 3,
-              "stars": 2,
-              "items": []
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000497",
-              "unitId": "galio",
-              "position": 4,
-              "stars": 1,
-              "items": []
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000394",
-              "unitId": "k-sante",
-              "position": 5,
-              "stars": 2,
-              "items": []
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000701",
-              "unitId": "ezreal",
-              "position": 21,
-              "stars": 3,
-              "items": [
-                "TFT_Item_InfinityEdge",
-                "TFT_Item_BlueBuff",
-                "TFT_Item_PowerGauntlet"
-              ]
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000691",
-              "unitId": "lucian",
-              "position": 22,
-              "stars": 3,
-              "items": [
-                "TFT_Item_SpearOfShojin",
-                "TFT_Item_RapidFireCannon",
-                "TFT_Item_LastWhisper"
-              ]
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000818",
-              "unitId": "jhin",
-              "position": 26,
-              "stars": 2,
-              "items": []
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000564",
-              "unitId": "yuumi",
               "position": 27,
               "stars": 2,
               "items": []
@@ -7450,53 +7327,6 @@
           "text": "各棋盘配装"
         },
         {
-          "id": "sample-block-0422",
-          "type": "text",
-          "elements": [
-            {
-              "text_run": {
-                "content": "棋盘配装 · 八级 · 伊芙琳",
-                "text_element_style": {
-                  "bold": true,
-                  "inline_code": false,
-                  "italic": false,
-                  "strikethrough": false,
-                  "underline": false
-                }
-              }
-            },
-            {
-              "text_run": {
-                "content": "\n主C：妮蔻。朔极之矛、珠光护手、强袭者的链枷。\n主坦：莉莉娅。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n功能装：古拉加斯。酒桶带离子破魔抗，日炎补灼烧与重伤。\n",
-                "text_element_style": {
-                  "bold": false,
-                  "inline_code": false,
-                  "italic": false,
-                  "strikethrough": false,
-                  "underline": false
-                }
-              }
-            },
-            {
-              "text_run": {
-                "content": "结算 12 局",
-                "text_element_style": {
-                  "bold": false,
-                  "inline_code": false,
-                  "italic": false,
-                  "link": {
-                    "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=8&unit=DA_Leona19-1&unit=DA_Lillia19-1&unit=DA_Gragas19-1&unit=DA_Varus19-1&unit=DA_Neeko19-1&unit=DA_Kaisa19-1&unit=DA_Evelynn19-1&unit=DA_19_Ahri-1"
-                  },
-                  "strikethrough": false,
-                  "underline": false
-                }
-              }
-            }
-          ],
-          "level": 0,
-          "text": "棋盘配装 · 八级 · 伊芙琳\n主C：妮蔻。朔极之矛、珠光护手、强袭者的链枷。\n主坦：莉莉娅。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n功能装：古拉加斯。酒桶带离子破魔抗，日炎补灼烧与重伤。\n结算 12 局"
-        },
-        {
           "id": "sample-block-0133",
           "type": "text",
           "elements": [
@@ -7945,7 +7775,13 @@
               "unitId": "akali-kda",
               "position": 17,
               "stars": 1,
-              "items": []
+              "items": [],
+              "alternate": {
+                "instanceId": "00000000-0000-4000-8000-000000000416",
+                "unitId": "varus",
+                "stars": 2,
+                "items": []
+              }
             },
             {
               "instanceId": "00000000-0000-4000-8000-000000000171",
@@ -7974,84 +7810,6 @@
             },
             {
               "instanceId": "00000000-0000-4000-8000-000000000160",
-              "unitId": "ahri",
-              "position": 25,
-              "stars": 1,
-              "items": []
-            }
-          ]
-        },
-        {
-          "id": "00000000-0000-4000-8000-000000000009",
-          "name": "八级 · 伊芙琳",
-          "category": "待分类",
-          "notes": "八级补阿狸，伊芙琳换艾克能开 13 星再换。卡莎只补羁绊，可空装。余法装给阿狸；多余物理成装临时给韦鲁斯，换人后再分。",
-          "revision": 3,
-          "updatedAt": "2026-11-19T17:28:30.815Z",
-          "sectionId": "sample-block-0464",
-          "pieces": [
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000807",
-              "unitId": "leona",
-              "position": 2,
-              "stars": 1,
-              "items": []
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000601",
-              "unitId": "lillia",
-              "position": 3,
-              "stars": 2,
-              "items": [
-                "TFT_Item_GargoyleStoneplate",
-                "TFT_Item_WarmogsArmor",
-                "TFT_Item_Redemption"
-              ]
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000488",
-              "unitId": "gragas",
-              "position": 4,
-              "stars": 2,
-              "items": [
-                "TFT_Item_IonicSpark",
-                "TFT_Item_RedBuff"
-              ]
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000416",
-              "unitId": "varus",
-              "position": 17,
-              "stars": 2,
-              "items": []
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000683",
-              "unitId": "neeko",
-              "position": 22,
-              "stars": 3,
-              "items": [
-                "TFT_Item_SpearOfShojin",
-                "TFT_Item_JeweledGauntlet",
-                "TFT_Item_PowerGauntlet"
-              ]
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000287",
-              "unitId": "kai-sa",
-              "position": 27,
-              "stars": 2,
-              "items": []
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000655",
-              "unitId": "evelynn",
-              "position": 11,
-              "stars": 2,
-              "items": []
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000814",
               "unitId": "ahri",
               "position": 25,
               "stars": 1,
@@ -8142,7 +7900,7 @@
           }
         ]
       },
-      "primaryTeamId": "00000000-0000-4000-8000-000000000009",
+      "primaryTeamId": "00000000-0000-4000-8000-000000000039",
       "stageTeamIds": [
         "00000000-0000-4000-8000-000000000113",
         "00000000-0000-4000-8000-000000000053"
@@ -8272,7 +8030,7 @@
         {
           "id": "sample-block-0083",
           "type": "text",
-          "text": "六保镖缺牌就按图用盖伦开四编舞，保留四保镖。"
+          "text": "六保镖缺牌时可留四保镖，用盖伦和阿狸开四编舞。"
         },
         {
           "id": "sample-block-0334",
@@ -8320,236 +8078,6 @@
                 "text_element_style": {
                   "link": {
                     "url": "https://data.metatft.com/lookups/pbe_TFTSet19_tables.json"
-                  }
-                }
-              }
-            }
-          ]
-        },
-        {
-          "id": "sample-block-0156",
-          "type": "text",
-          "text": "棋盘配装 · 八级 · 四保镖\n主C：烈娜塔·戈拉斯克。朔极之矛、大天使之杖、海克斯科技枪刃。\n主坦：内瑟斯。狂徒铠甲、石像鬼石板甲、振奋盔甲。\n副C：阿狸。有对应余装再补。\n功能装：莉莉娅。带日炎，近身给前排挂重伤。\n功能装：贾克斯。两星贾克斯带离子，邻近目标破魔抗。\n结算 0 局",
-          "elements": [
-            {
-              "text_run": {
-                "content": "棋盘配装 · 八级 · 四保镖",
-                "text_element_style": {
-                  "bold": true
-                }
-              }
-            },
-            {
-              "text_run": {
-                "content": "\n"
-              }
-            },
-            {
-              "text_run": {
-                "content": "主C：烈娜塔·戈拉斯克。朔极之矛、大天使之杖、海克斯科技枪刃。"
-              }
-            },
-            {
-              "text_run": {
-                "content": "\n"
-              }
-            },
-            {
-              "text_run": {
-                "content": "主坦：内瑟斯。狂徒铠甲、石像鬼石板甲、振奋盔甲。"
-              }
-            },
-            {
-              "text_run": {
-                "content": "\n"
-              }
-            },
-            {
-              "text_run": {
-                "content": "副C：阿狸。有对应余装再补。"
-              }
-            },
-            {
-              "text_run": {
-                "content": "\n"
-              }
-            },
-            {
-              "text_run": {
-                "content": "功能装：莉莉娅。带日炎，近身给前排挂重伤。"
-              }
-            },
-            {
-              "text_run": {
-                "content": "\n"
-              }
-            },
-            {
-              "text_run": {
-                "content": "功能装：贾克斯。两星贾克斯带离子，邻近目标破魔抗。"
-              }
-            },
-            {
-              "text_run": {
-                "content": "\n"
-              }
-            },
-            {
-              "text_run": {
-                "content": "结算 0 局",
-                "text_element_style": {
-                  "link": {
-                    "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=8&unit=DA_Lillia19-1&unit=DA_Nasus19-1&unit=DA_KSante19-1&unit=DA_Jax19-1&unit=DA_RenataGlasc19-1&unit=DA_Syndra19-1&unit=DA_19_Ahri-1&unit=DA_Garen19-1"
-                  }
-                }
-              }
-            }
-          ]
-        },
-        {
-          "id": "sample-block-0373",
-          "type": "text",
-          "text": "棋盘配装 · 六保镖 · 芬妮\n主C：烈娜塔·戈拉斯克。朔极之矛、大天使之杖、海克斯科技枪刃。\n主坦：内瑟斯。狂徒铠甲、石像鬼石板甲、振奋盔甲。\n副C：萨勒芬妮。有对应余装再补。\n功能装：莉莉娅。带日炎，近身给前排挂重伤。\n功能装：贾克斯。两星贾克斯带离子，邻近目标破魔抗。\n结算 38 局",
-          "elements": [
-            {
-              "text_run": {
-                "content": "棋盘配装 · 六保镖 · 芬妮",
-                "text_element_style": {
-                  "bold": true
-                }
-              }
-            },
-            {
-              "text_run": {
-                "content": "\n"
-              }
-            },
-            {
-              "text_run": {
-                "content": "主C：烈娜塔·戈拉斯克。朔极之矛、大天使之杖、海克斯科技枪刃。"
-              }
-            },
-            {
-              "text_run": {
-                "content": "\n"
-              }
-            },
-            {
-              "text_run": {
-                "content": "主坦：内瑟斯。狂徒铠甲、石像鬼石板甲、振奋盔甲。"
-              }
-            },
-            {
-              "text_run": {
-                "content": "\n"
-              }
-            },
-            {
-              "text_run": {
-                "content": "副C：萨勒芬妮。有对应余装再补。"
-              }
-            },
-            {
-              "text_run": {
-                "content": "\n"
-              }
-            },
-            {
-              "text_run": {
-                "content": "功能装：莉莉娅。带日炎，近身给前排挂重伤。"
-              }
-            },
-            {
-              "text_run": {
-                "content": "\n"
-              }
-            },
-            {
-              "text_run": {
-                "content": "功能装：贾克斯。两星贾克斯带离子，邻近目标破魔抗。"
-              }
-            },
-            {
-              "text_run": {
-                "content": "\n"
-              }
-            },
-            {
-              "text_run": {
-                "content": "结算 38 局",
-                "text_element_style": {
-                  "link": {
-                    "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=8&unit=DA_Lillia19-1&unit=DA_Nasus19-1&unit=DA_KSante19-1&unit=DA_Jax19-1&unit=DA_RenataGlasc19-1&unit=DA_Leona19-1&unit=DA_Kennen19-1&unit=DA_Seraphine19_Indie-1"
-                  }
-                }
-              }
-            }
-          ]
-        },
-        {
-          "id": "sample-block-0031",
-          "type": "text",
-          "text": "棋盘配装 · 六保镖 · 盖伦\n主C：烈娜塔·戈拉斯克。朔极之矛、大天使之杖、海克斯科技枪刃。\n主坦：内瑟斯。狂徒铠甲、石像鬼石板甲、振奋盔甲。\n功能装：莉莉娅。带日炎，近身给前排挂重伤。\n功能装：贾克斯。两星贾克斯带离子，邻近目标破魔抗。\n结算 82 局",
-          "elements": [
-            {
-              "text_run": {
-                "content": "棋盘配装 · 六保镖 · 盖伦",
-                "text_element_style": {
-                  "bold": true
-                }
-              }
-            },
-            {
-              "text_run": {
-                "content": "\n"
-              }
-            },
-            {
-              "text_run": {
-                "content": "主C：烈娜塔·戈拉斯克。朔极之矛、大天使之杖、海克斯科技枪刃。"
-              }
-            },
-            {
-              "text_run": {
-                "content": "\n"
-              }
-            },
-            {
-              "text_run": {
-                "content": "主坦：内瑟斯。狂徒铠甲、石像鬼石板甲、振奋盔甲。"
-              }
-            },
-            {
-              "text_run": {
-                "content": "\n"
-              }
-            },
-            {
-              "text_run": {
-                "content": "功能装：莉莉娅。带日炎，近身给前排挂重伤。"
-              }
-            },
-            {
-              "text_run": {
-                "content": "\n"
-              }
-            },
-            {
-              "text_run": {
-                "content": "功能装：贾克斯。两星贾克斯带离子，邻近目标破魔抗。"
-              }
-            },
-            {
-              "text_run": {
-                "content": "\n"
-              }
-            },
-            {
-              "text_run": {
-                "content": "结算 82 局",
-                "text_element_style": {
-                  "link": {
-                    "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=8&unit=DA_Lillia19-1&unit=DA_Nasus19-1&unit=DA_KSante19-1&unit=DA_Jax19-1&unit=DA_RenataGlasc19-1&unit=DA_Leona19-1&unit=DA_Kennen19-1&unit=DA_Garen19-1"
                   }
                 }
               }
@@ -8878,7 +8406,7 @@
             },
             {
               "text_run": {
-                "content": "备战席留安妮，二星带一件开提伯斯后再下。七八级补提伯斯、蕾欧娜开六保镖，盖伦换佛耶戈保留双编舞。狗头带离子减魔抗、日炎重伤，贾克斯放狗头同侧集火。",
+                "content": "备战席留安妮，二星带一件开提伯斯后再下。七八级补提伯斯、蕾欧娜开六保镖，盖伦换佛耶戈保留双编舞。提伯斯还没解锁时，可先用选秀前刷 4 次解锁的萨勒芬妮替换，实战把她放到后排。狗头带离子减魔抗、日炎重伤，贾克斯放狗头同侧集火。",
                 "text_element_style": {
                   "bold": false,
                   "inline_code": false,
@@ -8890,7 +8418,7 @@
             }
           ],
           "level": 0,
-          "text": "八级 · 六保镖贾克斯烈娜塔：六级用烈娜塔、狗头、贾克斯、莉莉娅、奎桑提、佛耶戈开四保镖双编舞。优先烈娜塔三星、狗头三星；贾克斯有饮血和泰坦再留牌追三。\n备战席留安妮，二星带一件开提伯斯后再下。七八级补提伯斯、蕾欧娜开六保镖，盖伦换佛耶戈保留双编舞。狗头带离子减魔抗、日炎重伤，贾克斯放狗头同侧集火。"
+          "text": "八级 · 六保镖贾克斯烈娜塔：六级用烈娜塔、狗头、贾克斯、莉莉娅、奎桑提、佛耶戈开四保镖双编舞。优先烈娜塔三星、狗头三星；贾克斯有饮血和泰坦再留牌追三。\n备战席留安妮，二星带一件开提伯斯后再下。七八级补提伯斯、蕾欧娜开六保镖，盖伦换佛耶戈保留双编舞。提伯斯还没解锁时，可先用选秀前刷 4 次解锁的萨勒芬妮替换，实战把她放到后排。狗头带离子减魔抗、日炎重伤，贾克斯放狗头同侧集火。"
         },
         {
           "id": "sample-block-0567",
@@ -9061,243 +8589,6 @@
           ]
         },
         {
-          "id": "00000000-0000-4000-8000-000000000065",
-          "name": "六保镖 · 芬妮",
-          "category": "待分类",
-          "notes": "六保镖开齐，烈娜塔留在后排。",
-          "revision": 2,
-          "updatedAt": "2026-11-19T15:36:37.719Z",
-          "sectionId": "sample-block-0122",
-          "pieces": [
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000706",
-              "unitId": "lillia",
-              "position": 2,
-              "stars": 2,
-              "items": [
-                "TFT_Item_RedBuff"
-              ]
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000001024",
-              "unitId": "nasus",
-              "position": 3,
-              "stars": 2,
-              "items": [
-                "TFT_Item_WarmogsArmor",
-                "TFT_Item_GargoyleStoneplate",
-                "TFT_Item_Redemption"
-              ]
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000875",
-              "unitId": "k-sante",
-              "position": 4,
-              "stars": 1,
-              "items": []
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000942",
-              "unitId": "jax",
-              "position": 10,
-              "stars": 2,
-              "items": [
-                "TFT_Item_IonicSpark"
-              ]
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000179",
-              "unitId": "renata-glasc",
-              "position": 22,
-              "stars": 3,
-              "items": [
-                "TFT_Item_SpearOfShojin",
-                "TFT_Item_ArchangelsStaff",
-                "TFT_Item_HextechGunblade"
-              ]
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000001026",
-              "unitId": "leona",
-              "position": 1,
-              "stars": 2,
-              "items": []
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000399",
-              "unitId": "kennen",
-              "position": 8,
-              "stars": 2,
-              "items": []
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000725",
-              "unitId": "seraphine",
-              "position": 27,
-              "stars": 2,
-              "items": []
-            }
-          ]
-        },
-        {
-          "id": "00000000-0000-4000-8000-000000000111",
-          "name": "六保镖 · 盖伦",
-          "category": "待分类",
-          "notes": "六保镖开齐，烈娜塔留在后排。",
-          "revision": 2,
-          "updatedAt": "2026-11-19T15:36:54.140Z",
-          "sectionId": "sample-block-0122",
-          "pieces": [
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000281",
-              "unitId": "lillia",
-              "position": 2,
-              "stars": 2,
-              "items": [
-                "TFT_Item_RedBuff"
-              ]
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000857",
-              "unitId": "nasus",
-              "position": 3,
-              "stars": 2,
-              "items": [
-                "TFT_Item_WarmogsArmor",
-                "TFT_Item_GargoyleStoneplate",
-                "TFT_Item_Redemption"
-              ]
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000920",
-              "unitId": "k-sante",
-              "position": 4,
-              "stars": 1,
-              "items": []
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000948",
-              "unitId": "jax",
-              "position": 10,
-              "stars": 2,
-              "items": [
-                "TFT_Item_IonicSpark"
-              ]
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000850",
-              "unitId": "renata-glasc",
-              "position": 22,
-              "stars": 3,
-              "items": [
-                "TFT_Item_SpearOfShojin",
-                "TFT_Item_ArchangelsStaff",
-                "TFT_Item_HextechGunblade"
-              ]
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000137",
-              "unitId": "leona",
-              "position": 1,
-              "stars": 2,
-              "items": []
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000929",
-              "unitId": "kennen",
-              "position": 8,
-              "stars": 2,
-              "items": []
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000831",
-              "unitId": "garen",
-              "position": 9,
-              "stars": 1,
-              "items": []
-            }
-          ]
-        },
-        {
-          "id": "00000000-0000-4000-8000-000000000028",
-          "name": "八级 · 四保镖",
-          "category": "待分类",
-          "notes": "盖伦站前两排，烈娜塔站后两排",
-          "revision": 2,
-          "updatedAt": "2026-11-19T15:36:19.597Z",
-          "sectionId": "sample-block-0122",
-          "pieces": [
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000504",
-              "unitId": "lillia",
-              "position": 2,
-              "stars": 2,
-              "items": [
-                "TFT_Item_RedBuff"
-              ]
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000420",
-              "unitId": "nasus",
-              "position": 3,
-              "stars": 2,
-              "items": [
-                "TFT_Item_WarmogsArmor",
-                "TFT_Item_GargoyleStoneplate",
-                "TFT_Item_Redemption"
-              ]
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000654",
-              "unitId": "k-sante",
-              "position": 4,
-              "stars": 1,
-              "items": []
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000388",
-              "unitId": "jax",
-              "position": 10,
-              "stars": 2,
-              "items": [
-                "TFT_Item_IonicSpark"
-              ]
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000690",
-              "unitId": "renata-glasc",
-              "position": 22,
-              "stars": 3,
-              "items": [
-                "TFT_Item_SpearOfShojin",
-                "TFT_Item_ArchangelsStaff",
-                "TFT_Item_HextechGunblade"
-              ]
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000395",
-              "unitId": "syndra",
-              "position": 18,
-              "stars": 1,
-              "items": []
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000560",
-              "unitId": "ahri",
-              "position": 27,
-              "stars": 1,
-              "items": []
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000973",
-              "unitId": "garen",
-              "position": 9,
-              "stars": 1,
-              "items": []
-            }
-          ]
-        },
-        {
           "id": "00000000-0000-4000-8000-000000000046",
           "name": "9级 · 六保镖双电子",
           "category": "待分类",
@@ -9453,7 +8744,13 @@
               "unitId": "tibbers",
               "position": 1,
               "stars": 2,
-              "items": []
+              "items": [],
+              "alternate": {
+                "instanceId": "00000000-0000-4000-8000-000000000725",
+                "unitId": "seraphine",
+                "stars": 2,
+                "items": []
+              }
             },
             {
               "instanceId": "00000000-0000-4000-8000-000000000883",
@@ -9536,7 +8833,7 @@
           }
         ]
       },
-      "primaryTeamId": "00000000-0000-4000-8000-000000000028",
+      "primaryTeamId": "00000000-0000-4000-8000-000000000044",
       "stageTeamIds": [
         "00000000-0000-4000-8000-000000000118",
         "00000000-0000-4000-8000-000000000099",
@@ -10220,7 +9517,7 @@
         {
           "id": "sample-block-0347",
           "type": "text",
-          "text": "鳄鱼能扛时可用芬妮换贾克斯，疾风从三降到二。芬妮在二阶段选秀前刷四次开锁，七级补回贾克斯。"
+          "text": "鳄鱼能扛时可用两星芬妮替换贾克斯，实战把她放到后排，疾风从三降到二。芬妮在二阶段选秀前刷四次开锁，七级补回贾克斯。"
         },
         {
           "id": "sample-block-0217",
@@ -10303,86 +9600,6 @@
                 "text_element_style": {
                   "link": {
                     "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=6&unit=DA_Taric19-1&unit=DA_Renekton19-1&unit=DA_Galio19-1&unit=DA_Jax19-1&unit=DA_Ashe19-1&unit=DA_Bard19-1"
-                  }
-                }
-              }
-            }
-          ]
-        },
-        {
-          "id": "sample-block-0213",
-          "type": "text",
-          "text": "棋盘配装 · 六级 · 芬妮\n主C：艾希。鬼索的狂暴之刃、最后的轻语、海妖之怒。\n主坦：雷克顿。石像鬼石板甲、狂徒铠甲、日炎斗篷。\n副C：萨勒芬妮。有对应余装再补。\n功能装：艾希。带轻语，快速连射可持续刷新破甲。\n功能装：雷克顿。鳄鱼第三件日炎补重伤，两件肉装先解锁艾希。\n结算 1 局",
-          "elements": [
-            {
-              "text_run": {
-                "content": "棋盘配装 · 六级 · 芬妮",
-                "text_element_style": {
-                  "bold": true
-                }
-              }
-            },
-            {
-              "text_run": {
-                "content": "\n"
-              }
-            },
-            {
-              "text_run": {
-                "content": "主C：艾希。鬼索的狂暴之刃、最后的轻语、海妖之怒。"
-              }
-            },
-            {
-              "text_run": {
-                "content": "\n"
-              }
-            },
-            {
-              "text_run": {
-                "content": "主坦：雷克顿。石像鬼石板甲、狂徒铠甲、日炎斗篷。"
-              }
-            },
-            {
-              "text_run": {
-                "content": "\n"
-              }
-            },
-            {
-              "text_run": {
-                "content": "副C：萨勒芬妮。有对应余装再补。"
-              }
-            },
-            {
-              "text_run": {
-                "content": "\n"
-              }
-            },
-            {
-              "text_run": {
-                "content": "功能装：艾希。带轻语，快速连射可持续刷新破甲。"
-              }
-            },
-            {
-              "text_run": {
-                "content": "\n"
-              }
-            },
-            {
-              "text_run": {
-                "content": "功能装：雷克顿。鳄鱼第三件日炎补重伤，两件肉装先解锁艾希。"
-              }
-            },
-            {
-              "text_run": {
-                "content": "\n"
-              }
-            },
-            {
-              "text_run": {
-                "content": "结算 1 局",
-                "text_element_style": {
-                  "link": {
-                    "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=6&unit=DA_Taric19-1&unit=DA_Renekton19-1&unit=DA_Galio19-1&unit=DA_Seraphine19_Indie-1&unit=DA_Ashe19-1&unit=DA_Bard19-1"
                   }
                 }
               }
@@ -10676,7 +9893,13 @@
               "unitId": "jax",
               "position": 10,
               "stars": 2,
-              "items": []
+              "items": [],
+              "alternate": {
+                "instanceId": "00000000-0000-4000-8000-000000000341",
+                "unitId": "seraphine",
+                "stars": 2,
+                "items": []
+              }
             },
             {
               "instanceId": "00000000-0000-4000-8000-000000000367",
@@ -10778,67 +10001,6 @@
               "items": []
             }
           ]
-        },
-        {
-          "id": "00000000-0000-4000-8000-000000000010",
-          "name": "六级 · 芬妮",
-          "category": "待分类",
-          "notes": "乐器格在艾希旁边。",
-          "revision": 2,
-          "updatedAt": "2026-11-19T15:44:30.784Z",
-          "sectionId": "sample-block-0327",
-          "pieces": [
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000722",
-              "unitId": "taric",
-              "position": 2,
-              "stars": 2,
-              "items": []
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000001018",
-              "unitId": "renekton",
-              "position": 3,
-              "stars": 2,
-              "items": [
-                "TFT_Item_GargoyleStoneplate",
-                "TFT_Item_WarmogsArmor",
-                "TFT_Item_RedBuff"
-              ]
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000001070",
-              "unitId": "galio",
-              "position": 4,
-              "stars": 1,
-              "items": []
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000341",
-              "unitId": "seraphine",
-              "position": 25,
-              "stars": 2,
-              "items": []
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000620",
-              "unitId": "ashe",
-              "position": 22,
-              "stars": 2,
-              "items": [
-                "TFT_Item_GuinsoosRageblade",
-                "TFT_Item_LastWhisper",
-                "TFT_Item_RunaansHurricane"
-              ]
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000558",
-              "unitId": "bard",
-              "position": 26,
-              "stars": 1,
-              "items": []
-            }
-          ]
         }
       ],
       "team": {
@@ -10880,7 +10042,13 @@
             "unitId": "jax",
             "position": 10,
             "stars": 2,
-            "items": []
+            "items": [],
+            "alternate": {
+              "instanceId": "00000000-0000-4000-8000-000000000341",
+              "unitId": "seraphine",
+              "stars": 2,
+              "items": []
+            }
           },
           {
             "instanceId": "00000000-0000-4000-8000-000000000367",
@@ -14500,7 +13668,7 @@
           "elements": [
             {
               "text_run": {
-                "content": "安妮、伊莉丝、芸阿娜开三离子，吉格斯和可酷伯同时补高能。两星吉格斯带一件装备开可酷伯，没开时先用瑟提。伊莉丝能扛且可酷伯未到，可以试用芬妮。",
+                "content": "安妮、伊莉丝、芸阿娜开三离子，吉格斯和可酷伯同时补高能。两星吉格斯带一件装备开可酷伯，没开时先用瑟提。伊莉丝能扛、芬妮已解锁时，可先用芬妮替换未到的可酷伯。实战让芸阿娜和吉格斯同侧，芬妮站另一侧后排。",
                 "text_element_style": {
                   "bold": false,
                   "inline_code": false,
@@ -14512,7 +13680,7 @@
             }
           ],
           "level": 0,
-          "text": "安妮、伊莉丝、芸阿娜开三离子，吉格斯和可酷伯同时补高能。两星吉格斯带一件装备开可酷伯，没开时先用瑟提。伊莉丝能扛且可酷伯未到，可以试用芬妮。"
+          "text": "安妮、伊莉丝、芸阿娜开三离子，吉格斯和可酷伯同时补高能。两星吉格斯带一件装备开可酷伯，没开时先用瑟提。伊莉丝能扛、芬妮已解锁时，可先用芬妮替换未到的可酷伯。实战让芸阿娜和吉格斯同侧，芬妮站另一侧后排。"
         },
         {
           "id": "sample-block-0550",
@@ -14643,111 +13811,10 @@
           ],
           "level": 0,
           "text": "棋盘配装 · 五级慢搜\n主C：芸阿娜。鬼索的狂暴之刃、最后的轻语。\n主坦：伊莉丝。石像鬼石板甲、狂徒铠甲。\n副C：吉格斯。朔极之矛。\n功能装：芸阿娜。轻语随普攻和法球命中减护甲。\n功能装：安妮。技能命中已有灼烧和重伤，靠近敌方前排。\n结算 22 局"
-        },
-        {
-          "id": "sample-block-0383",
-          "type": "text",
-          "elements": [
-            {
-              "text_run": {
-                "content": "棋盘配装 · 五级 · 芬妮",
-                "text_element_style": {
-                  "bold": true,
-                  "inline_code": false,
-                  "italic": false,
-                  "strikethrough": false,
-                  "underline": false
-                }
-              }
-            },
-            {
-              "text_run": {
-                "content": "\n主C：芸阿娜。鬼索的狂暴之刃、最后的轻语。\n主坦：伊莉丝。石像鬼石板甲、狂徒铠甲。\n副C：吉格斯。朔极之矛。\n功能装：芸阿娜。轻语随普攻和法球命中减护甲。\n功能装：安妮。技能命中已有灼烧和重伤，靠近敌方前排。\n",
-                "text_element_style": {
-                  "bold": false,
-                  "inline_code": false,
-                  "italic": false,
-                  "strikethrough": false,
-                  "underline": false
-                }
-              }
-            },
-            {
-              "text_run": {
-                "content": "结算 2 局",
-                "text_element_style": {
-                  "bold": false,
-                  "inline_code": false,
-                  "italic": false,
-                  "link": {
-                    "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=5&unit=DA_Annie19-1&unit=DA_Elise19-1&unit=DA_Seraphine19_Indie-1&unit=DA_Yunara19-1&unit=DA_Ziggs19-1"
-                  },
-                  "strikethrough": false,
-                  "underline": false
-                }
-              }
-            }
-          ],
-          "level": 0,
-          "text": "棋盘配装 · 五级 · 芬妮\n主C：芸阿娜。鬼索的狂暴之刃、最后的轻语。\n主坦：伊莉丝。石像鬼石板甲、狂徒铠甲。\n副C：吉格斯。朔极之矛。\n功能装：芸阿娜。轻语随普攻和法球命中减护甲。\n功能装：安妮。技能命中已有灼烧和重伤，靠近敌方前排。\n结算 2 局"
         }
       ],
       "kind": "guide",
       "teams": [
-        {
-          "id": "00000000-0000-4000-8000-000000000109",
-          "name": "五级 · 芬妮",
-          "category": "待分类",
-          "notes": "两星吉格斯带一件装备开可酷伯。",
-          "revision": 1,
-          "updatedAt": "2026-11-19T12:12:02.549Z",
-          "sectionId": "sample-block-0203",
-          "pieces": [
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000252",
-              "unitId": "annie",
-              "position": 2,
-              "stars": 1,
-              "items": []
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000001057",
-              "unitId": "elise",
-              "position": 3,
-              "stars": 2,
-              "items": [
-                "TFT_Item_GargoyleStoneplate",
-                "TFT_Item_WarmogsArmor"
-              ]
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000969",
-              "unitId": "seraphine",
-              "position": 25,
-              "stars": 2,
-              "items": []
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000366",
-              "unitId": "yunara",
-              "position": 22,
-              "stars": 2,
-              "items": [
-                "TFT_Item_GuinsoosRageblade",
-                "TFT_Item_LastWhisper"
-              ]
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000001041",
-              "unitId": "ziggs",
-              "position": 26,
-              "stars": 2,
-              "items": [
-                "TFT_Item_SpearOfShojin"
-              ]
-            }
-          ]
-        },
         {
           "id": "00000000-0000-4000-8000-000000000016",
           "name": "五级慢搜",
@@ -14779,7 +13846,13 @@
               "unitId": "kobuko",
               "position": 4,
               "stars": 1,
-              "items": []
+              "items": [],
+              "alternate": {
+                "instanceId": "00000000-0000-4000-8000-000000000969",
+                "unitId": "seraphine",
+                "stars": 2,
+                "items": []
+              }
             },
             {
               "instanceId": "00000000-0000-4000-8000-000000000709",
@@ -14804,23 +13877,23 @@
         }
       ],
       "team": {
-        "id": "00000000-0000-4000-8000-000000000109",
-        "name": "五级 · 芬妮",
+        "id": "00000000-0000-4000-8000-000000000016",
+        "name": "五级慢搜",
         "category": "待分类",
         "notes": "两星吉格斯带一件装备开可酷伯。",
         "revision": 1,
-        "updatedAt": "2026-11-19T12:12:02.549Z",
+        "updatedAt": "2026-11-19T12:11:50.318Z",
         "sectionId": "sample-block-0203",
         "pieces": [
           {
-            "instanceId": "00000000-0000-4000-8000-000000000252",
+            "instanceId": "00000000-0000-4000-8000-000000000886",
             "unitId": "annie",
             "position": 2,
             "stars": 1,
             "items": []
           },
           {
-            "instanceId": "00000000-0000-4000-8000-000000001057",
+            "instanceId": "00000000-0000-4000-8000-000000000538",
             "unitId": "elise",
             "position": 3,
             "stars": 2,
@@ -14830,14 +13903,20 @@
             ]
           },
           {
-            "instanceId": "00000000-0000-4000-8000-000000000969",
-            "unitId": "seraphine",
-            "position": 25,
-            "stars": 2,
-            "items": []
+            "instanceId": "00000000-0000-4000-8000-000000000145",
+            "unitId": "kobuko",
+            "position": 4,
+            "stars": 1,
+            "items": [],
+            "alternate": {
+              "instanceId": "00000000-0000-4000-8000-000000000969",
+              "unitId": "seraphine",
+              "stars": 2,
+              "items": []
+            }
           },
           {
-            "instanceId": "00000000-0000-4000-8000-000000000366",
+            "instanceId": "00000000-0000-4000-8000-000000000709",
             "unitId": "yunara",
             "position": 22,
             "stars": 2,
@@ -14847,7 +13926,7 @@
             ]
           },
           {
-            "instanceId": "00000000-0000-4000-8000-000000001041",
+            "instanceId": "00000000-0000-4000-8000-000000000665",
             "unitId": "ziggs",
             "position": 26,
             "stars": 2,
@@ -20367,76 +19446,6 @@
           ]
         },
         {
-          "id": "sample-block-0180",
-          "type": "text",
-          "text": "棋盘配装 · 八人口五杀过渡 · 解锁铁男前\n主C：凯尔。鬼索的狂暴之刃、强袭者的链枷、珠光护手。\n主坦：约里克。石像鬼石板甲、狂徒铠甲、日炎斗篷。\n功能装：约里克。日炎斗篷，前排重伤。\n功能装：斯维因。离子火花，贴近对面前排击碎魔抗。\n结算 725 局 · 均名 6.31 · 前四 12.8% · 登顶 0.3%",
-          "elements": [
-            {
-              "text_run": {
-                "content": "棋盘配装 · 八人口五杀过渡 · 解锁铁男前",
-                "text_element_style": {
-                  "bold": true
-                }
-              }
-            },
-            {
-              "text_run": {
-                "content": "\n"
-              }
-            },
-            {
-              "text_run": {
-                "content": "主C：凯尔。鬼索的狂暴之刃、强袭者的链枷、珠光护手。"
-              }
-            },
-            {
-              "text_run": {
-                "content": "\n"
-              }
-            },
-            {
-              "text_run": {
-                "content": "主坦：约里克。石像鬼石板甲、狂徒铠甲、日炎斗篷。"
-              }
-            },
-            {
-              "text_run": {
-                "content": "\n"
-              }
-            },
-            {
-              "text_run": {
-                "content": "功能装：约里克。日炎斗篷，前排重伤。"
-              }
-            },
-            {
-              "text_run": {
-                "content": "\n"
-              }
-            },
-            {
-              "text_run": {
-                "content": "功能装：斯维因。离子火花，贴近对面前排击碎魔抗。"
-              }
-            },
-            {
-              "text_run": {
-                "content": "\n"
-              }
-            },
-            {
-              "text_run": {
-                "content": "结算 725 局 · 均名 6.31 · 前四 12.8% · 登顶 0.3%",
-                "text_element_style": {
-                  "link": {
-                    "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=8&unit=DA_Yorick19-1&unit=DA_Locke19-1&unit=DA_Viego19-1&unit=DA_Olaf19-1&unit=DA_Kayle19-1&unit=DA_Karthus19-1&unit=DA_Gnar19-1&unit=DA_Swain19-1"
-                  }
-                }
-              }
-            }
-          ]
-        },
-        {
           "id": "sample-block-0059",
           "type": "text",
           "text": "棋盘配装 · 九人口七五杀 · 补回斯维因\n主C：凯尔。鬼索的狂暴之刃、强袭者的链枷、珠光护手。\n主坦：约里克。石像鬼石板甲、狂徒铠甲、日炎斗篷。\n副C：莫德凯撒。鬼索的狂暴之刃、饮血剑、夜之锋刃。\n功能装：约里克。日炎斗篷，前排重伤。\n功能装：斯维因。离子火花，贴近对面前排击碎魔抗。\n结算 4,890 局 · 均名 3.54 · 前四 74.0% · 登顶 8.3%",
@@ -20714,84 +19723,15 @@
                 "TFT_Item_GuinsoosRageblade",
                 "TFT_Item_Bloodthirster",
                 "TFT_Item_GuardianAngel"
-              ]
-            }
-          ]
-        },
-        {
-          "id": "00000000-0000-4000-8000-000000000024",
-          "name": "八人口五杀过渡 · 解锁铁男前",
-          "category": "条件定阵",
-          "notes": "先用斯维因和洛克补三摇滚，让不同名五杀累计达到 10 星。",
-          "revision": 2,
-          "updatedAt": "2026-11-19T15:34:36.512Z",
-          "sectionId": "sample-block-0219",
-          "pieces": [
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000696",
-              "unitId": "yorick",
-              "position": 2,
-              "stars": 2,
-              "items": [
-                "TFT_Item_GargoyleStoneplate",
-                "TFT_Item_WarmogsArmor",
-                "TFT_Item_RedBuff"
-              ]
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000510",
-              "unitId": "locke",
-              "position": 3,
-              "stars": 2,
-              "items": []
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000521",
-              "unitId": "viego",
-              "position": 4,
-              "stars": 2,
-              "items": []
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000509",
-              "unitId": "olaf",
-              "position": 5,
-              "stars": 2,
-              "items": []
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000966",
-              "unitId": "kayle",
-              "position": 21,
-              "stars": 2,
-              "items": [
-                "TFT_Item_GuinsoosRageblade",
-                "TFT_Item_PowerGauntlet",
-                "TFT_Item_JeweledGauntlet"
-              ]
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000320",
-              "unitId": "karthus",
-              "position": 23,
-              "stars": 2,
-              "items": []
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000765",
-              "unitId": "gnar",
-              "position": 25,
-              "stars": 2,
-              "items": []
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000000280",
-              "unitId": "swain",
-              "position": 6,
-              "stars": 2,
-              "items": [
-                "TFT_Item_IonicSpark"
-              ]
+              ],
+              "alternate": {
+                "instanceId": "00000000-0000-4000-8000-000000000280",
+                "unitId": "swain",
+                "stars": 2,
+                "items": [
+                  "TFT_Item_IonicSpark"
+                ]
+              }
             }
           ]
         },
@@ -21052,14 +19992,21 @@
               "TFT_Item_GuinsoosRageblade",
               "TFT_Item_Bloodthirster",
               "TFT_Item_GuardianAngel"
-            ]
+            ],
+            "alternate": {
+              "instanceId": "00000000-0000-4000-8000-000000000280",
+              "unitId": "swain",
+              "stars": 2,
+              "items": [
+                "TFT_Item_IonicSpark"
+              ]
+            }
           }
         ]
       },
       "summaryBlockId": "sample-block-0731",
       "primaryTeamId": "00000000-0000-4000-8000-000000000064",
       "stageTeamIds": [
-        "00000000-0000-4000-8000-000000000024",
         "00000000-0000-4000-8000-000000000019"
       ]
     },

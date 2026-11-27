@@ -17,8 +17,8 @@ const requiredCondition = (team: Team) => team.conditions?.some(condition => con
 const reviewedTransitions = new Map([
   // Three-Sea/Shojin opening into seven-Sea Shojin. The Blue Buff and six-Mage boards remain independent.
   ["00000000-0000-4000-8000-000000001085", { openingId: "00000000-0000-4000-8000-000000001126", carryId: "zoe" }],
-  // Eight-level Guardian Renata sells Garen to add Viego and Vi at nine as described in the guide.
-  ["00000000-0000-4000-8000-000000000046", { openingId: "00000000-0000-4000-8000-000000000111", carryId: "renata-glasc" }],
+  // The eight-level Guardian Renata board leads to the nine-level Viego and Vi board.
+  ["00000000-0000-4000-8000-000000000046", { openingId: "00000000-0000-4000-8000-000000000044", carryId: "renata-glasc" }],
 ]);
 
 export function medleyEligibleGuideCount(sections: Section[], publicationSeason: Season, currentSeason: Season): number {

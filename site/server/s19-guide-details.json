@@ -1186,7 +1186,7 @@
           {
             "id": "sample-block-0097",
             "type": "text",
-            "text": "场上不同名五杀合计 9 星开铁男。八级铁男换斯维因开七五杀，九级补回斯维因。"
+            "text": "场上不同名五杀合计 10 星开铁男。八级铁男换斯维因开七五杀，九级补回斯维因。"
           },
           {
             "id": "sample-block-0057",
@@ -1309,76 +1309,6 @@
                   "text_element_style": {
                     "link": {
                       "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=8&unit=DA_Yorick19-1&unit=DA_Locke19-1&unit=DA_Viego19-1&unit=DA_Olaf19-1&unit=DA_Kayle19-1&unit=DA_Karthus19-1&unit=DA_Gnar19-1&unit=DA_Mordekaiser19-1"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "id": "sample-block-0180",
-            "type": "text",
-            "text": "棋盘配装 · 八人口五杀过渡 · 解锁铁男前\n主C：凯尔。鬼索的狂暴之刃、强袭者的链枷、珠光护手。\n主坦：约里克。石像鬼石板甲、狂徒铠甲、日炎斗篷。\n功能装：约里克。日炎斗篷，前排重伤。\n功能装：斯维因。离子火花，贴近对面前排击碎魔抗。\n结算 725 局 · 均名 6.31 · 前四 12.8% · 登顶 0.3%",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "棋盘配装 · 八人口五杀过渡 · 解锁铁男前",
-                  "text_element_style": {
-                    "bold": true
-                  }
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主C：凯尔。鬼索的狂暴之刃、强袭者的链枷、珠光护手。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主坦：约里克。石像鬼石板甲、狂徒铠甲、日炎斗篷。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：约里克。日炎斗篷，前排重伤。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：斯维因。离子火花，贴近对面前排击碎魔抗。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "结算 725 局 · 均名 6.31 · 前四 12.8% · 登顶 0.3%",
-                  "text_element_style": {
-                    "link": {
-                      "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=8&unit=DA_Yorick19-1&unit=DA_Locke19-1&unit=DA_Viego19-1&unit=DA_Olaf19-1&unit=DA_Kayle19-1&unit=DA_Karthus19-1&unit=DA_Gnar19-1&unit=DA_Swain19-1"
                     }
                   }
                 }
@@ -1777,66 +1707,6 @@
             ]
           },
           {
-            "id": "sample-block-0422",
-            "type": "text",
-            "text": "棋盘配装 · 八级 · 伊芙琳\n主C：妮蔻。朔极之矛、珠光护手、强袭者的链枷。\n主坦：莉莉娅。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n功能装：古拉加斯。酒桶带离子破魔抗，日炎补灼烧与重伤。\n结算 12 局",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "棋盘配装 · 八级 · 伊芙琳",
-                  "text_element_style": {
-                    "bold": true
-                  }
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主C：妮蔻。朔极之矛、珠光护手、强袭者的链枷。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主坦：莉莉娅。石像鬼石板甲、狂徒铠甲、振奋盔甲。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：古拉加斯。酒桶带离子破魔抗，日炎补灼烧与重伤。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "结算 12 局",
-                  "text_element_style": {
-                    "link": {
-                      "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=8&unit=DA_Leona19-1&unit=DA_Lillia19-1&unit=DA_Gragas19-1&unit=DA_Varus19-1&unit=DA_Neeko19-1&unit=DA_Kaisa19-1&unit=DA_Evelynn19-1&unit=DA_19_Ahri-1"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
             "id": "sample-block-0133",
             "type": "text",
             "text": "棋盘配装 · 八级 · 阿卡丽\n主C：妮蔻。朔极之矛、珠光护手、强袭者的链枷。\n主坦：莉莉娅。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n功能装：古拉加斯。酒桶带离子破魔抗，日炎补灼烧与重伤。\n功能装：阿卡丽 · K/DA。K/DA 阿卡丽涂鸦施加易伤，帮助全队集火。\n结算 7,445 局 · 均名 3.52 · 前四 70.0% · 登顶 16.4%",
@@ -2197,7 +2067,7 @@
           {
             "id": "sample-block-0083",
             "type": "text",
-            "text": "六保镖缺牌就按图用盖伦开四编舞，保留四保镖。"
+            "text": "六保镖缺牌时可留四保镖，用盖伦和阿狸开四编舞。"
           },
           {
             "id": "sample-block-0334",
@@ -2245,236 +2115,6 @@
                   "text_element_style": {
                     "link": {
                       "url": "https://data.metatft.com/lookups/pbe_TFTSet19_tables.json"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "id": "sample-block-0156",
-            "type": "text",
-            "text": "棋盘配装 · 八级 · 四保镖\n主C：烈娜塔·戈拉斯克。朔极之矛、大天使之杖、海克斯科技枪刃。\n主坦：内瑟斯。狂徒铠甲、石像鬼石板甲、振奋盔甲。\n副C：阿狸。有对应余装再补。\n功能装：莉莉娅。带日炎，近身给前排挂重伤。\n功能装：贾克斯。两星贾克斯带离子，邻近目标破魔抗。\n结算 0 局",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "棋盘配装 · 八级 · 四保镖",
-                  "text_element_style": {
-                    "bold": true
-                  }
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主C：烈娜塔·戈拉斯克。朔极之矛、大天使之杖、海克斯科技枪刃。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主坦：内瑟斯。狂徒铠甲、石像鬼石板甲、振奋盔甲。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "副C：阿狸。有对应余装再补。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：莉莉娅。带日炎，近身给前排挂重伤。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：贾克斯。两星贾克斯带离子，邻近目标破魔抗。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "结算 0 局",
-                  "text_element_style": {
-                    "link": {
-                      "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=8&unit=DA_Lillia19-1&unit=DA_Nasus19-1&unit=DA_KSante19-1&unit=DA_Jax19-1&unit=DA_RenataGlasc19-1&unit=DA_Syndra19-1&unit=DA_19_Ahri-1&unit=DA_Garen19-1"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "id": "sample-block-0373",
-            "type": "text",
-            "text": "棋盘配装 · 六保镖 · 芬妮\n主C：烈娜塔·戈拉斯克。朔极之矛、大天使之杖、海克斯科技枪刃。\n主坦：内瑟斯。狂徒铠甲、石像鬼石板甲、振奋盔甲。\n副C：萨勒芬妮。有对应余装再补。\n功能装：莉莉娅。带日炎，近身给前排挂重伤。\n功能装：贾克斯。两星贾克斯带离子，邻近目标破魔抗。\n结算 38 局",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "棋盘配装 · 六保镖 · 芬妮",
-                  "text_element_style": {
-                    "bold": true
-                  }
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主C：烈娜塔·戈拉斯克。朔极之矛、大天使之杖、海克斯科技枪刃。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主坦：内瑟斯。狂徒铠甲、石像鬼石板甲、振奋盔甲。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "副C：萨勒芬妮。有对应余装再补。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：莉莉娅。带日炎，近身给前排挂重伤。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：贾克斯。两星贾克斯带离子，邻近目标破魔抗。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "结算 38 局",
-                  "text_element_style": {
-                    "link": {
-                      "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=8&unit=DA_Lillia19-1&unit=DA_Nasus19-1&unit=DA_KSante19-1&unit=DA_Jax19-1&unit=DA_RenataGlasc19-1&unit=DA_Leona19-1&unit=DA_Kennen19-1&unit=DA_Seraphine19_Indie-1"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "id": "sample-block-0031",
-            "type": "text",
-            "text": "棋盘配装 · 六保镖 · 盖伦\n主C：烈娜塔·戈拉斯克。朔极之矛、大天使之杖、海克斯科技枪刃。\n主坦：内瑟斯。狂徒铠甲、石像鬼石板甲、振奋盔甲。\n功能装：莉莉娅。带日炎，近身给前排挂重伤。\n功能装：贾克斯。两星贾克斯带离子，邻近目标破魔抗。\n结算 82 局",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "棋盘配装 · 六保镖 · 盖伦",
-                  "text_element_style": {
-                    "bold": true
-                  }
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主C：烈娜塔·戈拉斯克。朔极之矛、大天使之杖、海克斯科技枪刃。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主坦：内瑟斯。狂徒铠甲、石像鬼石板甲、振奋盔甲。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：莉莉娅。带日炎，近身给前排挂重伤。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：贾克斯。两星贾克斯带离子，邻近目标破魔抗。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "结算 82 局",
-                  "text_element_style": {
-                    "link": {
-                      "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=8&unit=DA_Lillia19-1&unit=DA_Nasus19-1&unit=DA_KSante19-1&unit=DA_Jax19-1&unit=DA_RenataGlasc19-1&unit=DA_Leona19-1&unit=DA_Kennen19-1&unit=DA_Garen19-1"
                     }
                   }
                 }
@@ -4325,7 +3965,7 @@
           {
             "id": "sample-block-0100",
             "type": "text",
-            "text": "安妮、伊莉丝、芸阿娜开三离子，吉格斯和可酷伯同时补高能。两星吉格斯带一件装备开可酷伯，没开时先用瑟提。伊莉丝能扛且可酷伯未到，可以试用芬妮。"
+            "text": "安妮、伊莉丝、芸阿娜开三离子，吉格斯和可酷伯同时补高能。两星吉格斯带一件装备开可酷伯，没开时先用瑟提。伊莉丝能扛、芬妮已解锁时，可先用芬妮替换未到的可酷伯。实战让芸阿娜和吉格斯同侧，芬妮站另一侧后排。"
           },
           {
             "id": "sample-block-0315",
@@ -4444,86 +4084,6 @@
                 }
               }
             ]
-          },
-          {
-            "id": "sample-block-0383",
-            "type": "text",
-            "text": "棋盘配装 · 五级 · 芬妮\n主C：芸阿娜。鬼索的狂暴之刃、最后的轻语。\n主坦：伊莉丝。石像鬼石板甲、狂徒铠甲。\n副C：吉格斯。朔极之矛。\n功能装：芸阿娜。轻语随普攻和法球命中减护甲。\n功能装：安妮。技能命中已有灼烧和重伤，靠近敌方前排。\n结算 2 局",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "棋盘配装 · 五级 · 芬妮",
-                  "text_element_style": {
-                    "bold": true
-                  }
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主C：芸阿娜。鬼索的狂暴之刃、最后的轻语。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主坦：伊莉丝。石像鬼石板甲、狂徒铠甲。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "副C：吉格斯。朔极之矛。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：芸阿娜。轻语随普攻和法球命中减护甲。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：安妮。技能命中已有灼烧和重伤，靠近敌方前排。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "结算 2 局",
-                  "text_element_style": {
-                    "link": {
-                      "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=5&unit=DA_Annie19-1&unit=DA_Elise19-1&unit=DA_Seraphine19_Indie-1&unit=DA_Yunara19-1&unit=DA_Ziggs19-1"
-                    }
-                  }
-                }
-              }
-            ]
           }
         ]
       }
@@ -4590,7 +4150,7 @@
           {
             "id": "sample-block-0347",
             "type": "text",
-            "text": "鳄鱼能扛时可用芬妮换贾克斯，疾风从三降到二。芬妮在二阶段选秀前刷四次开锁，七级补回贾克斯。"
+            "text": "鳄鱼能扛时可用两星芬妮替换贾克斯，实战把她放到后排，疾风从三降到二。芬妮在二阶段选秀前刷四次开锁，七级补回贾克斯。"
           },
           {
             "id": "sample-block-0217",
@@ -4673,86 +4233,6 @@
                   "text_element_style": {
                     "link": {
                       "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=6&unit=DA_Taric19-1&unit=DA_Renekton19-1&unit=DA_Galio19-1&unit=DA_Jax19-1&unit=DA_Ashe19-1&unit=DA_Bard19-1"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "id": "sample-block-0213",
-            "type": "text",
-            "text": "棋盘配装 · 六级 · 芬妮\n主C：艾希。鬼索的狂暴之刃、最后的轻语、海妖之怒。\n主坦：雷克顿。石像鬼石板甲、狂徒铠甲、日炎斗篷。\n副C：萨勒芬妮。有对应余装再补。\n功能装：艾希。带轻语，快速连射可持续刷新破甲。\n功能装：雷克顿。鳄鱼第三件日炎补重伤，两件肉装先解锁艾希。\n结算 1 局",
-            "elements": [
-              {
-                "text_run": {
-                  "content": "棋盘配装 · 六级 · 芬妮",
-                  "text_element_style": {
-                    "bold": true
-                  }
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主C：艾希。鬼索的狂暴之刃、最后的轻语、海妖之怒。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "主坦：雷克顿。石像鬼石板甲、狂徒铠甲、日炎斗篷。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "副C：萨勒芬妮。有对应余装再补。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：艾希。带轻语，快速连射可持续刷新破甲。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "功能装：雷克顿。鳄鱼第三件日炎补重伤，两件肉装先解锁艾希。"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "\n"
-                }
-              },
-              {
-                "text_run": {
-                  "content": "结算 1 局",
-                  "text_element_style": {
-                    "link": {
-                      "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=6&unit=DA_Taric19-1&unit=DA_Renekton19-1&unit=DA_Galio19-1&unit=DA_Seraphine19_Indie-1&unit=DA_Ashe19-1&unit=DA_Bard19-1"
                     }
                   }
                 }
