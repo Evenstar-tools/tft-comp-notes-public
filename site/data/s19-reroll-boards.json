@@ -528,12 +528,32 @@
       {
         "teamId": "00000000-0000-4000-8000-000000000016",
         "name": "5级追三",
-        "notes": "五级追三星芸阿娜、伊莉丝。芸阿娜和吉格斯同侧打前排。两星吉格斯带一件装备解锁可酷伯，解锁前用瑟提。"
+        "notes": "五级追芸阿娜三星，伊莉丝接近三星就一起追。安妮两星带一件开提伯斯。追出核心就攒钱，六级往五离子补。",
+        "roles": [
+          {
+            "label": "主C",
+            "units": [
+              "yunara"
+            ]
+          },
+          {
+            "label": "主坦",
+            "units": [
+              "elise"
+            ]
+          },
+          {
+            "label": "副C",
+            "units": [
+              "ziggs"
+            ]
+          }
+        ]
       },
       {
         "teamId": "00000000-0000-4000-8000-000000000069",
         "name": "5级未开可酷伯",
-        "notes": "五级追三星芸阿娜、伊莉丝。可酷伯解锁前用两星瑟提顶前排，伊莉丝接肉装。两星吉格斯带一件装备解锁可酷伯。",
+        "notes": "没开可酷伯先挂瑟提。吉格斯两星带一件开可酷伯，安妮两星带一件开提伯斯。芸阿娜三星后升六，提伯斯和拉克丝能凑齐就转五离子。",
         "pieces": [
           {
             "unitId": "annie",
@@ -563,8 +583,8 @@
             "position": 22,
             "items": [
               "TFT_Item_GuinsoosRageblade",
-              "TFT_Item_LastWhisper",
-              "TFT_Item_InfinityEdge"
+              "TFT_Item_RunaansHurricane",
+              "TFT_Item_LastWhisper"
             ]
           },
           {
@@ -594,11 +614,254 @@
             "units": [
               "ziggs"
             ]
+          }
+        ]
+      },
+      {
+        "teamId": "f17f1c69-ba22-4477-9680-8fa09b4b6b66",
+        "parentTeamId": "00000000-0000-4000-8000-000000000016",
+        "boardRole": "stage",
+        "name": "六级 · 五离子过渡",
+        "notes": "下吉格斯、可酷伯，上提伯斯、拉克丝、贾克斯。安妮两星带一件开提伯斯。两张离子牌还没齐，先在原五人加贾克斯开三迅击。",
+        "pieces": [
+          {
+            "unitId": "elise",
+            "stars": 3,
+            "position": 3,
+            "items": [
+              "TFT_Item_GargoyleStoneplate",
+              "TFT_Item_WarmogsArmor",
+              "TFT_Item_Redemption"
+            ]
           },
           {
-            "label": "功能装",
+            "unitId": "annie",
+            "stars": 2,
+            "position": 8,
+            "items": [
+              "TFT_Item_Crownguard"
+            ]
+          },
+          {
+            "unitId": "tibbers",
+            "stars": 1,
+            "position": 11,
+            "items": []
+          },
+          {
+            "unitId": "jax",
+            "stars": 2,
+            "position": 12,
+            "items": []
+          },
+          {
+            "unitId": "yunara",
+            "stars": 3,
+            "position": 21,
+            "items": [
+              "TFT_Item_GuinsoosRageblade",
+              "TFT_Item_RunaansHurricane",
+              "TFT_Item_LastWhisper"
+            ]
+          },
+          {
+            "unitId": "lux",
+            "stars": 2,
+            "position": 26,
+            "items": []
+          }
+        ],
+        "roles": [
+          {
+            "label": "主C",
             "units": [
               "yunara"
+            ]
+          },
+          {
+            "label": "主坦",
+            "units": [
+              "elise"
+            ]
+          },
+          {
+            "label": "副坦",
+            "units": [
+              "tibbers"
+            ]
+          }
+        ]
+      },
+      {
+        "teamId": "b5bce8cb-2f60-45ac-a99c-35b3e44bfabe",
+        "parentTeamId": "00000000-0000-4000-8000-000000000016",
+        "boardRole": "stage",
+        "name": "七级 · 补希瓦娜",
+        "notes": "加希瓦娜开双主唱，先用已有五离子和两星前排稳血。芸阿娜带三件装，到七级即可开金克丝。",
+        "pieces": [
+          {
+            "unitId": "elise",
+            "stars": 3,
+            "position": 3,
+            "items": [
+              "TFT_Item_GargoyleStoneplate",
+              "TFT_Item_WarmogsArmor",
+              "TFT_Item_Redemption"
+            ]
+          },
+          {
+            "unitId": "annie",
+            "stars": 2,
+            "position": 8,
+            "items": [
+              "TFT_Item_Crownguard"
+            ]
+          },
+          {
+            "unitId": "tibbers",
+            "stars": 2,
+            "position": 11,
+            "items": []
+          },
+          {
+            "unitId": "jax",
+            "stars": 2,
+            "position": 12,
+            "items": []
+          },
+          {
+            "unitId": "yunara",
+            "stars": 3,
+            "position": 21,
+            "items": [
+              "TFT_Item_GuinsoosRageblade",
+              "TFT_Item_RunaansHurricane",
+              "TFT_Item_LastWhisper"
+            ]
+          },
+          {
+            "unitId": "lux",
+            "stars": 2,
+            "position": 26,
+            "items": []
+          },
+          {
+            "unitId": "shyvana",
+            "stars": 1,
+            "position": 9,
+            "items": []
+          }
+        ],
+        "roles": [
+          {
+            "label": "主C",
+            "units": [
+              "yunara"
+            ]
+          },
+          {
+            "label": "主坦",
+            "units": [
+              "elise"
+            ]
+          },
+          {
+            "label": "副坦",
+            "units": [
+              "shyvana"
+            ]
+          }
+        ]
+      },
+      {
+        "teamId": "323e2a9e-0573-4d84-8389-846a29659e7e",
+        "parentTeamId": "00000000-0000-4000-8000-000000000016",
+        "boardRole": "stage",
+        "name": "八级 · 七离子成型",
+        "notes": "补格温开七离子。格温要 250 次欢呼，金克丝先解锁就用她填第七名离子，站后排。牌没齐先保五离子和两星前排。",
+        "pieces": [
+          {
+            "unitId": "elise",
+            "stars": 3,
+            "position": 3,
+            "items": [
+              "TFT_Item_GargoyleStoneplate",
+              "TFT_Item_WarmogsArmor",
+              "TFT_Item_Redemption"
+            ]
+          },
+          {
+            "unitId": "annie",
+            "stars": 2,
+            "position": 8,
+            "items": [
+              "TFT_Item_Crownguard"
+            ]
+          },
+          {
+            "unitId": "tibbers",
+            "stars": 2,
+            "position": 11,
+            "items": []
+          },
+          {
+            "unitId": "jax",
+            "stars": 2,
+            "position": 12,
+            "items": []
+          },
+          {
+            "unitId": "yunara",
+            "stars": 3,
+            "position": 21,
+            "items": [
+              "TFT_Item_GuinsoosRageblade",
+              "TFT_Item_RunaansHurricane",
+              "TFT_Item_LastWhisper"
+            ]
+          },
+          {
+            "unitId": "lux",
+            "stars": 2,
+            "position": 26,
+            "items": []
+          },
+          {
+            "unitId": "shyvana",
+            "stars": 2,
+            "position": 9,
+            "items": []
+          },
+          {
+            "unitId": "gwen",
+            "stars": 1,
+            "position": 13,
+            "items": []
+          }
+        ],
+        "roles": [
+          {
+            "label": "主C",
+            "units": [
+              "yunara"
+            ]
+          },
+          {
+            "label": "主坦",
+            "units": [
+              "elise"
+            ]
+          },
+          {
+            "label": "副坦",
+            "units": [
+              "shyvana"
+            ]
+          },
+          {
+            "label": "副C",
+            "units": [
+              "gwen"
             ]
           }
         ]
@@ -615,11 +878,50 @@
           "ziggs": 26
         }
       },
-      {"teamId": "00000000-0000-4000-8000-000000000016", "originalPositions": {"yunara": 22}, "positions": {"yunara": 21}},
-      {"teamId": "00000000-0000-4000-8000-000000000069", "originalPositions": {"yunara": 22}, "positions": {"yunara": 21}},
-      {"teamId": "00000000-0000-4000-8000-000000000016", "positions": {"kobuko": 10}, "stoneplateHolder": "elise", "originalPositions": {"elise": 3, "annie": 2, "kobuko": 4}},
-      {"teamId": "00000000-0000-4000-8000-000000000069", "positions": {"sett": 10}, "stoneplateHolder": "elise", "originalPositions": {"elise": 3, "annie": 2, "sett": 4}}
-    ]
+      {
+        "teamId": "00000000-0000-4000-8000-000000000016",
+        "originalPositions": {
+          "yunara": 22
+        },
+        "positions": {
+          "yunara": 21
+        }
+      },
+      {
+        "teamId": "00000000-0000-4000-8000-000000000069",
+        "originalPositions": {
+          "yunara": 22
+        },
+        "positions": {
+          "yunara": 21
+        }
+      },
+      {
+        "teamId": "00000000-0000-4000-8000-000000000016",
+        "positions": {
+          "kobuko": 10
+        },
+        "stoneplateHolder": "elise",
+        "originalPositions": {
+          "elise": 3,
+          "annie": 2,
+          "kobuko": 4
+        }
+      },
+      {
+        "teamId": "00000000-0000-4000-8000-000000000069",
+        "positions": {
+          "sett": 10
+        },
+        "stoneplateHolder": "elise",
+        "originalPositions": {
+          "elise": 3,
+          "annie": 2,
+          "sett": 4
+        }
+      }
+    ],
+    "entryTeamId": "00000000-0000-4000-8000-000000000016"
   },
   {
     "sectionId": "sample-block-0122",

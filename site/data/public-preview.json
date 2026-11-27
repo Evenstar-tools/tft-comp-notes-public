@@ -13596,19 +13596,12 @@
           "elements": [
             {
               "text_run": {
-                "content": "五级追芸阿娜、伊莉丝三星。羊刀轻语给芸阿娜，板甲狂徒给伊莉丝。",
-                "text_element_style": {
-                  "bold": false,
-                  "inline_code": false,
-                  "italic": false,
-                  "strikethrough": false,
-                  "underline": false
-                }
+                "content": "芸阿娜、伊莉丝来得多，有羊刀或海妖散件再进。五级追芸阿娜三星，伊莉丝只差几张就一起追。追完就攒钱升人口。"
               }
             }
           ],
           "level": 0,
-          "text": "五级追芸阿娜、伊莉丝三星。羊刀轻语给芸阿娜，板甲狂徒给伊莉丝。"
+          "text": "芸阿娜、伊莉丝来得多，有羊刀或海妖散件再进。五级追芸阿娜三星，伊莉丝只差几张就一起追。追完就攒钱升人口。"
         },
         {
           "id": "sample-block-0244",
@@ -13636,19 +13629,12 @@
           "elements": [
             {
               "text_run": {
-                "content": "主C：芸阿娜。羊刀、轻语，第三格补物理输出装。",
-                "text_element_style": {
-                  "bold": false,
-                  "inline_code": false,
-                  "italic": false,
-                  "strikethrough": false,
-                  "underline": false
-                }
+                "content": "主C：芸阿娜。羊刀、海妖，缺破甲补轻语。若前排薄暮能覆盖芸阿娜集火的一侧，第三件换死刃。"
               }
             }
           ],
           "level": 0,
-          "text": "主C：芸阿娜。羊刀、轻语，第三格补物理输出装。"
+          "text": "主C：芸阿娜。羊刀、海妖，缺破甲补轻语。若前排薄暮能覆盖芸阿娜集火的一侧，第三件换死刃。"
         },
         {
           "id": "sample-block-0184",
@@ -13696,19 +13682,12 @@
           "elements": [
             {
               "text_run": {
-                "content": "安妮、伊莉丝、芸阿娜开三离子，吉格斯和可酷伯同时补高能。两星吉格斯带一件装备开可酷伯，没开时先用瑟提。伊莉丝能扛、芬妮已解锁时，可先用芬妮替换未到的可酷伯。实战让芸阿娜和吉格斯同侧，芬妮站另一侧后排。",
-                "text_element_style": {
-                  "bold": false,
-                  "inline_code": false,
-                  "italic": false,
-                  "strikethrough": false,
-                  "underline": false
-                }
+                "content": "安妮、伊莉丝、芸阿娜开三离子，吉格斯、可酷伯开双高能。两星吉格斯带一件开可酷伯，没开用瑟提。安妮留到两星，带一件装备开提伯斯。"
               }
             }
           ],
           "level": 0,
-          "text": "安妮、伊莉丝、芸阿娜开三离子，吉格斯和可酷伯同时补高能。两星吉格斯带一件装备开可酷伯，没开时先用瑟提。伊莉丝能扛、芬妮已解锁时，可先用芬妮替换未到的可酷伯。实战让芸阿娜和吉格斯同侧，芬妮站另一侧后排。"
+          "text": "安妮、伊莉丝、芸阿娜开三离子，吉格斯、可酷伯开双高能。两星吉格斯带一件开可酷伯，没开用瑟提。安妮留到两星，带一件装备开提伯斯。"
         },
         {
           "id": "sample-block-0550",
@@ -13736,19 +13715,12 @@
           "elements": [
             {
               "text_run": {
-                "content": "六级优先补贾克斯开三疾风。要上提伯斯，提前给两星安妮一件装备。芬妮要在二阶段选秀前刷四次开锁，能稳血再留她。",
-                "text_element_style": {
-                  "bold": false,
-                  "inline_code": false,
-                  "italic": false,
-                  "strikethrough": false,
-                  "underline": false
-                }
+                "content": "六级优先凑五离子。拉克丝、提伯斯到手就上，贾克斯开双护卫和双迅击。五离子还差牌时，可以在原盘单加贾克斯开三迅击过渡。七级补希瓦娜开双主唱。八级格温或金克丝到手就开七离子，还差牌就先用两星前排稳血。"
               }
             }
           ],
           "level": 0,
-          "text": "六级优先补贾克斯开三疾风。要上提伯斯，提前给两星安妮一件装备。芬妮要在二阶段选秀前刷四次开锁，能稳血再留她。"
+          "text": "六级优先凑五离子。拉克丝、提伯斯到手就上，贾克斯开双护卫和双迅击。五离子还差牌时，可以在原盘单加贾克斯开三迅击过渡。七级补希瓦娜开双主唱。八级格温或金克丝到手就开七离子，还差牌就先用两星前排稳血。"
         },
         {
           "id": "sample-block-0257",
@@ -13756,22 +13728,12 @@
           "elements": [
             {
               "text_run": {
-                "content": "芸阿娜技能",
-                "text_element_style": {
-                  "bold": false,
-                  "inline_code": false,
-                  "italic": false,
-                  "link": {
-                    "url": "https://www.datatft.com/database/unit?id=919804"
-                  },
-                  "strikethrough": false,
-                  "underline": false
-                }
+                "content": "格温要累计 250 次离子火花粉丝欢呼。七级后，三件装的芸阿娜已满足金克丝的解锁条件。有哪张先用哪张。九级顺风可补蔚，和贾克斯开双电子，和安妮开双主宰。"
               }
             }
           ],
           "level": 0,
-          "text": "芸阿娜技能"
+          "text": "格温要累计 250 次离子火花粉丝欢呼。七级后，三件装的芸阿娜已满足金克丝的解锁条件。有哪张先用哪张。九级顺风可补蔚，和贾克斯开双电子，和安妮开双主宰。"
         },
         {
           "id": "sample-block-0522",
@@ -13799,46 +13761,17 @@
           "elements": [
             {
               "text_run": {
-                "content": "棋盘配装 · 五级慢搜",
-                "text_element_style": {
-                  "bold": true,
-                  "inline_code": false,
-                  "italic": false,
-                  "strikethrough": false,
-                  "underline": false
-                }
-              }
-            },
-            {
-              "text_run": {
-                "content": "\n主C：芸阿娜。鬼索的狂暴之刃、最后的轻语。\n主坦：伊莉丝。石像鬼石板甲、狂徒铠甲。\n副C：吉格斯。朔极之矛。\n功能装：芸阿娜。轻语随普攻和法球命中减护甲。\n功能装：安妮。技能命中已有灼烧和重伤，靠近敌方前排。\n",
-                "text_element_style": {
-                  "bold": false,
-                  "inline_code": false,
-                  "italic": false,
-                  "strikethrough": false,
-                  "underline": false
-                }
-              }
-            },
-            {
-              "text_run": {
-                "content": "结算 22 局",
-                "text_element_style": {
-                  "bold": false,
-                  "inline_code": false,
-                  "italic": false,
-                  "link": {
-                    "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=5&unit=DA_Annie19-1&unit=DA_Elise19-1&unit=DA_Kobuko19-1&unit=DA_Yunara19-1&unit=DA_Ziggs19-1"
-                  },
-                  "strikethrough": false,
-                  "underline": false
-                }
+                "content": "棋盘配装 · 五级慢搜\n主C：芸阿娜。鬼索的狂暴之刃、海妖之怒、最后的轻语。已由前排稳定破甲时，第三件可用死亡之刃。\n主坦：伊莉丝。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副C：吉格斯。朔极之矛。\n功能装：芸阿娜。轻语减护甲。\n功能装：安妮。两星穿一件装备解锁提伯斯。"
               }
             }
           ],
           "level": 0,
-          "text": "棋盘配装 · 五级慢搜\n主C：芸阿娜。鬼索的狂暴之刃、最后的轻语。\n主坦：伊莉丝。石像鬼石板甲、狂徒铠甲。\n副C：吉格斯。朔极之矛。\n功能装：芸阿娜。轻语随普攻和法球命中减护甲。\n功能装：安妮。技能命中已有灼烧和重伤，靠近敌方前排。\n结算 22 局"
+          "text": "棋盘配装 · 五级慢搜\n主C：芸阿娜。鬼索的狂暴之刃、海妖之怒、最后的轻语。已由前排稳定破甲时，第三件可用死亡之刃。\n主坦：伊莉丝。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副C：吉格斯。朔极之矛。\n功能装：芸阿娜。轻语减护甲。\n功能装：安妮。两星穿一件装备解锁提伯斯。"
+        },
+        {
+          "id": "ionic-yunara-hyperpop-pivot",
+          "type": "text",
+          "text": "吉格斯、可酷伯也来得多时可转四高能。六级补璐璐、小炮，七级补斯维因，八级补希瓦娜，九级有提莫再开五高能。"
         }
       ],
       "kind": "guide",
@@ -13847,7 +13780,7 @@
           "id": "00000000-0000-4000-8000-000000000016",
           "name": "五级慢搜",
           "category": "待分类",
-          "notes": "两星吉格斯带一件装备开可酷伯。",
+          "notes": "五级追芸阿娜三星，伊莉丝接近三星就一起追。安妮两星带一件开提伯斯。追出核心就攒钱，六级往五离子补。",
           "revision": 1,
           "updatedAt": "2026-11-19T12:11:50.318Z",
           "sectionId": "sample-block-0203",
@@ -13890,8 +13823,8 @@
               "stars": 2,
               "items": [
                 "TFT_Item_GuinsoosRageblade",
-                "TFT_Item_LastWhisper",
-                "TFT_Item_InfinityEdge"
+                "TFT_Item_RunaansHurricane",
+                "TFT_Item_LastWhisper"
               ]
             },
             {
@@ -13910,7 +13843,7 @@
         "id": "00000000-0000-4000-8000-000000000016",
         "name": "五级慢搜",
         "category": "待分类",
-        "notes": "两星吉格斯带一件装备开可酷伯。",
+        "notes": "五级追芸阿娜三星，伊莉丝接近三星就一起追。安妮两星带一件开提伯斯。追出核心就攒钱，六级往五离子补。",
         "revision": 1,
         "updatedAt": "2026-11-19T12:11:50.318Z",
         "sectionId": "sample-block-0203",
@@ -13953,8 +13886,8 @@
             "stars": 2,
             "items": [
               "TFT_Item_GuinsoosRageblade",
-              "TFT_Item_LastWhisper",
-              "TFT_Item_InfinityEdge"
+              "TFT_Item_RunaansHurricane",
+              "TFT_Item_LastWhisper"
             ]
           },
           {
