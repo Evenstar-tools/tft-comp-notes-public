@@ -129,7 +129,7 @@ test("an exact-board comparison keeps every requested trait breakpoint", () => {
 test("a site-added board shows its own verified full-board sample", () => {
   const roster = ["graves", "zac"];
   const generic = { population: 2, roster, games: 200, mean: 4.8, url: "generic" };
-  const exact = { ...generic, url: "bound", conditions: { kind: "full", teamId: "added" } };
+  const exact = { ...generic, roster: ["zac", "graves"], url: "bound", conditions: { kind: "full", teamId: "added" } };
   const batch = { patch: "PBE", window: "近三天", date: "2026-11-23", minGames: 100, greenThrough: 3.4, redFrom: 4.25, records: [generic, exact] };
   const board = { pieces: [], teamId: "added", requireBoundFull: true };
   assert.equal(findPlacement(batch, roster, 2, board)?.url, "bound");

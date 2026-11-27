@@ -221,7 +221,7 @@ export function findPlacement(batch: PlacementBatch, roster: string[], populatio
     if (scope?.traits && Object.entries(scope.traits).some(([id, level]) => board?.traitLevels?.[id] !== level)) return false;
     if (scope?.kind === "core") {
       if (!scope.coreRoster?.length || !scope.coreRoster.every(id => roster.includes(id))) return false;
-    } else if (entry.population !== population || entry.roster.join(",") !== identity) {
+    } else if (entry.population !== population || [...entry.roster].sort().join(",") !== identity) {
       return false;
     }
     if (!scope) return !entry.sampleScope;
