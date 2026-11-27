@@ -5,13 +5,13 @@
   "patch": "19.1c",
   "build": "6037882",
   "days": 3,
-  "updatedAt": "2026-11-27T14:48:18.162Z",
+  "updatedAt": "2026-11-27T17:51:57.233Z",
   "model": 429,
   "spansBuilds": true,
   "source": "MetaTFT",
   "sourceUrl": "https://www.metatft.com/pbe-comps",
   "statsUrl": "https://api-hc.metatft.com/tft-comps-api/comps_stats?queue=PBE&patch=19.1&b_patch=c&days=3&permit_filter_adjustment=false",
-  "totalFinishes": 1292212,
+  "totalFinishes": 1389089,
   "rows": [
     {
       "clusterId": "429018",
@@ -28,19 +28,19 @@
         "00000000-0000-4000-8000-000000001252"
       ],
       "places": [
-        8988,
-        7829,
-        6773,
-        5775,
-        5075,
-        4308,
-        3485,
-        2093
+        10080,
+        8722,
+        7479,
+        6347,
+        5654,
+        4804,
+        3864,
+        2309
       ],
-      "games": 44326,
-      "mean": 3.6192528087352795,
-      "winRate": 0.2027703830708839,
-      "topFourRate": 0.6624780038803411
+      "games": 49259,
+      "mean": 3.61280172151282,
+      "winRate": 0.20463265596134717,
+      "topFourRate": 0.6623764185225035
     },
     {
       "clusterId": "429005",
@@ -54,19 +54,19 @@
       "url": "https://www.metatft.com/pbe-comps#DA_Renekton19_HeroAugment-DA_Zac19",
       "heroAugment": true,
       "places": [
-        592,
-        1098,
-        1074,
-        806,
-        611,
-        470,
-        371,
-        271
+        631,
+        1193,
+        1145,
+        860,
+        656,
+        515,
+        391,
+        291
       ],
-      "games": 5293,
-      "mean": 3.7547704515397693,
-      "winRate": 0.11184583412053656,
-      "topFourRate": 0.67447572265256
+      "games": 5682,
+      "mean": 3.753431890179514,
+      "winRate": 0.11105244632171771,
+      "topFourRate": 0.6738824357620556
     },
     {
       "clusterId": "429003",
@@ -83,19 +83,45 @@
         "00000000-0000-4000-8000-000000000034"
       ],
       "places": [
-        29141,
-        19978,
-        16122,
-        14567,
-        13594,
-        13244,
-        12457,
-        9606
+        31211,
+        21393,
+        17300,
+        15629,
+        14579,
+        14197,
+        13427,
+        10292
       ],
-      "games": 128709,
-      "mean": 3.785376314010675,
-      "winRate": 0.22640996356121174,
-      "topFourRate": 0.6200654188906759
+      "games": 138028,
+      "mean": 3.7877459645868954,
+      "winRate": 0.22612078708667807,
+      "topFourRate": 0.6196786159329991
+    },
+    {
+      "clusterId": "429034",
+      "sourceName": "Axe Crescendo Olaf",
+      "name": "远程奥拉夫",
+      "sectionId": "sample-block-0281",
+      "teamId": "00000000-0000-4000-8000-000000000097",
+      "carryIds": [
+        "olaf"
+      ],
+      "url": "https://www.metatft.com/pbe-comps#DA_Olaf19_HeroAugment-DA_Taric19",
+      "heroAugment": true,
+      "places": [
+        399,
+        889,
+        935,
+        744,
+        604,
+        481,
+        372,
+        348
+      ],
+      "games": 4772,
+      "mean": 4.034367141659682,
+      "winRate": 0.0836127409891031,
+      "topFourRate": 0.6217518860016764
     },
     {
       "clusterId": "429006",
@@ -111,45 +137,19 @@
       ],
       "url": "https://www.metatft.com/pbe-comps#DA_DemonVision19-DA_Vayne19-DA_Yorick19",
       "places": [
-        2993,
-        4964,
-        5215,
-        4725,
-        4095,
-        3433,
-        2663,
-        1551
+        3233,
+        5357,
+        5639,
+        5108,
+        4400,
+        3675,
+        2895,
+        1681
       ],
-      "games": 29639,
-      "mean": 4.034818988494888,
-      "winRate": 0.100981814501164,
-      "topFourRate": 0.6038327878808327
-    },
-    {
-      "clusterId": "429034",
-      "sourceName": "Axe Crescendo Olaf",
-      "name": "远程奥拉夫",
-      "sectionId": "sample-block-0281",
-      "teamId": "00000000-0000-4000-8000-000000000097",
-      "carryIds": [
-        "olaf"
-      ],
-      "url": "https://www.metatft.com/pbe-comps#DA_Olaf19_HeroAugment-DA_Taric19",
-      "heroAugment": true,
-      "places": [
-        372,
-        814,
-        880,
-        700,
-        558,
-        443,
-        350,
-        324
-      ],
-      "games": 4441,
-      "mean": 4.037378968700743,
-      "winRate": 0.08376491781130375,
-      "topFourRate": 0.6228326953388876
+      "games": 31988,
+      "mean": 4.034606727522821,
+      "winRate": 0.10106915093159935,
+      "topFourRate": 0.6045079404776791
     },
     {
       "clusterId": "429015",
@@ -162,19 +162,44 @@
       ],
       "url": "https://www.metatft.com/pbe-comps#DA_KDA19-DA_19_Ahri-DA_Garen19",
       "places": [
-        3631,
-        2973,
-        3036,
-        2908,
-        2947,
-        2738,
-        2535,
-        1761
+        4112,
+        3344,
+        3403,
+        3247,
+        3297,
+        3077,
+        2819,
+        1966
       ],
-      "games": 22529,
-      "mean": 4.141905987837898,
-      "winRate": 0.16117004749434063,
-      "topFourRate": 0.5569710151360469
+      "games": 25265,
+      "mean": 4.132396596081536,
+      "winRate": 0.16275479912923016,
+      "topFourRate": 0.5583217890362161
+    },
+    {
+      "clusterId": "429004",
+      "sourceName": "Pentakill Kayle Mel",
+      "name": "三爵士五杀史密奇",
+      "sectionId": "sample-block-0275",
+      "teamId": "00000000-0000-4000-8000-000000000082",
+      "carryIds": [
+        "smeech"
+      ],
+      "url": "https://www.metatft.com/pbe-comps#DA_Pentakill19-DA_Kayle19-DA_Mel19",
+      "places": [
+        2904,
+        2729,
+        2351,
+        2371,
+        2317,
+        2310,
+        2154,
+        1417
+      ],
+      "games": 18553,
+      "mean": 4.13722848056918,
+      "winRate": 0.15652455128550638,
+      "topFourRate": 0.5581307605239045
     },
     {
       "clusterId": "429028",
@@ -197,44 +222,19 @@
         "00000000-0000-4000-8000-000000000075"
       ],
       "places": [
-        4377,
-        6015,
-        6456,
-        5743,
-        5356,
-        4575,
-        3936,
-        2754
+        4715,
+        6457,
+        6952,
+        6154,
+        5745,
+        4897,
+        4206,
+        2952
       ],
-      "games": 39212,
-      "mean": 4.145695195348363,
-      "winRate": 0.1116239926553096,
-      "topFourRate": 0.5761246557176375
-    },
-    {
-      "clusterId": "429004",
-      "sourceName": "Pentakill Kayle Mel",
-      "name": "三爵士五杀史密奇",
-      "sectionId": "sample-block-0275",
-      "teamId": "00000000-0000-4000-8000-000000000082",
-      "carryIds": [
-        "smeech"
-      ],
-      "url": "https://www.metatft.com/pbe-comps#DA_Pentakill19-DA_Kayle19-DA_Mel19",
-      "places": [
-        2680,
-        2525,
-        2170,
-        2183,
-        2150,
-        2152,
-        2017,
-        1327
-      ],
-      "games": 17204,
-      "mean": 4.148395721925134,
-      "winRate": 0.15577772611020693,
-      "topFourRate": 0.5555684724482678
+      "games": 42078,
+      "mean": 4.141499120680641,
+      "winRate": 0.11205380483863302,
+      "topFourRate": 0.5769760920195827
     },
     {
       "clusterId": "429002",
@@ -248,19 +248,19 @@
       ],
       "url": "https://www.metatft.com/pbe-comps#DA_Mosher19-DA_Viego19-DA_Amumu19",
       "places": [
-        3194,
-        3785,
-        3443,
-        3163,
-        3086,
-        2877,
-        2526,
-        1996
+        3380,
+        4067,
+        3690,
+        3384,
+        3280,
+        3043,
+        2694,
+        2134
       ],
-      "games": 24070,
-      "mean": 4.158163689239718,
-      "winRate": 0.13269630245118405,
-      "topFourRate": 0.5643955130868301
+      "games": 25672,
+      "mean": 4.156590838267373,
+      "winRate": 0.13166095356808974,
+      "topFourRate": 0.5656357120598318
     },
     {
       "clusterId": "429027",
@@ -274,19 +274,19 @@
       ],
       "url": "https://www.metatft.com/pbe-comps#DA_KDA19-DA_Kaisa19",
       "places": [
-        2652,
-        2583,
-        2175,
-        2121,
-        2062,
-        2066,
-        1937,
-        1505
+        2867,
+        2814,
+        2372,
+        2324,
+        2225,
+        2259,
+        2108,
+        1619
       ],
-      "games": 17101,
-      "mean": 4.159522834921934,
-      "winRate": 0.15507865037132332,
-      "topFourRate": 0.5573358283141336
+      "games": 18588,
+      "mean": 4.158274155369055,
+      "winRate": 0.1542392941682806,
+      "topFourRate": 0.5582633957391866
     },
     {
       "clusterId": "429008",
@@ -304,19 +304,19 @@
       ],
       "url": "https://www.metatft.com/pbe-comps#DA_GlitterBomb19-DA_Kobuko19",
       "places": [
-        11725,
-        10225,
-        9590,
-        9084,
-        8478,
-        7951,
-        7611,
-        7687
+        12578,
+        10928,
+        10299,
+        9699,
+        9066,
+        8576,
+        8171,
+        8224
       ],
-      "games": 72351,
-      "mean": 4.176168954126411,
-      "winRate": 0.16205719340437588,
-      "topFourRate": 0.5614849829304364
+      "games": 77541,
+      "mean": 4.177170787067487,
+      "winRate": 0.16221095936343355,
+      "topFourRate": 0.5610451245147728
     },
     {
       "clusterId": "429001",
@@ -333,19 +333,45 @@
       ],
       "url": "https://www.metatft.com/pbe-comps#DA_Prodigy19-DA_Malzahar19-DA_Amumu19",
       "places": [
-        2131,
-        2714,
-        2668,
-        2644,
-        2506,
-        2353,
-        1968,
-        1460
+        2322,
+        2907,
+        2857,
+        2870,
+        2676,
+        2507,
+        2097,
+        1553
       ],
-      "games": 18444,
-      "mean": 4.242192582953806,
-      "winRate": 0.1155389286488831,
-      "topFourRate": 0.5506939926263283
+      "games": 19789,
+      "mean": 4.230228915053818,
+      "winRate": 0.11733791500328465,
+      "topFourRate": 0.5536409116175653
+    },
+    {
+      "clusterId": "429010",
+      "sourceName": "Bite Marks Elise",
+      "name": "咬痕伊莉丝",
+      "sectionId": "sample-block-0273",
+      "teamId": "00000000-0000-4000-8000-000000000103",
+      "carryIds": [
+        "elise"
+      ],
+      "url": "https://www.metatft.com/pbe-comps#DA_Elise19_HeroAugment",
+      "heroAugment": true,
+      "places": [
+        311,
+        681,
+        831,
+        819,
+        714,
+        550,
+        380,
+        322
+      ],
+      "games": 4608,
+      "mean": 4.2421875,
+      "winRate": 0.06749131944444445,
+      "topFourRate": 0.5733506944444444
     },
     {
       "clusterId": "429012",
@@ -366,45 +392,19 @@
         "00000000-0000-4000-8000-000000000007"
       ],
       "places": [
-        10601,
-        10015,
-        11215,
-        11548,
-        11362,
-        10610,
-        9053,
-        5776
+        11322,
+        10640,
+        11981,
+        12300,
+        12153,
+        11348,
+        9644,
+        6160
       ],
-      "games": 80180,
-      "mean": 4.246906959341482,
-      "winRate": 0.13221501621351958,
-      "topFourRate": 0.5410202045397855
-    },
-    {
-      "clusterId": "429010",
-      "sourceName": "Bite Marks Elise",
-      "name": "咬痕伊莉丝",
-      "sectionId": "sample-block-0273",
-      "teamId": "00000000-0000-4000-8000-000000000103",
-      "carryIds": [
-        "elise"
-      ],
-      "url": "https://www.metatft.com/pbe-comps#DA_Elise19_HeroAugment",
-      "heroAugment": true,
-      "places": [
-        282,
-        636,
-        763,
-        762,
-        670,
-        508,
-        359,
-        301
-      ],
-      "games": 4281,
-      "mean": 4.253679046951647,
-      "winRate": 0.06587245970567625,
-      "topFourRate": 0.5706610604998832
+      "games": 85548,
+      "mean": 4.247743956609155,
+      "winRate": 0.13234675270023846,
+      "topFourRate": 0.5405503343152382
     },
     {
       "clusterId": "429016",
@@ -417,19 +417,45 @@
       ],
       "url": "https://www.metatft.com/pbe-comps#DA_Juggernaut19-DA_Graves19",
       "places": [
-        766,
-        1205,
-        1268,
-        1143,
-        1019,
-        998,
-        870,
-        759
+        821,
+        1295,
+        1347,
+        1227,
+        1076,
+        1070,
+        935,
+        805
       ],
-      "games": 8028,
-      "mean": 4.334454409566518,
-      "winRate": 0.09541604384653712,
-      "topFourRate": 0.5458395615346288
+      "games": 8576,
+      "mean": 4.331273320895522,
+      "winRate": 0.09573227611940298,
+      "topFourRate": 0.546875
+    },
+    {
+      "clusterId": "429038",
+      "sourceName": "Punch Line Sett",
+      "name": "飞拳瑟提",
+      "sectionId": "sample-block-0258",
+      "teamId": "00000000-0000-4000-8000-000000000061",
+      "carryIds": [
+        "sett"
+      ],
+      "url": "https://www.metatft.com/pbe-comps#DA_Sett19_HeroAugment",
+      "heroAugment": true,
+      "places": [
+        406,
+        658,
+        884,
+        886,
+        748,
+        710,
+        536,
+        378
+      ],
+      "games": 5206,
+      "mean": 4.359200922013062,
+      "winRate": 0.07798693814829043,
+      "topFourRate": 0.5443718786016135
     },
     {
       "clusterId": "429017",
@@ -448,19 +474,19 @@
       ],
       "url": "https://www.metatft.com/pbe-comps#DA_OceanSong19-DA_Zac19-DA_Aurora19",
       "places": [
-        408,
-        625,
-        786,
-        788,
-        770,
-        643,
-        545,
-        343
+        439,
+        651,
+        828,
+        844,
+        819,
+        683,
+        577,
+        364
       ],
-      "games": 4908,
-      "mean": 4.367359413202934,
-      "winRate": 0.08312958435207823,
-      "topFourRate": 0.5311735941320294
+      "games": 5205,
+      "mean": 4.369836695485111,
+      "winRate": 0.08434197886647454,
+      "topFourRate": 0.5306436119116235
     },
     {
       "clusterId": "429033",
@@ -477,19 +503,19 @@
       "url": "https://www.metatft.com/pbe-comps#DA_Kennen19_HeroAugment",
       "heroAugment": true,
       "places": [
-        523,
-        560,
-        680,
-        660,
-        625,
-        578,
-        502,
-        457
+        565,
+        601,
+        722,
+        701,
+        674,
+        617,
+        546,
+        493
       ],
-      "games": 4585,
-      "mean": 4.380806979280262,
-      "winRate": 0.11406761177753544,
-      "topFourRate": 0.5284623773173391
+      "games": 4919,
+      "mean": 4.386054076031714,
+      "winRate": 0.11486074405366944,
+      "topFourRate": 0.5263264891238056
     },
     {
       "clusterId": "429007",
@@ -508,19 +534,19 @@
       ],
       "url": "https://www.metatft.com/pbe-comps#DA_Bodyguard19-DA_RenataGlasc19",
       "places": [
-        2660,
-        3837,
-        3605,
-        3216,
-        2804,
-        2713,
-        2778,
-        3038
+        2822,
+        4104,
+        3834,
+        3430,
+        3001,
+        2879,
+        2967,
+        3253
       ],
-      "games": 24651,
-      "mean": 4.383635552310251,
-      "winRate": 0.10790637296661393,
-      "topFourRate": 0.5402620583343475
+      "games": 26290,
+      "mean": 4.386610878661088,
+      "winRate": 0.10734119437048308,
+      "topFourRate": 0.5397489539748954
     },
     {
       "clusterId": "429021",
@@ -536,45 +562,19 @@
       ],
       "url": "https://www.metatft.com/pbe-comps#DA_Heavenscale19-DA_Xayah19",
       "places": [
-        9524,
-        5816,
-        5719,
-        6678,
-        7513,
-        8040,
-        7710,
-        5204
+        10190,
+        6221,
+        6112,
+        7134,
+        8044,
+        8637,
+        8289,
+        5568
       ],
-      "games": 56204,
-      "mean": 4.384598960928048,
-      "winRate": 0.16945413137854956,
-      "topFourRate": 0.4935058002989111
-    },
-    {
-      "clusterId": "429038",
-      "sourceName": "Punch Line Sett",
-      "name": "飞拳瑟提",
-      "sectionId": "sample-block-0258",
-      "teamId": "00000000-0000-4000-8000-000000000061",
-      "carryIds": [
-        "sett"
-      ],
-      "url": "https://www.metatft.com/pbe-comps#DA_Sett19_HeroAugment",
-      "heroAugment": true,
-      "places": [
-        370,
-        604,
-        798,
-        830,
-        705,
-        662,
-        511,
-        359
-      ],
-      "games": 4839,
-      "mean": 4.388923331266791,
-      "winRate": 0.07646207894193015,
-      "topFourRate": 0.5377144038024385
+      "games": 60195,
+      "mean": 4.387623556773819,
+      "winRate": 0.16928316305340976,
+      "topFourRate": 0.49268211645485505
     },
     {
       "clusterId": "429013",
@@ -593,19 +593,44 @@
       ],
       "url": "https://www.metatft.com/pbe-comps#DA_Renegade19-DA_Graves19-DA_Zac19",
       "places": [
-        1082,
-        1109,
-        1117,
-        916,
+        1192,
+        1204,
+        1196,
         1004,
-        1033,
-        1055,
-        925
+        1088,
+        1105,
+        1129,
+        992
       ],
-      "games": 8241,
-      "mean": 4.406989443028759,
-      "winRate": 0.13129474578327874,
-      "topFourRate": 0.5125591554423007
+      "games": 8910,
+      "mean": 4.389786756453423,
+      "winRate": 0.13378226711560046,
+      "topFourRate": 0.5158249158249159
+    },
+    {
+      "clusterId": "429025",
+      "sourceName": "K/DA Ahri",
+      "name": "K/DA阿狸",
+      "sectionId": "sample-block-0006",
+      "teamId": "00000000-0000-4000-8000-000000000067",
+      "carryIds": [
+        "ahri"
+      ],
+      "url": "https://www.metatft.com/pbe-comps#DA_KDA19-DA_19_Ahri-DA_Leona19",
+      "places": [
+        4244,
+        3881,
+        4154,
+        4087,
+        4302,
+        4198,
+        4062,
+        3211
+      ],
+      "games": 32139,
+      "mean": 4.406982171193877,
+      "winRate": 0.1320514017237624,
+      "topFourRate": 0.5092255515106258
     },
     {
       "clusterId": "429014",
@@ -621,44 +646,19 @@
       ],
       "url": "https://www.metatft.com/pbe-comps#DA_KDA19-DA_Neeko19",
       "places": [
-        5900,
-        4827,
-        4126,
-        4024,
-        3970,
-        4134,
-        4493,
-        5201
+        6279,
+        5138,
+        4429,
+        4304,
+        4261,
+        4439,
+        4820,
+        5583
       ],
-      "games": 36675,
-      "mean": 4.41011588275392,
-      "winRate": 0.1608725289706885,
-      "topFourRate": 0.5147102931152011
-    },
-    {
-      "clusterId": "429025",
-      "sourceName": "K/DA Ahri",
-      "name": "K/DA阿狸",
-      "sectionId": "sample-block-0006",
-      "teamId": "00000000-0000-4000-8000-000000000067",
-      "carryIds": [
-        "ahri"
-      ],
-      "url": "https://www.metatft.com/pbe-comps#DA_KDA19-DA_19_Ahri-DA_Leona19",
-      "places": [
-        3951,
-        3623,
-        3885,
-        3826,
-        4025,
-        3938,
-        3797,
-        3006
-      ],
-      "games": 30051,
-      "mean": 4.410369039299857,
-      "winRate": 0.131476489967056,
-      "topFourRate": 0.5086353199560747
+      "games": 39253,
+      "mean": 4.417522227600438,
+      "winRate": 0.15996229587547448,
+      "topFourRate": 0.5133365602629099
     },
     {
       "clusterId": "429024",
@@ -678,19 +678,19 @@
         "00000000-0000-4000-8000-000000000064"
       ],
       "places": [
-        4317,
-        6154,
-        6825,
-        6970,
-        6753,
-        6153,
-        5384,
-        4132
+        4684,
+        6605,
+        7328,
+        7478,
+        7284,
+        6634,
+        5757,
+        4455
       ],
-      "games": 46688,
-      "mean": 4.420986120630569,
-      "winRate": 0.09246487320082249,
-      "topFourRate": 0.5197481151473612
+      "games": 50225,
+      "mean": 4.419173718267795,
+      "winRate": 0.09326032852165256,
+      "topFourRate": 0.5195619711299154
     },
     {
       "clusterId": "429020",
@@ -709,45 +709,19 @@
       ],
       "url": "https://www.metatft.com/pbe-comps#DA_Mosher19-DA_Yasuo19",
       "places": [
-        443,
-        717,
-        1005,
-        1019,
-        987,
-        811,
-        688,
-        423
+        475,
+        781,
+        1082,
+        1090,
+        1050,
+        883,
+        741,
+        454
       ],
-      "games": 6093,
-      "mean": 4.426226817659609,
-      "winRate": 0.07270638437551288,
-      "topFourRate": 0.5225668800262596
-    },
-    {
-      "clusterId": "429023",
-      "sourceName": "Dancin' n' Prancin' Lillia",
-      "name": "K/DA毒舞莉莉娅",
-      "sectionId": "sample-block-0020",
-      "teamId": "00000000-0000-4000-8000-000000000091",
-      "carryIds": [
-        "lillia"
-      ],
-      "url": "https://www.metatft.com/pbe-comps#DA_Lillia19_HeroAugment",
-      "heroAugment": true,
-      "places": [
-        376,
-        516,
-        605,
-        589,
-        587,
-        513,
-        486,
-        412
-      ],
-      "games": 4084,
-      "mean": 4.47845249755142,
-      "winRate": 0.0920666013712047,
-      "topFourRate": 0.5107737512242899
+      "games": 6556,
+      "mean": 4.424954240390482,
+      "winRate": 0.07245271507016474,
+      "topFourRate": 0.5228798047589994
     },
     {
       "clusterId": "429049",
@@ -761,19 +735,19 @@
       "url": "https://www.metatft.com/pbe-comps#DA_Annie19_HeroAugment",
       "heroAugment": true,
       "places": [
-        544,
-        1214,
-        1591,
-        1715,
-        1604,
-        1412,
-        1058,
-        697
+        597,
+        1338,
+        1700,
+        1842,
+        1720,
+        1499,
+        1143,
+        736
       ],
-      "games": 9835,
-      "mean": 4.48185053380783,
-      "winRate": 0.055312658871377735,
-      "topFourRate": 0.5148957803762074
+      "games": 10575,
+      "mean": 4.465626477541371,
+      "winRate": 0.05645390070921986,
+      "topFourRate": 0.517919621749409
     },
     {
       "clusterId": "429040",
@@ -792,19 +766,45 @@
       ],
       "url": "https://www.metatft.com/pbe-comps#DA_Mosher19-DA_Viego19-DA_Choreographer19",
       "places": [
-        1200,
-        1095,
-        984,
-        944,
-        966,
-        954,
-        1005,
-        1260
+        1310,
+        1182,
+        1061,
+        1021,
+        1037,
+        1009,
+        1074,
+        1350
       ],
-      "games": 8408,
-      "mean": 4.494172216936251,
-      "winRate": 0.142721217887726,
-      "topFourRate": 0.5022597526165556
+      "games": 9044,
+      "mean": 4.477885891198585,
+      "winRate": 0.14484741264927023,
+      "topFourRate": 0.505749668288368
+    },
+    {
+      "clusterId": "429023",
+      "sourceName": "Dancin' n' Prancin' Lillia",
+      "name": "K/DA毒舞莉莉娅",
+      "sectionId": "sample-block-0020",
+      "teamId": "00000000-0000-4000-8000-000000000091",
+      "carryIds": [
+        "lillia"
+      ],
+      "url": "https://www.metatft.com/pbe-comps#DA_Lillia19_HeroAugment",
+      "heroAugment": true,
+      "places": [
+        408,
+        554,
+        635,
+        628,
+        624,
+        550,
+        520,
+        454
+      ],
+      "games": 4373,
+      "mean": 4.487765835810657,
+      "winRate": 0.09329979419163045,
+      "topFourRate": 0.5088040246970044
     },
     {
       "clusterId": "429032",
@@ -820,19 +820,19 @@
       ],
       "url": "https://www.metatft.com/pbe-comps#DA_Illbeats19-DA_Draven19",
       "places": [
-        3747,
-        3637,
-        3412,
-        3493,
-        3777,
-        3960,
-        4221,
-        4151
+        4047,
+        3899,
+        3657,
+        3745,
+        4060,
+        4240,
+        4549,
+        4458
       ],
-      "games": 30398,
-      "mean": 4.6262583064675304,
-      "winRate": 0.12326468846634647,
-      "topFourRate": 0.4700638199881571
+      "games": 32655,
+      "mean": 4.625417240851324,
+      "winRate": 0.12393201653651814,
+      "topFourRate": 0.4700045934772623
     },
     {
       "clusterId": "429000",
@@ -851,19 +851,19 @@
       ],
       "url": "https://www.metatft.com/pbe-comps#DA_Encore19-DA_Ezreal19",
       "places": [
-        2331,
-        3695,
-        3934,
-        4050,
-        3848,
-        3869,
-        3693,
-        3694
+        2427,
+        3870,
+        4122,
+        4248,
+        4043,
+        4065,
+        3891,
+        3882
       ],
-      "games": 29114,
-      "mean": 4.6568661125231845,
-      "winRate": 0.08006457374459024,
-      "topFourRate": 0.48121178814316135
+      "games": 30548,
+      "mean": 4.6622692156606,
+      "winRate": 0.07944873641482257,
+      "topFourRate": 0.4801296320544717
     },
     {
       "clusterId": "429055",
@@ -879,19 +879,19 @@
       ],
       "url": "https://www.metatft.com/pbe-comps#DA_Jazz19-DA_Leona19",
       "places": [
-        27681,
-        16113,
-        10848,
-        10473,
-        11632,
-        14511,
-        20921,
-        37498
+        29589,
+        17301,
+        11621,
+        11263,
+        12471,
+        15612,
+        22472,
+        40419
       ],
-      "games": 149677,
-      "mean": 4.8504446240905414,
-      "winRate": 0.18493823366315465,
-      "topFourRate": 0.43503677919787276
+      "games": 160748,
+      "mean": 4.857223729066614,
+      "winRate": 0.1840707193868664,
+      "topFourRate": 0.4340582775524423
     }
   ],
   "smallSamples": []

@@ -54,7 +54,7 @@
         "thresh",
         "vladimir"
       ],
-      "games": 4535,
+      "games": 5377,
       "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=comps&level=9&trait=DA_Jazz19_2&unit=DA_Galio19-1&unit=DA_Jhin19-1_2_3&unit=DA_KSante19-1&unit=DA_Lucian19-1&unit=DA_Mel19-1&unit=DA_Nasus19-1&unit=DA_Smeech19-1&unit=DA_Thresh19-1&unit=DA_Vladimir19-1&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
       "sampleScope": "9级结算 · 3 爵士乐 · 烬两星三件 · 无纹章、人口装或重复弈子",
@@ -75,18 +75,18 @@
         ]
       },
       "placementCounts": [
-        1037,
-        912,
-        1090,
-        780,
-        382,
-        215,
-        94,
-        25
+        1240,
+        1062,
+        1292,
+        937,
+        464,
+        243,
+        110,
+        29
       ],
       "mean": 2.93,
-      "topFourRate": 0.842116868798236,
-      "winRate": 0.2286659316427784,
+      "topFourRate": 0.842663195090199,
+      "winRate": 0.230611865352427,
       "sectionId": "sample-block-0051"
     },
     {
@@ -101,7 +101,7 @@
         "vi",
         "zac"
       ],
-      "games": 234,
+      "games": 261,
       "url": "https://www.metatft.com/explorer?set=TFTSet19&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&tab=comps&level=8&unit=DA_Ashe19-1&unit=DA_Jax19-1&unit=DA_Renekton19-1&unit=DA_Zac19-1&unit=DA_Vi19-1&unit=DA_Galio19-1&unit=DA_KSante19-1&unit=DA_Bard19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "sampleScope": "八级结算 · 固定名单 · 无纹章、人口装或重复弈子",
       "conditions": {
@@ -111,18 +111,18 @@
       },
       "observedOn": "2026-11-27",
       "placementCounts": [
-        45,
-        78,
-        38,
+        51,
+        85,
         46,
-        21,
+        48,
+        25,
         3,
         2,
         1
       ],
-      "mean": 2.75,
-      "topFourRate": 0.8846153846153846,
-      "winRate": 0.19230769230769232
+      "mean": 2.74,
+      "topFourRate": 0.8812260536398467,
+      "winRate": 0.19540229885057472
     },
     {
       "population": 7,
@@ -135,7 +135,7 @@
         "neeko",
         "samira"
       ],
-      "games": 250,
+      "games": 282,
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=7&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Lillia19-1&unit=DA_Neeko19-1&unit=DA_Gragas19-1&unit=DA_Samira19-1&unit=DA_Evelynn19-1&unit=DA_Kaisa19-1&unit=DA_Ekko19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "sampleScope": "7级结算 · 固定名单 · 星级不限 · 无纹章、人口装或重复弈子",
       "conditions": {
@@ -147,15 +147,15 @@
       "placementCounts": [
         0,
         2,
-        8,
-        17,
-        40,
-        47,
-        72,
-        64
+        9,
+        21,
+        46,
+        54,
+        77,
+        73
       ],
-      "mean": 6.38,
-      "topFourRate": 0.108,
+      "mean": 6.35,
+      "topFourRate": 0.11347517730496454,
       "winRate": 0.0
     },
     {
@@ -170,7 +170,7 @@
         "neeko",
         "samira"
       ],
-      "games": 94,
+      "games": 107,
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Lillia19-1&unit=DA_Neeko19-1&unit=DA_Gragas19-1&unit=DA_Samira19-1&unit=DA_Evelynn19-1&unit=DA_Kaisa19-1&unit=DA_Ekko19-1&unit=DA_Leona19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "sampleScope": "8级结算 · 固定名单 · 星级不限 · 无纹章、人口装或重复弈子",
       "conditions": {
@@ -180,18 +180,18 @@
       },
       "observedOn": "2026-11-27",
       "placementCounts": [
-        13,
-        18,
-        10,
-        16,
-        18,
-        10,
+        15,
+        20,
+        11,
+        19,
+        19,
+        14,
         4,
         5
       ],
       "mean": 3.84,
-      "topFourRate": 0.6063829787234043,
-      "winRate": 0.13829787234042554
+      "topFourRate": 0.6074766355140186,
+      "winRate": 0.14018691588785046
     },
     {
       "population": 9,
@@ -206,7 +206,7 @@
         "neeko",
         "samira"
       ],
-      "games": 109,
+      "games": 127,
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Lillia19-1&unit=DA_Neeko19-1&unit=DA_Gragas19-1&unit=DA_Samira19-1&unit=DA_Evelynn19-1&unit=DA_Kaisa19-1&unit=DA_Ekko19-1&unit=DA_Leona19-1&unit=DA_AkaliKDA19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "sampleScope": "9级结算 · 固定名单 · 星级不限 · 无纹章、人口装或重复弈子",
       "conditions": {
@@ -216,18 +216,18 @@
       },
       "observedOn": "2026-11-27",
       "placementCounts": [
-        27,
-        41,
-        22,
-        10,
+        34,
+        47,
+        25,
+        12,
         8,
         1,
         0,
         0
       ],
-      "mean": 2.39,
-      "topFourRate": 0.9174311926605505,
-      "winRate": 0.24770642201834864
+      "mean": 2.34,
+      "topFourRate": 0.9291338582677166,
+      "winRate": 0.2677165354330709
     },
     {
       "population": 8,
@@ -257,20 +257,20 @@
           }
         ]
       },
-      "games": 4632,
+      "games": 5102,
       "placementCounts": [
-        495,
-        1081,
-        1191,
-        923,
-        539,
-        273,
-        94,
-        36
+        559,
+        1183,
+        1314,
+        1017,
+        586,
+        301,
+        104,
+        38
       ],
-      "mean": 3.28,
-      "topFourRate": 0.7966321243523317,
-      "winRate": 0.10686528497409327,
+      "mean": 3.27,
+      "topFourRate": 0.7983143865150921,
+      "winRate": 0.10956487651901216,
       "observedOn": "2026-11-27"
     },
     {
@@ -285,21 +285,21 @@
         "shyvana",
         "tibbers"
       ],
-      "games": 2222,
+      "games": 2531,
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&trait=DA_IonicSpark19_3&tactician_item_count=0&duplicate_unit_count=0&emblem_count=0&unit=DA_Elise19-1&unit=DA_Tibbers19-1&unit=DA_Annie19-1&unit=DA_Shyvana19-1&unit=DA_Aurora19-1&unit=DA_Jinx19-1&unit=DA_Gwen19-1&unit=DA_Leona19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
-      "mean": 5.39,
-      "topFourRate": 0.28622862286228623,
-      "winRate": 0.01935193519351935,
+      "mean": 5.38,
+      "topFourRate": 0.2840774397471355,
+      "winRate": 0.01935993678387989,
       "placementCounts": [
-        43,
-        53,
-        194,
-        346,
-        461,
-        512,
-        423,
-        190
+        49,
+        62,
+        220,
+        388,
+        534,
+        588,
+        479,
+        211
       ]
     },
     {
@@ -315,21 +315,21 @@
         "shyvana",
         "tibbers"
       ],
-      "games": 5128,
+      "games": 5908,
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&trait=DA_IonicSpark19_3&tactician_item_count=0&duplicate_unit_count=0&emblem_count=0&unit=DA_Elise19-1&unit=DA_Tibbers19-1&unit=DA_Annie19-1&unit=DA_Shyvana19-1&unit=DA_Aurora19-1&unit=DA_Jinx19-1&unit=DA_Gwen19-1&unit=DA_Leona19-1&unit=DA_MissFortune19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
-      "mean": 3.53,
-      "topFourRate": 0.7148985959438378,
-      "winRate": 0.13377535101404056,
+      "mean": 3.52,
+      "topFourRate": 0.7185172647257956,
+      "winRate": 0.1362559241706161,
       "placementCounts": [
-        686,
-        873,
-        1120,
-        987,
-        754,
-        431,
-        206,
-        71
+        805,
+        1013,
+        1284,
+        1143,
+        844,
+        509,
+        230,
+        80
       ]
     },
     {
@@ -345,21 +345,21 @@
         "wukong",
         "xayah"
       ],
-      "games": 707,
+      "games": 781,
       "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=9&unit=DA_KSante19-1&unit=DA_DrMundo19-1&unit=DA_Leona19-1&unit=DA_LeeSin19-1&unit=DA_Wukong19-1&unit=DA_Alune19-1&unit=DA_Aphelios19-1&unit=DA_Janna19-1&unit=DA_Xayah19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
-      "mean": 3.58,
-      "topFourRate": 0.7241867043847242,
-      "winRate": 0.09618104667609619,
+      "mean": 3.6,
+      "topFourRate": 0.7195902688860435,
+      "winRate": 0.09603072983354674,
       "placementCounts": [
-        68,
-        140,
-        141,
-        163,
-        100,
-        61,
-        31,
-        3
+        75,
+        150,
+        158,
+        179,
+        109,
+        71,
+        35,
+        4
       ]
     },
     {
@@ -401,11 +401,11 @@
         "tristana",
         "ziggs"
       ],
-      "games": 30666,
+      "games": 35783,
       "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&unit=DA_Ziggs19-1_3&unit=DA_Kobuko19-1_3&unit=DA_Seraphine19_Indie-1&unit=DA_Lulu19-1&unit=DA_Tristana19-1&unit=DA_Swain19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
-      "mean": 3.52,
-      "topFourRate": 0.6803952259831736,
-      "winRate": 0.23103763125285331,
+      "mean": 3.53,
+      "topFourRate": 0.6789257468630355,
+      "winRate": 0.22991364614481738,
       "sampleScope": "六张核心 · 吉格斯、可酷伯三星",
       "conditions": {
         "kind": "core",
@@ -431,14 +431,14 @@
       },
       "observedOn": "2026-11-27",
       "placementCounts": [
-        7085,
-        5377,
-        4519,
-        3884,
-        3180,
-        2759,
-        2358,
-        1504
+        8227,
+        6227,
+        5307,
+        4533,
+        3696,
+        3277,
+        2757,
+        1759
       ]
     },
     {
@@ -453,22 +453,22 @@
         "tristana",
         "ziggs"
       ],
-      "games": 14,
+      "games": 17,
       "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=8&unit=DA_Ziggs19-1&unit=DA_Kobuko19-1&unit=DA_Swain19-1&unit=DA_Galio19-1&unit=DA_Lulu19-1&unit=DA_Lucian19-1&unit=DA_Bard19-1&unit=DA_Tristana19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "placementCounts": [
         2,
         2,
         1,
-        1,
-        1,
+        2,
+        2,
         4,
         1,
-        2
+        3
       ],
       "observedOn": "2026-11-27",
-      "mean": 4.64,
-      "topFourRate": 0.42857142857142855,
-      "winRate": 0.14285714285714285
+      "mean": 4.82,
+      "topFourRate": 0.4117647058823529,
+      "winRate": 0.11764705882352941
     },
     {
       "population": 7,
@@ -481,20 +481,20 @@
         "neeko",
         "yuumi"
       ],
-      "games": 160,
+      "games": 176,
       "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=7&unit=DA_Braum19-1&unit=DA_Ekko19-1&unit=DA_Neeko19-1&unit=DA_Yuumi19-1&unit=DA_Lux19-1&unit=DA_Alune19-1&unit=DA_Malzahar19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
-      "mean": 5.39,
-      "topFourRate": 0.29375,
-      "winRate": 0.00625,
+      "mean": 5.35,
+      "topFourRate": 0.3068181818181818,
+      "winRate": 0.005681818181818182,
       "placementCounts": [
         1,
         7,
-        16,
-        23,
-        29,
-        40,
-        30,
+        19,
+        27,
+        32,
+        43,
+        33,
         14
       ]
     },
@@ -510,19 +510,19 @@
         "neeko",
         "yuumi"
       ],
-      "games": 92,
+      "games": 106,
       "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=9&unit=DA_Braum19-1&unit=DA_Ekko19-1&unit=DA_Neeko19-1&unit=DA_Yuumi19-1&unit=DA_Lux19-1&unit=DA_Alune19-1&unit=DA_Malzahar19-1&unit=DA_BaronNashor19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
-      "mean": 2.16,
-      "topFourRate": 0.8913043478260869,
-      "winRate": 0.41304347826086957,
+      "mean": 2.17,
+      "topFourRate": 0.8962264150943396,
+      "winRate": 0.39622641509433965,
       "placementCounts": [
-        38,
-        27,
+        42,
+        35,
         13,
-        4,
+        5,
         8,
         2,
-        0,
+        1,
         0
       ],
       "observedOn": "2026-11-27"
@@ -539,21 +539,21 @@
         "viego",
         "yorick"
       ],
-      "games": 1253,
+      "games": 1438,
       "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=8&unit=DA_Yorick19-1&unit=DA_Locke19-1&unit=DA_Viego19-1&unit=DA_Olaf19-1&unit=DA_Mordekaiser19-1&unit=DA_Kayle19-1&unit=DA_Karthus19-1&unit=DA_Gnar19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
-      "mean": 5.46,
-      "topFourRate": 0.27294493216280924,
-      "winRate": 0.01675977653631285,
+      "mean": 5.47,
+      "topFourRate": 0.26564673157162727,
+      "winRate": 0.016689847009735744,
       "placementCounts": [
-        21,
         24,
-        103,
-        194,
-        257,
-        297,
-        238,
-        119
+        31,
+        112,
+        215,
+        296,
+        353,
+        270,
+        137
       ]
     },
     {
@@ -616,20 +616,20 @@
         "viego",
         "yorick"
       ],
-      "games": 3517,
+      "games": 4074,
       "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=9&unit=DA_Yorick19-1&unit=DA_Locke19-1&unit=DA_Viego19-1&unit=DA_Olaf19-1&unit=DA_Kayle19-1&unit=DA_Karthus19-1&unit=DA_Gnar19-1&unit=DA_Mordekaiser19-1&unit=DA_Swain19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
-      "mean": 3.75,
-      "topFourRate": 0.6747227750924083,
-      "winRate": 0.09212396929201024,
+      "mean": 3.76,
+      "topFourRate": 0.6713303878252331,
+      "winRate": 0.09278350515463918,
       "placementCounts": [
-        324,
-        577,
-        765,
-        707,
-        566,
-        334,
-        193,
-        51
+        378,
+        660,
+        877,
+        820,
+        662,
+        397,
+        221,
+        59
       ],
       "observedOn": "2026-11-27"
     },
@@ -670,7 +670,7 @@
         "neeko",
         "varus"
       ],
-      "games": 3,
+      "games": 5,
       "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=5&unit=DA_Kennen19-1&unit=DA_Lillia19-1&unit=DA_Gragas19-1&unit=DA_Neeko19-1&unit=DA_Varus19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "placementCounts": [
         0,
@@ -679,11 +679,11 @@
         0,
         0,
         0,
-        0,
-        3
+        1,
+        4
       ],
       "observedOn": "2026-11-27",
-      "mean": 8.0,
+      "mean": 7.8,
       "topFourRate": 0.0,
       "winRate": 0.0
     },
@@ -699,20 +699,20 @@
         "lillia",
         "neeko"
       ],
-      "games": 4676,
+      "games": 5426,
       "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=8&unit=DA_Leona19-1&unit=DA_Lillia19-1&unit=DA_Gragas19-1&unit=DA_AkaliKDA19-1&unit=DA_Neeko19-1&unit=DA_Kaisa19-1&unit=DA_Evelynn19-1&unit=DA_19_Ahri-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "mean": 4.59,
-      "topFourRate": 0.4649272882805817,
-      "winRate": 0.06608212147134303,
+      "topFourRate": 0.4647991153704386,
+      "winRate": 0.06653151492812384,
       "placementCounts": [
-        309,
-        385,
-        664,
-        816,
-        892,
-        830,
-        532,
-        248
+        361,
+        451,
+        764,
+        946,
+        1047,
+        945,
+        623,
+        289
       ],
       "observedOn": "2026-11-27"
     },
@@ -783,21 +783,21 @@
         "renata-glasc",
         "syndra"
       ],
-      "games": 39,
+      "games": 43,
       "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=6&unit=DA_Lillia19-1&unit=DA_Nasus19-1&unit=DA_KSante19-1&unit=DA_Jax19-1&unit=DA_RenataGlasc19-1&unit=DA_Syndra19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "placementCounts": [
         0,
         0,
         0,
         1,
-        3,
         6,
+        7,
         9,
         20
       ],
       "observedOn": "2026-11-27",
-      "mean": 7.13,
-      "topFourRate": 0.02564102564102564,
+      "mean": 6.95,
+      "topFourRate": 0.023255813953488372,
       "winRate": 0.0
     },
     {
@@ -812,22 +812,22 @@
         "renata-glasc",
         "seraphine"
       ],
-      "games": 146,
+      "games": 162,
       "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=8&unit=DA_Lillia19-1&unit=DA_Nasus19-1&unit=DA_KSante19-1&unit=DA_Jax19-1&unit=DA_RenataGlasc19-1&unit=DA_Leona19-1&unit=DA_Kennen19-1&unit=DA_Seraphine19_Indie-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "placementCounts": [
-        29,
         33,
-        24,
-        25,
-        21,
-        12,
+        39,
+        26,
+        26,
+        22,
+        14,
         2,
         0
       ],
       "observedOn": "2026-11-27",
-      "mean": 3.14,
-      "topFourRate": 0.7602739726027398,
-      "winRate": 0.19863013698630136
+      "mean": 3.09,
+      "topFourRate": 0.7654320987654321,
+      "winRate": 0.2037037037037037
     },
     {
       "population": 8,
@@ -841,22 +841,22 @@
         "nasus",
         "renata-glasc"
       ],
-      "games": 711,
+      "games": 817,
       "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=8&unit=DA_Lillia19-1&unit=DA_Nasus19-1&unit=DA_KSante19-1&unit=DA_Jax19-1&unit=DA_RenataGlasc19-1&unit=DA_Leona19-1&unit=DA_Kennen19-1&unit=DA_Garen19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "placementCounts": [
-        89,
-        180,
-        186,
-        144,
-        60,
-        41,
-        9,
+        97,
+        206,
+        214,
+        164,
+        77,
+        47,
+        10,
         2
       ],
       "observedOn": "2026-11-27",
-      "mean": 3.11,
-      "topFourRate": 0.8424753867791842,
-      "winRate": 0.12517580872011252
+      "mean": 3.13,
+      "topFourRate": 0.8335373317013464,
+      "winRate": 0.11872705018359853
     },
     {
       "population": 8,
@@ -870,22 +870,22 @@
         "renata-glasc",
         "syndra"
       ],
-      "games": 6,
+      "games": 8,
       "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=8&unit=DA_Lillia19-1&unit=DA_Nasus19-1&unit=DA_KSante19-1&unit=DA_Garen19-1&unit=DA_Jax19-1&unit=DA_Syndra19-1&unit=DA_RenataGlasc19-1&unit=DA_19_Ahri-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
       "placementCounts": [
         1,
-        4,
-        0,
+        5,
         0,
         0,
         0,
         1,
+        1,
         0
       ],
-      "mean": 2.67,
-      "topFourRate": 0.8333333333333334,
-      "winRate": 0.16666666666666666
+      "mean": 3.0,
+      "topFourRate": 0.75,
+      "winRate": 0.125
     },
     {
       "population": 7,
@@ -927,21 +927,21 @@
         "vayne",
         "yuumi"
       ],
-      "games": 281,
+      "games": 325,
       "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=8&unit=DA_Illaoi19-1&unit=DA_Braum19-1&unit=DA_Swain19-1&unit=DA_Olaf19-1&unit=DA_Vayne19-1&unit=DA_Draven19-1&unit=DA_Yuumi19-1&unit=DA_Kaisa19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
-      "mean": 3.07,
-      "topFourRate": 0.7829181494661922,
-      "winRate": 0.20284697508896798,
+      "mean": 3.04,
+      "topFourRate": 0.7907692307692308,
+      "winRate": 0.20615384615384616,
       "placementCounts": [
-        57,
-        69,
-        55,
-        39,
-        34,
-        16,
+        67,
+        82,
+        62,
+        46,
+        36,
+        20,
         8,
-        3
+        4
       ]
     },
     {
@@ -1037,19 +1037,19 @@
         "zac",
         "zoe"
       ],
-      "games": 2519,
+      "games": 2897,
       "mean": 3.99,
-      "topFourRate": 0.6200873362445415,
-      "winRate": 0.06828106391425169,
+      "topFourRate": 0.617880566102865,
+      "winRate": 0.07076285812909906,
       "placementCounts": [
-        172,
-        375,
-        516,
-        499,
-        440,
-        298,
-        162,
-        57
+        205,
+        428,
+        588,
+        569,
+        508,
+        346,
+        189,
+        64
       ],
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Taric19-1&unit=DA_Zac19-1&unit=DA_Renekton19-1&unit=DA_Graves19-1&unit=DA_Illaoi19-1&unit=DA_Zoe19-1&unit=DA_Taliyah19-1&unit=DA_Yuumi19-1&unit=DA_Syndra19-1&trait=DA_OceanSong19_3&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
@@ -1102,7 +1102,7 @@
         "swain",
         "thresh"
       ],
-      "games": 2,
+      "games": 3,
       "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=8&unit=DA_Galio19-1&unit=DA_Thresh19-1&unit=DA_Shyvana19-1&unit=DA_Nasus19-1&unit=DA_Swain19-1&unit=DA_Jhin19-1&unit=DA_Lucian19-1&unit=DA_RenataGlasc19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "placementCounts": [
         0,
@@ -1111,11 +1111,11 @@
         0,
         1,
         0,
-        0,
+        1,
         1
       ],
       "observedOn": "2026-11-27",
-      "mean": 6.5,
+      "mean": 6.67,
       "topFourRate": 0.0,
       "winRate": 0.0
     },
@@ -1132,21 +1132,21 @@
         "yorick",
         "zeri"
       ],
-      "games": 2765,
+      "games": 3271,
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_DrMundo19-1&unit=DA_Nunu19-1&unit=DA_Galio19-1&unit=DA_Yorick19-1&unit=DA_Leona19-1&unit=DA_Jax19-1&unit=DA_Vi19-1&unit=DA_Bard19-1&unit=DA_Zeri19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
-      "mean": 3.81,
-      "topFourRate": 0.6401446654611211,
-      "winRate": 0.15443037974683543,
+      "mean": 3.82,
+      "topFourRate": 0.6386426169367166,
+      "winRate": 0.15316416997859983,
       "placementCounts": [
-        427,
-        395,
-        514,
-        434,
-        368,
-        298,
-        220,
-        109
+        501,
+        473,
+        596,
+        519,
+        433,
+        361,
+        263,
+        125
       ]
     },
     {
@@ -1162,22 +1162,22 @@
         "vi",
         "yorick"
       ],
-      "games": 15,
+      "games": 18,
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_DrMundo19-1&unit=DA_Nunu19-1&unit=DA_Galio19-1&unit=DA_Yorick19-1&unit=DA_Leona19-1&unit=DA_Jax19-1&unit=DA_Vi19-1&unit=DA_Lucian19-1&unit=DA_MissFortune19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
       "placementCounts": [
         1,
         1,
-        1,
+        3,
         2,
         1,
         1,
         3,
-        5
+        6
       ],
-      "mean": 5.73,
-      "topFourRate": 0.3333333333333333,
-      "winRate": 0.06666666666666667
+      "mean": 5.56,
+      "topFourRate": 0.3888888888888889,
+      "winRate": 0.05555555555555555
     },
     {
       "population": 9,
@@ -1192,21 +1192,21 @@
         "swain",
         "yorick"
       ],
-      "games": 3029,
+      "games": 3444,
       "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=9&unit=DA_Galio19-1&unit=DA_Yorick19-1&unit=DA_Swain19-1&unit=DA_Camille19-1&unit=DA_Smeech19-1&unit=DA_Olaf19-1&unit=DA_Kayle19-1&unit=DA_Bard19-1&unit=DA_Mel19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
-      "mean": 3.6,
-      "topFourRate": 0.6850445691647409,
-      "winRate": 0.13304721030042918,
+      "mean": 3.59,
+      "topFourRate": 0.6904761904761905,
+      "winRate": 0.13530778164924506,
       "placementCounts": [
-        403,
-        565,
-        554,
-        553,
-        459,
-        290,
-        164,
-        41
+        466,
+        632,
+        640,
+        640,
+        510,
+        331,
+        176,
+        49
       ]
     },
     {
@@ -1218,7 +1218,7 @@
         "yunara",
         "ziggs"
       ],
-      "games": 1,
+      "games": 2,
       "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=5&unit=DA_Annie19-1&unit=DA_Elise19-1&unit=DA_Seraphine19_Indie-1&unit=DA_Yunara19-1&unit=DA_Ziggs19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "placementCounts": [
         0,
@@ -1228,7 +1228,7 @@
         0,
         0,
         0,
-        1
+        2
       ],
       "observedOn": "2026-11-27",
       "mean": 8.0,
@@ -1244,7 +1244,7 @@
         "yunara",
         "ziggs"
       ],
-      "games": 6,
+      "games": 7,
       "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=5&unit=DA_Annie19-1&unit=DA_Elise19-1&unit=DA_Kobuko19-1&unit=DA_Yunara19-1&unit=DA_Ziggs19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
       "placementCounts": [
@@ -1255,7 +1255,7 @@
         0,
         0,
         0,
-        6
+        7
       ],
       "mean": 8.0,
       "topFourRate": 0.0,
@@ -1295,7 +1295,7 @@
         "renekton",
         "taric"
       ],
-      "games": 59,
+      "games": 68,
       "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=6&unit=DA_Taric19-1&unit=DA_Renekton19-1&unit=DA_Galio19-1&unit=DA_Jax19-1&unit=DA_Ashe19-1&unit=DA_Bard19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
       "placementCounts": [
@@ -1304,11 +1304,11 @@
         0,
         0,
         4,
-        11,
-        20,
-        24
+        12,
+        22,
+        30
       ],
-      "mean": 7.08,
+      "mean": 7.15,
       "topFourRate": 0.0,
       "winRate": 0.0
     },
@@ -1322,7 +1322,7 @@
         "neeko",
         "seraphine"
       ],
-      "games": 10,
+      "games": 11,
       "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=6&unit=DA_Lillia19-1&unit=DA_Gragas19-1&unit=DA_Kennen19-1&unit=DA_Evelynn19-1&unit=DA_Neeko19-1&unit=DA_Seraphine19_Indie-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "placementCounts": [
         0,
@@ -1332,10 +1332,10 @@
         0,
         3,
         2,
-        5
+        6
       ],
       "observedOn": "2026-11-27",
-      "mean": 7.2,
+      "mean": 7.27,
       "topFourRate": 0.0,
       "winRate": 0.0
     },
@@ -1348,7 +1348,7 @@
         "neeko",
         "seraphine"
       ],
-      "games": 23,
+      "games": 28,
       "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=5&unit=DA_Lillia19-1&unit=DA_Gragas19-1&unit=DA_Kennen19-1&unit=DA_Neeko19-1&unit=DA_Seraphine19_Indie-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "placementCounts": [
         0,
@@ -1357,11 +1357,11 @@
         0,
         0,
         0,
-        4,
-        19
+        5,
+        23
       ],
       "observedOn": "2026-11-27",
-      "mean": 7.83,
+      "mean": 7.82,
       "topFourRate": 0.0,
       "winRate": 0.0
     },
@@ -1376,21 +1376,21 @@
         "neeko",
         "seraphine"
       ],
-      "games": 72,
+      "games": 87,
       "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=7&unit=DA_Lillia19-1&unit=DA_Gragas19-1&unit=DA_Leona19-1&unit=DA_Evelynn19-1&unit=DA_Neeko19-1&unit=DA_Seraphine19_Indie-1&unit=DA_19_Ahri-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
-      "mean": 5.35,
-      "topFourRate": 0.3055555555555556,
-      "winRate": 0.041666666666666664,
+      "mean": 5.36,
+      "topFourRate": 0.2988505747126437,
+      "winRate": 0.034482758620689655,
       "placementCounts": [
         3,
-        2,
-        6,
-        11,
+        3,
+        7,
+        13,
+        19,
+        16,
         15,
-        14,
-        11,
-        10
+        11
       ]
     },
     {
@@ -1427,20 +1427,20 @@
           }
         ]
       },
-      "games": 6356,
+      "games": 7516,
       "placementCounts": [
-        136,
-        368,
-        896,
-        1373,
-        1342,
-        1165,
-        780,
-        296
+        160,
+        426,
+        1084,
+        1618,
+        1601,
+        1355,
+        925,
+        347
       ],
       "mean": 4.81,
-      "topFourRate": 0.43628067967275014,
-      "winRate": 0.021397105097545627
+      "topFourRate": 0.43746673762639704,
+      "winRate": 0.021287919105907396
     },
     {
       "population": 8,
@@ -1464,20 +1464,20 @@
           "jazz": 2
         }
       },
-      "games": 8847,
+      "games": 10399,
       "placementCounts": [
-        193,
-        330,
-        869,
-        1486,
-        1712,
-        1787,
-        1595,
-        875
+        226,
+        388,
+        1039,
+        1741,
+        2032,
+        2094,
+        1864,
+        1015
       ],
-      "mean": 5.3,
-      "topFourRate": 0.32530801401605064,
-      "winRate": 0.021815304623036057,
+      "mean": 5.29,
+      "topFourRate": 0.32637753630156746,
+      "winRate": 0.02173285892874315,
       "observedOn": "2026-11-27"
     },
     {
@@ -1486,12 +1486,12 @@
         "nasus",
         "renata-glasc"
       ],
-      "games": 855,
+      "games": 968,
       "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=8&trait=DA_Bodyguard19_2&unit=DA_Nasus19-1&unit=DA_RenataGlasc19-1_3_3&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
-      "mean": 3.74,
-      "topFourRate": 0.7017543859649122,
-      "winRate": 0.06432748538011696,
+      "mean": 3.72,
+      "topFourRate": 0.7076446280991735,
+      "winRate": 0.06301652892561983,
       "sampleScope": "八级四保镖 · 烈娜塔三星三格、内瑟斯同场",
       "conditions": {
         "kind": "core",
@@ -1513,14 +1513,14 @@
         ]
       },
       "placementCounts": [
-        55,
-        135,
-        233,
-        177,
-        131,
-        72,
-        41,
-        11
+        61,
+        151,
+        268,
+        205,
+        150,
+        77,
+        43,
+        13
       ]
     },
     {
@@ -2526,18 +2526,18 @@
         "zac",
         "zoe"
       ],
-      "games": 319,
-      "mean": 3.84,
-      "topFourRate": 0.670846394984326,
-      "winRate": 0.07523510971786834,
+      "games": 362,
+      "mean": 3.86,
+      "topFourRate": 0.6602209944751382,
+      "winRate": 0.0718232044198895,
       "placementCounts": [
-        24,
-        43,
-        74,
-        73,
-        52,
-        33,
-        18,
+        26,
+        48,
+        87,
+        78,
+        59,
+        42,
+        20,
         2
       ],
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Graves19-1&unit=DA_Zac19-1&unit=DA_Aurora19-1&unit=DA_Taliyah19-1&unit=DA_Shyvana19-1&unit=DA_Annie19-1&unit=DA_Ezreal19-1&unit=DA_Renekton19-1&unit=DA_Zoe19-1&trait=DA_OceanSong19_2&trait=DA_IonicSpark19_1&queue=PBE&patch=19.1&b_patch=c&days=3",
@@ -2576,20 +2576,20 @@
       },
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&trait=DA_Juggernaut19_2&trait=DA_Swiftstriker19_3&unit=DA_Kayle19-1&unit=DA_Zac19-1&unit=DA_Yorick19-1&unit=DA_Zeri19-1&unit=DA_Pyke19-1&unit=DA_Locke19-1&unit=DA_Ashe19-1&unit=DA_Olaf19-1&unit=DA_Taric19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
-      "games": 22,
+      "games": 26,
       "placementCounts": [
         3,
         3,
         4,
+        7,
         4,
-        4,
-        1,
+        2,
         1,
         2
       ],
-      "mean": 3.91,
-      "topFourRate": 0.6363636363636364,
-      "winRate": 0.13636363636363635,
+      "mean": 4.0,
+      "topFourRate": 0.6538461538461539,
+      "winRate": 0.11538461538461539,
       "sectionId": "sample-block-0219"
     },
     {
@@ -2613,20 +2613,20 @@
       },
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&trait=DA_Mosher19_3&unit=DA_Viego19-1&unit=DA_Briar19-1&unit=DA_Yorick19-1&unit=DA_Yasuo19-1&unit=DA_Yone19-1&unit=DA_Camille19-1&unit=DA_Kayn19-1&unit=DA_Olaf19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
-      "games": 113,
+      "games": 121,
       "placementCounts": [
-        14,
+        15,
         18,
-        16,
-        22,
-        22,
+        17,
+        25,
+        24,
         7,
-        10,
+        11,
         4
       ],
-      "mean": 3.89,
-      "topFourRate": 0.6194690265486725,
-      "winRate": 0.12389380530973451
+      "mean": 3.91,
+      "topFourRate": 0.6198347107438017,
+      "winRate": 0.12396694214876033
     },
     {
       "population": 9,
@@ -2651,20 +2651,20 @@
       },
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&trait=DA_Frontman19_2&trait=DA_GlitterBomb19_4&unit=DA_Kobuko19-1&unit=DA_Ziggs19-1&unit=DA_Teemo19-1&unit=DA_Lulu19-1&unit=DA_Shyvana19-1&unit=DA_Swain19-1&unit=DA_Tristana19-1&unit=DA_Elise19-1&unit=DA_Yunara19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
-      "games": 1268,
+      "games": 1467,
       "placementCounts": [
-        237,
-        354,
-        319,
-        215,
-        97,
-        36,
-        9,
-        1
+        269,
+        403,
+        371,
+        254,
+        114,
+        42,
+        12,
+        2
       ],
-      "mean": 2.79,
-      "topFourRate": 0.887223974763407,
-      "winRate": 0.18690851735015773
+      "mean": 2.81,
+      "topFourRate": 0.8841172460804363,
+      "winRate": 0.18336741649625085
     },
     {
       "population": 8,
@@ -2687,20 +2687,20 @@
       },
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&trait=DA_Bodyguard19_3&unit=DA_RenataGlasc19-1&unit=DA_Jax19-1&unit=DA_Nasus19-1&unit=DA_KSante19-1&unit=DA_Garen19-1&unit=DA_Leona19-1&unit=DA_Tibbers19-1&unit=DA_Lillia19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
-      "games": 1581,
+      "games": 1788,
       "placementCounts": [
-        240,
-        434,
-        429,
-        271,
-        121,
-        66,
-        15,
-        5
+        272,
+        512,
+        474,
+        300,
+        134,
+        72,
+        17,
+        7
       ],
-      "mean": 2.93,
-      "topFourRate": 0.8690702087286527,
-      "winRate": 0.15180265654648956
+      "mean": 2.91,
+      "topFourRate": 0.8713646532438478,
+      "winRate": 0.15212527964205816
     },
     {
       "population": 9,
@@ -2725,20 +2725,20 @@
       },
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&trait=DA_GlitterBomb19_4&trait=DA_Choreographer19_2&unit=DA_Ziggs19-1&unit=DA_Kobuko19-1&unit=DA_Swain19-1&unit=DA_Lulu19-1&unit=DA_Tristana19-1&unit=DA_Teemo19-1&unit=DA_Seraphine19_Indie-1&unit=DA_Garen19-1&unit=DA_Nidalee19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
-      "games": 1826,
+      "games": 2161,
       "placementCounts": [
-        822,
-        514,
-        296,
-        132,
-        43,
-        16,
+        959,
+        615,
+        358,
+        156,
+        52,
+        18,
         3,
         0
       ],
-      "mean": 1.97,
-      "topFourRate": 0.9660460021905805,
-      "winRate": 0.45016429353778753
+      "mean": 1.98,
+      "topFourRate": 0.966219342896807,
+      "winRate": 0.44377602961591855
     },
     {
       "population": 8,
@@ -2752,19 +2752,19 @@
         "yorick",
         "zac"
       ],
-      "games": 1089,
-      "mean": 5.13,
-      "topFourRate": 0.35996326905417814,
-      "winRate": 0.0440771349862259,
+      "games": 1212,
+      "mean": 5.14,
+      "topFourRate": 0.3572607260726073,
+      "winRate": 0.04455445544554455,
       "placementCounts": [
-        48,
-        55,
-        125,
-        164,
-        196,
-        213,
-        159,
-        129
+        54,
+        59,
+        138,
+        182,
+        220,
+        241,
+        176,
+        142
       ],
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Zac19-1&unit=DA_Yorick19-1&unit=DA_Taric19-1&unit=DA_Olaf19-1&unit=DA_Graves19-1&unit=DA_Pyke19-1&unit=DA_Locke19-1&unit=DA_Kayle19-1&trait=DA_OceanSong19_1&trait=DA_DemonVision19_1&trait=DA_Pentakill19_1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
@@ -2830,18 +2830,18 @@
         "zac",
         "zoe"
       ],
-      "games": 37,
-      "mean": 3.81,
-      "topFourRate": 0.6486486486486487,
-      "winRate": 0.10810810810810811,
+      "games": 41,
+      "mean": 3.88,
+      "topFourRate": 0.6341463414634146,
+      "winRate": 0.0975609756097561,
       "placementCounts": [
         4,
         4,
-        9,
+        11,
         7,
-        8,
+        9,
         2,
-        2,
+        3,
         1
       ],
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Zac19-1&unit=DA_Renekton19-1&unit=DA_Pyke19-1&unit=DA_Swain19-1&unit=DA_Ezreal19-1&unit=DA_Graves19-1&unit=DA_Olaf19-1&unit=DA_Taliyah19-1&unit=DA_Zoe19-1&trait=DA_OceanSong19_2&trait=DA_DemonVision19_1&queue=PBE&patch=19.1&b_patch=c&days=3",
@@ -2875,20 +2875,20 @@
       },
       "observedOn": "2026-11-27",
       "sampleScope": "9 级结算 · 固定九张 · 不限星级与装备 · 无额外人口装或重复棋子，纹章不限",
-      "games": 2827,
+      "games": 3220,
       "placementCounts": [
-        359,
-        526,
-        517,
-        525,
-        431,
-        270,
-        159,
-        40
+        417,
+        590,
+        596,
+        609,
+        482,
+        308,
+        170,
+        48
       ],
-      "mean": 3.63,
-      "topFourRate": 0.681641315882561,
-      "winRate": 0.126989741775734
+      "mean": 3.62,
+      "topFourRate": 0.6869565217391305,
+      "winRate": 0.12950310559006212
     },
     {
       "population": 9,
@@ -2909,20 +2909,20 @@
       },
       "observedOn": "2026-11-27",
       "sampleScope": "9 级结算 · 固定九张 · 不限星级与装备 · 无额外人口装或重复棋子，纹章不限",
-      "games": 3310,
+      "games": 3838,
       "placementCounts": [
-        302,
-        531,
-        718,
-        659,
-        543,
-        321,
-        189,
-        47
+        354,
+        607,
+        824,
+        763,
+        636,
+        382,
+        217,
+        55
       ],
-      "mean": 3.77,
-      "topFourRate": 0.6676737160120846,
-      "winRate": 0.09123867069486405
+      "mean": 3.78,
+      "topFourRate": 0.6638874413757165,
+      "winRate": 0.09223553934340803
     },
     {
       "population": 9,
@@ -2937,7 +2937,7 @@
         "wukong",
         "xayah"
       ],
-      "games": 524,
+      "games": 580,
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_KSante19-1&unit=DA_DrMundo19-1&unit=DA_Leona19-1&unit=DA_LeeSin19-1&unit=DA_Wukong19-1&unit=DA_Alune19-1&unit=DA_Aphelios19-1&unit=DA_Janna19-1&unit=DA_Xayah19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "conditions": {
         "kind": "full",
@@ -2947,18 +2947,18 @@
       "sampleScope": "固定名单 · 不限星级与装备 · 无纹章、人口装或重复棋子",
       "observedOn": "2026-11-27",
       "placementCounts": [
-        45,
-        105,
-        105,
-        122,
-        71,
-        48,
-        25,
+        51,
+        113,
+        121,
+        130,
+        78,
+        56,
+        28,
         3
       ],
       "mean": 3.63,
-      "topFourRate": 0.7194656488549618,
-      "winRate": 0.08587786259541985
+      "topFourRate": 0.7155172413793104,
+      "winRate": 0.08793103448275862
     },
     {
       "population": 9,
@@ -2973,7 +2973,7 @@
         "wukong",
         "xayah"
       ],
-      "games": 1104,
+      "games": 1353,
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Wukong19-1&unit=DA_DrMundo19-1&unit=DA_KSante19-1&unit=DA_Leona19-1&unit=DA_LeeSin19-1&unit=DA_Alune19-1&unit=DA_Janna19-1&unit=DA_Xayah19-1&unit=DA_MissFortune19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "conditions": {
         "kind": "full",
@@ -2983,18 +2983,18 @@
       "sampleScope": "固定名单 · 不限星级与装备 · 无纹章、人口装或重复棋子",
       "observedOn": "2026-11-27",
       "placementCounts": [
-        120,
-        183,
-        206,
-        224,
-        171,
-        126,
-        61,
-        13
+        145,
+        222,
+        252,
+        273,
+        220,
+        150,
+        73,
+        18
       ],
-      "mean": 3.75,
-      "topFourRate": 0.6639492753623188,
-      "winRate": 0.10869565217391304
+      "mean": 3.76,
+      "topFourRate": 0.6592756836659276,
+      "winRate": 0.10716925351071692
     },
     {
       "population": 9,
@@ -3009,7 +3009,7 @@
         "wukong",
         "xayah"
       ],
-      "games": 121,
+      "games": 137,
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Galio19-1&unit=DA_DrMundo19-1&unit=DA_Nunu19-1&unit=DA_Wukong19-1&unit=DA_LeeSin19-1&unit=DA_Janna19-1&unit=DA_Alune19-1&unit=DA_Lucian19-1&unit=DA_Xayah19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "conditions": {
         "kind": "full",
@@ -3019,18 +3019,18 @@
       "sampleScope": "固定名单 · 不限星级与装备 · 无纹章、人口装或重复棋子",
       "observedOn": "2026-11-27",
       "placementCounts": [
-        18,
+        20,
+        37,
         34,
-        29,
-        18,
-        12,
+        20,
+        15,
         8,
-        2,
+        3,
         0
       ],
-      "mean": 3.03,
-      "topFourRate": 0.8181818181818182,
-      "winRate": 0.1487603305785124
+      "mean": 3.07,
+      "topFourRate": 0.8102189781021898,
+      "winRate": 0.145985401459854
     },
     {
       "population": 9,
@@ -3045,7 +3045,7 @@
         "wukong",
         "xayah"
       ],
-      "games": 134,
+      "games": 156,
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Wukong19-1&unit=DA_Shyvana19-1&unit=DA_Elise19-1&unit=DA_LeeSin19-1&unit=DA_Gwen19-1&unit=DA_Janna19-1&unit=DA_Lux19-1&unit=DA_Xayah19-1&unit=DA_Jinx19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "conditions": {
         "kind": "full",
@@ -3055,18 +3055,18 @@
       "sampleScope": "固定名单 · 不限星级与装备 · 无纹章、人口装或重复棋子",
       "observedOn": "2026-11-27",
       "placementCounts": [
-        11,
-        20,
-        36,
-        19,
+        12,
+        23,
+        42,
         27,
+        31,
         16,
         5,
         0
       ],
-      "mean": 3.74,
-      "topFourRate": 0.6417910447761194,
-      "winRate": 0.08208955223880597
+      "mean": 3.71,
+      "topFourRate": 0.6666666666666666,
+      "winRate": 0.07692307692307693
     },
     {
       "population": 10,
@@ -3082,7 +3082,7 @@
         "wukong",
         "xayah"
       ],
-      "games": 393,
+      "games": 473,
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=10&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Wukong19-1&unit=DA_DrMundo19-1&unit=DA_KSante19-1&unit=DA_Leona19-1&unit=DA_LeeSin19-1&unit=DA_Janna19-1&unit=DA_Xayah19-1&unit=DA_Alune19-1&unit=DA_Aphelios19-1&unit=DA_MissFortune19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "conditions": {
         "kind": "full",
@@ -3092,18 +3092,18 @@
       "sampleScope": "固定名单 · 不限星级与装备 · 无纹章、人口装或重复棋子",
       "observedOn": "2026-11-27",
       "placementCounts": [
-        148,
-        134,
-        69,
-        29,
-        6,
+        189,
+        156,
+        78,
+        35,
+        8,
         7,
         0,
         0
       ],
-      "mean": 2.06,
-      "topFourRate": 0.9669211195928753,
-      "winRate": 0.37659033078880405
+      "mean": 2.02,
+      "topFourRate": 0.9682875264270613,
+      "winRate": 0.39957716701902746
     },
     {
       "population": 8,
@@ -3117,7 +3117,7 @@
         "tristana",
         "ziggs"
       ],
-      "games": 2,
+      "games": 3,
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Ziggs19-1&unit=DA_Kobuko19-1&unit=DA_Swain19-1&unit=DA_Galio19-1&unit=DA_Lulu19-1&unit=DA_Lucian19-1&unit=DA_Bard19-1&unit=DA_Tristana19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "conditions": {
         "kind": "full",
@@ -3134,9 +3134,9 @@
         0,
         2,
         0,
-        0
+        1
       ],
-      "mean": 6.0,
+      "mean": 6.67,
       "topFourRate": 0.0,
       "winRate": 0.0
     },
@@ -3151,7 +3151,7 @@
         "neeko",
         "yuumi"
       ],
-      "games": 125,
+      "games": 140,
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=7&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Braum19-1&unit=DA_Ekko19-1&unit=DA_Neeko19-1&unit=DA_Yuumi19-1&unit=DA_Lux19-1&unit=DA_Alune19-1&unit=DA_Malzahar19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "conditions": {
         "kind": "full",
@@ -3163,16 +3163,16 @@
       "placementCounts": [
         1,
         6,
-        10,
-        19,
+        13,
         23,
-        34,
-        24,
+        25,
+        37,
+        27,
         8
       ],
-      "mean": 5.36,
-      "topFourRate": 0.288,
-      "winRate": 0.008
+      "mean": 5.31,
+      "topFourRate": 0.30714285714285716,
+      "winRate": 0.007142857142857143
     },
     {
       "population": 9,
@@ -3186,7 +3186,7 @@
         "neeko",
         "yuumi"
       ],
-      "games": 68,
+      "games": 80,
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Braum19-1&unit=DA_Ekko19-1&unit=DA_Neeko19-1&unit=DA_Yuumi19-1&unit=DA_Lux19-1&unit=DA_Alune19-1&unit=DA_Malzahar19-1&unit=DA_BaronNashor19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "conditions": {
         "kind": "full",
@@ -3196,18 +3196,18 @@
       "sampleScope": "固定名单 · 不限星级与装备 · 无纹章、人口装或重复棋子",
       "observedOn": "2026-11-27",
       "placementCounts": [
-        26,
-        18,
+        30,
+        25,
         13,
-        3,
+        4,
         6,
         2,
         0,
         0
       ],
-      "mean": 2.28,
-      "topFourRate": 0.8823529411764706,
-      "winRate": 0.38235294117647056
+      "mean": 2.21,
+      "topFourRate": 0.9,
+      "winRate": 0.375
     },
     {
       "population": 8,
@@ -3291,7 +3291,7 @@
         "lillia",
         "neeko"
       ],
-      "games": 3620,
+      "games": 4218,
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Leona19-1&unit=DA_Lillia19-1&unit=DA_Gragas19-1&unit=DA_AkaliKDA19-1&unit=DA_Neeko19-1&unit=DA_Kaisa19-1&unit=DA_Evelynn19-1&unit=DA_19_Ahri-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "conditions": {
         "kind": "full",
@@ -3301,18 +3301,18 @@
       "sampleScope": "固定名单 · 不限星级与装备 · 无纹章、人口装或重复棋子",
       "observedOn": "2026-11-27",
       "placementCounts": [
-        220,
-        293,
-        485,
-        617,
-        720,
-        646,
-        435,
-        204
+        256,
+        342,
+        564,
+        714,
+        852,
+        742,
+        507,
+        241
       ],
-      "mean": 4.66,
-      "topFourRate": 0.44613259668508287,
-      "winRate": 0.06077348066298342
+      "mean": 4.67,
+      "topFourRate": 0.4447605500237079,
+      "winRate": 0.06069227121858701
     },
     {
       "population": 9,
@@ -3327,7 +3327,7 @@
         "vi",
         "viego"
       ],
-      "games": 7,
+      "games": 8,
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Nasus19-1&unit=DA_KSante19-1&unit=DA_Leona19-1&unit=DA_Lillia19-1&unit=DA_Kennen19-1&unit=DA_Jax19-1&unit=DA_Viego19-1&unit=DA_RenataGlasc19-1&unit=DA_Vi19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "conditions": {
         "kind": "full",
@@ -3338,7 +3338,7 @@
       "observedOn": "2026-11-27",
       "placementCounts": [
         3,
-        1,
+        2,
         1,
         1,
         0,
@@ -3346,9 +3346,9 @@
         0,
         0
       ],
-      "mean": 2.57,
-      "topFourRate": 0.8571428571428571,
-      "winRate": 0.42857142857142855
+      "mean": 2.5,
+      "topFourRate": 0.875,
+      "winRate": 0.375
     },
     {
       "population": 8,
@@ -3362,7 +3362,7 @@
         "vi",
         "zeri"
       ],
-      "games": 3,
+      "games": 4,
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Nasus19-1&unit=DA_Vi19-1&unit=DA_Lillia19-1&unit=DA_KSante19-1&unit=DA_Tibbers19-1&unit=DA_Leona19-1&unit=DA_Jax19-1&unit=DA_Zeri19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "conditions": {
         "kind": "full",
@@ -3374,15 +3374,15 @@
       "placementCounts": [
         0,
         1,
-        0,
+        1,
         0,
         1,
         1,
         0,
         0
       ],
-      "mean": 4.33,
-      "topFourRate": 0.3333333333333333,
+      "mean": 4.0,
+      "topFourRate": 0.5,
       "winRate": 0.0
     },
     {
@@ -3433,7 +3433,7 @@
         "vayne",
         "yuumi"
       ],
-      "games": 224,
+      "games": 261,
       "url": "https://www.metatft.com/explorer?level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&tab=comps&set=TFTSet19&unit=DA_Braum19-1&unit=DA_Draven19-1&unit=DA_Illaoi19-1&unit=DA_Kaisa19-1&unit=DA_Olaf19-1&unit=DA_Swain19-1&unit=DA_Vayne19-1&unit=DA_Yuumi19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "conditions": {
         "kind": "full",
@@ -3443,18 +3443,18 @@
       "sampleScope": "PBE 19.1c 滚动窗口 · 固定名单 · 无纹章、人口装或重复弈子",
       "observedOn": "2026-11-27",
       "placementCounts": [
-        46,
-        52,
-        43,
-        32,
-        26,
-        14,
+        55,
+        63,
+        47,
+        38,
+        28,
+        18,
         8,
-        3
+        4
       ],
-      "mean": 3.13,
-      "topFourRate": 0.7723214285714286,
-      "winRate": 0.20535714285714285
+      "mean": 3.1,
+      "topFourRate": 0.7777777777777778,
+      "winRate": 0.210727969348659
     },
     {
       "population": 6,
@@ -3466,7 +3466,7 @@
         "renekton",
         "taric"
       ],
-      "games": 48,
+      "games": 54,
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=6&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Taric19-1&unit=DA_Renekton19-1&unit=DA_Galio19-1&unit=DA_Jax19-1&unit=DA_Ashe19-1&unit=DA_Bard19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "conditions": {
         "kind": "full",
@@ -3482,10 +3482,10 @@
         0,
         4,
         8,
-        15,
-        21
+        16,
+        26
       ],
-      "mean": 7.1,
+      "mean": 7.19,
       "topFourRate": 0.0,
       "winRate": 0.0
     },
@@ -3532,7 +3532,7 @@
         "yorick",
         "zac"
       ],
-      "games": 473,
+      "games": 580,
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Pyke19-1&unit=DA_Graves19-1&unit=DA_Aurora19-1&unit=DA_Qiyana19-1&unit=DA_Vi19-1&unit=DA_Yorick19-1&unit=DA_Zac19-1&unit=DA_Evelynn19-1&unit=DA_Taric19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "conditions": {
         "kind": "full",
@@ -3542,18 +3542,18 @@
       "sampleScope": "固定名单 · 不限星级与装备 · 无纹章、人口装或重复棋子",
       "observedOn": "2026-11-27",
       "placementCounts": [
-        107,
-        95,
-        79,
-        73,
-        48,
-        37,
-        24,
-        10
+        132,
+        110,
+        104,
+        84,
+        59,
+        49,
+        30,
+        12
       ],
-      "mean": 3.25,
-      "topFourRate": 0.7484143763213531,
-      "winRate": 0.226215644820296
+      "mean": 3.27,
+      "topFourRate": 0.7413793103448276,
+      "winRate": 0.22758620689655173
     },
     {
       "population": 8,
@@ -3567,7 +3567,7 @@
         "zac",
         "zoe"
       ],
-      "games": 553,
+      "games": 648,
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Taric19-1&unit=DA_Zac19-1&unit=DA_Renekton19-1&unit=DA_Graves19-1&unit=DA_Swain19-1&unit=DA_Zoe19-1&unit=DA_Ashe19-1&unit=DA_Syndra19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "conditions": {
         "kind": "full",
@@ -3577,18 +3577,18 @@
       "sampleScope": "固定名单 · 不限星级与装备 · 无纹章、人口装或重复棋子",
       "observedOn": "2026-11-27",
       "placementCounts": [
-        57,
-        110,
-        130,
-        98,
-        73,
-        48,
-        21,
+        65,
+        129,
+        151,
+        118,
+        91,
+        56,
+        22,
         16
       ],
-      "mean": 3.59,
-      "topFourRate": 0.7142857142857143,
-      "winRate": 0.10307414104882459
+      "mean": 3.58,
+      "topFourRate": 0.7145061728395061,
+      "winRate": 0.10030864197530864
     },
     {
       "population": 9,
@@ -3603,7 +3603,7 @@
         "thresh",
         "vladimir"
       ],
-      "games": 992,
+      "games": 1186,
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_KSante19-1&unit=DA_Thresh19-1&unit=DA_Nasus19-1&unit=DA_Galio19-1&unit=DA_Vladimir19-1&unit=DA_Jhin19-1&unit=DA_Mel19-1&unit=DA_MissFortune19-1&unit=DA_Lucian19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "conditions": {
         "kind": "full",
@@ -3613,18 +3613,18 @@
       "sampleScope": "九级固定名单 · 与补女枪盘共用样本 · 不限主 C、星级或装备",
       "observedOn": "2026-11-27",
       "placementCounts": [
-        111,
-        119,
-        170,
-        212,
-        152,
+        133,
         131,
-        70,
-        27
+        210,
+        252,
+        187,
+        160,
+        81,
+        32
       ],
-      "mean": 3.99,
-      "topFourRate": 0.6169354838709677,
-      "winRate": 0.11189516129032258,
+      "mean": 4.01,
+      "topFourRate": 0.612141652613828,
+      "winRate": 0.112141652613828,
       "sectionId": "sample-block-0051"
     },
     {
@@ -3639,7 +3639,7 @@
         "viego",
         "yorick"
       ],
-      "games": 956,
+      "games": 1099,
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Yorick19-1&unit=DA_Locke19-1&unit=DA_Viego19-1&unit=DA_Olaf19-1&unit=DA_Kayle19-1&unit=DA_Karthus19-1&unit=DA_Gnar19-1&unit=DA_Mordekaiser19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "conditions": {
         "kind": "full",
@@ -3649,18 +3649,18 @@
       "sampleScope": "固定名单 · 不限星级与装备 · 无纹章、人口装或重复棋子",
       "observedOn": "2026-11-27",
       "placementCounts": [
+        17,
         15,
-        11,
-        64,
-        143,
-        198,
-        237,
-        183,
-        105
+        68,
+        160,
+        229,
+        279,
+        210,
+        121
       ],
-      "mean": 5.58,
-      "topFourRate": 0.24372384937238495,
-      "winRate": 0.015690376569037656
+      "mean": 5.59,
+      "topFourRate": 0.23657870791628755,
+      "winRate": 0.015468607825295723
     },
     {
       "population": 9,
@@ -3675,7 +3675,7 @@
         "thresh",
         "vladimir"
       ],
-      "games": 992,
+      "games": 1186,
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_KSante19-1&unit=DA_Thresh19-1&unit=DA_Nasus19-1&unit=DA_Galio19-1&unit=DA_Vladimir19-1&unit=DA_Jhin19-1&unit=DA_Mel19-1&unit=DA_MissFortune19-1&unit=DA_Lucian19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "conditions": {
         "kind": "full",
@@ -3685,18 +3685,18 @@
       "sampleScope": "固定名单 · 不限星级与装备 · 无纹章、人口装或重复棋子",
       "observedOn": "2026-11-27",
       "placementCounts": [
-        111,
-        119,
-        170,
-        212,
-        152,
+        133,
         131,
-        70,
-        27
+        210,
+        252,
+        187,
+        160,
+        81,
+        32
       ],
-      "mean": 3.99,
-      "topFourRate": 0.6169354838709677,
-      "winRate": 0.11189516129032258
+      "mean": 4.01,
+      "topFourRate": 0.612141652613828,
+      "winRate": 0.112141652613828
     },
     {
       "population": 8,
@@ -3710,7 +3710,7 @@
         "lillia",
         "neeko"
       ],
-      "games": 189,
+      "games": 231,
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Lillia19-1&unit=DA_Leona19-1&unit=DA_Gragas19-1&unit=DA_Ekko19-1&unit=DA_Neeko19-1&unit=DA_Evelynn19-1&unit=DA_19_Ahri-1&unit=DA_Kaisa19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "conditions": {
         "kind": "full",
@@ -3720,18 +3720,18 @@
       "sampleScope": "固定名单 · 不限星级与装备 · 无纹章、人口装或重复棋子",
       "observedOn": "2026-11-27",
       "placementCounts": [
-        7,
-        14,
-        29,
-        36,
-        22,
-        26,
+        8,
+        19,
         35,
-        20
+        41,
+        27,
+        33,
+        44,
+        24
       ],
-      "mean": 4.96,
-      "topFourRate": 0.455026455026455,
-      "winRate": 0.037037037037037035
+      "mean": 4.97,
+      "topFourRate": 0.4458874458874459,
+      "winRate": 0.03463203463203463
     },
     {
       "population": 8,
@@ -3745,7 +3745,7 @@
         "vayne",
         "yorick"
       ],
-      "games": 398,
+      "games": 463,
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Swain19-1&unit=DA_Olaf19-1&unit=DA_Yorick19-1&unit=DA_Camille19-1&unit=DA_Gnar19-1&unit=DA_Vayne19-1&unit=DA_Varus19-1&unit=DA_Locke19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "conditions": {
         "kind": "full",
@@ -3756,17 +3756,17 @@
       "observedOn": "2026-11-27",
       "placementCounts": [
         1,
-        1,
-        16,
-        42,
-        71,
-        95,
-        96,
-        76
+        2,
+        19,
+        49,
+        76,
+        111,
+        117,
+        88
       ],
-      "mean": 6.09,
-      "topFourRate": 0.1507537688442211,
-      "winRate": 0.002512562814070352
+      "mean": 6.11,
+      "topFourRate": 0.15334773218142547,
+      "winRate": 0.0021598272138228943
     },
     {
       "population": 8,
@@ -3780,7 +3780,7 @@
         "sett",
         "yone"
       ],
-      "games": 12,
+      "games": 14,
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_KSante19-1&unit=DA_Leona19-1&unit=DA_Sett19-1&unit=DA_Yone19-1&unit=DA_Kayn19-1&unit=DA_Ekko19-1&unit=DA_Alune19-1&unit=DA_Ezreal19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "conditions": {
         "kind": "full",
@@ -3795,9 +3795,9 @@
         0,
         0,
         0,
-        3,
+        4,
         6,
-        3
+        4
       ],
       "mean": 7.0,
       "topFourRate": 0.0,
@@ -3815,7 +3815,7 @@
         "thresh",
         "yuumi"
       ],
-      "games": 18,
+      "games": 19,
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Nasus19-1&unit=DA_Thresh19-1&unit=DA_Illaoi19-1&unit=DA_Katarina19-1&unit=DA_RenataGlasc19-1&unit=DA_Jhin19-1&unit=DA_Samira19-1&unit=DA_Yuumi19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "conditions": {
         "kind": "full",
@@ -3832,10 +3832,10 @@
         6,
         2,
         4,
-        2
+        3
       ],
-      "mean": 5.61,
-      "topFourRate": 0.2222222222222222,
+      "mean": 5.74,
+      "topFourRate": 0.21052631578947367,
       "winRate": 0.0,
       "sectionId": "sample-block-0051"
     },
@@ -3885,7 +3885,7 @@
         "yorick",
         "zoe"
       ],
-      "games": 4,
+      "games": 6,
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Annie19-1&unit=DA_Swain19-1&unit=DA_Yorick19-1&unit=DA_Gragas19-1&unit=DA_Vladimir19-1&unit=DA_Olaf19-1&unit=DA_Karthus19-1&unit=DA_Zoe19-1&unit=DA_Mel19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "conditions": {
         "kind": "full",
@@ -3895,17 +3895,17 @@
       "sampleScope": "固定名单 · 不限星级与装备 · 无纹章、人口装或重复棋子",
       "observedOn": "2026-11-27",
       "placementCounts": [
-        2,
+        3,
         1,
-        0,
+        1,
         0,
         0,
         1,
         0,
         0
       ],
-      "mean": 2.5,
-      "topFourRate": 0.75,
+      "mean": 2.33,
+      "topFourRate": 0.8333333333333334,
       "winRate": 0.5
     },
     {
@@ -3986,7 +3986,7 @@
         "nidalee",
         "renata-glasc"
       ],
-      "games": 7,
+      "games": 9,
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_DrMundo19-1&unit=DA_Garen19-1&unit=DA_Leona19-1&unit=DA_Nasus19-1&unit=DA_Malzahar19-1&unit=DA_RenataGlasc19-1&unit=DA_Nidalee19-1&unit=DA_Alune19-1&unit=DA_19_Ahri-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "conditions": {
         "kind": "full",
@@ -3996,18 +3996,18 @@
       "sampleScope": "固定名单 · 不限星级与装备 · 无纹章、人口装或重复棋子",
       "observedOn": "2026-11-27",
       "placementCounts": [
-        1,
+        2,
         1,
         2,
         3,
         0,
-        0,
+        1,
         0,
         0
       ],
-      "mean": 3.0,
-      "topFourRate": 1.0,
-      "winRate": 0.14285714285714285
+      "mean": 3.11,
+      "topFourRate": 0.8888888888888888,
+      "winRate": 0.2222222222222222
     },
     {
       "population": 7,
@@ -4025,23 +4025,23 @@
         "teamId": "00000000-0000-4000-8000-000000001177",
         "population": 7
       },
-      "games": 609,
-      "mean": 5.52,
+      "games": 687,
+      "mean": 5.51,
       "url": "https://www.metatft.com/explorer?level=7&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&tab=comps&set=TFTSet19&unit=DA_Braum19-1&unit=DA_Draven19-1&unit=DA_Garen19-1&unit=DA_Gnar19-1&unit=DA_Viego19-1&unit=DA_Yone19-1&unit=DA_Yorick19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "sampleScope": "PBE 19.1c 滚动窗口 · 固定名单 · 无纹章、人口装或重复弈子",
       "observedOn": "2026-11-27",
       "placementCounts": [
-        11,
-        22,
-        54,
-        80,
-        108,
-        129,
-        127,
-        78
+        14,
+        26,
+        57,
+        94,
+        122,
+        145,
+        139,
+        90
       ],
-      "topFourRate": 0.2742200328407225,
-      "winRate": 0.0180623973727422
+      "topFourRate": 0.2780203784570597,
+      "winRate": 0.020378457059679767
     },
     {
       "population": 7,
@@ -4054,7 +4054,7 @@
         "taric",
         "zac"
       ],
-      "games": 33,
+      "games": 35,
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=7&trait=DA_Juggernaut19_2&trait=DA_OceanSong19_1&unit=DA_Braum19-1&unit=DA_Ekko19-1&unit=DA_Garen19-1&unit=DA_Malzahar19-1&unit=DA_Syndra19-1&unit=DA_Taric19-1&unit=DA_Zac19-1&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&queue=PBE&patch=19.1&b_patch=c&days=3",
       "sampleScope": "7级结算 · 固定名单 · 星级不限 · 无纹章、人口装或重复弈子",
       "conditions": {
@@ -4072,13 +4072,13 @@
         2,
         3,
         11,
-        8,
+        9,
         6,
-        3
+        4
       ],
       "observedOn": "2026-11-27",
-      "mean": 5.67,
-      "topFourRate": 0.15151515151515152,
+      "mean": 5.74,
+      "topFourRate": 0.14285714285714285,
       "winRate": 0.0
     },
     {
@@ -4093,7 +4093,7 @@
         "yuumi",
         "zac"
       ],
-      "games": 11,
+      "games": 12,
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&trait=DA_Juggernaut19_2&trait=DA_OceanSong19_1&trait=DA_Illbeats19_1&unit=DA_Braum19-1&unit=DA_Ekko19-1&unit=DA_Garen19-1&unit=DA_Malzahar19-1&unit=DA_Syndra19-1&unit=DA_Taric19-1&unit=DA_Yuumi19-1&unit=DA_Zac19-1&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&queue=PBE&patch=19.1&b_patch=c&days=3",
       "sampleScope": "8级结算 · 固定名单 · 星级不限 · 无纹章、人口装或重复弈子",
       "conditions": {
@@ -4107,7 +4107,7 @@
         }
       },
       "placementCounts": [
-        0,
+        1,
         5,
         3,
         2,
@@ -4117,9 +4117,9 @@
         0
       ],
       "observedOn": "2026-11-27",
-      "mean": 2.91,
-      "topFourRate": 0.9090909090909091,
-      "winRate": 0.0
+      "mean": 2.75,
+      "topFourRate": 0.9166666666666666,
+      "winRate": 0.08333333333333333
     },
     {
       "population": 9,
@@ -4165,7 +4165,7 @@
         "ekko",
         "syndra"
       ],
-      "games": 38,
+      "games": 39,
       "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=7&trait=DA_Juggernaut19_2&trait=DA_OceanSong19_1&unit=DA_Ekko19-1_3&unit=DA_Syndra19-1_3&queue=PBE&patch=19.1&b_patch=c&days=3",
       "sampleScope": "7级结算 · 4 主宰、3 海之歌 · 艾克与辛德拉三星",
       "conditions": {
@@ -4196,15 +4196,15 @@
         2,
         6,
         6,
-        10,
+        11,
         6,
         6,
         1
       ],
       "observedOn": "2026-11-27",
       "mean": 4.82,
-      "topFourRate": 0.39473684210526316,
-      "winRate": 0.02631578947368421
+      "topFourRate": 0.38461538461538464,
+      "winRate": 0.02564102564102564
     },
     {
       "population": 7,
@@ -4266,7 +4266,7 @@
         "pyke",
         "swain"
       ],
-      "games": 97,
+      "games": 323,
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&trait=DA_DemonVision19_1&trait=DA_Jazz19_1&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Alistar19-1&unit=DA_Aurora19-1&unit=DA_Bard19-1&unit=DA_Galio19-1&unit=DA_Locke19-1&unit=DA_Mel19-1&unit=DA_Pyke19-1&unit=DA_Swain19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "sampleScope": "8级结算 · 固定名单 · 星级不限 · 无纹章、人口装或重复弈子",
       "conditions": {
@@ -4279,19 +4279,19 @@
         }
       },
       "placementCounts": [
-        7,
-        5,
-        9,
-        16,
-        8,
-        28,
-        16,
-        8
+        13,
+        15,
+        32,
+        57,
+        52,
+        75,
+        56,
+        23
       ],
       "observedOn": "2026-11-27",
-      "mean": 5.07,
-      "topFourRate": 0.38144329896907214,
-      "winRate": 0.07216494845360824
+      "mean": 5.12,
+      "topFourRate": 0.3622291021671827,
+      "winRate": 0.04024767801857585
     },
     {
       "population": 9,
@@ -4306,7 +4306,7 @@
         "rell",
         "swain"
       ],
-      "games": 52,
+      "games": 167,
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&trait=DA_DemonVision19_1&trait=DA_Jazz19_1&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Alistar19-1&unit=DA_Aurora19-1&unit=DA_Bard19-1&unit=DA_Galio19-1&unit=DA_Locke19-1&unit=DA_Mel19-1&unit=DA_Pyke19-1&unit=DA_Rell19-1&unit=DA_Swain19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "sampleScope": "9级结算 · 固定名单 · 星级不限 · 无纹章、人口装或重复弈子",
       "conditions": {
@@ -4319,19 +4319,19 @@
         }
       },
       "placementCounts": [
-        10,
-        16,
-        12,
-        9,
+        29,
+        47,
+        39,
+        28,
+        17,
+        5,
         2,
-        2,
-        1,
         0
       ],
       "observedOn": "2026-11-27",
-      "mean": 2.75,
-      "topFourRate": 0.9038461538461539,
-      "winRate": 0.19230769230769232
+      "mean": 2.88,
+      "topFourRate": 0.8562874251497006,
+      "winRate": 0.17365269461077845
     },
     {
       "population": 8,
@@ -4345,7 +4345,7 @@
         "pyke",
         "swain"
       ],
-      "games": 338,
+      "games": 1117,
       "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&unit=DA_Alistar19-1&unit=DA_Aurora19-1&unit=DA_Bard19-1&unit=DA_Galio19-1&unit=DA_Locke19-1&unit=DA_Mel19-1&unit=DA_Pyke19-1&unit=DA_Swain19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "sampleScope": "八张核心同场 · 结算等级、星级与装备不限",
       "conditions": {
@@ -4363,19 +4363,19 @@
         ]
       },
       "placementCounts": [
-        57,
-        78,
-        62,
-        44,
-        29,
-        35,
-        23,
-        10
+        181,
+        227,
+        193,
+        164,
+        134,
+        109,
+        79,
+        30
       ],
       "observedOn": "2026-11-27",
-      "mean": 3.46,
-      "topFourRate": 0.7130177514792899,
-      "winRate": 0.16863905325443787
+      "mean": 3.57,
+      "topFourRate": 0.684870188003581,
+      "winRate": 0.162041181736795
     },
     {
       "population": 9,
@@ -4390,7 +4390,7 @@
         "smeech",
         "yuumi"
       ],
-      "games": 3812,
+      "games": 4942,
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&trait=DA_Jazz19_2&unit=DA_Annie19-1&unit=DA_Braum19-1&unit=DA_Galio19-1&unit=DA_Jinx19-1&unit=DA_Lucian19-1&unit=DA_Mel19-1&unit=DA_Shyvana19-1&unit=DA_Smeech19-1&unit=DA_Yuumi19-1&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&queue=PBE&patch=19.1&b_patch=c&days=3",
       "sampleScope": "9级结算 · 固定名单 · 星级与装备不限 · 无纹章、人口装或重复弈子",
       "conditions": {
@@ -4402,19 +4402,19 @@
         }
       },
       "placementCounts": [
-        336,
-        433,
-        794,
-        766,
-        633,
-        463,
-        283,
-        104
+        439,
+        554,
+        1032,
+        999,
+        840,
+        584,
+        365,
+        129
       ],
       "observedOn": "2026-11-27",
-      "mean": 4.04,
-      "topFourRate": 0.6109653725078699,
-      "winRate": 0.08814270724029381
+      "mean": 4.03,
+      "topFourRate": 0.6118980169971672,
+      "winRate": 0.08883043302306759
     },
     {
       "population": 8,
@@ -4428,7 +4428,7 @@
         "shyvana",
         "yuumi"
       ],
-      "games": 5334,
+      "games": 6916,
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&trait=DA_Jazz19_1&unit=DA_Annie19-1&unit=DA_Braum19-1&unit=DA_Galio19-1&unit=DA_Jinx19-1&unit=DA_Lucian19-1&unit=DA_Mel19-1&unit=DA_Shyvana19-1&unit=DA_Yuumi19-1&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&queue=PBE&patch=19.1&b_patch=c&days=3",
       "sampleScope": "8级结算 · 固定名单 · 星级与装备不限 · 无纹章、人口装或重复弈子",
       "conditions": {
@@ -4440,19 +4440,19 @@
         }
       },
       "placementCounts": [
-        65,
-        122,
-        415,
-        806,
-        1119,
-        1121,
-        1036,
-        650
+        93,
+        149,
+        543,
+        1015,
+        1462,
+        1469,
+        1328,
+        857
       ],
       "observedOn": "2026-11-27",
-      "mean": 5.54,
-      "topFourRate": 0.26396700412448443,
-      "winRate": 0.012185976752905886
+      "mean": 5.55,
+      "topFourRate": 0.26026604973973394,
+      "winRate": 0.01344707923655292
     },
     {
       "population": 9,
@@ -4467,7 +4467,7 @@
         "shyvana",
         "yuumi"
       ],
-      "games": 342,
+      "games": 437,
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&trait=DA_Jazz19_1&unit=DA_Annie19-1&unit=DA_Braum19-1&unit=DA_Galio19-1&unit=DA_Jinx19-1&unit=DA_Lucian19-1&unit=DA_Mel19-1&unit=DA_Rell19-1&unit=DA_Shyvana19-1&unit=DA_Yuumi19-1&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&queue=PBE&patch=19.1&b_patch=c&days=3",
       "sampleScope": "9级结算 · 固定名单 · 星级与装备不限 · 无纹章、人口装或重复弈子",
       "conditions": {
@@ -4479,19 +4479,19 @@
         }
       },
       "placementCounts": [
-        20,
-        38,
-        64,
-        63,
-        57,
-        43,
-        35,
-        22
+        23,
+        46,
+        79,
+        83,
+        73,
+        60,
+        47,
+        26
       ],
       "observedOn": "2026-11-27",
-      "mean": 4.4,
-      "topFourRate": 0.5409356725146199,
-      "winRate": 0.05847953216374269
+      "mean": 4.45,
+      "topFourRate": 0.528604118993135,
+      "winRate": 0.05263157894736842
     },
     {
       "population": 8,
@@ -4505,7 +4505,7 @@
         "shyvana",
         "yuumi"
       ],
-      "games": 32031,
+      "games": 41400,
       "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&unit=DA_Annie19-1&unit=DA_Braum19-1&unit=DA_Galio19-1&unit=DA_Jinx19-1&unit=DA_Lucian19-1&unit=DA_Mel19-1&unit=DA_Shyvana19-1&unit=DA_Yuumi19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "sampleScope": "八张指定棋子同场（含加里奥、梅尔、悠米） · 结算等级、星级与装备不限",
       "conditions": {
@@ -4523,19 +4523,19 @@
         ]
       },
       "placementCounts": [
-        7066,
-        5973,
-        5089,
-        4211,
-        3583,
-        2855,
-        2144,
-        1110
+        9159,
+        7722,
+        6542,
+        5422,
+        4636,
+        3712,
+        2764,
+        1443
       ],
       "observedOn": "2026-11-27",
       "mean": 3.44,
-      "topFourRate": 0.6974181261902532,
-      "winRate": 0.22059879491742374
+      "topFourRate": 0.6967391304347826,
+      "winRate": 0.221231884057971
     },
     {
       "population": 8,
@@ -4549,7 +4549,7 @@
         "yorick",
         "zac"
       ],
-      "games": 126,
+      "games": 152,
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&trait=DA_Juggernaut19_2&trait=DA_OceanSong19_1&trait=DA_DemonVision19_1&trait=DA_Renegade19_1&unit=DA_Gnar19-1&unit=DA_Graves19-1&unit=DA_Olaf19-1&unit=DA_Pyke19-1&unit=DA_Taric19-1&unit=DA_Vayne19-1&unit=DA_Yorick19-1&unit=DA_Zac19-1&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&queue=PBE&patch=19.1&b_patch=c&days=3",
       "sampleScope": "8级结算 · 固定名单 · 星级与装备不限 · 无纹章、人口装或重复弈子",
       "conditions": {
@@ -4564,19 +4564,19 @@
         }
       },
       "placementCounts": [
-        3,
-        5,
-        17,
+        4,
+        7,
+        23,
+        30,
+        19,
+        15,
         27,
-        16,
-        13,
-        24,
-        21
+        27
       ],
       "observedOn": "2026-11-27",
-      "mean": 5.29,
-      "topFourRate": 0.4126984126984127,
-      "winRate": 0.023809523809523808,
+      "mean": 5.24,
+      "topFourRate": 0.42105263157894735,
+      "winRate": 0.02631578947368421,
       "sectionId": "sample-block-0251"
     },
     {
@@ -4592,7 +4592,7 @@
         "yorick",
         "zac"
       ],
-      "games": 128,
+      "games": 165,
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&trait=DA_Juggernaut19_2&trait=DA_OceanSong19_1&trait=DA_DemonVision19_1&trait=DA_Renegade19_1&unit=DA_Gnar19-1&unit=DA_Graves19-1&unit=DA_Olaf19-1&unit=DA_Pyke19-1&unit=DA_Taric19-1&unit=DA_TwistedFate19-1&unit=DA_Vayne19-1&unit=DA_Yorick19-1&unit=DA_Zac19-1&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&queue=PBE&patch=19.1&b_patch=c&days=3",
       "sampleScope": "9级结算 · 固定名单 · 星级与装备不限 · 无纹章、人口装或重复弈子",
       "conditions": {
@@ -4607,19 +4607,19 @@
         }
       },
       "placementCounts": [
+        28,
+        38,
+        52,
         21,
-        29,
-        43,
         14,
-        14,
-        4,
-        3,
-        0
+        6,
+        5,
+        1
       ],
       "observedOn": "2026-11-27",
-      "mean": 2.96,
-      "topFourRate": 0.8359375,
-      "winRate": 0.1640625,
+      "mean": 2.99,
+      "topFourRate": 0.8424242424242424,
+      "winRate": 0.1696969696969697,
       "sectionId": "sample-block-0251"
     },
     {
@@ -4631,7 +4631,7 @@
         "yorick",
         "zac"
       ],
-      "games": 719,
+      "games": 876,
       "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&trait=DA_Juggernaut19_2&unit=DA_Graves19-1&unit=DA_Pyke19-1&unit=DA_Vayne19-1&unit=DA_Yorick19-1&unit=DA_Zac19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "sampleScope": "五张核心同场 · 4 主宰 · 结算等级、星级与装备不限",
       "conditions": {
@@ -4649,19 +4649,19 @@
         }
       },
       "placementCounts": [
-        102,
-        163,
-        147,
-        104,
-        73,
-        43,
-        49,
-        38
+        125,
+        204,
+        177,
+        124,
+        85,
+        52,
+        56,
+        53
       ],
       "observedOn": "2026-11-27",
       "mean": 3.55,
-      "topFourRate": 0.717663421418637,
-      "winRate": 0.14186369958275383,
+      "topFourRate": 0.7191780821917808,
+      "winRate": 0.14269406392694065,
       "sectionId": "sample-block-0251"
     },
     {
@@ -4784,7 +4784,7 @@
         "rell",
         "twisted-fate"
       ],
-      "games": 232,
+      "games": 259,
       "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&level=9&trait=DA_Jazz19_2&unit=DA_TwistedFate19-1_2_3&unit=DA_Galio19-1&unit=DA_DrMundo19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
       "sampleScope": "9级结算 · 3爵士乐 · 崔斯特两星三件 · 加里奥、蒙多同场",
@@ -4809,18 +4809,18 @@
         ]
       },
       "placementCounts": [
-        43,
-        32,
-        34,
-        33,
-        29,
+        49,
+        36,
+        37,
+        38,
         31,
-        17,
-        13
+        35,
+        19,
+        14
       ],
-      "mean": 3.86,
-      "topFourRate": 0.6120689655172413,
-      "winRate": 0.1853448275862069,
+      "mean": 3.84,
+      "topFourRate": 0.6177606177606177,
+      "winRate": 0.1891891891891892,
       "sectionId": "sample-block-1180"
     },
     {
@@ -4835,7 +4835,7 @@
         "senna",
         "shyvana"
       ],
-      "games": 376,
+      "games": 456,
       "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&level=8&trait=DA_Bodyguard19_1&unit=DA_19_Ahri-1&unit=DA_Shyvana19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
       "sampleScope": "8级结算 · 2护卫档 · 阿狸、希瓦娜同场",
@@ -4852,18 +4852,18 @@
         }
       },
       "placementCounts": [
-        6,
-        14,
-        25,
-        40,
-        79,
-        72,
-        76,
-        64
+        7,
+        17,
+        31,
+        49,
+        90,
+        90,
+        96,
+        76
       ],
-      "mean": 5.69,
-      "topFourRate": 0.22606382978723405,
-      "winRate": 0.015957446808510637,
+      "mean": 5.7,
+      "topFourRate": 0.22807017543859648,
+      "winRate": 0.015350877192982455,
       "sectionId": "sample-block-1180"
     },
     {
@@ -4879,7 +4879,7 @@
         "nunu-willump",
         "rell"
       ],
-      "games": 337,
+      "games": 404,
       "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&level=9&trait=DA_Heartsteel19_2&trait=DA_Manager19_2&trait=DA_Bodyguard19_1&unit=DA_Aphelios19-1_2_3&unit=DA_Alune19-1&unit=DA_KSante19-1&unit=DA_Leona19-1&unit=DA_DrMundo19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
       "sampleScope": "9级结算 · 3心之钢、3经纪人、2护卫档 · 厄斐琉斯两星三件 · 拉露恩、奎桑提、蕾欧娜、蒙多同场",
@@ -4908,18 +4908,18 @@
         ]
       },
       "placementCounts": [
-        44,
-        68,
-        63,
-        67,
-        57,
-        26,
-        12,
+        51,
+        84,
+        86,
+        79,
+        61,
+        28,
+        15,
         0
       ],
-      "mean": 3.45,
-      "topFourRate": 0.7181008902077152,
-      "winRate": 0.13056379821958458,
+      "mean": 3.39,
+      "topFourRate": 0.7425742574257426,
+      "winRate": 0.12623762376237624,
       "sectionId": "sample-block-1181"
     },
     {
@@ -4934,7 +4934,7 @@
         "neeko",
         "senna"
       ],
-      "games": 1959,
+      "games": 2285,
       "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&level=8&trait=DA_Heartsteel19_2&trait=DA_Manager19_1&trait=DA_Bodyguard19_1&unit=DA_Alune19-1&unit=DA_KSante19-1&unit=DA_Leona19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
       "sampleScope": "8级结算 · 3心之钢、2经纪人、2护卫档 · 拉露恩、奎桑提、蕾欧娜同场",
@@ -4954,18 +4954,18 @@
         }
       },
       "placementCounts": [
-        25,
-        55,
-        86,
-        216,
-        319,
-        447,
-        457,
-        354
+        32,
+        65,
+        101,
+        244,
+        373,
+        513,
+        542,
+        415
       ],
-      "mean": 5.9,
-      "topFourRate": 0.19499744767738642,
-      "winRate": 0.012761613067891782,
+      "mean": 5.91,
+      "topFourRate": 0.19343544857768052,
+      "winRate": 0.01400437636761488,
       "sectionId": "sample-block-1181"
     },
     {
@@ -5003,20 +5003,20 @@
       },
       "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=9&trait=DA_EDM19_1&unit=DA_Zeri19-1_2&unit=DA_DrMundo19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "placementCounts": [
-        4255,
-        3203,
-        3299,
-        2943,
-        2314,
-        1664,
-        1016,
-        438
+        4873,
+        3673,
+        3795,
+        3439,
+        2726,
+        1910,
+        1167,
+        510
       ],
-      "games": 19132,
+      "games": 22093,
       "observedOn": "2026-11-27",
-      "mean": 3.37,
-      "topFourRate": 0.7160777754547355,
-      "winRate": 0.22240225799707297
+      "mean": 3.38,
+      "topFourRate": 0.7142533834246141,
+      "winRate": 0.22056760059747432
     },
     {
       "sectionId": "sample-block-0275",
@@ -5048,20 +5048,20 @@
       },
       "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=9&trait=DA_Jazz19_2&trait=DA_Pentakill19_1&unit=DA_Smeech19-1&unit=DA_Kayle19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "placementCounts": [
-        511,
-        712,
-        677,
-        695,
-        561,
-        366,
-        207,
-        49
+        594,
+        800,
+        789,
+        798,
+        616,
+        420,
+        220,
+        58
       ],
-      "games": 3778,
+      "games": 4295,
       "observedOn": "2026-11-27",
-      "mean": 3.6,
-      "topFourRate": 0.6868713605082054,
-      "winRate": 0.13525674960296452
+      "mean": 3.58,
+      "topFourRate": 0.6940628637951106,
+      "winRate": 0.13830034924330617
     },
     {
       "population": 8,
@@ -5075,22 +5075,22 @@
         "pyke",
         "swain"
       ],
-      "games": 915,
+      "games": 1767,
       "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&unit=DA_Aurora19-1&unit=DA_Alistar19-1&unit=DA_Pyke19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
       "placementCounts": [
-        145,
-        151,
-        144,
-        110,
-        98,
-        110,
-        91,
-        66
+        273,
+        303,
+        289,
+        232,
+        209,
+        199,
+        166,
+        96
       ],
-      "mean": 3.97,
-      "topFourRate": 0.6010928961748634,
-      "winRate": 0.15846994535519127,
+      "mean": 3.87,
+      "topFourRate": 0.620826259196378,
+      "winRate": 0.15449915110356535,
       "sampleScope": "三核心 · 阿萝拉、阿利斯塔、派克",
       "conditions": {
         "kind": "core",
@@ -5114,22 +5114,22 @@
         "pyke",
         "swain"
       ],
-      "games": 116,
+      "games": 323,
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Alistar19-1&unit=DA_Aurora19-1&unit=DA_Bard19-1&unit=DA_Galio19-1&unit=DA_Locke19-1&unit=DA_Mel19-1&unit=DA_Pyke19-1&unit=DA_Swain19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
       "placementCounts": [
-        8,
-        10,
-        9,
-        18,
-        11,
-        30,
-        19,
-        11
+        13,
+        15,
+        32,
+        57,
+        52,
+        75,
+        56,
+        23
       ],
-      "mean": 5.03,
-      "topFourRate": 0.3879310344827586,
-      "winRate": 0.06896551724137931
+      "mean": 5.12,
+      "topFourRate": 0.3622291021671827,
+      "winRate": 0.04024767801857585
     },
     {
       "population": 9,
@@ -5144,22 +5144,22 @@
         "rell",
         "swain"
       ],
-      "games": 62,
+      "games": 167,
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Alistar19-1&unit=DA_Aurora19-1&unit=DA_Bard19-1&unit=DA_Galio19-1&unit=DA_Locke19-1&unit=DA_Mel19-1&unit=DA_Pyke19-1&unit=DA_Rell19-1&unit=DA_Swain19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
       "placementCounts": [
-        13,
-        18,
-        13,
-        12,
-        3,
+        29,
+        47,
+        39,
+        28,
+        17,
+        5,
         2,
-        1,
         0
       ],
-      "mean": 2.74,
-      "topFourRate": 0.9032258064516129,
-      "winRate": 0.20967741935483872
+      "mean": 2.88,
+      "topFourRate": 0.8562874251497006,
+      "winRate": 0.17365269461077845
     },
     {
       "population": 5,
@@ -5361,7 +5361,7 @@
         "swain",
         "yorick"
       ],
-      "games": 2116,
+      "games": 2322,
       "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&trait=DA_Swiftstriker19_2&unit=DA_Locke19-1_2_3&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
       "sampleScope": "3迅击鼓手 · 洛克两星三件",
@@ -5383,18 +5383,18 @@
         ]
       },
       "placementCounts": [
-        227,
-        414,
-        345,
-        348,
-        296,
-        222,
-        177,
-        87
+        253,
+        439,
+        390,
+        382,
+        326,
+        245,
+        191,
+        96
       ],
       "mean": 3.89,
-      "topFourRate": 0.6304347826086957,
-      "winRate": 0.10727788279773157
+      "topFourRate": 0.6304909560723514,
+      "winRate": 0.10895779500430663
     },
     {
       "sectionId": "swiftstriker-locke",
@@ -5409,7 +5409,7 @@
         "swain",
         "yorick"
       ],
-      "games": 339,
+      "games": 364,
       "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=comps&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Bard19-1&unit=DA_Galio19-1&unit=DA_Kayle19-1&unit=DA_Locke19-1&unit=DA_Mel19-1&unit=DA_Olaf19-1&unit=DA_Swain19-1&unit=DA_Yorick19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
       "sampleScope": "8级无转职固定8人 · 3迅击鼓手三摇滚恶魔洛克",
@@ -5421,17 +5421,17 @@
       },
       "placementCounts": [
         3,
-        9,
+        10,
         32,
-        49,
-        69,
-        68,
+        51,
+        75,
         73,
-        36
+        81,
+        39
       ],
-      "mean": 5.5,
-      "topFourRate": 0.2743362831858407,
-      "winRate": 0.008849557522123894
+      "mean": 5.54,
+      "topFourRate": 0.26373626373626374,
+      "winRate": 0.008241758241758242
     },
     {
       "sectionId": "swiftstriker-locke",
@@ -5447,7 +5447,7 @@
         "swain",
         "yorick"
       ],
-      "games": 66,
+      "games": 73,
       "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=comps&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Bard19-1&unit=DA_Galio19-1&unit=DA_Kayle19-1&unit=DA_Locke19-1&unit=DA_Mel19-1&unit=DA_Olaf19-1&unit=DA_Rell19-1&unit=DA_Swain19-1&unit=DA_Yorick19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
       "sampleScope": "9级无转职固定9人 · 补芮尔上限",
@@ -5458,18 +5458,18 @@
         "emblems": 0
       },
       "placementCounts": [
-        3,
-        12,
-        20,
+        5,
         13,
+        23,
+        14,
         9,
         5,
         3,
         1
       ],
-      "mean": 3.68,
-      "topFourRate": 0.7272727272727273,
-      "winRate": 0.045454545454545456
+      "mean": 3.56,
+      "topFourRate": 0.7534246575342466,
+      "winRate": 0.0684931506849315
     },
     {
       "sectionId": "true-damage-akali",
@@ -5485,7 +5485,7 @@
         "yasuo",
         "yone"
       ],
-      "games": 18395,
+      "games": 20100,
       "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&trait=DA_TrueDamage19_2&unit=DA_Akali_TrueDamage19-1&unit=DA_Yasuo19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
       "sampleScope": "5真实伤害 · 阿卡丽·真实伤害与亚索同场",
@@ -5501,18 +5501,18 @@
         }
       },
       "placementCounts": [
-        3097,
-        2189,
-        2555,
-        2767,
-        2527,
-        2146,
-        1796,
-        1318
+        3390,
+        2392,
+        2771,
+        3036,
+        2771,
+        2337,
+        1971,
+        1432
       ],
       "mean": 4.07,
-      "topFourRate": 0.5766784452296819,
-      "winRate": 0.16836096765425387
+      "topFourRate": 0.5765671641791045,
+      "winRate": 0.16865671641791044
     },
     {
       "sectionId": "true-damage-akali",
@@ -5528,7 +5528,7 @@
         "yasuo",
         "yone"
       ],
-      "games": 217,
+      "games": 243,
       "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=comps&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Akali_TrueDamage19-1&unit=DA_DrMundo19-1&unit=DA_Ekko19-1&unit=DA_Kennen19-1&unit=DA_Leona19-1&unit=DA_MissFortune19-1&unit=DA_Senna19-1&unit=DA_Yasuo19-1&unit=DA_Yone19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
       "sampleScope": "9级无转职固定9人 · 五真实伤害阿卡丽亚索",
@@ -5539,18 +5539,18 @@
         "emblems": 0
       },
       "placementCounts": [
-        28,
-        19,
-        30,
-        38,
-        34,
-        42,
+        32,
         20,
-        6
+        31,
+        42,
+        41,
+        46,
+        23,
+        8
       ],
-      "mean": 4.23,
-      "topFourRate": 0.5299539170506913,
-      "winRate": 0.12903225806451613
+      "mean": 4.28,
+      "topFourRate": 0.51440329218107,
+      "winRate": 0.13168724279835392
     },
     {
       "sectionId": "arcanist-mel-vladimir",
@@ -5566,7 +5566,7 @@
         "swain",
         "vladimir"
       ],
-      "games": 4510,
+      "games": 4867,
       "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&trait=DA_Arcanist19_2&unit=DA_Mel19-1&unit=DA_Vladimir19-1&unit=DA_Rell19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
       "sampleScope": "4法师 · 梅尔、弗拉基米尔与芮尔同场",
@@ -5583,18 +5583,18 @@
         }
       },
       "placementCounts": [
-        496,
-        663,
-        684,
-        760,
-        623,
-        596,
-        462,
-        226
+        537,
+        704,
+        747,
+        815,
+        682,
+        637,
+        505,
+        240
       ],
-      "mean": 4.13,
-      "topFourRate": 0.5771618625277162,
-      "winRate": 0.10997782705099779
+      "mean": 4.14,
+      "topFourRate": 0.5759194575713992,
+      "winRate": 0.11033490856790631
     },
     {
       "sectionId": "arcanist-mel-vladimir",
@@ -5610,7 +5610,7 @@
         "swain",
         "vladimir"
       ],
-      "games": 419,
+      "games": 458,
       "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=comps&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Annie19-1&unit=DA_DrMundo19-1&unit=DA_Leona19-1&unit=DA_Mel19-1&unit=DA_Nasus19-1&unit=DA_Nunu19-1&unit=DA_Rell19-1&unit=DA_Swain19-1&unit=DA_Vladimir19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
       "sampleScope": "9级无转职固定9人 · 四法师梅尔吸血鬼",
@@ -5621,18 +5621,18 @@
         "emblems": 0
       },
       "placementCounts": [
-        46,
-        58,
-        73,
-        99,
-        64,
-        46,
-        21,
+        51,
+        65,
+        82,
+        104,
+        71,
+        51,
+        22,
         12
       ],
-      "mean": 3.86,
-      "topFourRate": 0.6587112171837709,
-      "winRate": 0.10978520286396182
+      "mean": 3.83,
+      "topFourRate": 0.6593886462882096,
+      "winRate": 0.11135371179039301
     },
     {
       "sectionId": "renegade-qiyana-samira",
@@ -5645,7 +5645,7 @@
         "qiyana",
         "samira"
       ],
-      "games": 1340,
+      "games": 1561,
       "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&unit=DA_Qiyana19-1_3&unit=DA_Samira19-1_3&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
       "sampleScope": "奇亚娜三星 · 莎弥拉三星同场",
@@ -5668,18 +5668,18 @@
         ]
       },
       "placementCounts": [
-        170,
-        199,
-        236,
-        215,
-        187,
-        152,
-        128,
-        53
+        193,
+        234,
+        279,
+        256,
+        208,
+        175,
+        149,
+        67
       ],
-      "mean": 3.96,
-      "topFourRate": 0.6119402985074627,
-      "winRate": 0.12686567164179105
+      "mean": 3.97,
+      "topFourRate": 0.6162716207559257,
+      "winRate": 0.1236386931454196
     },
     {
       "sectionId": "renegade-qiyana-samira",
@@ -5694,7 +5694,7 @@
         "qiyana",
         "samira"
       ],
-      "games": 51,
+      "games": 55,
       "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=comps&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Aurora19-1&unit=DA_Ekko19-1&unit=DA_Evelynn19-1&unit=DA_Graves19-1&unit=DA_Kennen19-1&unit=DA_Nasus19-1&unit=DA_Qiyana19-1&unit=DA_Samira19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
       "sampleScope": "8级无转职固定8人 · 五非主流奇亚娜莎弥拉",
@@ -5705,18 +5705,18 @@
         "emblems": 0
       },
       "placementCounts": [
-        3,
+        4,
         5,
-        5,
+        6,
         10,
-        12,
+        13,
         10,
         6,
-        0
+        1
       ],
-      "mean": 4.51,
-      "topFourRate": 0.45098039215686275,
-      "winRate": 0.058823529411764705
+      "mean": 4.49,
+      "topFourRate": 0.45454545454545453,
+      "winRate": 0.07272727272727272
     },
     {
       "sectionId": "sample-block-0171",
@@ -5731,7 +5731,7 @@
         "zac",
         "zoe"
       ],
-      "games": 6769,
+      "games": 7268,
       "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&unit=DA_Renekton19-1_3_3&unit=DA_Ashe19-1_3_3&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
       "sampleScope": "雷克顿三星三件 · 艾希三星三件同场",
@@ -5756,18 +5756,18 @@
         ]
       },
       "placementCounts": [
-        595,
-        1381,
-        1571,
-        1311,
-        895,
-        597,
-        303,
-        116
+        631,
+        1488,
+        1696,
+        1400,
+        966,
+        639,
+        324,
+        124
       ],
       "mean": 3.61,
-      "topFourRate": 0.717683557394002,
-      "winRate": 0.08790072388831438
+      "topFourRate": 0.7175288937809576,
+      "winRate": 0.0868189323059989
     },
     {
       "sectionId": "sample-block-0171",
@@ -5782,7 +5782,7 @@
         "zac",
         "zoe"
       ],
-      "games": 930,
+      "games": 993,
       "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=comps&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Ashe19-1&unit=DA_Galio19-1&unit=DA_Illaoi19-1&unit=DA_Renekton19-1&unit=DA_Swain19-1&unit=DA_Taric19-1&unit=DA_Zac19-1&unit=DA_Zoe19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
       "sampleScope": "8级无转职固定8人 · 鳄鱼艾希双C",
@@ -5794,17 +5794,17 @@
       },
       "placementCounts": [
         16,
-        96,
-        247,
-        232,
-        194,
-        95,
-        32,
+        103,
+        267,
+        249,
+        205,
+        102,
+        33,
         18
       ],
-      "mean": 4.07,
-      "topFourRate": 0.635483870967742,
-      "winRate": 0.017204301075268817
+      "mean": 4.06,
+      "topFourRate": 0.6394763343403826,
+      "winRate": 0.016112789526686808
     },
     {
       "sectionId": "true-damage-senna",
@@ -5818,7 +5818,7 @@
         "senna",
         "yasuo"
       ],
-      "games": 2497,
+      "games": 2667,
       "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&unit=DA_Senna19-1_3_3&unit=DA_Ekko19-1_3&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
       "sampleScope": "赛娜三星三件 · 艾克三星同场",
@@ -5842,18 +5842,18 @@
         ]
       },
       "placementCounts": [
-        460,
-        471,
-        462,
-        405,
-        294,
-        237,
-        119,
-        49
+        483,
+        498,
+        500,
+        436,
+        321,
+        251,
+        125,
+        53
       ],
-      "mean": 3.41,
-      "topFourRate": 0.7200640768922707,
-      "winRate": 0.184221065278334
+      "mean": 3.42,
+      "topFourRate": 0.718785151856018,
+      "winRate": 0.18110236220472442
     },
     {
       "sectionId": "true-damage-senna",
@@ -5868,7 +5868,7 @@
         "senna",
         "yasuo"
       ],
-      "games": 6410,
+      "games": 6828,
       "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&unit=DA_Senna19-1_3_3&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
       "sampleScope": "赛娜三星三件全样本",
@@ -5887,18 +5887,18 @@
         ]
       },
       "placementCounts": [
-        950,
-        982,
-        1079,
-        1016,
-        888,
-        739,
-        495,
-        261
+        1001,
+        1040,
+        1160,
+        1094,
+        948,
+        783,
+        525,
+        277
       ],
-      "mean": 3.84,
-      "topFourRate": 0.6282371294851794,
-      "winRate": 0.1482059282371295
+      "mean": 3.85,
+      "topFourRate": 0.6290275336848272,
+      "winRate": 0.14660222612770943
     },
     {
       "sectionId": "jazz-bard",
@@ -5912,7 +5912,7 @@
         "mel",
         "swain"
       ],
-      "games": 716,
+      "games": 764,
       "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&trait=DA_Jazz19_2&unit=DA_Bard19-1_3_3&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
       "sampleScope": "3爵士乐 · 巴德三星三件",
@@ -5934,18 +5934,18 @@
         ]
       },
       "placementCounts": [
-        103,
-        117,
-        103,
-        91,
-        100,
-        91,
-        81,
+        109,
+        122,
+        109,
+        101,
+        108,
+        101,
+        84,
         30
       ],
       "mean": 4.0,
-      "topFourRate": 0.5782122905027933,
-      "winRate": 0.14385474860335196
+      "topFourRate": 0.5772251308900523,
+      "winRate": 0.14267015706806283
     },
     {
       "sectionId": "jazz-bard",
@@ -5960,7 +5960,7 @@
         "mel",
         "swain"
       ],
-      "games": 592,
+      "games": 620,
       "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&unit=DA_Bard19-1_3_3&unit=DA_Galio19-1_3&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
       "sampleScope": "巴德三星三件 · 加里奥三星同场",
@@ -5984,18 +5984,18 @@
         ]
       },
       "placementCounts": [
-        127,
-        132,
-        95,
-        86,
-        74,
-        36,
+        137,
+        136,
+        99,
+        90,
+        78,
+        38,
         34,
         8
       ],
-      "mean": 3.22,
-      "topFourRate": 0.7432432432432432,
-      "winRate": 0.21452702702702703
+      "mean": 3.2,
+      "topFourRate": 0.7451612903225806,
+      "winRate": 0.22096774193548388
     },
     {
       "sectionId": "ionic-prodigy-lux",
@@ -6008,7 +6008,7 @@
         "malzahar",
         "shyvana"
       ],
-      "games": 3139,
+      "games": 3310,
       "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&unit=DA_Lux19-1_3_3&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
       "sampleScope": "拉克丝三星三件 · 全样本",
@@ -6027,18 +6027,18 @@
         ]
       },
       "placementCounts": [
-        305,
-        488,
-        632,
-        550,
-        482,
-        362,
-        232,
-        88
+        322,
+        520,
+        670,
+        574,
+        513,
+        377,
+        239,
+        95
       ],
       "mean": 3.91,
-      "topFourRate": 0.6291812679197196,
-      "winRate": 0.09716470213443772
+      "topFourRate": 0.6302114803625377,
+      "winRate": 0.09728096676737161
     },
     {
       "sectionId": "ionic-prodigy-lux",
@@ -6053,7 +6053,7 @@
         "shyvana",
         "zac"
       ],
-      "games": 1241,
+      "games": 1314,
       "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&unit=DA_Lux19-1_3_3&unit=DA_Annie19-1_3&queue=PBE&patch=19.1&b_patch=c&days=3",
       "observedOn": "2026-11-27",
       "sampleScope": "拉克丝三星三件 · 安妮三星同场",
@@ -6077,18 +6077,18 @@
         ]
       },
       "placementCounts": [
-        114,
-        240,
-        282,
-        220,
-        171,
-        128,
-        63,
+        123,
+        255,
+        303,
+        232,
+        180,
+        133,
+        65,
         23
       ],
-      "mean": 3.68,
-      "topFourRate": 0.6897663174858985,
-      "winRate": 0.09186140209508462
+      "mean": 3.66,
+      "topFourRate": 0.6948249619482496,
+      "winRate": 0.09360730593607305
     },
     {
       "population": 8,
@@ -6588,7 +6588,7 @@
         "swain",
         "vladimir"
       ],
-      "games": 46,
+      "games": 47,
       "placementCounts": [
         1,
         1,
@@ -6596,7 +6596,7 @@
         8,
         7,
         10,
-        11,
+        12,
         4
       ],
       "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Annie19-1&unit=DA_Leona19-1&unit=DA_Mel19-1&unit=DA_Nasus19-1&unit=DA_Nunu19-1&unit=DA_Rell19-1&unit=DA_Swain19-1&unit=DA_Vladimir19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
@@ -6607,9 +6607,9 @@
         "teamId": "86805d25-91a4-4fc1-89fc-ae4d92b5022d",
         "population": 8
       },
-      "mean": 5.46,
-      "topFourRate": 0.30434782608695654,
-      "winRate": 0.021739130434782608
+      "mean": 5.49,
+      "topFourRate": 0.2978723404255319,
+      "winRate": 0.02127659574468085
     },
     {
       "sectionId": "sample-block-0229",
@@ -6726,14 +6726,14 @@
     "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=8&unit=DA_RenataGlasc19-1_3_3&unit=DA_Nasus19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
     "observedOn": "2026-11-27",
     "placementCounts": [
-      925,
-      1721,
-      1858,
-      1335,
-      747,
-      440,
-      193,
-      52
+      1071,
+      1982,
+      2113,
+      1525,
+      860,
+      492,
+      214,
+      63
     ]
   },
   "boardComparisons": [
@@ -6757,28 +6757,28 @@
           "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&trait=DA_Virtuosos19_2&trait=DA_Jazz19_1&unit=DA_Lucian19-1&unit=DA_Nasus19-1&unit=DA_Galio19-1&unit=DA_KSante19-1&unit=DA_Mel19-1&unit=DA_Jhin19-1&unit=DA_Thresh19-1&unit=DA_Vladimir19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
           "observedOn": "2026-11-27",
           "placementCounts": [
-            193,
-            330,
-            869,
-            1486,
-            1712,
-            1787,
-            1595,
-            875
+            226,
+            388,
+            1039,
+            1741,
+            2032,
+            2094,
+            1864,
+            1015
           ]
         },
         {
           "label": "固定八张 · 双两星",
           "scope": "同八张 · 八级结算 · 烬两星三格装备、锤石两星",
           "placementCounts": [
-            110,
-            287,
-            718,
-            1051,
-            967,
-            766,
-            492,
-            156
+            128,
+            337,
+            870,
+            1239,
+            1156,
+            911,
+            575,
+            184
           ],
           "observedOn": "2026-11-27",
           "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&trait=DA_Virtuosos19_2&trait=DA_Jazz19_1&unit=DA_Lucian19-1&unit=DA_Nasus19-1&unit=DA_Galio19-1&unit=DA_KSante19-1&unit=DA_Mel19-1&unit=DA_Jhin19-1_2_3&unit=DA_Thresh19-1_2&unit=DA_Vladimir19-1&queue=PBE&patch=19.1&b_patch=c&days=3"
@@ -6798,14 +6798,14 @@
           "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&unit=DA_Viego19-1&unit=DA_Briar19-1&unit=DA_Camille19-1&unit=DA_Kayn19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
           "observedOn": "2026-11-27",
           "placementCounts": [
-            1731,
-            2044,
-            1806,
-            1662,
-            1517,
-            1351,
-            1133,
-            845
+            1982,
+            2376,
+            2111,
+            1921,
+            1764,
+            1556,
+            1321,
+            987
           ],
           "label": "四张不限星",
           "scope": "佛耶戈、贝蕾亚、卡蜜尔、凯隐同场 · 不限人口、星级"
@@ -6814,14 +6814,14 @@
           "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&unit=DA_Viego19-1_3&unit=DA_Briar19-1_3&unit=DA_Camille19-1&unit=DA_Kayn19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
           "observedOn": "2026-11-27",
           "placementCounts": [
-            1359,
-            1454,
-            1022,
-            681,
-            444,
-            277,
-            118,
-            38
+            1563,
+            1699,
+            1203,
+            793,
+            507,
+            317,
+            134,
+            53
           ],
           "label": "双核三星",
           "scope": "同四张 · 佛耶戈、贝蕾亚三星 · 不限人口"
@@ -6843,7 +6843,7 @@
         {
           "label": "6级 · 3离子",
           "scope": "双三星 · 芸阿娜三件 · 无纹章、人口装",
-          "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&queue=PBE&patch=19.1&b_patch=c&days=3&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&level=6&unit=DA_Yunara19-1_3_3&unit=DA_Elise19-1_3&trait=DA_IonicSpark19_1",
+          "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&level=6&unit=DA_Yunara19-1_3_3&unit=DA_Elise19-1_3&trait=DA_IonicSpark19_1&queue=PBE&patch=19.1&b_patch=c&days=3",
           "observedOn": "2026-11-27",
           "placementCounts": [
             0,
@@ -6851,15 +6851,15 @@
             0,
             0,
             2,
-            5,
+            7,
             8,
-            8
+            9
           ]
         },
         {
           "label": "6级 · 5离子",
           "scope": "双三星 · 芸阿娜三件 · 无纹章、人口装",
-          "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&queue=PBE&patch=19.1&b_patch=c&days=3&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&level=6&unit=DA_Yunara19-1_3_3&unit=DA_Elise19-1_3&trait=DA_IonicSpark19_2",
+          "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&level=6&unit=DA_Yunara19-1_3_3&unit=DA_Elise19-1_3&trait=DA_IonicSpark19_2&queue=PBE&patch=19.1&b_patch=c&days=3",
           "observedOn": "2026-11-27",
           "placementCounts": [
             0,
@@ -6867,9 +6867,9 @@
             1,
             1,
             3,
-            8,
+            9,
             5,
-            5
+            6
           ]
         }
       ]
@@ -6890,49 +6890,49 @@
         {
           "label": "7级 · 3离子",
           "scope": "双三星 · 芸阿娜三件 · 无纹章、人口装",
-          "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&queue=PBE&patch=19.1&b_patch=c&days=3&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&level=7&unit=DA_Yunara19-1_3_3&unit=DA_Elise19-1_3&trait=DA_IonicSpark19_1",
+          "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&level=7&unit=DA_Yunara19-1_3_3&unit=DA_Elise19-1_3&trait=DA_IonicSpark19_1&queue=PBE&patch=19.1&b_patch=c&days=3",
           "observedOn": "2026-11-27",
           "placementCounts": [
             0,
             5,
             4,
-            12,
-            24,
-            25,
-            9,
+            15,
+            27,
+            30,
+            17,
             6
           ]
         },
         {
           "label": "7级 · 5离子",
           "scope": "双三星 · 芸阿娜三件 · 无纹章、人口装",
-          "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&queue=PBE&patch=19.1&b_patch=c&days=3&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&level=7&unit=DA_Yunara19-1_3_3&unit=DA_Elise19-1_3&trait=DA_IonicSpark19_2",
+          "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&level=7&unit=DA_Yunara19-1_3_3&unit=DA_Elise19-1_3&trait=DA_IonicSpark19_2&queue=PBE&patch=19.1&b_patch=c&days=3",
           "observedOn": "2026-11-27",
           "placementCounts": [
             0,
             1,
             3,
+            16,
+            11,
             15,
-            10,
             13,
-            13,
-            3
+            4
           ]
         },
         {
           "label": "7级 · 7离子",
           "scope": "双三星 · 芸阿娜三件 · 无纹章、人口装",
-          "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&queue=PBE&patch=19.1&b_patch=c&days=3&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&level=7&unit=DA_Yunara19-1_3_3&unit=DA_Elise19-1_3&trait=DA_IonicSpark19_3",
+          "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&level=7&unit=DA_Yunara19-1_3_3&unit=DA_Elise19-1_3&trait=DA_IonicSpark19_3&queue=PBE&patch=19.1&b_patch=c&days=3",
           "observedOn": "2026-11-27",
           "placementCounts": [
             1,
             0,
             4,
-            8,
-            7,
-            15,
+            9,
+            9,
+            16,
             10,
-            7
+            8
           ]
         }
       ]
@@ -6954,48 +6954,48 @@
         {
           "label": "8级 · 3离子",
           "scope": "双三星 · 芸阿娜三件 · 无纹章、人口装",
-          "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&queue=PBE&patch=19.1&b_patch=c&days=3&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&level=8&unit=DA_Yunara19-1_3_3&unit=DA_Elise19-1_3&trait=DA_IonicSpark19_1",
+          "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&level=8&unit=DA_Yunara19-1_3_3&unit=DA_Elise19-1_3&trait=DA_IonicSpark19_1&queue=PBE&patch=19.1&b_patch=c&days=3",
           "observedOn": "2026-11-27",
           "placementCounts": [
             4,
-            14,
-            36,
-            44,
-            34,
-            27,
-            22,
+            15,
+            37,
+            46,
+            35,
+            31,
+            25,
             5
           ]
         },
         {
           "label": "8级 · 5离子",
           "scope": "双三星 · 芸阿娜三件 · 无纹章、人口装",
-          "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&queue=PBE&patch=19.1&b_patch=c&days=3&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&level=8&unit=DA_Yunara19-1_3_3&unit=DA_Elise19-1_3&trait=DA_IonicSpark19_2",
+          "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&level=8&unit=DA_Yunara19-1_3_3&unit=DA_Elise19-1_3&trait=DA_IonicSpark19_2&queue=PBE&patch=19.1&b_patch=c&days=3",
           "observedOn": "2026-11-27",
           "placementCounts": [
-            0,
-            7,
-            19,
-            14,
-            13,
-            12,
             1,
+            8,
+            20,
+            14,
+            15,
+            12,
+            3,
             0
           ]
         },
         {
           "label": "8级 · 7离子",
           "scope": "双三星 · 芸阿娜三件 · 无纹章、人口装",
-          "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&queue=PBE&patch=19.1&b_patch=c&days=3&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&level=8&unit=DA_Yunara19-1_3_3&unit=DA_Elise19-1_3&trait=DA_IonicSpark19_3",
+          "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&level=8&unit=DA_Yunara19-1_3_3&unit=DA_Elise19-1_3&trait=DA_IonicSpark19_3&queue=PBE&patch=19.1&b_patch=c&days=3",
           "observedOn": "2026-11-27",
           "placementCounts": [
             5,
             9,
-            23,
-            36,
-            30,
-            20,
-            12,
+            26,
+            39,
+            31,
+            22,
+            13,
             5
           ]
         }
@@ -7015,7 +7015,7 @@
         {
           "label": "6级结算",
           "scope": "芸阿娜三星三件 · 无纹章、人口装",
-          "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&queue=PBE&patch=19.1&b_patch=c&days=3&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&level=6&unit=DA_Yunara19-1_3_3",
+          "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&level=6&unit=DA_Yunara19-1_3_3&queue=PBE&patch=19.1&b_patch=c&days=3",
           "observedOn": "2026-11-27",
           "placementCounts": [
             0,
@@ -7023,57 +7023,57 @@
             3,
             4,
             11,
-            29,
-            38,
-            42
+            33,
+            42,
+            46
           ]
         },
         {
           "label": "7级结算",
           "scope": "芸阿娜三星三件 · 无纹章、人口装",
-          "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&queue=PBE&patch=19.1&b_patch=c&days=3&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&level=7&unit=DA_Yunara19-1_3_3",
+          "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&level=7&unit=DA_Yunara19-1_3_3&queue=PBE&patch=19.1&b_patch=c&days=3",
           "observedOn": "2026-11-27",
           "placementCounts": [
             2,
             10,
             27,
-            62,
-            96,
-            122,
-            79,
-            50
+            68,
+            107,
+            135,
+            94,
+            54
           ]
         },
         {
           "label": "8级结算",
           "scope": "芸阿娜三星三件 · 无纹章、人口装",
-          "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&queue=PBE&patch=19.1&b_patch=c&days=3&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&level=8&unit=DA_Yunara19-1_3_3",
+          "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&level=8&unit=DA_Yunara19-1_3_3&queue=PBE&patch=19.1&b_patch=c&days=3",
           "observedOn": "2026-11-27",
           "placementCounts": [
-            18,
-            55,
-            132,
-            182,
-            181,
-            135,
-            95,
-            42
+            20,
+            60,
+            144,
+            195,
+            193,
+            150,
+            110,
+            46
           ]
         },
         {
           "label": "9级结算",
           "scope": "芸阿娜三星三件 · 无纹章、人口装",
-          "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&queue=PBE&patch=19.1&b_patch=c&days=3&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&level=9&unit=DA_Yunara19-1_3_3",
+          "url": "https://www.metatft.com/explorer?tab=units&set=TFTSet19&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&level=9&unit=DA_Yunara19-1_3_3&queue=PBE&patch=19.1&b_patch=c&days=3",
           "observedOn": "2026-11-27",
           "placementCounts": [
-            57,
-            90,
-            103,
-            121,
-            92,
-            53,
-            22,
-            7
+            62,
+            100,
+            118,
+            140,
+            96,
+            54,
+            25,
+            9
           ]
         }
       ]
