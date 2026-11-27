@@ -165,10 +165,15 @@
 .gear-section-heading h3,.gear-cook-results h3 {margin:0;font-size:1rem;font-weight:700;}
 .gear-wearer-count {margin-inline-start:6px;color:var(--muted);font-size:.8125rem;font-weight:500;}
 .gear-wearer-table-scroll {
-  max-block-size:min(24rem, 52svh);
+  max-block-size:min(34rem, 62svh);
   overflow:auto;
   margin-block-start:6px;
+  padding-inline-end:4px;
   scrollbar-width:thin;
+  scrollbar-gutter:stable;
+}
+@media (max-width: 760px) {
+  .gear-wearer-table-scroll { max-block-size:min(24rem, 52svh); }
 }
 .gear-wearer-table-scroll .gear-wearers-table {margin-block-start:0;}
 .gear-wearer-table-scroll .gear-wearers-table thead th {
