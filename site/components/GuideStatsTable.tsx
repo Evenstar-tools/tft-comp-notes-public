@@ -14,6 +14,7 @@ export const guideStatsMetricLabels = {
 } satisfies Record<GuideStatsMetric, string>;
 
 const metrics = ["mean", "pickRate", "topFourRate", "winRate"] as const;
+const sampleLimits = [100, 200, 500] as const;
 const tierLabels = { recommended: "推荐", secondary: "次选", review: "待复核" } satisfies Record<RecommendationTier, string>;
 const formats = {
   pickRate: new Intl.NumberFormat("zh-CN", { style: "percent", maximumFractionDigits: 2, minimumFractionDigits: 2 }),
@@ -33,7 +34,7 @@ export type GuideStatsTableRow = {
   units: ReactNode;
   games: number;
   pickRate: number | null;
-  mean: number;
+  mean: number | null;
   topFourRate: number | null;
   winRate: number | null;
 };
@@ -46,7 +47,7 @@ export function GuideStatsTable({ rows, metric, direction, onSort }: {
 }) {
   const order = direction === "asc" ? "ascending" : "descending";
 
-  return <table className="guide-stats-table" aria-label="阵容战绩对照" role="table">
+  return <table className="guide-stats-table" aria-label="阵容数据对照" role="table">
     <colgroup>
       <col />
       <col className="guide-stats-units-column" />
@@ -68,26 +69,30 @@ export function GuideStatsTable({ rows, metric, direction, onSort }: {
       </tr>
     </thead>
     <tbody role="rowgroup">
-      {rows.map(row => <tr key={row.id} id={row.id} role="row">
-        <th scope="row" role="rowheader" className="guide-stats-identity">
-          <div className="guide-stats-title">
-            {row.link}
-            {row.style && <span className="guide-playstyle-tag">{row.style}</span>}
-          </div>
-          {row.note && <p>{row.note}</p>}
-        </th>
-        <td className="guide-stats-units" role="cell"><div className="guide-stats-portraits">{row.units}</div></td>
-        {metrics.map(key => {
-          const value = row[key];
-          return <td key={key} className="guide-stats-metric" role="cell" data-active={key === metric ? "true" : undefined}>
-            <span className="guide-stats-mobile-label">{guideStatsMetricLabels[key]}</span>
-            <strong data-tier={key === "mean" ? row.tier : undefined}>
-              {value === null || !Number.isFinite(value) ? "—" : key === "mean" ? formatRecommendationMean(value) : formats[key].format(value)}
-            </strong>
-            {key === "mean" && <small className="guide-stats-sample"><span>{tierLabels[row.tier]}</span><span>{gameFormat.format(row.games)} 场</span></small>}
-          </td>;
-        })}
-      </tr>)}
+      {rows.map(row => {
+        const sampleLimit = sampleLimits.find(limit => row.games < limit);
+        return <tr key={row.id} id={row.id} role="row">
+          <th scope="row" role="rowheader" className="guide-stats-identity">
+            <div className="guide-stats-title">
+              {row.link}
+              {sampleLimit && <span className="guide-stats-sample-tag" data-limit={sampleLimit}>{`<${sampleLimit} 场`}</span>}
+              {row.style && <span className="guide-playstyle-tag">{row.style}</span>}
+            </div>
+            {row.note && <p>{row.note}</p>}
+          </th>
+          <td className="guide-stats-units" role="cell"><div className="guide-stats-portraits">{row.units}</div></td>
+          {metrics.map(key => {
+            const value = row[key];
+            return <td key={key} className="guide-stats-metric" role="cell" data-active={key === metric ? "true" : undefined}>
+              <span className="guide-stats-mobile-label">{guideStatsMetricLabels[key]}</span>
+              <strong data-tier={key === "mean" ? row.tier : undefined}>
+                {value === null || !Number.isFinite(value) ? "—" : key === "mean" ? formatRecommendationMean(value) : formats[key].format(value)}
+              </strong>
+              {key === "mean" && <small className="guide-stats-sample"><span>{tierLabels[row.tier]}</span><span>{gameFormat.format(row.games)} 场</span></small>}
+            </td>;
+          })}
+        </tr>;
+      })}
     </tbody>
   </table>;
 }

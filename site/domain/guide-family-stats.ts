@@ -262,10 +262,12 @@ export function guideFamilyBoardIds(batch: GuideFamilyBatch, seasonId: string, s
     .filter(id => id !== undefined));
 }
 
-export function guideFamilyRows(batch: GuideFamilyBatch, seasonId: string, sectionId: string, teams: Team[]) {
+export function guideFamilyRows(batch: GuideFamilyBatch, seasonId: string, sectionId: string, teams: Team[], { includeSmallSamples = false } = {}) {
   if (batch.seasonId !== seasonId || !batch.patch || !batch.updatedAt || batch.days < 1) return [];
-  return batch.rows.flatMap(stat => {
-    if (stat.sectionId !== sectionId || recommendationTier(stat) === "review") return [];
+  const rows = includeSmallSamples ? [...batch.rows, ...(batch.smallSamples ?? [])] : batch.rows;
+  return rows.flatMap(stat => {
+    const countOnly = includeSmallSamples && Number.isSafeInteger(stat.games) && stat.games > 0 && stat.games < 100;
+    if (stat.sectionId !== sectionId || (!countOnly && recommendationTier(stat) === "review")) return [];
     const team = stat.teamId ? teams.find(t => t.id === stat.teamId) : teams[0];
     if (!team) return [];
     const ids = new Set(familyBoardIds(stat, team.id));
