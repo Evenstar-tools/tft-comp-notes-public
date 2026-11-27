@@ -1,6 +1,7 @@
 import type { ContentBlock, Section } from "./document";
 import { readableSection, sectionTeams } from "./document-flow";
 import { isEditorialSection } from "./guide-reading";
+import { resolveBoardTeamId, resolveGuideSectionId } from "./guide-slugs.ts";
 import type { OwnerRecommendationOverride, RecommendationGroup } from "./guide-family-stats";
 import { isVersionUpdate, sameEdition } from "./version-updates";
 
@@ -132,8 +133,11 @@ function guideTarget(field: Field) {
     const url = new URL(text, origin);
     const path = url.pathname.match(guidePath);
     const teams = url.searchParams.getAll("team");
-    if (url.origin === origin && !url.username && !url.password && path && teams.length === 1 && uuid.test(teams[0]))
-      return { sectionId: path[1], teamId: teams[0] };
+    if (url.origin === origin && !url.username && !url.password && path && teams.length === 1) {
+      const sectionId = resolveGuideSectionId(path[1]);
+      const teamId = resolveBoardTeamId(sectionId, teams[0]);
+      if (teamId && uuid.test(teamId)) return { sectionId, teamId };
+    }
   } catch { /* bad link */ }
 }
 

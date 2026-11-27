@@ -64,11 +64,11 @@ test("published reviewed transitions prove Guinsoo Gnar, Shojin Zoe and the nint
   assert.equal(currentWearerSnapshot(gearEvidence, { ...patch, metaTftPatch: { patch: "19.1", bPatch: "d" } }), false);
   const routes = medleyGuideRoutes(sections, publicationSeason, current);
   const fits = buildMedleyFits(groups, routes, current.units, current.items, "sona", 5, gearEvidence.rows);
-  const renata = fits[18].find(fit => fit.finalHref.endsWith("000046"));
+  const renata = fits[18].find(fit => fit.finalHref === "/guides/bodyguard-renata?team=lv9-6-bodyguard");
   assert.equal(renata.score, 3);
   assert.deepEqual(renata.finalIds, ["lillia", "renata-glasc", "vi"]);
   assert.deepEqual(renata.lateIds, ["vi"]);
-  assert.ok(renata.stageHref.endsWith("000044"));
+  assert.equal(renata.stageHref, "/guides/bodyguard-renata?team=lv8-6-bodyguard");
   const gnar = fits[28].find(fit => fit.handoff?.fromId === "gnar");
   assert.equal(gnar.handoff.toId, "kai-sa");
   assert.equal(gnar.handoff.source, "guide");
@@ -78,8 +78,8 @@ test("published reviewed transitions prove Guinsoo Gnar, Shojin Zoe and the nint
   assert.ok(!opening.opening.find(piece => piece.unitId === "kai-sa").items.includes("TFT_Item_GuinsoosRageblade"));
   const zoe = fits[13].find(fit => fit.handoff?.fromId === "zoe");
   assert.deepEqual(zoe.handoff.itemIds, ["TFT_Item_SpearOfShojin"]);
-  assert.ok(zoe.finalHref.endsWith("001085"));
-  assert.ok(zoe.stageHref.endsWith("001126"));
+  assert.equal(zoe.finalHref, "/guides/ocean-zoe?team=lv9");
+  assert.equal(zoe.stageHref, "/guides/ocean-zoe?team=lv6-4-spellweaver");
   assert.equal(renata.finalBoard.length, 9);
   assert.ok(fits[23].length <= 5 && fits[23].length >= 3);
 });

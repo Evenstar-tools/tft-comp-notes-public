@@ -1,3 +1,5 @@
+import { canonicalGuidePath, resolveGuideSectionId } from "./guide-slugs.ts";
+
 export const ANALYTICS_EVENT_NAMES = [
   "page_view",
   "guide_view",
@@ -286,7 +288,8 @@ export function resolvePublicPage(pathname: string, search = ""): PublicPageDesc
   if (cleanPath.startsWith("/guides/")) {
     const id = cleanPath.slice("/guides/".length);
     if (!id || id.includes("/") || !isPublicId(id)) return null;
-    return { category: "guide", key: `guide:${id}`, canonicalPath: `/guides/${id}` };
+    const sectionId = resolveGuideSectionId(id);
+    return { category: "guide", key: `guide:${sectionId}`, canonicalPath: canonicalGuidePath(sectionId) };
   }
 
   if (cleanPath === "/heroes") {
@@ -444,7 +447,7 @@ export function extractPublicGuideIdFromHref(href: string | null | undefined): s
     const parsed = new URL(href, "https://local.invalid");
     if (!parsed.pathname.startsWith("/guides/")) return null;
     const id = parsed.pathname.slice("/guides/".length).replace(/\/+$/, "");
-    return isPublicId(id) ? id : null;
+    return isPublicId(id) ? resolveGuideSectionId(id) : null;
   } catch {
     return null;
   }

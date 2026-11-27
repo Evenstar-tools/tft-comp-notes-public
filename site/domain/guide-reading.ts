@@ -4,6 +4,7 @@ import { unitSearchNames } from "./unit-search.mjs";
 import { rerollRoute } from "./reroll-stages.ts";
 import { guideBoardKind, usedPopulation } from "./team.ts";
 import { AD_GRAVES_BOARD_IDS, GUIDE_SECTION_IDS, HYPERPOP_BLOCK_IDS, PYKE_GRAVES_BOARD_ID } from "./guide-identities.ts";
+import { canonicalGuidePath } from "./guide-slugs.ts";
 import { sourceSectionTitle } from "./source-category-display.ts";
 import { displayGuideName } from "./trait-names.mjs";
 
@@ -150,8 +151,7 @@ export function parseGuideFilters(values: Record<string, string | string[] | und
 }
 
 export function guideLink(sectionId: string, teamId?: string, from?: string) {
-  const params = new URLSearchParams({ ...(teamId ? { team: teamId } : {}), ...(from ? { from } : {}) });
-  return "/guides/" + encodeURIComponent(sectionId) + (params.size ? "?" + params : "");
+  return canonicalGuidePath(sectionId, teamId, { from: from || undefined });
 }
 
 export function validVersionReturn(value: unknown) {

@@ -74,7 +74,7 @@ test("the Classical Jhin track keeps both samples across the 427 to 428 change a
   });
   const track = trend.tracks.find(track => track.id === classical.id);
   assert.ok(track);
-  assert.equal(track.href, `/guides/${classical.sectionId}?team=${classical.teamId}`);
+  assert.equal(track.href, "/guides/classical-jhin?team=lv8");
   assert.equal(track.points.at(-2).at, earlier.capturedAt);
   assert.equal(track.points.at(-1).at, latest.capturedAt);
   assert.notEqual(track.points.at(-2).segment, track.points.at(-1).segment);

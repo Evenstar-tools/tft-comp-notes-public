@@ -4,7 +4,7 @@ import { readableSection, sectionTeams } from "@/domain/document-flow";
 import { guideBoardName, primaryFirst } from "@/domain/guide-reading";
 import { gearFilters, type GearPageParams } from "@/domain/gear-library";
 import { itemGuideOrigin } from "@/domain/links";
-import { livePublication } from "@/server/publication";
+import { publicGuidePublication } from "@/server/publication";
 import { displayGuideName } from "@/domain/trait-names.mjs";
 
 export const dynamic = "force-dynamic";
@@ -18,7 +18,7 @@ export default async function Items({ searchParams }: {
   let guideOrigin: typeof origin;
   const examples: Record<string, ItemGuideUse[]> = {};
   try {
-    const live = await livePublication();
+    const live = await publicGuidePublication();
     for (const section of live?.sections.filter(readableSection) ?? []) {
       const teams = primaryFirst(sectionTeams(section), section.primaryTeamId);
       for (const team of teams) {

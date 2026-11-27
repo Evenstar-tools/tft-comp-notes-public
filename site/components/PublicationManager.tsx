@@ -4,7 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { findSection, readableSection, reviewIssues, sectionChanges, sectionTeams } from "@/domain/document-flow";
 import { sourceSectionTitle } from "@/domain/source-category-display";
 import { editorLink, feishuSection } from "@/domain/links";
-import { authoredParagraphs, isEditorialSection } from "@/domain/guide-reading";
+import { authoredParagraphs, guideLink, isEditorialSection } from "@/domain/guide-reading";
 import { orderPosterStages, posterStageTitle } from "@/domain/poster";
 import { usedPopulation } from "@/domain/team";
 import { isVersionUpdate, versionUpdateLink } from "@/domain/version-updates";
@@ -188,7 +188,7 @@ export function PublicationManager() {
         <strong>{status}</strong>
         {published.map(id => {
           const entry = liveSections.find(section => section.id === id);
-          return <a key={id} href={entry && isVersionUpdate(entry) ? versionUpdateLink(id) : "/guides/" + id}>{entry ? chapterTitle(entry) : "查看攻略"}</a>;
+          return <a key={id} href={entry && isVersionUpdate(entry) ? versionUpdateLink(id) : guideLink(id)}>{entry ? chapterTitle(entry) : "查看攻略"}</a>;
         })}
       </div>}
       <div className="publication-columns">
@@ -264,7 +264,7 @@ export function PublicationManager() {
                 {sectionTeams(section).map(team => <a key={team.id} href={editorLink(team.id)}>
                   {team.name === section.title ? "修改阵容" : "修改：" + team.name}
                 </a>)}
-                {state?.live?.sections.some((entry) => entry.id === section.id) && <a href={isVersionUpdate(section) ? versionUpdateLink(section.id) : "/guides/" + section.id}>查看已发布版本</a>}
+                {state?.live?.sections.some((entry) => entry.id === section.id) && <a href={isVersionUpdate(section) ? versionUpdateLink(section.id) : guideLink(section.id)}>查看已发布版本</a>}
               </div>
               {section.id === "introduction" && recommendation?.declared && <section className="publish-review" aria-label="本版阵容推荐预览">
                 <h3>本版阵容推荐</h3>

@@ -1,4 +1,5 @@
 import type { BoardSetup, SourceGuide, Team, TeamCondition } from "@/domain/types";
+import { canonicalGuideHref } from "../domain/links.ts";
 
 export const guideBoardTransferKey = "tft-guide-board-transfer-v1";
 
@@ -17,7 +18,7 @@ export function checkedSourceGuide(value: unknown): SourceGuide | undefined {
   const { sectionId, teamId, href, title } = value as Partial<SourceGuide>;
   if (typeof sectionId === "string" && sectionId.trim() && typeof teamId === "string" && teamId.trim() &&
       guideHref(href) && typeof title === "string" && title.trim()) {
-    return { sectionId, teamId, href, title };
+    return { sectionId, teamId, href: canonicalGuideHref(href), title };
   }
 }
 
@@ -30,7 +31,7 @@ export function readGuideBoardTransfer(id: string): { team: Team; title: string;
     const { team, title, href, focusUnit, target, sharedConditions, sourceGuide } = payload;
     if (!team || !Array.isArray(team.pieces) || !team.pieces.length || typeof title !== "string" ||
         !guideHref(href)) return null;
-    return { team, title, href, target, sourceGuide: checkedSourceGuide(sourceGuide),
+    return { team, title, href: canonicalGuideHref(href), target, sourceGuide: checkedSourceGuide(sourceGuide),
       sharedConditions: Array.isArray(sharedConditions) ? sharedConditions : undefined,
       focusUnit: typeof focusUnit === "string" ? focusUnit : undefined };
   } catch {
@@ -44,7 +45,7 @@ export function checkedGuideBoardSource(value: unknown, draftId: string): GuideB
   if (!value || typeof value !== "object") return null;
   const source = value as Partial<GuideBoardSource>;
   if (source.draftId !== draftId || typeof source.title !== "string" || !guideHref(source.href)) return null;
-  return { ...source, draftId, title: source.title, href: source.href, sourceGuide: checkedSourceGuide(source.sourceGuide) };
+  return { ...source, draftId, title: source.title, href: canonicalGuideHref(source.href), sourceGuide: checkedSourceGuide(source.sourceGuide) };
 }
 
 export function readGuideBoardSource(draftId: string): GuideBoardSource | null {
