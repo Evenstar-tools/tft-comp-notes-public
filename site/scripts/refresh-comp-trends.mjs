@@ -126,7 +126,12 @@ export function appendCompTrendBatch(history, input, { review, patch, unitNames,
     const top = entry?.points.at(-1);
     const newest = !top || timeByBatch.get(top.batchId) <= capturedAt;
     const series = entry ?? { id: seriesId, sectionId: row.sectionId, points: [] };
-    if (newest) Object.assign(series, { teamId: row.teamId, name: row.name, carryIds: [...row.carryIds] });
+    if (newest) {
+      // Keep editorial co-carries when the same board still represents the same source cluster.
+      const retainedCarries = top?.clusterId === String(row.clusterId) ? entry.carryIds : [];
+      const carryIds = [...new Set([...row.carryIds, ...retainedCarries])];
+      Object.assign(series, { teamId: row.teamId, name: row.name, carryIds });
+    }
     const record = { batchId: id, clusterId: String(row.clusterId), ...point };
     const existing = series.points.findIndex(value => value.batchId === id);
     if (existing < 0) series.points.push(record);

@@ -13,7 +13,8 @@
         "摇滚薇恩约里克"
       ],
       "carryIds": [
-        "vayne"
+        "vayne",
+        "pyke"
       ],
       "url": "https://www.metatft.com/pbe-comps#DA_DemonVision19-DA_Vayne19-DA_Yorick19",
       "representativeUnits": [
@@ -72,7 +73,9 @@
         "四主唱炸弹"
       ],
       "carryIds": [
-        "ziggs"
+        "ziggs",
+        "seraphine",
+        "teemo"
       ],
       "url": "https://www.metatft.com/pbe-comps#DA_GlitterBomb19-DA_Kobuko19",
       "representativeUnits": [
@@ -98,7 +101,8 @@
         "离子金克丝"
       ],
       "carryIds": [
-        "jinx"
+        "jinx",
+        "gwen"
       ],
       "url": "https://www.metatft.com/pbe-comps#DA_IonicSpark19-DA_Jinx19",
       "landingTeamId": "00000000-0000-4000-8000-000000000007",
@@ -124,7 +128,8 @@
       "sectionId": "sample-block-1110",
       "teamId": "00000000-0000-4000-8000-000000001251",
       "carryIds": [
-        "jinx"
+        "jinx",
+        "smeech"
       ],
       "url": "https://www.metatft.com/pbe-comps#DA_Arcanist19-DA_Shyvana19",
       "landingTeamId": "00000000-0000-4000-8000-000000001252",
@@ -153,7 +158,8 @@
         "七五杀天使"
       ],
       "carryIds": [
-        "kayle"
+        "kayle",
+        "mordekaiser"
       ],
       "url": "https://www.metatft.com/pbe-comps#DA_Pentakill19-DA_Kayle19-DA_Olaf19",
       "landingTeamId": "00000000-0000-4000-8000-000000000064",
@@ -179,7 +185,8 @@
       "sectionId": "sample-block-0275",
       "teamId": "00000000-0000-4000-8000-000000000082",
       "carryIds": [
-        "smeech"
+        "smeech",
+        "kayle"
       ],
       "url": "https://www.metatft.com/pbe-comps#DA_Pentakill19-DA_Kayle19-DA_Mel19",
       "representativeUnits": [
@@ -256,7 +263,8 @@
         "天才蚂蚱"
       ],
       "carryIds": [
-        "malzahar"
+        "malzahar",
+        "baron-nashor"
       ],
       "url": "https://www.metatft.com/pbe-comps#DA_Prodigy19-DA_Malzahar19-DA_Amumu19",
       "representativeUnits": [
@@ -279,7 +287,9 @@
         "国风悟空霞"
       ],
       "carryIds": [
-        "xayah"
+        "xayah",
+        "janna",
+        "lee-sin"
       ],
       "url": "https://www.metatft.com/pbe-comps#DA_Heavenscale19-DA_Xayah19",
       "representativeUnits": [
@@ -334,7 +344,9 @@
         "非主流男枪"
       ],
       "carryIds": [
-        "graves"
+        "graves",
+        "aurora",
+        "taliyah"
       ],
       "url": "https://www.metatft.com/pbe-comps#DA_OceanSong19-DA_Zac19-DA_Aurora19",
       "representativeUnits": [
@@ -359,7 +371,8 @@
         "打击乐德莱文"
       ],
       "carryIds": [
-        "draven"
+        "draven",
+        "kai-sa"
       ],
       "url": "https://www.metatft.com/pbe-comps#DA_Illbeats19-DA_Draven19",
       "representativeUnits": [
@@ -382,7 +395,8 @@
         "迅击泽丽"
       ],
       "carryIds": [
-        "zeri"
+        "zeri",
+        "vi"
       ],
       "url": "https://www.metatft.com/pbe-comps#DA_Jazz19-DA_Leona19",
       "representativeUnits": [
@@ -437,7 +451,8 @@
       ],
       "carryIds": [
         "pyke",
-        "graves"
+        "graves",
+        "aurora"
       ],
       "url": "https://www.metatft.com/pbe-comps#DA_Renegade19-DA_Graves19-DA_Zac19",
       "representativeUnits": [
@@ -460,7 +475,8 @@
       "teamId": "00000000-0000-4000-8000-000000000059",
       "carryIds": [
         "jhin",
-        "miss-fortune"
+        "miss-fortune",
+        "vladimir"
       ],
       "url": "https://www.metatft.com/pbe-comps#DA_Virtuosos19-DA_Thresh19",
       "sharedTeamIds": [
@@ -506,7 +522,8 @@
       "sectionId": "sample-block-0854",
       "teamId": "00000000-0000-4000-8000-000000001146",
       "carryIds": [
-        "ahri"
+        "ahri",
+        "nidalee"
       ],
       "url": "https://www.metatft.com/pbe-comps#DA_KDA19-DA_19_Ahri-DA_Garen19",
       "representativeUnits": [
@@ -612,7 +629,8 @@
       "sectionId": "sample-block-0251",
       "teamId": "00000000-0000-4000-8000-000000001261",
       "carryIds": [
-        "graves"
+        "graves",
+        "vayne"
       ],
       "url": "https://www.metatft.com/pbe-comps#DA_Juggernaut19-DA_Graves19",
       "representativeUnits": [
