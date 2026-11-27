@@ -15085,6 +15085,31 @@
           ]
         },
         {
+          "id": "sample-block-0171-ashe-h",
+          "type": "heading",
+          "level": 3,
+          "text": "八级 · 鳄鱼艾希双C",
+          "elements": [
+            {
+              "text_run": {
+                "content": "八级 · 鳄鱼艾希双C"
+              }
+            }
+          ]
+        },
+        {
+          "id": "sample-block-0171-ashe-t",
+          "type": "text",
+          "text": "反曲弓多且六级艾希来得顺时，卡 50 金同追雷克顿、艾希和俄洛伊三星；八级补加里奥、斯维因开五海之歌与四主唱，雷克顿带正义、无尽、血手打爆发，艾希拿羊刀、海妖、轻语兜底输出。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "反曲弓多且六级艾希来得顺时，卡 50 金同追雷克顿、艾希和俄洛伊三星；八级补加里奥、斯维因开五海之歌与四主唱，雷克顿带正义、无尽、血手打爆发，艾希拿羊刀、海妖、轻语兜底输出。"
+              }
+            }
+          ]
+        },
+        {
           "id": "sample-block-0171-loadouts",
           "type": "heading",
           "level": 3,
@@ -15129,6 +15154,18 @@
             {
               "text_run": {
                 "content": "棋盘配装 · 六级慢 D · 三海洋双泰坦\n主C：雷克顿。饮血剑、泰坦的坚决。\n主坦：俄洛伊。石像鬼石板甲、狂徒铠甲。\n功能装：艾希。轻语破甲。\n功能装：塔里克。日炎挂重伤。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "sample-block-0171-ashe-loadout",
+          "type": "text",
+          "text": "棋盘配装 · 八级 · 鳄鱼艾希双C\n主C：雷克顿。正义之手、无尽之刃、斯特拉克的挑战护手。\n主坦：俄洛伊。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副C：艾希。鬼索的狂暴之刃、海妖之怒、最后的轻语。\n功能装：塔里克。日炎斗篷。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "棋盘配装 · 八级 · 鳄鱼艾希双C\n主C：雷克顿。正义之手、无尽之刃、斯特拉克的挑战护手。\n主坦：俄洛伊。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副C：艾希。鬼索的狂暴之刃、海妖之怒、最后的轻语。\n功能装：塔里克。日炎斗篷。"
               }
             }
           ]
@@ -15381,6 +15418,87 @@
               "position": 13,
               "stars": 2,
               "items": []
+            }
+          ]
+        },
+        {
+          "id": "d78a44d5-edd8-4481-8efb-35333087cd33",
+          "name": "八级 · 鳄鱼艾希双C",
+          "category": "待分类",
+          "notes": "六级同追雷克顿、艾希、俄洛伊三星，八级补加里奥、斯维因开四主唱与五海之歌。",
+          "revision": 1,
+          "updatedAt": "2026-11-27T14:28:48.000Z",
+          "sectionId": "sample-block-0171",
+          "pieces": [
+            {
+              "instanceId": "be384f17-a55e-469c-9e4f-4fa940fa3c59",
+              "unitId": "illaoi",
+              "position": 3,
+              "stars": 3,
+              "items": [
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_WarmogsArmor",
+                "TFT_Item_Redemption"
+              ]
+            },
+            {
+              "instanceId": "fe594fc2-6395-419e-990b-ad249922be24",
+              "unitId": "zac",
+              "position": 8,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "c730aecc-5e13-45aa-aeec-7eed6ec1affc",
+              "unitId": "galio",
+              "position": 9,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "a8ec8cd0-2dbe-4c54-966b-68dd71c78168",
+              "unitId": "swain",
+              "position": 10,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "1a32f04a-bfed-405b-b633-59c65987117f",
+              "unitId": "taric",
+              "position": 11,
+              "stars": 2,
+              "items": [
+                "TFT_Item_RedBuff"
+              ]
+            },
+            {
+              "instanceId": "4aae1da7-8154-4284-bc20-8ea66df0442b",
+              "unitId": "renekton",
+              "position": 12,
+              "stars": 3,
+              "items": [
+                "TFT_Item_UnstableConcoction",
+                "TFT_Item_InfinityEdge",
+                "TFT_Item_SteraksGage"
+              ]
+            },
+            {
+              "instanceId": "5fefad62-b1d8-4836-866e-6f8220acf5f5",
+              "unitId": "zoe",
+              "position": 21,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "e63823d1-7526-495b-9db8-3cd0882fc7b4",
+              "unitId": "ashe",
+              "position": 27,
+              "stars": 3,
+              "items": [
+                "TFT_Item_GuinsoosRageblade",
+                "TFT_Item_RunaansHurricane",
+                "TFT_Item_LastWhisper"
+              ]
             }
           ]
         }
@@ -25928,6 +26046,682 @@
         "9ac0242d-2780-4c8e-856f-9d2a8c9a4bc7"
       ],
       "summaryBlockId": "true-damage-akali-start"
+    },
+    {
+      "id": "arcanist-mel-vladimir",
+      "title": "四法师梅尔吸血鬼",
+      "category": "高费阵容",
+      "blocks": [
+        {
+          "id": "arcanist-mel-vladimir-start",
+          "type": "text",
+          "text": "水滴、大棒多，前期能用安妮、斯维因带法装连胜或有经济强化冲九就走。梅尔负责重伤与减抗启动，弗拉基米尔和芮尔在九级补足后期伤害与前排上限。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "水滴、大棒多，前期能用安妮、斯维因带法装连胜或有经济强化冲九就走。梅尔负责重伤与减抗启动，弗拉基米尔和芮尔在九级补足后期伤害与前排上限。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "arcanist-mel-vladimir-tempo",
+          "type": "text",
+          "text": "打法：95",
+          "elements": [
+            {
+              "text_run": {
+                "content": "打法：95"
+              }
+            }
+          ]
+        },
+        {
+          "id": "arcanist-mel-vladimir-roll",
+          "type": "text",
+          "text": "法装前期先给安妮、佐伊或辛德拉打工，肉装先给内瑟斯或斯维因。八级搜出两星梅尔和两星蕾欧娜稳血即停 D 存钱上九，五费未两星前不要停在八级空抽。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "法装前期先给安妮、佐伊或辛德拉打工，肉装先给内瑟斯或斯维因。八级搜出两星梅尔和两星蕾欧娜稳血即停 D 存钱上九，五费未两星前不要停在八级空抽。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "arcanist-mel-vladimir-cap",
+          "type": "text",
+          "text": "九级补蒙多医生接主坦肉装并开双经纪人，聚光灯格优先给梅尔或弗拉基米尔。梅尔朔极之矛可换蓝霸符，虚空之杖可换珠光护手；弗拉基米尔适应性头盔可换莫雷洛秘典或灭世者的死亡之帽。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "九级补蒙多医生接主坦肉装并开双经纪人，聚光灯格优先给梅尔或弗拉基米尔。梅尔朔极之矛可换蓝霸符，虚空之杖可换珠光护手；弗拉基米尔适应性头盔可换莫雷洛秘典或灭世者的死亡之帽。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "arcanist-mel-vladimir-loadouts",
+          "type": "heading",
+          "level": 3,
+          "text": "各棋盘配装",
+          "elements": [
+            {
+              "text_run": {
+                "content": "各棋盘配装"
+              }
+            }
+          ]
+        },
+        {
+          "id": "arcanist-mel-vladimir-items-lv9",
+          "type": "text",
+          "text": "棋盘配装 · 九级 · 四法师梅尔吸血鬼\n主C：梅尔。朔极之矛、莫雷洛秘典、虚空之杖。\n主坦：蒙多医生。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副C：弗拉基米尔。蓝霸符、珠光护手、适应性头盔。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "棋盘配装 · 九级 · 四法师梅尔吸血鬼\n主C：梅尔。朔极之矛、莫雷洛秘典、虚空之杖。\n主坦：蒙多医生。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副C：弗拉基米尔。蓝霸符、珠光护手、适应性头盔。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "arcanist-mel-vladimir-items-lv8",
+          "type": "text",
+          "text": "棋盘配装 · 八级 · 四法师稳血过渡\n主C：梅尔。朔极之矛、莫雷洛秘典、虚空之杖。\n主坦：蕾欧娜。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副C：弗拉基米尔。蓝霸符、珠光护手、适应性头盔。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "棋盘配装 · 八级 · 四法师稳血过渡\n主C：梅尔。朔极之矛、莫雷洛秘典、虚空之杖。\n主坦：蕾欧娜。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副C：弗拉基米尔。蓝霸符、珠光护手、适应性头盔。"
+              }
+            }
+          ]
+        }
+      ],
+      "kind": "guide",
+      "teams": [
+        {
+          "id": "1c424859-acec-469d-afda-be5244334c5d",
+          "name": "九级 · 四法师梅尔吸血鬼",
+          "category": "待分类",
+          "notes": "蒙多医生配蕾欧娜开双经纪人，聚光灯格给梅尔或弗拉基米尔。",
+          "revision": 1,
+          "updatedAt": "2026-11-27T14:28:48.000Z",
+          "sectionId": "arcanist-mel-vladimir",
+          "pieces": [
+            {
+              "instanceId": "974366e3-ffc7-462d-ae46-3031872889b5",
+              "unitId": "dr-mundo",
+              "position": 3,
+              "stars": 2,
+              "items": [
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_WarmogsArmor",
+                "TFT_Item_Redemption"
+              ]
+            },
+            {
+              "instanceId": "222eacda-3422-4047-bfef-9675cee09a6b",
+              "unitId": "rell",
+              "position": 8,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "0414d25e-19d9-4380-97f4-dc3eb85d90ca",
+              "unitId": "leona",
+              "position": 9,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "15c4f91a-5399-4401-bd82-5e0badd13ab9",
+              "unitId": "nasus",
+              "position": 10,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "1b3bfffc-aa10-4954-a491-4f9394276906",
+              "unitId": "nunu-willump",
+              "position": 11,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "0a297a7c-9e32-4f45-b5bc-6a9243e44b52",
+              "unitId": "swain",
+              "position": 12,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "41cf2e67-52bc-4508-8d40-48d758a392a6",
+              "unitId": "vladimir",
+              "position": 21,
+              "stars": 2,
+              "items": [
+                "TFT_Item_BlueBuff",
+                "TFT_Item_JeweledGauntlet",
+                "TFT_Item_AdaptiveHelm"
+              ]
+            },
+            {
+              "instanceId": "08237c5c-1032-4fa8-91d8-687c6fc89589",
+              "unitId": "annie",
+              "position": 22,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "6710f9a0-9512-4ab7-b9c4-7977fc69d0bb",
+              "unitId": "mel",
+              "position": 27,
+              "stars": 2,
+              "items": [
+                "TFT_Item_SpearOfShojin",
+                "TFT_Item_Morellonomicon",
+                "TFT_Item_StatikkShiv"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "86805d25-91a4-4fc1-89fc-ae4d92b5022d",
+          "name": "八级 · 四法师稳血过渡",
+          "category": "待分类",
+          "notes": "九级补蒙多医生替换主坦肉装开双经纪人。",
+          "revision": 1,
+          "updatedAt": "2026-11-27T14:28:48.000Z",
+          "sectionId": "arcanist-mel-vladimir",
+          "pieces": [
+            {
+              "instanceId": "d91d1a9d-23b2-4098-bfca-8e61f0424f76",
+              "unitId": "leona",
+              "position": 3,
+              "stars": 2,
+              "items": [
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_WarmogsArmor",
+                "TFT_Item_Redemption"
+              ],
+              "alternate": {
+                "instanceId": "e1a5ebd2-7217-4f1a-b907-edd0231f12a8",
+                "unitId": "dr-mundo",
+                "stars": 2,
+                "items": [
+                  "TFT_Item_GargoyleStoneplate",
+                  "TFT_Item_WarmogsArmor",
+                  "TFT_Item_Redemption"
+                ]
+              }
+            },
+            {
+              "instanceId": "5c0b92ac-05dc-45f1-93cb-007ecd6b4acb",
+              "unitId": "rell",
+              "position": 8,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "a06765e7-7f96-474b-9b2f-a64068c2ed42",
+              "unitId": "nasus",
+              "position": 10,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "a0686211-49a7-4a9c-ba2f-36f0e7e14464",
+              "unitId": "nunu-willump",
+              "position": 11,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "acefdc77-9647-47c7-a3c2-70968cdbe58b",
+              "unitId": "swain",
+              "position": 12,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "e8f718a1-dbe4-4dec-9757-18e100e648a1",
+              "unitId": "vladimir",
+              "position": 21,
+              "stars": 1,
+              "items": [
+                "TFT_Item_BlueBuff",
+                "TFT_Item_JeweledGauntlet",
+                "TFT_Item_AdaptiveHelm"
+              ]
+            },
+            {
+              "instanceId": "a75a4363-c2e2-46aa-9600-d654695261a6",
+              "unitId": "annie",
+              "position": 22,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "21119bf0-3643-4c47-b103-3b8d42fc4ca1",
+              "unitId": "mel",
+              "position": 27,
+              "stars": 2,
+              "items": [
+                "TFT_Item_SpearOfShojin",
+                "TFT_Item_Morellonomicon",
+                "TFT_Item_StatikkShiv"
+              ]
+            }
+          ]
+        }
+      ],
+      "team": {
+        "id": "1c424859-acec-469d-afda-be5244334c5d",
+        "name": "九级 · 四法师梅尔吸血鬼",
+        "category": "待分类",
+        "notes": "蒙多医生配蕾欧娜开双经纪人，聚光灯格给梅尔或弗拉基米尔。",
+        "revision": 1,
+        "updatedAt": "2026-11-27T14:28:48.000Z",
+        "sectionId": "arcanist-mel-vladimir",
+        "pieces": [
+          {
+            "instanceId": "974366e3-ffc7-462d-ae46-3031872889b5",
+            "unitId": "dr-mundo",
+            "position": 3,
+            "stars": 2,
+            "items": [
+              "TFT_Item_GargoyleStoneplate",
+              "TFT_Item_WarmogsArmor",
+              "TFT_Item_Redemption"
+            ]
+          },
+          {
+            "instanceId": "222eacda-3422-4047-bfef-9675cee09a6b",
+            "unitId": "rell",
+            "position": 8,
+            "stars": 2,
+            "items": []
+          },
+          {
+            "instanceId": "0414d25e-19d9-4380-97f4-dc3eb85d90ca",
+            "unitId": "leona",
+            "position": 9,
+            "stars": 2,
+            "items": []
+          },
+          {
+            "instanceId": "15c4f91a-5399-4401-bd82-5e0badd13ab9",
+            "unitId": "nasus",
+            "position": 10,
+            "stars": 2,
+            "items": []
+          },
+          {
+            "instanceId": "1b3bfffc-aa10-4954-a491-4f9394276906",
+            "unitId": "nunu-willump",
+            "position": 11,
+            "stars": 2,
+            "items": []
+          },
+          {
+            "instanceId": "0a297a7c-9e32-4f45-b5bc-6a9243e44b52",
+            "unitId": "swain",
+            "position": 12,
+            "stars": 2,
+            "items": []
+          },
+          {
+            "instanceId": "41cf2e67-52bc-4508-8d40-48d758a392a6",
+            "unitId": "vladimir",
+            "position": 21,
+            "stars": 2,
+            "items": [
+              "TFT_Item_BlueBuff",
+              "TFT_Item_JeweledGauntlet",
+              "TFT_Item_AdaptiveHelm"
+            ]
+          },
+          {
+            "instanceId": "08237c5c-1032-4fa8-91d8-687c6fc89589",
+            "unitId": "annie",
+            "position": 22,
+            "stars": 2,
+            "items": []
+          },
+          {
+            "instanceId": "6710f9a0-9512-4ab7-b9c4-7977fc69d0bb",
+            "unitId": "mel",
+            "position": 27,
+            "stars": 2,
+            "items": [
+              "TFT_Item_SpearOfShojin",
+              "TFT_Item_Morellonomicon",
+              "TFT_Item_StatikkShiv"
+            ]
+          }
+        ]
+      },
+      "primaryTeamId": "1c424859-acec-469d-afda-be5244334c5d",
+      "stageTeamIds": [
+        "86805d25-91a4-4fc1-89fc-ae4d92b5022d"
+      ],
+      "summaryBlockId": "arcanist-mel-vladimir-start"
+    },
+    {
+      "id": "renegade-qiyana-samira",
+      "title": "五非主流奇亚娜莎弥拉",
+      "category": "慢搜阵容",
+      "blocks": [
+        {
+          "id": "renegade-qiyana-samira-start",
+          "type": "text",
+          "text": "【特殊运营门槛】二阶段手里已有至少 3 张奇亚娜或莎弥拉、且大剑与拳套充足再进；缺牌或未追出双三星强度断崖下跌，严禁空城硬玩。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "【特殊运营门槛】二阶段手里已有至少 3 张奇亚娜或莎弥拉、且大剑与拳套充足再进；缺牌或未追出双三星强度断崖下跌，严禁空城硬玩。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "renegade-qiyana-samira-tempo",
+          "type": "text",
+          "text": "打法：二费慢搜",
+          "elements": [
+            {
+              "text_run": {
+                "content": "打法：二费慢搜"
+              }
+            }
+          ]
+        },
+        {
+          "id": "renegade-qiyana-samira-roll",
+          "type": "text",
+          "text": "3-2 拉六凑三非主流、三真实伤害、双护卫、双古典乐，卡 50 金慢搜三星奇亚娜与三星莎弥拉，内瑟斯数量多顺手追三。最晚 4-5 前必须搜出双三星锁血。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "3-2 拉六凑三非主流、三真实伤害、双护卫、双古典乐，卡 50 金慢搜三星奇亚娜与三星莎弥拉，内瑟斯数量多顺手追三。最晚 4-5 前必须搜出双三星锁血。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "renegade-qiyana-samira-cap",
+          "type": "text",
+          "text": "奇亚娜饮血剑可换斯特拉克的挑战护手或泰坦的坚决；莎弥拉朔极之矛可换死亡之刃或巨人杀手。双三星成型后存钱上八补格雷福斯、阿萝拉开五非主流；高经济解锁派克后替换格雷福斯。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "奇亚娜饮血剑可换斯特拉克的挑战护手或泰坦的坚决；莎弥拉朔极之矛可换死亡之刃或巨人杀手。双三星成型后存钱上八补格雷福斯、阿萝拉开五非主流；高经济解锁派克后替换格雷福斯。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "renegade-qiyana-samira-loadouts",
+          "type": "heading",
+          "level": 3,
+          "text": "各棋盘配装",
+          "elements": [
+            {
+              "text_run": {
+                "content": "各棋盘配装"
+              }
+            }
+          ]
+        },
+        {
+          "id": "renegade-qiyana-samira-items-lv6",
+          "type": "text",
+          "text": "棋盘配装 · 六级 · 非主流奇亚娜莎弥拉\n主C：奇亚娜。正义之手、夜之锋刃、饮血剑。\n主坦：内瑟斯。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副C：莎弥拉。无尽之刃、最后的轻语、朔极之矛。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "棋盘配装 · 六级 · 非主流奇亚娜莎弥拉\n主C：奇亚娜。正义之手、夜之锋刃、饮血剑。\n主坦：内瑟斯。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副C：莎弥拉。无尽之刃、最后的轻语、朔极之矛。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "renegade-qiyana-samira-items-lv8",
+          "type": "text",
+          "text": "棋盘配装 · 八级 · 五非主流补齐\n主C：奇亚娜。正义之手、夜之锋刃、饮血剑。\n主坦：内瑟斯。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副C：莎弥拉。无尽之刃、最后的轻语、朔极之矛。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "棋盘配装 · 八级 · 五非主流补齐\n主C：奇亚娜。正义之手、夜之锋刃、饮血剑。\n主坦：内瑟斯。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副C：莎弥拉。无尽之刃、最后的轻语、朔极之矛。"
+              }
+            }
+          ]
+        }
+      ],
+      "kind": "guide",
+      "teams": [
+        {
+          "id": "9c60581e-2adb-400b-be09-8e04fb2bdef2",
+          "name": "六级 · 非主流奇亚娜莎弥拉",
+          "category": "待分类",
+          "notes": "六级卡 50 金追奇亚娜、莎弥拉双三星，顺带追三星内瑟斯。",
+          "revision": 1,
+          "updatedAt": "2026-11-27T14:28:48.000Z",
+          "sectionId": "renegade-qiyana-samira",
+          "pieces": [
+            {
+              "instanceId": "c2d05a0d-6ba7-4445-8e33-a2c5948bde24",
+              "unitId": "nasus",
+              "position": 3,
+              "stars": 3,
+              "items": [
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_WarmogsArmor",
+                "TFT_Item_Redemption"
+              ]
+            },
+            {
+              "instanceId": "96cdcfd3-04db-4d8d-a6dd-e77a486e5a71",
+              "unitId": "evelynn",
+              "position": 7,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "851562cc-bddb-4ed0-9aa9-994bf2472b4c",
+              "unitId": "kennen",
+              "position": 9,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "1dbbfe25-3768-4ed3-809c-bfa47bcd98f4",
+              "unitId": "ekko",
+              "position": 10,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "c68fc65b-f52a-4440-bae6-31abe6eff2a2",
+              "unitId": "qiyana",
+              "position": 12,
+              "stars": 3,
+              "items": [
+                "TFT_Item_UnstableConcoction",
+                "TFT_Item_GuardianAngel",
+                "TFT_Item_Bloodthirster"
+              ]
+            },
+            {
+              "instanceId": "e1b7513a-aac1-4159-8bbb-444fc86c8695",
+              "unitId": "samira",
+              "position": 27,
+              "stars": 3,
+              "items": [
+                "TFT_Item_InfinityEdge",
+                "TFT_Item_LastWhisper",
+                "TFT_Item_SpearOfShojin"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "69b58664-27f4-4404-b4fb-1475fe1583ff",
+          "name": "八级 · 五非主流补齐",
+          "category": "待分类",
+          "notes": "解锁派克后可替换格雷福斯保五非主流并提上限。",
+          "revision": 1,
+          "updatedAt": "2026-11-27T14:28:48.000Z",
+          "sectionId": "renegade-qiyana-samira",
+          "pieces": [
+            {
+              "instanceId": "ab0c52c9-1e68-4684-b55e-d6bf1edf7bf0",
+              "unitId": "nasus",
+              "position": 3,
+              "stars": 3,
+              "items": [
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_WarmogsArmor",
+                "TFT_Item_Redemption"
+              ]
+            },
+            {
+              "instanceId": "a195078a-b175-4c39-993f-6c82b7a91c0a",
+              "unitId": "evelynn",
+              "position": 7,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "053f0994-635d-40b9-8d7f-a7fc93ce8993",
+              "unitId": "kennen",
+              "position": 9,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "19f3ebe5-b7b7-4a14-8ea3-60936e9e203a",
+              "unitId": "ekko",
+              "position": 10,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "e81c77de-af25-4dfe-9c1d-a29e02abfa91",
+              "unitId": "qiyana",
+              "position": 12,
+              "stars": 3,
+              "items": [
+                "TFT_Item_UnstableConcoction",
+                "TFT_Item_GuardianAngel",
+                "TFT_Item_Bloodthirster"
+              ]
+            },
+            {
+              "instanceId": "fdf290d1-e309-445a-b5d9-b722d4e60f84",
+              "unitId": "samira",
+              "position": 27,
+              "stars": 3,
+              "items": [
+                "TFT_Item_InfinityEdge",
+                "TFT_Item_LastWhisper",
+                "TFT_Item_SpearOfShojin"
+              ]
+            },
+            {
+              "instanceId": "70462cc5-15e6-4725-9e30-de3e826aac64",
+              "unitId": "graves",
+              "position": 8,
+              "stars": 2,
+              "items": [],
+              "alternate": {
+                "instanceId": "e194109d-4f10-47ad-b8f6-0a1a42f8aee9",
+                "unitId": "pyke",
+                "stars": 2,
+                "items": []
+              }
+            },
+            {
+              "instanceId": "f0bdd6d3-e25d-4a0f-8142-81d529cf47bc",
+              "unitId": "aurora",
+              "position": 21,
+              "stars": 2,
+              "items": []
+            }
+          ]
+        }
+      ],
+      "team": {
+        "id": "9c60581e-2adb-400b-be09-8e04fb2bdef2",
+        "name": "六级 · 非主流奇亚娜莎弥拉",
+        "category": "待分类",
+        "notes": "六级卡 50 金追奇亚娜、莎弥拉双三星，顺带追三星内瑟斯。",
+        "revision": 1,
+        "updatedAt": "2026-11-27T14:28:48.000Z",
+        "sectionId": "renegade-qiyana-samira",
+        "pieces": [
+          {
+            "instanceId": "c2d05a0d-6ba7-4445-8e33-a2c5948bde24",
+            "unitId": "nasus",
+            "position": 3,
+            "stars": 3,
+            "items": [
+              "TFT_Item_GargoyleStoneplate",
+              "TFT_Item_WarmogsArmor",
+              "TFT_Item_Redemption"
+            ]
+          },
+          {
+            "instanceId": "96cdcfd3-04db-4d8d-a6dd-e77a486e5a71",
+            "unitId": "evelynn",
+            "position": 7,
+            "stars": 2,
+            "items": []
+          },
+          {
+            "instanceId": "851562cc-bddb-4ed0-9aa9-994bf2472b4c",
+            "unitId": "kennen",
+            "position": 9,
+            "stars": 2,
+            "items": []
+          },
+          {
+            "instanceId": "1dbbfe25-3768-4ed3-809c-bfa47bcd98f4",
+            "unitId": "ekko",
+            "position": 10,
+            "stars": 2,
+            "items": []
+          },
+          {
+            "instanceId": "c68fc65b-f52a-4440-bae6-31abe6eff2a2",
+            "unitId": "qiyana",
+            "position": 12,
+            "stars": 3,
+            "items": [
+              "TFT_Item_UnstableConcoction",
+              "TFT_Item_GuardianAngel",
+              "TFT_Item_Bloodthirster"
+            ]
+          },
+          {
+            "instanceId": "e1b7513a-aac1-4159-8bbb-444fc86c8695",
+            "unitId": "samira",
+            "position": 27,
+            "stars": 3,
+            "items": [
+              "TFT_Item_InfinityEdge",
+              "TFT_Item_LastWhisper",
+              "TFT_Item_SpearOfShojin"
+            ]
+          }
+        ]
+      },
+      "primaryTeamId": "9c60581e-2adb-400b-be09-8e04fb2bdef2",
+      "stageTeamIds": [
+        "69b58664-27f4-4404-b4fb-1475fe1583ff"
+      ],
+      "summaryBlockId": "renegade-qiyana-samira-start"
     }
   ],
   "season": {
