@@ -127,6 +127,7 @@ const guideSlugs: Record<string, GuideSlugs> = {
     "00000000-0000-4000-8000-000000000032": "lv6-seraphine",
     "00000000-0000-4000-8000-000000000079": "lv6",
     "00000000-0000-4000-8000-000000000100": "lv8-seraphine",
+    "d78a44d5-edd8-4481-8efb-35333087cd33": "lv8-ashe",
   } },
   "sample-block-0466": { slug: "rider-annie", boards: {
     "00000000-0000-4000-8000-000000000035": "lv8",
@@ -216,6 +217,14 @@ const guideSlugs: Record<string, GuideSlugs> = {
   "true-damage-akali": { slug: "true-damage-akali", boards: {
     "bace6643-9e7b-4b21-9ceb-36e58a535ee4": "lv9",
     "9ac0242d-2780-4c8e-856f-9d2a8c9a4bc7": "lv8",
+  } },
+  "arcanist-mel-vladimir": { slug: "arcanist-mel-vladimir", boards: {
+    "1c424859-acec-469d-afda-be5244334c5d": "lv9",
+    "86805d25-91a4-4fc1-89fc-ae4d92b5022d": "lv8",
+  } },
+  "renegade-qiyana-samira": { slug: "renegade-qiyana-samira", boards: {
+    "9c60581e-2adb-400b-be09-8e04fb2bdef2": "lv6",
+    "69b58664-27f4-4404-b4fb-1475fe1583ff": "lv8",
   } },
 };
 
