@@ -6175,6 +6175,11 @@
           ],
           "level": 0,
           "text": "TFTAcademy 同侧原盘"
+        },
+        {
+          "id": "web-ezreal-illaoi-shyvana-roles",
+          "type": "text",
+          "text": "棋盘配装 · 八级 · 俄洛伊希瓦娜前排\n主C：伊泽瑞尔。蓝霸符、无尽之刃、强袭者的链枷。\n主坦：希瓦娜。冕卫、石像鬼石板甲、狂徒铠甲。\n副C：卢锡安。朔极之矛、最后的轻语、红霸符。"
         }
       ],
       "kind": "guide",
@@ -7634,7 +7639,8 @@
               "stars": 2,
               "items": [
                 "TFT_Item_GargoyleStoneplate",
-                "TFT_Item_WarmogsArmor"
+                "TFT_Item_WarmogsArmor",
+                "TFT_Item_Redemption"
               ]
             },
             {
@@ -7703,7 +7709,9 @@
               "position": 3,
               "stars": 2,
               "items": [
-                "TFT_Item_GargoyleStoneplate"
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_WarmogsArmor",
+                "TFT_Item_Redemption"
               ]
             },
             {
@@ -7721,7 +7729,9 @@
               "position": 22,
               "stars": 2,
               "items": [
-                "TFT_Item_SpearOfShojin"
+                "TFT_Item_SpearOfShojin",
+                "TFT_Item_JeweledGauntlet",
+                "TFT_Item_PowerGauntlet"
               ]
             },
             {
@@ -8480,7 +8490,8 @@
               "stars": 2,
               "items": [
                 "TFT_Item_WarmogsArmor",
-                "TFT_Item_GargoyleStoneplate"
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_Crownguard"
               ]
             },
             {
@@ -8550,7 +8561,9 @@
               "position": 3,
               "stars": 2,
               "items": [
-                "TFT_Item_WarmogsArmor"
+                "TFT_Item_WarmogsArmor",
+                "TFT_Item_RedBuff",
+                "TFT_Item_IonicSpark"
               ]
             },
             {
@@ -8576,7 +8589,8 @@
               "stars": 2,
               "items": [
                 "TFT_Item_SpearOfShojin",
-                "TFT_Item_ArchangelsStaff"
+                "TFT_Item_ArchangelsStaff",
+                "TFT_Item_HextechGunblade"
               ]
             },
             {
@@ -8787,7 +8801,8 @@
             "stars": 2,
             "items": [
               "TFT_Item_WarmogsArmor",
-              "TFT_Item_GargoyleStoneplate"
+              "TFT_Item_GargoyleStoneplate",
+              "TFT_Item_Crownguard"
             ]
           },
           {
@@ -9224,7 +9239,8 @@
               "stars": 2,
               "items": [
                 "TFT_Item_GargoyleStoneplate",
-                "TFT_Item_WarmogsArmor"
+                "TFT_Item_WarmogsArmor",
+                "TFT_Item_Redemption"
               ]
             },
             {
@@ -9248,7 +9264,8 @@
               "stars": 2,
               "items": [
                 "TFT_Item_SpearOfShojin",
-                "TFT_Item_InfinityEdge"
+                "TFT_Item_InfinityEdge",
+                "TFT_Item_Deathblade"
               ]
             },
             {
@@ -9374,7 +9391,8 @@
             "stars": 2,
             "items": [
               "TFT_Item_GargoyleStoneplate",
-              "TFT_Item_WarmogsArmor"
+              "TFT_Item_WarmogsArmor",
+              "TFT_Item_Redemption"
             ]
           },
           {
@@ -9398,7 +9416,8 @@
             "stars": 2,
             "items": [
               "TFT_Item_SpearOfShojin",
-              "TFT_Item_InfinityEdge"
+              "TFT_Item_InfinityEdge",
+              "TFT_Item_Deathblade"
             ]
           },
           {
@@ -10465,7 +10484,7 @@
         {
           "id": "sample-block-0342",
           "type": "text",
-          "text": "主坦：蕾欧娜、蒙多医生。石像鬼、狂徒、振奋。"
+          "text": "主坦：蒙多医生。石像鬼、狂徒、振奋。"
         },
         {
           "id": "sample-block-0336",
@@ -10796,6 +10815,11 @@
               }
             }
           ]
+        },
+        {
+          "id": "web-zeri-kayle-transition-roles",
+          "type": "text",
+          "text": "棋盘配装 · 八级稳血 · 凯尔打工\n主C：凯尔。朔极之矛、无尽之刃、强袭者的链枷。\n主坦：蕾欧娜。石像鬼石板甲、狂徒铠甲、振奋盔甲。"
         }
       ],
       "kind": "guide",
@@ -13327,7 +13351,8 @@
               "stars": 2,
               "items": [
                 "TFT_Item_GargoyleStoneplate",
-                "TFT_Item_IonicSpark"
+                "TFT_Item_IonicSpark",
+                "TFT_Item_Redemption"
               ]
             },
             {
@@ -13389,7 +13414,8 @@
               "stars": 2,
               "items": [
                 "TFT_Item_GargoyleStoneplate",
-                "TFT_Item_IonicSpark"
+                "TFT_Item_IonicSpark",
+                "TFT_Item_Redemption"
               ]
             },
             {
@@ -13413,7 +13439,8 @@
               "stars": 2,
               "items": [
                 "emblem-k-da",
-                "TFT_Item_SpearOfShojin"
+                "TFT_Item_SpearOfShojin",
+                "TFT_Item_JeweledGauntlet"
               ]
             }
           ]
@@ -13514,7 +13541,8 @@
             "stars": 2,
             "items": [
               "TFT_Item_GargoyleStoneplate",
-              "TFT_Item_IonicSpark"
+              "TFT_Item_IonicSpark",
+              "TFT_Item_Redemption"
             ]
           },
           {
@@ -13838,7 +13866,8 @@
               "stars": 2,
               "items": [
                 "TFT_Item_GargoyleStoneplate",
-                "TFT_Item_WarmogsArmor"
+                "TFT_Item_WarmogsArmor",
+                "TFT_Item_Redemption"
               ]
             },
             {
@@ -13861,7 +13890,8 @@
               "stars": 2,
               "items": [
                 "TFT_Item_GuinsoosRageblade",
-                "TFT_Item_LastWhisper"
+                "TFT_Item_LastWhisper",
+                "TFT_Item_InfinityEdge"
               ]
             },
             {
@@ -13899,7 +13929,8 @@
             "stars": 2,
             "items": [
               "TFT_Item_GargoyleStoneplate",
-              "TFT_Item_WarmogsArmor"
+              "TFT_Item_WarmogsArmor",
+              "TFT_Item_Redemption"
             ]
           },
           {
@@ -13922,7 +13953,8 @@
             "stars": 2,
             "items": [
               "TFT_Item_GuinsoosRageblade",
-              "TFT_Item_LastWhisper"
+              "TFT_Item_LastWhisper",
+              "TFT_Item_InfinityEdge"
             ]
           },
           {
@@ -14727,7 +14759,8 @@
               "stars": 2,
               "items": [
                 "TFT_Item_IonicSpark",
-                "TFT_Item_UnstableConcoction"
+                "TFT_Item_UnstableConcoction",
+                "TFT_Item_GuardianAngel"
               ]
             },
             {
@@ -14737,7 +14770,8 @@
               "stars": 2,
               "items": [
                 "TFT_Item_GargoyleStoneplate",
-                "TFT_Item_WarmogsArmor"
+                "TFT_Item_WarmogsArmor",
+                "TFT_Item_RedBuff"
               ]
             },
             {
@@ -15145,11 +15179,11 @@
         {
           "id": "sample-block-0118",
           "type": "text",
-          "text": "棋盘配装 · 八级成型 · 五海洋\n主C：雷克顿。饮血剑、泰坦的坚决、斯特拉克的挑战护手。\n主坦：俄洛伊。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n主坦：扎克。升星后接对应余装。\n副C：格雷福斯。正义之手。\n功能装：艾希。轻语破甲。\n功能装：塔里克。日炎挂重伤。",
+          "text": "棋盘配装 · 八级成型 · 五海洋\n主C：雷克顿。饮血剑、泰坦的坚决、斯特拉克的挑战护手。\n主坦：俄洛伊。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副坦：扎克。升星后接对应余装。\n副C：格雷福斯。正义之手。\n功能装：艾希。轻语破甲。\n功能装：塔里克。日炎挂重伤。",
           "elements": [
             {
               "text_run": {
-                "content": "棋盘配装 · 八级成型 · 五海洋\n主C：雷克顿。饮血剑、泰坦的坚决、斯特拉克的挑战护手。\n主坦：俄洛伊。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n主坦：扎克。升星后接对应余装。\n副C：格雷福斯。正义之手。\n功能装：艾希。轻语破甲。\n功能装：塔里克。日炎挂重伤。"
+                "content": "棋盘配装 · 八级成型 · 五海洋\n主C：雷克顿。饮血剑、泰坦的坚决、斯特拉克的挑战护手。\n主坦：俄洛伊。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副坦：扎克。升星后接对应余装。\n副C：格雷福斯。正义之手。\n功能装：艾希。轻语破甲。\n功能装：塔里克。日炎挂重伤。"
               }
             }
           ]
@@ -15362,7 +15396,8 @@
               "stars": 2,
               "items": [
                 "TFT_Item_Bloodthirster",
-                "TFT_Item_TitansResolve"
+                "TFT_Item_TitansResolve",
+                "TFT_Item_SteraksGage"
               ]
             },
             {
@@ -15372,7 +15407,8 @@
               "stars": 2,
               "items": [
                 "TFT_Item_GargoyleStoneplate",
-                "TFT_Item_WarmogsArmor"
+                "TFT_Item_WarmogsArmor",
+                "TFT_Item_Redemption"
               ]
             },
             {
@@ -16038,7 +16074,8 @@
               "stars": 2,
               "items": [
                 "TFT_Item_Leviathan",
-                "TFT_Item_JeweledGauntlet"
+                "TFT_Item_JeweledGauntlet",
+                "TFT_Item_PowerGauntlet"
               ]
             },
             {
@@ -16048,7 +16085,8 @@
               "stars": 2,
               "items": [
                 "TFT_Item_GargoyleStoneplate",
-                "TFT_Item_WarmogsArmor"
+                "TFT_Item_WarmogsArmor",
+                "TFT_Item_Crownguard"
               ]
             },
             {
@@ -16699,7 +16737,9 @@
               "position": 1,
               "stars": 2,
               "items": [
-                "TFT_Item_GargoyleStoneplate"
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_WarmogsArmor",
+                "TFT_Item_Crownguard"
               ]
             },
             {
@@ -16718,7 +16758,8 @@
               "stars": 2,
               "items": [
                 "TFT_Item_RabadonsDeathcap",
-                "TFT_Item_HextechGunblade"
+                "TFT_Item_HextechGunblade",
+                "TFT_Item_JeweledGauntlet"
               ]
             },
             {
@@ -17620,7 +17661,8 @@
               "stars": 2,
               "items": [
                 "TFT_Item_GargoyleStoneplate",
-                "TFT_Item_RedBuff"
+                "TFT_Item_RedBuff",
+                "TFT_Item_WarmogsArmor"
               ]
             },
             {
@@ -17637,7 +17679,8 @@
               "stars": 2,
               "items": [
                 "TFT_Item_BlueBuff",
-                "TFT_Item_JeweledGauntlet"
+                "TFT_Item_JeweledGauntlet",
+                "TFT_Item_HextechGunblade"
               ]
             },
             {
@@ -17925,7 +17968,8 @@
               "stars": 3,
               "items": [
                 "TFT_Item_GargoyleStoneplate",
-                "TFT_Item_NightHarvester"
+                "TFT_Item_NightHarvester",
+                "TFT_Item_WarmogsArmor"
               ]
             },
             {
@@ -17934,7 +17978,9 @@
               "position": 5,
               "stars": 2,
               "items": [
-                "TFT_Item_WarmogsArmor"
+                "TFT_Item_WarmogsArmor",
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_Redemption"
               ]
             },
             {
@@ -17999,7 +18045,8 @@
               "stars": 2,
               "items": [
                 "TFT_Item_GuinsoosRageblade",
-                "TFT_Item_RunaansHurricane"
+                "TFT_Item_RunaansHurricane",
+                "TFT_Item_InfinityEdge"
               ]
             },
             {
@@ -18009,7 +18056,8 @@
               "stars": 2,
               "items": [
                 "TFT_Item_GargoyleStoneplate",
-                "TFT_Item_NightHarvester"
+                "TFT_Item_NightHarvester",
+                "TFT_Item_WarmogsArmor"
               ]
             },
             {
@@ -18071,7 +18119,8 @@
             "stars": 3,
             "items": [
               "TFT_Item_GargoyleStoneplate",
-              "TFT_Item_NightHarvester"
+              "TFT_Item_NightHarvester",
+              "TFT_Item_WarmogsArmor"
             ]
           },
           {
@@ -18080,7 +18129,9 @@
             "position": 5,
             "stars": 2,
             "items": [
-              "TFT_Item_WarmogsArmor"
+              "TFT_Item_WarmogsArmor",
+              "TFT_Item_GargoyleStoneplate",
+              "TFT_Item_Redemption"
             ]
           },
           {
@@ -18638,7 +18689,8 @@
               "stars": 2,
               "items": [
                 "TFT_Item_Bloodthirster",
-                "TFT_Item_TitansResolve"
+                "TFT_Item_TitansResolve",
+                "TFT_Item_SteraksGage"
               ]
             },
             {
@@ -18648,7 +18700,8 @@
               "stars": 2,
               "items": [
                 "TFT_Item_GargoyleStoneplate",
-                "TFT_Item_RedBuff"
+                "TFT_Item_RedBuff",
+                "TFT_Item_WarmogsArmor"
               ]
             },
             {
@@ -20449,7 +20502,8 @@
               "stars": 2,
               "items": [
                 "TFT_Item_GargoyleStoneplate",
-                "TFT_Item_WarmogsArmor"
+                "TFT_Item_WarmogsArmor",
+                "TFT_Item_Crownguard"
               ]
             },
             {
@@ -20473,7 +20527,8 @@
               "stars": 2,
               "items": [
                 "TFT_Item_InfinityEdge",
-                "TFT_Item_Deathblade"
+                "TFT_Item_Deathblade",
+                "TFT_Item_MadredsBloodrazor"
               ]
             },
             {
@@ -22495,7 +22550,7 @@
           "elements": [
             {
               "text_run": {
-                "content": "棋盘配装 · 六级 · 三海四法开门\n主C：佐伊。先做回蓝和法强。\n副C：卡尔萨斯。带第二套法装，缺重伤可带鬼书。\n主坦：安妮。\n",
+                "content": "棋盘配装 · 六级 · 三海四法开门\n主C：佐伊。先做回蓝和法强。\n副C：卡尔萨斯。带第二套法装，缺重伤可带鬼书。\n主坦：安妮。狂徒铠甲、石像鬼石板甲、振奋盔甲。\n",
                 "text_element_style": {
                   "bold": false,
                   "inline_code": false,
@@ -22519,7 +22574,7 @@
             }
           ],
           "level": 0,
-          "text": "棋盘配装 · 六级 · 三海四法开门\n主C：佐伊。先做回蓝和法强。\n副C：卡尔萨斯。带第二套法装，缺重伤可带鬼书。\n主坦：安妮。\n功能装：塔里克。离子火花补减抗。"
+          "text": "棋盘配装 · 六级 · 三海四法开门\n主C：佐伊。先做回蓝和法强。\n副C：卡尔萨斯。带第二套法装，缺重伤可带鬼书。\n主坦：安妮。狂徒铠甲、石像鬼石板甲、振奋盔甲。\n功能装：塔里克。离子火花补减抗。"
         },
         {
           "id": "sample-block-1050",
@@ -22527,7 +22582,7 @@
           "elements": [
             {
               "text_run": {
-                "content": "棋盘配装 · 八级 · 三海六法开门\n主C：佐伊。先做回蓝和法强。\n副C：卡尔萨斯。带第二套法装，缺重伤可带鬼书。\n主坦：安妮。\n",
+                "content": "棋盘配装 · 八级 · 三海六法开门\n主C：佐伊。先做回蓝和法强。\n副C：卡尔萨斯。带第二套法装，缺重伤可带鬼书。\n主坦：安妮。狂徒铠甲、石像鬼石板甲、振奋盔甲。\n",
                 "text_element_style": {
                   "bold": false,
                   "inline_code": false,
@@ -22551,7 +22606,17 @@
             }
           ],
           "level": 0,
-          "text": "棋盘配装 · 八级 · 三海六法开门\n主C：佐伊。先做回蓝和法强。\n副C：卡尔萨斯。带第二套法装，缺重伤可带鬼书。\n主坦：安妮。\n功能装：塔里克。离子火花补减抗。"
+          "text": "棋盘配装 · 八级 · 三海六法开门\n主C：佐伊。先做回蓝和法强。\n副C：卡尔萨斯。带第二套法装，缺重伤可带鬼书。\n主坦：安妮。狂徒铠甲、石像鬼石板甲、振奋盔甲。\n功能装：塔里克。离子火花补减抗。"
+        },
+        {
+          "id": "web-ocean-zoe-nine-roles",
+          "type": "text",
+          "text": "棋盘配装 · 九级 · 七海之歌佐伊双法\n主C：佐伊。朔极之矛、珠光护手、海克斯科技枪刃。\n主坦：雷克顿。石像鬼石板甲、狂徒铠甲、日炎斗篷。"
+        },
+        {
+          "id": "web-ocean-zoe-eight-roles",
+          "type": "text",
+          "text": "棋盘配装 · 八级 · 七海之歌佐伊\n主C：佐伊。蓝霸符、珠光护手、灭世者的死亡之帽。\n主坦：雷克顿。石像鬼石板甲、虚空护手、冕卫。\n副C：艾希。死亡之刃、鬼索的狂暴之刃、海妖之怒。"
         }
       ],
       "kind": "guide",
@@ -23100,6 +23165,11 @@
           ],
           "level": 0,
           "text": "19.1b 六法四主宰＋三星三件卡尔萨斯 39 场。重点先看八级三五杀＋同样带装的卡尔萨斯，208 场、平均排名 4.22。19.1a 六法四主宰同主 C 口径 134 场、3.60。图示原九人当前未查到，旧版 8 场。当前九级登顶示例，名单和配装来自实战，站位为示意。"
+        },
+        {
+          "id": "web-spellweaver-karthus-nine-roles",
+          "type": "text",
+          "text": "棋盘配装 · 九级 · 六法四主宰卡尔萨斯梅尔\n主C：卡尔萨斯。海克斯科技枪刃、珠光护手、蓝霸符。\n主坦：安妮。狂徒铠甲、石像鬼石板甲、振奋盔甲。\n副C：梅尔。朔极之矛、莫雷洛秘典、虚空之杖。\n副坦：斯维因。石像鬼石板甲、石像鬼石板甲、冕卫。"
         }
       ],
       "kind": "guide",
@@ -23373,6 +23443,11 @@
           ],
           "level": 0,
           "text": "截图原九人 19.1b 找到 1 场，拉露恩和悠米均两星三件，第 4 名。九级无纹章的双二星三件核心，现版 13 场，旧版 67 场。九级无纹章只锁两人共现的 130 场平均排名 3.40，包含其他构筑。适合作为顺风变阵。原名单实战，棋盘用该局实戴装备，站位为示意。"
+        },
+        {
+          "id": "web-headliner-alune-yuumi-nine-roles",
+          "type": "text",
+          "text": "棋盘配装 · 九级 · 三大触三经纪拉露恩悠米\n主C：拉露恩。虚空之杖、莫雷洛秘典、朔极之矛。\n主C：悠米。珠光护手、朔极之矛、巨人杀手。\n主坦：蒙多医生。石像鬼石板甲、冕卫、适应性头盔。"
         }
       ],
       "kind": "guide",
