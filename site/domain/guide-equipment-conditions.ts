@@ -1,5 +1,5 @@
 import { itemMap, unitMap } from "@/data";
-import { GUIDE_SECTION_IDS } from "./guide-identities.ts";
+import { GUIDE_SECTION_IDS, PYKE_GRAVES_BOARD_ID } from "./guide-identities.ts";
 import { augmentArtPath } from "@/data/augment-art";
 import augmentCatalog from "@/data/augment-catalog.json";
 import currentPatch from "@/data/current-patch.json";
@@ -94,6 +94,12 @@ const guideConditions: Partial<Record<string, {
   conditions: [
     { itemId: "emblem-rock", kind: "option", featured: true },
     { itemId: "TFT_Item_ForceOfNature", kind: "option", featured: true },
+  ],
+}, [GUIDE_SECTION_IDS.oceanGraves]: {
+  boardId: PYKE_GRAVES_BOARD_ID,
+  label: "五非主流派克男枪",
+  conditions: [
+    { itemId: "emblem-renegade", recipientId: "vi", kind: "option", action: "有非主流纹章直接给蔚（或九级补崔斯特）吃暴击与 10% 减伤，换下奇亚娜，八级即可提前开 5 非主流稳血。" },
   ],
 } };
 
