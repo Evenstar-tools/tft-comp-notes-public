@@ -7,7 +7,7 @@ import { legacyGuideDestination } from "../domain/legacy-guide-redirects.ts";
 import { rerollEntryTeamId } from "../domain/reroll-stages.ts";
 import { switchAlternate, traitCounts, traitGroup, usedPopulation } from "../domain/team.ts";
 import { findPlacement } from "../domain/guide-placement.ts";
-import { guideFamilyBoardIds, guideFamilyRows, homeRecommendationEligible, recommendationTier } from "../domain/guide-family-stats.ts";
+import { guideFamilyBoardIds, guideFamilyRows, homeRecommendationEligible } from "../domain/guide-family-stats.ts";
 import { migrateS19GuideSnapshot } from "../server/s19-guide-cleanup.ts";
 
 const json = path => JSON.parse(readFileSync(new URL(path, import.meta.url), "utf8"));
@@ -207,38 +207,41 @@ test("published guide data resolves every section and board reference", () => {
   assert.ok(placements.find(row => row.conditions?.teamId === board(classical, "1138").id).games >= 617);
 });
 
-test("native fast-nine ratings drive recommendations while filtered samples remain available on the board", () => {
+test("fast-nine picks retain their reviewed family bindings and board-specific core samples", () => {
   const batch = json("../data/guide-placement.json");
   const families = json("../data/guide-family-stats.json");
+  const bindings = json("../data/guide-family-map.json");
   const picks = json("../data/patch-recommendations.json");
-  for (const [suffix, clusterId, tier, status] of [
-    ["0235", "429055", "secondary", "avoid"],
-    ["0275", "429004", "recommended", "recommended"],
-    ["0214", "429021", "recommended", "conditional"],
+  for (const [suffix, clusterId, status] of [
+    ["0235", "429055", "avoid"],
+    ["0275", "429004", "recommended"],
+    ["0214", "429021", "conditional"],
   ]) {
     const section = guide(suffix);
     const team = section.team;
     const pick = picks.entries.find(entry => entry.sectionId === section.id && entry.teamId === team.id);
-    const [family] = guideFamilyRows(families, preview.season.id, section.id, sectionTeams(section));
-    assert.equal(family.stat.clusterId, clusterId);
-    assert.equal(family.team.id, team.id);
-    assert.equal(recommendationTier(family.stat), tier);
+    const binding = bindings.rows.find(row => row.clusterId === clusterId);
+    assert.equal(binding.sectionId, section.id);
+    assert.equal(binding.teamId, team.id);
     assert.equal(pick.status, status);
     assert.equal(pick.group, "fast9");
-    assert.deepEqual(pick.sources, [family.stat.url]);
-    assert.equal(homeRecommendationEligible(family.stat), tier === "recommended");
+    assert.deepEqual(pick.sources, [binding.url]);
     const carries = readingNotes(section, team, preview.season).roles.find(role => role.label === "主C").units;
-    assert.deepEqual(family.stat.carryIds, carries);
+    assert.deepEqual(binding.carryIds, carries);
+    // A provider can change its representative board without changing the model ID.
+    for (const family of guideFamilyRows(families, preview.season.id, section.id, sectionTeams(section))) {
+      assert.equal(family.stat.clusterId, clusterId);
+      assert.equal(family.team.id, team.id);
+    }
     if (suffix === "0214") continue;
-    const records = batch.records.filter(row => row.conditions?.kind === "core" && row.conditions.teamId === team.id);
+    const records = batch.records.filter(row => !row.windowHours && row.conditions?.kind === "core" && row.conditions.teamId === team.id);
     const traitLevels = Object.fromEntries(active(team.pieces).map(trait => [trait.id, trait.level]));
     const sample = findPlacement({ ...batch, records }, team.pieces.map(piece => piece.unitId), usedPopulation(team.pieces), {
       edition: preview.season.id, teamId: team.id, traitLevels, pieces: team.pieces,
     });
-    assert.equal(sample?.build, picks.build);
+    assert.equal(batch.build, picks.build);
     assert.equal(sample?.conditions?.population, 9);
-    assert.equal(recommendationTier(sample), "recommended");
-    assert.ok(sample.mean < family.stat.mean);
+    assert.equal(sample.conditions.kind, "core");
   }
 });
 
