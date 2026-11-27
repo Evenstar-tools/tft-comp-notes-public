@@ -153,9 +153,11 @@ export function auditGuideCopy(section) {
     ...Object.entries(section.reroll?.advice ?? {}).map(([teamId, text]) => ({ teamId, text }))];
   const oldUnlock = /薇恩[^。！？\n]{0,24}(?:打满|打|挂满|战斗|上场)[^。！？\n]{0,12}[三3]\s*回合|(?:打满|打|挂满|战斗|上场)[^。！？\n]{0,12}[三3]\s*回合[^。！？\n]{0,24}(?:开|解锁)[^。！？\n]{0,4}薇恩/;
   const oldStats = /(?:\bPBE\s*)?\b19\.1[a-z]?\b[^。！？\n]{0,40}\d[\d,，]*\s*场|棋盘均名\s*·/i;
+  const oldThresholdTag = /【特殊运营门槛】/;
   return passages.flatMap(({ text = "", linkedSample, richText = [], ...source }) => [
     ...(oldUnlock.test(text) ? [{ rule: "obsolete-unlock", severity: "error", message: "正文仍有薇恩旧版三回合解锁说明", ...source }] : []),
     ...(!linkedSample && oldStats.test(text) ? [{ rule: "obsolete-stats", severity: "error", message: "正文仍有写死的旧战绩", ...source }] : []),
+    ...(oldThresholdTag.test(text) ? [{ rule: "bracket-threshold-tag", severity: "error", message: "正文禁用【特殊运营门槛】重括号前缀，请直接用简短人话写清进场或解锁条件", ...source }] : []),
     ...([text, ...richText].some(value => value && videoDomain.test(value))
       ? [{ rule: "video-link", severity: "error", message: "正文仍有视频平台外链", ...source }] : []),
   ]);

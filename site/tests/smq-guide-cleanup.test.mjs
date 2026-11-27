@@ -214,7 +214,7 @@ test("fast-nine picks retain their reviewed family bindings and board-specific c
   const trend = json("../data/comp-trends.json");
   const picks = json("../data/patch-recommendations.json");
   for (const [suffix, clusterId, status] of [
-    ["0235", "429055", "avoid"],
+    ["0235", "429055", "conditional"],
     ["0275", "429004", "recommended"],
     ["0214", "429021", "conditional"],
   ]) {
