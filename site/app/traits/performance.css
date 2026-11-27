@@ -187,8 +187,13 @@
   .page-heading.trait-lookup-heading { flex-direction: column; align-items: stretch; }
   .trait-lookup-intro { flex-direction: column; align-items: start; }
   .trait-lookup-controls > input { width: 100%; }
-  .trait-lookup-columns-control label { min-height: 44px; }
+  .trait-lookup-columns-control { gap: 4px 10px; }
+  .trait-lookup-columns-control label { min-height: 44px; padding-inline: 4px; border-color: transparent; background: transparent; }
+  .trait-lookup-columns-control label:has(:checked) { background: color-mix(in srgb,var(--raised) 72%,transparent); }
+  .trait-lookup-title h3 { line-height: 1.4; }
   .trait-entry-actions a { min-height: 40px; }
+  .trait-lookup-members { margin-block-start: 9px; row-gap: 8px; }
+  .trait-lookup-entry .matrix-trait-info > p { margin-block: 8px; font-size: .9375rem; line-height: 1.65; }
 }
 
 .trait-data-heading, .trait-guide-context, .tier-buttons, .tier-rates {
@@ -307,4 +312,14 @@
   .trait-performance[data-single] .trait-tier-stat { min-height: 44px; }
   .tier-sample-pair { grid-template-columns: minmax(0, 1fr); }
   .tier-sample a { display: inline-flex; align-items: center; min-height: 32px; }
+}
+@media (max-width: 420px) {
+  .trait-performance:has(.trait-tier-effect) .trait-tier-head { display: none; }
+  .trait-tier-row:has(.trait-tier-effect) { grid-template-columns: minmax(0,1fr); gap: 3px; padding-block: 6px 10px; }
+  .trait-tier-row:has(.trait-tier-effect) .trait-tier-stat {
+    display: flex; justify-self: start; min-height: 40px; gap: 9px; padding-inline: 5px;
+  }
+  .trait-tier-row:has(.trait-tier-effect) .trait-tier-stat > b { color: var(--accent); }
+  .trait-tier-row:has(.trait-tier-effect) .trait-tier-stat .tier-mean::before { content: "均名"; margin-inline: 4px; color: var(--muted); font-size: .8125rem; font-weight: 400; }
+  .trait-lookup-entry .trait-tier-effect { font-size: .9375rem; line-height: 1.6; }
 }

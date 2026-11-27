@@ -93,6 +93,21 @@
 .gear-list-name small,.gear-detail-placement small,.gear-cook-results a small {
   display:block;color:var(--muted);font-weight:400;font-size:.8125rem;
 }
+@media (max-width: 580px) {
+  .gear-index-list:not([data-view=craft],[data-view=special],:has(.gear-recipe-results)) {
+    --gear-tile-height: 5.4rem;
+    grid-auto-rows: minmax(var(--gear-tile-height),auto);
+  }
+  .gear-index-list:not([data-view=craft],[data-view=special],:has(.gear-recipe-results)) .gear-list-name {
+    display: block; font-size: .8125rem; line-height: 1.4; text-wrap: balance;
+  }
+  .gear-index-list:not([data-view=craft],[data-view=special]) .gear-list-name small { font-size: .75rem; }
+}
+@media (max-width: 360px) {
+  .gear-index-list:not([data-view=craft],[data-view=special],:has(.gear-recipe-results)) {
+    grid-template-columns: repeat(3,minmax(0,1fr));
+  }
+}
 .gear-index-list:not([data-view=craft],[data-view=special]) .gear-list-name small {font-size:.6875rem;}
 .gear-recipe-results {
   grid-column:1/-1;margin:5px 0 0;padding-block-start:6px;border-block-start:1px solid var(--line);
@@ -402,12 +417,16 @@
   .gear-rank-tools select {width:100%;}
   .gear-rank-identity {gap:5px;font-size:.9375rem;}
   .gear-rank-identity .item-icon {width:28px!important;height:28px!important;}
+  .gear-rank-row {gap:6px;padding-block:10px 12px;}
   .gear-rank-toggle {gap:8px;}
-  .gear-rank-holders {gap:6px;}
-  .gear-pick-kind {align-self:start;margin-top:3px;}
-  .gear-holder {grid-template-columns:19px minmax(0,1fr);column-gap:4px;font-size:.8125rem;}
-  .gear-holder img {width:19px;height:19px;grid-row:auto;}
-  .gear-holder small {grid-column:1/-1;font-size:.75rem;}
+  .gear-rank-holders {grid-template-columns:auto minmax(0,1fr);column-gap:12px;padding-block:4px 0;}
+  .gear-pick-kind {grid-row:1 / span 3;align-self:start;padding-block-start:8px;font-size:.8125rem;}
+  .gear-holder {
+    grid-column:2;grid-template-columns:22px minmax(0,1fr) auto;column-gap:6px;
+    width:100%;min-height:34px;font-size:.875rem;line-height:1.4;
+  }
+  .gear-holder img {width:22px;height:22px;grid-row:auto;align-self:center;}
+  .gear-holder small {font-size:.8125rem;text-align:end;font-variant-numeric:tabular-nums;}
   .gear-reverse { --gear-columns: minmax(0, 1fr) 3.6rem 3.2rem; }
   .gear-reverse[data-wins] { --gear-columns: minmax(0, 1fr) 3.6rem 3.2rem 3.2rem; }
   .gear-reverse-head,.gear-reverse-toggle { padding-inline: 9px; gap: 5px; }

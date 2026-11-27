@@ -195,6 +195,7 @@ html[data-theme="dark"] .emblem-page .weak {color:#ff9ca4;}
   .emblem-row {grid-template-columns:minmax(0,1fr) auto auto auto 15px;grid-template-areas:"item mean win count arrow" "best best best best best";gap:5px 8px;padding:7px 9px;}
   .emblem-row[aria-expanded="true"],.emblem-page[data-wearer-view] .emblem-row {grid-template-areas:"item mean win count arrow";}
   .emblem-identity {grid-area:item;font-size:.875rem;line-height:1.25;gap:6px;}
+  .emblem-identity > span {min-width:0;overflow-wrap:anywhere;}
   .emblem-metric:nth-child(2) {grid-area:mean;}
   .emblem-metric:nth-child(3) {grid-area:win;}
   .emblem-metric,.emblem-count {font-size:.8125rem;line-height:1.25;white-space:nowrap;}
@@ -208,4 +209,23 @@ html[data-theme="dark"] .emblem-page .weak {color:#ff9ca4;}
   .emblem-holders .emblem-wearer {gap:4px;font-size:.8125rem;}
   .emblem-holders .emblem-wearer img {width:20px;height:20px;}
   .emblem-holders td {font-size:.8125rem;}
+}
+@media (max-width: 420px) {
+  .emblem-row {
+    grid-template-columns:repeat(3,minmax(0,1fr)) 16px;
+    grid-template-areas:"item item item arrow" "mean win count count" "best best best best";
+    gap:8px 10px;
+    padding:10px 11px 12px;
+  }
+  .emblem-row:is([aria-expanded="true"],:has(.emblem-best-empty)),.emblem-page[data-wearer-view] .emblem-row {
+    grid-template-areas:"item item item arrow" "mean win count count";
+  }
+  .emblem-identity {font-size:.9375rem;line-height:1.4;}
+  .emblem-metric,.emblem-count {font-size:.9375rem;text-align:start;}
+  .emblem-metric small,.emblem-count small {font-size:.8125rem;}
+  .emblem-best {padding-block-start:6px;border-block-start:1px solid var(--line);}
+  .emblem-best:has(.emblem-best-empty) {display:none;}
+  .emblem-best-entry {gap:4px;}
+  .emblem-best-mean {flex-wrap:wrap;gap:1px 5px;}
+  .emblem-best-mean small {white-space:nowrap;}
 }

@@ -170,7 +170,7 @@ export const UnitBrowser = memo(function UnitBrowser({
             ref={searchInput}
             type="search"
             aria-label="搜索英雄"
-            placeholder={explainSearch ? "搜英雄、外号、拼音或羁绊" : "英雄 / 外号 / 拼音 / 羁绊"}
+            placeholder={explainSearch ? "搜英雄、外号、拼音或羁绊" : "搜英雄"}
             value={query}
             onChange={(event) => setQuery(event.target.value)}
           />

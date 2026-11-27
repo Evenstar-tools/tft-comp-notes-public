@@ -382,6 +382,33 @@
   .hero-result-avatar img { width: 28px; height: 28px; }
   .hero-result-mobile-rank span { display: block; }
 }
+@media (max-width: 580px) {
+  .hero-view-nav a { min-height: 42px; }
+  .library-columns .browser-filters > .chip-group {
+    flex-basis: 100%; display: grid; grid-template-columns: repeat(6,minmax(0,1fr)); gap: 2px;
+  }
+  .library-columns .browser-filters .cost-chip { justify-content: center; min-height: 34px; padding-inline: 2px; gap: 4px; font-size: .8125rem; }
+  .hero-results-note { padding: 0 1px 8px; font-size: .8125rem; }
+  .hero-results-table, .hero-results-table :is(thead, tbody) { display: block; }
+  .hero-results-table tr { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); }
+  .hero-results-table thead { position: sticky; top: 0; z-index: 1; }
+  .hero-results-table thead tr { border-block: 1px solid var(--line); background: var(--panel); border-radius: 6px; }
+  .hero-results-table thead th:not(:first-child) { position: static; width: auto; padding: 0; border: 0; background: transparent; font-size: .875rem; }
+  .hero-results-table .hero-result-heading { position: absolute; width: 1px; height: 1px; padding: 0; clip-path: inset(50%); overflow: hidden; }
+  .hero-results-table thead button { width: 100%; min-height: 42px; }
+  .hero-results-table tbody tr { padding: 6px 0 8px; border-bottom: 1px solid var(--line); }
+  .hero-results-table tbody th { grid-column: 1 / -1; }
+  .hero-results-table tbody :is(th, td) { border-bottom: 0; }
+  .hero-results-table tbody td { padding: 4px 1px 0; font-size: 1rem; line-height: 1.35; white-space: nowrap; }
+  .hero-result-open { min-height: 46px; padding: 2px 6px; gap: 9px; }
+  .hero-result-avatar img { width: 34px; height: 34px; }
+  .hero-result-name { gap: 3px; }
+  .hero-result-name strong { font-size: 1rem; }
+  .hero-result-name small { font-size: .8125rem; }
+  .hero-result-traits { display: block; }
+  .hero-result-mobile-rank { color: var(--muted); font-size: .8125rem; font-weight: 400; }
+  .hero-result-mobile-rank span { display: inline; }
+}
 @media (min-width: 1000px) {
   .page-heading.hero-catalog-heading.is-statistics,
   .library-columns.is-statistics { width: 100%; max-width: 1152px; margin-inline: auto; }

@@ -942,4 +942,15 @@
 
 @media (max-width: 640px) {
   .medley-gc-top-fit strong { white-space: normal; overflow-wrap: anywhere; line-height: 1.35; }
+  .medley-toolbar-card { padding: 0 0 12px; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: transparent; box-shadow: none; }
+  .medley-search { min-height: 44px; background: var(--panel); }
+  .medley-segmented button { min-height: 38px; padding-inline: 8px; font-size: .875rem; }
+  .medley-toolbar-sub { padding-block-start: 0; border: 0; font-size: .875rem; line-height: 1.55; }
+  .medley-count { white-space: normal; }
+  .medley-gc-unit > span { font-size: .8125rem; line-height: 1.35; text-wrap: balance; }
+  .medley-gc-enter { font-size: .8125rem; }
+}
+@media (max-width: 400px) {
+  .medley-gc-roster, .medley-gc-roster.five { grid-template-columns: repeat(3,minmax(0,1fr)); row-gap: 8px; }
+  .medley-gc-foot { flex-wrap: wrap; gap: 6px 10px; }
 }
