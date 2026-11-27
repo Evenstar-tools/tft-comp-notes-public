@@ -9068,7 +9068,7 @@
             },
             {
               "text_run": {
-                "content": "　七级起用奥拉夫、斯维因、韦鲁斯开三摇滚，上场打满 3 回合就开薇恩。德莱文三星升八补悠米，薇恩到手再换韦鲁斯。布隆剩一两张到三才多留一轮。",
+                "content": "　七级起，场上不同名的摇滚或花式射手合计 5 星就开薇恩。德莱文的星级也计入。德莱文三星升八补悠米，薇恩到手再换韦鲁斯。布隆剩一两张到三才多留一轮。",
                 "text_element_style": {
                   "bold": false,
                   "inline_code": false,
@@ -9080,7 +9080,7 @@
             }
           ],
           "level": 0,
-          "text": "换人　七级起用奥拉夫、斯维因、韦鲁斯开三摇滚，上场打满 3 回合就开薇恩。德莱文三星升八补悠米，薇恩到手再换韦鲁斯。布隆剩一两张到三才多留一轮。"
+          "text": "换人　七级起，场上不同名的摇滚或花式射手合计 5 星就开薇恩。德莱文的星级也计入。德莱文三星升八补悠米，薇恩到手再换韦鲁斯。布隆剩一两张到三才多留一轮。"
         },
         {
           "id": "sample-block-0531",
@@ -24895,6 +24895,249 @@
       "stageTeamIds": [
         "3f5c63e5-1ea1-4310-bbc0-9871308b936d"
       ]
+    },
+    {
+      "id": "mosher-yasuo-yone",
+      "title": "速八六舞者亚索永恩",
+      "category": "高费阵容",
+      "blocks": [
+        {
+          "id": "mosher-yasuo-yone-start",
+          "type": "text",
+          "text": "大剑、拳套多，卡特琳娜和凯隐来得顺、前排能稳血就走。七级前攒出阵上不同名真实伤害或舞者合计 6 星，七级解锁亚索。血量掉得快就先在七级补两星稳血。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "大剑、拳套多，卡特琳娜和凯隐来得顺、前排能稳血就走。七级前攒出阵上不同名真实伤害或舞者合计 6 星，七级解锁亚索。血量掉得快就先在七级补两星稳血。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "mosher-yasuo-yone-tempo",
+          "type": "text",
+          "text": "打法：84",
+          "elements": [
+            {
+              "text_run": {
+                "content": "打法：84"
+              }
+            }
+          ]
+        },
+        {
+          "id": "mosher-yasuo-yone-roll",
+          "type": "text",
+          "text": "八级搜两星亚索、永恩和奎桑提，凑六舞者、三心之钢、双保镖。先做亚索无尽和正义，再补奎桑提石像鬼，永恩先拿夜刃、轻语，最后补双 C 的第三件。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "八级搜两星亚索、永恩和奎桑提，凑六舞者、三心之钢、双保镖。先做亚索无尽和正义，再补奎桑提石像鬼，永恩先拿夜刃、轻语，最后补双 C 的第三件。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "mosher-yasuo-yone-position",
+          "type": "text",
+          "text": "奎桑提单顶第一排中间，亚索和永恩同侧站第二排外沿，先打薄的一边。永恩用轻语破甲，遇大范围控制就把永恩换到另一侧。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "奎桑提单顶第一排中间，亚索和永恩同侧站第二排外沿，先打薄的一边。永恩用轻语破甲，遇大范围控制就把永恩换到另一侧。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "mosher-yasuo-yone-cap",
+          "type": "text",
+          "text": "双 C 两星稳住再上九。两星永恩开厄斐琉斯，九级优先补他，也可按对局补五费控制。有心之钢转职就用厄斐琉斯开五心之钢。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "双 C 两星稳住再上九。两星永恩开厄斐琉斯，九级优先补他，也可按对局补五费控制。有心之钢转职就用厄斐琉斯开五心之钢。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "mosher-yasuo-yone-items",
+          "type": "text",
+          "text": "棋盘配装 · 八级 · 六舞者亚索永恩\n主C：亚索。无尽之刃、正义之手、斯特拉克的挑战护手。\n主坦：奎桑提。石像鬼石板甲、狂徒铠甲、日炎斗篷。\n副C：永恩。夜之锋刃、无尽之刃、最后的轻语。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "棋盘配装 · 八级 · 六舞者亚索永恩\n主C：亚索。无尽之刃、正义之手、斯特拉克的挑战护手。\n主坦：奎桑提。石像鬼石板甲、狂徒铠甲、日炎斗篷。\n副C：永恩。夜之锋刃、无尽之刃、最后的轻语。"
+              }
+            }
+          ]
+        }
+      ],
+      "kind": "guide",
+      "teams": [
+        {
+          "id": "edad46b7-e909-4233-b0c5-79d6899db862",
+          "name": "八级 · 六舞者亚索永恩",
+          "category": "待分类",
+          "notes": "",
+          "revision": 1,
+          "updatedAt": "2026-11-27T12:50:22.608Z",
+          "sectionId": "mosher-yasuo-yone",
+          "pieces": [
+            {
+              "instanceId": "3268cc3e-5e90-48aa-b424-7f695fed802f",
+              "unitId": "k-sante",
+              "position": 3,
+              "stars": 2,
+              "items": [
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_WarmogsArmor",
+                "TFT_Item_RedBuff"
+              ]
+            },
+            {
+              "instanceId": "ca956791-85a3-4050-95b2-70ebf13a772b",
+              "unitId": "viego",
+              "position": 7,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "e638afc8-5feb-4a9c-b083-ee3cfcd8154f",
+              "unitId": "briar",
+              "position": 8,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "bce32c45-eb8a-4d3d-b0db-666c08cb4834",
+              "unitId": "nasus",
+              "position": 10,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "ffa77817-4c42-4d75-8a4b-c519f128b214",
+              "unitId": "yasuo",
+              "position": 12,
+              "stars": 2,
+              "items": [
+                "TFT_Item_InfinityEdge",
+                "TFT_Item_UnstableConcoction",
+                "TFT_Item_SteraksGage"
+              ]
+            },
+            {
+              "instanceId": "acc6fb64-3262-4fd6-9366-0247fb6d5a5b",
+              "unitId": "yone",
+              "position": 13,
+              "stars": 2,
+              "items": [
+                "TFT_Item_GuardianAngel",
+                "TFT_Item_InfinityEdge",
+                "TFT_Item_LastWhisper"
+              ]
+            },
+            {
+              "instanceId": "0a95a53c-cbbc-405f-880f-6b7914d6fba4",
+              "unitId": "katarina",
+              "position": 15,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "85e12b22-998b-467b-ab8d-360a984aeb09",
+              "unitId": "kayn",
+              "position": 19,
+              "stars": 2,
+              "items": []
+            }
+          ]
+        }
+      ],
+      "team": {
+        "id": "edad46b7-e909-4233-b0c5-79d6899db862",
+        "name": "八级 · 六舞者亚索永恩",
+        "category": "待分类",
+        "notes": "",
+        "revision": 1,
+        "updatedAt": "2026-11-27T12:50:22.608Z",
+        "sectionId": "mosher-yasuo-yone",
+        "pieces": [
+          {
+            "instanceId": "3268cc3e-5e90-48aa-b424-7f695fed802f",
+            "unitId": "k-sante",
+            "position": 3,
+            "stars": 2,
+            "items": [
+              "TFT_Item_GargoyleStoneplate",
+              "TFT_Item_WarmogsArmor",
+              "TFT_Item_RedBuff"
+            ]
+          },
+          {
+            "instanceId": "ca956791-85a3-4050-95b2-70ebf13a772b",
+            "unitId": "viego",
+            "position": 7,
+            "stars": 2,
+            "items": []
+          },
+          {
+            "instanceId": "e638afc8-5feb-4a9c-b083-ee3cfcd8154f",
+            "unitId": "briar",
+            "position": 8,
+            "stars": 2,
+            "items": []
+          },
+          {
+            "instanceId": "bce32c45-eb8a-4d3d-b0db-666c08cb4834",
+            "unitId": "nasus",
+            "position": 10,
+            "stars": 2,
+            "items": []
+          },
+          {
+            "instanceId": "ffa77817-4c42-4d75-8a4b-c519f128b214",
+            "unitId": "yasuo",
+            "position": 12,
+            "stars": 2,
+            "items": [
+              "TFT_Item_InfinityEdge",
+              "TFT_Item_UnstableConcoction",
+              "TFT_Item_SteraksGage"
+            ]
+          },
+          {
+            "instanceId": "acc6fb64-3262-4fd6-9366-0247fb6d5a5b",
+            "unitId": "yone",
+            "position": 13,
+            "stars": 2,
+            "items": [
+              "TFT_Item_GuardianAngel",
+              "TFT_Item_InfinityEdge",
+              "TFT_Item_LastWhisper"
+            ]
+          },
+          {
+            "instanceId": "0a95a53c-cbbc-405f-880f-6b7914d6fba4",
+            "unitId": "katarina",
+            "position": 15,
+            "stars": 2,
+            "items": []
+          },
+          {
+            "instanceId": "85e12b22-998b-467b-ab8d-360a984aeb09",
+            "unitId": "kayn",
+            "position": 19,
+            "stars": 2,
+            "items": []
+          }
+        ]
+      },
+      "primaryTeamId": "edad46b7-e909-4233-b0c5-79d6899db862",
+      "stageTeamIds": [],
+      "summaryBlockId": "mosher-yasuo-yone-start"
     }
   ],
   "season": {
