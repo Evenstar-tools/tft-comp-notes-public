@@ -16,14 +16,17 @@ const openingItemNames: Record<string, string> = {
   TFT_Item_RunaansHurricane: "海妖",
 };
 
-export function GuideEquipment({ team, data, roles, selectedPiece, onSelectPiece, guideHref, sectionId, guideStats = true }: {
+export function GuideEquipment({ team, data, roles, selectedPiece, onSelectPiece, guideHref, sectionId, guideStats = true, detailView = false }: {
   team: Team; data: Season; roles: GuideRole[]; selectedPiece: string; onSelectPiece: (id: string, trigger: HTMLButtonElement) => void; guideHref?: string;
-  sectionId?: string; guideStats?: boolean;
+  sectionId?: string; guideStats?: boolean; detailView?: boolean;
 }) {
   const [showNames, setShowNames] = useState(false);
   const loadoutsId = useId();
   useEffect(() => {
-    try { setShowNames(sessionStorage.getItem("tft.guide.showGearNames") === "true"); } catch { /* Storage is optional. */ }
+    const frame = requestAnimationFrame(() => {
+      try { setShowNames(sessionStorage.getItem("tft.guide.showGearNames") === "true"); } catch { /* Storage is optional. */ }
+    });
+    return () => cancelAnimationFrame(frame);
   }, []);
   const items = new Map(data.items.map(item => [item.id, item]));
   const members = guideRoster(team, data, roles);
@@ -42,12 +45,13 @@ export function GuideEquipment({ team, data, roles, selectedPiece, onSelectPiece
   function memberButton({ piece, unit, role }: { piece: Piece; unit: Unit; role?: string }) {
     const repeated = members.some(member => member.unit.id === unit.id && member.piece.instanceId !== piece.instanceId);
     const label = unit.name + (repeated ? " · 第 " + (Math.floor(piece.position / 7) + 1) + " 排第 " + (piece.position % 7 + 1) + " 格" : "");
+    const roleId = loadoutsId + "-" + piece.instanceId;
     const utility = role !== "功能装" && utilities.some(entry => entry.units.includes(unit.id));
     const description = [role, utility && "功能装", piece.stars + " 星"].filter(Boolean).join(" · ");
-    return <button className="guide-member-button" type="button" aria-label={label} aria-description={description}
+    return <button className="guide-member-button" type="button" aria-label={label} aria-describedby={roleId}
       aria-pressed={selectedPiece === piece.instanceId} onClick={event => onSelectPiece(piece.instanceId, event.currentTarget)}>
       <img src={unit.image} width={42} height={42} alt="" loading="lazy" className={"guide-piece-portrait cost-" + unit.cost} />
-      <span><strong title={unit.name}>{unitShortNames[unit.id] ?? unit.name}</strong><small>{description}</small></span>
+      <span><strong title={unit.name}>{unitShortNames[unit.id] ?? unit.name}</strong><small id={roleId}>{description}</small></span>
     </button>;
   }
 
@@ -60,13 +64,13 @@ export function GuideEquipment({ team, data, roles, selectedPiece, onSelectPiece
   </ul>;
   return <section className="guide-gear" aria-label="当前棋盘配装">
     <div className="guide-gear-heading">
-      <h3>{equipped.length ? "配装" : "阵容棋子"}</h3>
+      <h3>{equipped.length ? detailView ? "核心配装" : "配装" : "阵容棋子"}</h3>
       {!!equipped.length && <label className="guide-gear-name-toggle">
         <input type="checkbox" checked={showNames} aria-controls={loadoutsId} onChange={event => {
           const checked = event.currentTarget.checked;
           setShowNames(checked);
           try { sessionStorage.setItem("tft.guide.showGearNames", String(checked)); } catch { /* Keep the selection in this view. */ }
-        }} />装备名
+        }} />{detailView ? "显示装备名" : "装备名"}
       </label>}
     </div>
     {opening && <section className="guide-opening-gear" aria-label="开装与接装">
@@ -106,7 +110,7 @@ export function GuideEquipment({ team, data, roles, selectedPiece, onSelectPiece
       </li>;
     })}</ul>}
     {!equipped.length ? roster : !!others.length && <details className="guide-unequipped">
-      <summary>其余棋子 <span>{others.length}</span></summary>
+      <summary>{detailView ? "其余棋子（" + others.length + "）" : <>其余棋子 <span>{others.length}</span></>}</summary>
       {roster}
     </details>}
   </section>;

@@ -17,6 +17,7 @@ import { boardStages } from "@/domain/team-stages";
 import { legacyGuideDestination } from "@/domain/legacy-guide-redirects";
 import { databaseConfigured } from "@/server/access";
 import { hasOwnerSession } from "@/server/owner-session";
+import "./guide-detail.css";
 export const metadata = { title: "阵容笔记" };
 export const dynamic = "force-dynamic";
 export default async function Guide({
@@ -56,7 +57,7 @@ export default async function Guide({
     href: versionUpdateLink(currentPatch.updateId, { anchor: entry.sources?.length ? "patch-recommendations" : undefined }),
   }));
   return (
-    <div className="reading-page">
+    <div className="reading-page guide-detail-page">
       <DocumentView section={section} gameData={section.gameData ?? live!.season} publicationId={live!.id}
         initialTeam={typeof team === "string" ? team : undefined} defaultTeam={defaultTeam}
         initialStage={boardStages.find(option => option === stage)} initialFlex={typeof flex === "string" ? flex : undefined}

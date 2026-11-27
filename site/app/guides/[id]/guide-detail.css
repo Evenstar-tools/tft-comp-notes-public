@@ -1,0 +1,443 @@
+.guide-detail-page {
+  --guide-paper: light-dark(#f6f4ec, #1f232b);
+  --guide-soft-line: light-dark(#e3dfd2, #2b303a);
+  --guide-green: light-dark(#266041, #92d8ac);
+  --guide-card-shadow: 0 1px 2px light-dark(#22262009, #0004);
+  max-width: 1280px;
+}
+
+.guide-detail-page .guide-return {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  font-size: .84rem;
+  font-weight: 600;
+}
+
+.guide-detail-page .guide-page-heading {
+  gap: 8px 14px;
+  margin: 6px 0 12px;
+}
+
+.guide-detail-page .document-view .guide-page-title {
+  margin: 0;
+  font-size: clamp(1.5rem, 3vw, 1.88rem);
+  font-weight: 750;
+}
+
+.guide-detail-page .guide-title-stats {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.guide-detail-page :is(.guide-playstyle-tag, .guide-title-stats > *) {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: .92rem;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.35;
+}
+
+.guide-detail-page .guide-playstyle-tag { color: var(--accent); }
+.guide-detail-page .guide-title-mean { font-size: 1.02rem; font-weight: 750; }
+.guide-detail-page .guide-title-mean[data-tone="middle"] { color: var(--accent); }
+.guide-detail-page .guide-title-mean[data-tone="strong"] { color: var(--guide-green); }
+.guide-detail-page .guide-title-mean:hover { text-decoration: underline; }
+
+.guide-detail-page .guide-board-actions { flex-wrap: wrap; min-width: 0; }
+.guide-detail-page .guide-board-actions .guide-zoom-trigger { min-height: 36px; padding-inline: 10px; border-radius: 8px; }
+.guide-detail-page .guide-board-actions svg { flex: none; }
+.guide-detail-page .guide-board-zoom { width: auto; }
+.guide-detail-page .guide-board-actions .guide-editor-link { color: var(--on-accent); }
+
+/* Stage Stepper: clean bottom rule, no extra outer card box */
+.guide-detail-page .guide-reader .guide-board-options:not(:empty) {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin: 0;
+  padding: 0 0 10px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.guide-detail-page .guide-reader .guide-board-options > .guide-phases {
+  display: flex;
+  flex: 0 1 auto;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  min-width: 0;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.guide-detail-page .guide-board-options :is(.guide-phases, .guide-extra-phases) button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 7px;
+  min-width: 0;
+  min-height: 34px;
+  max-width: 100%;
+  padding: 4px 8px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: .9rem;
+  line-height: 1.3;
+  text-align: start;
+  white-space: normal;
+}
+
+.guide-detail-page .guide-phases > button + button::before {
+  content: "→";
+  position: absolute;
+  inset-inline-start: -13px;
+  color: var(--line);
+  font-size: .78rem;
+  font-weight: 500;
+  pointer-events: none;
+}
+
+.guide-detail-page .guide-board-options :is(.guide-phases, .guide-extra-phases) button:hover {
+  background: transparent;
+  color: var(--text);
+}
+
+.guide-detail-page .guide-board-options :is(.guide-phases, .guide-extra-phases) button[aria-pressed="true"] {
+  border-bottom-color: var(--accent);
+  background: transparent;
+  color: var(--accent);
+  font-weight: 750;
+}
+
+.guide-detail-page .guide-step-number {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--raised);
+  color: var(--muted);
+  font-size: .72rem;
+  font-weight: 750;
+  font-variant-numeric: tabular-nums;
+}
+
+.guide-detail-page [aria-pressed="true"] > .guide-step-number { background: var(--accent); color: var(--on-accent); }
+.guide-detail-page .guide-step-label { min-width: 0; }
+.guide-detail-page .guide-step-label small { display: block; margin-top: 2px; }
+
+.guide-detail-page .guide-board-options > .guide-family-fold {
+  position: relative;
+  flex: 0 0 auto;
+  max-width: 100%;
+  margin: 0 0 0 auto;
+}
+
+.guide-detail-page .guide-family-fold > summary {
+  width: auto;
+  padding: 4px 2px;
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  font-size: .875rem;
+  font-weight: 650;
+  line-height: 1.6;
+}
+
+.guide-detail-page .guide-family-fold > ul {
+  position: absolute;
+  z-index: 4;
+  inset-block-start: calc(100% + 6px);
+  inset-inline-end: 0;
+  width: min(320px, calc(100vw - 64px));
+  margin: 0;
+  padding: 4px 12px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--panel);
+  box-shadow: 0 6px 20px light-dark(#22262016, #0006);
+}
+
+.guide-detail-page .guide-family-fold > ul li:first-child a { border-block-start: 0; }
+.guide-detail-page .guide-family-fold > ul a { min-height: 40px; align-content: center; }
+.guide-detail-page .guide-family-fold > ul a:hover { text-decoration: underline; }
+
+/* Restrained Two-Column Layout: single surface level, zero nested boxes */
+.guide-detail-page .guide-reader .reader-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.48fr) minmax(0, 1fr);
+  gap: 0 24px;
+  margin-block-start: 16px;
+}
+
+.guide-detail-page .reader-play {
+  min-width: 0;
+  margin: 0;
+  padding: 16px 20px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel);
+  box-shadow: var(--guide-card-shadow);
+}
+
+.guide-detail-page .guide-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 0;
+  padding: 16px 20px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel);
+  box-shadow: var(--guide-card-shadow);
+}
+
+/* Strip inner box chrome inside the unified sidebar */
+.guide-detail-page :is(.guide-gear, .guide-tempo-card, .guide-overview-card) {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.guide-detail-page .guide-sidebar > :not(:first-child) {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--guide-soft-line);
+}
+
+.guide-detail-page .guide-reader :is(.guide-board-head, .guide-gear-heading, .guide-tempo-card, .guide-overview-head) > h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 750;
+  line-height: 1.4;
+}
+
+.guide-detail-page .guide-player-board { margin-top: 8px; }
+
+/* Remove inner box around hex board */
+.guide-detail-page .reader-play > .read-board {
+  --board-edge: light-dark(#c5c2b6, #454650);
+  --board-cell: light-dark(#eeece4, #252931);
+  margin: 10px 0 8px;
+  padding: 6px 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+/* Clean typography traits without pill boxes */
+.guide-detail-page .read-traits {
+  gap: 6px 14px;
+  padding-top: 6px;
+}
+
+.guide-detail-page .read-traits li {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  font-size: .9rem;
+  color: var(--muted);
+}
+
+.guide-detail-page .read-traits li:first-child {
+  color: var(--accent);
+  font-weight: 750;
+}
+
+/* Next stage strip separated by a single clean top rule */
+.guide-detail-page .guide-next-stage {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  margin-top: 12px;
+  padding: 12px 0 0;
+  border: 0;
+  border-top: 1px solid var(--guide-soft-line);
+  border-radius: 0;
+  background: transparent;
+  font-size: .875rem;
+}
+
+.guide-detail-page .guide-next-stage-roster {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  min-width: 0;
+}
+
+.guide-detail-page .guide-next-stage-roster strong {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--guide-green);
+  font-size: .875rem;
+  font-weight: 750;
+}
+
+.guide-detail-page .guide-next-stage-roster ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.guide-detail-page .guide-next-stage-roster li { display: inline-flex; align-items: center; gap: 5px; }
+.guide-detail-page .guide-next-stage-roster li span { color: var(--muted); font-weight: 750; }
+.guide-detail-page .guide-next-stage-roster img { flex: none; border: 1.5px solid var(--unit-cost, var(--line)); border-radius: 5px; object-fit: cover; }
+
+.guide-detail-page .guide-next-stage > button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 32px;
+  margin-inline-start: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  font-size: .875rem;
+  font-weight: 700;
+}
+.guide-detail-page .guide-next-stage > button:hover { text-decoration: underline; text-underline-offset: 3px; }
+.guide-detail-page .guide-next-stage > button svg { flex: none; }
+
+/* Gear loadouts: flat hairline dividers instead of nested row boxes */
+.guide-detail-page .guide-gear-heading { min-height: 32px; }
+.guide-detail-page .guide-gear-name-toggle { min-height: 32px; padding-inline: 0; }
+.guide-detail-page .guide-gear > .guide-loadouts { gap: 0; margin: 6px 0 0; border: 0; }
+
+.guide-detail-page .guide-loadout {
+  grid-template-columns: minmax(0, 1fr) minmax(122px, .95fr);
+  padding: 8px 0;
+  border: 0;
+  border-bottom: 1px solid var(--guide-soft-line);
+  border-radius: 0;
+  background: transparent;
+}
+.guide-detail-page .guide-loadout:last-child { border-bottom: 0; }
+
+.guide-detail-page .guide-loadout .guide-member-button { min-height: 42px; padding-inline: 0; }
+.guide-detail-page .guide-loadout .guide-piece-portrait { width: 38px; height: 38px; }
+.guide-detail-page .guide-member-button strong { font-size: .95rem; }
+.guide-detail-page .guide-member-button small { font-size: .8125rem; }
+
+.guide-detail-page .guide-loadout-gear { grid-template-columns: repeat(3, 38px); justify-content: end; gap: 5px; }
+.guide-detail-page .guide-loadouts[data-item-names] .guide-loadout-gear { grid-template-columns: repeat(3, minmax(38px, 1fr)); }
+.guide-detail-page .guide-loadout-slot { min-width: 0; min-height: 40px; }
+.guide-detail-page .guide-loadout-slot > .item-icon { max-width: 32px; max-height: 32px; }
+.guide-detail-page .guide-unequipped { margin-top: 4px; }
+.guide-detail-page .guide-unequipped > summary { min-height: 34px; color: var(--accent); font-size: .875rem; }
+
+/* Tempo section: clean typography, no left thick bar or nested tag boxes */
+.guide-detail-page .guide-tempo-card { display: grid; gap: 7px; }
+.guide-detail-page .guide-tempo-card > p { margin: 0; font-size: .9375rem; line-height: 1.6; color: var(--text); }
+.guide-detail-page .guide-tempo-tag {
+  display: inline;
+  margin-inline-end: 6px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  font-size: .9rem;
+  font-weight: 750;
+}
+.guide-detail-page a.guide-tempo-tag:hover { text-decoration: underline; }
+.guide-detail-page .guide-tempo-card .guide-equipment-conditions { padding: 8px 0 0; border: 0; border-top: 1px solid var(--guide-soft-line); border-radius: 0; }
+
+/* Overview metrics: clean hairline-separated numbers, no inner boxes */
+.guide-detail-page .guide-overview-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 3px 8px; }
+.guide-detail-page .guide-overview-head a { color: var(--muted); font-size: .8125rem; }
+.guide-detail-page .guide-overview-head a:hover { color: var(--accent); text-decoration: underline; }
+
+.guide-detail-page .guide-overview-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  margin: 10px 0 6px;
+}
+
+.guide-detail-page .guide-overview-metrics > div {
+  padding: 4px 8px 4px 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  text-align: start;
+}
+.guide-detail-page .guide-overview-metrics > div + div {
+  padding-inline-start: 12px;
+  border-inline-start: 1px solid var(--guide-soft-line);
+}
+
+.guide-detail-page .guide-overview-metrics dt { color: var(--muted); font-size: .8125rem; line-height: 1.4; }
+.guide-detail-page .guide-overview-metrics dd { margin: 2px 0 0; font-size: 1.25rem; font-weight: 750; font-variant-numeric: tabular-nums; }
+.guide-detail-page .guide-overview-metrics [data-tone="strong"] { color: var(--guide-green); }
+.guide-detail-page .guide-overview-metrics [data-tone="middle"] { color: var(--gold); }
+.guide-detail-page .guide-overview-metrics :is([data-tone="weak"], [data-tone="limited"]) { color: var(--muted); }
+.guide-detail-page .guide-overview-source { margin: 0 0 6px; color: var(--muted); font-size: .8125rem; }
+
+.guide-detail-page .guide-overview-card :is(.guide-match-details, .board-diff, .guide-stage-stats) { margin: 0; border: 0; }
+.guide-detail-page .guide-overview-card :is(.guide-match-details, .board-diff, .guide-stage-stats) > summary {
+  min-height: 36px;
+  align-content: center;
+  padding: 4px 0;
+  color: var(--accent);
+  font-size: .875rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+.guide-detail-page .guide-overview-card :is(.board-diff:not(:first-child), .guide-overview-source + details) {
+  border-block-start: 1px solid var(--guide-soft-line);
+}
+.guide-detail-page .guide-match-details > .guide-match-stats { margin-block: 0 4px; border: 0; }
+
+@media (max-width: 960px) {
+  .guide-detail-page .guide-reader .reader-layout { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .guide-detail-page .guide-board-options > .guide-family-fold { margin-inline-start: 0; }
+  .guide-detail-page .guide-family-fold > ul { inset-inline: 0 auto; }
+}
+
+@media (max-width: 600px) {
+  .guide-detail-page .guide-page-heading { align-items: flex-start; }
+  .guide-detail-page .guide-board-actions { width: 100%; }
+  .guide-detail-page .guide-board-actions > * { flex: 1 1 auto; }
+  .guide-detail-page .guide-board-actions .guide-zoom-trigger,
+  .guide-detail-page .guide-board-actions .guide-editor-link { justify-content: center; width: 100%; }
+  .guide-detail-page .guide-phases > button + button::before { content: none; }
+  .guide-detail-page .reader-play,
+  .guide-detail-page .guide-sidebar { padding: 12px 14px; }
+  .guide-detail-page .guide-loadout { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  .guide-detail-page .guide-loadout-gear { justify-content: start; }
+}
