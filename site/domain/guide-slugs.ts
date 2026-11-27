@@ -226,6 +226,18 @@ const guideSlugs: Record<string, GuideSlugs> = {
     "9c60581e-2adb-400b-be09-8e04fb2bdef2": "lv6",
     "69b58664-27f4-4404-b4fb-1475fe1583ff": "lv8",
   } },
+  "true-damage-senna": { slug: "true-damage-senna", boards: {
+    "cfd4c9e6-f92d-4fd6-819b-486ec2461c03": "lv7",
+    "3f69e13a-ddcf-4d24-9a6d-1c0d5e1df4cb": "lv8",
+  } },
+  "jazz-bard": { slug: "jazz-bard", boards: {
+    "adc7fda0-b310-467b-98dd-3bd0134610cf": "lv7",
+    "6308c680-360d-4afe-8326-bdd5b4622582": "lv8",
+  } },
+  "ionic-prodigy-lux": { slug: "ionic-prodigy-lux", boards: {
+    "a281cc9a-3387-42fb-b9e6-0146139e1069": "lv6",
+    "7ca75194-155a-4f65-9d18-c27d7c8738dd": "lv8",
+  } },
 };
 
 const sectionIdsBySlug = new Map(Object.entries(guideSlugs).map(([id, guide]) => [guide.slug, id]));
