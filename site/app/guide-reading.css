@@ -676,7 +676,9 @@ html[data-theme="dark"] .guide-placement.weak {color:#ff9ba3;}
   .home-guide-library .guide-section > .reader-list > article:only-child .guide-avatars {grid-area:1/2/span 4;align-self:center;margin:0;}
 }
 @media (max-width:580px) {
-  .home-guide-library .guide-result-main {padding:10px 12px;}
+  .home-guide-library .guide-result-main {gap:7px;padding:12px;}
+  .home-guide-library .guide-result-main > p {line-height:1.6;text-wrap:pretty;}
+  .home-guide-library .guide-avatars .guide-avatar-name,.home-guide-library .guide-avatars .guide-avatar-role {font-size:.8125rem;line-height:1.35;}
   .home-guide-library .guide-result-title {text-wrap:balance;}
   .home-guide-library .guide-title-row > .guide-placement {display:block;width:max-content;}
   .home-guide-library .guide-title-row > .guide-placement small {display:block;}

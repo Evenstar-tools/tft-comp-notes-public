@@ -93,6 +93,21 @@
 .gear-list-name small,.gear-detail-placement small,.gear-cook-results a small {
   display:block;color:var(--muted);font-weight:400;font-size:.8125rem;
 }
+@media (max-width: 580px) {
+  .gear-index-list:not([data-view=craft],[data-view=special],:has(.gear-recipe-results)) {
+    --gear-tile-height: 5.4rem;
+    grid-auto-rows: minmax(var(--gear-tile-height),auto);
+  }
+  .gear-index-list:not([data-view=craft],[data-view=special],:has(.gear-recipe-results)) .gear-list-name {
+    display: block; font-size: .8125rem; line-height: 1.4; text-wrap: balance;
+  }
+  .gear-index-list:not([data-view=craft],[data-view=special]) .gear-list-name small { font-size: .75rem; }
+}
+@media (max-width: 360px) {
+  .gear-index-list:not([data-view=craft],[data-view=special],:has(.gear-recipe-results)) {
+    grid-template-columns: repeat(3,minmax(0,1fr));
+  }
+}
 .gear-index-list:not([data-view=craft],[data-view=special]) .gear-list-name small {font-size:.6875rem;}
 .gear-recipe-results {
   grid-column:1/-1;margin:5px 0 0;padding-block-start:6px;border-block-start:1px solid var(--line);

@@ -372,11 +372,11 @@ export function MedleyLibrary({
         </div>
       </div>
       <div className="medley-toolbar-sub">
-        <span id="medley-search-hint">输入多个英雄用空格隔开，也支持直接输入组号（如 18、28）{fixedMatched ? ` · ${fixed.name}属于每组，上场才计数` : ""}</span>
+        <span id="medley-search-hint">多个英雄用空格隔开，也可搜组号。{fixedMatched ? ` ${fixed.name}属于每组，上场才计数。` : ""}</span>
         <span className="medley-count" role="status">
           {focusedGroup
             ? <>当前聚焦 <strong>第 {focusedGroup.number} 组</strong> · {focusedFits.length} 套适配</>
-            : <>共 <strong>{shownGroups.length}</strong> / {groups.length} 组 · 点击任意组合看完整阵容</>}
+            : <>显示 <strong>{shownGroups.length}</strong> / {groups.length} 组</>}
         </span>
       </div>
     </section>

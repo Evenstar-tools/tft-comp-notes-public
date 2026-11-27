@@ -72,6 +72,7 @@
 .site-lookup-board-evidence > div { display: grid; padding: 4px 0; }
 .site-lookup-board-evidence a:not(.site-lookup-result) { color: var(--accent); }
 .site-lookup-source { font-size: .75rem; color: var(--muted); }
+.site-lookup-source time { white-space: nowrap; }
 .site-lookup-source:hover { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
 .home-search-results { display: grid; gap: 10px 16px; align-items: start; margin: 8px 0 12px; }
 .home-search-results > .site-lookup-other, .home-search-results > .site-lookup-results {
@@ -98,10 +99,30 @@
   .home-search-results[data-with-reference] { grid-template-columns: minmax(0, 1.8fr) minmax(250px, 1fr); }
 }
 @media (max-width: 580px) {
+  .site-search-dialog-results .site-lookup-group:not([data-search-kind="gear"]) { padding: 0 0 8px; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; }
+  .site-search-dialog-results .site-lookup-group:not([data-search-kind="gear"]) > h2 { margin: 0 0 4px; }
+  .site-lookup-group > h2, .site-lookup-other > h2 { font-size: .9375rem; }
+  .site-lookup-result { min-height: 48px; padding-block: 7px; }
+  .site-lookup-label { line-height: 1.45; }
+  .site-lookup-label > strong { font-size: 1rem; overflow-wrap: anywhere; }
+  .site-lookup-result small, .site-lookup-order, .site-lookup-source { font-size: .8125rem; }
   .site-lookup-evidence-grid { grid-template-columns: 1fr; }
   .site-lookup-evidence-grid > .site-lookup-evidence + .site-lookup-evidence { border-inline-start: 0; padding-inline-start: 0; border-top: 1px solid var(--line); }
+  .site-lookup-evidence > header { gap: 4px 6px; padding-block: 8px; }
+  .site-lookup-evidence h3 { font-size: .9375rem; }
+  .site-lookup-column-names, .site-lookup-metrics[data-numeric] { grid-template-columns: 2.5rem 3.5rem; gap: 6px; flex: none; }
+  .site-lookup-metrics[data-numeric] > strong { font-size: .9375rem; }
   .site-lookup-metrics { gap: 1px 5px; }
-  .site-lookup-gear-meta button, .site-search-conditions button { min-height: 36px; }
+  .site-lookup-gear-meta button, .site-search-conditions button { min-height: 40px; font-size: .8125rem; }
+  .site-lookup-gear-meta { row-gap: 8px; }
+  .site-lookup-source { line-height: 1.5; text-wrap: pretty; }
   .site-lookup-terminals .site-lookup-metrics { max-width: 6rem; }
   .site-lookup-result { gap: 7px; }
+}
+@media (max-width: 360px) {
+  .site-lookup-evidence-grid .site-lookup-evidence > header {
+    display: grid; grid-template-columns: minmax(0,1fr) auto; row-gap: 2px;
+  }
+  .site-lookup-evidence-grid .site-lookup-order { grid-column: 1; }
+  .site-lookup-evidence-grid .site-lookup-column-names { grid-area: 1 / 2 / span 2; align-self: end; }
 }
