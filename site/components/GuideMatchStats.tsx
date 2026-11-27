@@ -23,6 +23,7 @@ function FamilyStats({ rows, rare }: {
 }) {
   if (!rows.length && !rare.length) return <p className="muted">这张棋盘暂无对应的体系战绩。</p>;
   return <div className="guide-carry-samples guide-family-results">
+    {family.spansBuilds && <small>采样窗口跨构建</small>}
     {!!rows.length && <ul>{rows.map(({ stat }) => <li key={stat.clusterId}>
       <div className="guide-family-result-head"><strong>{displayGuideName(stat.name)}</strong>
         <a href={stat.url} target="_blank" rel="noreferrer" title={stat.sourceName}>MetaTFT · {family.patch} · 近 {family.days} 天 ↗</a>
@@ -140,7 +141,8 @@ export function GuideMatchStats({ id, stage, team, teams, section, edition, augm
     <div className="guide-stat-body">
       {activeView === "board" && <>
         {rating?.games ? <PlacementSummary rating={rating} stage={stage} />
-          : !formation && <p className="muted">{heroGuide ? "本盘暂无强化样本。" : "本盘暂无固定名单样本。"}</p>}
+          : (!formation || formation.period.historical) && <p className="muted">{heroGuide ? "本盘暂无强化样本。"
+            : formation ? "本盘暂无当前补丁的固定终盘样本。" : "本盘暂无固定名单样本。"}</p>}
         {formation && <GuideFormationStats evidence={formation} />}
         <GuideDistribution team={team} sectionId={section.id} ratings={rating ? [rating] : []} edition={edition} heroGuide={heroGuide} view="board" />
       </>}

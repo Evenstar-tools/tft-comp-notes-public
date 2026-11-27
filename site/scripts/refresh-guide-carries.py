@@ -173,7 +173,7 @@ def main():
         result = {k: plan[k] for k in ("sectionId","teamId","sameNine") if k in plan}
         return {**result, "carryId":carry_id, "carryName":carry["name"], "stars":stars, "slots":3,
                 "anchorIds":plan["anchorIds"], "tankName":known[plan["tankId"]]["name"],
-                "scope":"九人口 · 同九张棋子" if plan.get("sameNine") else "、".join(descriptions),
+                "scope":"9 级结算 · 含指定九张棋子" if plan.get("sameNine") else "、".join(descriptions),
                 "games":sum(counts), "placementCounts":counts, "kind":special or "slots", **audit,
                 "gearComparable":bool(plan["carryItems"] and plan["tankItems"]),
                 "url":scoped_url(EXPLORER + urlencode([("tab","games" if special else "units"), *args]), window)}

@@ -4737,7 +4737,10 @@
       "games": 502,
       "observedOn": "2026-11-26",
       "windowHours": 6,
-      "build": "6035832",
+      "sourcePeriod": {
+        "patch": "PBE 19.1c",
+        "window": "近 6 小时 · 覆盖构建切换"
+      },
       "checkedAt": "2026-11-26T03:48:40+00:00",
       "mean": 3.41,
       "topFourRate": 0.7051792828685259,
@@ -4785,7 +4788,10 @@
       "games": 112,
       "observedOn": "2026-11-26",
       "windowHours": 6,
-      "build": "6035832",
+      "sourcePeriod": {
+        "patch": "PBE 19.1c",
+        "window": "近 6 小时 · 覆盖构建切换"
+      },
       "checkedAt": "2026-11-26T03:48:40+00:00",
       "mean": 3.45,
       "topFourRate": 0.6607142857142857,

@@ -83,6 +83,19 @@ export type FormationComparison = {
   }[];
 };
 
+export function formationSourcePeriod(
+  sample: { patch?: string; build?: string; window?: string; windowHours: number },
+  current: { patch: string; build: string },
+) {
+  const patch = sample.patch ?? "补丁未记录";
+  const historical = patch.replace(/^PBE\s+/i, "") !== current.patch ||
+    Boolean(sample.build && sample.build !== current.build);
+  const window = sample.window === "仅当前构建"
+    ? (sample.build ? "构建 " + sample.build : "构建未记录")
+    : sample.window ?? "滚动 " + sample.windowHours + " 小时";
+  return { patch, window, historical };
+}
+
 export function placementEvidenceKind(record: Pick<PlacementRecord, "url" | "conditions" | "referencesAugment">) {
   if (record.referencesAugment || record.conditions?.augmentId) return "augment";
   if (record.conditions?.kind === "core") return "core";

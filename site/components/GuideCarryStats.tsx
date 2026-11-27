@@ -19,7 +19,7 @@ function Sample({ row }: {row: CarrySample}) {
     <div className="carry-sample-head"><strong>{row.carryName} {row.stars}★ · {gear}</strong>
       <span>{mean !== undefined && <>均名 <b>{mean.toFixed(2)}</b> · </>}{size}</span>
     </div>
-    <p>{row.scope}</p>
+    <p>{row.sameNine ? "9 级结算 · 含指定九张棋子" : row.scope}</p>
     {row.kind === "slots" && row.recentGames > 0 && <p>三件成装 {row.completedGames}/{row.recentGames} 场
       {row.gearComparable && <>；其中 {row.loadoutGames} 场主 C、{row.tankName}各有推荐装</>}。</p>}
     {row.kind === "augment" && <p>抽样三件成装 {row.completedGames}/{row.recentGames} 场；其中 {row.withAugments} 场公开强化。</p>}
@@ -47,7 +47,7 @@ export function GuideCarryStats({ rows, builds }: ReturnType<typeof carryEvidenc
   return <div className="guide-carry-samples">
     {builds.length > 0 && <AugmentBoardBuilds boards={builds} />}
     {!!current.length && <ul>{current.map(row => <Sample key={row.carryId} row={row}/>)}</ul>}
-    {!!comparisons.length && <><h4>同名单 · 不同携装条件</h4><ul>{comparisons.map(row => <Sample key={row.carryId} row={row}/>)}</ul></>}
+    {!!comparisons.length && <><h4>九张同场 · 不同携装条件</h4><ul>{comparisons.map(row => <Sample key={row.carryId} row={row}/>)}</ul></>}
     {!!rows.length && <small>{carryPeriod}</small>}
   </div>;
 }

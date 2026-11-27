@@ -1,10 +1,15 @@
 import batch from "@/data/guide-placement.json";
-import { formationComparisonFor, remainingPlacements, type FormationFamilyReference, type PlacementBatch } from "@/domain/guide-placement";
+import currentPatch from "@/data/current-patch.json";
+import { formationComparisonFor, formationSourcePeriod, remainingPlacements, type FormationFamilyReference, type PlacementBatch } from "@/domain/guide-placement";
 import { usedPopulation } from "@/domain/team";
 import { tierPerformance } from "@/domain/trait-performance";
 import type { Team } from "@/domain/types";
 
 const stats = batch as PlacementBatch;
+const currentPeriod = {
+  patch: currentPatch.metaTftPatch.patch + currentPatch.metaTftPatch.bPatch,
+  build: currentPatch.build,
+};
 const number = new Intl.NumberFormat("zh-CN");
 const percent = new Intl.NumberFormat("zh-CN", { style: "percent", maximumFractionDigits: 1 });
 const checkedDate = new Intl.DateTimeFormat("zh-CN", {
@@ -12,14 +17,15 @@ const checkedDate = new Intl.DateTimeFormat("zh-CN", {
 });
 
 export function formationEvidence(team: Team, edition: string) {
-  return formationComparisonFor(stats.formationComparisons ?? [], edition,
+  const evidence = formationComparisonFor(stats.formationComparisons ?? [], edition,
     team.pieces.map(piece => piece.unitId), usedPopulation(team.pieces));
+  return evidence && { ...evidence, period: formationSourcePeriod(evidence.group, currentPeriod) };
 }
 
 export function formationCoreResult(team: Team, edition: string, build?: string) {
   const evidence = formationEvidence(team, edition);
   const core = evidence?.group.coreSummary;
-  if (!build || evidence?.group.build !== build || !core) return;
+  if (!build || evidence?.group.build !== build || evidence.period.historical || !core) return;
   const result = tierPerformance(core.placementCounts);
   if (result && result.games >= stats.minGames) return { label: core.label, ...result };
 }
@@ -27,12 +33,13 @@ export function formationCoreResult(team: Team, edition: string, build?: string)
 export function GuideFormationFamilyReference({ sample }: { sample: FormationFamilyReference }) {
   const result = tierPerformance(sample.placementCounts);
   if (!result || result.games < stats.minGames) return null;
+  const period = formationSourcePeriod(sample, currentPeriod);
   return <div className="guide-carry-samples">
     <ul><li>
       <div className="carry-sample-head"><strong>{sample.name}</strong><span>均名 <b>{result.mean.toFixed(2)}</b> · {number.format(result.games)} 场</span></div>
       <p>前四 {percent.format(result.top4)} · 登顶 {percent.format(result.win)}</p>
       <div className="carry-source"><a href={sample.url} target="_blank" rel="noreferrer">
-        {sample.patch ?? "PBE"} 阵容榜 · {sample.window ?? `近 ${sample.windowHours} 小时`} · {checkedDate.format(new Date(sample.checkedAt))} 北京时间 ↗
+        {period.historical && "历史 · "}{period.patch} 阵容榜 · {period.window} · {checkedDate.format(new Date(sample.checkedAt))} 北京时间 ↗
       </a></div>
     </li></ul>
   </div>;
@@ -58,14 +65,14 @@ function ComparisonTable({ rows, caption }: { rows: Row[]; caption: string }) {
 }
 
 export function GuideFormationStats({ evidence }: { evidence: NonNullable<ReturnType<typeof formationEvidence>> }) {
-  const { group, board } = evidence;
+  const { group, board, period } = evidence;
   const rows = group.boards.map(({ name, sample }) => ({ name, counts: sample.placementCounts, url: sample.url }));
   const core = group.coreSummary;
   const coreResult = core && tierPerformance(core.placementCounts);
   const subset = board.subset;
   const remaining = subset && remainingPlacements(board.sample.placementCounts, subset.sample.placementCounts);
   return <details className="guide-formation" open>
-    <summary>同条件阵容对照</summary>
+    <summary>{period.historical && "历史 · "}同条件阵容对照</summary>
     <p>{group.population} 级结算 · {group.condition} · {group.exclusions}</p>
     {core && coreResult && coreResult.games >= stats.minGames && <p>
       <a href={core.url} target="_blank" rel="noreferrer">{core.label} ↗</a> · 恰好九张不同棋子 · 均名 {coreResult.mean.toFixed(2)} · {number.format(coreResult.games)} 场
@@ -75,6 +82,6 @@ export function GuideFormationStats({ evidence }: { evidence: NonNullable<Return
       { name: subset.remainder, counts: remaining },
       { name: subset.condition, counts: subset.sample.placementCounts, url: subset.sample.url },
     ]} />}
-    <small>MetaTFT · {group.patch} · {group.window ?? `滚动 ${group.windowHours} 小时`} · {checkedDate.format(new Date(group.checkedAt))} 北京时间取数</small>
+    <small>MetaTFT · {period.patch} · {period.window} · {checkedDate.format(new Date(group.checkedAt))} 北京时间取数</small>
   </details>;
 }
