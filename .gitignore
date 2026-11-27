@@ -14,6 +14,8 @@
 .sites-runtime/
 node_modules/
 site/.editor-art/
+__pycache__/
+*.py[cod]
 _work/
 .DS_Store
 Thumbs.db

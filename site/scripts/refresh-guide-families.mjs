@@ -126,7 +126,7 @@ for (const b of bindings.rows) {
   const group = groups[b.clusterId];
   const metric = distributions.get(b.clusterId);
   const roster = group?.units_string.split(",").map(v=>v.trim()).filter(Boolean).sort() || [];
-  if (modelChanged || !group || !metric) {
+  if (modelChanged || !group) {
     review.push({id:b.clusterId,guide:b.name,reason:modelChanged?"模型更新，请重新配对":"本批没有原分组",roster});
     droppedBindings.push(`${b.clusterId}(${b.name})`);
     continue;
@@ -151,6 +151,11 @@ for (const b of bindings.rows) {
     review.push({id:b.clusterId,guide:b.name,reason:match.reason,roster:match.roster,added:match.added,removed:match.removed});
   }
   if (heroAugment) info.heroAugment = true;
+  if (!metric) {
+    smallSamples.push({ ...info, places: [0, 0, 0, 0, 0, 0, 0, 0], games: 0, mean: null, winRate: null, topFourRate: null });
+    review.push({ id: b.clusterId, guide: b.name, reason: "当前补丁暂无对局，留在攻略检索", games: 0 });
+    continue;
+  }
   if (metric.games < 100) {
     smallSamples.push({...info,...metric});
     review.push({id:b.clusterId,guide:b.name,reason:"不足 100 场，留在攻略检索",games:metric.games});
@@ -206,13 +211,15 @@ for (const entry of queue.normal) entry.verification = crossCheck(evidence,entry
 const reviewSnapshot={...observation,...delta,review,queue,matchQueue:observation.queue,catalogPublishedAt:catalog.publishedAt,
   catalogBoards:publicBoards.length,sourceUrl,statsUrl};
 await writeJson(reviewPath,reviewSnapshot);
-await writeJson(historyPath,{latest:observation,previous:previous ?? null});
-if (modelChanged || !rows.length) throw Error("没有可沿用的体系映射。请查复核清单并校对新模型后重跑。");
+const inGrace = Date.parse(updatedAt) >= patchStart && Date.parse(updatedAt) < patchStart + 12 * 60 * 60 * 1000;
+if (modelChanged || (!rows.length && !(inGrace && smallSamples.length))) {
+  throw Error("没有可沿用的体系映射。请查复核清单并校对新模型后重跑。");
+}
 if (droppedBindings.length && !allowMissingBindings) {
   throw Error(`已绑定体系未对齐（${droppedBindings.length} 项：${droppedBindings.join("、")}）。复核清单已写入，保留上一批战绩快照。`);
 }
+await writeJson(historyPath,{latest:observation,previous:previous ?? null});
 rows.sort((a,b)=>a.mean-b.mean || b.games-a.games || a.clusterId.localeCompare(b.clusterId));
-const inGrace = Date.parse(updatedAt) >= patchStart && Date.parse(updatedAt) < patchStart + 12 * 60 * 60 * 1000;
 const previousBatch = inGrace && [published, published.previous].find(batch =>
   batch?.seasonId === season.id && batch.queue === bindings.queue && Date.parse(batch.updatedAt) < patchStart);
 const { previous: _older, ...previousSnapshot } = previousBatch || {};
