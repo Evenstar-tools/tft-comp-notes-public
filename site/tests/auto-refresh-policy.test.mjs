@@ -29,10 +29,10 @@ test("the scheduled fast profile refreshes the two snapshots allowed by the publ
 
 test("scheduled and manual runs use the protected-PR refresh entry point", () => {
   const workflow = readFileSync(new URL("../../.github/workflows/data-refresh.yml", import.meta.url), "utf8");
-  assert.match(workflow, /cron: '0 1 \* \* \*'/);
-  assert.match(workflow, /cron: '0 13 \* \* \*'/);
-  assert.match(workflow, /'schedule:0 1 \* \* \*'\) profile=daily/);
-  assert.match(workflow, /'schedule:0 13 \* \* \*'\) profile=fast/);
+  assert.match(workflow, /cron: '53 2 \* \* \*'/);
+  assert.match(workflow, /cron: '17 13 \* \* \*'/);
+  assert.match(workflow, /'schedule:53 2 \* \* \*'\) profile=daily/);
+  assert.match(workflow, /'schedule:17 13 \* \* \*'\) profile=fast/);
   assert.match(workflow, /workflow_dispatch:/);
   assert.match(workflow, /run-conditional-refresh\.mjs --profile "\$PROFILE" --dry-run/);
   assert.match(workflow, /GH_TOKEN: \$\{\{ secrets\.DATA_REFRESH_TOKEN \}\}/);
