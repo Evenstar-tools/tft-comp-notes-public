@@ -54,6 +54,14 @@
   scrollbar-width:thin;
   align-content:start;
 }
+@media (min-width:761px) {
+  .gear-index {
+    display:flex;flex-direction:column;
+    max-block-size:calc(100dvh - var(--masthead-height) - 24px);
+  }
+  .gear-index > :not(.gear-index-list) {flex:none;}
+  .gear-index-list {min-block-size:0;}
+}
 @media (max-height:820px) {.gear-index-list {--gear-visible-rows:6;}}
 @media (max-height:685px) {.gear-index-list {--gear-visible-rows:5;}}
 .gear-index-list:has(.gear-recipe-results),.gear-index-list:is([data-view=craft],[data-view=special]) {
