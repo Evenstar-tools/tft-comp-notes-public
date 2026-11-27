@@ -12,6 +12,21 @@ export interface PatchObject {
   values: [label: string, before: string, after: string][];
 }
 
+export type PatchGuideImpactDirection = "buff" | "nerf" | "adjust";
+
+export const patchGuideImpactLabels: Record<PatchGuideImpactDirection, string> = {
+  buff: "加强",
+  nerf: "削弱",
+  adjust: "调整",
+};
+
+export interface PatchGuideImpact {
+  sectionId: string;
+  teamId?: string;
+  direction: PatchGuideImpactDirection;
+  note: string;
+}
+
 export interface PatchReference {
   id: string;
   edition: string;
@@ -21,9 +36,15 @@ export interface PatchReference {
   build: string;
   source: { name: string; url: string; rolling?: boolean };
   highlights: string[];
-  observation?: string;
+  observation?: string | string[];
   observationStats?: { name: string; games: number; mean: number }[];
+  impacts?: PatchGuideImpact[];
   groups: Partial<Record<PatchCategory, PatchObject[]>>;
+}
+
+export function splitHighlightLine(line: string): { label?: string; text: string } {
+  const match = /^([^：:]{2,10})[：:]\s*(.+)$/.exec(line.trim());
+  return match ? { label: match[1], text: match[2] } : { text: line };
 }
 
 const searchText = (value: string) => value.normalize("NFKC").toLowerCase().replace(/[\s/·_-]+/g, "");
