@@ -466,14 +466,18 @@ function ItemReading({ item, wearer, filters, uses, onRecipe, onWearer, wearerHr
   const cookComponent = cookware.has(item.id);
   const suitable = sampled?.rows.some(row => !excluded.includes(row.unitId) && unitMap.has(row.unitId) && row.mean !== undefined && row.games >= minGames);
   const [order, setOrder] = useState<"games" | "mean">(!inRanking && (radiant || special) && suitable ? "mean" : "games");
+  const wearerTable = useRef<HTMLDivElement>(null);
   const selectedWearer = wearer && !excluded.includes(wearer) ? sampled?.rows.find(row => row.unitId === wearer && unitMap.has(wearer)) : undefined;
-  const known = sampled?.rows.filter(row => !excluded.includes(row.unitId) && unitMap.has(row.unitId) &&
-    (order === "games" || row.games >= minGames && row.mean !== undefined)) ?? [];
-  known.sort(order === "mean" ? (a, b) => (a.mean ?? 9) - (b.mean ?? 9) || b.games - a.games : (a, b) => b.games - a.games);
-  const [allUsers, setAllUsers] = useState(false);
-  const limit = radiant || special ? 3 : 6;
-  const orderedUsers = inRanking || allUsers ? known : known.slice(0, limit);
-  const shown = selectedWearer && !orderedUsers.includes(selectedWearer) ? [selectedWearer, ...orderedUsers] : orderedUsers;
+  const known = sampled?.rows.filter(row => !excluded.includes(row.unitId) && unitMap.has(row.unitId)) ?? [];
+  const rankedMean = (row: (typeof known)[number]) => row.games >= minGames && row.mean !== undefined ? row.mean : Infinity;
+  known.sort(order === "mean"
+    ? (a, b) => rankedMean(a) - rankedMean(b) || b.games - a.games
+    : (a, b) => b.games - a.games);
+  const shown = known;
+  useEffect(() => {
+    if (!selectedWearer) return;
+    wearerTable.current?.querySelector<HTMLTableRowElement>("tr[data-selected]")?.scrollIntoView({ block: "nearest" });
+  }, [item.id, selectedWearer?.unitId, order]);
   const maxWearerGames = known.reduce((max, row) => Math.max(max, row.games), selectedWearer?.games || 1);
   const boardUses = new Map<string, ItemBoardUse>();
   const relevant = uses.filter(use => (!reverse || use.unitId === filters.wearer) && unitMap.has(use.unitId) &&
@@ -589,15 +593,15 @@ function ItemReading({ item, wearer, filters, uses, onRecipe, onWearer, wearerHr
     {(showWearers || showBoardUses) && <div className="gear-reading-body" data-split={!!(showWearers && showBoardUses) || undefined}>
       {showWearers && <section className="gear-wearers" aria-labelledby={wearerTitle}>
           <header className="gear-section-heading">
-            <h3 id={wearerTitle}>实战使用者</h3>
-            {!!sampled?.rows.length && <select aria-label="实战使用者排序" value={order} onChange={event => setOrder(event.target.value as typeof order)}>
+            <h3 id={wearerTitle}>实战使用者{known.length > 0 && <small className="gear-wearer-count">{known.length} 位</small>}</h3>
+            {!!known.length && <select aria-label="实战使用者排序" value={order} onChange={event => setOrder(event.target.value as typeof order)}>
               <option value="games">按场数</option>
               <option value="mean">按均名</option>
             </select>}
           </header>
           {shown.length ? <>
-            <div className="gear-wearer-table-scroll" role={inRanking ? "region" : undefined}
-              aria-label={inRanking ? "使用者战绩" : undefined} tabIndex={inRanking ? 0 : undefined}>
+            <div ref={wearerTable} className="gear-wearer-table-scroll" role="region"
+              aria-label="使用者战绩" tabIndex={0}>
             <table className="gear-wearers-table">
               <thead><tr><th scope="col">棋子</th><th scope="col">场数</th>{withRate && <th scope="col">携带率</th>}<th scope="col">均名</th></tr></thead>
               <tbody>{shown.map(row => {
@@ -642,9 +646,6 @@ function ItemReading({ item, wearer, filters, uses, onRecipe, onWearer, wearerHr
               })}</tbody>
             </table>
             </div>
-            {!inRanking && known.length > limit && <button type="button" className="gear-more" onClick={() => setAllUsers(!allUsers)} aria-expanded={allUsers}>
-              {allUsers ? "收起使用者" : "更多使用者"}
-            </button>}
           </> : <p className="gear-empty">{sampled?.totalGames && minGames > 1 ? `暂无达到 ${minGames} 场的使用者` : "暂无携带数据"}</p>}
       </section>}
 
