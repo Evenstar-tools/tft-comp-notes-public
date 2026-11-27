@@ -241,14 +241,18 @@ export function MedleyLibrary({
   const [extrasExpanded, setExtrasExpanded] = useState(false);
   const [drawerState, setDrawerState] = useState<{ groupNum: number; fit: MedleyGuideFit; tab: "opening" | "final" } | null>(null);
 
+  const drawerRef = useRef<HTMLDialogElement>(null);
+  const drawerOpen = drawerState !== null;
   useEffect(() => {
-    if (!drawerState) return;
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setDrawerState(null);
+    const dialog = drawerRef.current;
+    if (!drawerOpen || !dialog) return;
+    const trigger = document.activeElement;
+    dialog.showModal();
+    return () => {
+      dialog.close();
+      if (trigger instanceof HTMLElement && trigger.isConnected) trigger.focus({ preventScroll: true });
     };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [drawerState]);
+  }, [drawerOpen]);
 
   const cleaned = query.trim().toLowerCase();
   const groupNumberMatch = /^(?:#|组合\s*|第\s*)?(\d+)\s*组?$/.exec(cleaned);
@@ -571,9 +575,15 @@ export function MedleyLibrary({
       </span>
     </footer>
 
-    {drawerState && <>
-      <div className="medley-drawer-backdrop" onClick={() => setDrawerState(null)} />
-      <aside className="medley-drawer" role="dialog" aria-modal="true" aria-label={drawerState.fit.title}>
+    {drawerState && <dialog ref={drawerRef} className="medley-drawer" aria-label={drawerState.fit.title}
+      onCancel={event => { event.preventDefault(); setDrawerState(null); }}
+      onClick={event => {
+        if (event.target !== event.currentTarget) return;
+        const { left, right, top, bottom } = event.currentTarget.getBoundingClientRect();
+        if (event.clientX < left || event.clientX > right || event.clientY < top || event.clientY > bottom) {
+          setDrawerState(null);
+        }
+      }}>
         <div className="medley-drawer-head">
           <div>
             <h3>{drawerState.fit.title}</h3>
@@ -622,7 +632,6 @@ export function MedleyLibrary({
             : <a className="medley-act-btn primary" href={drawerState.fit.finalHref}>前往终盘攻略页<ArrowUpRight size={14} aria-hidden="true" /></a>}
           <button type="button" className="medley-act-btn" onClick={() => setDrawerState(null)}>收起</button>
         </div>
-      </aside>
-    </>}
+    </dialog>}
   </div>;
 }

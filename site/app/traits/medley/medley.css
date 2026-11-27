@@ -793,23 +793,26 @@
 .medley-gc-enter { flex: none; color: var(--accent); font-weight: 650; font-size: .77rem; }
 
 /* Slide-over Board Preview Drawer */
-.medley-drawer-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 60;
+.medley-drawer::backdrop {
   background: rgba(16, 18, 22, .4);
   backdrop-filter: blur(2px);
 }
 .medley-drawer {
   position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 61;
+  inset: 0 0 0 auto;
   width: min(560px, 94vw);
-  background: var(--panel);
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
   border-left: 1px solid var(--line);
+  background: var(--panel);
+  color: inherit;
   box-shadow: -12px 0 36px rgba(16, 18, 22, .22);
+}
+.medley-drawer[open] {
   display: flex;
   flex-direction: column;
 }
