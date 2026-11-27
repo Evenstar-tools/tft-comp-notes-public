@@ -24912,11 +24912,11 @@
         {
           "id": "mosher-yasuo-yone-start",
           "type": "text",
-          "text": "大剑、拳套多，卡特琳娜和凯隐来得顺、前排能稳血就走。七级前攒出阵上不同名真实伤害或舞者合计 6 星，七级解锁亚索。血量掉得快就先在七级补两星稳血。",
+          "text": "大剑、拳套多，卡蜜尔和凯隐来得顺、前排能稳血就走。七级前攒出阵上不同名真实伤害或舞者合计 6 星，七级解锁亚索；中期先用两星奎桑提带肉装吃三心之钢。",
           "elements": [
             {
               "text_run": {
-                "content": "大剑、拳套多，卡特琳娜和凯隐来得顺、前排能稳血就走。七级前攒出阵上不同名真实伤害或舞者合计 6 星，七级解锁亚索。血量掉得快就先在七级补两星稳血。"
+                "content": "大剑、拳套多，卡蜜尔和凯隐来得顺、前排能稳血就走。七级前攒出阵上不同名真实伤害或舞者合计 6 星，七级解锁亚索；中期先用两星奎桑提带肉装吃三心之钢。"
               }
             }
           ]
@@ -24936,11 +24936,11 @@
         {
           "id": "mosher-yasuo-yone-roll",
           "type": "text",
-          "text": "八级搜两星亚索、永恩和奎桑提，凑六舞者、三心之钢、双保镖。先做亚索无尽和正义，再补奎桑提石像鬼，永恩先拿夜刃、轻语，最后补双 C 的第三件。",
+          "text": "八级搜两星亚索、永恩，前排顺手找两星盖伦接主坦装（蕾欧娜先两星就直接替补顶上开双保镖），卡蜜尔换下低费挂件凑六舞者、三心之钢、双编舞师。先做亚索无尽和正义，再补主坦石像鬼，永恩先拿夜刃、轻语。",
           "elements": [
             {
               "text_run": {
-                "content": "八级搜两星亚索、永恩和奎桑提，凑六舞者、三心之钢、双保镖。先做亚索无尽和正义，再补奎桑提石像鬼，永恩先拿夜刃、轻语，最后补双 C 的第三件。"
+                "content": "八级搜两星亚索、永恩，前排顺手找两星盖伦接主坦装（蕾欧娜先两星就直接替补顶上开双保镖），卡蜜尔换下低费挂件凑六舞者、三心之钢、双编舞师。先做亚索无尽和正义，再补主坦石像鬼，永恩先拿夜刃、轻语。"
               }
             }
           ]
@@ -24948,11 +24948,11 @@
         {
           "id": "mosher-yasuo-yone-position",
           "type": "text",
-          "text": "奎桑提单顶第一排中间，亚索和永恩同侧站第二排外沿，先打薄的一边。永恩用轻语破甲，遇大范围控制就把永恩换到另一侧。",
+          "text": "盖伦（或替补蕾欧娜）单顶第一排中央吃石像鬼双抗，亚索、永恩与近战舞者站第二排吃满编舞开战护盾，双 C 同侧从外沿切脆皮侧。永恩带轻语破甲，遇大范围控制就把永恩换边。",
           "elements": [
             {
               "text_run": {
-                "content": "奎桑提单顶第一排中间，亚索和永恩同侧站第二排外沿，先打薄的一边。永恩用轻语破甲，遇大范围控制就把永恩换到另一侧。"
+                "content": "盖伦（或替补蕾欧娜）单顶第一排中央吃石像鬼双抗，亚索、永恩与近战舞者站第二排吃满编舞开战护盾，双 C 同侧从外沿切脆皮侧。永恩带轻语破甲，遇大范围控制就把永恩换边。"
               }
             }
           ]
@@ -24960,11 +24960,11 @@
         {
           "id": "mosher-yasuo-yone-cap",
           "type": "text",
-          "text": "双 C 两星稳住再上九。两星永恩开厄斐琉斯，九级优先补他，也可按对局补五费控制。有心之钢转职就用厄斐琉斯开五心之钢。",
+          "text": "双 C 与四费主坦两星稳住再上九。两星永恩解锁厄斐琉斯，九级优先补他或换五费蒙多医生接肉装；有心之钢转职可开五心之钢。",
           "elements": [
             {
               "text_run": {
-                "content": "双 C 两星稳住再上九。两星永恩开厄斐琉斯，九级优先补他，也可按对局补五费控制。有心之钢转职就用厄斐琉斯开五心之钢。"
+                "content": "双 C 与四费主坦两星稳住再上九。两星永恩解锁厄斐琉斯，九级优先补他或换五费蒙多医生接肉装；有心之钢转职可开五心之钢。"
               }
             }
           ]
@@ -24972,11 +24972,11 @@
         {
           "id": "mosher-yasuo-yone-items",
           "type": "text",
-          "text": "棋盘配装 · 八级 · 六舞者亚索永恩\n主C：亚索。无尽之刃、正义之手、斯特拉克的挑战护手。\n主坦：奎桑提。石像鬼石板甲、狂徒铠甲、日炎斗篷。\n副C：永恩。夜之锋刃、无尽之刃、最后的轻语。",
+          "text": "棋盘配装 · 八级 · 六舞者亚索永恩\n主C：亚索。无尽之刃、正义之手、斯特拉克的挑战护手。\n主坦：盖伦。石像鬼石板甲、狂徒铠甲、日炎斗篷。\n副C：永恩。夜之锋刃、无尽之刃、最后的轻语。",
           "elements": [
             {
               "text_run": {
-                "content": "棋盘配装 · 八级 · 六舞者亚索永恩\n主C：亚索。无尽之刃、正义之手、斯特拉克的挑战护手。\n主坦：奎桑提。石像鬼石板甲、狂徒铠甲、日炎斗篷。\n副C：永恩。夜之锋刃、无尽之刃、最后的轻语。"
+                "content": "棋盘配装 · 八级 · 六舞者亚索永恩\n主C：亚索。无尽之刃、正义之手、斯特拉克的挑战护手。\n主坦：盖伦。石像鬼石板甲、狂徒铠甲、日炎斗篷。\n副C：永恩。夜之锋刃、无尽之刃、最后的轻语。"
               }
             }
           ]
@@ -24988,21 +24988,31 @@
           "id": "edad46b7-e909-4233-b0c5-79d6899db862",
           "name": "八级 · 六舞者亚索永恩",
           "category": "待分类",
-          "notes": "",
-          "revision": 1,
-          "updatedAt": "2026-11-27T12:50:22.608Z",
+          "notes": "盖伦配佛耶戈开双编舞全前排吃盾；蕾欧娜先两星可互换开双保镖。",
+          "revision": 2,
+          "updatedAt": "2026-11-27T13:48:00.000Z",
           "sectionId": "mosher-yasuo-yone",
           "pieces": [
             {
-              "instanceId": "3268cc3e-5e90-48aa-b424-7f695fed802f",
-              "unitId": "k-sante",
+              "instanceId": "4b8d19e2-71a4-49c3-85f0-6a91d2e384c5",
+              "unitId": "garen",
               "position": 3,
               "stars": 2,
               "items": [
                 "TFT_Item_GargoyleStoneplate",
                 "TFT_Item_WarmogsArmor",
                 "TFT_Item_RedBuff"
-              ]
+              ],
+              "alternate": {
+                "instanceId": "9f27a1c4-61e8-4f2b-98d4-3c8e712a94b1",
+                "unitId": "leona",
+                "stars": 2,
+                "items": [
+                  "TFT_Item_GargoyleStoneplate",
+                  "TFT_Item_WarmogsArmor",
+                  "TFT_Item_RedBuff"
+                ]
+              }
             },
             {
               "instanceId": "ca956791-85a3-4050-95b2-70ebf13a772b",
@@ -25019,8 +25029,8 @@
               "items": []
             },
             {
-              "instanceId": "bce32c45-eb8a-4d3d-b0db-666c08cb4834",
-              "unitId": "nasus",
+              "instanceId": "3268cc3e-5e90-48aa-b424-7f695fed802f",
+              "unitId": "k-sante",
               "position": 10,
               "stars": 2,
               "items": []
@@ -25048,8 +25058,8 @@
               ]
             },
             {
-              "instanceId": "0a95a53c-cbbc-405f-880f-6b7914d6fba4",
-              "unitId": "katarina",
+              "instanceId": "7d1e48b9-32f0-4a61-b5c8-19e408f2a763",
+              "unitId": "camille",
               "position": 15,
               "stars": 2,
               "items": []
@@ -25068,21 +25078,31 @@
         "id": "edad46b7-e909-4233-b0c5-79d6899db862",
         "name": "八级 · 六舞者亚索永恩",
         "category": "待分类",
-        "notes": "",
-        "revision": 1,
-        "updatedAt": "2026-11-27T12:50:22.608Z",
+        "notes": "盖伦配佛耶戈开双编舞全前排吃盾；蕾欧娜先两星可互换开双保镖。",
+        "revision": 2,
+        "updatedAt": "2026-11-27T13:48:00.000Z",
         "sectionId": "mosher-yasuo-yone",
         "pieces": [
           {
-            "instanceId": "3268cc3e-5e90-48aa-b424-7f695fed802f",
-            "unitId": "k-sante",
+            "instanceId": "4b8d19e2-71a4-49c3-85f0-6a91d2e384c5",
+            "unitId": "garen",
             "position": 3,
             "stars": 2,
             "items": [
               "TFT_Item_GargoyleStoneplate",
               "TFT_Item_WarmogsArmor",
               "TFT_Item_RedBuff"
-            ]
+            ],
+            "alternate": {
+              "instanceId": "9f27a1c4-61e8-4f2b-98d4-3c8e712a94b1",
+              "unitId": "leona",
+              "stars": 2,
+              "items": [
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_WarmogsArmor",
+                "TFT_Item_RedBuff"
+              ]
+            }
           },
           {
             "instanceId": "ca956791-85a3-4050-95b2-70ebf13a772b",
@@ -25099,8 +25119,8 @@
             "items": []
           },
           {
-            "instanceId": "bce32c45-eb8a-4d3d-b0db-666c08cb4834",
-            "unitId": "nasus",
+            "instanceId": "3268cc3e-5e90-48aa-b424-7f695fed802f",
+            "unitId": "k-sante",
             "position": 10,
             "stars": 2,
             "items": []
@@ -25128,8 +25148,8 @@
             ]
           },
           {
-            "instanceId": "0a95a53c-cbbc-405f-880f-6b7914d6fba4",
-            "unitId": "katarina",
+            "instanceId": "7d1e48b9-32f0-4a61-b5c8-19e408f2a763",
+            "unitId": "camille",
             "position": 15,
             "stars": 2,
             "items": []

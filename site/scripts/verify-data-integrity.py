@@ -321,17 +321,7 @@ def validate_recommendation_overrides(entry, active, path, errors):
     return override if override in RECOMMENDATION_OVERRIDES else None
 
 
-def check_recommendation_entries(recommendations, family, sections, current, effective,
-                                 patch_ready, family_aligned, warnings, errors):
-    name = "data/patch-recommendations.json"
-    entries = recommendations.get("entries")
-    if not isinstance(entries, list):
-        return
-    reviewed = timestamp(recommendations.get("reviewedAt"))
-    active = (patch_ready and recommendations.get("seasonId") == current["seasonId"]
-              and recommendations.get("build") == current["build"] and reviewed is not None and reviewed >= effective)
-    current_family = current_recommendation_family(family, recommendations if active else {},
-                                                   current, effective, family_aligned)
+def collect_public_boards(sections, errors):
     boards = {}
     primaries = {}
     sections_by_id = {section["id"]: section for section in sections}
@@ -346,6 +336,39 @@ def check_recommendation_entries(recommendations, family, sections, current, eff
         primary = section.get("primaryTeamId")
         primaries[section_id] = primary if isinstance(primary, str) else next(iter(teams), None)
         boards.update({(section_id, team_id): team for team_id, team in teams.items()})
+    reroll_path = ROOT / "data/s19-reroll-boards.json"
+    if reroll_path.exists():
+        reroll = read_json("data/s19-reroll-boards.json", list, errors)
+        for guide in reroll:
+            if not isinstance(guide, dict):
+                continue
+            section_id = guide.get("sectionId")
+            if not isinstance(section_id, str) or section_id not in sections_by_id:
+                continue
+            for stage in guide.get("stages") or []:
+                if not isinstance(stage, dict) or not isinstance(stage.get("teamId"), str):
+                    continue
+                key = (section_id, stage["teamId"])
+                if key not in boards:
+                    boards[key] = {
+                        "id": stage["teamId"],
+                        "boardRole": stage.get("boardRole", "stage"),
+                        "pieces": stage.get("pieces", []),
+                    }
+    return boards, primaries, sections_by_id
+
+
+def check_recommendation_entries(recommendations, family, boards, primaries, sections_by_id,
+                                 current, effective, patch_ready, family_aligned, warnings, errors):
+    name = "data/patch-recommendations.json"
+    entries = recommendations.get("entries")
+    if not isinstance(entries, list):
+        return
+    reviewed = timestamp(recommendations.get("reviewedAt"))
+    active = (patch_ready and recommendations.get("seasonId") == current["seasonId"]
+              and recommendations.get("build") == current["build"] and reviewed is not None and reviewed >= effective)
+    current_family = current_recommendation_family(family, recommendations if active else {},
+                                                   current, effective, family_aligned)
     rows = family.get("rows")
     families = []
     for row in rows if isinstance(rows, list) else []:
@@ -456,6 +479,75 @@ def qualified_home_guides(families, primaries, boards, decisions, excluded, sect
             yield section_id, "heroAugment" if is_hero else decisions.get(first, (None, None))[0]
 
 
+def check_family_bindings(family_map, family, boards, family_aligned, errors):
+    map_name = "data/guide-family-map.json"
+    stats_name = "data/guide-family-stats.json"
+    rows = family_map.get("rows")
+    if not isinstance(rows, list):
+        return
+    model = family_map.get("model")
+    if type(model) is not int:
+        errors.append(f"{map_name}：缺少有效整数 model")
+    seen_clusters = set()
+    for index, row in enumerate(rows):
+        if not isinstance(row, dict):
+            continue
+        path = f"{map_name}.rows[{index}]"
+        cluster_id = row.get("clusterId")
+        if not isinstance(cluster_id, str) or not cluster_id.strip():
+            errors.append(f"{path}.clusterId：缺少有效分组 ID")
+        elif cluster_id in seen_clusters:
+            errors.append(f"{path}.clusterId：重复绑定分组 {cluster_id}")
+        else:
+            seen_clusters.add(cluster_id)
+        section_id, team_id = row.get("sectionId"), row.get("teamId")
+        if isinstance(section_id, str):
+            if not isinstance(team_id, str) or (section_id, team_id) not in boards:
+                errors.append(f"{path}.teamId：未在对应公开攻略中找到棋盘 {team_id}")
+            if "landingTeamId" in row:
+                landing = row.get("landingTeamId")
+                if not isinstance(landing, str) or (section_id, landing) not in boards:
+                    errors.append(f"{path}.landingTeamId：未在对应公开攻略中找到棋盘 {landing}")
+            if "sharedTeamIds" in row:
+                shared = row.get("sharedTeamIds")
+                if not isinstance(shared, list) or any(
+                    not isinstance(tid, str) or (section_id, tid) not in boards for tid in shared
+                ):
+                    errors.append(f"{path}.sharedTeamIds：包含未在对应公开攻略中找到的棋盘")
+
+    present = {}
+    for collection_key in ("rows", "smallSamples"):
+        collection = family.get(collection_key)
+        if collection is None:
+            continue
+        if not isinstance(collection, list):
+            errors.append(f"{stats_name}.{collection_key}：须为数组")
+            continue
+        for item in collection:
+            if not isinstance(item, dict) or item.get("clusterId") is None:
+                continue
+            cid = str(item["clusterId"])
+            if cid in present:
+                errors.append(f"{stats_name}：重复收录体系分组 {cid}")
+            else:
+                present[cid] = item
+
+    if family_aligned and type(model) is int and family.get("model") == model:
+        for row in rows:
+            if not isinstance(row, dict) or not isinstance(row.get("clusterId"), str):
+                continue
+            cid = row["clusterId"].strip()
+            if not cid:
+                continue
+            if cid not in present:
+                label = row.get("name") or row.get("sectionId") or cid
+                errors.append(f"{stats_name}：缺少已绑定体系 {cid}（{label}），不允许残缺快照上线")
+                continue
+            actual = present[cid]
+            if actual.get("sectionId") != row.get("sectionId") or actual.get("teamId") != row.get("teamId"):
+                errors.append(f"{stats_name}：体系 {cid} 的攻略或主盘与 {map_name} 不一致")
+
+
 def check_references(recommendations, family, current, effective,
                      patch_ready, family_aligned, warnings, errors):
     preview = read_json("data/public-preview.json", dict, errors)
@@ -465,8 +557,9 @@ def check_references(recommendations, family, current, effective,
         sections = []
     sections = [section for section in sections if isinstance(section, dict) and isinstance(section.get("id"), str)]
     ids = {section["id"] for section in sections}
-    check_recommendation_entries(recommendations, family, sections, current, effective,
-                                 patch_ready, family_aligned, warnings, errors)
+    boards, primaries, sections_by_id = collect_public_boards(sections, errors)
+    check_recommendation_entries(recommendations, family, boards, primaries, sections_by_id,
+                                 current, effective, patch_ready, family_aligned, warnings, errors)
     names = ("data/patch-recommendations.json", "data/guide-family-map.json")
     family_map = read_json(names[1], dict, errors)
     for name, source, key in zip(names, (recommendations, family_map), ("entries", "rows")):
@@ -481,6 +574,7 @@ def check_references(recommendations, family, current, effective,
                 section_id = record["sectionId"]
                 if not isinstance(section_id, str) or section_id not in ids:
                     errors.append(f"{path}.sectionId：未在公开攻略中找到")
+    check_family_bindings(family_map, family, boards, family_aligned, errors)
 
 
 def main():

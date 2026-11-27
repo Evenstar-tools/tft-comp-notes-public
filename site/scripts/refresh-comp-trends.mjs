@@ -112,10 +112,13 @@ export function appendCompTrendBatch(history, input, { review, patch, unitNames,
   }
   for (const row of input.rows) {
     if (heroClusters.has(String(row.clusterId))) continue;
+    if (Number.isSafeInteger(row.games) && row.games >= 0 && row.games < minGames) continue;
     const point = metrics(row);
     if (!point || typeof row.sectionId !== "string" || !row.sectionId ||
         typeof row.name !== "string" || !row.name || !row.clusterId ||
-        !Array.isArray(row.carryIds)) continue;
+        !Array.isArray(row.carryIds)) {
+      throw Error("趋势输入包含字段缺失或指标异常的合格体系记录：" + (row.clusterId ?? row.name ?? "unknown"));
+    }
     const seriesId = [row.sectionId, row.teamId || row.clusterId].join(":");
     if (touchedSeries.has(seriesId)) throw Error("同一批次中存在重复的阵容棋盘：" + seriesId);
     touchedSeries.add(seriesId);

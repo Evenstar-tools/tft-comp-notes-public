@@ -2,7 +2,7 @@ import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
-import { changeSignals, heroAugmentSourceUnits, makeReviewQueue, sourceProfile } from "./family-review.mjs";
+import { changeSignals, heroAugmentSourceUnits, makeReviewQueue, matchBoundCluster, sourceProfile } from "./family-review.mjs";
 import { crossCheck } from "./family-evidence.mjs";
 import { saveCompTrendBatch } from "./refresh-comp-trends.mjs";
 
@@ -10,9 +10,11 @@ const root = fileURLToPath(new URL("../", import.meta.url));
 const sourceUrl = "https://www.metatft.com/pbe-comps";
 const args = process.argv.slice(2);
 const arg = (key) => args.includes(key) ? args[args.indexOf(key) + 1] : undefined;
+const allowMissingBindings = args.includes("--allow-missing-bindings");
+const noTrends = args.includes("--no-trends");
 const siteSnapshot = resolve(root, "data/guide-family-stats.json");
 const out = resolve(arg("--output") || siteSnapshot);
-const trendOutput = arg("--trends") || (out === siteSnapshot ? resolve(root, "data/comp-trends.json") : undefined);
+const trendOutput = noTrends ? undefined : (arg("--trends") || (out === siteSnapshot ? resolve(root, "data/comp-trends.json") : undefined));
 const reviewPath = resolve(arg("--review") || resolve(root, "outputs/family-review/review.json"));
 const historyPath = resolve(arg("--history") || resolve(dirname(reviewPath), "family-history.json"));
 const catalogPath = arg("--catalog") || resolve(root, "outputs/family-review/catalog.json");
@@ -104,6 +106,7 @@ const matchedBoardIds = new Set();
 const rows = [];
 const review = [];
 const smallSamples = [];
+const droppedBindings = [];
 for (const row of stats.results.filter(r=>r.cluster!=="")) {
   const id=String(row.cluster);
   if(distributions.has(id)) throw Error("重复组号：" + id);
@@ -122,18 +125,30 @@ for (const b of bindings.rows) {
   reviewed.add(b.clusterId);
   const group = groups[b.clusterId];
   const metric = distributions.get(b.clusterId);
-  const roster = group?.units_string.split(",").map(v=>v.trim()).sort() || [];
-  if (modelChanged || !group || !metric || JSON.stringify(roster)!==JSON.stringify([...b.representativeUnits].sort())) {
-    review.push({id:b.clusterId,guide:b.name,reason:modelChanged?"模型更新，请重新配对":!group||!metric?"本批没有原分组":"代表棋盘有变",roster});
+  const roster = group?.units_string.split(",").map(v=>v.trim()).filter(Boolean).sort() || [];
+  if (modelChanged || !group || !metric) {
+    review.push({id:b.clusterId,guide:b.name,reason:modelChanged?"模型更新，请重新配对":"本批没有原分组",roster});
+    droppedBindings.push(`${b.clusterId}(${b.name})`);
     continue;
   }
-  const { representativeUnits, ...info } = b;
+  const match = matchBoundCluster(b, group, unitIds);
+  if (!match.ok) {
+    review.push({id:b.clusterId,guide:b.name,reason:match.reason,roster:match.roster,added:match.added,removed:match.removed});
+    droppedBindings.push(`${b.clusterId}(${b.name})`);
+    continue;
+  }
+  const info = { ...b };
+  delete info.representativeUnits;
   const anchor = publicBoardById.get(info.teamId);
   const augmentUnits = heroAugmentSourceUnits(group.name_string);
   const heroAugment = anchor?.special === "英雄强化" && augmentUnits.some(apiId => info.carryIds.includes(unitIds.get(apiId)));
   if (!anchor || anchor.sectionId !== info.sectionId || (!heroAugment && (anchor.special || augmentUnits.length))) {
     review.push({id:b.clusterId,guide:b.name,reason:"主盘已变或应独立检索"});
+    droppedBindings.push(`${b.clusterId}(${b.name})`);
     continue;
+  }
+  if (match.status === "drift") {
+    review.push({id:b.clusterId,guide:b.name,reason:match.reason,roster:match.roster,added:match.added,removed:match.removed});
   }
   if (heroAugment) info.heroAugment = true;
   if (metric.games < 100) {
@@ -193,6 +208,9 @@ const reviewSnapshot={...observation,...delta,review,queue,matchQueue:observatio
 await writeJson(reviewPath,reviewSnapshot);
 await writeJson(historyPath,{latest:observation,previous:previous ?? null});
 if (modelChanged || !rows.length) throw Error("没有可沿用的体系映射。请查复核清单并校对新模型后重跑。");
+if (droppedBindings.length && !allowMissingBindings) {
+  throw Error(`已绑定体系未对齐（${droppedBindings.length} 项：${droppedBindings.join("、")}）。复核清单已写入，保留上一批战绩快照。`);
+}
 rows.sort((a,b)=>a.mean-b.mean || b.games-a.games || a.clusterId.localeCompare(b.clusterId));
 const inGrace = Date.parse(updatedAt) >= patchStart && Date.parse(updatedAt) < patchStart + 12 * 60 * 60 * 1000;
 const previousBatch = inGrace && [published, published.previous].find(batch =>
@@ -207,12 +225,7 @@ const accepted={seasonId:season.id,set:bindings.set,queue:bindings.queue,patch,b
   source:"MetaTFT",sourceUrl,statsUrl,totalFinishes:total,rows,smallSamples,previous:previousBatch ? previousSnapshot : undefined};
 await writeJson(out,accepted);
 if (trendOutput) {
-  try {
-    const unitNames = new Map(season.units.map(unit => [unit.id, unit.name]));
-    await saveCompTrendBatch(resolve(trendOutput), accepted, { review: reviewSnapshot, patch: currentPatch, unitNames });
-  } catch (error) {
-    if (arg("--trends")) throw error;
-    console.warn("体系已刷新，趋势保留上一批。", error.message);
-  }
+  const unitNames = new Map(season.units.map(unit => [unit.id, unit.name]));
+  await saveCompTrendBatch(resolve(trendOutput), accepted, { review: reviewSnapshot, patch: currentPatch, unitNames });
 }
 console.log(`${patch}，${updatedAt}，${rows.length} 个体系已对应攻略，${total} 次选手结算。复核清单 ${review.length} 项。`);

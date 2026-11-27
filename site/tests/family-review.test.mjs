@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { changeSignals, compareBoards, sourceProfile, makeReviewQueue } from "../scripts/family-review.mjs";
+import { changeSignals, compareBoards, matchBoundCluster, sourceProfile, makeReviewQueue } from "../scripts/family-review.mjs";
 import { crossCheck } from "../scripts/family-evidence.mjs";
 
 const meta = {set:"S19",queue:"PBE",patch:"19.1 Nov-20",days:3,model:427};
@@ -34,4 +34,52 @@ test("单局吃鸡或同站重复引用不能完成交叉核实",()=>{
   assert.equal(crossCheck([e],{id:"x"},after).status,"待交叉核对");
   e.secondSource.url="https://www.datatft.com/explorerForPBE"; e.player.matches.push({...e.player.matches[0],id:"2",placement:7});
   assert.equal(crossCheck([e],{id:"x"},after).status,"可人工决定收录");
+});
+test("代表盘兼容 1–2 张挂件微调，主 C 丢失或大幅换阵必须阻断",()=>{
+  const mapPairs = [
+    ["DA_Amumu19","amumu"],["DA_Briar19","briar"],["DA_Camille19","camille"],["DA_Garen19","garen"],
+    ["DA_Kayn19","kayn"],["DA_Viego19","viego"],["DA_Yasuo19","yasuo"],["DA_Yone19","yone"],
+    ["DA_Galio19","galio"],["DA_Jhin19","jhin"],["DA_KSante19","k-sante"],["DA_Lucian19","lucian"],
+    ["DA_Mel19","mel"],["DA_Nasus19","nasus"],["DA_Smeech19","smeech"],["DA_Thresh19","thresh"],
+    ["DA_Vladimir19","vladimir"],["DA_Gragas19","gragas"],["DA_Olaf19","olaf"],["DA_Swain19","swain"],
+  ];
+  const unitIds = new Map(mapPairs);
+  const viegoBinding = {
+    clusterId: "429002",
+    carryIds: ["viego", "briar"],
+    representativeUnits: ["DA_Amumu19","DA_Briar19","DA_Camille19","DA_Garen19","DA_Kayn19","DA_Viego19","DA_Yasuo19","DA_Yone19"],
+  };
+  // Exact match
+  assert.equal(matchBoundCluster(viegoBinding, { units_string: viegoBinding.representativeUnits.join(", ") }, unitIds).status, "exact");
+  // Real 429002 case: 8-level Garen dropped from 7-unit representative board -> tolerated drift
+  const droppedGaren = matchBoundCluster(viegoBinding, {
+    units_string: "DA_Amumu19, DA_Briar19, DA_Camille19, DA_Kayn19, DA_Viego19, DA_Yasuo19, DA_Yone19",
+  }, unitIds);
+  assert.equal(droppedGaren.ok, true);
+  assert.equal(droppedGaren.status, "drift");
+  assert.deepEqual(droppedGaren.removed, ["DA_Garen19"]);
+
+  // Secondary variant carry not on representative board (429003 Jhin + MF) still tolerates 1 filler swap as long as Jhin stays
+  const jhinBinding = {
+    clusterId: "429003",
+    carryIds: ["jhin", "miss-fortune"],
+    representativeUnits: ["DA_Galio19","DA_Jhin19","DA_KSante19","DA_Lucian19","DA_Mel19","DA_Nasus19","DA_Smeech19","DA_Thresh19","DA_Vladimir19"],
+  };
+  const swappedFiller = matchBoundCluster(jhinBinding, {
+    units_string: "DA_Galio19, DA_Jhin19, DA_KSante19, DA_Lucian19, DA_Mel19, DA_Nasus19, DA_Smeech19, DA_Thresh19, DA_Gragas19",
+  }, unitIds);
+  assert.equal(swappedFiller.ok, true);
+  assert.equal(swappedFiller.status, "drift");
+
+  // Carry dropped -> must reject
+  const missingCarry = matchBoundCluster(viegoBinding, {
+    units_string: "DA_Amumu19, DA_Briar19, DA_Camille19, DA_Garen19, DA_Kayn19, DA_Gragas19, DA_Yasuo19, DA_Yone19",
+  }, unitIds);
+  assert.equal(missingCarry.ok, false);
+
+  // >=3 units changed -> must reject
+  const majorRewrite = matchBoundCluster(viegoBinding, {
+    units_string: "DA_Briar19, DA_Viego19, DA_Yasuo19, DA_Yone19, DA_Galio19, DA_Gragas19, DA_Olaf19, DA_Swain19",
+  }, unitIds);
+  assert.equal(majorRewrite.ok, false);
 });

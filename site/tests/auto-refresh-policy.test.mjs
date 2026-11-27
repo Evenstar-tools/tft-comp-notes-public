@@ -5,7 +5,8 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
-import { changedDataFiles, preflightReason, verifyAlignment } from "../scripts/check-auto-refresh.mjs";
+import { changedDataFiles, preflightReason, verifyAlignment, verifyFamilyContinuity } from "../scripts/check-auto-refresh.mjs";
+import { formatDotSummary, summarizeRefresh } from "../scripts/check-refresh-alerts.mjs";
 
 const current = {
   seasonId: "s19-pbe",
@@ -105,4 +106,86 @@ test("an edited module must align to the active batch and preserve available bui
   assert.throws(() => verifyAlignment(files, summary({ build: "6037882" })), /未对齐/);
   assert.throws(() => verifyAlignment(files, summary({ alignment: "lagging" })), /未对齐/);
   assert.throws(() => verifyAlignment(files, { ...summary({}), ok: false }), /状态摘要/);
+});
+
+test("auto-refresh continuity blocks dropped bindings, baseline losses, and incomplete trend batches", () => {
+  const row = (clusterId, sectionId, teamId, extra = {}) => ({
+    clusterId, sectionId, teamId, games: 250, mean: 4.15, ...extra,
+  });
+  const baseRows = [
+    row("429002", "sample-block-0243", "t-viego"),
+    row("429018", "sample-block-1110", "t-jinx"),
+    row("429003", "sample-block-0051", "t-jhin"),
+    row("429055", "sample-block-0235", "t-zeri"),
+    row("429033", "sample-block-0064", "t-kennen", { heroAugment: true }),
+  ];
+  const baseline = { ...family, patch: "19.1c", rows: baseRows, smallSamples: [] };
+  const candidate = { ...baseline, updatedAt: "2026-11-26T12:00:00Z" };
+  const bindings = { model: 429, rows: baseRows.map(({ clusterId, sectionId, teamId }) => ({ clusterId, sectionId, teamId })) };
+  const batchId = "429|19.1c|3|2026-11-26T12:00:00.000Z";
+  const trend = {
+    batches: [{ id: batchId, model: 429, capturedAt: candidate.updatedAt }],
+    series: baseRows.filter(r => !r.heroAugment).map(r => ({
+      id: `${r.sectionId}:${r.teamId}`,
+      points: [{ batchId, clusterId: r.clusterId, games: r.games, mean: r.mean }],
+    })),
+  };
+
+  assert.doesNotThrow(() => verifyFamilyContinuity(baseline, candidate, {
+    bindings, trend, checkTrends: true, familyChanged: true,
+  }));
+
+  // Missing bound cluster (429002 dropped) -> hard fail
+  const droppedViego = { ...candidate, rows: baseRows.slice(1) };
+  assert.throws(() => verifyFamilyContinuity(baseline, droppedViego, { bindings }), /缺少已绑定分组.*429002/);
+  assert.throws(() => verifyFamilyContinuity(baseline, droppedViego, {}), /较已发布基线丢失分组.*429002/);
+
+  // Moving to smallSamples (<100 games) is allowed without tripping missing-binding breaker
+  const smallZeri = {
+    ...candidate,
+    rows: baseRows.filter(r => r.clusterId !== "429055"),
+    smallSamples: [{ ...baseRows[3], games: 40 }],
+  };
+  assert.doesNotThrow(() => verifyFamilyContinuity(baseline, smallZeri, { bindings }));
+
+  // Trend batch missing one regular comp's point -> hard fail
+  const incompleteTrend = { ...trend, series: trend.series.slice(1) };
+  assert.throws(() => verifyFamilyContinuity(baseline, candidate, {
+    bindings, trend: incompleteTrend, checkTrends: true, familyChanged: true,
+  }), /缺少活跃体系采样点.*sample-block-0243:t-viego/);
+});
+
+test("refresh alert probe flags missing bound clusters and homepage recommendations without needing local review.json", () => {
+  const familyStats = {
+    set: "TFTSet19", queue: "PBE", patch: "19.1c", build: "6035832", model: 429,
+    updatedAt: "2026-11-26T12:00:00Z",
+    rows: [{ clusterId: "429018", sectionId: "sample-block-1110", name: "爵士金克丝", games: 8000, mean: 4.12 }],
+    smallSamples: [],
+  };
+  const bindings = {
+    model: 429,
+    rows: [
+      { clusterId: "429018", sectionId: "sample-block-1110", name: "爵士金克丝" },
+      { clusterId: "429002", sectionId: "sample-block-0243", name: "六舞者佛耶戈" },
+    ],
+  };
+  const recommendations = {
+    seasonId: "s19-pbe",
+    build: "6035832",
+    entries: [
+      { sectionId: "sample-block-1110", status: "recommended" },
+      { sectionId: "sample-block-0243", status: "recommended" },
+    ],
+  };
+  const report = summarizeRefresh({
+    current,
+    trends: { batches: [{ id: "b1", capturedAt: "2026-11-26T12:00:00Z", patch: "19.1c", build: "6035832", model: 429 }] },
+    family: familyStats,
+    bindings,
+    recommendations,
+  });
+  assert.equal(report.needsAttention, true);
+  assert.ok(report.alerts.some(alert => /已绑定体系缺失战绩.*429002 六舞者佛耶戈/.test(alert)));
+  assert.ok(report.alerts.some(alert => /首页推荐阵容缺少有效体系战绩.*sample-block-0243/.test(alert)));
+  assert.match(formatDotSummary(report), /^● 待核对/);
 });

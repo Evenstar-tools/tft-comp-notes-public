@@ -58,12 +58,12 @@ test("the committed data passes the gate and status reports all 11 modules", () 
     "guide-family-stats", "guide-placement", "guide-carry-stats", "comp-trends",
     "patch-recommendations", "patch-recommendation-stats",
   ].sort());
-  for (const module of state.modules) {
-    assert.equal(module.file, `data/${module.id}.json`);
-    assert.ok(module.records > 0 && module.sampledAt);
-    assert.ok(["aligned", "lagging"].includes(module.alignment));
-    assert.ok(module.script?.startsWith("scripts/") || module.id.startsWith("patch-recommendation"));
-    if (module.updatedAtUtc8) assert.match(module.updatedAtUtc8, /\+08:00$/);
+  for (const entry of state.modules) {
+    assert.equal(entry.file, `data/${entry.id}.json`);
+    assert.ok(entry.records > 0 && entry.sampledAt);
+    assert.ok(["aligned", "lagging"].includes(entry.alignment));
+    assert.ok(entry.script?.startsWith("scripts/") || entry.id.startsWith("patch-recommendation"));
+    if (entry.updatedAtUtc8) assert.match(entry.updatedAtUtc8, /\+08:00$/);
   }
 });
 
@@ -152,11 +152,21 @@ test("the homepage warns when the current native cohort plus valid overrides has
   const cwd = fixture(t);
   const file = join(cwd, "data", "patch-recommendations.json");
   const familyFile = join(cwd, "data", "guide-family-stats.json");
+  const mapFile = join(cwd, "data", "guide-family-map.json");
   const raw = readJson(file);
   const family = readJson(familyFile);
+  const familyMap = readJson(mapFile);
+  const writeCohort = rows => {
+    const ids = new Set(rows.map(row => String(row.clusterId)));
+    writeFileSync(familyFile, JSON.stringify({ ...family, rows, smallSamples: [] }));
+    writeFileSync(mapFile, JSON.stringify({
+      ...familyMap,
+      rows: familyMap.rows.filter(row => ids.has(String(row.clusterId))),
+    }));
+  };
   const kept = family.rows.filter(row => ["429018", "429003", "429024"].includes(String(row.clusterId)));
   assert.equal(kept.length, 3);
-  writeFileSync(familyFile, JSON.stringify({ ...family, rows: kept }));
+  writeCohort(kept);
   const check = (overrides, fields = {}) => {
     const overrideKeys = new Set(overrides.map(({ teamId }) => teamId));
     writeFileSync(file, JSON.stringify({ ...raw, ...fields,
@@ -186,15 +196,79 @@ test("the homepage warns when the current native cohort plus valid overrides has
 
   const hero = family.rows.find(row => row.heroAugment && row.games >= 100 && row.mean <= 4.40);
   assert.ok(hero);
-  writeFileSync(familyFile, JSON.stringify({ ...family, rows: [...kept, hero] }));
+  writeCohort([...kept, hero]);
   assert.match(lowCount(check([])), /仅 3 套/);
   assert.equal(lowCount(check(manual.slice(0, 1))), undefined);
-  writeFileSync(familyFile, JSON.stringify({ ...family, rows: kept }));
+  writeCohort(kept);
 
   const { effectiveAt } = readJson(join(cwd, "data", "current-patch.json"));
   const older = new Date(Date.parse(effectiveAt) - 1000).toISOString();
   const stale = check(manual, { build: String(Number(raw.build) - 1), reviewedAt: older });
   assert.match(lowCount(stale), /仅 0 套/);
+});
+
+test("the gate rejects dropped bound clusters and invalid family-map board references", t => {
+  const cwd = fixture(t);
+  const familyFile = join(cwd, "data", "guide-family-stats.json");
+  const mapFile = join(cwd, "data", "guide-family-map.json");
+  const family = readJson(familyFile);
+  const familyMap = readJson(mapFile);
+
+  // Dropping 429002 (Mosher Viego) from guide-family-stats.json while bound in guide-family-map.json must fail data:verify
+  writeFileSync(familyFile, JSON.stringify({
+    ...family,
+    rows: family.rows.filter(row => String(row.clusterId) !== "429002"),
+  }));
+  const dropped = run(cwd, "--verify");
+  assert.equal(dropped.status, 1);
+  assert.ok(JSON.parse(dropped.stdout).errors.some(error => /缺少已绑定体系 429002/.test(error)));
+
+  // Moving a bound cluster (<100 games) into smallSamples keeps it accounted for and passes
+  const viego = family.rows.find(row => String(row.clusterId) === "429002");
+  const smallViego = { ...viego, places: [10, 10, 10, 10, 5, 5, 0, 0], games: 50, mean: 3.1 };
+  writeFileSync(familyFile, JSON.stringify({
+    ...family,
+    rows: family.rows.filter(row => String(row.clusterId) !== "429002"),
+    smallSamples: [smallViego],
+  }));
+  assert.equal(run(cwd, "--verify").status, 0);
+
+  // Broken board ID in guide-family-map.json must fail data:verify
+  writeFileSync(familyFile, JSON.stringify(family));
+  const brokenMap = structuredClone(familyMap);
+  brokenMap.rows[0].teamId = "00000000-0000-4000-8000-deadbeef0000";
+  writeFileSync(mapFile, JSON.stringify(brokenMap));
+  const invalidBoard = run(cwd, "--verify");
+  assert.equal(invalidBoard.status, 1);
+  assert.ok(JSON.parse(invalidBoard.stdout).errors.some(error => /guide-family-map\.json\.rows\[0\]\.teamId/.test(error)));
+});
+
+test("guide-placement refresh preserves existing stats on transient single-board zero counts and aborts on mass zeros", () => {
+  const pyCandidates = process.platform === "win32" ? [["py", "-3"], ["python"], ["python3"]] : [["python3"], ["python"]];
+  const py = pyCandidates.find(([cmd, ...flags]) =>
+    spawnSync(cmd, [...flags, "-c", "import sys"], { stdio: "ignore" }).status === 0);
+  assert.ok(py, "Python 3 required");
+  const [cmd, ...flags] = py;
+  const script = [
+    "import importlib.util, pathlib, sys",
+    "sys.path.insert(0, 'scripts')",
+    "spec = importlib.util.spec_from_file_location('rgd', pathlib.Path('scripts/refresh-guide-distributions.py'))",
+    "mod = importlib.util.module_from_spec(spec)",
+    "spec.loader.exec_module(mod)",
+    "r1 = {'url': 'u1', 'games': 915, 'mean': 3.97, 'topFourRate': 0.58, 'winRate': 0.14, 'placementCounts': [128,150,140,113,110,100,94,80], 'observedOn': '2026-11-26'}",
+    "r2 = {'url': 'u2', 'games': 0, 'placementCounts': [0]*8, 'observedOn': '2026-11-26'}",
+    "preserved = mod.apply_refreshed_counts([r1, r2], {'u1': [0]*8, 'u2': [10,10,0,0,0,0,0,0]}, '2026-11-27')",
+    "assert preserved == ['u1'] and r1['games'] == 915 and r1['mean'] == 3.97 and r1['observedOn'] == '2026-11-26'",
+    "assert r2['games'] == 20 and r2['mean'] == 1.5 and r2['observedOn'] == '2026-11-27'",
+    "active = [{'url': f'a{i}', 'games': 120, 'placementCounts': [15]*8, 'observedOn': '2026-11-26'} for i in range(3)]",
+    "try:",
+    "    mod.apply_refreshed_counts(active, {f'a{i}': [0]*8 for i in range(3)}, '2026-11-27')",
+    "    raise AssertionError('expected ValueError on mass unexpected zeros')",
+    "except ValueError as exc:",
+    "    assert 'unexpectedly returned 0 games' in str(exc)",
+  ].join("\n");
+  const res = spawnSync(cmd, [...flags, "-X", "utf8", "-c", script], { cwd: site, encoding: "utf8" });
+  assert.equal(res.status, 0, res.stderr || res.stdout);
 });
 
 test("daily dry-run lists every step in order and leaves the checkout unchanged", t => {

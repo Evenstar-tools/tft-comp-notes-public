@@ -9,6 +9,34 @@ export function heroAugmentSourceUnits(sourceKey) {
   });
 }
 
+export function matchBoundCluster(binding, group, unitIds) {
+  const expected = [...new Set((binding?.representativeUnits ?? []).map(v => v.trim()).filter(Boolean))].sort();
+  const roster = [...new Set((group?.units_string ?? "").split(",").map(v => v.trim()).filter(Boolean))].sort();
+  if (!group || !roster.length || !expected.length) {
+    return { ok: false, status: "missing", reason: "本批没有原分组", roster, added: [], removed: expected };
+  }
+  const expectedSet = new Set(expected);
+  const rosterSet = new Set(roster);
+  const removed = expected.filter(id => !rosterSet.has(id));
+  const added = roster.filter(id => !expectedSet.has(id));
+  if (!removed.length && !added.length) {
+    return { ok: true, status: "exact", roster, added, removed };
+  }
+  const unmapped = roster.some(apiId => !unitIds?.has(apiId));
+  const expectedUnitIds = new Set(expected.map(apiId => unitIds?.get(apiId)).filter(Boolean));
+  const rosterUnitIds = new Set(roster.map(apiId => unitIds?.get(apiId)).filter(Boolean));
+  const carries = binding?.carryIds ?? [];
+  const expectedCarries = carries.filter(id => expectedUnitIds.has(id));
+  const carriesIntact = carries.length > 0 && carries.some(id => rosterUnitIds.has(id)) &&
+    expectedCarries.length > 0 && expectedCarries.every(id => rosterUnitIds.has(id));
+  const shared = expected.length - removed.length;
+  const minShared = Math.max(5, Math.min(expected.length, roster.length) - 2);
+  if (!unmapped && carriesIntact && removed.length <= 2 && added.length <= 2 && shared >= minShared) {
+    return { ok: true, status: "drift", reason: "代表棋盘微调（已兼容保留）", roster, added, removed };
+  }
+  return { ok: false, status: "changed", reason: "代表棋盘有变", roster, added, removed };
+}
+
 export function sourceProfile(group, sourceIds) {
   const units = (group?.units_string ?? "").split(/,\s*/).filter(Boolean);
   const builds = [];
