@@ -11,12 +11,21 @@ import { compactGuideParagraph, compactUtilityCopy, rememberGuideCopy } from "..
 import { heroGuideIndex } from "../domain/hero-guides.ts";
 import { heroAugmentForUnit, heroAugmentProfileLink } from "../domain/hero-augments.ts";
 import { validHeroReturn } from "../domain/library-navigation.ts";
+import { ownerGuideDefaultBoard } from "../domain/guide-reading.ts";
 
 const json = file => JSON.parse(readFileSync(new URL(file, import.meta.url), "utf8"));
 const data = json("../data/season.json");
 const meta = json("../data/combos-s19-meta.json");
 const tiers = json("../data/combo-tiers-s19.json").traits;
 const teams = [{id:"jazz",name:"备选",pieces:[{unitId:"bard"},{unitId:"ziggs"}]}, {id:"nine",name:"九人口",pieces:[{unitId:"ziggs"},{unitId:"nidalee"}]}];
+
+test("the writable owner default keeps stored boards and falls back from generated stages", () => {
+  const guide = { primaryTeamId: "published", team: { id: "legacy" }, reroll: { added: ["generated"] } };
+  assert.equal(ownerGuideDefaultBoard(guide, "generated"), "published");
+  assert.equal(ownerGuideDefaultBoard({ ...guide, primaryTeamId: undefined }, "generated"), "legacy");
+  assert.equal(ownerGuideDefaultBoard(guide, "another-published"), "another-published");
+  assert.equal(ownerGuideDefaultBoard(guide, undefined), undefined);
+});
 
 test("S19 guide titles and stage labels use current trait names with the original board IDs", () => {
   const guide = { id: "original", title: "四酷炫德莱文", category: "慢搜阵容", primaryTeamId: "draven",

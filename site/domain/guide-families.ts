@@ -18,6 +18,21 @@ function difference(left: string[], right: string[]) {
   });
 }
 
+function unitNames(ids: string[], data: Season) {
+  return ids.map(id => data.units.find(unit => unit.id === id)?.name ?? id).join("、");
+}
+
+export function boardRosterChange(from: Team, to: Team, fromData: Season, toData = fromData) {
+  const oldRoster = from.pieces.map(piece => piece.unitId);
+  const newRoster = to.pieces.map(piece => piece.unitId);
+  const add = difference(newRoster, oldRoster), drop = difference(oldRoster, newRoster);
+  const names = (ids: string[], data: Season, limit: number) => ids.length > limit
+    ? `${unitNames(ids.slice(0, 1), data)}等${ids.length}人` : unitNames(ids, data);
+  const describe = (limit = Infinity) => [drop.length && "下" + names(drop, fromData, limit),
+    add.length && "上" + names(add, toData, limit)].filter(Boolean).join("，");
+  return { add, drop, describe };
+}
+
 function profile(section: Section, team: Team, season: Season, rate: Rate) {
   const data = section.gameData ?? season;
   const notes = readingNotes(section, team, data);
@@ -107,9 +122,8 @@ export function groupGuides(sections: Section[], season: Season, rate: Rate): Gu
 export function familyVariants(family: GuideFamily, teamId: string): PosterVariant[] {
   const current = family.boards.find(board => board.team.id === teamId);
   if (!current) return [];
-  const names = (ids: string[], data: Season) => ids.map(id => data.units.find(unit => unit.id === id)?.name ?? id).join("、");
   return family.boards.filter(board => board !== current).map(board => {
-    const add = difference(board.roster, current.roster), drop = difference(current.roster, board.roster);
+    const { add, drop, describe } = boardRosterChange(current.team, board.team, current.data, board.data);
     const oldC = current.carries.map(p => p.unitId), newC = board.carries.map(p => p.unitId);
     const incoming = board.carries.filter(piece => !oldC.includes(piece.unitId));
     const departing = current.carries.filter(piece => !newC.includes(piece.unitId));
@@ -117,11 +131,10 @@ export function familyVariants(family: GuideFamily, teamId: string): PosterVaria
       const overlaps = departing.map(prev => piece.items.filter(item => prev.items.includes(item)));
       const shared = overlaps.sort((a,b) => b.length-a.length)[0] ?? [];
       const items = [...new Set(shared)].map(id => board.data.items.find(item => item.id === id)?.name ?? id);
-      return (items.length ? items.join("、") : "输出装") + "改给" + names([piece.unitId], board.data);
+      return (items.length ? items.join("、") : "输出装") + "改给" + unitNames([piece.unitId], board.data);
     }).join("，");
-    const change = [drop.length && "下" + names(drop, current.data), add.length && "上" + names(add, board.data), handoff].filter(Boolean).join("，");
     return { sectionId: board.section.id, teamId: board.team.id, title: boardTitle(board.section, board.team, board.section.id === current.section.id),
-      change: change || "同一套棋子，调整站位或配装", rating: board.rating,
+      change: [describe(), handoff].filter(Boolean).join("，") || "同一套棋子，调整站位或配装", rating: board.rating,
       pooled: !add.length && !drop.length && !!board.rating && board.rating.url === current.rating?.url };
   });
 }
