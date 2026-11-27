@@ -93,7 +93,10 @@ export function verifyFamilyContinuity(baseline, candidate, { bindings, trend, c
   const presentIds = new Set([...(candidate.rows ?? []), ...(candidate.smallSamples ?? [])]
     .filter(row => row?.clusterId !== undefined && row?.clusterId !== null)
     .map(row => String(row.clusterId)));
-  const boundIds = bindings?.model === candidate.model && Array.isArray(bindings.rows)
+  if (bindings && bindings.model !== candidate.model) {
+    throw new Error("候选体系模型与绑定映射表不一致");
+  }
+  const boundIds = bindings && Array.isArray(bindings.rows)
     ? new Set(bindings.rows.map(row => String(row.clusterId)))
     : null;
   if (boundIds) {
@@ -111,11 +114,11 @@ export function verifyFamilyContinuity(baseline, candidate, { bindings, trend, c
     if (dropped.length) {
       throw new Error("候选体系战绩较已发布基线丢失分组：" + dropped.join("、"));
     }
+    if ((baseline.rows?.length ?? 0) >= 4 && (candidate.rows?.length ?? 0) < 4) {
+      throw new Error("候选合格体系数量异常骤降");
+    }
   }
-  if ((baseline.rows?.length ?? 0) >= 4 && (candidate.rows?.length ?? 0) < 4) {
-    throw new Error("候选合格体系数量异常骤降");
-  }
-  if (checkTrends && trend) {
+  if ((checkTrends || familyChanged) && trend) {
     if (!Array.isArray(trend.batches) || !trend.batches.length) {
       throw new Error("候选趋势文件缺少批次记录");
     }

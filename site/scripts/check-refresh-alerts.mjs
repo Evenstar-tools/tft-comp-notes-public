@@ -106,14 +106,35 @@ export function summarizeRefresh({ current, trends, family, bindings, recommenda
   }
   if (recommendations && Array.isArray(recommendations.entries) &&
       recommendations.seasonId === current.seasonId && String(recommendations.build) === String(current.build)) {
-    const boundSections = bindings && Array.isArray(bindings.rows)
-      ? new Set(bindings.rows.map(row => row.sectionId))
-      : null;
-    const activeFamilySections = new Set((family.rows ?? []).map(row => row.sectionId));
+    const boardKeysFor = list => {
+      const keys = new Set();
+      for (const row of list ?? []) {
+        if (!row?.sectionId) continue;
+        keys.add(row.sectionId);
+        for (const tid of [row.teamId, row.landingTeamId, ...(row.sharedTeamIds ?? [])]) {
+          if (tid) keys.add(`${row.sectionId}:${tid}`);
+        }
+      }
+      return keys;
+    };
+    const boundKeys = bindings && Array.isArray(bindings.rows) ? boardKeysFor(bindings.rows) : null;
+    const effectiveMs = time(current.effectiveAt);
+    const updatedMs = time(family.updatedAt);
+    const familyCurrent = family.patch === currentPatch &&
+      (!Number.isFinite(effectiveMs) || !Number.isFinite(updatedMs) || updatedMs >= effectiveMs);
+    const inGrace = familyCurrent && Number.isFinite(effectiveMs) && Number.isFinite(updatedMs) &&
+      updatedMs < effectiveMs + 12 * 60 * 60 * 1000;
+    const activeRows = familyCurrent
+      ? [...(family.rows ?? []), ...(inGrace ? [...(family.smallSamples ?? []), ...(family.previous?.rows ?? [])] : [])]
+      : [];
+    const activeKeys = boardKeysFor(activeRows);
     const missingRecommended = [...new Set(recommendations.entries
-      .filter(entry => entry.status === "recommended" && !entry.override &&
-        (!boundSections || boundSections.has(entry.sectionId)) &&
-        !activeFamilySections.has(entry.sectionId))
+      .filter(entry => {
+        if (entry.status !== "recommended" || entry.override) return false;
+        const key = entry.teamId ? `${entry.sectionId}:${entry.teamId}` : entry.sectionId;
+        if (boundKeys && !boundKeys.has(key)) return false;
+        return !activeKeys.has(key);
+      })
       .map(entry => entry.sectionId))];
     if (missingRecommended.length) {
       alerts.push(`有 ${missingRecommended.length} 条首页推荐阵容缺少有效体系战绩（${missingRecommended.join("、")}）`);

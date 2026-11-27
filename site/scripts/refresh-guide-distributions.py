@@ -70,18 +70,50 @@ def fetch_counts(url):
     return counts
 
 
-def apply_refreshed_counts(records, snapshots, observed, *, hours=None, build=None, now_iso=None):
+def _patch_scope(url):
+    pairs = dict(parse_qsl(urlsplit(url).query))
+    return pairs.get("queue"), pairs.get("patch"), pairs.get("b_patch")
+
+
+def _same_patch_scope(url, window):
+    if window is None:
+        return True
+    return _patch_scope(url) == (window.get("queue"), window.get("patch"), window.get("b_patch"))
+
+
+def _within_preserve_window(prev_observed, observed):
+    if not prev_observed or not observed:
+        return True
+    try:
+        prev_day = datetime.fromisoformat(str(prev_observed)).date()
+        cur_day = datetime.fromisoformat(str(observed)).date()
+    except ValueError:
+        return False
+    return 0 <= (cur_day - prev_day).days <= 1
+
+
+def apply_refreshed_counts(records, snapshots, observed, *, window=None, hours=None, build=None, now_iso=None, team_scoped=False):
     preserved = []
     unexpected_zero_active = 0
     for r in records:
-        counts = snapshots[r["url"]]
+        target_url = scoped_url(r["url"], window) if window else r["url"]
+        counts = snapshots[target_url]
         total = sum(counts)
         prev_games = r.get("games", 0)
-        if total == 0 and hours is None and isinstance(prev_games, int) and prev_games > 0:
-            preserved.append(r["url"])
-            if prev_games >= 20:
-                unexpected_zero_active += 1
+        can_preserve = (
+            total == 0
+            and hours is None
+            and not team_scoped
+            and _same_patch_scope(r["url"], window)
+            and type(prev_games) is int
+            and prev_games >= 20
+            and _within_preserve_window(r.get("observedOn"), observed)
+        )
+        if can_preserve:
+            preserved.append(target_url)
+            unexpected_zero_active += 1
             continue
+        r["url"] = target_url
         r.update(placementCounts=counts, games=total, observedOn=observed)
         if hours is not None:
             r.update(windowHours=hours, build=build, checkedAt=now_iso)
@@ -96,22 +128,40 @@ def apply_refreshed_counts(records, snapshots, observed, *, hours=None, build=No
     return preserved
 
 
-def apply_auxiliary_counts(comparisons, formation, formation_groups, snapshots, observed, now_iso):
+def apply_auxiliary_counts(comparisons, formation, formation_groups, snapshots, observed, now_iso, *, window=None):
     for sample in comparisons:
-        counts = snapshots[sample["url"]]
-        if sum(counts) == 0 and sum(sample.get("placementCounts") or []) > 0:
+        target_url = scoped_url(sample["url"], window) if window else sample["url"]
+        counts = snapshots[target_url]
+        prev_total = sum(sample.get("placementCounts") or [])
+        if (sum(counts) == 0 and prev_total >= 20
+                and _same_patch_scope(sample["url"], window)
+                and _within_preserve_window(sample.get("observedOn"), observed)):
             continue
+        sample["url"] = target_url
         sample.update(placementCounts=counts, observedOn=observed)
-    updated_formation = False
-    for sample in formation:
-        counts = snapshots[sample["url"]]
-        if sum(counts) == 0 and sum(sample.get("placementCounts") or []) > 0:
+    for group in formation_groups:
+        group_samples = [
+            entry for board in group.get("boards", [])
+            for entry in (board.get("sample"), board.get("subset", {}).get("sample"))
+            if entry
+        ]
+        if not group_samples:
             continue
-        sample["placementCounts"] = counts
-        updated_formation = True
-    if updated_formation or not formation:
-        for group in formation_groups:
-            group["checkedAt"] = now_iso
+        group_day = str(group.get("checkedAt") or "")[:10] or None
+        preserve_group = any(
+            sum(snapshots[scoped_url(entry["url"], window) if window else entry["url"]]) == 0
+            and sum(entry.get("placementCounts") or []) >= 20
+            and _same_patch_scope(entry["url"], window)
+            and _within_preserve_window(group_day, observed)
+            for entry in group_samples
+        )
+        if preserve_group:
+            continue
+        for entry in group_samples:
+            target_url = scoped_url(entry["url"], window) if window else entry["url"]
+            entry["url"] = target_url
+            entry["placementCounts"] = snapshots[target_url]
+        group["checkedAt"] = now_iso
 
 
 def main():
@@ -151,8 +201,6 @@ def main():
             raise ValueError(f"No refreshable records for: {', '.join(sorted(missing))}")
     comparisons = [] if args.team else [sample for group in batch.get("boardComparisons", []) for sample in group["samples"]]
     core = None if args.team else scoped_url(CORE, window)
-    for row in records + comparisons:
-        row["url"] = scoped_url(row["url"], window)
     # Comparisons with a separately sampled core stay together as one observation.
     formation_groups = [
         group for group in batch.get("formationComparisons", [])
@@ -160,9 +208,10 @@ def main():
     ]
     formation = [entry for group in formation_groups for board in group["boards"]
                  for entry in [board["sample"], board.get("subset", {}).get("sample")] if entry]
-    for sample in formation:
-        sample["url"] = scoped_url(sample["url"], window)
-    urls = list(dict.fromkeys([*([core] if core else []), *(r["url"] for r in records + comparisons + formation)]))
+    urls = list(dict.fromkeys([
+        *([core] if core else []),
+        *(scoped_url(r["url"], window) for r in records + comparisons + formation),
+    ]))
     with ThreadPoolExecutor(max_workers=4) as pool:
         snapshots = dict(zip(urls, pool.map(fetch_counts, urls)))
     if core and not sum(snapshots[core]):
@@ -170,11 +219,14 @@ def main():
     now = datetime.now(timezone.utc)
     observed = now.date().isoformat()
     now_iso = now.isoformat(timespec="seconds")
-    preserved = apply_refreshed_counts(records, snapshots, observed, hours=args.hours, build=build, now_iso=now_iso)
+    preserved = apply_refreshed_counts(
+        records, snapshots, observed,
+        window=window, hours=args.hours, build=build, now_iso=now_iso, team_scoped=bool(args.team),
+    )
     if core:
         batch["date"] = observed
         batch["renataNasusReference"] = {"url": core, "observedOn": observed, "placementCounts": snapshots[core]}
-    apply_auxiliary_counts(comparisons, formation, formation_groups, snapshots, observed, now_iso)
+    apply_auxiliary_counts(comparisons, formation, formation_groups, snapshots, observed, now_iso, window=window)
     with NamedTemporaryFile(mode="w", encoding="utf-8", newline="\n", dir=args.out.parent, delete=False) as tmp:
         json.dump(batch, tmp, ensure_ascii=False, indent=2, allow_nan=False)
         tmp.write("\n")
