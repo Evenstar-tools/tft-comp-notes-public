@@ -4,7 +4,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import { Move, Send, X } from "lucide-react";
 import { season } from "@/data";
 import { boardInstruments, moveBoardInstrument } from "@/domain/board-instruments";
-import { boardLayout, sameBoardLayout } from "@/domain/published-board-layout";
+import { boardContentVersion, boardLayout, sameBoardLayout } from "@/domain/published-board-layout";
 import { movePiece } from "@/domain/team";
 import type { BoardInstrumentId, Team } from "@/domain/types";
 import { Board } from "./Board";
@@ -72,11 +72,13 @@ function PositionDialog({ publicationId, sectionId, teamId, title, href, onClose
   }
 
   async function publish() {
-    if (!draft || !dirty || busy) return;
+    if (!saved || !draft || !dirty || busy) return;
     setBusy(true);
     setError("");
     try {
-      const result = await request<{ team: Team }>(endpoint, jsonPost({ publicationId, sectionId, team: draft }));
+      const result = await request<{ team: Team }>(endpoint, jsonPost({
+        publicationId, sectionId, team: draft, expectedBoard: boardContentVersion(saved),
+      }));
       setSaved(result.team);
       setDraft(result.team);
       setSelected(null);

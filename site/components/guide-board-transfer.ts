@@ -3,7 +3,7 @@ import { canonicalGuideHref } from "../domain/links.ts";
 
 export const guideBoardTransferKey = "tft-guide-board-transfer-v1";
 
-export type GuideBoardTarget = { publicationId: string; sectionId: string; teamId: string };
+export type GuideBoardTarget = { publicationId: string; sectionId: string; teamId: string; expectedBoard?: string };
 export type GuideBoardSource = {
   draftId: string; title: string; href: string; target?: GuideBoardTarget; published?: string; sharedConditions?: TeamCondition[];
   sourceGuide?: SourceGuide; officialBoard?: BoardSetup; restoredPlayerTeam?: boolean;

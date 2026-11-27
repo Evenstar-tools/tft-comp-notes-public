@@ -1,6 +1,7 @@
 import type { Publication, Section } from "./document";
 import { sectionTeams } from "./document-flow.ts";
 import type { BoardSetup, Piece, PieceLoadout, Team } from "./types";
+import { sameEdition } from "./version-updates.ts";
 
 export type BoardLayout = {
   pieces: Pick<Piece, "instanceId" | "unitId" | "position">[];
@@ -23,6 +24,8 @@ export type PublishedBoardEdit = {
   content: PublishedBoardContent;
 };
 
+export type PublishedBoardOverride = PublishedBoardEdit & { edition: string };
+
 function loadout({ instanceId, unitId, stars, items }: PieceLoadout): PieceLoadout {
   return { instanceId, unitId, stars, items };
 }
@@ -35,6 +38,10 @@ export function publishedBoardContent({ pieces, instrumentPositions, conditions 
     instrumentPositions: Object.keys(instrumentPositions ?? {}).length ? instrumentPositions : undefined,
     conditions,
   };
+}
+
+export function boardContentVersion(board: PublishedBoardContent): string {
+  return JSON.stringify(publishedBoardContent(board));
 }
 
 export function publishedBoardEdits(sections: Section[], edits?: PublishedBoardEdit[]) {
@@ -111,6 +118,26 @@ export function applyPublishedBoardLayouts(source: Publication, rendered: Public
       const replace = (team: Team) => {
         const edit = edits.find(entry => entry.teamId === team.id);
         return edit ? applyBoardLayout(team, edit.layout) : team;
+      };
+      return { ...section, team: section.team && replace(section.team), teams: section.teams?.map(replace) };
+    }),
+  };
+}
+
+export function applyBoardOverrides(publication: Publication): Publication {
+  if (!publication.boardOverrides?.length) return publication;
+  const overrides = publication.boardOverrides;
+  return {
+    ...publication,
+    sections: publication.sections.map(section => {
+      const edition = section.gameData?.id ?? publication.season.id;
+      const boards = new Map(overrides.filter(edit => edit.sectionId === section.id && sameEdition(edit.edition, edition))
+        .map(edit => [edit.teamId, edit]));
+      if (!boards.size) return section;
+      const replace = (team: Team) => {
+        const edit = boards.get(team.id);
+        return edit && boardContentVersion(team) === boardContentVersion(edit.source)
+          ? { ...team, ...edit.content, instrumentPositions: edit.content.instrumentPositions, conditions: edit.content.conditions } : team;
       };
       return { ...section, team: section.team && replace(section.team), teams: section.teams?.map(replace) };
     }),

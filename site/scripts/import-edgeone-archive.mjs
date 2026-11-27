@@ -3,6 +3,7 @@ import { dirname, isAbsolute, relative, resolve, sep } from "node:path";
 import { parseArgs } from "node:util";
 import { getDatabaseClient } from "../server/runtime-db.ts";
 import { mediaStore } from "../server/runtime-media.ts";
+import { isRepositoryBoardRevision } from "../domain/publication-record.ts";
 
 class ArchiveError extends Error {}
 const reject = (message) => { throw new ArchiveError(message); };
@@ -58,7 +59,13 @@ function validate(archive) {
         if (!value || value.id !== row.id) reject("备份中的内容标识与数据表不一致。");
         if (table === "teams" && !Array.isArray(value.pieces)) reject("备份中的棋盘缺少棋子列表。");
         if (table === "snapshots") {
-          if (!Array.isArray(value.sections) || !value.season) reject("备份中的发布快照结构不完整。");
+          if (isRepositoryBoardRevision(value)) {
+            if (typeof value.previousId !== "string" || typeof value.publishedAt !== "string" ||
+                !Array.isArray(value.boardOverrides) || !value.boardOverrides.every(edit =>
+                  edit && typeof edit.sectionId === "string" && typeof edit.teamId === "string" && typeof edit.edition === "string" &&
+                  Array.isArray(edit.source?.pieces) && Array.isArray(edit.content?.pieces)))
+              reject("备份中的棋盘修改记录结构不完整。");
+          } else if (!Array.isArray(value.sections) || !value.season) reject("备份中的发布快照结构不完整。");
           imageTokens(value, tokens);
         }
       }
