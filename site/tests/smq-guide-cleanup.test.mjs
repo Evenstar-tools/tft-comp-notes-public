@@ -101,8 +101,8 @@ test("guide entry boards follow the playable level and retain the family results
   const readSection = { ...renata, reroll: entry(renata) };
   assert.ok(routeStage.teamId.endsWith("0048"));
   assert.equal(usedPopulation(routeStage.pieces), 6);
-  assert.equal(rerollEntryTeamId(readSection, sixGuards.id), routeStage.teamId);
-  assert.equal(rerollEntryTeamId(readSection, renata.primaryTeamId), board(renata, "0118").id);
+  assert.equal(renata.primaryTeamId, sixGuards.id);
+  assert.equal(rerollEntryTeamId(readSection, renata.primaryTeamId), routeStage.teamId);
   assert.equal(rerollEntryTeamId(readSection, board(renata, "0046").id), undefined);
 
   const vayne = guide("0338");
@@ -159,14 +159,14 @@ test("merged links select their retained boards and retired guides are omitted f
     { ...five, id: "sample-block-0154" },
     { ...anchor, teams: anchor.teams.slice(0, 3) },
     { ...anchor, id: "sample-block-1055" },
-    { ...kayle, teams: kayle.teams.slice(0, 3) },
+    { ...kayle, teams: kayle.teams.filter(team => team.id !== board(kayle, "0106").id) },
     { ...kayle, id: "sample-block-" + "0468" },
     { ...graves, teams: graves.teams.filter(team => !variants.includes(team)),
       blocks: graves.blocks.filter(block => block.id === "sample-block-0574") },
     { ...graves, id: "sample-block-0452", teams: variants },
   ] };
   const updated = migrateS19GuideSnapshot(legacy);
-  assert.deepEqual(updated.sections.map(s => [s.id, s.teams.length]), [[five.id, 2], [anchor.id, 6], [kayle.id, 4], [graves.id, 8]]);
+  assert.deepEqual(updated.sections.map(s => [s.id, s.teams.length]), [[five.id, 2], [anchor.id, 6], [kayle.id, 3], [graves.id, 8]]);
   assert.equal(updated.sections[2].team, kayle.team);
   assert.equal(updated.sections[3].team, graves.team);
   assert.deepEqual(updated.sections[3].teams.slice(-3), variants);

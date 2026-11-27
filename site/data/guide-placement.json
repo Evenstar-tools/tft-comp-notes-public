@@ -596,7 +596,7 @@
         "patchId": "pbe-day-2",
         "title": "五杀天使洛克 · 铁男前过渡",
         "play": "七级上纳尔、奥拉夫、卡尔萨斯、吉格斯解锁凯尔。不同名五杀凑到 9 星解锁铁男，买到后换斯维因开七五杀。",
-        "guide": "/guides/sample-block-0219?team=00000000-0000-4000-8000-000000000024"
+        "guide": "/guides/sample-block-0219?team=00000000-0000-4000-8000-000000000064"
       },
       "sourcePeriod": {
         "patch": "PBE 19.1",
@@ -3236,41 +3236,6 @@
       "population": 8,
       "roster": [
         "ahri",
-        "evelynn",
-        "gragas",
-        "kai-sa",
-        "leona",
-        "lillia",
-        "neeko",
-        "varus"
-      ],
-      "games": 2,
-      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Leona19-1&unit=DA_Lillia19-1&unit=DA_Gragas19-1&unit=DA_Varus19-1&unit=DA_Neeko19-1&unit=DA_Kaisa19-1&unit=DA_Evelynn19-1&unit=DA_19_Ahri-1&queue=PBE&patch=19.1&b_patch=c&days=3",
-      "conditions": {
-        "kind": "full",
-        "teamId": "00000000-0000-4000-8000-000000000009",
-        "population": 8
-      },
-      "sampleScope": "固定名单 · 不限星级与装备 · 无纹章、人口装或重复棋子",
-      "observedOn": "2026-11-26",
-      "placementCounts": [
-        0,
-        0,
-        1,
-        0,
-        1,
-        0,
-        0,
-        0
-      ],
-      "mean": 4.0,
-      "topFourRate": 0.5,
-      "winRate": 0.0
-    },
-    {
-      "population": 8,
-      "roster": [
-        "ahri",
         "ekko",
         "evelynn",
         "gragas",
@@ -3336,108 +3301,6 @@
       "mean": 4.6,
       "topFourRate": 0.4670087976539589,
       "winRate": 0.06378299120234604
-    },
-    {
-      "population": 8,
-      "roster": [
-        "ahri",
-        "garen",
-        "jax",
-        "k-sante",
-        "lillia",
-        "nasus",
-        "renata-glasc",
-        "syndra"
-      ],
-      "games": 0,
-      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Lillia19-1&unit=DA_Nasus19-1&unit=DA_KSante19-1&unit=DA_Jax19-1&unit=DA_RenataGlasc19-1&unit=DA_Syndra19-1&unit=DA_19_Ahri-1&unit=DA_Garen19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
-      "conditions": {
-        "kind": "full",
-        "teamId": "00000000-0000-4000-8000-000000000028",
-        "population": 8
-      },
-      "sampleScope": "固定名单 · 不限星级与装备 · 无纹章、人口装或重复棋子",
-      "observedOn": "2026-11-26",
-      "placementCounts": [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
-      ]
-    },
-    {
-      "population": 8,
-      "roster": [
-        "jax",
-        "k-sante",
-        "kennen",
-        "leona",
-        "lillia",
-        "nasus",
-        "renata-glasc",
-        "seraphine"
-      ],
-      "games": 46,
-      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Lillia19-1&unit=DA_Nasus19-1&unit=DA_KSante19-1&unit=DA_Jax19-1&unit=DA_RenataGlasc19-1&unit=DA_Leona19-1&unit=DA_Kennen19-1&unit=DA_Seraphine19_Indie-1&queue=PBE&patch=19.1&b_patch=c&days=3",
-      "conditions": {
-        "kind": "full",
-        "teamId": "00000000-0000-4000-8000-000000000065",
-        "population": 8
-      },
-      "sampleScope": "固定名单 · 不限星级与装备 · 无纹章、人口装或重复棋子",
-      "observedOn": "2026-11-26",
-      "placementCounts": [
-        7,
-        14,
-        9,
-        7,
-        6,
-        3,
-        0,
-        0
-      ],
-      "mean": 3.0,
-      "topFourRate": 0.8043478260869565,
-      "winRate": 0.15217391304347827
-    },
-    {
-      "population": 8,
-      "roster": [
-        "garen",
-        "jax",
-        "k-sante",
-        "kennen",
-        "leona",
-        "lillia",
-        "nasus",
-        "renata-glasc"
-      ],
-      "games": 238,
-      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Lillia19-1&unit=DA_Nasus19-1&unit=DA_KSante19-1&unit=DA_Jax19-1&unit=DA_RenataGlasc19-1&unit=DA_Leona19-1&unit=DA_Kennen19-1&unit=DA_Garen19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
-      "conditions": {
-        "kind": "full",
-        "teamId": "00000000-0000-4000-8000-000000000111",
-        "population": 8
-      },
-      "sampleScope": "固定名单 · 不限星级与装备 · 无纹章、人口装或重复棋子",
-      "observedOn": "2026-11-26",
-      "placementCounts": [
-        28,
-        57,
-        74,
-        41,
-        19,
-        13,
-        5,
-        1
-      ],
-      "mean": 3.13,
-      "topFourRate": 0.8403361344537815,
-      "winRate": 0.11764705882352941
     },
     {
       "population": 9,
@@ -3618,36 +3481,6 @@
       "population": 6,
       "roster": [
         "ashe",
-        "bard",
-        "galio",
-        "renekton",
-        "seraphine",
-        "taric"
-      ],
-      "games": 0,
-      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=6&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Taric19-1&unit=DA_Renekton19-1&unit=DA_Galio19-1&unit=DA_Seraphine19_Indie-1&unit=DA_Ashe19-1&unit=DA_Bard19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
-      "conditions": {
-        "kind": "full",
-        "teamId": "00000000-0000-4000-8000-000000000010",
-        "population": 6
-      },
-      "sampleScope": "固定名单 · 不限星级与装备 · 无纹章、人口装或重复棋子",
-      "observedOn": "2026-11-26",
-      "placementCounts": [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
-      ]
-    },
-    {
-      "population": 6,
-      "roster": [
-        "ashe",
         "jax",
         "renekton",
         "sett",
@@ -3813,35 +3646,6 @@
       "mean": 8.0,
       "topFourRate": 0.0,
       "winRate": 0.0
-    },
-    {
-      "population": 5,
-      "roster": [
-        "annie",
-        "elise",
-        "seraphine",
-        "yunara",
-        "ziggs"
-      ],
-      "games": 0,
-      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=5&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Annie19-1&unit=DA_Elise19-1&unit=DA_Seraphine19_Indie-1&unit=DA_Yunara19-1&unit=DA_Ziggs19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
-      "conditions": {
-        "kind": "full",
-        "teamId": "00000000-0000-4000-8000-000000000109",
-        "population": 5
-      },
-      "sampleScope": "固定名单 · 不限星级与装备 · 无纹章、人口装或重复棋子",
-      "observedOn": "2026-11-26",
-      "placementCounts": [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
-      ]
     },
     {
       "population": 8,

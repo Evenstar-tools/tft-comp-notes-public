@@ -4,13 +4,6 @@
     "entryTeamId": "00000000-0000-4000-8000-000000000052",
     "stages": [
       {
-        "teamId": "00000000-0000-4000-8000-000000000123",
-        "name": "8级同侧集火",
-        "boardRole": "variant",
-        "parentTeamId": "00000000-0000-4000-8000-000000000050",
-        "notes": "对手前排偏一侧时，卢锡安和伊泽瑞尔同侧集火。遇切后或大范围伤害，换回双角。"
-      },
-      {
         "teamId": "00000000-0000-4000-8000-000000000052",
         "name": "6级追三",
         "boardRole": "stage",
@@ -511,12 +504,10 @@
           "kennen": 2
         }
       },
-      {"teamId": "00000000-0000-4000-8000-000000000009", "originalPositions": {"neeko": 22}, "positions": {"neeko": 21}},
       {"teamId": "00000000-0000-4000-8000-000000000114", "originalPositions": {"neeko": 22, "ahri": 26}, "positions": {"neeko": 21, "ahri": 27}},
       {"teamId": "00000000-0000-4000-8000-000000000113", "originalPositions": {"neeko": 22}, "positions": {"neeko": 21}},
       {"teamId": "00000000-0000-4000-8000-000000000053", "originalPositions": {"neeko": 22}, "positions": {"neeko": 21}},
       {"teamId": "00000000-0000-4000-8000-000000000039", "originalPositions": {"neeko": 22}, "positions": {"neeko": 21}},
-      {"teamId": "00000000-0000-4000-8000-000000000009", "positions": {"leona": 8}, "stoneplateHolder": "lillia", "originalPositions": {"lillia": 3, "leona": 2, "gragas": 4}},
       {"teamId": "00000000-0000-4000-8000-000000000114", "positions": {"lillia": 7}, "stoneplateHolder": "gragas", "originalPositions": {"gragas": 3, "lillia": 1, "leona": 4}},
       {"teamId": "00000000-0000-4000-8000-000000000113", "positions": {"leona": 8}, "stoneplateHolder": "lillia", "originalPositions": {"lillia": 3, "leona": 2, "gragas": 4}},
       {"teamId": "00000000-0000-4000-8000-000000000053", "positions": {"kennen": 10}, "stoneplateHolder": "lillia", "originalPositions": {"lillia": 3, "kennen": 4, "gragas": 2}},
@@ -614,21 +605,7 @@
           "ziggs": 26
         }
       },
-      {
-        "teamId": "00000000-0000-4000-8000-000000000109",
-        "notes": "二阶段选秀前刷四次解锁芬妮，前排能扛再上。芸阿娜和吉格斯同侧先打一名敌人，芬妮分到另一侧。",
-        "positions": {
-          "ziggs": 24,
-          "seraphine": 26
-        },
-        "originalName": "五级 · 芬妮",
-        "originalPositions": {
-          "ziggs": 26,
-          "seraphine": 25
-        }
-      },
       {"teamId": "00000000-0000-4000-8000-000000000016", "originalPositions": {"yunara": 22}, "positions": {"yunara": 21}},
-      {"teamId": "00000000-0000-4000-8000-000000000109", "originalPositions": {"yunara": 22}, "positions": {"yunara": 21}},
       {"teamId": "00000000-0000-4000-8000-000000000069", "originalPositions": {"yunara": 22}, "positions": {"yunara": 21}},
       {"teamId": "00000000-0000-4000-8000-000000000016", "positions": {"kobuko": 10}, "stoneplateHolder": "elise", "originalPositions": {"elise": 3, "annie": 2, "kobuko": 4}},
       {"teamId": "00000000-0000-4000-8000-000000000069", "positions": {"sett": 10}, "stoneplateHolder": "elise", "originalPositions": {"elise": 3, "annie": 2, "sett": 4}}
@@ -636,7 +613,7 @@
   },
   {
     "sectionId": "sample-block-0122",
-    "entryTeamId": "00000000-0000-4000-8000-000000000118",
+    "entryTeamId": "00000000-0000-4000-8000-000000000048",
     "stages": [
       {
         "teamId": "00000000-0000-4000-8000-000000000118",
@@ -647,7 +624,7 @@
         "teamId": "00000000-0000-4000-8000-000000000058",
         "name": "6级带芬妮",
         "notes": "六级追三星烈娜塔、内瑟斯。芬妮已解锁且到两星，再用她换辛德拉。保四护卫双古典，少双编舞。",
-        "parentTeamId": "00000000-0000-4000-8000-000000000065",
+        "parentTeamId": "00000000-0000-4000-8000-000000000044",
         "pieces": [
           {
             "unitId": "lillia",
@@ -1002,16 +979,10 @@
           "after": "三星贾克斯带青龙刀、饮血、泰坦，和蔚一起开电子舞曲。"
         }
       },
-      {"teamId": "00000000-0000-4000-8000-000000000028", "originalPositions": {"renata-glasc": 22}, "positions": {"renata-glasc": 21}},
       {"teamId": "00000000-0000-4000-8000-000000000099", "originalPositions": {"renata-glasc": 22}, "positions": {"renata-glasc": 21}},
       {"teamId": "00000000-0000-4000-8000-000000000118", "originalPositions": {"renata-glasc": 22}, "positions": {"renata-glasc": 21}},
-      {"teamId": "00000000-0000-4000-8000-000000000065", "originalPositions": {"renata-glasc": 22}, "positions": {"renata-glasc": 21}},
-      {"teamId": "00000000-0000-4000-8000-000000000111", "originalPositions": {"renata-glasc": 22}, "positions": {"renata-glasc": 21}},
       {"teamId": "00000000-0000-4000-8000-000000000058", "originalPositions": {"renata-glasc": 22, "seraphine": 26}, "positions": {"renata-glasc": 21, "seraphine": 27}},
-      {"teamId": "00000000-0000-4000-8000-000000000028", "positions": {"k-sante": 11}, "stoneplateHolder": "nasus", "originalPositions": {"nasus": 3, "lillia": 2, "k-sante": 4}},
-      {"teamId": "00000000-0000-4000-8000-000000000099", "positions": {"k-sante": 11}, "stoneplateHolder": "nasus", "originalPositions": {"nasus": 3, "lillia": 2, "k-sante": 4}},
-      {"teamId": "00000000-0000-4000-8000-000000000065", "positions": {"k-sante": 11, "leona": 7}, "stoneplateHolder": "nasus", "originalPositions": {"nasus": 3, "lillia": 2, "k-sante": 4, "leona": 1}},
-      {"teamId": "00000000-0000-4000-8000-000000000111", "positions": {"k-sante": 11, "leona": 7}, "stoneplateHolder": "nasus", "originalPositions": {"nasus": 3, "lillia": 2, "k-sante": 4, "leona": 1}}
+      {"teamId": "00000000-0000-4000-8000-000000000099", "positions": {"k-sante": 11}, "stoneplateHolder": "nasus", "originalPositions": {"nasus": 3, "lillia": 2, "k-sante": 4}}
     ]
   },
   {
@@ -1092,13 +1063,6 @@
         "teamId": "00000000-0000-4000-8000-000000000054",
         "name": "6级双爵士",
         "notes": "六级追三星艾希、雷克顿。巴德、加里奥都到手再开双爵士。鳄鱼先穿两件解锁艾希，砂槌贴艾希。"
-      },
-      {
-        "teamId": "00000000-0000-4000-8000-000000000010",
-        "boardRole": "variant",
-        "name": "6级带芬妮",
-        "notes": "六级追三星艾希、雷克顿。前排扛得住且芬妮两星，再用她换贾克斯。砂槌贴艾希，七级可补回贾克斯。",
-        "parentTeamId": "00000000-0000-4000-8000-000000000054"
       }
     ],
     "edits": [
@@ -1113,26 +1077,14 @@
         }
       },
       {
-        "teamId": "00000000-0000-4000-8000-000000000010",
-        "instrumentMoves": {
-          "maracas": 15
-        },
-        "originalName": "六级 · 芬妮",
-        "originalInstruments": {
-          "maracas": 9
-        }
-      },
-      {
         "teamId": "00000000-0000-4000-8000-000000000020",
         "instrumentMoves": {
           "maracas": 15
         }
       },
       {"teamId": "00000000-0000-4000-8000-000000000054", "originalPositions": {"ashe": 22}, "positions": {"ashe": 21}},
-      {"teamId": "00000000-0000-4000-8000-000000000010", "originalPositions": {"ashe": 22}, "positions": {"ashe": 21}},
       {"teamId": "00000000-0000-4000-8000-000000000020", "originalPositions": {"ashe": 22}, "positions": {"ashe": 21}},
       {"teamId": "00000000-0000-4000-8000-000000000054", "positions": {"galio": 11}, "stoneplateHolder": "renekton", "originalPositions": {"renekton": 3, "taric": 2, "galio": 4}, "originalInstruments": {"maracas": 15}},
-      {"teamId": "00000000-0000-4000-8000-000000000010", "positions": {"galio": 10}, "stoneplateHolder": "renekton", "originalPositions": {"renekton": 3, "taric": 2, "galio": 4}, "originalInstruments": {"maracas": 15}},
       {"teamId": "00000000-0000-4000-8000-000000000020", "positions": {"sett": 11}, "stoneplateHolder": "renekton", "originalPositions": {"renekton": 3, "taric": 2, "sett": 4}, "originalInstruments": {"maracas": 15}}
     ]
   },
@@ -2843,7 +2795,6 @@
     ],
     "edits": [
       {"teamId": "00000000-0000-4000-8000-000000000064", "positions": {"locke": 9, "viego": 10}, "stoneplateHolder": "yorick", "originalPositions": {"yorick": 2, "locke": 3, "viego": 4, "olaf": 5}},
-      {"teamId": "00000000-0000-4000-8000-000000000024", "positions": {"locke": 9, "viego": 10}, "stoneplateHolder": "yorick", "originalPositions": {"yorick": 2, "locke": 3, "viego": 4, "olaf": 5, "swain": 6}},
       {"teamId": "00000000-0000-4000-8000-000000000019", "positions": {"locke": 9, "viego": 10}, "stoneplateHolder": "yorick", "originalPositions": {"yorick": 2, "locke": 3, "viego": 4, "olaf": 5, "swain": 6}},
       {
         "teamId": "00000000-0000-4000-8000-000000000106",

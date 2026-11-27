@@ -68,7 +68,7 @@ test("published reviewed transitions prove Guinsoo Gnar, Shojin Zoe and the nint
   assert.equal(renata.score, 3);
   assert.deepEqual(renata.finalIds, ["lillia", "renata-glasc", "vi"]);
   assert.deepEqual(renata.lateIds, ["vi"]);
-  assert.ok(renata.stageHref.endsWith("000111"));
+  assert.ok(renata.stageHref.endsWith("000044"));
   const gnar = fits[28].find(fit => fit.handoff?.fromId === "gnar");
   assert.equal(gnar.handoff.toId, "kai-sa");
   assert.equal(gnar.handoff.source, "guide");
