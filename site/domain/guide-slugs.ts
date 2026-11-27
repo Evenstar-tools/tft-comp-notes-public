@@ -209,6 +209,14 @@ const guideSlugs: Record<string, GuideSlugs> = {
   "mosher-yasuo-yone": { slug: "mosher-yasuo-yone", boards: {
     "edad46b7-e909-4233-b0c5-79d6899db862": "lv8",
   } },
+  "swiftstriker-locke": { slug: "swiftstriker-locke", boards: {
+    "19b143ef-e315-4b8e-8081-31e13a6ec3f0": "lv8",
+    "7f18bb65-1662-403f-b1e2-fff9634c755f": "lv9",
+  } },
+  "true-damage-akali": { slug: "true-damage-akali", boards: {
+    "bace6643-9e7b-4b21-9ceb-36e58a535ee4": "lv9",
+    "9ac0242d-2780-4c8e-856f-9d2a8c9a4bc7": "lv8",
+  } },
 };
 
 const sectionIdsBySlug = new Map(Object.entries(guideSlugs).map(([id, guide]) => [guide.slug, id]));

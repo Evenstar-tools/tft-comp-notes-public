@@ -5347,6 +5347,210 @@
       "mean": 3.714,
       "topFourRate": 0.8571428571428571,
       "winRate": 0.14285714285714285
+    },
+    {
+      "sectionId": "swiftstriker-locke",
+      "population": 8,
+      "roster": [
+        "bard",
+        "galio",
+        "kayle",
+        "locke",
+        "mel",
+        "olaf",
+        "swain",
+        "yorick"
+      ],
+      "games": 2116,
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&trait=DA_Swiftstriker19_2&unit=DA_Locke19-1_2_3&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "observedOn": "2026-11-27",
+      "sampleScope": "3迅击鼓手 · 洛克两星三件",
+      "conditions": {
+        "teamId": "19b143ef-e315-4b8e-8081-31e13a6ec3f0",
+        "kind": "core",
+        "coreRoster": [
+          "locke"
+        ],
+        "traits": {
+          "swiftstriker": 3
+        },
+        "units": [
+          {
+            "unitId": "locke",
+            "stars": 2,
+            "items": 3
+          }
+        ]
+      },
+      "placementCounts": [
+        227,
+        414,
+        345,
+        348,
+        296,
+        222,
+        177,
+        87
+      ],
+      "mean": 3.89,
+      "topFourRate": 0.6304347826086957,
+      "winRate": 0.10727788279773157
+    },
+    {
+      "sectionId": "swiftstriker-locke",
+      "population": 8,
+      "roster": [
+        "bard",
+        "galio",
+        "kayle",
+        "locke",
+        "mel",
+        "olaf",
+        "swain",
+        "yorick"
+      ],
+      "games": 339,
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=comps&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Bard19-1&unit=DA_Galio19-1&unit=DA_Kayle19-1&unit=DA_Locke19-1&unit=DA_Mel19-1&unit=DA_Olaf19-1&unit=DA_Swain19-1&unit=DA_Yorick19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "observedOn": "2026-11-27",
+      "sampleScope": "8级无转职固定8人 · 3迅击鼓手三摇滚恶魔洛克",
+      "conditions": {
+        "teamId": "19b143ef-e315-4b8e-8081-31e13a6ec3f0",
+        "kind": "fixed",
+        "population": 8,
+        "emblems": 0
+      },
+      "placementCounts": [
+        3,
+        9,
+        32,
+        49,
+        69,
+        68,
+        73,
+        36
+      ],
+      "mean": 5.5,
+      "topFourRate": 0.2743362831858407,
+      "winRate": 0.008849557522123894
+    },
+    {
+      "sectionId": "swiftstriker-locke",
+      "population": 9,
+      "roster": [
+        "bard",
+        "galio",
+        "kayle",
+        "locke",
+        "mel",
+        "olaf",
+        "rell",
+        "swain",
+        "yorick"
+      ],
+      "games": 66,
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=comps&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Bard19-1&unit=DA_Galio19-1&unit=DA_Kayle19-1&unit=DA_Locke19-1&unit=DA_Mel19-1&unit=DA_Olaf19-1&unit=DA_Rell19-1&unit=DA_Swain19-1&unit=DA_Yorick19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "observedOn": "2026-11-27",
+      "sampleScope": "9级无转职固定9人 · 补芮尔上限",
+      "conditions": {
+        "teamId": "7f18bb65-1662-403f-b1e2-fff9634c755f",
+        "kind": "fixed",
+        "population": 9,
+        "emblems": 0
+      },
+      "placementCounts": [
+        3,
+        12,
+        20,
+        13,
+        9,
+        5,
+        3,
+        1
+      ],
+      "mean": 3.68,
+      "topFourRate": 0.7272727272727273,
+      "winRate": 0.045454545454545456
+    },
+    {
+      "sectionId": "true-damage-akali",
+      "population": 9,
+      "roster": [
+        "akali-true-damage",
+        "dr-mundo",
+        "ekko",
+        "kennen",
+        "leona",
+        "miss-fortune",
+        "senna",
+        "yasuo",
+        "yone"
+      ],
+      "games": 18395,
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&trait=DA_TrueDamage19_2&unit=DA_Akali_TrueDamage19-1&unit=DA_Yasuo19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "observedOn": "2026-11-27",
+      "sampleScope": "5真实伤害 · 阿卡丽·真实伤害与亚索同场",
+      "conditions": {
+        "teamId": "bace6643-9e7b-4b21-9ceb-36e58a535ee4",
+        "kind": "core",
+        "coreRoster": [
+          "akali-true-damage",
+          "yasuo"
+        ],
+        "traits": {
+          "true-damage": 5
+        }
+      },
+      "placementCounts": [
+        3097,
+        2189,
+        2555,
+        2767,
+        2527,
+        2146,
+        1796,
+        1318
+      ],
+      "mean": 4.07,
+      "topFourRate": 0.5766784452296819,
+      "winRate": 0.16836096765425387
+    },
+    {
+      "sectionId": "true-damage-akali",
+      "population": 9,
+      "roster": [
+        "akali-true-damage",
+        "dr-mundo",
+        "ekko",
+        "kennen",
+        "leona",
+        "miss-fortune",
+        "senna",
+        "yasuo",
+        "yone"
+      ],
+      "games": 217,
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=comps&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Akali_TrueDamage19-1&unit=DA_DrMundo19-1&unit=DA_Ekko19-1&unit=DA_Kennen19-1&unit=DA_Leona19-1&unit=DA_MissFortune19-1&unit=DA_Senna19-1&unit=DA_Yasuo19-1&unit=DA_Yone19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "observedOn": "2026-11-27",
+      "sampleScope": "9级无转职固定9人 · 五真实伤害阿卡丽亚索",
+      "conditions": {
+        "teamId": "bace6643-9e7b-4b21-9ceb-36e58a535ee4",
+        "kind": "fixed",
+        "population": 9,
+        "emblems": 0
+      },
+      "placementCounts": [
+        28,
+        19,
+        30,
+        38,
+        34,
+        42,
+        20,
+        6
+      ],
+      "mean": 4.23,
+      "topFourRate": 0.5299539170506913,
+      "winRate": 0.12903225806451613
     }
   ],
   "edition": "s19-pbe-19.1",
