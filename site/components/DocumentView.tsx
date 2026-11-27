@@ -5,7 +5,7 @@ import { canonicalGuideHref } from "@/domain/links";
 import { GuideTeams, type GuidePassage, type GuidePatchAdvice } from "./GuideTeams";
 import { sectionTeams } from "@/domain/document-flow";
 import { boardTitle } from "@/domain/guide-families";
-import { allBlocks, boardLoadoutHeading, guideBoardName, guideBody, guidePlaystyle, guideTitleWithoutPlaystyle, isBoardLoadout, primaryFirst, type GuideRole } from "@/domain/guide-reading";
+import { allBlocks, boardLoadoutHeading, guideBoardName, guideBody, guideCredit, guidePlaystyle, guideTitleWithoutPlaystyle, isBoardLoadout, primaryFirst, type GuideRole } from "@/domain/guide-reading";
 import { compactGuideParagraph, guideCopyKey, hasGuideLinks, rememberGuideCopy } from "@/domain/guide-copy";
 import { rerollRoute } from "@/domain/reroll-stages";
 import { sourceSectionTitle } from "@/domain/source-category-display";
@@ -188,6 +188,8 @@ export function DocumentView({ section, gameData, publicationId, initialTeam, de
     trackGuideView({ guideId: section.id, mode: "detail", returnTo });
   }, [publicationId, section.id, returnTo]);
   const folded = new Set(gameData ? Object.values(section.generatedRegions ?? {}).flatMap(region => [region.textId, region.imageId]) : []);
+  const credit = guideCredit(section);
+  if (credit) folded.add(credit.id);
   const augment = heroAugmentForGuide(section);
   const primary = gameData && primaryFirst(sectionTeams(section), section.primaryTeamId)[0];
   const augmentAtBoard = augment && gameData && primary && guideEquipmentConditions(section, [primary], gameData)?.rows.some(row => row.id === augment.id);
@@ -283,9 +285,10 @@ export function DocumentView({ section, gameData, publicationId, initialTeam, de
     const context = guideName ? guideTitleWithoutPlaystyle(guideName, playstyle)
       : showCategory && showFolder && category !== section.title.trim() ? "英雄强化" : "";
     return <>
-      {(publicationId || context) && <div className="guide-header-meta">
+      {(publicationId || context || credit) && <div className="guide-header-meta">
         {publicationId && <a href={returnTo ?? (augment ? heroAugmentLibrary : "/?sort=category")}>{returnLabel}</a>}
         {context && <span>{context}</span>}
+        {credit && <span>{credit.label}<strong>{credit.name}</strong></span>}
       </div>}
       <div className="guide-page-heading">
         <Title className="guide-page-title">{guideTitleWithoutPlaystyle(title, playstyle)}</Title>

@@ -8,7 +8,10 @@ import { selectTrendWindow, type CompTrendModel, type TrendDiscovery, type Trend
 import { beijingDateTime } from "@/lib/beijing-time";
 import "./comp-trend-panel.css";
 
-const CompTrendChart = dynamic(() => import("./CompTrendChart").then(module => module.CompTrendChart), { ssr: false });
+const CompTrendChart = dynamic(() => import("./CompTrendChart").then(module => module.CompTrendChart), {
+  ssr: false,
+  loading: () => <p className="comp-trend-loading" role="status">正在加载趋势图…</p>,
+});
 const tftableUrl = "https://tftable.cc/meta";
 const number = new Intl.NumberFormat("zh-CN");
 const percent = new Intl.NumberFormat("zh-CN", { style: "percent", maximumFractionDigits: 1, minimumFractionDigits: 1 });
@@ -167,6 +170,15 @@ export function CompTrendPanel({ model }: { model: CompTrendModel }) {
     {lines.length > 0 ?
       <div className="comp-trend-body">
         <div className="comp-trend-plot">
+          <div className="comp-trend-mobile-picker">
+            <select aria-label="选择曲线阵容" value={pinned?.id ?? ""} onChange={event => setFocused(event.target.value || undefined)}>
+              <option value="">全部曲线</option>
+              {visible.map(track => <option key={track.id} value={track.id}>{track.name}</option>)}
+            </select>
+            {pinned && readoutRow && <output aria-live="polite">
+              {archiveDay.format(readoutRow.day)} · {pinnedPoint ? pinnedPoint.strength.toFixed(2) : "无样本"}
+            </output>}
+          </div>
           <div className="comp-trend-canvas">
             <CompTrendChart rows={rows} lines={lines}
               highlighted={highlighted} activeDay={previewTime === undefined && selectedTime !== undefined ? activeRow?.day : undefined}

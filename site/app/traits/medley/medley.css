@@ -939,3 +939,7 @@
   .medley-check-chip + .medley-check-chip { padding-inline-start: 0; border-inline-start: 0; padding-top: 6px; border-top: 1px solid var(--m-line-soft); }
   .medley-extra-row { flex-direction: column; align-items: flex-start; }
 }
+
+@media (max-width: 640px) {
+  .medley-gc-top-fit strong { white-space: normal; overflow-wrap: anywhere; line-height: 1.35; }
+}

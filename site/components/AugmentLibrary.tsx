@@ -128,6 +128,8 @@ function Detail({ entry, guide, samples, results, returnTo }: {
   ));
   return <div className={"aug-detail" + (heroAugment || hasBoards || hasResults ? " aug-detail-with-stats" : "")}>
     <div className="aug-effect">
+      {heroAugment && entry.effect && entry.effect !== heroAugment.ability &&
+        <p className="aug-hero-effect-mobile"><EffectText text={entry.effect} /></p>}
       {heroAugment && heroUnit ? <HeroSkill unit={heroUnit} augment={heroAugment} defaultAugmented showGear={false}/> : heroAugment ? <>
         <strong>{heroAugment.baseRole} → {heroAugment.role}</strong>
         <p>{heroAugment.ability}</p>

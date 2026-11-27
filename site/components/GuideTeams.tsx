@@ -1,7 +1,7 @@
 "use client";
 import { Fragment, useCallback, useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
 import Image from "next/image";
-import { ArrowRight, ImageDown, Maximize2, X } from "lucide-react";
+import { ArrowRight, ChevronDown, ImageDown, Maximize2, X } from "lucide-react";
 import { Board } from "./Board";
 import { GuideEquipment } from "./GuideEquipment";
 import { GuideEquipmentConditions } from "./GuideEquipmentConditions";
@@ -65,6 +65,9 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
   const [previousTeam, setPrevious] = useState("");
   const [showStage, setStage] = useState(false);
   const sampleId = useId();
+  const variantOptionsId = useId();
+  const [variantOpen, setVariantOpen] = useState(false);
+  const variantTrigger = useRef<HTMLButtonElement>(null);
   const [sampleView, setSampleView] = useState<MatchStatsView>();
   const [routeNote, setRouteNote] = useState("");
   const [zoomed, setZoomed] = useState(false);
@@ -108,7 +111,7 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
       setTeam(resolveBoardTeamId(section.id, params.get("team") ?? undefined) ?? defaultTeamId);
       setSelectedStage(boardStages.find(stage => stage === params.get("stage")));
       setSelectedFlex(params.get("flex") ?? undefined);
-      setStage(false); setRouteNote(""); setPiece(""); setPrevious(""); setZoomed(false); setSampleView(undefined);
+      setStage(false); setRouteNote(""); setPiece(""); setPrevious(""); setZoomed(false); setSampleView(undefined); setVariantOpen(false);
       setShowPoster(wantsPoster);
       setPosterShare(wantsPoster ? readPosterShare(params.get("posterFormat"), params.get("posterStages")) : undefined);
       setPosterHistoryKey(key => key + 1);
@@ -343,6 +346,9 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
   const shownRoles = showFlex && flexPreview
     ? notes.roles.map(role => ({ ...role, units: role.units.map(id => id === flexPreview.outgoing.id ? flexPreview.incoming.id : id) }))
     : mainBoardActive ? notes.roles : [];
+  const mobileCoreRoles = shownRoles.filter(role => role.label === "主C" || role.label === "主坦")
+    .map(role => ({ ...role, units: role.units.filter(id => shownBoard.pieces.some(piece => piece.unitId === id)) }))
+    .filter(role => role.units.length > 0);
   const role = unit ? shownRoles.find(entry => entry.units.includes(unit.id)) : undefined;
   const pieceNote = role?.text && unit && augment?.unitId === unit.id
     ? compactUtilityCopy(role.text, unit.id, shownBoard, boardData)
@@ -382,6 +388,8 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
     : kind === "上限" || currentPhase?.label.endsWith("级上限") ||
       (kind === "主阵" && formation && shownPopulation > Number(formation)));
   const boardTitle = cap ? shownPopulation + "级上限棋盘" : shownPopulation + " 人口棋盘";
+  const selectedBoardLabel = mainBoardActive ? guideBoardName(team) : stageLabels[activeStage];
+  const zoomTitle = showFlex && flexPreview ? `${selectedBoardLabel} · ${flexPreview.incoming.name}替${flexPreview.outgoing.name}` : selectedBoardLabel;
   const intro = passages[0]?.source === introText.trim() ? passages[0] : undefined;
   const phaseAdvice = passages.find(passage => passage !== intro && passage.brief && passage.text);
   const opening = intro?.brief && intro.text ? intro : undefined;
@@ -460,12 +468,16 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
   }
   function renderVariantStrip() {
     if (!systems || systems.length < 2) return null;
-    return <nav className="guide-variant-strip" aria-label="同套变种" data-count={systems.length}>
+    return <nav className="guide-variant-strip" aria-label="同套变种" data-count={systems.length} data-mobile-open={variantOpen}>
       <div className="guide-variant-strip-head">
-        <h3>同套变种<span className="guide-variant-strip-count">（{systems.length}）</span></h3>
-        {systems.length >= 3 && <small className="guide-variant-strip-hint" aria-hidden>左滑对比 →</small>}
+        <h3>同套变种（{systems.length}）</h3>
       </div>
-      <ul className="guide-variant-strip-list" role="list">{systems.map(system => {
+      <button ref={variantTrigger} className="guide-mobile-variant-toggle" type="button" aria-expanded={variantOpen}
+        aria-controls={variantOptionsId} onClick={() => setVariantOpen(open => !open)}>
+        <span><small>当前变种</small><strong>{currentSystem?.title ?? selectedBoardLabel}</strong></span>
+        <span>换变种 <ChevronDown size={16} aria-hidden /></span>
+      </button>
+      <ul id={variantOptionsId} className="guide-variant-strip-list" role="list">{systems.map(system => {
         const board = system.sectionId === section.id ? teams.find(option => option.id === system.teamId) : undefined;
         const current = system === currentSystem;
         const swap = !current && board ? boardRosterChange(systemEntry ?? team, board, data) : undefined;
@@ -480,7 +492,13 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
           {optionStats(sample, undefined, source)}
         </>;
         return <li key={system.sectionId + ":" + system.teamId}>{board
-          ? <button type="button" className="guide-variant-option" aria-pressed={current} onClick={() => pickTeam(board)}>{contents}</button>
+          ? <button type="button" className="guide-variant-option" aria-pressed={current} onClick={() => {
+            pickTeam(board);
+            if (variantOpen) {
+              setVariantOpen(false);
+              variantTrigger.current?.focus({ preventScroll: true });
+            }
+          }}>{contents}</button>
           : <a className="guide-variant-option" href={guideLink(system.sectionId, system.teamId, returnTo)}>{contents}</a>}
         </li>;
       })}</ul>
@@ -641,6 +659,11 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
         <div className="reader-board-title guide-board-head"><h3>{boardTitle}</h3>
           {!detailView && boardActions}
         </div>
+        {detailView && mobileCoreRoles.length > 0 && <div className="guide-mobile-core" aria-label="棋盘核心">
+          {mobileCoreRoles.map(role => <span key={role.label + ":" + role.units.join(",")}>
+            <b>{role.label}</b> {role.units.map(name).join("、")}
+          </span>)}
+        </div>}
         {hasPlayerBoard && <div className="guide-player-board">
           <span>{showPlayerBoard ? "当前显示你的本机站位" : "当前显示官方原盘"}</span>
           <button type="button" className="guide-zoom-trigger" onClick={() => {
@@ -734,7 +757,7 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
         if (next && v.sectionId === section.id) pickTeam(next);
         else window.location.assign(posterShareLink(guideLink(v.sectionId, v.teamId, returnTo), format));
       }} close={() => setShowPoster(false)} />}
-    {zoomed && <GuideBoardZoom title={section.title} stage={boardTitle} team={shownBoard} data={boardData} roles={shownRoles}
+    {zoomed && <GuideBoardZoom title={detailView ? zoomTitle : section.title} stage={boardTitle} team={shownBoard} data={boardData} roles={shownRoles}
       initialPiece={selectedPiece} guideHref={guideHref} changedPositions={showFlex && flexPreview ? [flexPreview.position] : mainBoardActive ? changed : undefined}
       onClose={() => setZoomed(false)} onInspect={picked => {
         setZoomed(false);

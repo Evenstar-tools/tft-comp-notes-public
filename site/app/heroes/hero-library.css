@@ -360,6 +360,11 @@
   .hero-view-nav a { padding-inline: 6px; }
   .library-columns:not(.is-matrix) .browser-toolbar { grid-template-columns: minmax(0, 1fr); }
   .library-columns.is-matrix .browser-toolbar { grid-template-columns: minmax(0, 1fr) auto; }
+  .library-columns.is-matrix .browser-controls .browser-filters:not(.is-expanded) { display: flex; }
+  .library-columns.is-matrix .browser-filters:not(.is-expanded) > :not(.select-field) { display: none; }
+  .library-columns.is-matrix .browser-filters .select-field { max-width: none; }
+  .library-columns.is-matrix .browser-filters select { min-height: 44px; }
+  .library-columns .is-library-matrix .trait-grid-scroll { max-height: min(62dvh, 540px); }
   .library-columns .trait-tags .hero-trait-chip { min-height: 32px; }
   .hero-search-match a { display: inline-flex; min-height: 32px; align-items: center; padding-inline: 3px; }
   .library-columns .unit-details .detail-hero:has(.detail-splash) { height: 132px; }

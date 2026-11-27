@@ -6089,6 +6089,45 @@
       "mean": 3.68,
       "topFourRate": 0.6897663174858985,
       "winRate": 0.09186140209508462
+    },
+    {
+      "population": 8,
+      "roster": [
+        "garen",
+        "braum",
+        "zac",
+        "vladimir",
+        "yuumi",
+        "taliyah",
+        "zoe",
+        "renata-glasc"
+      ],
+      "games": 3,
+      "placementCounts": [
+        0,
+        0,
+        1,
+        0,
+        1,
+        0,
+        0,
+        1
+      ],
+      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&queue=PBE&patch=19.1&b_patch=c&days=3&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&level=8&unit=DA_Braum19-1&unit=DA_Garen19-1&unit=DA_RenataGlasc19-1&unit=DA_Taliyah19-1&unit=DA_Vladimir19-1&unit=DA_Yuumi19-1&unit=DA_Zac19-1&unit=DA_Zoe19-1",
+      "sampleScope": "八级结算 · 固定八人 · 不限星级和装备 · 无纹章、额外人口或重复棋子",
+      "sourcePeriod": {
+        "patch": "19.1c",
+        "window": "近 3 天"
+      },
+      "observedOn": "2026-11-27",
+      "conditions": {
+        "kind": "full",
+        "teamId": "14d668d4-7d3a-4445-a5b5-bfcfc6aa555b",
+        "population": 8
+      },
+      "mean": 5.333,
+      "topFourRate": 0.3333333333333333,
+      "winRate": 0.0
     }
   ],
   "edition": "s19-pbe-19.1",

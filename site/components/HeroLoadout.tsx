@@ -25,8 +25,8 @@ const lockableItems = [...itemMap.values()].filter(item =>
 );
 const lockableIds = new Set(lockableItems.map(item => item.id));
 
-export function HeroLoadout({ unit, items, gearSource, period }: {
-  unit: Unit; items: HeroItemSample[]; gearSource: HeroItemSource; period?: string;
+export function HeroLoadout({ unit, items, gearSource, period, sectionId }: {
+  unit: Unit; items: HeroItemSample[]; gearSource: HeroItemSource; period?: string; sectionId?: string;
 }) {
   const [choice, setChoice] = useState<{ unitId: string; itemIds: string[] }>();
   const [gearQuery, setGearQuery] = useState("");
@@ -64,7 +64,7 @@ export function HeroLoadout({ unit, items, gearSource, period }: {
     }
   }
 
-  return <div className="hero-loadout">
+  return <div className="hero-loadout" id={sectionId} tabIndex={sectionId ? -1 : undefined}>
     <section className="hero-loadout-items" aria-label="单件装备">
       <header>
         <h3>单件装备</h3>

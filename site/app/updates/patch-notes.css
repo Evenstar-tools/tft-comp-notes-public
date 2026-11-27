@@ -16,6 +16,7 @@
 .patch-summary,.patch-current-summary {border-inline-start:2px solid var(--accent);background:var(--panel);padding:9px 13px;line-height:1.6}
 .patch-summary {margin:0;list-style:none}
 .patch-summary li {padding-inline-start:.9rem;position:relative}
+.patch-summary li strong {color:var(--text);font-weight:700}
 .patch-summary li::before {content:"";width:4px;height:4px;border-radius:50%;position:absolute;inset-inline-start:0;top:.68em;background:var(--accent)}
 .patch-summary li+li {margin-top:4px}
 .patch-reading {margin-top:18px}
@@ -47,8 +48,9 @@
 .patch-board-observation .patch-board-roster {margin-top:3px}
 .patch-sample-links {display:inline-flex;gap:8px;flex-wrap:wrap;margin-inline-start:auto;white-space:nowrap}
 .patch-status {border-radius:4px;padding:0 6px;background:var(--raised);color:var(--muted);font-size:.77rem;white-space:nowrap}
-.patch-status[data-status="recommended"] {color:var(--cost-2)}
-.patch-status[data-status="conditional"] {color:var(--accent)}
+.patch-status[data-status="recommended"],.patch-status[data-status="buff"] {color:light-dark(#216242,#85d8a3)}
+.patch-status[data-status="nerf"] {color:light-dark(#914735,#edaa96)}
+.patch-status[data-status="conditional"],.patch-status[data-status="adjust"] {color:var(--accent)}
 .patch-search-row {display:flex;align-items:center;justify-content:space-between;gap:8px 12px;flex-wrap:wrap}
 .patch-search-row h3 {white-space:nowrap}
 .patch-search-row small {color:var(--muted);font-size:.79rem;font-weight:400}
@@ -157,4 +159,15 @@
   .patch-value {scroll-margin-top:114px}
   .patch-copy-change {width:40px;height:40px}
   .patch-object header img {width:28px;height:28px}
+}
+
+.patch-editions-mobile { display: none; }
+@media (max-width: 720px) {
+  .patch-page .patch-index { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 8px; align-items: center; }
+  .patch-page .patch-index h1 { margin: 0; }
+  .patch-page .patch-editions-desktop { display: none; }
+  .patch-editions-mobile { display: block; }
+  .patch-editions-mobile summary { padding: 10px; border: 1px solid var(--line); border-radius: 6px; color: var(--accent); }
+  .patch-editions-mobile[open] { display: grid; grid-column: 1 / -1; grid-row: 2; }
+  .patch-editions-mobile[open] summary { justify-self: end; margin-block: 5px; }
 }

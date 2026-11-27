@@ -68,8 +68,10 @@
 .home-gear-board-status { margin: 8px 0 0; }
 @media (max-width: 580px) {
   .home-guide-library .guide-filters[data-inline-style] { grid-template-columns: minmax(0,1fr) auto; }
-  .home-guide-library .guide-filters[data-inline-style] > .guide-extra-filters { grid-column: 2; grid-row: 1; }
-  .home-style-select { grid-row: 2; justify-self: start; }
+  .home-guide-library .guide-filters > .guide-search-field { grid-column: 1 / -1; grid-row: 1; }
+  .home-guide-library .guide-filters[data-inline-style] > .guide-extra-filters,
+  .home-guide-library .guide-filters > .guide-extra-filters { grid-column: 2; grid-row: 2; }
+  .home-style-select { grid-column: 1; grid-row: 2; justify-self: start; min-width: 0; }
   .guide-search-field .home-gear-chip { max-width: 66%; }
   .home-gear-search { padding-inline: 11px; }
   .home-gear-columns { grid-template-columns: 1fr; gap: 9px; }

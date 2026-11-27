@@ -243,10 +243,14 @@
 .gear-back-to-index {display:none;}
 @media (max-width:760px) {
   .gear-library {grid-template-columns:minmax(0,1fr);gap:12px;}
-  .gear-index {position:static;padding:10px;}
+  .gear-library[data-detail-entry] .gear-detail {order:-1;}
+  .gear-index {position:static;padding:10px;scroll-margin-block-start:12px;}
+  .gear-detail,.gear-build-query {scroll-margin-block-start:12px;}
   .gear-index-list {--gear-visible-rows:2;}
   .gear-index-list:is([data-view=craft],[data-view=special],:has(.gear-recipe-results)) {max-block-size:14rem;}
-  .gear-back-to-index {display:inline-flex;align-items:center;min-height:32px;margin-bottom:5px;font-size:.875rem;}
+  .gear-back-to-index {display:inline-flex;align-items:center;min-height:44px;font-size:.875rem;}
+  .gear-back-to-index::before {content:"↑";margin-inline-end:4px;}
+  .gear-library[data-detail-entry] .gear-back-to-index::before {content:"↓";}
 }
 @media (max-width:390px) {
   .gear-wearers-table :is(th,td) {padding-inline:3px;}

@@ -381,6 +381,7 @@ export function UnitDetails({
   augmented,
   onAugmentedChange,
   showAugmentGear,
+  skillSectionId,
   wornItems,
 }: {
   unit?: Unit;
@@ -396,6 +397,7 @@ export function UnitDetails({
   augmented?: boolean;
   onAugmentedChange?: (value: boolean) => void;
   showAugmentGear?: boolean;
+  skillSectionId?: string;
   wornItems?: string[];
 }) {
   if (!unit)
@@ -489,7 +491,7 @@ export function UnitDetails({
       <HeroSkill key={unit.id + String(defaultAugmented)} unit={augment ? unitMap.get(unit.id) ?? unit : unit}
         augment={augment}
         defaultAugmented={defaultAugmented} augmented={augmented} onAugmentedChange={onAugmentedChange}
-        showGear={showAugmentGear} wornItems={wornItems} />
+        showGear={showAugmentGear} sectionId={skillSectionId} wornItems={wornItems} />
       {action}
       <section className="detail-section">
         <h3>羁绊</h3>

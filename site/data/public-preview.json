@@ -26951,6 +26951,311 @@
         "7ca75194-155a-4f65-9d18-c27d7c8738dd"
       ],
       "summaryBlockId": "ionic-prodigy-lux-start"
+    },
+    {
+      "id": "arcanist-taliyah-vladimir",
+      "title": "法师编舞岩雀吸血鬼",
+      "category": "八级运营",
+      "kind": "guide",
+      "blocks": [
+        {
+          "id": "arcanist-taliyah-vladimir-start",
+          "type": "text",
+          "text": "作者把这套叫「隆吸水」。有两星布隆、肉装和法系散件时可以走。八级解锁吸血鬼和岩雀，小搜能稳住就上九。两人先靠小技能攒大招，再一起打后排；作者示范的配装约在开战 13 秒同时放大。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "作者把这套叫「隆吸水」。有两星布隆、肉装和法系散件时可以走。八级解锁吸血鬼和岩雀，小搜能稳住就上九。两人先靠小技能攒大招，再一起打后排；作者示范的配装约在开战 13 秒同时放大。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "arcanist-taliyah-vladimir-style",
+          "type": "text",
+          "text": "打法：84",
+          "elements": [
+            {
+              "text_run": {
+                "content": "打法：84"
+              }
+            }
+          ]
+        },
+        {
+          "id": "arcanist-taliyah-vladimir-credit",
+          "type": "text",
+          "text": "B站：桃子别烦我",
+          "elements": [
+            {
+              "text_run": {
+                "content": "B站："
+              }
+            },
+            {
+              "text_run": {
+                "content": "桃子别烦我",
+                "text_element_style": {
+                  "bold": true
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "arcanist-taliyah-vladimir-unlocks",
+          "type": "text",
+          "text": "七级上场五名不同的海之歌或主宰，先开扎克。手里还没有五费、血量也撑得住时，可在七级战斗结束留 85 金解锁派克，凑齐岩雀要求的五种费用。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "七级上场五名不同的海之歌或主宰，先开扎克。手里还没有五费、血量也撑得住时，可在七级战斗结束留 85 金解锁派克，凑齐岩雀要求的五种费用。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "arcanist-taliyah-vladimir-double-unlock",
+          "type": "text",
+          "text": "八级双解锁：砂槌放第三排，1 至 5 费各选一名站在强化格。前两排合计只站一人，把他放在砂槌相邻的第二排，其余人放后两排。开战同时满足岩雀和吸血鬼的条件，解锁后换回成型站位。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "八级双解锁：砂槌放第三排，1 至 5 费各选一名站在强化格。前两排合计只站一人，把他放在砂槌相邻的第二排，其余人放后两排。开战同时满足岩雀和吸血鬼的条件，解锁后换回成型站位。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "arcanist-taliyah-vladimir-roll",
+          "type": "text",
+          "text": "八级没有两星四费坦时，肉装先给两星布隆，大触打击乐优先分生命。盖伦或扎克先两星就接肉装，三海之歌且两人同星时优先盖伦。四费接坦后把节拍调回法强，布隆仍留场开大触。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "八级没有两星四费坦时，肉装先给两星布隆，大触打击乐优先分生命。盖伦或扎克先两星就接肉装，三海之歌且两人同星时优先盖伦。四费接坦后把节拍调回法强，布隆仍留场开大触。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "arcanist-taliyah-vladimir-gearing",
+          "type": "text",
+          "text": "吸血鬼优先法爆、双纳什，少一件纳什可换青龙刀或蓝霸符。岩雀用鬼书和虚空之杖给后排挂重伤、减魔抗，第三件补法爆；已有重伤和减抗就换巨杀、帽子等输出装，回蓝装至多一件。输出装先给先两星的，两人同星优先吸血鬼。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "吸血鬼优先法爆、双纳什，少一件纳什可换青龙刀或蓝霸符。岩雀用鬼书和虚空之杖给后排挂重伤、减魔抗，第三件补法爆；已有重伤和减抗就换巨杀、帽子等输出装，回蓝装至多一件。输出装先给先两星的，两人同星优先吸血鬼。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "arcanist-taliyah-vladimir-position",
+          "type": "text",
+          "text": "盖伦对位对方主 C，布隆、扎克护住双核。岩雀靠砂槌，烈娜塔站在施加重伤、减魔抗棋子的另一侧，让两边的敌人都更容易挂上迷醉。悠米收残局，多余装备留给九级的奈德丽。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "盖伦对位对方主 C，布隆、扎克护住双核。岩雀靠砂槌，烈娜塔站在施加重伤、减魔抗棋子的另一侧，让两边的敌人都更容易挂上迷醉。悠米收残局，多余装备留给九级的奈德丽。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "arcanist-taliyah-vladimir-late",
+          "type": "text",
+          "text": "九级优先找两星吸血鬼和岩雀，补奈德丽提高编舞师档位，后续可再补洛。有眼泪和金铲铲时，海之歌纹章给吸血鬼，再补辛德拉开五海之歌。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "九级优先找两星吸血鬼和岩雀，补奈德丽提高编舞师档位，后续可再补洛。有眼泪和金铲铲时，海之歌纹章给吸血鬼，再补辛德拉开五海之歌。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "arcanist-taliyah-vladimir-gear",
+          "type": "text",
+          "text": "棋盘配装 · 八级 · 法师编舞岩雀吸血鬼\n主C：弗拉基米尔。珠光护手、纳什之牙、纳什之牙。\n副C：塔莉垭。莫雷洛秘典、虚空之杖、珠光护手。\n主坦：盖伦。石像鬼石板甲、狂徒铠甲、振奋盔甲。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "棋盘配装 · 八级 · 法师编舞岩雀吸血鬼\n主C：弗拉基米尔。珠光护手、纳什之牙、纳什之牙。\n副C：塔莉垭。莫雷洛秘典、虚空之杖、珠光护手。\n主坦：盖伦。石像鬼石板甲、狂徒铠甲、振奋盔甲。"
+              }
+            }
+          ]
+        }
+      ],
+      "team": {
+        "id": "14d668d4-7d3a-4445-a5b5-bfcfc6aa555b",
+        "name": "八级 · 法师编舞岩雀吸血鬼",
+        "category": "待分类",
+        "notes": "",
+        "revision": 1,
+        "updatedAt": "2026-11-27T14:00:45.430Z",
+        "sectionId": "arcanist-taliyah-vladimir",
+        "instrumentPositions": {
+          "maracas": 15
+        },
+        "pieces": [
+          {
+            "instanceId": "312a229f-794e-4369-8a75-2f76fc6242dd",
+            "unitId": "garen",
+            "position": 3,
+            "stars": 2,
+            "items": [
+              "TFT_Item_GargoyleStoneplate",
+              "TFT_Item_WarmogsArmor",
+              "TFT_Item_Redemption"
+            ]
+          },
+          {
+            "instanceId": "907afb17-8d1a-4e76-af99-ba376f354660",
+            "unitId": "braum",
+            "position": 7,
+            "stars": 2,
+            "items": []
+          },
+          {
+            "instanceId": "9ba2fd6b-ba0f-4123-af6a-5443304ee967",
+            "unitId": "zac",
+            "position": 8,
+            "stars": 2,
+            "items": []
+          },
+          {
+            "instanceId": "081a735c-c51c-4d84-9b30-ae308f17ce40",
+            "unitId": "vladimir",
+            "position": 16,
+            "stars": 1,
+            "items": [
+              "TFT_Item_JeweledGauntlet",
+              "TFT_Item_Leviathan",
+              "TFT_Item_Leviathan"
+            ]
+          },
+          {
+            "instanceId": "2189cc92-6ed0-46ec-8393-09d2d5a1c1f9",
+            "unitId": "yuumi",
+            "position": 22,
+            "stars": 2,
+            "items": []
+          },
+          {
+            "instanceId": "974f9ccd-8a60-447a-ada8-408973790bf9",
+            "unitId": "taliyah",
+            "position": 21,
+            "stars": 1,
+            "items": [
+              "TFT_Item_Morellonomicon",
+              "TFT_Item_StatikkShiv",
+              "TFT_Item_JeweledGauntlet"
+            ]
+          },
+          {
+            "instanceId": "133d4a9e-8c53-4f49-96b3-5c3407db531e",
+            "unitId": "zoe",
+            "position": 14,
+            "stars": 2,
+            "items": []
+          },
+          {
+            "instanceId": "f1e19cb1-b857-499b-a976-9124a3ed4f7c",
+            "unitId": "renata-glasc",
+            "position": 27,
+            "stars": 2,
+            "items": []
+          }
+        ]
+      },
+      "teams": [
+        {
+          "id": "14d668d4-7d3a-4445-a5b5-bfcfc6aa555b",
+          "name": "八级 · 法师编舞岩雀吸血鬼",
+          "category": "待分类",
+          "notes": "",
+          "revision": 1,
+          "updatedAt": "2026-11-27T14:00:45.430Z",
+          "sectionId": "arcanist-taliyah-vladimir",
+          "instrumentPositions": {
+            "maracas": 15
+          },
+          "pieces": [
+            {
+              "instanceId": "312a229f-794e-4369-8a75-2f76fc6242dd",
+              "unitId": "garen",
+              "position": 3,
+              "stars": 2,
+              "items": [
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_WarmogsArmor",
+                "TFT_Item_Redemption"
+              ]
+            },
+            {
+              "instanceId": "907afb17-8d1a-4e76-af99-ba376f354660",
+              "unitId": "braum",
+              "position": 7,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "9ba2fd6b-ba0f-4123-af6a-5443304ee967",
+              "unitId": "zac",
+              "position": 8,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "081a735c-c51c-4d84-9b30-ae308f17ce40",
+              "unitId": "vladimir",
+              "position": 16,
+              "stars": 1,
+              "items": [
+                "TFT_Item_JeweledGauntlet",
+                "TFT_Item_Leviathan",
+                "TFT_Item_Leviathan"
+              ]
+            },
+            {
+              "instanceId": "2189cc92-6ed0-46ec-8393-09d2d5a1c1f9",
+              "unitId": "yuumi",
+              "position": 22,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "974f9ccd-8a60-447a-ada8-408973790bf9",
+              "unitId": "taliyah",
+              "position": 21,
+              "stars": 1,
+              "items": [
+                "TFT_Item_Morellonomicon",
+                "TFT_Item_StatikkShiv",
+                "TFT_Item_JeweledGauntlet"
+              ]
+            },
+            {
+              "instanceId": "133d4a9e-8c53-4f49-96b3-5c3407db531e",
+              "unitId": "zoe",
+              "position": 14,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "f1e19cb1-b857-499b-a976-9124a3ed4f7c",
+              "unitId": "renata-glasc",
+              "position": 27,
+              "stars": 2,
+              "items": []
+            }
+          ]
+        }
+      ],
+      "primaryTeamId": "14d668d4-7d3a-4445-a5b5-bfcfc6aa555b",
+      "stageTeamIds": [],
+      "summaryBlockId": "arcanist-taliyah-vladimir-start"
     }
   ],
   "season": {

@@ -359,7 +359,7 @@ export function MedleyLibrary({
               setExtrasExpanded(false);
             }}
             aria-describedby="medley-search-hint"
-            placeholder="搜英雄名、外号或组号（多个英雄用空格隔开，如 莉莉娅 烈娜塔 蔚 或 28）"
+            placeholder="搜英雄、外号或组号"
           />
           {!!query && <button type="button" className="medley-clear" aria-label="清除搜索" onClick={clearSearch}>
             <X size={16} aria-hidden="true" />
@@ -394,7 +394,7 @@ export function MedleyLibrary({
             </div>
             <h2>本局合奏搭档</h2>
             <p className={"medley-pool-hint" + (activeFit ? " is-linked" : "")}>
-              {activeFit ? `正在对照：${activeFit.title.split(" · ")[0]}` : "悬停下方阵容，自动高亮留牌"}
+              {activeFit ? `正在对照：${activeFit.title.split(" · ")[0]}` : "点选下方阵容，查看该留哪些棋子"}
             </p>
           </div>
           <div className="medley-pool-units">

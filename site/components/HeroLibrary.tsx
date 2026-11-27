@@ -155,11 +155,12 @@ export function HeroLibrary({ guides, commonItems, gearSource: liveGearSource }:
   if (unit && focused) return <HeroProfile key={unit.id} unit={unit}
     guides={guides === null ? null : related} returnHref={returnHref} editorHref={editorHref}
     statsContent={<>
-      <div className="hero-profile-performance">
+      <div className="hero-profile-performance" id="hero-data" tabIndex={-1}>
         <HeroBattleSummary unit={unit} stats={stats} controls={dataControls} unavailable={heroArchiveNotice} />
       </div>
       {gearSource ? <HeroLoadout key={period?.id ?? "current"} unit={unit} items={availableItems?.[unit.id] ?? []}
-        gearSource={gearSource} period={period?.id} /> : gearArchiveNotice}
+        gearSource={gearSource} period={period?.id} sectionId="hero-gear" /> :
+        <div id="hero-gear" tabIndex={-1}>{gearArchiveNotice}</div>}
     </>}
     backLabel={statistics ? "返回数据榜" : "返回英雄图鉴"}
     onBack={() => {

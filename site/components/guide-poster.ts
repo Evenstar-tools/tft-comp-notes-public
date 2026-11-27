@@ -3,7 +3,7 @@ import { boardInstruments, boardMarkerNote } from "@/domain/board-instruments";
 import type { Section } from "@/domain/document";
 import { sectionTeams } from "@/domain/document-flow";
 import { guideConditionHasName, guideConditionName, guideConditionTag, guideEquipmentConditions, guideReferenceConditions } from "@/domain/guide-equipment-conditions";
-import { guideRoster, readingNotes } from "@/domain/guide-reading";
+import { guideCredit, guideRoster, readingNotes } from "@/domain/guide-reading";
 import { heroArtworkFocus } from "@/domain/hero-artwork";
 import { preferredItemImage } from "@/domain/item-art";
 import { defaultPosterFormat, posterGear, posterLayout, posterOperationTitle, posterRequirements, posterStageTitle, posterTitle, type PosterFormat } from "@/domain/poster";
@@ -71,6 +71,7 @@ export async function guidePoster({ section, team, data, format = defaultPosterF
   if (!team.pieces.length) throw new Error("先把棋子放上棋盘");
   const { stages, boards, operations } = posterLayout(section, team, data, format, stageIds);
   const { title, subtitle } = posterTitle(section, team);
+  const credit = section && guideCredit(section);
   const requirements = posterRequirements(section, team, data);
   const sectionBoards = section ? sectionTeams(section) : [];
   const conditions = section && guideEquipmentConditions(section, sectionBoards, data, undefined, team);
@@ -329,7 +330,16 @@ export async function guidePoster({ section, team, data, format = defaultPosterF
       }
     }
     rule(c, y + 5);
-    return block(c, "S19 PBE · 资料 " + data.sourceDate, pad, y + 13, inner, 12.5, muted, 17) + 10;
+    const footerY = y + 13;
+    const date = "S19 PBE · 资料 " + data.sourceDate;
+    if (!credit) return block(c, date, pad, footerY, inner, 12.5, muted, 17) + 10;
+    font(c, 12.5);
+    const nameX = pad + c.measureText(credit.label).width;
+    const dateX = W - pad - c.measureText(date).width;
+    c.fillStyle = muted;
+    c.fillText(credit.label, pad, footerY);
+    c.fillText(date, dateX, footerY);
+    return block(c, credit.name, nameX, footerY, dateX - nameX - 12, 12.5, ink, 17, 700) + 10;
   }
 
   const height = Math.ceil(paint(ctx, 1));

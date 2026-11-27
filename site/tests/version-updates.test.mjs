@@ -3,10 +3,11 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { splitSections } from "../domain/document-flow.ts";
 import { isVersionUpdate, publishedVersionUpdates, versionUpdateLink } from "../domain/version-updates.ts";
-import { findPatchObjects, publishedPatchCallouts } from "../domain/patch-reference.ts";
+import { findPatchObjects, publishedPatchCallouts, splitHighlightLine } from "../domain/patch-reference.ts";
 import { patchReferences } from "../data/patch-notes.ts";
 import { guideLink, validVersionReturn } from "../domain/guide-reading.ts";
 import { itemGuideOrigin, itemLink } from "../domain/links.ts";
+import { sectionTeams } from "../domain/document-flow.ts";
 
 test("published Feishu briefs stay in their own season and environment after a snapshot is merged", () => {
   const block = (id, text, level) => ({
@@ -74,4 +75,29 @@ test("a patch search matches aliases inside the selected category and keeps old/
   assert.deepEqual(publishedVersionUpdates("s19-pbe", { season: { id: "s19-pbe-19.1" }, sections: [intro] }), [intro]);
   assert.equal(isVersionUpdate({ ...intro, blocks: [...intro.blocks, { type: "text", text: "其他资料" }] }), false);
   assert.equal(isVersionUpdate({ ...intro, blocks: [{ type: "quote", children: [{ text: "更新预览" }, { text: "待编辑" }] }] }), false);
+});
+
+test("patch highlights split leading focus labels and current patch impacts stay concise and valid", () => {
+  assert.deepEqual(splitHighlightLine("解锁：史密奇上调至 9 个非唯一羁绊。"), {
+    label: "解锁",
+    text: "史密奇上调至 9 个非唯一羁绊。",
+  });
+  assert.deepEqual(splitHighlightLine("普通说明无前缀。"), { text: "普通说明无前缀。" });
+
+  const latest = patchReferences.find(patch => patch.id === "pbe-6035832");
+  assert.ok(latest);
+  assert.ok(latest.highlights.every(line => !/小队规划器代码/.test(line)));
+  assert.ok(latest.highlights.some(line => splitHighlightLine(line).label === "小结"));
+  const totalObjects = Object.values(latest.groups).reduce((sum, rows) => sum + (rows?.length ?? 0), 0);
+  assert.equal(totalObjects, 61);
+
+  const preview = JSON.parse(readFileSync(new URL("../data/public-preview.json", import.meta.url), "utf8"));
+  assert.ok(Array.isArray(latest.impacts) && latest.impacts.length >= 4 && latest.impacts.length <= 8);
+  for (const impact of latest.impacts) {
+    const section = preview.sections.find(entry => entry.id === impact.sectionId);
+    assert.ok(section, impact.sectionId);
+    if (impact.teamId) {
+      assert.ok(sectionTeams(section).some(board => board.id === impact.teamId), impact.teamId);
+    }
+  }
 });

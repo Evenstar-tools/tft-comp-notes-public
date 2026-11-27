@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, MoveHorizontal } from "lucide-react";
+import { ArrowRight, Maximize2, Minimize2, MoveHorizontal } from "lucide-react";
 import { guideRoster, type GuideRole } from "@/domain/guide-reading";
 import { itemLink } from "@/domain/links";
 import type { Piece, Season, Team } from "@/domain/types";
@@ -17,6 +17,7 @@ export function GuideBoardZoom({ title, stage, team, data, roles, initialPiece, 
 }) {
   const roster = guideRoster(team, data, roles);
   const [selected, setSelected] = useState(initialPiece);
+  const [magnified, setMagnified] = useState(false);
   const boardViewport = useRef<HTMLDivElement>(null);
   const member = roster.find(row => row.piece.instanceId === selected) ?? roster[0];
   const piece = member?.piece;
@@ -32,13 +33,19 @@ export function GuideBoardZoom({ title, stage, team, data, roles, initialPiece, 
       }
     });
     return () => cancelAnimationFrame(frame);
-  }, []);
+  }, [magnified]);
   return <MatrixDialog title={<>{title}<small>{stage}</small></>} className="guide-board-dialog guide-board-inspection"
     closeLabel="关闭棋盘" onClose={onClose}>
     <div className="zoom-board-layout" data-has-member={!!member}>
       <div className="zoom-board-pane">
-        <p className="zoom-pan-hint"><MoveHorizontal size={16} aria-hidden />左右滑动棋盘</p>
-        <div ref={boardViewport} className="read-board read-board-large" role="region" aria-label="放大棋盘站位" tabIndex={0}>
+        <div className="zoom-board-tools">
+          <span>{magnified ? <><MoveHorizontal size={16} aria-hidden />左右滑动棋盘</> : "点棋子看装备"}</span>
+          <button type="button" onClick={() => setMagnified(value => !value)}>
+            {magnified ? <><Minimize2 size={15} aria-hidden />查看全盘</> : <><Maximize2 size={15} aria-hidden />放大细节</>}
+          </button>
+        </div>
+        <div ref={boardViewport} className="read-board read-board-large" data-magnified={magnified}
+          role="region" aria-label="棋盘站位" tabIndex={0}>
           <Board data={data} pieces={team.pieces} instrumentPositions={team.instrumentPositions} targeting={null}
             selectedId={piece?.instanceId ?? null} changedPositions={changedPositions}
             onCell={(_, picked) => { if (picked) setSelected(picked.instanceId); }} />

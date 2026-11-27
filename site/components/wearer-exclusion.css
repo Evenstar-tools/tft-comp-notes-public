@@ -5,7 +5,11 @@
   position:absolute;inset-inline-start:10px;top:50%;transform:translateY(-50%);
   color:var(--muted);pointer-events:none;
 }
-.wearer-exclude[data-excluded] input {border-color:var(--accent);}
+.wearer-exclude[data-excluded] input {border-color:var(--accent);padding-inline-end:32px;}
+.wearer-exclude-count {
+  position:absolute;inset-inline-end:8px;top:50%;transform:translateY(-50%);
+  color:var(--accent);font-size:.75rem;font-variant-numeric:tabular-nums;pointer-events:none;
+}
 .wearer-exclude[data-excluded] .wearer-exclude-icon {color:var(--accent);}
 .wearer-exclude-chips {display:flex;flex-wrap:wrap;gap:4px;margin-top:4px;}
 .wearer-exclude-chip {
@@ -36,7 +40,8 @@
 .wearer-exclude-unit>span {min-width:0;overflow-wrap:anywhere;}
 .wearer-exclude-empty:not(:empty) {padding:8px;color:var(--muted);font-size:.875rem;}
 @media(max-width:760px) {
-  .wearer-exclude input {min-height:44px;}
+  .wearer-exclude input {min-height:44px;padding-inline-start:29px;}
+  .wearer-exclude .wearer-exclude-icon {inset-inline-start:7px;}
   .wearer-exclude-chip button {min-width:32px;min-height:30px;}
   .wearer-exclude-option {min-height:44px;}
 }
