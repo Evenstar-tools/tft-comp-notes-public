@@ -365,12 +365,11 @@
       "representativeUnits": [
         "DA_Braum19",
         "DA_Draven19",
-        "DA_Illaoi19",
+        "DA_Gnar19",
         "DA_Kaisa19",
-        "DA_Olaf19",
-        "DA_Swain19",
-        "DA_Vayne19",
-        "DA_Yuumi19"
+        "DA_Viego19",
+        "DA_Yone19",
+        "DA_Yorick19"
       ]
     },
     {
@@ -390,36 +389,37 @@
         "DA_Bard19",
         "DA_DrMundo19",
         "DA_Galio19",
+        "DA_Gragas19",
         "DA_Jax19",
         "DA_Leona19",
         "DA_Nunu19",
         "DA_Vi19",
-        "DA_Yorick19",
         "DA_Zeri19"
       ]
     },
     {
       "clusterId": "429040",
-      "sourceName": "Slayer Viego Briar",
-      "name": "六舞者佛耶戈",
-      "sectionId": "sample-block-0243",
-      "teamId": "00000000-0000-4000-8000-000000000087",
+      "sourceName": "Choreographer Viego Draven",
+      "name": "编舞佛耶戈德莱文",
+      "sectionId": "sample-block-0407",
+      "teamId": "00000000-0000-4000-8000-000000001177",
       "aliases": [
-        "舞者破败王",
-        "舞者贝蕾亚"
+        "编舞德莱文佛耶戈",
+        "大触佛耶戈德莱文",
+        "琴吹唯佛耶戈"
       ],
       "carryIds": [
         "viego",
-        "briar"
+        "draven"
       ],
       "url": "https://www.metatft.com/pbe-comps#DA_Mosher19-DA_Viego19-DA_Choreographer19",
       "representativeUnits": [
-        "DA_Briar19",
-        "DA_Camille19",
-        "DA_Kayn19",
-        "DA_Olaf19",
+        "DA_Braum19",
+        "DA_Draven19",
+        "DA_Garen19",
+        "DA_Gnar19",
+        "DA_TwistedFate19",
         "DA_Viego19",
-        "DA_Yasuo19",
         "DA_Yone19",
         "DA_Yorick19"
       ]
@@ -599,7 +599,6 @@
         "DA_Amumu19",
         "DA_Briar19",
         "DA_Camille19",
-        "DA_Garen19",
         "DA_Kayn19",
         "DA_Viego19",
         "DA_Yasuo19",
@@ -667,6 +666,98 @@
         "DA_Leona19",
         "DA_Lillia19",
         "DA_Neeko19"
+      ]
+    },
+    {
+      "clusterId": "429033",
+      "sourceName": "He's Electric Kennen",
+      "name": "电能凯南",
+      "sectionId": "sample-block-0064",
+      "teamId": "00000000-0000-4000-8000-000000000012",
+      "sharedTeamIds": [
+        "00000000-0000-4000-8000-000000000045"
+      ],
+      "carryIds": [
+        "kennen"
+      ],
+      "url": "https://www.metatft.com/pbe-comps#DA_Kennen19_HeroAugment",
+      "representativeUnits": [
+        "DA_Ekko19",
+        "DA_Jax19",
+        "DA_KSante19",
+        "DA_Kennen19",
+        "DA_Leona19",
+        "DA_Lillia19",
+        "DA_Nasus19",
+        "DA_Senna19"
+      ]
+    },
+    {
+      "clusterId": "429038",
+      "sourceName": "Punch Line Sett",
+      "name": "飞拳瑟提",
+      "sectionId": "sample-block-0258",
+      "teamId": "00000000-0000-4000-8000-000000000061",
+      "carryIds": [
+        "sett"
+      ],
+      "url": "https://www.metatft.com/pbe-comps#DA_Sett19_HeroAugment",
+      "representativeUnits": [
+        "DA_Alune19",
+        "DA_Aphelios19",
+        "DA_Ezreal19",
+        "DA_KSante19",
+        "DA_Kayn19",
+        "DA_Leona19",
+        "DA_Sett19",
+        "DA_Yone19"
+      ]
+    },
+    {
+      "clusterId": "429049",
+      "sourceName": "Tibbers! I Can't See the Stage Annie",
+      "name": "骑熊安妮",
+      "sectionId": "sample-block-0466",
+      "teamId": "00000000-0000-4000-8000-000000000035",
+      "carryIds": [
+        "annie"
+      ],
+      "url": "https://www.metatft.com/pbe-comps#DA_Annie19_HeroAugment",
+      "representativeUnits": [
+        "DA_Annie19",
+        "DA_Aurora19",
+        "DA_Elise19",
+        "DA_Gwen19",
+        "DA_Jinx19",
+        "DA_Shyvana19",
+        "DA_Tibbers19"
+      ]
+    },
+    {
+      "clusterId": "429020",
+      "sourceName": "Mosher Yasuo Yone",
+      "name": "速八六舞者亚索永恩",
+      "sectionId": "mosher-yasuo-yone",
+      "teamId": "edad46b7-e909-4233-b0c5-79d6899db862",
+      "aliases": [
+        "六舞者亚索",
+        "速八舞者永恩",
+        "舞者亚索永恩"
+      ],
+      "carryIds": [
+        "yasuo",
+        "yone"
+      ],
+      "url": "https://www.metatft.com/pbe-comps#DA_Mosher19-DA_Yasuo19",
+      "representativeUnits": [
+        "DA_Briar19",
+        "DA_KSante19",
+        "DA_Katarina19",
+        "DA_Kayn19",
+        "DA_Nasus19",
+        "DA_Viego19",
+        "DA_Yasuo19",
+        "DA_Yone19"
       ]
     }
   ]
