@@ -733,6 +733,7 @@
   gap: 14px;
 }
 .medley-group-card {
+  min-inline-size: 0;
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: 12px;
@@ -768,8 +769,8 @@
   border: 1px solid transparent;
 }
 .medley-gc-unit.is-matched { background: var(--m-accent-bg); border-color: var(--m-accent-line); }
-.medley-gc-unit .medley-avatar { width: 42px; height: 42px; }
-.medley-gc-unit span { font-size: .74rem; font-weight: 550; text-align: center; line-height: 1.2; white-space: nowrap; }
+.medley-gc-unit .medley-avatar { width: min(42px, 100%); height: auto; aspect-ratio: 1; }
+.medley-gc-unit > span { font-size: .74rem; font-weight: 550; text-align: center; line-height: 1.2; overflow-wrap: anywhere; }
 
 .medley-gc-foot {
   display: flex;
@@ -792,23 +793,26 @@
 .medley-gc-enter { flex: none; color: var(--accent); font-weight: 650; font-size: .77rem; }
 
 /* Slide-over Board Preview Drawer */
-.medley-drawer-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 60;
+.medley-drawer::backdrop {
   background: rgba(16, 18, 22, .4);
   backdrop-filter: blur(2px);
 }
 .medley-drawer {
   position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 61;
+  inset: 0 0 0 auto;
   width: min(560px, 94vw);
-  background: var(--panel);
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
   border-left: 1px solid var(--line);
+  background: var(--panel);
+  color: inherit;
   box-shadow: -12px 0 36px rgba(16, 18, 22, .22);
+}
+.medley-drawer[open] {
   display: flex;
   flex-direction: column;
 }
@@ -912,10 +916,14 @@
 .medley-source a { display: inline-flex; align-items: center; gap: 3px; color: var(--accent); }
 .medley-source a:hover { text-decoration: underline; }
 
+@media (max-height: 600px) {
+  .medley-pool-strip { position: static; }
+}
+
 @media (max-width: 960px) {
   .medley-pool-strip { grid-template-columns: 1fr; gap: 12px; position: static; }
   .medley-pool-fixed { padding-left: 0; padding-top: 10px; border-left: 0; border-top: 1px dashed var(--line); }
-  .medley-groups-grid { grid-template-columns: 1fr; }
+  .medley-groups-grid { grid-template-columns: minmax(0, 1fr); }
   .medley-how-panel { grid-template-columns: 1fr; }
   .medley-roster-strip,
   .medley-roster-strip.pop-8 { grid-template-columns: repeat(5, minmax(0, 1fr)); }

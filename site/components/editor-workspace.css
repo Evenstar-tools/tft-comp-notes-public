@@ -361,6 +361,7 @@
 }
 
 @media (min-width: 1100px) {
+  .editor .tb-menus .popover-panel { inset-inline: auto 0; }
   .editor:has(.workspace:not(.matrix-workspace)) {
     width: min(100%, 1648px);
     margin-inline: auto;
