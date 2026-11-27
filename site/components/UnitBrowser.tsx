@@ -86,7 +86,6 @@ export const UnitBrowser = memo(function UnitBrowser({
   onTrayPick,
   onTrayDetails,
   relatedTrayUnitIds,
-  compactFiveRows = false,
 }: {
   selectedId: string | null;
   onSelect: (id: string) => void;
@@ -106,7 +105,6 @@ export const UnitBrowser = memo(function UnitBrowser({
   onTrayPick?: (id: string) => void;
   onTrayDetails?: (id: string) => void;
   relatedTrayUnitIds?: ReadonlySet<string>;
-  compactFiveRows?: boolean;
 }) {
   const [local, setLocal] = useState<BrowserFilters>({ query: "", cost: 0, traitIds: [], unlock: false, view: initialView });
   const [showFilters, setShowFilters] = useState(false);
@@ -149,33 +147,14 @@ export const UnitBrowser = memo(function UnitBrowser({
     }
     return { byUnit, counts };
   }, [showTraitMatches, traitIds, units]);
-  const groups = useMemo(() => {
-    if (compactFiveRows) {
-      const buckets: Array<{ key: string; cost: number; label: string; units: Unit[] }> = [1, 2, 3, 4].map((value) => ({
-        key: String(value),
+  const groups = useMemo(
+    () =>
+      COSTS.map((value) => ({
         cost: value,
-        label: `${value} 费`,
         units: units.filter((unit) => unit.cost === value),
-      }));
-      const high5 = units.filter((unit) => unit.cost === 5);
-      const high7 = units.filter((unit) => unit.cost === 7);
-      if (high5.length || high7.length) {
-        buckets.push({
-          key: high5.length && high7.length ? "5-7" : high7.length ? "7" : "5",
-          cost: high5.length ? 5 : 7,
-          label: high5.length && high7.length ? "5·7费" : high7.length ? "7 费" : "5 费",
-          units: [...high5, ...high7],
-        });
-      }
-      return buckets.filter((group) => group.units.length);
-    }
-    return COSTS.map((value) => ({
-      key: String(value),
-      cost: value,
-      label: `${value} 费`,
-      units: units.filter((unit) => unit.cost === value),
-    })).filter((group) => group.units.length);
-  }, [units, compactFiveRows]);
+      })).filter((group) => group.units.length),
+    [units],
+  );
   const activeFilterCount = Number(!!cost) + traitIds.length + Number(unlock);
   const filtered = !!query || activeFilterCount > 0;
   const hasTraitChips = multiTrait && traitIds.length > 0;
@@ -361,10 +340,10 @@ export const UnitBrowser = memo(function UnitBrowser({
                   onUnlock={onTrayDetails}
                 />
               ));
-              return <section className="cost-group" key={group.key}>
+              return <section className="cost-group" key={group.cost}>
                 <h3 className={`cost-heading cost-${group.cost}`}>
                   <i aria-hidden />
-                  {group.label}<span>{group.units.length}</span>
+                  {group.cost} 费<span>{group.units.length}</span>
                 </h3>
                 <div className="unit-list">
                   {!onAdd && cards.length > 1 ? <>
