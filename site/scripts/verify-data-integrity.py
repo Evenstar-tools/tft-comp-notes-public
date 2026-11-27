@@ -157,7 +157,11 @@ def check_module(module, data, current, effective, aligned_check, warnings, erro
     collection, kind, time_key = MODULES[module]
     records = data.get(collection)
     count = len(records) if isinstance(records, kind) else 0
-    if not count and not (module == "patch-recommendations" and isinstance(records, list)):
+    if not count and not (
+        (module == "patch-recommendations" and isinstance(records, list))
+        or (module == "guide-family-stats" and isinstance(records, list)
+            and isinstance(data.get("smallSamples"), list) and bool(data["smallSamples"]))
+    ):
         errors.append(f"{name}：{collection} 缺失、为空或类型错误")
     metadata = data
     if module == "comp-trends":
@@ -321,10 +325,11 @@ def validate_recommendation_overrides(entry, active, path, errors):
     return override if override in RECOMMENDATION_OVERRIDES else None
 
 
-def collect_public_boards(sections, errors):
+def collect_public_boards(sections, preview, errors):
     boards = {}
     primaries = {}
     sections_by_id = {section["id"]: section for section in sections}
+    original_board_ids = {}
     for section in sections:
         section_id = section["id"]
         section_teams = section.get("teams")
@@ -335,9 +340,11 @@ def collect_public_boards(sections, errors):
         }
         primary = section.get("primaryTeamId")
         primaries[section_id] = primary if isinstance(primary, str) else next(iter(teams), None)
+        original_board_ids[section_id] = set(teams)
         boards.update({(section_id, team_id): team for team_id, team in teams.items()})
     reroll_path = ROOT / "data/s19-reroll-boards.json"
-    if reroll_path.exists():
+    season_scope = edition(preview.get("season", {}).get("id") if isinstance(preview.get("season"), dict) else None)
+    if reroll_path.exists() and season_scope == "s19-pbe":
         reroll = read_json("data/s19-reroll-boards.json", list, errors)
         for guide in reroll:
             if not isinstance(guide, dict):
@@ -348,12 +355,18 @@ def collect_public_boards(sections, errors):
             for stage in guide.get("stages") or []:
                 if not isinstance(stage, dict) or not isinstance(stage.get("teamId"), str):
                     continue
+                pieces = stage.get("pieces")
+                if not isinstance(pieces, list) or not pieces:
+                    continue
+                parent_id = stage.get("parentTeamId")
+                if parent_id is not None and parent_id not in original_board_ids.get(section_id, set()):
+                    continue
                 key = (section_id, stage["teamId"])
                 if key not in boards:
                     boards[key] = {
                         "id": stage["teamId"],
                         "boardRole": stage.get("boardRole", "stage"),
-                        "pieces": stage.get("pieces", []),
+                        "pieces": pieces,
                     }
     return boards, primaries, sections_by_id
 
@@ -420,7 +433,7 @@ def check_recommendation_entries(recommendations, family, boards, primaries, sec
             continue
         stage_ids = section.get("stageTeamIds")
         board = boards[key]
-        stage = (team_id in stage_ids if isinstance(stage_ids, list) else board.get("boardRole") == "stage")
+        stage = (team_id in stage_ids if isinstance(stage_ids, list) else False) or board.get("boardRole") == "stage"
         primary_id = primaries[section_id]
         main_board = boards.get((section_id, primary_id), {})
         if stage and team_id != primary_id and key not in landing_boards and board_population(board) <= board_population(main_board):
@@ -532,20 +545,28 @@ def check_family_bindings(family_map, family, boards, family_aligned, errors):
             else:
                 present[cid] = item
 
-    if family_aligned and type(model) is int and family.get("model") == model:
-        for row in rows:
-            if not isinstance(row, dict) or not isinstance(row.get("clusterId"), str):
-                continue
-            cid = row["clusterId"].strip()
-            if not cid:
-                continue
-            if cid not in present:
-                label = row.get("name") or row.get("sectionId") or cid
-                errors.append(f"{stats_name}：缺少已绑定体系 {cid}（{label}），不允许残缺快照上线")
-                continue
-            actual = present[cid]
-            if actual.get("sectionId") != row.get("sectionId") or actual.get("teamId") != row.get("teamId"):
-                errors.append(f"{stats_name}：体系 {cid} 的攻略或主盘与 {map_name} 不一致")
+    if family_aligned and type(model) is int:
+        if type(family.get("model")) is not int or family.get("model") != model:
+            errors.append(f"{stats_name}：体系模型 {family.get('model')} 与 {map_name}（{model}）不一致")
+        else:
+            for row in rows:
+                if not isinstance(row, dict) or not isinstance(row.get("clusterId"), str):
+                    continue
+                cid = row["clusterId"].strip()
+                if not cid:
+                    continue
+                if cid not in present:
+                    label = row.get("name") or row.get("sectionId") or cid
+                    errors.append(f"{stats_name}：缺少已绑定体系 {cid}（{label}），不允许残缺快照上线")
+                    continue
+                actual = present[cid]
+                if (actual.get("sectionId") != row.get("sectionId")
+                        or actual.get("teamId") != row.get("teamId")
+                        or actual.get("landingTeamId") != row.get("landingTeamId")):
+                    errors.append(f"{stats_name}：体系 {cid} 的攻略、主盘或落点盘与 {map_name} 不一致")
+            orphans = sorted(set(present) - seen_clusters)
+            if orphans:
+                errors.append(f"{stats_name}：存在未在 {map_name} 登记的残留分组（{'、'.join(orphans[:5])}）")
 
 
 def check_references(recommendations, family, current, effective,
@@ -557,7 +578,7 @@ def check_references(recommendations, family, current, effective,
         sections = []
     sections = [section for section in sections if isinstance(section, dict) and isinstance(section.get("id"), str)]
     ids = {section["id"] for section in sections}
-    boards, primaries, sections_by_id = collect_public_boards(sections, errors)
+    boards, primaries, sections_by_id = collect_public_boards(sections, preview, errors)
     check_recommendation_entries(recommendations, family, boards, primaries, sections_by_id,
                                  current, effective, patch_ready, family_aligned, warnings, errors)
     names = ("data/patch-recommendations.json", "data/guide-family-map.json")
