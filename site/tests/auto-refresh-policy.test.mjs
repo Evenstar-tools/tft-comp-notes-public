@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 import { changedDataFiles, preflightReason, verifyAlignment } from "../scripts/check-auto-refresh.mjs";
@@ -47,6 +49,34 @@ test("scheduled refresh can proceed only with the confirmed patch, build, model 
   assert.match(check({ patch: undefined }), /完整/);
   assert.match(check({ warnings: ["upstream unavailable"] }), /完整/);
   assert.match(preflightReason(current, { ...family, queue: "Ranked" }, { upstream }), /队列/);
+});
+
+test("the second preflight compares against the committed batch after collection", () => {
+  const repo = mkdtempSync(join(tmpdir(), "tft-preflight-"));
+  try {
+    const site = join(repo, "site");
+    const script = join(site, "scripts", "check-auto-refresh.mjs");
+    const batch = join(site, "data", "guide-family-stats.json");
+    const report = join(repo, "upstream.json");
+    const git = (...args) => execFileSync("git", args, { cwd: repo, encoding: "utf8" });
+    const preflight = () => execFileSync(process.execPath, [script, "preflight", "--report", report], { encoding: "utf8" });
+    mkdirSync(join(site, "scripts"), { recursive: true });
+    mkdirSync(join(site, "data"));
+    copyFileSync(new URL("../scripts/check-auto-refresh.mjs", import.meta.url), script);
+    writeFileSync(join(site, "data", "current-patch.json"), JSON.stringify(current));
+    writeFileSync(batch, JSON.stringify(family));
+    git("init", "--quiet");
+    git("add", "site/data");
+    git("-c", "user.name=Data Refresh Test", "-c", "user.email=refresh@example.invalid", "commit", "--quiet", "-m", "published");
+    writeFileSync(batch, JSON.stringify({ ...family, updatedAt: "2026-11-26T09:30:01Z" }));
+    writeFileSync(report, JSON.stringify({ upstream }));
+    assert.match(preflight(), /上游版本、构建、模型和样本时间已对齐/);
+
+    writeFileSync(report, JSON.stringify({ upstream: { ...upstream, sampledAt: "2026-11-26T07:00:00Z" } }));
+    assert.throws(preflight, error => error.status === 2 && /早于/.test(error.stdout));
+  } finally {
+    rmSync(repo, { recursive: true, force: true });
+  }
 });
 
 test("the refresh path policy only accepts tracked edits to the selected stats", () => {

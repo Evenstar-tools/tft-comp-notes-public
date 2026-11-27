@@ -54,6 +54,10 @@ function run(command, args, cwd) {
 const git = (...args) => run("git", args, repo);
 const dataUrl = file => new URL("../data/" + file, import.meta.url);
 
+export function readPublishedFamily(ref = "HEAD") {
+  return JSON.parse(git("show", ref + ":" + familyPath).replace(/^\uFEFF/, ""));
+}
+
 export function changedDataFiles(status, profile) {
   if (!Object.hasOwn(profiles, profile)) throw new Error("未知自动刷新配置 " + profile);
   const allowed = new Set(profiles[profile].map(id => "site/data/" + id + ".json"));
@@ -87,11 +91,14 @@ function verify(profile) {
   });
   if (!files.length) return "本轮没有实质数据变更";
   verifyAlignment(files, JSON.parse(run(process.execPath, ["scripts/run-data-refresh.mjs", "--status", "--json"], site)));
-  const baseline = JSON.parse(git("show", "HEAD:" + familyPath)).model;
+  const baseline = readPublishedFamily();
   const family = readJson(dataUrl("guide-family-stats.json"));
+  if (time(family.updatedAt) < time(baseline.updatedAt)) {
+    throw new Error("候选体系样本早于已发布批次");
+  }
   const trend = readJson(dataUrl("comp-trends.json"));
   const newest = trend.batches.reduce((latest, batch) => time(batch.capturedAt) > time(latest.capturedAt) ? batch : latest);
-  if (family.model !== baseline || (files.includes("site/data/comp-trends.json") && newest.model !== baseline)) {
+  if (family.model !== baseline.model || (files.includes("site/data/comp-trends.json") && newest.model !== baseline.model)) {
     throw new Error("自动提交不能切换体系模型");
   }
   console.log("已核对可发布文件 " + files.join("、"));
@@ -104,8 +111,9 @@ function main() {
   } });
   let reason;
   if (positionals.length === 1 && positionals[0] === "preflight" && values.report && !values.profile) {
-    reason = preflightReason(readJson(dataUrl("current-patch.json")),
-      readJson(dataUrl("guide-family-stats.json")), readJson(values.report));
+    // The exact collector and the upstream probe can observe different cache ages.
+    // The lower bound is the published batch, even after collection has updated the worktree.
+    reason = preflightReason(readJson(dataUrl("current-patch.json")), readPublishedFamily(), readJson(values.report));
     if (!reason) console.log("上游版本、构建、模型和样本时间已对齐");
   } else if (positionals.length === 1 && positionals[0] === "verify" && values.profile && !values.report) {
     reason = verify(values.profile);
