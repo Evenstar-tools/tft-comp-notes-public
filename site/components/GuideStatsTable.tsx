@@ -1,6 +1,6 @@
 import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
 import type { ReactNode } from "react";
-import { formatRecommendationMean, type RecommendationTier } from "@/domain/guide-family-stats";
+import { formatRecommendationMean, placementCutoff, type RecommendationTier } from "@/domain/guide-family-stats";
 import "../app/guide-stats-table.css";
 
 export type GuideStatsMetric = "pickRate" | "mean" | "topFourRate" | "winRate";
@@ -87,9 +87,11 @@ export function GuideStatsTable({ rows, metric, direction, onSort }: {
           <td className="guide-stats-units" role="cell"><div className="guide-stats-portraits">{row.units}</div></td>
           {metrics.map(key => {
             const value = row[key];
+            const meanTone = key !== "mean" ? undefined : value === null || !Number.isFinite(value) || row.tier === "review"
+              ? row.tier : value <= placementCutoff ? "recommended" : "secondary";
             return <td key={key} className="guide-stats-metric" role="cell" data-active={key === metric ? "true" : undefined}>
               <span className="guide-stats-mobile-label">{guideStatsMetricLabels[key]}</span>
-              <strong data-tier={key === "mean" ? row.tier : undefined}>
+              <strong data-tier={meanTone}>
                 {value === null || !Number.isFinite(value) ? "—" : key === "mean" ? formatRecommendationMean(value) : formats[key].format(value)}
               </strong>
               {key === "mean" && <small className="guide-stats-sample"><span>{tierLabels[row.tier]}</span><span>{gameFormat.format(row.games)} 场</span></small>}
