@@ -1,4 +1,5 @@
 import type { PosterFormat } from "./poster.ts";
+import { boardPublicSlug, canonicalGuidePath, resolveBoardTeamId, resolveGuideSectionId } from "./guide-slugs.ts";
 
 export function feishuSection(id?: string) {
   return "/api/document/open" + (id ? "?" + new URLSearchParams({ section: id }) : "");
@@ -39,7 +40,7 @@ export function itemLink(itemId: string, unitId?: string, from?: string) {
   return "/items?" + new URLSearchParams({ item: itemId, ...(unitId ? { unit: unitId } : {}), ...(from ? { from } : {}) });
 }
 
-const itemLibraryFilters = new Set(["item", "trait", "unit", "wearer", "view", "q", "order", "exclude"]);
+const itemLibraryFilters = new Set(["item", "trait", "unit", "wearer", "view", "q", "order", "exclude", "stats"]);
 
 export function validItemLibraryReturn(value: unknown) {
   if (typeof value !== "string" || value.length > 1024 || !/^\/(?:items|emblems)(?:\?|$)/.test(value) || /[\r\n\t\\]/.test(value)) return;
@@ -49,14 +50,34 @@ export function validItemLibraryReturn(value: unknown) {
     keys.every(key => itemLibraryFilters.has(key))) return value;
 }
 
+function readLocalGuideHref(href: string) {
+  if (/[\r\n\t\\]/.test(href)) return;
+  const path = /^\/guides\/([\w-]+)\/?(?=[?#]|$)/.exec(href);
+  if (!path) return;
+  const url = new URL(href, "https://tft.local");
+  if (url.pathname !== path[0]) return;
+  return { url, sectionId: resolveGuideSectionId(path[1]) };
+}
+
+export function canonicalGuideHref(href: string): string {
+  const guide = readLocalGuideHref(href);
+  if (!guide) return href;
+  const { url, sectionId } = guide;
+  const teams = url.searchParams.getAll("team");
+  const teamId = teams.length === 1 ? resolveBoardTeamId(sectionId, teams[0]) : undefined;
+  const board = teamId === undefined ? undefined : boardPublicSlug(sectionId, teamId);
+  if (board !== undefined && board !== teams[0]) url.searchParams.set("team", board);
+  return canonicalGuidePath(sectionId) + url.search + url.hash;
+}
+
 export function itemGuideOrigin(value: unknown) {
-  if (typeof value !== "string" || value.length > 1800 || /[\r\n\t\\]/.test(value)) return;
-  const sectionId = /^\/guides\/([\w-]+)(?:\?|$)/.exec(value)?.[1];
-  if (!sectionId) return;
-  const url = new URL(value, "https://tft.local");
-  if (url.pathname !== "/guides/" + sectionId || url.hash) return;
-  const teamId = url.searchParams.get("team");
-  if (!teamId || !/^[\w-]+$/.test(teamId)) return;
-  return { href: value, sectionId, teamId };
+  if (typeof value !== "string" || value.length > 1800) return;
+  const guide = readLocalGuideHref(value);
+  if (!guide || guide.url.hash) return;
+  const { sectionId, url } = guide;
+  const [team, ...duplicates] = url.searchParams.getAll("team");
+  if (!team || duplicates.length || !/^[\w-]+$/.test(team)) return;
+  const teamId = resolveBoardTeamId(sectionId, team)!;
+  return { href: canonicalGuideHref(value), sectionId, teamId };
 }
 export function manageLink(sectionId?: string) { return "/manage" + (sectionId ? "?section=" + encodeURIComponent(sectionId) : ""); }

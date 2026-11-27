@@ -1,4 +1,5 @@
 import { familyPickRate } from "./guide-family-stats.ts";
+import { canonicalGuidePath } from "./guide-slugs.ts";
 import type { Season } from "./types";
 import { displayGuideName, displayTraitNames } from "./trait-names.mjs";
 
@@ -90,8 +91,7 @@ function era(edition: string) {
 function guideHref(sectionId: string, teamId: string | undefined, boards: ReadonlyMap<string, ReadonlySet<string>>) {
   const teams = boards.get(sectionId);
   if (!teams) return;
-  const query = teamId && teams.has(teamId) ? "?" + new URLSearchParams({ team: teamId }) : "";
-  return "/guides/" + encodeURIComponent(sectionId) + query;
+  return canonicalGuidePath(sectionId, teamId && teams.has(teamId) ? teamId : undefined);
 }
 
 function qualified(point: RankSample) {

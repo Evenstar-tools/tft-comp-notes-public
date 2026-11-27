@@ -1,4 +1,5 @@
 import type { ContentBlock, Section } from "../domain/document";
+import { canonicalGuidePath } from "../domain/guide-slugs.ts";
 import details from "./s19-guide-details.json" with { type: "json" };
 
 interface GuideDetails {
@@ -32,17 +33,18 @@ export function refreshWebDetails(section: Section) {
   }
 }
 
-function isGuideLink(block: ContentBlock, url: string) {
+function isGuideLink(block: ContentBlock, urls: ReadonlySet<string>) {
   if (block.type !== "text" || block.text?.trim() !== "网页详解" || block.children?.length) return false;
   const runs = block.elements?.filter(element => element.mention_doc || element.text_run?.content.trim());
-  return !!runs?.length && runs.every(element => element.text_run?.text_element_style?.link?.url === url);
+  return !!runs?.length && runs.every(element => urls.has(element.text_run?.text_element_style?.link?.url ?? ""));
 }
 
 export function includeWebDetails(section: Section, liveIds: ReadonlySet<string>, previousSummaryId?: string) {
   const guide = guides[section.id];
   if (section.kind !== "guide" || !guide) return;
-  const url = "https://tft.example.com/guides/" + section.id;
-  const links = section.blocks.filter(block => isGuideLink(block, url));
+  const origin = "https://tft.example.com";
+  const urls = new Set([origin + "/guides/" + section.id, origin + canonicalGuidePath(section.id)]);
+  const links = section.blocks.filter(block => isGuideLink(block, urls));
   if (!links.length) return;
 
   const linkIds = new Set(links.map(block => block.id));

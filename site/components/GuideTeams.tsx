@@ -17,6 +17,7 @@ import { useOwnerSession } from "./OwnerSession";
 import { findPlayerGuideTeam, isPlayerTeamStorageKey, readPlayerTeams, samePlayerBoard } from "./player-team-storage";
 import { sectionTeams } from "@/domain/document-flow";
 import { allBlocks, guideBoardName, guideFacets, guideLink, guidePlaystyle, guideRoute, guideStrategyLabel, oceanGravesUnlockBoardId, primaryFirst, readingNotes, sourceSummary, type GuideRole } from "@/domain/guide-reading";
+import { canonicalGuidePath, resolveBoardTeamId } from "@/domain/guide-slugs";
 import { fixedBoardPlacementDetail, placementEvidenceKind } from "@/domain/guide-placement";
 import placementBatch from "@/data/guide-placement.json";
 import { compactGuideParagraph, compactUtilityCopy, hasGuideLinks, rememberGuideCopy } from "@/domain/guide-copy";
@@ -102,7 +103,7 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
     function navigate() {
       const params = new URL(window.location.href).searchParams;
       const wantsPoster = params.get("poster") === "1";
-      setTeam(params.get("team") ?? defaultTeamId);
+      setTeam(resolveBoardTeamId(section.id, params.get("team") ?? undefined) ?? defaultTeamId);
       setSelectedStage(boardStages.find(stage => stage === params.get("stage")));
       setSelectedFlex(params.get("flex") ?? undefined);
       setStage(false); setRouteNote(""); setPiece(""); setPrevious(""); setZoomed(false); setSampleView(undefined);
@@ -112,7 +113,7 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
     }
     window.addEventListener("popstate", navigate);
     return () => window.removeEventListener("popstate", navigate);
-  }, [publicationId, defaultTeamId]);
+  }, [publicationId, defaultTeamId, section.id]);
   const closePiece = useCallback(() => {
     const origin = pieceOrigin.current;
     setPiece("");
@@ -148,11 +149,7 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
   const officialBoard = mainBoardActive ? showFlex ? flexPreview!.liveTeam : team
     : { ...readTeamStage(team, activeStage), id: team.id + "-" + activeStage };
   function boardViewLink(stage?: BoardStage, flex?: string) {
-    const params = new URLSearchParams({ team: team.id });
-    if (returnTo) params.set("from", returnTo);
-    if (stage && stage !== mainStage) params.set("stage", stage);
-    if (flex) params.set("flex", flex);
-    return guideLink(section.id) + "?" + params;
+    return canonicalGuidePath(section.id, team.id, { from: returnTo, stage: stage === mainStage ? undefined : stage, flex });
   }
   const guideHref = publicationId ? boardViewLink(activeStage, showFlex ? flexPreview?.id : undefined) : undefined;
   const editorTitle = [...new Set([section.title, guideBoardName(team), !mainBoardActive ? stageLabels[activeStage] : "",

@@ -47,7 +47,7 @@ test("Feishu notes opt in explicitly, keep order, resolve rich links, and can cl
     id: "linked", type: "text", text: "条件 ｜ 九人口棋盘 ｜ 只在血量健康时考虑。 ｜ 战绩",
     elements: [
       { text_run: { content: "条件 ｜ " } },
-      { text_run: { content: "九人口棋盘", text_element_style: { link: { url: origin + `/guides/${guideId}?team=${alternate}` } } } },
+      { text_run: { content: "九人口棋盘", text_element_style: { link: { url: origin + "/guides/ionic-jinx?team=lv9" } } } },
       { text_run: { content: " ｜ 只在血量健康时考虑。 ｜ " } },
       { text_run: { content: "战绩", text_element_style: { link: { url: "https://www.metatft.com/pbe-comps" } } } },
     ],

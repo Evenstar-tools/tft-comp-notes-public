@@ -1,6 +1,7 @@
 "use client";
 import { augmentHref } from "@/domain/augment-library";
 import { guideEquipmentConditions } from "@/domain/guide-equipment-conditions";
+import { canonicalGuideHref } from "@/domain/links";
 import { GuideTeams, type GuidePassage, type GuidePatchAdvice } from "./GuideTeams";
 import { sectionTeams } from "@/domain/document-flow";
 import { boardTitle } from "@/domain/guide-families";
@@ -24,7 +25,7 @@ function safeUrl(url: string) {
     if (parsed.origin === "https://tft.example.com"
       && !parsed.username && !parsed.password
       && /^\/(?:guides\/[A-Za-z0-9_-]+|emblems)\/?$/.test(parsed.pathname)) {
-      return parsed.pathname + parsed.search + parsed.hash;
+      return canonicalGuideHref(parsed.pathname + parsed.search + parsed.hash);
     }
     return ["https:", "http:"].includes(parsed.protocol) ? parsed.href : undefined;
   } catch {
