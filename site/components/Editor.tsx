@@ -71,11 +71,11 @@ import { request } from "./api";
 import { downloadBlob, exportTeamImage } from "./export-team";
 import { GuidePoster } from "./GuidePoster";
 import { clearGuideBoardTransfer, readGuideBoardSource, readGuideBoardTransfer, storeGuideBoardSource, type GuideBoardSource } from "./guide-board-transfer";
+import { readOwnerDraft, writeOwnerDraft } from "./owner-draft-storage";
 import { exportPlayerTeams, findPlayerGuideTeam, importPlayerTeams, isPlayerTeamStorageKey, readPlayerEditorDraft, readPlayerTeams, resetPlayerGuideBoard, savePlayerTeam, writePlayerEditorDraft } from "./player-team-storage";
 import { trackToolAction } from "@/lib/analytics";
 import "./editor-workspace.css";
 
-const LOCAL_KEY = "tft-s19-unsynced-team-v1";
 const equipmentRecipes = indexRecipes(season.items);
 const canReceiveEquipment = (id: string, piece: Piece) => {
   const item = itemMap.get(id);
@@ -110,6 +110,7 @@ function compatiblePlayerBackup(team: Team) {
 function meaningful(team: Team) {
   return (
     team.pieces.length > 0 ||
+    !!team.stages || !!team.conditions?.length || !!team.posterFormat || !!team.webTitle ||
     !!team.notes.trim() ||
     team.name.trim() !== "未命名阵容" || team.category !== "待分类" || !!team.sectionId
   );
@@ -190,6 +191,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
   const team = useMemo(() => readTeamStage(draftTeam, stage), [draftTeam, stage]);
   const [showPoster, setShowPoster] = useState(false);
   const [saved, setSaved] = useState<Team[] | null>(initialTeams ?? null);
+  const [cloudReadFailed, setCloudReadFailed] = useState(false);
   const [localTeams, setLocalTeams] = useState<Team[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [pieceSelection, setPieceSelection] = useState<{ id: string; highlightRelated?: boolean } | null>(null);
@@ -262,6 +264,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
   );
   const [toast, setToast] = useState<Toast | null>(null);
   const [restore, setRestore] = useState<Team | null>(null);
+  const [legacyDraft, setLegacyDraft] = useState<Team>();
   const [draftChecked, setDraftChecked] = useState(false);
   const [history, setHistory] = useState<Team[]>([]);
   const [future, setFuture] = useState<Team[]>([]);
@@ -352,42 +355,39 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
     request<{ teams: Team[] }>("/api/teams")
       .then((data) => setSaved(data.teams))
       .catch((error) => {
+        setCloudReadFailed(true);
         setSaved([]);
         notify({ kind: "error", text: error.message });
       });
   }, [initialTeams, notify, ownerMode]);
 
-  // 本地草稿：云端阵容到位后只判断一次。与某个云端阵容完全一致就静默打开。
+  const known = saved?.find((entry) => entry.id === draftTeam.id);
+  const dirty = known ? !same(known, draftTeam) : meaningful(draftTeam);
+
   useEffect(() => {
     if (!ownerMode || !saved || draftChecked) return;
     setDraftChecked(true);
     try {
-      const raw = localStorage.getItem(LOCAL_KEY);
-      if (!raw) return;
-      const draft = JSON.parse(raw) as Team;
-      if (!meaningful(draft)) return localStorage.removeItem(LOCAL_KEY);
-      if (saved.some((entry) => same(entry, draft))) {
-        showDraft(draft);
-        return;
-      }
-      setRestore(draft);
+      const draft = readOwnerDraft(localStorage, cloudReadFailed ? null : saved);
+      setLegacyDraft(draft.legacy);
+      if (draft.resume) showDraft(draft.resume);
+      if (draft.restore) setRestore(draft.restore);
     } catch {
       notify({ kind: "error", text: "本地草稿无法读取；云端阵容仍可打开。" });
     }
-  }, [saved, draftChecked, notify, ownerMode, showDraft]);
+  }, [saved, cloudReadFailed, draftChecked, notify, ownerMode, showDraft]);
 
   useEffect(() => {
-    if (!ownerMode || !draftChecked || restore) return;
+    if (!ownerMode || !draftChecked || restore || (cloudReadFailed && !known && !dirty)) return;
     try {
-      if (meaningful(draftTeam)) localStorage.setItem(LOCAL_KEY, JSON.stringify(draftTeam));
-      else localStorage.removeItem(LOCAL_KEY);
+      writeOwnerDraft(localStorage, known || dirty ? draftTeam : null, dirty);
     } catch {
       notify({
         kind: "error",
         text: "浏览器没能保存本地草稿，请及时保存到云端。",
       });
     }
-  }, [draftTeam, restore, draftChecked, notify, ownerMode]);
+  }, [draftTeam, restore, draftChecked, cloudReadFailed, known, dirty, notify, ownerMode]);
 
   const restorePlayerDraft = useCallback(() => {
     try {
@@ -411,8 +411,6 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
     }
   }, [draftTeam, stage, guideBoardSource, draftChecked, importKey, ownerMode, params, notify]);
 
-  const known = saved?.find((entry) => entry.id === team.id);
-  const dirty = known ? !same(known, draftTeam) : meaningful(draftTeam);
   const guidePublished = !!guideBoardSource?.published && guideBoardSource.published === JSON.stringify(publishedBoardContent(draftTeam));
   const priorGuideCopy = guideTarget && !known && !history.length && saved?.find(entry =>
     entry.id !== draftTeam.id && !entry.sectionId && entry.name === draftTeam.name);
@@ -1101,7 +1099,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
             className="btn ghost sm"
             onClick={() => {
               setRestore(null);
-              localStorage.removeItem(LOCAL_KEY);
+              writeOwnerDraft(localStorage, null, false);
             }}
           >
             丢弃
@@ -1225,9 +1223,13 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
                     导入备份
                   </button>
                 </div>}
-                {ownerMode && localTeams.length > 0 && <details className="editor-local-teams">
-                  <summary>本机阵容 {localTeams.length}</summary>
+                {ownerMode && (localTeams.length > 0 || legacyDraft) && <details className="editor-local-teams">
+                  <summary>本机阵容 {localTeams.length + (legacyDraft ? 1 : 0)}</summary>
                   <ul className="menu-list">
+                    {legacyDraft && <li><button type="button" onClick={() => {
+                      close();
+                      open({ ...independentDraft(legacyDraft, emptyTeam()), webTitle: legacyDraft.webTitle }, "已打开旧版备份副本");
+                    }}>旧版备份 · {legacyDraft.name}</button></li>}
                     {localTeams.map(entry => <li key={entry.id}><button type="button" onClick={() => {
                       close();
                       open({ ...independentDraft(entry, emptyTeam()), webTitle: entry.webTitle }, "已带入本机阵容，点「保存到云端」转存");
