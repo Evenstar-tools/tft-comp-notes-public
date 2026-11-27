@@ -211,6 +211,7 @@ test("fast-nine picks retain their reviewed family bindings and board-specific c
   const batch = json("../data/guide-placement.json");
   const families = json("../data/guide-family-stats.json");
   const bindings = json("../data/guide-family-map.json");
+  const trend = json("../data/comp-trends.json");
   const picks = json("../data/patch-recommendations.json");
   for (const [suffix, clusterId, status] of [
     ["0235", "429055", "avoid"],
@@ -227,10 +228,13 @@ test("fast-nine picks retain their reviewed family bindings and board-specific c
     assert.equal(pick.group, "fast9");
     assert.deepEqual(pick.sources, [binding.url]);
     const roles = readingNotes(section, team, preview.season).roles;
-    const carries = roles.filter(role => role.label === "主C" || role.label === "副C").flatMap(role =>
+    const sourceCarries = roles.find(role => role.label === "主C").units;
+    const trendCarries = roles.filter(role => role.label === "主C" || role.label === "副C").flatMap(role =>
       role.units.filter(id => team.pieces.some(piece => piece.unitId === id && piece.items.length)));
-    assert.deepEqual(binding.carryIds, carries);
-    assert.deepEqual(families.rows.find(row => row.clusterId === clusterId).carryIds, carries);
+    assert.deepEqual(binding.carryIds, sourceCarries);
+    assert.deepEqual(families.rows.find(row => row.clusterId === clusterId).carryIds, sourceCarries);
+    const archived = trend.series.find(row => row.sectionId === section.id && row.teamId === team.id);
+    assert.deepEqual(archived.carryIds, trendCarries);
     // A provider can change its representative board without changing the model ID.
     for (const family of guideFamilyRows(families, preview.season.id, section.id, sectionTeams(section))) {
       assert.equal(family.stat.clusterId, clusterId);
