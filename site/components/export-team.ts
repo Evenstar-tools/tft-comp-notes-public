@@ -61,6 +61,24 @@ export function drawBoardStars(ctx: CanvasRenderingContext2D, count: number, x: 
   }
   ctx.restore();
 }
+function drawBoardAlternate(ctx: CanvasRenderingContext2D, image: HTMLImageElement | null | undefined,
+  x: number, y: number, width: number, height: number, border: string) {
+  if (!image) return;
+  const radius = width * .21;
+  const cx = x + radius + width * .06, cy = y + radius + height * .04;
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+  ctx.clip();
+  drawCover(ctx, image, cx - radius, cy - radius, radius * 2, radius * 2);
+  ctx.restore();
+  ctx.save();
+  ctx.strokeStyle = border;
+  ctx.lineWidth = Math.max(1.5, width * .04);
+  ctx.stroke();
+  ctx.restore();
+}
+
 export function drawBoardInstrument(ctx: CanvasRenderingContext2D, instrument: BoardInstrument, image: HTMLImageElement | null | undefined, x: number, y: number, width: number, height: number) {
   const summon = instrument.id === "infernalIdol";
   ctx.save();
@@ -120,6 +138,7 @@ export async function exportTeamImage(team: Team): Promise<Blob> {
   if (instruments.size) ctx.fillText(boardMarkerNote(instruments), 48, 128);
   const urls = team.pieces.flatMap((piece) => [
     unitMap.get(piece.unitId)?.image,
+    piece.alternate && unitMap.get(piece.alternate.unitId)?.image,
     ...piece.items.map((id) => preferredItemImage(season.items.find((item) => item.id === id))),
   ]);
   urls.push(...[...instruments.values()].map(entry => entry.image));
@@ -181,6 +200,8 @@ export async function exportTeamImage(team: Team): Promise<Blob> {
     ctx.lineWidth = 4;
     ctx.stroke();
     drawBoardStars(ctx, piece.stars, x, y, width, height);
+    const alternate = piece.alternate && unitMap.get(piece.alternate.unitId);
+    if (alternate) drawBoardAlternate(ctx, images.get(alternate.image), x, y, width, height, colors[alternate.cost] ?? "#fff");
   }
   ctx.font = "22px sans-serif";
   ctx.fillStyle = "#ced8e6";

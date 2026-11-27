@@ -1,6 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import { ItemIcon } from "./ItemIcon";
-import { guideConditionName, guideConditionTag, guideConditionsAnchor, type GuideCondition, type guideEquipmentConditions } from "@/domain/guide-equipment-conditions";
+import { guideConditionHasName, guideConditionName, guideConditionTag, guideConditionsAnchor, type GuideCondition, type guideEquipmentConditions } from "@/domain/guide-equipment-conditions";
 import { itemLink } from "@/domain/links";
 
 export function GuideConditionIcon({ condition, size }: { condition: GuideCondition; size: number }) {
@@ -15,8 +15,8 @@ export function GuideEquipmentConditions({ conditions, guideHref, onViewBoard, a
   onViewBoard?: () => void;
   anchored?: boolean;
 }) {
-  const { board, label, rows, source, wearer } = conditions;
-  const title = rows.some(row => row.featured) ? "顶级条件"
+  const { board, guideWide, label, rows, source, wearer } = conditions;
+  const title = guideWide ? "定阵条件" : rows.some(row => row.featured) ? "顶级条件"
     : rows.some(row => row.category === "海克斯" || row.recipient) ? "阵容条件" : "装备条件";
   const singleAugment = rows.length === 1 && rows[0].category === "海克斯" && !label && !source && !board?.conditions;
   return <section id={anchored ? guideConditionsAnchor : undefined} className="guide-equipment-conditions" aria-label={title}>
@@ -32,7 +32,7 @@ export function GuideEquipmentConditions({ conditions, guideHref, onViewBoard, a
       const swapLabel = row.replaced ? `${name}，替换${row.replaced.name}` : name;
       const tag = guideConditionTag(row);
       const augment = row.category === "海克斯";
-      const showName = augment || !!row.recipient;
+      const showName = guideConditionHasName(row);
       return <li key={row.id + ":" + (row.recipient?.id ?? "")} data-augment={augment || undefined} data-named={showName || undefined}>
         <a className="guide-equipment-conditions-item" data-named={showName || undefined} href={row.item ? itemLink(row.id, row.recipient?.id ?? wearer?.id, guideHref) : row.href}
           aria-label={swapLabel} title={swapLabel}>

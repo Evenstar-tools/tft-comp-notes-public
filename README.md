@@ -38,6 +38,8 @@ npm run build
 
 在 `site/` 运行 `npm run data:status` 查看 11 个模块的基线，运行 `npm run data:verify` 执行离线完整性门禁。日更、版本切换和归档统一走 `npm run data:refresh --`，参数、样本口径和回退流程见[数据更新规范](site/docs/数据更新规范.md)。数据维护需要 Python 3 和项目要求的 Node.js 版本。
 
+在 `site/` 运行 `npm run guides:audit` 巡检合并后的主打攻略及其阶段、变阵。追加 `-- --strict --json` 可导出结构化报告，并将站位提示计入退出状态。用 `-- --guide sample-block-0243` 可指定攻略，可重复传入。特殊摆法可以通过 `--overrides` 读取本地 JSON 数组，每条填写 `sectionId`、`teamId`、`rule`、`reason`，也可用 `unitId` 限定棋子。豁免仅用于巡检的站位规则。
+
 ## 素材说明
 
 云顶之弈阵容笔记是独立的社区项目，使用 Riot Games 的素材。Riot Games 未认可或赞助本项目。素材使用参见 [Riot Games 社区项目说明](https://www.riotgames.com/en/legal)。第三方代码和资源保留各自的声明。
