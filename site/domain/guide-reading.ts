@@ -53,6 +53,16 @@ const authoringInstructions = "在本篇文档维护 S19 阵容推荐。一级�
 export const boardLoadoutHeading = "各棋盘配装";
 const boardLoadoutPrefix = "棋盘配装 · ";
 
+const creditLine = /^(B站|阵容原创)[：:][ \t]*(\S[^\r\n]*)$/u;
+
+export function guideCredit(section: Section) {
+  for (const block of section.blocks) {
+    if (block.type !== "text") continue;
+    const match = creditLine.exec(block.text?.trim() ?? "");
+    if (match) return { id: block.id, label: match[1] + "：", name: match[2] };
+  }
+}
+
 export function isBoardLoadout(block: ContentBlock) {
   return block.type === "text" && (block.text?.startsWith(boardLoadoutPrefix) ?? false);
 }
@@ -77,7 +87,7 @@ export function authoredParagraphs(section: Section) {
   const generated = new Set(Object.values(section.generatedRegions ?? {}).map(region => region.textId));
   return allBlocks(section.blocks).filter(block =>
     block.type === "text" && !block.label && block.text?.trim() && !generated.has(block.id) &&
-    !block.text.startsWith("【阵容构建器 · ") && !isBoardLoadout(block),
+    !block.text.startsWith("【阵容构建器 · ") && !isBoardLoadout(block) && !creditLine.test(block.text.trim()),
   );
 }
 

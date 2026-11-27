@@ -207,6 +207,9 @@ const guideSlugs: Record<string, GuideSlugs> = {
     "83cebafb-502e-4f5d-8a17-db9871730b44": "95-lv9",
     "3f5c63e5-1ea1-4310-bbc0-9871308b936d": "95-lv8",
   } },
+  "arcanist-taliyah-vladimir": { slug: "arcanist-taliyah-vladimir", boards: {
+    "14d668d4-7d3a-4445-a5b5-bfcfc6aa555b": "lv8",
+  } },
   "mosher-yasuo-yone": { slug: "mosher-yasuo-yone", boards: {
     "edad46b7-e909-4233-b0c5-79d6899db862": "lv8",
   } },
