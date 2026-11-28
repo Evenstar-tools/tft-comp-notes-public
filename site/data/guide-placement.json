@@ -6719,6 +6719,121 @@
       "mean": 1.89,
       "topFourRate": 1.0,
       "winRate": 0.2222222222222222
+    },
+    {
+      "sectionId": "arcanist-taliyah-vladimir",
+      "population": 8,
+      "roster": [
+        "braum",
+        "garen",
+        "renata-glasc",
+        "taliyah",
+        "vladimir",
+        "yuumi",
+        "zac",
+        "zoe"
+      ],
+      "games": 630,
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&unit=DA_Vladimir19-1&unit=DA_Taliyah19-1&unit=DA_Braum19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "observedOn": "2026-11-28",
+      "sampleScope": "弗拉基米尔、塔莉垭与布隆同场（全人口核心）",
+      "conditions": {
+        "teamId": "14d668d4-7d3a-4445-a5b5-bfcfc6aa555b",
+        "kind": "core",
+        "coreRoster": [
+          "braum",
+          "taliyah",
+          "vladimir"
+        ]
+      },
+      "placementCounts": [
+        86,
+        94,
+        92,
+        85,
+        86,
+        68,
+        64,
+        55
+      ],
+      "mean": 4.15,
+      "topFourRate": 0.5666666666666667,
+      "winRate": 0.1365079365079365
+    },
+    {
+      "sectionId": "arcanist-taliyah-vladimir",
+      "population": 8,
+      "roster": [
+        "braum",
+        "garen",
+        "renata-glasc",
+        "taliyah",
+        "vladimir",
+        "yuumi",
+        "zac",
+        "zoe"
+      ],
+      "games": 32,
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=comps&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Braum19-1&unit=DA_Garen19-1&unit=DA_RenataGlasc19-1&unit=DA_Taliyah19-1&unit=DA_Vladimir19-1&unit=DA_Yuumi19-1&unit=DA_Zac19-1&unit=DA_Zoe19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "observedOn": "2026-11-28",
+      "sampleScope": "8级无转职固定8人 · 法师编舞岩雀吸血鬼",
+      "conditions": {
+        "teamId": "14d668d4-7d3a-4445-a5b5-bfcfc6aa555b",
+        "kind": "fixed",
+        "population": 8,
+        "emblems": 0
+      },
+      "placementCounts": [
+        0,
+        0,
+        1,
+        2,
+        5,
+        6,
+        7,
+        11
+      ],
+      "mean": 6.53,
+      "topFourRate": 0.09375,
+      "winRate": 0.0
+    },
+    {
+      "sectionId": "arcanist-taliyah-vladimir",
+      "population": 9,
+      "roster": [
+        "braum",
+        "garen",
+        "nidalee",
+        "renata-glasc",
+        "taliyah",
+        "vladimir",
+        "yuumi",
+        "zac",
+        "zoe"
+      ],
+      "games": 66,
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=comps&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Braum19-1&unit=DA_Garen19-1&unit=DA_Nidalee19-1&unit=DA_RenataGlasc19-1&unit=DA_Taliyah19-1&unit=DA_Vladimir19-1&unit=DA_Yuumi19-1&unit=DA_Zac19-1&unit=DA_Zoe19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "observedOn": "2026-11-28",
+      "sampleScope": "9级无转职固定9人 · 补奈德丽上限",
+      "conditions": {
+        "teamId": "1c4768e0-686a-495f-96f4-cda4348c8fdc",
+        "kind": "fixed",
+        "population": 9,
+        "emblems": 0
+      },
+      "placementCounts": [
+        2,
+        11,
+        14,
+        14,
+        10,
+        7,
+        3,
+        5
+      ],
+      "mean": 4.17,
+      "topFourRate": 0.6212121212121212,
+      "winRate": 0.030303030303030304
     }
   ],
   "edition": "s19-pbe-19.1",
