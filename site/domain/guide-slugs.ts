@@ -7,7 +7,7 @@ const guideSlugs: Record<string, GuideSlugs> = {
     "00000000-0000-4000-8000-000000001252": "lv8",
     "00000000-0000-4000-8000-000000001253": "lv9-rell",
   } },
-  "sample-block-1060": { slug: "ocean-ekko-syndra", boards: {
+  "sample-block-1060": { slug: "ocean-ekko-syndra", searchAliases: { "lv8-yuumi": ["四主宰海之歌艾克辛德拉"] }, boards: {
     "00000000-0000-4000-8000-000000001201": "lv8-yuumi",
     "00000000-0000-4000-8000-000000001202": "lv7",
     "00000000-0000-4000-8000-000000001203": "lv9-nidalee",
@@ -85,7 +85,7 @@ const guideSlugs: Record<string, GuideSlugs> = {
     "00000000-0000-4000-8000-000000001241": "lv8",
     "00000000-0000-4000-8000-000000001242": "lv9-rell",
   } },
-  "sample-block-0235": { slug: "edm-zeri", boards: {
+  "sample-block-0235": { slug: "edm-zeri", searchAliases: { "95-lv9": ["双电子泽丽 95"] }, boards: {
     "00000000-0000-4000-8000-000000000003": "95-lv8",
     "00000000-0000-4000-8000-000000000049": "lv9-miss-fortune",
     "00000000-0000-4000-8000-000000000105": "95-lv9",
@@ -219,11 +219,11 @@ const guideSlugs: Record<string, GuideSlugs> = {
     "1808c76f-5fa3-4ccd-b1e3-8fdf6f5f03fe": "lv9-heartsteel",
     "00000000-0000-4000-8000-000000001146": "95-lv9",
   } },
-  "sample-block-1180": { slug: "tango-twisted-fate", boards: {
+  "sample-block-1180": { slug: "tango-twisted-fate", searchAliases: { "95-lv9": ["探戈爵士卡牌 95", "探戈爵士乐卡牌 95"] }, boards: {
     "752a22a6-a1e1-4c6a-b4ab-a66ae4fc3b80": "95-lv9",
     "9294d9e9-bdbd-42c3-ae67-d1884a0198d6": "95-lv8",
   } },
-  "sample-block-1181": { slug: "heartsteel-aphelios", boards: {
+  "sample-block-1181": { slug: "heartsteel-aphelios", searchAliases: { "95-lv9": ["三心之钢三经纪月男 95"] }, boards: {
     "83cebafb-502e-4f5d-8a17-db9871730b44": "95-lv9",
     "3f5c63e5-1ea1-4310-bbc0-9871308b936d": "95-lv8",
   } },
