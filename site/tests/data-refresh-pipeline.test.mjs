@@ -16,9 +16,11 @@ function run(cwd, ...args) {
   return result;
 }
 
-function fixture(t) {
-  const cwd = mkdtempSync(join(site, ".data-refresh-test-"));
-  t.after(() => rmSync(cwd, { recursive: true }));
+function fixture(t, { gitRepository = false } = {}) {
+  const root = mkdtempSync(join(site, ".data-refresh-test-"));
+  t.after(() => rmSync(root, { recursive: true }));
+  const cwd = gitRepository ? join(root, "site") : root;
+  if (gitRepository) mkdirSync(cwd);
   mkdirSync(join(cwd, "scripts"));
   mkdirSync(join(cwd, "public"));
   for (const name of ["run-data-refresh.mjs", "verify-data-integrity.py", "archive-stat-period.mjs"]) {
@@ -88,9 +90,17 @@ test("the gate rejects an existing but wrong board and a mismatched fixed query"
 });
 
 test("release reconciliation rejects a missing fixed sample and an older same-patch batch", t => {
-  const cwd = fixture(t);
-  const git = spawnSync("git", ["rev-parse", "HEAD"], { cwd: site, encoding: "utf8" });
-  assert.equal(git.status, 0, git.stderr);
+  const cwd = fixture(t, { gitRepository: true });
+  const git = (...args) => {
+    const result = spawnSync("git", args, { cwd, encoding: "utf8", timeout: 20000 });
+    assert.equal(result.status, 0, result.stderr);
+    return result.stdout.trim();
+  };
+  git("init", "--quiet", "..");
+  git("add", "--", "data");
+  git("-c", "user.name=Release fixture", "-c", "user.email=fixture@example.test",
+    "-c", "commit.gpgsign=false", "-c", "core.hooksPath=.git/hooks", "commit", "--quiet", "-m", "Capture baseline");
+  const baseline = git("rev-parse", "HEAD");
   const path = join(cwd, "data", "guide-placement.json");
   const batch = readJson(path);
   const fixed = row => row.conditions?.teamId && !row.sourcePeriod && !row.boardObservation &&
@@ -105,7 +115,7 @@ test("release reconciliation rejects a missing fixed sample and an older same-pa
   writeFileSync(heroPath, JSON.stringify(heroes));
 
   const [python, ...prefix] = process.platform === "win32" ? ["py", "-3", "-X", "utf8"] : ["python3"];
-  const result = spawnSync(python, [...prefix, "scripts/verify-data-integrity.py", "--base", git.stdout.trim()],
+  const result = spawnSync(python, [...prefix, "scripts/verify-data-integrity.py", "--base", baseline],
     { cwd, encoding: "utf8", timeout: 20000 });
   assert.equal(result.status, 1, result.stderr);
   const { errors } = JSON.parse(result.stdout);

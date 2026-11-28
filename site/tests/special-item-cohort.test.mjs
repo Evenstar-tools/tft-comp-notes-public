@@ -64,12 +64,13 @@ test("transient item rollup mismatch is retried without accepting the inconsiste
     dates: [{ itemName: "fishbones", patch, day: 1, places }], units: [{ places }],
   };
   const inconsistent = { ...aligned, units: [{ places: [100, 0, 0, 0, 0, 0, 0, 0] }] };
-  let calls = 0;
-  const result = await fetchItemCohort("https://example.test/items", "fishbones", "19.1", 3, async () => {
-    calls++;
-    return Response.json(calls === 1 ? inconsistent : aligned);
+  const requests = [];
+  const url = "https://example.test/items?itemName=fishbones&days=3";
+  const result = await fetchItemCohort(url, "fishbones", "19.1", 3, async request => {
+    requests.push(request);
+    return Response.json(requests.length === 1 ? inconsistent : aligned);
   });
-  assert.equal(calls, 2);
+  assert.deepEqual(requests, [url, "https://example.test/items?days=3&itemName=fishbones"]);
   assert.equal(result.stats.winRate, 0.2);
   assert.deepEqual(result.data, aligned);
 });

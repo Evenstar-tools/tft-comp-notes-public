@@ -1,12 +1,12 @@
 {
   "seasonId": "s19-pbe",
-  "build": "6037882",
+  "build": "6045507",
   "label": "PBE 19.1c · 11/25",
   "metaTftPatch": {
     "patch": "19.1",
     "bPatch": "c"
   },
-  "effectiveAt": "2026-11-26T03:29:46Z",
+  "effectiveAt": "2026-11-27T22:35:38Z",
   "updateId": "pbe-6035832",
-  "sourceUrl": "https://matches3.metatft.com/PBE1_4537316014.json"
+  "sourceUrl": "https://matches3.metatft.com/PBE1_4537487353.json"
 }

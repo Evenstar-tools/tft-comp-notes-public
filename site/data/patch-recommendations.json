@@ -1,7 +1,7 @@
 {
   "seasonId": "s19-pbe",
-  "build": "6037882",
-  "reviewedAt": "2026-11-27T01:33:06.998Z",
+  "build": "6045507",
+  "reviewedAt": "2026-11-28T02:01:32.446Z",
   "entries": [
     {
       "sectionId": "sample-block-0420",
@@ -28,29 +28,12 @@
       ]
     },
     {
-      "sectionId": "sample-block-0464",
-      "teamId": "00000000-0000-4000-8000-000000000039",
-      "status": "review",
-      "group": "reroll",
-      "note": "眼泪、大棒做青龙刀或法爆配肉装，妮蔻与莉莉娅来得多。五级追妮蔻三星，莉莉娅或酒桶先三接肉。",
-      "timing": "眼泪、大棒做回蓝法爆配肉装，妮蔻与莉莉娅多。",
-      "upgrade": "五级追妮蔻三星，莉莉娅或酒桶先三接肉。",
-      "sources": [
-        "https://www.metatft.com/pbe-comps#DA_KDA19-DA_Neeko19",
-        "https://www.metatft.com/explorer?tab=units&set=TFTSet19&trait=DA_KDA19_5&unit=DA_Neeko19-1&unit=DA_Lillia19-1&unit=DA_AkaliKDA19-1&queue=PBE&patch=19.1&b_patch=c&days=0.08333333333333333"
-      ]
-    },
-    {
       "sectionId": "sample-block-0229",
       "teamId": "00000000-0000-4000-8000-000000000071",
-      "status": "conditional",
+      "status": "review",
       "group": "reroll",
-      "note": "水滴、大棒做蓝霸符与法装，玛尔扎哈和艾克多就停七双追。集齐五种乐器且玛尔扎哈打六万伤解锁男爵，蓝霸符优先启动。",
-      "timing": "水滴、大棒做蓝霸符与法装，玛尔扎哈和艾克多就停七双追。",
-      "upgrade": "集齐五种乐器且玛尔扎哈打六万伤解锁男爵，蓝霸符优先启动。",
-      "sources": [
-        "https://www.metatft.com/pbe-comps#DA_Prodigy19-DA_Malzahar19-DA_Amumu19"
-      ]
+      "override": "exclude",
+      "note": "来源体系混有其他天才变阵，暂不作为男爵条件阵容的推荐依据。"
     },
     {
       "sectionId": "sample-block-0122",
@@ -125,18 +108,6 @@
       ]
     },
     {
-      "sectionId": "sample-block-0006",
-      "teamId": "00000000-0000-4000-8000-000000000067",
-      "status": "recommended",
-      "group": "fast8",
-      "note": "眼泪、大棒做回蓝法爆，K/DA 来牌顺用妮蔻代持。八级阿狸、蕾欧娜两星，凑 13 星 K/DA。",
-      "timing": "眼泪、大棒做回蓝法爆，K/DA 来牌顺用妮蔻代持。",
-      "upgrade": "八级阿狸、蕾欧娜两星，凑 13 星 K/DA。",
-      "sources": [
-        "https://www.metatft.com/pbe-comps#DA_KDA19-DA_19_Ahri-DA_Leona19"
-      ]
-    },
-    {
       "sectionId": "sample-block-0251",
       "teamId": "00000000-0000-4000-8000-000000000076",
       "status": "conditional",
@@ -173,18 +144,6 @@
       ]
     },
     {
-      "sectionId": "sample-block-0219",
-      "teamId": "00000000-0000-4000-8000-000000000064",
-      "status": "conditional",
-      "group": "fast8",
-      "note": "攻速弓与法强装顺、五杀牌多，七级先解锁约里克与铁男。八级搜凯尔、铁男两星开七五杀，上九补斯维因。",
-      "timing": "攻速弓与法强装顺、五杀牌多，七级解锁约里克铁男。",
-      "upgrade": "八级搜凯尔、铁男两星开七五杀，上九补斯维因。",
-      "sources": [
-        "https://www.metatft.com/pbe-comps#DA_Pentakill19-DA_Kayle19-DA_Olaf19"
-      ]
-    },
-    {
       "sectionId": "sample-block-0214",
       "teamId": "00000000-0000-4000-8000-000000000104",
       "status": "conditional",
@@ -195,16 +154,6 @@
       "sources": [
         "https://www.metatft.com/pbe-comps#DA_Heavenscale19-DA_Xayah19"
       ]
-    },
-    {
-      "sectionId": "sample-block-0235",
-      "teamId": "00000000-0000-4000-8000-000000000105",
-      "status": "conditional",
-      "note": "高经济速九才进，血量和经济够再上九搜两星泽丽和蒙多接装。",
-      "sources": [
-        "https://www.metatft.com/pbe-comps#DA_Jazz19-DA_Leona19"
-      ],
-      "group": "fast9"
     },
     {
       "sectionId": "sample-block-0275",
@@ -243,24 +192,16 @@
       ]
     },
     {
-      "sectionId": "sample-block-0254",
-      "teamId": "00000000-0000-4000-8000-000000000050",
-      "status": "avoid",
-      "note": "伊泽瑞尔和狗头来牌多、能做蓝霸符再慢搜。",
+      "sectionId": "sample-block-0235",
+      "teamId": "00000000-0000-4000-8000-000000000105",
+      "status": "conditional",
+      "note": "本批均名 4.87。血量和经济都够再上九搜两星泽丽和蒙多。",
       "sources": [
-        "https://www.metatft.com/pbe-comps#DA_Encore19-DA_Ezreal19"
-      ]
-    },
-    {
-      "sectionId": "sample-block-0251",
-      "teamId": "00000000-0000-4000-8000-000000000093",
-      "status": "avoid",
-      "note": "八级先用两星男枪和扎克稳血。血量够才留 85 金开派克。",
-      "sources": [
-        "https://www.metatft.com/pbe-comps#DA_Renegade19-DA_Graves19-DA_Zac19"
-      ]
+        "https://www.metatft.com/pbe-comps#DA_Jazz19-DA_Leona19"
+      ],
+      "group": "fast9"
     }
   ],
-  "summary": "首页按 MetaTFT 19.1c 近三天体系战绩精选，采样窗口跨热补。爵士金克丝八级搜两星稳血，三爵士五杀史密奇有血量和经济再上九。四国风霞、六护卫烈娜塔与高登顶的双电子泽丽可在全部攻略查看。",
+  "summary": "采用 MetaTFT 19.1c 近三天体系战绩，样本覆盖本次客户端构建切换前后。",
   "reviewedRollingPatch": "19.1c"
 }

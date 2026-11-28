@@ -1,5 +1,5 @@
 import { readFile, writeFile } from "node:fs/promises";
-import { itemCohort } from "./special-item-cohort.mjs";
+import { fetchItemCohort } from "./special-item-cohort.mjs";
 
 const json = async (file) => JSON.parse(await readFile(new URL(file, import.meta.url), "utf8"));
 const api = "https://api-hc.metatft.com/tft-stat-api/item_detail";
@@ -83,12 +83,8 @@ async function collect(traitId) {
   const params = new URLSearchParams({
     queue: "PBE", patch: cohort.patch, b_patch: cohort.bPatch, days: String(days), permit_filter_adjustment: "false", itemName: sourceId,
   });
-  const result = await recordsFor(api + "?" + params);
-  if (result.queue_id !== "pbe" || result.tft_set !== "TFTSet19" || !Array.isArray(result.units) ||
-      !Array.isArray(result.units_overall) || !Array.isArray(result.dates))
-    throw new Error("Unexpected PBE cohort for " + traitId);
-
-  const { version, stats } = itemCohort(result, sourceId, cohort.patch, days);
+  const { data: result, version, stats } = await fetchItemCohort(api + "?" + params, sourceId, cohort.patch, days);
+  if (!Array.isArray(result.units_overall)) throw new Error("Missing wearer baseline for " + traitId);
   if (version !== cohort.patch + cohort.bPatch) throw new Error("Unexpected PBE hotfix for " + traitId);
   const overall = new Map(result.units_overall.map(row => [row.unit, statistics(row.places)]));
   const holders = [];
