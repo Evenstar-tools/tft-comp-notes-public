@@ -50,6 +50,7 @@ test("catalog nicknames resolve a published board without intercepting generic s
     ["true-damage-senna", "真伤赛娜", "lv7"],
     ["ionic-prodigy-lux", "离子拉克丝", "lv6"],
     ["arcanist-taliyah-vladimir", "隆吸水", "lv8"],
+    ["arcanist-taliyah-vladimir", "隆吸水九级", "lv9-nidalee"],
     ["sample-block-0229", "大龙 ９５", "95-lv9"],
     ["sample-block-0251", "四主宰男枪", "4-jugg-graves"],
     ["sample-block-0171", "救生员鳄鱼艾希", "lv8-ashe"],

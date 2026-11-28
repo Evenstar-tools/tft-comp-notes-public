@@ -439,18 +439,19 @@ export async function performSiteSearch(input: string, exclude?: string, publica
     guides: searchGuides(live), extra: { ...extra, lowCosts }, live, exclusion, level, includeSeven: include,
   };
 
-  const boardQuery = boardSearchQuery(query, previous);
-  if (boardQuery && (boardQuery.group || boardQuery.terms?.length || boardQuery.inherited)) {
-    const result = boardResults(query, boardQuery, context);
-    if (result) return result;
-  }
-
-  if (!boardQuery && extra.intent === "browse" && !extra.excluded && !extra.lowCosts) {
+  // A registered board name may include a level that would otherwise be parsed as a filter.
+  if (extra.intent === "browse" && !extra.excluded && !extra.lowCosts) {
     const hits = context.guides.flatMap(guide => {
       const board = guideBoardBySearchAlias(guide.section.id, guide.teams, term);
       return board ? [guideHit(guide, board)] : [];
     }).slice(0, limit);
     if (hits.length) return { query, intent: "browse", groups: [{ kind: "guides", title: "阵容攻略", hits }] };
+  }
+
+  const boardQuery = boardSearchQuery(query, previous);
+  if (boardQuery && (boardQuery.group || boardQuery.terms?.length || boardQuery.inherited)) {
+    const result = boardResults(query, boardQuery, context);
+    if (result) return result;
   }
 
   const requestedAugment = heroAugmentSearchQuery(query, season.units, previous);
