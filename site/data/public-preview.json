@@ -13579,6 +13579,31 @@
           "text": "七级无卡莎的 16 星夺冠局"
         },
         {
+          "id": "kda-seraphine-nine-heading",
+          "type": "heading",
+          "text": "九级 · 补艾克",
+          "level": 2,
+          "elements": [
+            {
+              "text_run": {
+                "content": "九级 · 补艾克"
+              }
+            }
+          ]
+        },
+        {
+          "id": "kda-seraphine-nine-notes",
+          "type": "text",
+          "text": "八级已经稳血再升九。补艾克开双天才，芬妮与酒桶继续带装。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "八级已经稳血再升九。补艾克开双天才，芬妮与酒桶继续带装。"
+              }
+            }
+          ]
+        },
+        {
           "id": "sample-block-0646",
           "type": "heading",
           "elements": [
@@ -13663,7 +13688,7 @@
             },
             {
               "text_run": {
-                "content": "\n主C：萨勒芬妮。K/DA纹章、朔极之矛、珠光护手。\n主坦：古拉加斯。石像鬼石板甲、离子火花。\n副C：妮蔻。有对应余装再补。\n功能装：莉莉娅。莉莉娅日炎先覆盖前排重伤。\n功能装：古拉加斯。酒桶贴脸带离子破魔抗。\n",
+                "content": "\n主C：萨勒芬妮。K/DA纹章、朔极之矛、珠光护手。\n主坦：古拉加斯。石像鬼石板甲、离子火花、振奋盔甲。\n副C：妮蔻。有对应余装再补。\n功能装：莉莉娅。莉莉娅日炎先覆盖前排重伤。\n功能装：古拉加斯。酒桶贴脸带离子破魔抗。\n",
                 "text_element_style": {
                   "bold": false,
                   "inline_code": false,
@@ -13690,7 +13715,7 @@
             }
           ],
           "level": 0,
-          "text": "棋盘配装 · 六级追芬妮\n主C：萨勒芬妮。K/DA纹章、朔极之矛、珠光护手。\n主坦：古拉加斯。石像鬼石板甲、离子火花。\n副C：妮蔻。有对应余装再补。\n功能装：莉莉娅。莉莉娅日炎先覆盖前排重伤。\n功能装：古拉加斯。酒桶贴脸带离子破魔抗。\n结算 7 局"
+          "text": "棋盘配装 · 六级追芬妮\n主C：萨勒芬妮。K/DA纹章、朔极之矛、珠光护手。\n主坦：古拉加斯。石像鬼石板甲、离子火花、振奋盔甲。\n副C：妮蔻。有对应余装再补。\n功能装：莉莉娅。莉莉娅日炎先覆盖前排重伤。\n功能装：古拉加斯。酒桶贴脸带离子破魔抗。\n结算 7 局"
         },
         {
           "id": "sample-block-0093",
@@ -13710,7 +13735,7 @@
             },
             {
               "text_run": {
-                "content": "\n主C：萨勒芬妮。K/DA纹章、朔极之矛。\n主坦：古拉加斯。石像鬼石板甲、离子火花。\n副C：妮蔻。有对应余装再补。\n功能装：莉莉娅。莉莉娅日炎先覆盖前排重伤。\n功能装：古拉加斯。酒桶贴脸带离子破魔抗。\n",
+                "content": "\n主C：萨勒芬妮。K/DA纹章、朔极之矛、珠光护手。\n主坦：古拉加斯。石像鬼石板甲、离子火花、振奋盔甲。\n副C：妮蔻。有对应余装再补。\n功能装：莉莉娅。莉莉娅日炎先覆盖前排重伤。\n功能装：古拉加斯。酒桶贴脸带离子破魔抗。\n",
                 "text_element_style": {
                   "bold": false,
                   "inline_code": false,
@@ -13737,7 +13762,19 @@
             }
           ],
           "level": 0,
-          "text": "棋盘配装 · 五级追一费\n主C：萨勒芬妮。K/DA纹章、朔极之矛。\n主坦：古拉加斯。石像鬼石板甲、离子火花。\n副C：妮蔻。有对应余装再补。\n功能装：莉莉娅。莉莉娅日炎先覆盖前排重伤。\n功能装：古拉加斯。酒桶贴脸带离子破魔抗。\n结算 16 局"
+          "text": "棋盘配装 · 五级追一费\n主C：萨勒芬妮。K/DA纹章、朔极之矛、珠光护手。\n主坦：古拉加斯。石像鬼石板甲、离子火花、振奋盔甲。\n副C：妮蔻。有对应余装再补。\n功能装：莉莉娅。莉莉娅日炎先覆盖前排重伤。\n功能装：古拉加斯。酒桶贴脸带离子破魔抗。\n结算 16 局"
+        },
+        {
+          "id": "kda-seraphine-nine-roles",
+          "type": "text",
+          "text": "棋盘配装 · 九级 · 补艾克\n主C：萨勒芬妮。K/DA纹章、朔极之矛、珠光护手。\n主坦：古拉加斯。石像鬼石板甲、振奋盔甲、离子火花。\n功能装：莉莉娅。日炎斗篷。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "棋盘配装 · 九级 · 补艾克\n主C：萨勒芬妮。K/DA纹章、朔极之矛、珠光护手。\n主坦：古拉加斯。石像鬼石板甲、振奋盔甲、离子火花。\n功能装：莉莉娅。日炎斗篷。"
+              }
+            }
+          ]
         },
         {
           "id": "web-kda-seraphine-lv8-akali-roles",
@@ -14013,6 +14050,91 @@
               "items": []
             }
           ]
+        },
+        {
+          "id": "fa58c8aa-702c-45cc-bc2d-75e78b8666ea",
+          "name": "九级 · 补艾克",
+          "category": "待分类",
+          "notes": "八级已经稳血再升九。补艾克开双天才，芬妮与酒桶继续带装。",
+          "revision": 1,
+          "updatedAt": "2026-11-28T16:08:07.824Z",
+          "sectionId": "sample-block-0367",
+          "boardRole": "stage",
+          "pieces": [
+            {
+              "instanceId": "b334625c-d3f1-4599-b07e-0a8a083ad592",
+              "unitId": "lillia",
+              "position": 2,
+              "stars": 3,
+              "items": [
+                "TFT_Item_RedBuff"
+              ]
+            },
+            {
+              "instanceId": "979235a0-972f-4ad5-aa43-189c6d713930",
+              "unitId": "gragas",
+              "position": 3,
+              "stars": 3,
+              "items": [
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_Redemption",
+                "TFT_Item_IonicSpark"
+              ]
+            },
+            {
+              "instanceId": "63e79ec3-1756-41e8-a46f-12b51f049fb2",
+              "unitId": "leona",
+              "position": 10,
+              "stars": 1,
+              "items": []
+            },
+            {
+              "instanceId": "0c08f537-46ce-4f60-98b5-8cf41d92e4c8",
+              "unitId": "evelynn",
+              "position": 8,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "56e95707-c89b-4d45-aa55-471615aa8f6a",
+              "unitId": "neeko",
+              "position": 23,
+              "stars": 3,
+              "items": []
+            },
+            {
+              "instanceId": "321842b9-cbc7-4e33-8126-8f26c43a65d2",
+              "unitId": "seraphine",
+              "position": 27,
+              "stars": 3,
+              "items": [
+                "emblem-k-da",
+                "TFT_Item_SpearOfShojin",
+                "TFT_Item_JeweledGauntlet"
+              ]
+            },
+            {
+              "instanceId": "bdaab006-ba23-4d62-8382-e36f6d4b2c54",
+              "unitId": "ahri",
+              "position": 25,
+              "stars": 1,
+              "items": []
+            },
+            {
+              "instanceId": "32a57fbe-fe34-4743-83db-da4a2dc4e433",
+              "unitId": "akali-kda",
+              "position": 12,
+              "stars": 1,
+              "items": []
+            },
+            {
+              "unitId": "ekko",
+              "stars": 2,
+              "position": 9,
+              "items": [],
+              "instanceId": "f360a8cb-0b9e-4ebe-b7bd-ea17b8ba6400"
+            }
+          ]
         }
       ],
       "team": {
@@ -14082,7 +14204,8 @@
       "stageTeamIds": [
         "00000000-0000-4000-8000-000000000086",
         "00000000-0000-4000-8000-000000000055",
-        "99816bd6-efbd-4541-856b-6a0bf0def3a0"
+        "99816bd6-efbd-4541-856b-6a0bf0def3a0",
+        "fa58c8aa-702c-45cc-bc2d-75e78b8666ea"
       ]
     },
     {

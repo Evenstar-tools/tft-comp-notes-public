@@ -7355,6 +7355,83 @@
       "topFourRate": 0.6785714285714286,
       "winRate": 0.07142857142857142,
       "observedOn": "2026-11-28"
+    },
+    {
+      "sectionId": "sample-block-0367",
+      "population": 9,
+      "roster": [
+        "ahri",
+        "akali-kda",
+        "ekko",
+        "evelynn",
+        "gragas",
+        "leona",
+        "lillia",
+        "neeko",
+        "seraphine"
+      ],
+      "build": "6045507",
+      "conditions": {
+        "kind": "full",
+        "teamId": "fa58c8aa-702c-45cc-bc2d-75e78b8666ea",
+        "population": 9
+      },
+      "sampleScope": "9级结算 · 固定名单 · 1枚纹章，未限定纹章种类",
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=comps&level=9&emblem_count=1&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Lillia19-1&unit=DA_Gragas19-1&unit=DA_Leona19-1&unit=DA_Evelynn19-1&unit=DA_Neeko19-1&unit=DA_Seraphine19_Indie-1&unit=DA_19_Ahri-1&unit=DA_AkaliKDA19-1&unit=DA_Ekko19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "games": 97,
+      "placementCounts": [
+        56,
+        27,
+        9,
+        2,
+        1,
+        1,
+        1,
+        0
+      ],
+      "mean": 1.68,
+      "topFourRate": 0.9690721649484536,
+      "winRate": 0.5773195876288659,
+      "observedOn": "2026-11-28"
+    },
+    {
+      "sectionId": "sample-block-0464",
+      "population": 9,
+      "roster": [
+        "ahri",
+        "akali-kda",
+        "ekko",
+        "evelynn",
+        "gragas",
+        "kai-sa",
+        "leona",
+        "lillia",
+        "neeko"
+      ],
+      "querySignature": "[9,[\"ahri\",\"akali-kda\",\"ekko\",\"evelynn\",\"gragas\",\"kai-sa\",\"leona\",\"lillia\",\"neeko\"]]",
+      "build": "6045507",
+      "conditions": {
+        "kind": "full",
+        "teamId": "9b4ff401-a78b-48ae-b895-9ac931684465",
+        "population": 9
+      },
+      "sampleScope": "9级结算 · 固定名单 · 无纹章、人口装或重复棋子",
+      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&queue=PBE&patch=19.1&b_patch=c&days=3&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Leona19-1&unit=DA_Lillia19-1&unit=DA_Gragas19-1&unit=DA_AkaliKDA19-1&unit=DA_Neeko19-1&unit=DA_Kaisa19-1&unit=DA_Evelynn19-1&unit=DA_19_Ahri-1&unit=DA_Ekko19-1",
+      "games": 280,
+      "placementCounts": [
+        64,
+        58,
+        55,
+        48,
+        26,
+        18,
+        7,
+        4
+      ],
+      "mean": 3.06,
+      "topFourRate": 0.8035714285714286,
+      "winRate": 0.22857142857142856,
+      "observedOn": "2026-11-28"
     }
   ],
   "edition": "s19-pbe-19.1",

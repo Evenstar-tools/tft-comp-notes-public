@@ -114,6 +114,7 @@ const guideSlugs: Record<string, GuideSlugs> = {
   } },
   "sample-block-0367": { slug: "kda-seraphine", boards: {
     "99816bd6-efbd-4541-856b-6a0bf0def3a0": "lv8-akali",
+    "fa58c8aa-702c-45cc-bc2d-75e78b8666ea": "lv9-ekko",
     "00000000-0000-4000-8000-000000000033": "lv5-early",
     "00000000-0000-4000-8000-000000000055": "lv6",
     "00000000-0000-4000-8000-000000000086": "lv5",
