@@ -94,6 +94,7 @@
 
 .guide-card-avatar {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   min-width: 0;
   justify-items: center;
   align-content: start;
@@ -150,6 +151,8 @@
 }
 
 .guide-card-unit {
+  max-width: 100%;
+  white-space: normal;
   overflow-wrap: anywhere;
 }
 

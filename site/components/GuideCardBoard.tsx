@@ -30,7 +30,9 @@ export function GuideCardBoard({ team, data, roles, chaseTargets, eager, title, 
   const itemMap = new Map(data.items.map(item => [item.id, item]));
   const lineupLabel = roster.map(({ unit, piece, role }) => {
     const core = coreRole(role);
-    return core ? `${unit.name} ${core} ${piece.stars} 星` : unit.name;
+    if (!core) return unit.name;
+    const equipment = piece.items.map(id => itemMap.get(id)?.name ?? id).join("、");
+    return [`${unit.name} ${core} ${piece.stars} 星`, equipment].filter(Boolean).join(" ");
   }).join("、");
   const action = expanded ? "收起快看" : "快看棋盘";
   const level = usedPopulation(team.pieces);
@@ -56,7 +58,7 @@ export function GuideCardBoard({ team, data, roles, chaseTargets, eager, title, 
           const { piece, unit, role } = member;
           const chaseThree = piece.stars === 3 && chaseTargets.includes(unit.id);
           const core = coreRole(role);
-          return <span className={"guide-card-avatar cost-" + unit.cost} data-core={core} key={piece.instanceId}
+          return <span className={"guide-card-avatar cost-" + unit.cost} data-core={core} data-unit-id={unit.id} key={piece.instanceId}
             title={unit.name + (chaseThree ? " · 追三星" : core ? ` · ${piece.stars} 星` : "")}>
             <span className="guide-card-portrait">
               <img src={unit.image} alt="" width={56} height={42} draggable={false} loading={eager ? "eager" : "lazy"} decoding="async" />
@@ -65,7 +67,7 @@ export function GuideCardBoard({ team, data, roles, chaseTargets, eager, title, 
             {core && <>
               {piece.items.length > 0 && <span className="guide-card-items">{piece.items.map((id, index) => {
                 const item = itemMap.get(id);
-                return <span title={item?.name ?? id} key={index}><ItemIcon item={item} size={15} /></span>;
+                return <span data-item-id={id} title={item?.name ?? id} key={index}><ItemIcon item={item} size={15} /></span>;
               })}</span>}
               <span className="guide-card-unit">{shortName(member)}</span>
               <span className="guide-card-role">{core}</span>
@@ -98,7 +100,7 @@ export function GuideQuickView({ id, team, data, roles, note, href }: {
       {members.length > 0 &&
         <ul>{members.map(member => {
           const { unit, piece, role } = member;
-          return <li key={piece.instanceId}>
+          return <li key={piece.instanceId} data-unit-id={unit.id}>
             <img className={"guide-piece-portrait cost-" + unit.cost} src={unit.image} alt="" width={38} height={38} loading="lazy" decoding="async" />
             <span className="guide-quick-view-owner">
               <strong>{shortName(member)}</strong>
@@ -107,7 +109,7 @@ export function GuideQuickView({ id, team, data, roles, note, href }: {
             <span className="guide-quick-view-items">
               {piece.items.map((itemId, index) => {
                 const item = items.get(itemId);
-                return <span title={item?.name ?? itemId} key={index}>
+                return <span data-item-id={itemId} title={item?.name ?? itemId} key={index}>
                   <ItemIcon item={item} size={28} />{item ? equipmentLabel(item) : itemId}
                 </span>;
               })}
