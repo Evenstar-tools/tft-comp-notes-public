@@ -215,6 +215,7 @@
 
 .guide-detail-page .guide-variant-option-copy > strong { font-weight: 700; }
 .guide-detail-page .guide-variant-option small { color: var(--muted); font-size: .75rem; }
+.guide-detail-page .guide-variant-option .guide-variant-kind { margin-inline-start: 6px; }
 .guide-detail-page .guide-variant-option .guide-variant-current { margin-inline-start: 5px; color: var(--accent); white-space: nowrap; }
 .guide-detail-page .guide-variant-change {
   display: -webkit-box;
