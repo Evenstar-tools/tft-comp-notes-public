@@ -110,6 +110,12 @@ export function guideSystems(section: Section, batch: GuideFamilyBatch, edition:
     } while (owners.size > previous);
   }
   attachStages();
+  // Separate authored entrances take precedence over merely sharing units with another route.
+  const routeAnchors = teams.filter(board => rerollEntryTeamId(section, board.id));
+  if (routeAnchors.length > 1) {
+    for (const board of routeAnchors) if (!owners.has(board.id)) create(board);
+    attachStages();
+  }
   // A count-only sample can identify its own board, but the authored route still owns its stages.
   for (const row of (batch.smallSamples ?? []).filter(sameGuide)) {
     const board = row.teamId && byId.get(row.teamId);
@@ -193,10 +199,11 @@ export function systemMeanTone(mean: number | undefined) {
   return mean === undefined ? "limited" : mean < 4 ? "strong" : mean > 4.5 ? "weak" : "middle";
 }
 
-export function guideSystemSample(stat: GuideFamilyStat | undefined) {
-  if (!stat) return { mean: "—", tone: "limited", sample: "暂无体系数据" };
+export function guideSystemSample(stat: Pick<PlacementRating, "mean" | "topFourRate" | "games"> | undefined) {
+  if (!stat || stat.mean === undefined) return { mean: "—", tone: "limited", sample: "暂无体系数据" };
+  const topFour = stat.topFourRate === undefined ? [] : [`前四 ${percent.format(stat.topFourRate)}`];
   return { mean: stat.mean.toFixed(2), tone: systemMeanTone(stat.mean),
-    sample: `前四 ${percent.format(stat.topFourRate)} · ${frequency.format(stat.games)}场` };
+    sample: [...topFour, `${frequency.format(stat.games)}场`].join(" · ") };
 }
 
 function boardSample(rating: PlacementRating | undefined) {

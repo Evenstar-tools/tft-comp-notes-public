@@ -75,7 +75,12 @@
   box-shadow: none;
 }
 
-.guide-detail-page .guide-reader .guide-board-options > .guide-phases {
+.guide-detail-page .guide-board-head:has(> .guide-phases) {
+  justify-content: flex-start;
+  column-gap: 14px;
+}
+
+.guide-detail-page .guide-reader :is(.guide-board-options, .guide-board-head) > .guide-phases {
   display: flex;
   flex: 0 1 auto;
   flex-wrap: wrap;
@@ -88,7 +93,7 @@
   background: transparent;
 }
 
-.guide-detail-page .guide-board-options :is(.guide-phases, .guide-extra-phases) button {
+.guide-detail-page :is(.guide-board-options, .guide-board-head) :is(.guide-phases, .guide-extra-phases) button {
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -109,7 +114,7 @@
   white-space: normal;
 }
 
-.guide-detail-page .guide-phases > button + button::before {
+.guide-detail-page .guide-board-options .guide-phases > button + button::before {
   content: "→";
   position: absolute;
   inset-inline-start: -13px;
@@ -119,12 +124,12 @@
   pointer-events: none;
 }
 
-.guide-detail-page .guide-board-options :is(.guide-phases, .guide-extra-phases) button:hover {
+.guide-detail-page :is(.guide-board-options, .guide-board-head) :is(.guide-phases, .guide-extra-phases) button:hover {
   background: transparent;
   color: var(--text);
 }
 
-.guide-detail-page .guide-board-options :is(.guide-phases, .guide-extra-phases) button[aria-pressed="true"] {
+.guide-detail-page :is(.guide-board-options, .guide-board-head) :is(.guide-phases, .guide-extra-phases) button[aria-pressed="true"] {
   border-bottom-color: var(--accent);
   background: transparent;
   color: var(--accent);
@@ -581,8 +586,8 @@
   .guide-detail-page .guide-board-actions :is(.guide-board-zoom, .guide-board-poster) { background: transparent; }
   .guide-detail-page .guide-board-actions .guide-editor-link > span { display: inline; }
   .guide-detail-page .guide-board-actions .guide-editor-action { display: flex; }
-  .guide-detail-page .guide-phases > button + button::before { content: none; }
-  .guide-detail-page .guide-board-options :is(.guide-phases, .guide-extra-phases) button { min-height: 40px; line-height: 1.45; }
+  .guide-detail-page .guide-board-options .guide-phases > button + button::before { content: none; }
+  .guide-detail-page :is(.guide-board-options, .guide-board-head) :is(.guide-phases, .guide-extra-phases) button { min-height: 40px; line-height: 1.45; }
   .guide-detail-page .reader-play { padding: 14px 10px 16px; }
   .guide-detail-page .reader-play > :is(.guide-board-head, .guide-mobile-core, .read-traits, .guide-next-changes) { margin-inline: 4px; }
   .guide-detail-page .guide-sidebar { padding: 12px 14px; }
