@@ -312,6 +312,11 @@ export function MedleyLibrary({
       <div>
         <a className="text-link medley-back" href="/traits?trait=collab"><ArrowLeft size={14} aria-hidden="true" />羁绊速查</a>
         <div className="medley-title"><TraitBadge trait={collab} size={32} /><h1>合奏组合</h1></div>
+        <p className="medley-subtitle">
+          <span>每局随机 1/40 组（各 {(catalog.probability * 100).toFixed(1)}%）</span>
+          <span className="medley-dot" aria-hidden="true">·</span>
+          <span>娑娜每局固定计入，上场 {collab.thresholds.join(" / ")} 名开档</span>
+        </p>
       </div>
       <button
         type="button"
@@ -326,8 +331,7 @@ export function MedleyLibrary({
 
     {howOpen && <section className="medley-how-panel" aria-label="合奏玩法与适配规则">
       <div>
-        <h3>合奏玩法</h3>
-        <p>每局随机抽 1 组（各 {(catalog.probability * 100).toFixed(1)}%）。{fixed.name}每组都有，上场才计数。上场 {collab.thresholds.join(" / ")} 名开档。</p>
+        <h3>为什么看合奏适配？</h3>
         <p>合奏前期相当于额外经济海克斯，来牌顺就早开 3 合奏，灵感送的弈子复制体能省下买牌与刷新金币；缺关键牌或需要拆核心羁绊时，直接按原过渡走即可。</p>
       </div>
       <div className="medley-how-rules">
@@ -354,7 +358,7 @@ export function MedleyLibrary({
               setPinnedFit(null);
               setExtrasExpanded(false);
             }}
-            aria-describedby={fixedMatched ? "medley-search-hint" : undefined}
+            aria-describedby="medley-search-hint"
             placeholder="搜英雄、外号或组号"
           />
           {!!query && <button type="button" className="medley-clear" aria-label="清除搜索" onClick={clearSearch}>
@@ -368,7 +372,7 @@ export function MedleyLibrary({
         </div>
       </div>
       <div className="medley-toolbar-sub">
-        {fixedMatched && <span id="medley-search-hint">{fixed.name}每组都有，上场才计数。</span>}
+        <span id="medley-search-hint">多个英雄用空格隔开，也可搜组号。{fixedMatched ? ` ${fixed.name}属于每组，上场才计数。` : ""}</span>
         <span className="medley-count" role="status">
           {focusedGroup
             ? <>当前聚焦 <strong>第 {focusedGroup.number} 组</strong> · {focusedFits.length} 套适配</>
