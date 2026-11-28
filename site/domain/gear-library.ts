@@ -2,7 +2,7 @@ import { itemMap, season, traitMap, unitMap } from "@/data";
 import { itemReference } from "@/data/item-reference";
 import rawEmblemSnapshot from "@/data/emblem-stats.json";
 import { emblemItemId } from "./links";
-import { gearWearerMatches, type GearOrder } from "./gear-wearer";
+import { gearWearerMatches, parseGearOrder, type GearOrder } from "./gear-wearer";
 import { emblemSearchNames, makeItemSearchTerms } from "./item-search";
 import { itemAliases } from "./roster-import";
 import { legacyEmblemNames } from "./trait-names.mjs";
@@ -17,7 +17,7 @@ export const gearGroups = {
 export type GearGroup = keyof typeof gearGroups;
 export type ItemGroup = Exclude<GearGroup, "emblems">;
 export type GearFilters = { query: string; order: GearOrder; excluded: readonly string[]; wearer: string };
-export const maxExcludedWearers = 2;
+export const maxExcludedWearers = 4;
 export type GearPageParams = {
   q?: string; order?: string; sort?: string; exclude?: string; wearer?: string;
   item?: string; view?: string; unit?: string; trait?: string; from?: string; builds?: string;
@@ -61,12 +61,11 @@ export function reverseWearerExact(query: string) {
 }
 
 export function gearFilters(params: GearPageParams): GearFilters {
-  const order = params.order ?? params.sort;
   const ids = typeof params.exclude === "string" ? params.exclude.split(",") : [];
   const excluded = [...new Set(ids.filter(id => unitMap.has(id)))].slice(0, maxExcludedWearers);
   return {
     query: (typeof params.q === "string" ? params.q : "").slice(0, 80),
-    order: order === "games" ? "games" : order === "wins" || order === "winRate" ? "wins" : "mean",
+    order: parseGearOrder(params.order ?? params.sort),
     excluded,
     wearer: params.wearer && unitMap.has(params.wearer) ? params.wearer : "",
   };
@@ -81,7 +80,7 @@ export function gearHref(group: GearGroup, filters?: GearFilters, selection: Gea
   if (group !== "emblems") params.set("view", group);
   if (filters?.query.trim()) params.set("q", filters.query.trim());
   if (filters?.order && filters.order !== "mean") params.set("order", filters.order);
-  if (filters?.excluded.length) params.set("exclude", filters.excluded.join(","));
+  if (filters?.excluded.length) params.set("exclude", filters.excluded.slice(0, maxExcludedWearers).join(","));
   const wearer = filters?.wearer ?? selection.wearer;
   if (wearer && unitMap.has(wearer)) params.set("wearer", wearer);
   return (group === "emblems" ? "/emblems" : "/items") + (params.size ? "?" + params : "");
