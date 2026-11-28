@@ -164,13 +164,14 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
   const lastInlineSearchKey = useRef<string | null>(null);
   const filterPanel = useRef<HTMLDetailsElement>(null);
   const showingTrends = view === "comp-trends";
-  const recommended = view === "regular" && sort === "recommended";
+  const recommendationTab = view === "regular" && sort === "recommended";
+  const needle = showingTrends ? "" : query.trim();
+  const recommended = recommendationTab && !needle;
   const selections = choices[view] ?? emptyFilters;
-  const active = recommended && tierOrder.includes(selections.category) ? { ...selections, category: "" } : selections;
+  const active = recommendationTab && tierOrder.includes(selections.category) ? { ...selections, category: "" } : selections;
   const { category, style, cost } = active;
   const styleKey = guideStyleKey(style);
   const hasFilter = Boolean(category || style || cost);
-  const needle = showingTrends ? "" : query.trim();
   const inputIntent = homeSearchIntent(needle, scope);
   const hasUnitQuery = Boolean(inputIntent.text && searchUnitIds(inputIntent.text, season).size);
   const intent = hasUnitQuery || inputIntent.scope !== scope ? inputIntent : { ...inputIntent, scope: "all" as const };
@@ -350,7 +351,7 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
     }
     return ratings;
   }, [library.regular, patch, recommendations?.reviewedRollingPatch, showArchiveCore]);
-  const showTiers = view === "regular" && !recommended;
+  const showTiers = view === "regular" && !recommendationTab;
   const tierFilter = showTiers ? category : "";
   const homeEntries = [...library.regular, ...library["hero-augments"]];
   const availableFacets = view === "regular" ? homeEntries : visible;
@@ -723,7 +724,7 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
   const currentHomeReady = currentHomeEvidence || currentHomeRoutes.length > 0;
   const recommendationSnapshot = currentHomeReady ? (currentHomeEvidence ? homeFamilyStats : undefined)
     : previousDeadline !== undefined ? previousFamilyStats : undefined;
-  const filteredHome = Boolean(needle || cost || style);
+  const filteredHome = Boolean(cost || style);
   const homeCandidates = !equipmentQuery && recommended
     ? currentHomeReady && !filteredHome ? currentHomeCandidates
       : homeRouteCandidates(recommendationSnapshot, filteredHome ? candidatesFor(homeEntries) : homeEntries, currentHomeReady)
@@ -815,8 +816,8 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
     return guideLink(sectionId, boardId, homeGuideReturn(home, cardId, boardId)) + "#" + guideConditionsAnchor;
   }
   const displayedCount = recommended ? recommendationCards.length : ranked ? statsRows.length + coreStatsRows.length : results.length;
-  const crossTab = needle && !displayedCount && !equipmentQuery && (!recommended || hasUnitQuery)
-    ? candidatesFor(library[recommended || isHeroList ? "regular" : "hero-augments"], conditions, false)
+  const crossTab = needle && !displayedCount && !equipmentQuery
+    ? candidatesFor(library[isHeroList ? "regular" : "hero-augments"], conditions, false)
       .sort((a,b) => b.rank - a.rank).slice(0, 8)
     : [];
   const lookupGroups = lookup.phase === "ready" && conditions.length === 1 && !selectedGear ? lookup.result.groups.filter(group =>
@@ -1105,9 +1106,9 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
       <div className="guide-order-row">
         <nav className="guide-library-tabs home-patch-tabs" aria-label="阵容分栏">
           <a href={homeLink("regular", nextSelections("regular"), "recommended")}
-            aria-current={recommended ? "page" : undefined} onClick={event => changeView(event, "regular", "recommended")}>本版推荐</a>
+            aria-current={recommendationTab ? "page" : undefined} onClick={event => changeView(event, "regular", "recommended")}>本版推荐</a>
           <a href={homeLink("regular", nextSelections("regular"), archiveSort)}
-            aria-current={view === "regular" && !recommended ? "page" : undefined} onClick={event => changeView(event, "regular", archiveSort)}>全部攻略</a>
+            aria-current={view === "regular" && !recommendationTab ? "page" : undefined} onClick={event => changeView(event, "regular", archiveSort)}>全部攻略</a>
           {heroSections.length > 0 && <a href={homeLink("hero-augments", nextSelections("hero-augments"), sort)}
             aria-current={view === "hero-augments" ? "page" : undefined} onClick={event => changeView(event, "hero-augments")}>英雄强化</a>}
           {(!launchTransition || trends) && <a href={homeLink("comp-trends", emptyFilters, sort)} aria-current={showingTrends ? "page" : undefined}
@@ -1184,7 +1185,7 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
       {artifactRanking}
     </>}
     {!showingTrends && <>
-    {view === "regular" && !recommended && <div className="home-archive-tools">
+    {view === "regular" && !recommendationTab && <div className="home-archive-tools">
       <nav className="home-archive-switch" aria-label="全部攻略视图">
           {archiveViews.filter(([option]) => !launchTransition || option === "category" || (hasCurrentStats && familyStats.rows.length > 0) || hasCurrentCore).map(([option, label]) =>
           <a key={option} href={homeLink("regular", active, option)} aria-current={sort === option ? "true" : undefined}
@@ -1251,7 +1252,6 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
       <PatchRecommendationList stats={!launchTransition || homeSelections.some(route => hasHomeRecommendationSample(route.rating)) ? recommendationSnapshot : undefined}
         cards={recommendationCards} home={home} quietUnrated={launchTransition}
         previousBuild={!!recommendationSnapshot && !currentHomeReady} />
-      {!displayedCount && !crossTab.length && needle && showLookup && !equipmentQuery && <div className="empty-inline">{archiveLink}</div>}
       {!displayedCount && !crossTab.length && !showLookup && !searching && (needle || hasFilter ? emptyState : <div className="empty-inline">{!launchTransition && <p>{currentHomeEvidence ? "暂无符合条件的本版推荐" : "本版体系数据待更新"}</p>}
         {archiveLink}
       </div>)}
