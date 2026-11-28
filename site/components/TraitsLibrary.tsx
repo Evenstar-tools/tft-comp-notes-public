@@ -19,6 +19,14 @@ const traitGroups = [
   { axis: "special", label: "个人羁绊" },
 ] as const;
 
+const s19RewardTabs: Partial<Record<string, string>> = {
+  "true-damage": "true-damage",
+  hyperpop: "glitter-bomb",
+  "8-bit": "8bit",
+  collab: "collabtest",
+  tango: "tango-soul",
+};
+
 type TraitAxis = typeof traitGroups[number]["axis"];
 
 type TraitView = {
@@ -47,6 +55,8 @@ function TraitEntry({ trait, members, memberQuery, overall, picked, onPick, link
   comparison?: { scopeOn: boolean; board?: TraitScope; overallSource?: string; currentBoard: string };
 }) {
   const inlineMembers = trait.axis === "special" && members.length <= 2;
+  const rewardTab = season.id.startsWith("s19-") ? s19RewardTabs[trait.id] : undefined;
+  const rewardLabel = trait.id === "collab" ? "组合表" : "奖励";
   const lineupName = (picked ? picked + (trait.countMode === "stars" ? "星" : "") : "") + trait.name;
   const roster = members.length > 0 && <div className="trait-lookup-members">
     {members.map(unit => {
@@ -67,6 +77,10 @@ function TraitEntry({ trait, members, memberQuery, overall, picked, onPick, link
             <h3 id={"lookup-" + trait.id} tabIndex={-1} title={trait.nameEn}>{trait.name}</h3>
           </div>
           <div className="trait-entry-actions">
+            {rewardTab && <a className="trait-reward-link" href={"https://www.datatft.com/rate?season=19#" + rewardTab}
+              target="_blank" rel="noreferrer" aria-label={trait.name + rewardLabel + "（DataTFT）"}>
+              {rewardLabel}<span aria-hidden="true"> ↗</span>
+            </a>}
             <a href={"/?" + new URLSearchParams({ q: (picked ?? "") + trait.name, sort: "category" })}
               aria-label={"查" + lineupName + "阵容"}>阵容</a>
             {trait.id === "collab" && <a href="/traits/medley">查看 40 组</a>}
@@ -165,7 +179,6 @@ export function TraitsLibrary({ initialQuery, initialTrait, initialTier, meta, o
               </div>
             </details> : <span>本版本战绩待更新</span>}
             <a href="/traits/medley">合奏组合</a>
-            <a href="https://www.datatft.com/rate?season=19#true-damage" target="_blank" rel="noreferrer">收菜奖励 ↗</a>
           </div>
         </div>
         <div className="trait-lookup-controls">
