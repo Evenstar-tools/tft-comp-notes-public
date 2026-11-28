@@ -18,7 +18,7 @@ import { findPlayerGuideTeam, isPlayerTeamStorageKey, readPlayerTeams, samePlaye
 import { sectionTeams } from "@/domain/document-flow";
 import { allBlocks, guideBoardName, guideFacets, guideLink, guidePlaystyle, guideRoute, guideStrategyLabel, oceanGravesUnlockBoardId, primaryFirst, readingNotes, sourceSummary, type GuideRole } from "@/domain/guide-reading";
 import { canonicalGuidePath, resolveBoardTeamId } from "@/domain/guide-slugs";
-import { fixedBoardPlacementDetail, placementEvidenceKind } from "@/domain/guide-placement";
+import { placementEvidenceKind } from "@/domain/guide-placement";
 import placementBatch from "@/data/guide-placement.json";
 import { compactGuideParagraph, compactUtilityCopy, hasGuideLinks, rememberGuideCopy } from "@/domain/guide-copy";
 import { guideFlexPreview, reviewedGuidePhases } from "@/domain/guide-execution";
@@ -35,7 +35,7 @@ import familyStats from "@/data/guide-family-stats.json";
 import { guideFamilyRows } from "@/domain/guide-family-stats";
 import type { Section } from "@/domain/document";
 import { boardRosterChange, familyVariants, groupGuides, type PosterVariant } from "@/domain/guide-families";
-import { guidePromotionRows, guideSystemDisplayBoards, guideSystemPhases, guideSystemSample, systemMeanTone, type GuideSystem } from "@/domain/guide-variant-strip";
+import { guideHeaderCoreSample, guidePromotionRows, guideSystemDisplayBoards, guideSystemPhases, guideSystemSample, systemMeanTone, type GuideSystem } from "@/domain/guide-variant-strip";
 import type { BoardStage, Season, Team } from "@/domain/types";
 import { season } from "@/data";
 import { sameEdition } from "@/domain/version-updates";
@@ -212,29 +212,25 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
   const matchingFamily = familyRows.filter(row => row.boards.some(board => board.id === team.id));
   const overall = matchingFamily.length === 1 ? matchingFamily[0].stat : undefined;
   const showMatchStats = mainBoardActive && !showFlex;
-  const placements = detailView && showMatchStats && !overall
-    ? (heroGuide ? ["augment"] as const : ["fixed", "core", "lineup"] as const).flatMap(scope => {
-      const rating = teamPlacement(team, section, scope);
-      return rating?.games ? [fixedBoardPlacementDetail(rating)] : [];
-    }) : [];
-  const placement = placements.find(rating => rating.mean !== undefined) ?? placements[0];
+  const sharedBoards = primaryFirst(systemBoards.length ? systemBoards : teams, team.id);
+  const placement = detailView && showMatchStats && !overall && !heroGuide
+    ? guideHeaderCoreSample(sharedBoards, board => teamPlacement(board, section, "core") ?? teamPlacement(board, section, "lineup"), placementBatch.minGames)
+    : undefined;
   const overview = detailView && (showMatchStats ? overall ?? placement : undefined);
   const evidence = placement && placementEvidenceKind(placement);
-  const scope = placement?.referencesAugment ? "同装样本" : evidence ? sampleScopes[evidence] : "体系战绩";
+  const scope = evidence ? sampleScopes[evidence] : "体系战绩";
   const patch = placement?.patch ?? familyStats.patch;
   const windowLabel = placement?.window ?? "近 " + familyStats.days + " 天";
   const mean = overview ? overview.mean : undefined;
-  const meanLabel = overall ? "均名" : placement?.referencesAugment ? "同装均名"
-    : evidence === "core" ? "核心均名" : evidence === "lineup" ? "名单共现均名" : evidence === "augment" ? "强化均名"
-      : placement ? `${placement.population}级结算均名` : "均名";
-  const topFour = overview && overview.topFourRate !== undefined && mean !== undefined && !placement?.referencesAugment
+  const meanLabel = overall ? "均名" : evidence === "core" ? "核心均名" : evidence === "lineup" ? "名单共现均名" : "均名";
+  const topFour = overview && overview.topFourRate !== undefined && mean !== undefined
     ? percent.format(overview.topFourRate) : undefined;
-  const win = overview && overview.winRate !== undefined && mean !== undefined && !placement?.referencesAugment
+  const win = overview && overview.winRate !== undefined && mean !== undefined
     ? percent.format(overview.winRate) : undefined;
   const tone = overall ? systemMeanTone(mean) : (placement?.tone ?? systemMeanTone(mean));
   function openMatchStats() {
     if (matchDetails.current) matchDetails.current.open = true;
-    setSampleView(evidence === "core" || evidence === "lineup" ? "carry" : placement ? "board" : "family");
+    setSampleView(evidence === "core" || evidence === "lineup" ? "carry" : "family");
   }
   const performance = overall && <a className="guide-family-rating" href={showMatchStats ? "#" + sampleId : overall.url}
     onClick={() => setSampleView("family")} title={overall.sourceName + " · " + familyStats.patch + " · 近 " + familyStats.days + " 天"}>
@@ -508,7 +504,7 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
     if (!currentSystem) return null;
     const rows = guidePromotionRows(displayedSystemBoards, board => teamPlacement(board, section, "fixed") ??
       (heroGuide ? teamPlacement(board, section, "augment") : undefined), placementBatch);
-    if (rows.length < 2) return null;
+    if (rows.length < 2 || !rows.some(row => row.mean !== undefined)) return null;
     return <section className="guide-promotion-comparison" aria-label="上人口与补卡对照">
       <h3>上人口与补卡对照</h3>
       <p>同套棋盘停级和升人口后的结算名次，仅用于比较补卡。</p>
