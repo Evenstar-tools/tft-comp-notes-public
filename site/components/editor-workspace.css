@@ -203,6 +203,12 @@
   border: 0;
   border-radius: 0;
 }
+.editor-icon-art {
+  display: inline-block;
+  width: var(--editor-icon-width);
+  height: var(--editor-icon-height);
+  background-repeat: no-repeat;
+}
 .editor .unit-art > .editor-icon-art,
 .editor .board-avatar > .editor-icon-art,
 .editor .board-alternate > .editor-icon-art {

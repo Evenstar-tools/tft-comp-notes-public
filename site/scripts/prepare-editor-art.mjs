@@ -8,7 +8,7 @@ export async function prepareEditorArt() {
   const sheets = editorArtSources(await readData("season"), await readData("item-art"));
   await mkdir(".editor-art", { recursive: true });
   for (const [name, sources] of Object.entries(sheets)) {
-    const size = name === "portraits" ? 96 : 64;
+    const size = name === "portraits" ? 64 : 40;
     const columns = editorArtColumns;
     const rows = Math.max(1, Math.ceil(sources.length / columns));
     const tiles = await Promise.all(sources.map(async (src, index) => ({
