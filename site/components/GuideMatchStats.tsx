@@ -70,13 +70,15 @@ export function guideMatchEvidence({ team, teams, section, edition, augmentName,
     ? family.smallSamples?.filter(stat => stat.sectionId === section.id &&
       (launch ? recommendationTier(stat) !== "review" && stat.games >= placements.minGames : stat.games > 0)) ?? [] : [];
   function evidenceFor(board: Team) {
+    const fixedStatsOnly = section.reroll?.stages.some(stage => stage.teamId === board.id && stage.ownEvidenceOnly);
     const rating = teamPlacement(board, section, heroGuide ? "augment" : "fixed");
-    const related = heroGuide ? [] : [teamPlacement(board, section, "lineup"), teamPlacement(board, section, "core")]
-      .filter((sample): sample is PlacementRating => !!sample?.games);
-    const carry = carryEvidence(edition, section.id, board, augmentName);
-    const rows = matchingFamily ? familyRows.filter(row => row.boards.some(entry => entry.id === board.id) && familyRosterMatches(row.stat, board)) : [];
-    const rare = rareRows.filter(stat => (stat.teamId ?? teams[0]?.id) === board.id && familyRosterMatches(stat, board));
-    const formation = !heroGuide && !board.publishedRosterNeedsReview ? formationEvidence(board, edition) : undefined;
+    const related = !heroGuide && !fixedStatsOnly ? [teamPlacement(board, section, "lineup"), teamPlacement(board, section, "core")]
+      .filter((sample): sample is PlacementRating => !!sample?.games) : [];
+    const carry = fixedStatsOnly ? { rows: [], builds: [] } : carryEvidence(edition, section.id, board, augmentName);
+    const rows = matchingFamily && !fixedStatsOnly
+      ? familyRows.filter(row => row.boards.some(entry => entry.id === board.id) && familyRosterMatches(row.stat, board)) : [];
+    const rare = fixedStatsOnly ? [] : rareRows.filter(stat => (stat.teamId ?? teams[0]?.id) === board.id && familyRosterMatches(stat, board));
+    const formation = !heroGuide && !fixedStatsOnly && !board.publishedRosterNeedsReview ? formationEvidence(board, edition) : undefined;
     const candidateReference = !rows.length && !rare.length ? formation?.board.familyReference : undefined;
     const reference = launch ? currentFormationFamilyReference(candidateReference) : candidateReference;
     function distributionGroups(view: "board" | "carry") {
@@ -89,7 +91,7 @@ export function guideMatchEvidence({ team, teams, section, edition, augmentName,
     const carryGroups = [...related, ...carry.rows, ...carry.builds];
     const groups = {
       board: rating?.games ? [rating] : formationGroups.length ? formationGroups : distributionGroups("board"),
-      carry: carryGroups.length ? carryGroups : distributionGroups("carry"),
+      carry: fixedStatsOnly || carryGroups.length ? carryGroups : distributionGroups("carry"),
       family: reference ? [{ games: reference.placementCounts.reduce((n, count) => n + count, 0) }]
         : [...rows.map(row => row.stat), ...rare],
     };

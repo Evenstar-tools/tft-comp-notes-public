@@ -61,6 +61,7 @@ test("catalog nicknames resolve a published board without intercepting generic s
     ["arcanist-taliyah-vladimir", "隆吸水九级", "lv9-nidalee"],
     ["sample-block-0229", "大龙 ９５", "95-lv9"],
     ["sample-block-0251", "四主宰男枪", "4-jugg-graves"],
+    ["sample-block-0251", "闭环男枪", "lv8-pentakill-rock"],
     ["sample-block-0171", "救生员鳄鱼艾希", "lv8-ashe"],
   ];
   for (const [sectionId, query, slug] of cases) {

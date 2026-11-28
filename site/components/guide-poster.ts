@@ -3,7 +3,7 @@ import { boardInstruments, boardMarkerNote } from "@/domain/board-instruments";
 import type { Section } from "@/domain/document";
 import { sectionTeams } from "@/domain/document-flow";
 import { guideConditionHasName, guideConditionName, guideConditionTag, guideEquipmentConditions, guideReferenceConditions } from "@/domain/guide-equipment-conditions";
-import { guideCredit, guideRoster, readingNotes } from "@/domain/guide-reading";
+import { guideCredit, guideRoster, guideStageCredit, readingNotes } from "@/domain/guide-reading";
 import { heroArtworkFocus } from "@/domain/hero-artwork";
 import { preferredItemImage } from "@/domain/item-art";
 import { defaultPosterFormat, posterGear, posterLayout, posterOperationTitle, posterRequirements, posterStageTitle, posterTitle, type PosterFormat } from "@/domain/poster";
@@ -71,7 +71,7 @@ export async function guidePoster({ section, team, data, format = defaultPosterF
   if (!team.pieces.length) throw new Error("先把棋子放上棋盘");
   const { stages, boards, operations } = posterLayout(section, team, data, format, stageIds);
   const { title, subtitle } = posterTitle(section, team);
-  const credit = section && guideCredit(section);
+  const credit = section && (guideStageCredit(section, team.id) ?? guideCredit(section));
   const requirements = posterRequirements(section, team, data);
   const sectionBoards = section ? sectionTeams(section) : [];
   const conditions = section && guideEquipmentConditions(section, sectionBoards, data, undefined, team);

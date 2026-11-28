@@ -17,7 +17,7 @@ import { useOwnerSession } from "./OwnerSession";
 import { OwnerEditBar, OwnerEditFlag, OwnerInlineEdit, OwnerPageDrawer, useOwnerPageEditor } from "./OwnerPageEditor";
 import { findPlayerGuideTeam, isPlayerTeamStorageKey, readPlayerTeams, samePlayerBoard } from "./player-team-storage";
 import { sectionTeams } from "@/domain/document-flow";
-import { allBlocks, guideBoardName, guideEditorTitle, guideFacets, guideLink, guidePlaystyle, guideRoute, guideStrategyLabel, oceanGravesUnlockBoardId, primaryFirst, readingNotes, sourceSummary, type GuideRole } from "@/domain/guide-reading";
+import { allBlocks, guideBoardName, guideEditorTitle, guideFacets, guideLink, guidePlaystyle, guideRoute, guideStageCredit, guideStrategyLabel, oceanGravesUnlockBoardId, primaryFirst, readingNotes, sourceSummary, type GuideRole } from "@/domain/guide-reading";
 import { canonicalGuidePath, resolveBoardTeamId } from "@/domain/guide-slugs";
 import { placementEvidenceKind } from "@/domain/guide-placement";
 import placementBatch from "@/data/guide-placement.json";
@@ -269,6 +269,7 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
   const inlineAugment = augment && equipmentConditions?.rows.some(row => row.id === augment.id);
   const augmentUnitName = inlineAugment ? data.units.find(unit => unit.id === augment.unitId)?.name : undefined;
   const heroGuide = !!augment || section.category === heroAugmentCategory;
+  const fixedStatsOnly = section.reroll?.stages.some(stage => stage.teamId === team.id && stage.ownEvidenceOnly);
   const familyRows = systems ? systems.flatMap(system => {
     const anchor = system.sectionId === section.id && teams.find(board => board.id === system.teamId);
     return anchor && system.stat ? [{ stat: system.stat, team: anchor, boards: teams.filter(board => system.boardIds.includes(board.id)) }] : [];
@@ -277,10 +278,10 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
       Boolean(stat.heroAugment) === heroGuide && (!launchStats || recommendationTier(stat) !== "review" && stat.games >= placementBatch.minGames))
     : [];
   const matchingFamily = familyRows.filter(row => row.boards.some(board => board.id === team.id) && familyRosterMatches(row.stat, team));
-  const overall = matchingFamily.length === 1 ? matchingFamily[0].stat : undefined;
+  const overall = !fixedStatsOnly && matchingFamily.length === 1 ? matchingFamily[0].stat : undefined;
   const showMatchStats = mainBoardActive && !showFlex;
   const editedBoardSample = team.publishedRosterChanged && teamPlacement(team, section, "fixed");
-  const placement = detailView && showMatchStats && !overall && !heroGuide
+  const placement = detailView && showMatchStats && !overall && !heroGuide && !fixedStatsOnly
     ? team.publishedRosterChanged
       ? editedBoardSample && !editedBoardSample.sourcePeriod && editedBoardSample.games >= placementBatch.minGames ? editedBoardSample : undefined
       : guideCorePlacement(section, systemBoards, systemEntry?.id ?? team.id)
@@ -659,7 +660,7 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
   }) : undefined;
   const matchStats = matchEvidence && (!launchStats || matchEvidence.populatedViews.length > 0) &&
     <GuideMatchStats key={team.id} id={sampleId} team={team} teams={displayedSystemBoards} section={section}
-      stage={inStage} edition={data.id} heroGuide={heroGuide} evidence={matchEvidence}
+      stage={inStage && !fixedStatsOnly} edition={data.id} heroGuide={heroGuide} evidence={matchEvidence}
       view={sampleView} onSelectView={setSampleView} onPickTeam={selectSampleTeam} />;
   const headerTools = <>
     {style && <span className="guide-playstyle-tag" title="打法">{style}</span>}
@@ -696,7 +697,8 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
   const preferredBlocks = ownerFields?.blocks ?? team.ownerBlocks;
   const orderedBlocks = preferredBlocks?.some((id, index) => id !== guideContentBlocks[index]) ? preferredBlocks : undefined;
   const hasConditions = !!(equipmentConditions || referenceConditions || conditionEditor);
-  const tempo = (tempoPassages.length > 0 || mainBoardActive && (!!advice || !!notes.starHint) || !orderedBlocks && hasConditions || ownerEditor.editing) &&
+  const stageCredit = mainBoardActive && !showFlex ? guideStageCredit(section, team.id) : undefined;
+  const tempo = (tempoPassages.length > 0 || stageCredit || mainBoardActive && (!!advice || !!notes.starHint) || !orderedBlocks && hasConditions || ownerEditor.editing) &&
     <section className="guide-tempo-card" aria-label="节奏与解锁要点">
       {ownerEditor.editing ? <div className="owner-page-anchor" data-owner-selected={ownerEditor.active?.kind === "copy" || undefined}>
         <h3>节奏与解锁要点</h3><OwnerInlineEdit label="编辑攻略文案" onClick={() => ownerEditor.open("copy")} />
@@ -708,6 +710,7 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
       {mainBoardActive && advice && <p className="guide-patch-advice">
         <a className="guide-tempo-tag" href={advice.href}>{advice.label}</a>{displayTraitNames(advice.note)}
       </p>}
+      {stageCredit && <p>{stageCredit.label}<a href={stageCredit.href} target="_blank" rel="noreferrer"><strong>{stageCredit.name}</strong></a></p>}
       {!orderedBlocks && conditions}
     </section>;
   const stats = (overview || matchStats || stageComparison) && <section className="guide-overview-card" aria-label="对局表现">
@@ -726,7 +729,7 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
         {placement && overview.games < placementBatch.minGames && " · 少量样本"}
       </p>
     </>}
-    {!launchStats && inStage && showMatchStats && !overview && <p className="guide-overview-source">当前阶段暂无快览数据。</p>}
+    {!launchStats && inStage && showMatchStats && !overview && !fixedStatsOnly && <p className="guide-overview-source">当前阶段暂无快览数据。</p>}
     {matchStats && (!inStage || overview ? <details className="guide-match-details" ref={matchDetails}>
       <summary>对局数据</summary>{matchStats}
     </details> : matchStats)}
