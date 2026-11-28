@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { registerHooks } from "node:module";
 import { sectionTeams } from "../domain/document-flow.ts";
-import { guideHeaderCoreSample, guidePromotionRows, guideSystemDisplayBoards, guideSystemPhases, guideSystemSample, guideSystems, rankGuideSystems, systemMeanTone } from "../domain/guide-variant-strip.ts";
+import { guideHeaderCoreSample, guidePromotionRows, guideSameLevelSwaps, guideSystemDisplayBoards, guideSystemPhases, guideSystemSample, guideSystems, rankGuideSystems, systemMeanTone } from "../domain/guide-variant-strip.ts";
 import { GUIDE_SECTION_IDS } from "../domain/guide-identities.ts";
 import { usedPopulation } from "../domain/team.ts";
 
@@ -75,7 +75,7 @@ function guide(sectionId, batch = family, reviewedRollingPatch) {
   const data = section.gameData ?? publication.season;
   const systems = guideSystems(section, batch, data.id, patch, placement.minGames, reviewedRollingPatch);
   const boards = system => teams.filter(board => system.boardIds.includes(board.id));
-  return { systems, boards, comparison: system => guidePromotionRows(boards(system), rate, placement) };
+  return { section, systems, boards, comparison: system => guidePromotionRows(boards(system), rate, placement) };
 }
 
 test("Graves keeps the eight-level swap and Twisted Fate in the AD route", () => {
@@ -130,14 +130,46 @@ test("other authored branches retain independent cores and choose the best valid
   const { systems: ziggs } = guide(GUIDE_SECTION_IDS.hyperpopSeraphine);
   assert.deepEqual(ziggs.map(system => system.teamId), ["0089", "0096", "0098"].map(id));
   assert.match(ziggs[1].title, /五高能三编舞/);
-  const { systems: renekton } = guide("sample-block-0171");
-  assert.equal(renekton.find(system => system.teamId === id("0100"))?.stat, undefined);
-  assert(renekton.some(system => system.teamId === id("0100") && system.boardIds.includes(id("0032"))));
   const { systems: kayle, comparison } = guide(GUIDE_SECTION_IDS.pentakillKayle);
   assert.deepEqual(kayle.map(system => system.teamId), [id("0064"), "19b143ef-e315-4b8e-8081-31e13a6ec3f0", id("0106")]);
   assert.deepEqual(comparison(kayle[0]).map(row => row.board.id), ["0019", "0064"].map(id));
   const sister = { ...zeri[0], sectionId: "cross-guide", stat: { ...zeri[0].stat, mean: 3.7 } };
   assert.equal(rankGuideSystems([...zeri, sister])[0], sister);
+});
+
+test("authored upgrades and swaps remain accessible within their route", () => {
+  const briar = "3356f4a8-25be-44b1-a0bf-702e866cfa63";
+  const baron9 = "0dd45d5d-496c-459b-9db2-8e05355bd6c2";
+  const baron8 = "a56a62e0-a4de-4986-9917-7acfaab6c105";
+  const baron10 = "cae04fb7-8a61-4ef2-8e86-b716e0b2fd13";
+  const ashe = row("sample-block-0327", "0122", "海之歌艾希", 4.45);
+  const dualCarry = row("sample-block-0171", "0011", "鳄鱼艾希", 4.1, {
+    teamId: "d78a44d5-edd8-4481-8efb-35333087cd33", heroAugment: true,
+  });
+  const batch = { ...family, rows: [...family.rows, ashe, dualCarry] };
+  const cases = [
+    ["0254", 1, id("0052"), [id("0050"), id("1109")], [[id("1109"), id("0050")]]],
+    ["0243", 1, id("0074"), [briar, id("0087")], [[id("0087"), briar]]],
+    ["0464", 1, id("0053"), [id("0039"), id("0114")], [[id("0114"), id("0039")]]],
+    ["0171", 2, id("0079"), [id("0002"), id("0032"), id("0100")],
+      [[id("0032"), id("0079")], [id("0100"), id("0002")]]],
+    ["0327", 1, id("0054"), [id("0020"), id("0122")], [[id("0020"), id("0054")]]],
+    ["0229", 2, baron9, [baron8, baron10], []],
+    ["1004", 2, id("1122"), [id("1085")], []],
+  ];
+  for (const [suffix, count, entry, linked, swaps] of cases) {
+    const { section, systems, boards } = guide("sample-block-" + suffix, batch);
+    assert.equal(systems.length, count, section.title);
+    const system = systems.find(system => system.teamId === entry);
+    assert.ok(system, section.title);
+    assert(linked.every(id => system.boardIds.includes(id)), section.title);
+    assert.deepEqual(guideSameLevelSwaps(section, boards(system)).map(({ board, parent }) =>
+      [board.id, parent.id]).sort(), swaps, section.title);
+  }
+  const asheSystems = guide(ashe.sectionId, batch).systems;
+  assert.equal(asheSystems[0].stat, ashe);
+  const zoeSystems = guide("sample-block-1004", batch).systems;
+  assert(zoeSystems.find(system => system.teamId === id("1126"))?.boardIds.includes(id("1094")));
 });
 
 test("Kennen opens the authored five-level reroll board within its system", () => {
