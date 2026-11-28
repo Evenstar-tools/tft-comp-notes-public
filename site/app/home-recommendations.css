@@ -154,16 +154,17 @@
   .home-guide-library .guide-title-row > .guide-placement small { flex-basis: auto; margin-inline-start: 4px; }
 }
 @media (min-width: 1220px) {
-  .home-patch-cards:has(> :nth-child(3):last-child) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .home-patch-cards:has(> :nth-child(3):last-child) .home-patch-card-link {
+  .home-patch-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .home-patch-card { min-block-size: 13.75rem; }
+  .home-patch-card-link {
     grid-template-columns: minmax(0, 1fr) max-content;
   }
-  .home-patch-cards:has(> :nth-child(3):last-child) .home-patch-avatars { grid-area: 2 / 1; }
-  .home-patch-cards:has(> :nth-child(3):last-child) :is(.home-patch-mean, .home-patch-manual-badge) { grid-area: 1 / 2 / span 2; }
-  .home-patch-cards:has(> :nth-child(3):last-child) .home-patch-card-copy { display: contents; }
-  .home-patch-cards:has(> :nth-child(3):last-child) .home-patch-title { grid-area: 1 / 1; }
-  .home-patch-cards:has(> :nth-child(3):last-child) .home-patch-card-copy > :is(p, dl) { grid-column: 1 / -1; }
-  .home-patch-cards:has(> :nth-child(3):last-child) .home-patch-card-copy > p { margin-top: 0; }
+  .home-patch-avatars { grid-area: 2 / 1; }
+  :is(.home-patch-mean, .home-patch-manual-badge) { grid-area: 1 / 2 / span 2; }
+  .home-patch-card-copy { display: contents; }
+  .home-patch-title { grid-area: 1 / 1; }
+  .home-patch-card-copy > :is(p, dl) { grid-column: 1 / -1; }
+  .home-patch-card-copy > p { margin-top: 0; }
 }
 @media (max-width: 760px) {
   .home-patch-cards { grid-template-columns: minmax(0, 1fr); gap: 5px; }
