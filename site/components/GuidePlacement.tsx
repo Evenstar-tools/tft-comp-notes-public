@@ -1,7 +1,11 @@
 import batch from "@/data/guide-placement.json";
+import coreStats from "@/data/patch-recommendation-stats.json";
 import currentPatch from "@/data/current-patch.json";
 import { season } from "@/data";
+import { canRankRecommendations } from "@/domain/guide-family-stats";
 import { findPlacement, placementEvidenceKind, type PlacementBatch, type PlacementRating } from "@/domain/guide-placement";
+import { guideHeaderCoreSample, systemMeanTone } from "@/domain/guide-variant-strip";
+import { primaryFirst } from "@/domain/guide-reading";
 import { AD_GRAVES_BOARD_IDS } from "@/domain/guide-identities";
 import { oceanGravesGuideId, oceanGravesUnlockBoardId } from "@/domain/guide-reading";
 import { traitCounts, usedPopulation } from "@/domain/team";
@@ -64,6 +68,27 @@ export function teamPlacement(team: Team, section: Section, scope?: PlacementSco
       !/ThiefsGloves/i.test(item.id)).map(item => item.id)) : undefined,
     pieces: team.pieces,
   });
+}
+
+export type GuideCorePlacement = Pick<PlacementRating,
+  "games" | "mean" | "topFourRate" | "winRate" | "conditions" | "referencesAugment" |
+  "patch" | "window" | "url" | "sampleScope" | "tone">;
+
+export function guideCorePlacement(section: Section, boards: Team[], entryId: string | undefined): GuideCorePlacement | undefined {
+  const ordered = primaryFirst(boards, entryId);
+  const placement = placementBatch.build === currentPatch.build && guideHeaderCoreSample(ordered,
+    board => teamPlacement(board, section, "core") ?? teamPlacement(board, section, "lineup"), placementBatch.minGames);
+  if (placement) return placement;
+  if (!canRankRecommendations(coreStats, (section.gameData ?? season).id, currentPatch)) return;
+  for (const board of ordered) {
+    const row = coreStats.rows.find(entry => entry.sectionId === section.id && entry.teamId === board.id);
+    if (!row || row.games < placementBatch.minGames) continue;
+    return {
+      ...row, conditions: { kind: "core" },
+      patch: coreStats.patch, window: `近 ${coreStats.hours} 小时`,
+      tone: systemMeanTone(row.mean),
+    };
+  }
 }
 
 export function recommendationBoardSample(team: Team, section: Section, scope: "fixed" | "core", build?: string) {

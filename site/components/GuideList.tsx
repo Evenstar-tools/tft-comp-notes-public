@@ -6,8 +6,11 @@ import { guideRerollTargets } from "@/domain/reroll-targets";
 import { season as currentSeason } from "@/data";
 import familyData from "@/data/guide-family-stats.json";
 import coreData from "@/data/patch-recommendation-stats.json";
+import placementBatch from "@/data/guide-placement.json";
 import { displayGuideName, displayTraitNames } from "@/domain/trait-names.mjs";
 import { canRankRecommendations, compareGuideFamilyPerformance, currentFamilyBatch, currentRecommendationEvidence, familyMetricValue, formatRecommendationMean, hasHomeRecommendationSample, homeRecommendationEligible, guideFamilyBoardIds, guideFamilyRows, previousRecommendationDeadline, recommendationGroup, recommendationTier, selectRecommendationRoutes, type GuideFamilyDirection, type GuideFamilyMetric, type GuideFamilySnapshot, type GuideFamilyStat, type HomeRecommendationRating, type RecommendationGroup, type RecommendationStats } from "@/domain/guide-family-stats";
+import { guideHeaderCoreSample, guideSystems } from "@/domain/guide-variant-strip";
+import { placementEvidenceKind } from "@/domain/guide-placement";
 import { carryMinGames, guideCarryRows } from "@/domain/guide-carry-stats";
 import { sectionTeams } from "@/domain/document-flow";
 import { boardTitle, groupGuides, type GuideFamily } from "@/domain/guide-families";
@@ -28,8 +31,7 @@ import { HomeGuideBanner } from "./GuideNavigation";
 import { SiteSearchResults, useSiteSearch } from "./SiteSearchResults";
 import { siteSearchIntent, type SiteSearchResponse } from "@/domain/site-search";
 import { isLiveLaunchTransition, sameEdition } from "@/domain/version-updates";
-import { guideBoardKind, recommendationBoardSample, teamPlacement } from "./GuidePlacement";
-import { guideHeaderCoreSample } from "@/domain/guide-variant-strip";
+import { guideBoardKind, guideCorePlacement, teamPlacement, type GuideCorePlacement } from "./GuidePlacement";
 import { formationCoreResult } from "./GuideFormationStats";
 import { PatchRecommendationList, type RecommendationCard } from "./PatchRecommendationList";
 import { GuideConditionIcon } from "./GuideEquipmentConditions";
@@ -332,6 +334,21 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
     return () => window.clearTimeout(timer);
   }, [previousDeadline]);
   const hasCurrentCore = !!patch && canRankRecommendations(coreStats, season.id, patch);
+  const showArchiveCore = view === "regular" && !recommended && sort !== "mean";
+  const archiveCorePlacements = useMemo(() => {
+    const ratings = new Map<string, GuideCorePlacement>();
+    if (!showArchiveCore || !patch) return ratings;
+    for (const { section, data, teams } of library.regular) {
+      const systems = guideSystems(section, familyStats, data.id, patch, placementBatch.minGames, recommendations?.reviewedRollingPatch);
+      for (const system of systems) {
+        if (system.stat) continue;
+        const boards = teams.filter(board => system.boardIds.includes(board.id));
+        const sample = guideCorePlacement(section, boards, system.teamId);
+        if (sample) for (const board of boards) ratings.set(board.id, sample);
+      }
+    }
+    return ratings;
+  }, [library.regular, patch, recommendations?.reviewedRollingPatch, showArchiveCore]);
   const showTiers = view === "regular" && !recommended;
   const tierFilter = showTiers ? category : "";
   const homeEntries = [...library.regular, ...library["hero-augments"]];
@@ -561,8 +578,8 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
       pickRate: null, topFourRate: core.topFourRate ?? null, winRate: core.winRate ?? null,
     };
   }) : [];
-  type Card = Result & { rating?: Pick<GuideFamilyStat, "mean" | "games" | "name" | "topFourRate" | "winRate">;
-    core?: boolean; fixedSample?: string; routeName?: string; clusterId?: GuideFamilyStat["clusterId"]; routes?: Team[]; cardId: string; tier: ReturnType<typeof recommendationTier> };
+  type Card = Result & { rating?: Pick<GuideFamilyStat, "mean" | "games"> & Partial<Pick<GuideFamilyStat, "topFourRate" | "winRate">>;
+    core?: GuideCorePlacement; routeName?: string; clusterId?: GuideFamilyStat["clusterId"]; routes?: Team[]; cardId: string; tier: ReturnType<typeof recommendationTier> };
   const results = ranked || recommended ? [] : grouped.flatMap<Card>(entry => {
     const primaryCard = { ...entry, cardId: entry.section.id, tier: "review" as const };
     if (isHeroList) {
@@ -589,19 +606,14 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
           cardId: isFocus && !cards.some(card => card.cardId === route.section.id) ? route.section.id : route.section.id + "-family-" + match.stat.clusterId });
       }
       if (matches.some(match => includesBoard(match.boards, focus))) continue;
-      if (focus && route.familyBoards.has(focus.id)) {
+      const core = focus && archiveCorePlacements.get(focus.id);
+      if (focus && route.familyBoards.has(focus.id) && !core) {
         if (!cards.length && route === entry) cards.push(primaryCard);
         continue;
       }
-      const core = hasCurrentCore && route.data.id === coreStats.seasonId ? coreStats.rows.find(row =>
-        row.sectionId === route.section.id && row.teamId === focus?.id) : undefined;
-      const boardRating = focus && (fixedRecommendations.get(focus.id) ??
-        recommendationBoardSample(focus, route.section, "fixed", patch?.build) ??
-        recommendationBoardSample(focus, route.section, "core", patch?.build));
-      const rating = core ?? boardRating;
+      const rating = core?.mean !== undefined ? { ...core, mean: core.mean } : undefined;
       if (route !== entry && !rating) continue;
-      cards.push({ ...entry, ...route, tier: boardTier(route.section, focus, rating), core: !!core,
-        fixedSample: !core ? boardRating?.label : undefined, rating, cardId: route.section.id });
+      cards.push({ ...entry, ...route, tier: boardTier(route.section, focus, rating), core, rating, cardId: route.section.id });
     }
     return cards.filter(card => !tierFilter || tierLabels[card.tier] === tierFilter);
   });
@@ -871,14 +883,20 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
 
   const renderCards = (group: Card[], groupName: string, eager: boolean) => {
     const CardTitle = groupName ? "h3" : "h2";
-    return <div className="guide-list reader-list">{group.map(({ section, data, team, teams, matches, augment, siblings, family, rating: matchedRating, core, fixedSample, routeName, clusterId, rows, routes, cardId, context: searchContext, unitLabel, facet, curated }, index) => {
+    return <div className="guide-list reader-list">{group.map(({ section, data, team, teams, matches, augment, siblings, family, rating: matchedRating, core, routeName, clusterId, rows, routes, cardId, context: searchContext, unitLabel, facet, curated }, index) => {
       const playstyle = guidePlaystyle(section, team);
       const primary = teams[0];
       const kind = team && guideBoardKind(section, team, primary);
       const alternative = team && team.id !== primary.id;
       const review = reviewFor(section.id, team?.id);
-      const rating = review || (launchTransition && matchedRating && !hasHomeRecommendationSample(matchedRating)) ? undefined : matchedRating;
-      const formation = rating && !core && !fixedSample && team ? formationCoreResult(team, data.id, patch?.build) : undefined;
+      const belowCoreDisplay = !!core && core.games <= 500;
+      const hiddenOnLaunch = launchTransition && (review || belowCoreDisplay || (matchedRating && !hasHomeRecommendationSample(matchedRating)));
+      const rating = hiddenOnLaunch || (review && !core) ? undefined : matchedRating;
+      const showMean = rating && (core ? !belowCoreDisplay : recommendationTier(rating) !== "review");
+      const meanLabel = core ? placementEvidenceKind(core) === "lineup" ? "名单共现均名" : "核心均名" : "均名";
+      const ratingSource = core ? [core.patch, core.window, core.sampleScope].filter(Boolean).join(" · ")
+        : familyStats.patch + " · 近 " + familyStats.days + " 天体系样本";
+      const formation = rating && !core && team ? formationCoreResult(team, data.id, patch?.build) : undefined;
       const useGuideEntry = team && (!needle || matches.some(match => match.board.id === team.id && match.namedFamily));
       const link = guideLink(section.id, (useGuideEntry ? rerollEntryTeamId(section, team.id) : undefined) ?? team?.id,
         homeGuideReturn(home, cardId, team?.id));
@@ -963,10 +981,11 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
               {styleTag && <span className="guide-playstyle-tag" title="打法">{styleTag}</span>}
               {review && <span className="guide-review-badge" id={reviewId} title={review.note}>待复核</span>}
             </div>
-            {rating && <span id={ratingId} className={"guide-placement " + (rating.mean < 4.5 ? "strong" : rating.mean > 4.5 ? "weak" : "middle")}
-              title={(fixedSample ?? (core ? coreStats.patch + " · " + coreStats.hours + " 小时核心样本" : familyStats.patch + " · 近 " + familyStats.days + " 天体系样本")) + " · 前四 " + (100 * rating.topFourRate).toFixed(1) + "% · 吃鸡 " + (100 * rating.winRate).toFixed(1) + "%"}>
-              {recommendationTier(rating) !== "review" && <><span>均名</span> <strong>{formatRecommendationMean(rating.mean)}</strong></>}
-              <small>{rating.games.toLocaleString("zh-CN")} 场{fixedSample ? " · " + fixedSample : core ? " · 核心样本" : formation ? " · 跨人口样本" : ""}</small>
+            {rating && <span id={ratingId} className={"guide-placement " + (!showMean ? "limited" : rating.mean < 4.5 ? "strong" : rating.mean > 4.5 ? "weak" : "middle")}
+              title={[ratingSource, showMean && rating.topFourRate !== undefined && ("前四 " + (100 * rating.topFourRate).toFixed(1) + "%"),
+                showMean && rating.winRate !== undefined && ("吃鸡 " + (100 * rating.winRate).toFixed(1) + "%")].filter(Boolean).join(" · ")}>
+              {showMean && <><span>{meanLabel}</span> <strong>{core ? rating.mean.toFixed(2) : formatRecommendationMean(rating.mean)}</strong></>}
+              <small>{rating.games.toLocaleString("zh-CN")} 场{core ? " · 少量样本" : formation ? " · 跨人口样本" : ""}</small>
             </span>}
           </div>
           {description && <small className="guide-result-meta" id={conditionId}>

@@ -220,22 +220,27 @@ test("a count-only cluster cannot claim another board or supply its preferred la
   assert.equal(systems[0].teamId, id("0075"));
 });
 
-test("promotion metrics reject core or lineup records, keep small samples gray and suppress unfit top-four rates", () => {
+test("promotion comparison only shows a mean above 50 games and keeps smaller counts", () => {
   const { systems, boards } = guide(GUIDE_SECTION_IDS.jazzJinx);
   const three = boards(systems[0]);
   const fixedSample = { population: 9, roster: ["zeri"], url: "https://www.metatft.com/explorer?tab=comps", games: 10,
     placementCounts: [0, 0, 0, 2, 0, 4, 2, 2], date: "2026-11-27", patch: "19.1c", window: "3天" };
   const summarize = sample => guidePromotionRows(three, board => board.id === id("1251") ? sample : undefined, placement)
     .find(row => row.board.id === id("1251"))?.stat;
-  assert.deepEqual(summarize(fixedSample), { mean: "6.20", tone: "limited", sample: "前四 20% · 10场 · 少量样本" });
+  assert.deepEqual(summarize(fixedSample), { mean: "—", tone: "limited", sample: "10场 · 少量样本" });
+  const at50 = { ...fixedSample, games: 50, placementCounts: [0, 0, 0, 50, 0, 0, 0, 0] };
+  const at51 = { ...at50, games: 51, placementCounts: [0, 0, 0, 51, 0, 0, 0, 0] };
+  assert.deepEqual(summarize(at50), { mean: "—", tone: "limited", sample: "50场 · 少量样本" });
+  assert.deepEqual(summarize(at51), { mean: "4.00", tone: "limited", sample: "前四 100% · 51场 · 少量样本" });
+  assert.equal(guidePromotionRows(three, () => at50, placement).every(row => row.games === 50 && row.mean === undefined), true);
   // Core/lineup records are rejected from fixed promotion rows
   assert.deepEqual(summarize({ ...fixedSample, url: "https://www.metatft.com/explorer?tab=units", conditions: { kind: "core" } }),
     { mean: "—", tone: "limited", sample: "暂无数据" });
   assert.equal(guidePromotionRows(three, () => undefined, placement).some(row => row.mean !== undefined), false);
   const tiny = { ...fixedSample, games: 2, placementCounts: [1, 0, 0, 0, 0, 0, 0, 1] };
-  assert.deepEqual(summarize(tiny), { mean: "4.50", tone: "limited", sample: "2场 · 少量样本" });
-  const augment = { ...fixedSample, mean: 7.2, topFourRate: 0.1, referencesAugment: "He's Electric" };
-  assert.deepEqual(summarize(augment), { mean: "7.20", tone: "limited", sample: "10场 · 少量样本" });
+  assert.deepEqual(summarize(tiny), { mean: "—", tone: "limited", sample: "2场 · 少量样本" });
+  const augment = { ...at51, mean: 7.2, topFourRate: 0.1, referencesAugment: "He's Electric" };
+  assert.deepEqual(summarize(augment), { mean: "7.20", tone: "limited", sample: "51场 · 少量样本" });
   const noted = { ...fixedSample, sampleNote: "已排除 3★ 救生员鳄鱼赌狗（仅计 2★ 鳄鱼 + 2★ 男枪）" };
   assert.equal(guidePromotionRows(three, board => board.id === id("1251") ? noted : undefined, placement)
     .find(row => row.board.id === id("1251"))?.note, noted.sampleNote);
