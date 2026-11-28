@@ -79,6 +79,16 @@
   border-radius: 3px;
 }
 
+@media (861px <= width <= 1000px) {
+  .site-footer-references {
+    column-gap: 20px;
+  }
+
+  .site-footer-group ul {
+    column-gap: 10px;
+  }
+}
+
 @media (max-width: 860px) {
   .site-footer-inner {
     grid-template-columns: minmax(0, 1fr);
