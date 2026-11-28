@@ -301,7 +301,7 @@ test("the homepage warns when the current native cohort plus valid overrides has
   const check = (overrides, fields = {}) => {
     const overrideKeys = new Set(overrides.map(({ teamId }) => teamId));
     writeFileSync(file, JSON.stringify({ ...raw, ...fields,
-      entries: [...raw.entries.filter(entry => !overrideKeys.has(entry.teamId)), ...overrides],
+      entries: [...raw.entries.filter(entry => !entry.override && !overrideKeys.has(entry.teamId)), ...overrides],
     }));
     const result = run(cwd, "--verify");
     assert.equal(result.status, 0, result.stdout || result.stderr);
