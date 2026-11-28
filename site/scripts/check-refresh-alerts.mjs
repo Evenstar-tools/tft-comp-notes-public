@@ -4,6 +4,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { parseArgs } from "node:util";
 import { heroAugmentSourceUnits } from "./family-review.mjs";
+import { refreshCohort } from "./refresh-cohort.mjs";
 
 const site = new URL("../", import.meta.url);
 const repo = fileURLToPath(new URL("../../", import.meta.url));
@@ -191,27 +192,37 @@ export function refreshSummaryMarkdown(report) {
   return lines.join("\n") + "\n";
 }
 
-export async function checkUpstream(family, fetcher = fetch) {
-  const queue = queueName(family.queue);
-  if (queue !== "PBE" || !/^TFTSet\d+$/.test(family.set ?? "")) {
-    return { warnings: ["当前赛季或队列未配置上游 PBE 巡检"] };
+export async function checkUpstream(current, family, fetcher = fetch) {
+  let cohort;
+  try {
+    cohort = refreshCohort(current);
+  } catch (error) {
+    return { warnings: [error.message] };
+  }
+  if (!cohort.queueMatches(family.queue) || family.set !== cohort.set) {
+    return { warnings: ["当前赛季或队列与已发布体系不一致"] };
   }
   const api = "https://api-hc.metatft.com/tft-comps-api/";
-  const scoped = data => data.tft_set === family.set && queueName(data.queue_id) === queue;
+  const scoped = data => data.tft_set === cohort.set && cohort.queueMatches(data.queue_id);
+  const modelQuery = new URLSearchParams({ queue: cohort.apiQueue, patch: "current" });
+  const statsQuery = new URLSearchParams({ ...Object.fromEntries(modelQuery), days: "3", permit_filter_adjustment: "true",
+    ...(cohort.rank && { rank: cohort.rank }) });
   const endpoints = [
-    ["lookup", `https://data.metatft.com/lookups/${family.set}_pbe_en_us.json`, data => {
+    ...(cohort.pbe ? [["lookup", cohort.lookupUrl, data => {
       const metadata = data._metadata;
       const match = /^rls-(\d+\.\d+)\.\d+\.(\d+)\./i.exec(metadata?.release ?? "");
-      if (metadata?.set !== family.set || queueName(metadata.patch) !== queue || !match) return;
+      if (metadata?.set !== cohort.set || queueName(metadata.patch) !== cohort.queue || !match) return;
       return { build: int(match[2]), lookupPatch: match[1] };
-    }],
-    ["comps_data", api + "comps_data?queue=PBE&patch=current", data =>
+    }]] : []),
+    ["comps_data", api + "comps_data?" + modelQuery, data =>
       scoped(data) && Number.isSafeInteger(int(data.cluster_id)) ? { model: int(data.cluster_id) } : undefined],
-    ["comps_stats", api + "comps_stats?queue=PBE&patch=current&days=3&permit_filter_adjustment=true", data => {
+    ["comps_stats", api + "comps_stats?" + statsQuery, data => {
       const resolved = data.resolved_patch;
-      if (!scoped(data) || !/^\d+\.\d+$/.test(resolved?.patch ?? "") || !/^[a-z]?$/.test(resolved?.b_patch_version ?? "")) return;
+      if (!scoped(data) || !Number.isSafeInteger(int(data.cluster_id)) ||
+          !/^\d+\.\d+$/.test(resolved?.patch ?? "") || !/^[a-z]?$/.test(resolved?.b_patch_version ?? "")) return;
       const sampledAt = new Date(Number.isFinite(data.updated) ? data.updated : NaN);
       return {
+        statsModel: int(data.cluster_id),
         patch: resolved.patch + (resolved.b_patch_version ?? ""),
         sampledAt: Number.isFinite(sampledAt.valueOf()) ? sampledAt.toISOString() : null,
       };
@@ -229,6 +240,10 @@ export async function checkUpstream(family, fetcher = fetch) {
     if (result.status === "fulfilled") Object.assign(observations, result.value);
     else observations.warnings.push(`上游 ${endpoints[index][0]} 本次未取得可比数据（${result.reason?.message ?? "请求失败"}）`);
   }
+  if (observations.statsModel !== undefined && observations.statsModel !== observations.model) {
+    observations.warnings.push("上游 comps_data 与 comps_stats 的体系模型不一致");
+  }
+  delete observations.statsModel;
   if (observations.patch && !observations.sampledAt) observations.warnings.push("上游 comps_stats 缺少可核对的采样时间");
   return observations;
 }
@@ -320,7 +335,7 @@ async function main() {
     optionalJson("outputs/family-review/review.json"),
   ]);
   const [upstream, github] = await Promise.all([
-    values["check-upstream"] ? checkUpstream(family) : undefined,
+    values["check-upstream"] ? checkUpstream(current, family) : undefined,
     values["check-github"] ? checkGithubAlerts(values.repo || defaultRepoSlug) : undefined,
   ]);
   const report = summarizeRefresh({ current, trends, family, bindings, recommendations, review, upstream,

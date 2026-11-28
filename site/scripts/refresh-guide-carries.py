@@ -1,4 +1,4 @@
-"""Refresh board-specific carry samples from the public S19 PBE Explorer."""
+"""Refresh board-specific carry samples from the MetaTFT Explorer."""
 import argparse
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
@@ -9,12 +9,11 @@ from tempfile import NamedTemporaryFile
 from urllib.error import HTTPError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
-from guide_stats_window import current_window, scoped_url
+from guide_stats_window import current_cohort, scoped_url
 
 DATA = Path(__file__).resolve().parents[1] / "data"
 EXPLORER = "https://www.metatft.com/explorer?"
 API = "https://api-hc.metatft.com/tft-explorer-api/"
-LOOKUP = "https://data.metatft.com/lookups/TFTSet19_pbe_en_us.json"
 FULL_GEAR = {"Item.Equippable.Item." + tag for tag in ("Craftable", "Radiant", "Artifact", "Support")}
 FORMS = {"akali-kda": "DA_AkaliKDA19", "akali-true-damage": "DA_Akali_TrueDamage19",
          "seraphine": "DA_Seraphine19_Indie", "elise": "DA_Elise19", "nidalee": "DA_Nidalee19", "shyvana": "DA_Shyvana19"}
@@ -49,7 +48,9 @@ def key(name):
     return re.sub("[^a-z0-9]", "", name.lower())
 
 
-def audit_games(records, plan, window, units, required, traits, full_gear, item_ids, augment_id):
+def audit_games(records, plan, cohort, units, required, traits, full_gear, item_ids, augment_id):
+    window = cohort.window
+    ranks = window["rank"].split(",") if "rank" in window else None
     carry = units[plan["carryId"]]
     tank = units[plan["tankId"]]
     emblem = plan.get("emblem")
@@ -60,9 +61,16 @@ def audit_games(records, plan, window, units, required, traits, full_gear, item_
     for record in records:
         placement = record["placement"]
         identity = (record["match_id"], placement)
-        if (record["set"] != "TFTSet19" or record["patch"] != window["patch"]
-                or record.get("b_patch_version") != window["b_patch"] or str(record["queue"]) != "1090"
-                or not re.fullmatch(r"PBE1_\d+", str(identity[0])) or type(placement) is not int or not 1 <= placement <= 8):
+        hotfix = record.get("b_patch_version")
+        if not cohort.pbe and hotfix == "_":
+            hotfix = ""
+        match_id = str(identity[0])
+        match_scope = (re.fullmatch(r"PBE1_\d+", match_id) if cohort.pbe
+                       else re.fullmatch(r"(?!PBE)[A-Z]{2,4}\d*_\d+", match_id))
+        if (record["set"] != cohort.set_name or record["patch"] != window["patch"]
+                or hotfix != window["b_patch"] or str(record["queue"]) != cohort.match_queue
+                or not match_scope or (ranks and record.get("rank") not in ranks)
+                or type(placement) is not int or not 1 <= placement <= 8):
             raise ValueError("Unexpected recent match cohort")
         if identity in seen:
             continue
@@ -98,13 +106,13 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--out", type=Path, default=DATA / "guide-carry-stats.json")
     args = parser.parse_args()
-    plans, season, source = read("guide-carry-queries.json"), read("season.json"), fetch(LOOKUP)
-    build, window = current_window(DATA)
-    patch = window["patch"]
-    release = re.fullmatch(r"rls-(19\.\d+)\.\d+\.(\d+)\.Set19\.Shipping\.pbe", source["_metadata"]["release"])
-    if (source["_metadata"]["set"] != "TFTSet19" or not season["id"].startswith(f"s19-pbe-{patch}.")
-            or not release or release.groups() != (patch, build)):
-        raise ValueError("S19 PBE season and lookup do not match")
+    plans, season = read("guide-carry-queries.json"), read("season.json")
+    cohort = current_cohort(DATA)
+    window = cohort.window
+    if not season["id"].startswith(cohort.edition + "."):
+        raise ValueError("Season data does not match the active patch")
+    source = fetch(cohort.lookup_url("en_us"))
+    cohort.verify_lookup(source, exact_pbe_build=True)
     known = {unit["id"]: unit for unit in season["units"]}
     used = {unit for plan in plans for unit in [plan["carryId"], *plan["anchorIds"]]}
     units = {}
@@ -157,7 +165,7 @@ def main():
                 params.append(("unit_tier_numitems_unique", value if value.rpartition("-")[2].count("_") == 2 else value + "_.*"))
         suffix = "?" + urlencode([*base, *params])
         records = fetch(API + "recent_matches" + suffix)["data"]
-        audit, verified = audit_games(records, plan, window, units, required, thresholds, full, item_ids,
+        audit, verified = audit_games(records, plan, cohort, units, required, thresholds, full, item_ids,
                                       augments[carry_id] if plan.get("augment") else None)
         special = "augment" if plan.get("augment") else "emblem" if plan.get("emblem") else None
         if special:
@@ -169,7 +177,7 @@ def main():
             counts = totals[0]["placement_count"] if totals else [0] * 8
         if len(counts) != 8 or any(type(n) is not int or n < 0 for n in counts):
             raise ValueError(f"Invalid placement buckets for {plan['board']}")
-        args = [("set","TFTSet19"), *filters]
+        args = [("set", cohort.set_name), *filters]
         result = {k: plan[k] for k in ("sectionId","teamId","sameNine") if k in plan}
         return {**result, "carryId":carry_id, "carryName":carry["name"], "stars":stars, "slots":3,
                 "anchorIds":plan["anchorIds"], "tankName":known[plan["tankId"]]["name"],
@@ -182,8 +190,8 @@ def main():
         rows = list(pool.map(query, plans))
     if not any(r["games"] >= 100 and r["completedGames"] > 0 for r in rows):
         raise ValueError("No usable anchor sample. Keeping previous file.")
-    out = {"seasonId":season["id"],"queue":"PBE","patch":patch + window["b_patch"],"build":build,
-           "window":f"近三天 · {patch}{window['b_patch']} 滚动","days":3,"minGames":100,
+    out = {"seasonId":season["id"],"queue":cohort.queue,"patch":cohort.version,"build":cohort.build,
+           "window":f"近三天 · {cohort.version} 滚动","days":3,"minGames":100,
            "updatedAt":datetime.now(timezone.utc).isoformat(timespec="seconds"),"rows":rows}
     with NamedTemporaryFile(mode="w", encoding="utf-8", newline="\n", dir=args.out.parent, delete=False) as f:
         json.dump(out, f, ensure_ascii=False, separators=(",",":"), allow_nan=False)

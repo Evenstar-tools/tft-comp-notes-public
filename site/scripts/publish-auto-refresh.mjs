@@ -4,14 +4,13 @@ import { readFile } from "node:fs/promises";
 import { setTimeout as delay } from "node:timers/promises";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { parseArgs } from "node:util";
-import { preflightReason, readPublishedFamily } from "./check-auto-refresh.mjs";
+import { preflightReason, readPublishedFamily, verifyRefreshChanges } from "./check-auto-refresh.mjs";
 import { checkUpstream } from "./check-refresh-alerts.mjs";
 import { automaticRefreshModules } from "./run-data-refresh.mjs";
 
 const repository = "Evenstar-tools/tft-comp-notes-public";
 const remoteHome = `https://github.com/${repository}`;
 const repoRoot = fileURLToPath(new URL("../../", import.meta.url));
-const guardFile = fileURLToPath(new URL("./check-auto-refresh.mjs", import.meta.url));
 const ciPath = "checks.yml";
 const requiredCheck = "domain-tests";
 const prFields = [
@@ -57,19 +56,7 @@ function requireCurrentMain(base) {
 }
 
 function validatedPaths(profile, receipt) {
-  const guard = invoke(process.execPath, [guardFile, "verify", "--profile", profile, "--receipt", receipt]);
-  if (guard.stdout) process.stdout.write(guard.stdout);
-  if (guard.status === 2) return [];
-  if (guard.status !== 0) {
-    if (guard.stderr) process.stderr.write(guard.stderr);
-    throw new Error("发布前的战绩数据校验未通过");
-  }
-
-  const entries = git("status", "--porcelain=v1", "-z").split("\0").filter(Boolean);
-  if (entries.some(entry => !entry.startsWith(" M site/data/"))) {
-    throw new Error("工作区包含未经校验的修改");
-  }
-  return entries.map(entry => entry.slice(3));
+  return verifyRefreshChanges(profile, receipt);
 }
 
 function assertCandidate(pull, branch, head) {
@@ -141,8 +128,8 @@ async function main() {
   } });
   automaticRefreshModules(profile);
   if (!receipt) throw new Error("自动发布须提供本次采集回执 --receipt");
-  const paths = validatedPaths(profile, receipt);
-  if (!paths.length) return;
+  const changes = validatedPaths(profile, receipt);
+  if (!changes.length) return;
   verifyRemote();
   const base = git("rev-parse", "HEAD").trim();
   requireCurrentMain(base);
@@ -151,15 +138,15 @@ async function main() {
   const timestamp = new Intl.DateTimeFormat("sv-SE", { timeZone: "Asia/Shanghai" }).format();
   const title = `chore(data): 刷新 ${profile} 战绩（${timestamp}）`;
   git("switch", "--create", branch);
-  git("add", "--", ...paths);
+  git("add", "--", ...changes.map(({ path }) => path));
   git("diff", "--cached", "--check");
   git("commit", "-m", title);
   const head = git("rev-parse", "HEAD").trim();
   const committed = git("diff", "--name-status", "--no-renames", "-z", base, head).split("\0");
   committed.pop();
-  if (committed.length !== 2 * paths.length || paths.some(path => {
+  if (committed.length !== 2 * changes.length || changes.some(({ path, change }) => {
     const index = committed.indexOf(path);
-    return index % 2 !== 1 || committed[index - 1] !== "M";
+    return index % 2 !== 1 || committed[index - 1] !== change;
   })) {
     throw new Error("提交包含未经校验的路径或变更类型，已停止推送");
   }
@@ -175,7 +162,7 @@ async function main() {
   await waitForChecks(url, branch, head);
   const current = JSON.parse(await readFile(new URL("../data/current-patch.json", import.meta.url), "utf8"));
   const publishedFamily = readPublishedFamily(base);
-  const reason = preflightReason(current, publishedFamily, { upstream: await checkUpstream(publishedFamily) });
+  const reason = preflightReason(current, publishedFamily, { upstream: await checkUpstream(current, publishedFamily) });
   if (reason) throw new Error(`候选 PR 已保留，合并前来源条件变化。 ${reason}`);
   requireCurrentMain(base);
   gh("pr", "merge", url, "--squash", "--match-head-commit", head);

@@ -1,4 +1,4 @@
-"""Refresh S19 PBE guide placement counts from the same filters as the guide's mean."""
+"""Refresh guide placement counts from the same filters as the guide's mean."""
 import argparse
 import json
 import os
@@ -8,21 +8,20 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from urllib.parse import parse_qsl, urlsplit
-from guide_stats_window import current_window, scoped_url
+from guide_stats_window import WINDOW_KEYS, current_cohort, scoped_url
 
 DATA = Path(__file__).resolve().parents[1] / "data"
 BATCH = DATA / "guide-placement.json"
-CORE = "https://www.metatft.com/explorer?tab=units&set=TFTSet19&level=8&unit=DA_RenataGlasc19-1_3_3&unit=DA_Nasus19-1"
 BASE = "https://api-hc.metatft.com/tft-explorer-api/"
 
 
-def fetch_counts(url):
-    pairs = parse_qsl(urlsplit(url).query)
+def fetch_counts(url, set_name):
+    pairs = parse_qsl(urlsplit(url).query, keep_blank_values=True)
     exact = ("tab", "comps") in pairs
-    if ("set", "TFTSet19") not in pairs or not (exact or ("tab", "units") in pairs):
+    if ("set", set_name) not in pairs or not (exact or ("tab", "units") in pairs):
         raise ValueError(f"Unsupported season or query: {url}")
-    window = {k: v for k, v in pairs if k in ("queue", "patch", "b_patch", "days")}
-    if len(window) != 4:
+    window = {k: v for k, v in pairs if k in WINDOW_KEYS}
+    if not {"queue", "patch", "b_patch", "days"} <= window.keys():
         raise ValueError(f"Missing explicit patch window: {url}")
     params = [*window.items(), ("formatnoarray", "true"), ("compact", "true"), ("permit_filter_adjustment", "false")]
     units, traits = set(), set()
@@ -71,14 +70,14 @@ def fetch_counts(url):
 
 
 def _patch_scope(url):
-    pairs = dict(parse_qsl(urlsplit(url).query))
-    return pairs.get("queue"), pairs.get("patch"), pairs.get("b_patch")
+    pairs = dict(parse_qsl(urlsplit(url).query, keep_blank_values=True))
+    return pairs.get("queue"), pairs.get("patch"), pairs.get("b_patch", ""), pairs.get("rank")
 
 
 def _same_patch_scope(url, window):
     if window is None:
         return True
-    return _patch_scope(url) == (window.get("queue"), window.get("patch"), window.get("b_patch"))
+    return _patch_scope(url) == (window.get("queue"), window.get("patch"), window.get("b_patch", ""), window.get("rank"))
 
 
 def _within_preserve_window(prev_observed, observed):
@@ -171,18 +170,18 @@ def main():
     parser.add_argument("--hours", type=int, help="Collect a current-build window for the selected boards")
     args = parser.parse_args()
     batch = json.loads(BATCH.read_text(encoding="utf-8"))
-    build, window = current_window(DATA)
-    patch = window["patch"]
+    cohort = current_cohort(DATA)
+    build, window = cohort.build, dict(cohort.window)
     edition = json.loads((DATA / "season.json").read_text(encoding="utf-8"))["id"]
-    if (batch.get("edition") != "s19-pbe-" + patch or not edition.startswith(batch["edition"] + ".")
-            or batch.get("build") != build or batch["patch"] != "PBE " + patch + window["b_patch"]):
-        raise ValueError("The guide snapshot and S19 PBE edition must match")
+    label = "PBE" if cohort.pbe else "Ranked"
+    if (batch.get("edition") != cohort.edition or not edition.startswith(cohort.edition + ".")
+            or batch.get("build") != build or batch["patch"] != f"{label} {cohort.version}"):
+        raise ValueError("The guide snapshot and active season, queue and patch must match")
     if args.hours is not None:
         if not args.team or not 0 < args.hours <= 72:
             parser.error("--hours requires --team and must be between 1 and 72")
-        active = json.loads((DATA / "current-patch.json").read_text(encoding="utf-8"))
         start = datetime.now(timezone.utc) - timedelta(hours=args.hours)
-        if start < datetime.fromisoformat(active["effectiveAt"]):
+        if start < datetime.fromisoformat(cohort.effective_at):
             raise ValueError("The requested hours extend before the current build")
         window["days"] = str(args.hours / 24)
     # Curated short-window and hero-augment observations keep their own capture date.
@@ -200,7 +199,10 @@ def main():
         if missing:
             raise ValueError(f"No refreshable records for: {', '.join(sorted(missing))}")
     comparisons = [] if args.team else [sample for group in batch.get("boardComparisons", []) for sample in group["samples"]]
-    core = None if args.team else scoped_url(CORE, window)
+    core_url = (batch.get("renataNasusReference") or {}).get("url")
+    if not args.team and cohort.number == 19 and not core_url:
+        raise ValueError("Missing the S19 anchor query; keeping the previous snapshot")
+    core = scoped_url(core_url, window) if core_url and not args.team else None
     # Comparisons with a separately sampled core stay together as one observation.
     formation_groups = [
         group for group in batch.get("formationComparisons", [])
@@ -213,7 +215,7 @@ def main():
         *(scoped_url(r["url"], window) for r in records + comparisons + formation),
     ]))
     with ThreadPoolExecutor(max_workers=4) as pool:
-        snapshots = dict(zip(urls, pool.map(fetch_counts, urls)))
+        snapshots = dict(zip(urls, pool.map(lambda url: fetch_counts(url, cohort.set_name), urls)))
     if core and not sum(snapshots[core]):
         raise ValueError("The S19 anchor sample is empty; keeping the previous snapshot")
     now = datetime.now(timezone.utc)
@@ -223,8 +225,9 @@ def main():
         records, snapshots, observed,
         window=window, hours=args.hours, build=build, now_iso=now_iso, team_scoped=bool(args.team),
     )
-    if core:
+    if not args.team:
         batch["date"] = observed
+    if core:
         batch["renataNasusReference"] = {"url": core, "observedOn": observed, "placementCounts": snapshots[core]}
     apply_auxiliary_counts(comparisons, formation, formation_groups, snapshots, observed, now_iso, window=window)
     with NamedTemporaryFile(mode="w", encoding="utf-8", newline="\n", dir=args.out.parent, delete=False) as tmp:

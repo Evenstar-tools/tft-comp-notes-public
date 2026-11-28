@@ -1,8 +1,7 @@
 import { readFile, writeFile } from "node:fs/promises";
+import { refreshCohort, verifyItemWindow, verifyLookup } from "./refresh-cohort.mjs";
 
-const lookupUrl = "https://data.metatft.com/lookups/TFTSet19_pbe_en_us.json";
 const api = "https://api-hc.metatft.com/tft-stat-api/item_detail";
-const set = "TFTSet19";
 const days = 3;
 const output = new URL("../data/hero-stats.json", import.meta.url);
 const aliases = {
@@ -21,15 +20,8 @@ async function getJson(url) {
   return response.json();
 }
 
-function cohortUrl(itemName, { patch, bPatch }) {
-  const params = new URLSearchParams({ queue: "PBE", patch, b_patch: bPatch, days: String(days), permit_filter_adjustment: "false", itemName });
-  return `${api}?${params}`;
-}
-
-function histogramMap(result, { patch, bPatch }) {
-  if (result.tft_set !== set || result.queue_id !== "pbe" || result.unit_games?.length !== 1 ||
-      result.unit_games[0].patch?.[0] !== patch || result.unit_games[0].patch?.[1] !== bPatch || !result.units_overall?.length ||
-      !Number.isFinite(result.updated) || result.updated <= 0) throw new Error("Unexpected PBE cohort");
+function histogramMap(result) {
+  if (!result.units_overall?.length) throw new Error("Missing overall hero sample");
   const byUnit = new Map();
   for (const { unit, places } of result.units_overall) {
     if (byUnit.has(unit) || !Array.isArray(places) || places.length !== 8 ||
@@ -40,19 +32,22 @@ function histogramMap(result, { patch, bPatch }) {
 }
 
 const current = await readFile(new URL("../data/current-patch.json", import.meta.url), "utf8").then(JSON.parse);
-const cohort = current.metaTftPatch;
-if (current.seasonId !== "s19-pbe" || !cohort?.patch || !cohort.bPatch) throw new Error("Verify the PBE patch and hotfix before collecting hero stats");
+const cohort = refreshCohort(current);
+const filters = { ...cohort.filters, days: String(days) };
+const itemName = "TFT_Item_RapidFireCannon";
+const query = new URLSearchParams({ ...filters, permit_filter_adjustment: "false", itemName });
 const [season, lookup, result, saved] = await Promise.all([
   readFile(new URL("../data/season.json", import.meta.url), "utf8").then(JSON.parse),
-  getJson(lookupUrl),
-  getJson(cohortUrl("TFT_Item_RapidFireCannon", cohort)),
+  getJson(cohort.lookupUrl),
+  getJson(`${api}?${query}`),
   readFile(output, "utf8").then(JSON.parse).catch(error => {
     if (error.code !== "ENOENT") throw error;
   }),
 ]);
-const patch = lookup._metadata?.release?.match(/^rls-(\d+\.\d+)\./)?.[1];
-if (patch !== cohort.patch || lookup._metadata.set !== set || !season.id.startsWith(`s19-pbe-${patch}.`)) throw new Error("Expected matching S19 PBE game data");
-const overall = histogramMap(result, cohort);
+verifyLookup(lookup, cohort);
+if (!season.id.startsWith(cohort.edition + ".")) throw new Error("Season data does not match the active patch");
+verifyItemWindow(result, cohort, itemName);
+const overall = histogramMap(result);
 const used = new Set();
 const rows = {};
 const sum = counts => counts.reduce((total, count) => total + count, 0);
@@ -78,11 +73,12 @@ if (!Object.keys(rows).length) throw new Error("No matching hero samples");
 const updated = new Date(result.updated);
 const date = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Shanghai" }).format(updated);
 const snapshot = {
-  source: "MetaTFT", sourceUrl: `https://www.metatft.com/units?${new URLSearchParams({ set, queue: "PBE", patch, b_patch: cohort.bPatch, days: String(days) })}`,
-  version: `S19 PBE ${patch}${cohort.bPatch}`,
+  source: "MetaTFT", sourceUrl: `https://www.metatft.com/units?${new URLSearchParams({ set: cohort.set, ...filters })}`,
+  version: `${cohort.season} ${cohort.label} ${cohort.version}`,
   days, minGames: 100, date, updatedAt: updated.toISOString(), rows,
 };
-if (saved?.source === snapshot.source && saved.version === snapshot.version && saved.days === snapshot.days) {
+if (saved?.source === snapshot.source && saved.version === snapshot.version && saved.days === snapshot.days &&
+    new URL(saved.sourceUrl).searchParams.get("rank") === (cohort.rank || null)) {
   if (saved.updatedAt > snapshot.updatedAt) throw new Error("The published source returned an older hero snapshot");
   if (saved.date < date) {
     snapshot.previous = {

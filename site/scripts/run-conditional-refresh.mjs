@@ -38,9 +38,11 @@ function main() {
   const { values } = parseArgs({ options: {
     profile: { type: "string", default: defaultProfile },
     "dry-run": { type: "boolean" },
+    archive: { type: "boolean" },
   } });
   const { profile } = values;
-  automaticRefreshModules(profile);
+  const archive = values.archive || profile === "daily";
+  automaticRefreshModules(profile, { archive });
   if (!values["dry-run"]) requireCleanCheckout();
 
   const tempDir = mkdtempSync(join(tmpdir(), "tft-refresh-"));
@@ -51,14 +53,15 @@ function main() {
     return run(process.execPath, ["scripts/check-auto-refresh.mjs", "preflight", "--report", reportPath], { allowSkip: true });
   };
   try {
-    if (!upstreamIsAligned()) {
-      console.log("结果：上游条件待核，本轮未采集");
-      return;
-    }
-    const refresh = ["scripts/run-data-refresh.mjs", "--profile", profile];
+    const aligned = upstreamIsAligned();
+    const refresh = ["scripts/run-data-refresh.mjs", "--profile", profile, ...(archive ? ["--archive"] : [])];
     if (values["dry-run"]) {
       run(process.execPath, [...refresh, "--dry-run"]);
-      console.log("结果：采集计划预览完成");
+      console.log(aligned ? "结果：采集计划预览完成" : "结果：采集计划预览完成，上游条件待核，本轮未采集");
+      return;
+    }
+    if (!aligned) {
+      console.log("结果：上游条件待核，本轮未采集");
       return;
     }
 
