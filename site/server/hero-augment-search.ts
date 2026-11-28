@@ -16,9 +16,11 @@ import { itemLink } from "@/domain/links";
 import type { SearchHeroAugmentDetail, SiteSearchHit } from "@/domain/site-search";
 import { traitCounts, usedPopulation } from "@/domain/team";
 import { tierPerformance } from "@/domain/trait-performance";
-import { sameEdition } from "@/domain/version-updates";
+import { isLiveLaunchTransition, sameEdition } from "@/domain/version-updates";
 
 const placementBatch = placements as PlacementBatch;
+const duringLaunch = isLiveLaunchTransition(currentPatch);
+const augmentSamplesMatch = sameEdition(placementBatch.edition ?? "", currentPatch.seasonId) && placementBatch.build === currentPatch.build;
 const catalog = new Map(augments.rows.map(entry => [entry.id, entry]));
 const referencePages: Record<string, string> = {
   annie: "tibbers_i_cant_see_the_stage", kennen: "hes_electric", lillia: "dancin_n_prancin",
@@ -63,6 +65,8 @@ export function heroAugmentSearchHit(augment: HeroAugment, live: Publication | n
   };
   const roster = team?.pieces.map(piece => piece.unitId).sort() ?? [];
   const samples = team && !request.picksOnly ? placementBatch.records.filter(record => {
+    if (duringLaunch && (!augmentSamplesMatch || record.sourcePeriod || (record.build && record.build !== currentPatch.build) ||
+        record.games < heroAugmentSortingMinGames)) return false;
     if (record.referencesAugment !== augment.name || record.augmentBuild?.teamId !== team.id ||
         augmentLoadout(record)?.unitId !== hero.id || record.population !== board?.population) return false;
     const required = record.conditions?.trait;
@@ -73,7 +77,8 @@ export function heroAugmentSearchHit(augment: HeroAugment, live: Publication | n
   const source = samples.find(record => record.augmentBuild?.kind === "guide") ?? samples[0];
   const picked = guide && team && carryData.build === currentPatch.build
     ? guideCarryRows(data.id, guide.id, team.id).find(row => row.kind === "augment" && row.carryId === hero.id &&
-      row.games > 0 && row.withAugments >= row.games && row.anchorIds.every(id => roster.includes(id))) : undefined;
+      row.games >= (duringLaunch ? heroAugmentSortingMinGames : 1) &&
+      row.withAugments >= row.games && row.anchorIds.every(id => roster.includes(id))) : undefined;
   const pickStats = picked && tierPerformance(picked.placementCounts);
   const verifiedPick = picked && pickStats?.games === picked.games ? {
     label: "近期实选核对", games: picked.games, mean: picked.games >= heroAugmentSortingMinGames ? pickStats.mean : undefined,

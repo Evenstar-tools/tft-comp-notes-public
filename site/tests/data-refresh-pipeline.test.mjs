@@ -89,6 +89,81 @@ test("the gate rejects an existing but wrong board and a mismatched fixed query"
   assert.ok(errors.some(error => error.includes("来源查询的结算等级与固定终盘样本不一致")));
 });
 
+test("ranked launch accepts pending snapshots without dropping published guides or boards", t => {
+  const cwd = fixture(t, { gitRepository: true });
+  const git = (...args) => {
+    const result = spawnSync("git", args, { cwd, encoding: "utf8", timeout: 20000 });
+    assert.equal(result.status, 0, result.stderr);
+    return result.stdout.trim();
+  };
+  const path = name => join(cwd, "data", name + ".json");
+  const write = (name, data) => writeFileSync(path(name), JSON.stringify(data));
+  git("init", "--quiet", "..");
+  git("add", "--", "data");
+  git("-c", "user.name=Release fixture", "-c", "user.email=fixture@example.test",
+    "-c", "commit.gpgsign=false", "-c", "core.hooksPath=.git/hooks", "commit", "--quiet", "-m", "Capture PBE baseline");
+  const baseline = git("rev-parse", "HEAD");
+  const [python, ...prefix] = process.platform === "win32" ? ["py", "-3", "-X", "utf8"] : ["python3"];
+  const verify = (prBody = "") => {
+    const result = spawnSync(python, [...prefix, "scripts/verify-data-integrity.py", "--base", baseline], {
+      cwd, encoding: "utf8", timeout: 20000, env: { ...process.env, RELEASE_PR_BODY: prBody },
+    });
+    assert.ok(result.stdout, result.stderr);
+    return JSON.parse(result.stdout);
+  };
+
+  const build = "6050000";
+  const ranked = { sampleStatus: "pending", seasonId: "s19-live", queue: "RANKED", patch: "19.1", build };
+  write("current-patch", { seasonId: ranked.seasonId, build, launchTransition: true, label: "S19 正式服 19.1",
+    metaTftPatch: { patch: "19.1" }, effectiveAt: "2026-12-02T19:00:00Z" });
+  const preview = readJson(path("public-preview"));
+  preview.season.id = "s19-live-19.1.0." + build;
+  write("public-preview", preview);
+  const source = "https://www.metatft.com/explorer?tab=units&set=TFTSet19&queue=1100&patch=19.1&b_patch=&days=3";
+  const oldPlacement = readJson(path("guide-placement"));
+  const { population, roster, conditions } = oldPlacement.records.find(row => row.conditions?.kind === "full" && row.sectionId);
+  const placement = { ...ranked, edition: "s19-live-19.1", patch: "Ranked 19.1", date: null,
+    records: [{ population, roster, conditions, url: source, games: 0 }], renataNasusReference: { url: source } };
+  for (const [name, fields] of Object.entries({
+    "hero-stats": { version: "S19 Ranked 19.1", rows: {} },
+    "item-wearers": { version: "S19 Ranked 19.1", items: {} },
+    "special-item-wearers": { version: "S19 Ranked 19.1", items: {} },
+    "emblem-stats": { set: "S19", mode: "RANKED", emblems: {} },
+    "trait-stats": { season: 19, sourcePatch: "19.1", rows: {} },
+    "guide-family-stats": { set: "TFTSet19", model: null, totalFinishes: 0, rows: [], smallSamples: [] },
+    "guide-family-map": { set: "TFTSet19", model: null, rows: [] },
+    "guide-placement": placement,
+    "guide-carry-stats": { rows: [] },
+    "comp-trends": { scope: "international", batches: [], series: [], discoveries: [] },
+    "patch-recommendations": { entries: [] },
+    "patch-recommendation-stats": { rows: [] },
+  })) write(name, { ...ranked, ...fields });
+
+  const accepted = verify();
+  assert.equal(accepted.ok, true, accepted.errors.join("\n"));
+  assert.ok(accepted.modules.every(entry => entry.alignment === "pending" && entry.sampledAt === null && entry.records === 0));
+
+  const openingCard = { sectionId: "sample-block-1110", teamId: "00000000-0000-4000-8000-000000001252",
+    group: "fast8", status: "recommended", override: "include", note: "八级成型" };
+  const opening = { seasonId: ranked.seasonId, build, reviewedAt: "2026-12-02T19:00:00Z" };
+  write("patch-recommendations", { ...opening, entries: [{ ...openingCard, launchEntry: true }] });
+  assert.equal(verify().ok, true);
+  write("patch-recommendations", { ...opening, entries: [openingCard] });
+  assert.ok(verify().errors.some(error => error.includes("过渡盘不能置顶或手动入榜")));
+  write("patch-recommendations", { ...opening, entries: [{ ...openingCard, launchEntry: true }] });
+
+  write("guide-placement", { ...placement, records: [{ ...placement.records[0], games: 12,
+    url: source.replace("queue=1100", "queue=PBE") }] });
+  const rejected = verify();
+  assert.ok(rejected.errors.some(error => error.includes("guide-placement.json") && error.includes("无战绩查询模板")));
+  write("guide-placement", { ...placement, records: [] });
+  preview.sections = preview.sections.filter(section => section.id !== "sample-block-0251");
+  write("public-preview", preview);
+  const missing = verify("- retire `guide:sample-block-0251` — fixture");
+  assert.ok(missing.errors.some(error => error.includes("必须保留已发布攻略与棋盘 guide:sample-block-0251")));
+  assert.ok(missing.errors.some(error => error.includes("发布目录遗漏 board:sample-block-0251/")));
+});
+
 test("release reconciliation rejects a missing fixed sample and an older same-patch batch", t => {
   const cwd = fixture(t, { gitRepository: true });
   const git = (...args) => {

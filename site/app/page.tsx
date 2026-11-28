@@ -9,7 +9,7 @@ import { guideNavigationHref } from "@/domain/guide-navigation";
 import { guideWearerQuery, splitGuideConditions } from "@/domain/guide-search";
 import { validItemLibraryReturn } from "@/domain/links";
 import { heroAugmentCategory } from "@/domain/hero-augments";
-import { editionScope, isOfficialEdition, isVersionUpdate, sameEdition } from "@/domain/version-updates";
+import { editionScope, isLiveLaunchTransition, isOfficialEdition, isVersionUpdate, sameEdition } from "@/domain/version-updates";
 import { currentPatchRecommendations } from "@/server/patch-recommendations";
 import currentPatch from "@/data/current-patch.json";
 import compTrendHistory from "@/data/comp-trends.json";
@@ -23,10 +23,12 @@ import "./home-recommendations.css";
 
 export const dynamic = "force-dynamic";
 
-function homeTrends(live: Publication, guides: Section[], patch?: typeof currentPatch) {
+function homeTrends(live: Publication, guides: Section[], patch?: typeof currentPatch & { launchTransition?: boolean }) {
   if (!editionScope(live.season.id)) return;
   const boards = new Map(guides.map(section => [section.id, new Set(sectionTeams(section).map(team => team.id))]));
-  return buildCompTrendModel(compTrendHistory, live.season, boards, patch) ?? {
+  const model = buildCompTrendModel(compTrendHistory, live.season, boards, patch);
+  if (isLiveLaunchTransition(patch)) return model && model.days.length >= 2 ? model : undefined;
+  return model ?? {
     scope: isOfficialEdition(live.season.id) ? "国际服排位 · 数据待更新" : "PBE · 数据待更新",
     days: [], tracks: [], patches: [], discoveries: [],
   };

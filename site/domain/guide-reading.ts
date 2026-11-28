@@ -104,6 +104,30 @@ export function guideBoardName(team: Team) {
   return cleanBoardName(team.webTitle ?? team.name);
 }
 
+function titleCore(text: string) {
+  return text.toLowerCase().replace(/速[七八九\d]/g, "").replace(/[\s·•&/＋+\-—()（）一二三四五六七八九十\d]/g, "");
+}
+
+function isSubsequence(needle: string, haystack: string) {
+  if (!needle) return false;
+  let index = 0;
+  for (const ch of haystack) if (ch === needle[index]) index += 1;
+  return index === needle.length;
+}
+
+export function guideEditorTitle(sectionTitle: string, boardName: string, ...extras: (string | undefined)[]) {
+  const s = sectionTitle.trim();
+  const b = boardName.trim();
+  const cs = titleCore(s);
+  const cb = titleCore(b);
+  const base = !b || b === s ? [s]
+    : !s ? [b]
+    : cs && cb && isSubsequence(cs, cb) ? [b]
+    : cs && cb && cs.includes(cb) ? [s]
+    : [s, b];
+  return [...new Set([...base, ...extras.map(part => part?.trim() ?? "")].filter(Boolean))].join(" · ");
+}
+
 export function matchingGear(team: Team, data: Season, query: string, aliases: Record<string, string> = {}) {
   const needle = query.trim().toLowerCase();
   if (!needle) return [];

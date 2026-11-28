@@ -33,6 +33,15 @@ DISTRIBUTIONS = {
     "patch-recommendation-stats": "placementCounts",
 }
 ARCHIVE_MODULES = ("hero-stats", "item-wearers", "special-item-wearers")
+RANKED_QUEUES = {"RANKED", "RANKED_TFT", "1100"}
+PENDING_AUXILIARY = {
+    "hero-stats": ("previous",),
+    "trait-stats": ("scopes", "comparison"),
+    "guide-family-stats": ("smallSamples", "previous", "totalFinishes"),
+    "guide-placement": ("boardComparisons", "formationComparisons"),
+    "comp-trends": ("batches", "discoveries", "families"),
+}
+SAMPLE_TIMES = ("updatedAt", "date", "asOf", "reviewedAt", "capturedAt")
 EDITION = re.compile(r"^(s[1-9]\d*-(?:pbe|live))(?:-|$)")
 PATCH = re.compile(r"\d+\.\d+[a-z]?")
 BUILD = re.compile(r"[1-9]\d*")
@@ -109,23 +118,32 @@ def current_patch(errors):
     base = mapping.get("patch") if isinstance(mapping, dict) else None
     suffix = mapping.get("bPatch", "") if isinstance(mapping, dict) else None
     season, build, label = (current.get(key) for key in ("seasonId", "build", "label"))
+    scope = edition(season)
     effective = timestamp(current.get("effectiveAt"))
     valid_mapping = matches(re.compile(r"\d+\.\d+"), base) and matches(re.compile(r"[a-z]?"), suffix)
     patch = base + suffix if valid_mapping else None
     problems = [
         key for key, valid in (
-            ("seasonId", season == edition(season) and season is not None),
+            ("seasonId", season == scope and season is not None),
             ("build", matches(BUILD, build)),
             ("label", isinstance(label, str) and bool(label.strip())),
             ("metaTftPatch.patch / bPatch", valid_mapping),
             ("effectiveAt", effective is not None),
         ) if not valid
     ]
+    if scope:
+        allowed = {"PBE"} if scope.endswith("-pbe") else RANKED_QUEUES
+        if "queue" in current and str(current["queue"]).upper() not in allowed:
+            problems.append("queue")
+    launch = current.get("launchTransition", False)
+    if type(launch) is not bool or (launch and (not scope or not scope.endswith("-live") or suffix != "")):
+        problems.append("launchTransition")
     if problems:
         errors.append(f"{name}：字段无效（{', '.join(problems)}）")
     return {
         "seasonId": season, "build": build, "label": label,
         "patch": patch, "effectiveAt": current.get("effectiveAt"),
+        **({"launchTransition": True} if launch is True else {}),
     }, effective, not problems
 
 
@@ -155,7 +173,62 @@ def patch_order(value):
     return int(major), int(minor), suffix
 
 
+def pending_query(url, current):
+    try:
+        parts = urlsplit(url)
+        query = parse_qs(parts.query, keep_blank_values=True)
+    except (ValueError, TypeError, AttributeError):
+        return False
+    season = current["seasonId"].split("-")[0][1:]
+    patch, suffix = re.fullmatch(r"(\d+\.\d+)([a-z]?)", current["patch"]).groups()
+    return (parts.scheme == "https" and parts.netloc == "www.metatft.com" and parts.path == "/explorer"
+            and query.get("tab") in (["comps"], ["units"])
+            and query.get("queue") == ["1100"] and query.get("set") == [f"TFTSet{season}"]
+            and query.get("patch") == [patch] and query.get("b_patch") == [suffix]
+            and query.get("days") == ["3"])
+
+
+def pending_placement(records, anchor, current):
+    if anchor is not None and (not isinstance(anchor, dict) or set(anchor) != {"url"}
+                               or not pending_query(anchor["url"], current)):
+        return False
+    template_keys = {"population", "roster", "url", "conditions", "sampleScope", "sampleNote",
+                     "sampleLabel", "detailOnly", "games", "sectionId"}
+    return all(isinstance(row, dict) and set(row) <= template_keys
+               and type(row.get("games")) is int and row["games"] == 0
+               and pending_query(row.get("url"), current) for row in records)
+
+
+def check_pending_module(module, data, current, valid_patch, errors):
+    name = f"data/{module}.json"
+    collection, kind, _ = MODULES[module]
+    records = data.get(collection)
+    scope, queue, patch = module_scope(module, data, data)
+    build = data.get("build")
+    initial_errors = len(errors)
+    if not valid_patch or not current.get("launchTransition"):
+        errors.append(f"{name}：仅正式服首版过渡可以标记待采集")
+    elif (scope != current["seasonId"] or str(queue).upper() not in RANKED_QUEUES
+          or patch != current["patch"] or build != current["build"]
+          or module == "trait-stats" and data.get("sourcePatch") not in (None, patch)):
+        errors.append(f"{name}：待采集的赛季、队列、补丁或构建未对齐")
+    if any(data.get(key) is not None for key in SAMPLE_TIMES):
+        errors.append(f"{name}：待采集不能填入采样时间")
+    empty = isinstance(records, kind) and not records
+    if module == "guide-placement" and valid_patch and isinstance(records, list):
+        empty = pending_placement(records, data.get("renataNasusReference"), current)
+    if not empty or any(data.get(key) for key in PENDING_AUXILIARY.get(module, ())):
+        errors.append(f"{name}：待采集只能留空集合或当前正式服的无战绩查询模板")
+    return {
+        "id": module, "file": name, "patch": patch, "build": build,
+        "sampledAt": None, "updatedAtUtc8": None, "records": 0,
+        "alignment": "pending" if len(errors) == initial_errors else "error",
+    }
+
+
 def check_module(module, data, current, effective, aligned_check, warnings, errors):
+    if data.get("sampleStatus") == "pending":
+        return check_pending_module(module, data, current, aligned_check, errors)
     name = f"data/{module}.json"
     initial_errors = len(errors)
     collection, kind, time_key = MODULES[module]
@@ -197,7 +270,7 @@ def check_module(module, data, current, effective, aligned_check, warnings, erro
     alignment = "unchecked"
     if aligned_check and len(errors) == initial_errors:
         season = current["seasonId"]
-        allowed = {"PBE"} if season.endswith("-pbe") else {"RANKED", "RANKED_TFT", "1100"}
+        allowed = {"PBE"} if season.endswith("-pbe") else RANKED_QUEUES
         same_scope = scope == season and (editorial or str(queue).upper() in allowed)
         older = (captured < effective if isinstance(captured, datetime)
                  else captured < effective.astimezone(timezone.utc).date())
@@ -348,7 +421,7 @@ def collect_public_boards(sections, preview, errors, reroll=None):
         boards.update({(section_id, team_id): team for team_id, team in teams.items()})
     reroll_path = ROOT / "data/s19-reroll-boards.json"
     season_scope = edition(preview.get("season", {}).get("id") if isinstance(preview.get("season"), dict) else None)
-    if season_scope == "s19-pbe":
+    if season_scope in ("s19-pbe", "s19-live"):
         if reroll is None:
             reroll = read_json("data/s19-reroll-boards.json", list, errors) if reroll_path.exists() else []
         for guide in reroll:
@@ -356,6 +429,9 @@ def collect_public_boards(sections, preview, errors, reroll=None):
                 continue
             section_id = guide.get("sectionId")
             if not isinstance(section_id, str) or section_id not in sections_by_id:
+                continue
+            local_data = sections_by_id[section_id].get("gameData")
+            if isinstance(local_data, dict) and edition(local_data.get("id")) != season_scope:
                 continue
             for stage in guide.get("stages") or []:
                 if not isinstance(stage, dict) or not isinstance(stage.get("teamId"), str):
@@ -441,7 +517,10 @@ def check_recommendation_entries(recommendations, family, boards, primaries, sec
         stage = (team_id in stage_ids if isinstance(stage_ids, list) else False) or board.get("boardRole") == "stage"
         primary_id = primaries[section_id]
         main_board = boards.get((section_id, primary_id), {})
-        if stage and team_id != primary_id and key not in landing_boards and board_population(board) <= board_population(main_board):
+        launch_entry = (active and current.get("launchTransition") is True and override == "include"
+                        and entry.get("launchEntry") is True)
+        if (stage and team_id != primary_id and key not in landing_boards and not launch_entry
+                and board_population(board) <= board_population(main_board)):
             errors.append(f"{path}.override：过渡盘不能置顶或手动入榜")
             continue
         manual[key] = ("heroAugment" if is_hero else group if valid_group else None, override)
@@ -675,9 +754,21 @@ def check_references(recommendations, family, current, effective,
                                  current, effective, patch_ready, family_aligned, warnings, errors)
     names = ("data/patch-recommendations.json", "data/guide-family-map.json")
     family_map = read_json(names[1], dict, errors)
+    pending_map = family_map.get("sampleStatus") == "pending"
+    if pending_map or family.get("sampleStatus") == "pending":
+        season = current.get("seasonId") or ""
+        if (not patch_ready or not current.get("launchTransition") or not pending_map
+                or family.get("sampleStatus") != "pending" or family_map.get("rows") != []
+                or family_map.get("model") is not None or family.get("model") is not None
+                or edition(family_map.get("seasonId")) != season
+                or family_map.get("set") != "TFTSet" + season.split("-")[0][1:]
+                or family_map.get("set") != family.get("set")
+                or str(family_map.get("queue")).upper() not in RANKED_QUEUES
+                or family_map.get("patch") != current["patch"] or family_map.get("build") != current["build"]):
+            errors.append(f"{names[1]}：待采集的正式服体系映射需与空体系战绩同批，且不含旧模型")
     for name, source, key in zip(names, (recommendations, family_map), ("entries", "rows")):
         rows = source.get(key)
-        if (not isinstance(rows, list) or (key == "rows" and not rows)
+        if (not isinstance(rows, list) or (key == "rows" and not pending_map and not rows)
                 or not all(isinstance(row, dict) and "sectionId" in row for row in rows)):
             errors.append(f"{name}：{key} 缺少攻略章节引用")
         if PRIVATE_ID.search(json.dumps(source, ensure_ascii=False)):
@@ -687,7 +778,8 @@ def check_references(recommendations, family, current, effective,
                 section_id = record["sectionId"]
                 if not isinstance(section_id, str) or section_id not in ids:
                     errors.append(f"{path}.sectionId：未在公开攻略中找到")
-    check_family_bindings(family_map, family, boards, family_aligned, errors)
+    if not pending_map:
+        check_family_bindings(family_map, family, boards, family_aligned, errors)
     check_sample_bindings(boards, current, errors)
 
 
@@ -708,7 +800,7 @@ def release_inventory(preview, reroll, family_map, placement):
     return inventory
 
 
-def check_release_inventory(base, modules, errors):
+def check_release_inventory(base, patch, modules, errors):
     if not re.fullmatch(r"[0-9a-f]{7,40}", base):
         errors.append("发布对账需要明确的 Git 基线提交")
         return
@@ -721,14 +813,25 @@ def check_release_inventory(base, modules, errors):
         previous = [read_base(name) for name in files]
         current = [read_json(f"data/{name}.json", list if name == "s19-reroll-boards" else dict, errors) for name in files]
         before, after = release_inventory(*previous), release_inventory(*current)
-        if previous[2]["model"] != current[2]["model"] or previous[2]["set"] != current[2]["set"]:
+        previous_patch = read_base("current-patch")
+        launch = patch.get("launchTransition") and not previous_patch.get("launchTransition")
+        live = patch["seasonId"]
+        if launch and (previous_patch.get("seasonId") != live.removesuffix("-live") + "-pbe"
+                       or edition(previous[0]["season"]["id"]) != previous_patch.get("seasonId")
+                       or edition(current[0]["season"]["id"]) != live):
+            errors.append("只有同赛季 PBE 切至正式服可以启用首版待采集状态")
+            launch = False
+        if launch or previous[2].get("model") != current[2].get("model") or previous[2]["set"] != current[2]["set"]:
             before = {key for key in before if not key.startswith("family:")}
-        if any(previous[3].get(key) != current[3].get(key) for key in ("edition", "patch", "build")):
+        if launch or any(previous[3].get(key) != current[3].get(key) for key in ("edition", "patch", "build")):
             before = {key for key in before if not key.startswith("sample:")}
-        if previous[0]["season"]["id"] == current[0]["season"]["id"]:
+        if edition(previous[0]["season"]["id"]) == edition(current[0]["season"]["id"]):
             for entry in modules:
                 module = entry["id"]
-                old = check_module(module, read_base(module), {}, None, False, [], [])
+                previous_module = read_base(module)
+                if entry["alignment"] == "pending" and previous_module.get("sampleStatus") != "pending":
+                    errors.append(f"data/{module}.json：已采集的数据不能退回待采集")
+                old = check_module(module, previous_module, {}, None, False, [], [])
                 if old["patch"] != entry["patch"]:
                     continue
                 parse_date = sample_date if module == "guide-placement" else timestamp
@@ -740,6 +843,9 @@ def check_release_inventory(base, modules, errors):
         return
     removed = before - after
     declared = set(re.findall(r"^\s*- retire `([^`]+)` +[—-] +\S[^\r\n]*$", os.environ.get("RELEASE_PR_BODY", ""), re.M))
+    if launch:
+        for key in sorted(removed & declared):
+            errors.append(f"正式服首版过渡必须保留已发布攻略与棋盘 {key}")
     for key in sorted(removed - declared):
         errors.append(f"发布目录遗漏 {key}。确需下线时，在 PR 正文逐项写 - retire `{key}` — 原因")
     for key in sorted(declared - removed):
@@ -765,7 +871,7 @@ def main():
             check_references(data, family, current, effective, valid_patch, family_aligned, warnings, errors)
     batches = check_history(errors)
     if args.base and not errors:
-        check_release_inventory(args.base, modules, errors)
+        check_release_inventory(args.base, current, modules, errors)
     print(json.dumps({
         "ok": not errors, "currentPatch": current, "modules": modules,
         "historyBatches": batches, "checkedDistributions": checked,

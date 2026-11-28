@@ -25,6 +25,8 @@
 .emblem-result + .emblem-result {border-top:1px solid var(--line);}
 .emblem-result:first-child .emblem-row {border-radius:7px 7px 0 0;}
 .emblem-result:last-child .emblem-row[aria-expanded="false"] {border-radius:0 0 7px 7px;}
+.emblem-page .emblem-row[data-attributes-only] {grid-template-columns:minmax(0,1fr) 18px;grid-template-areas:"item arrow";}
+.emblem-page .emblem-row[data-attributes-only] .emblem-chevron {grid-area:arrow;}
 .emblem-identity,.emblem-wearer {display:flex;min-width:0;align-items:center;gap:8px;}
 .emblem-identity>span {font-weight:620;}
 .emblem-icon-trigger {display:inline-flex;flex:none;}

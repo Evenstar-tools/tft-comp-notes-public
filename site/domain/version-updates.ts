@@ -7,6 +7,10 @@ export function isOfficialEdition(edition: string) {
   return /^s\d+-live(?:-|$)/i.test(edition);
 }
 
+export function isLiveLaunchTransition(patch?: { seasonId?: string; launchTransition?: boolean }) {
+  return patch?.launchTransition === true && isOfficialEdition(patch.seasonId ?? "");
+}
+
 export function editionScope(edition: string) {
   return edition.toLowerCase().match(/^(s\d+-(?:live|pbe))(?:-|$)/)?.[1];
 }
@@ -14,6 +18,10 @@ export function editionScope(edition: string) {
 export function sameEdition(first: string, second: string) {
   const scope = editionScope(first);
   return Boolean(scope && scope === editionScope(second));
+}
+
+export function isS19LaunchUpgrade(previous: string, current: string) {
+  return editionScope(previous) === "s19-pbe" && editionScope(current) === "s19-live";
 }
 
 /** A mixed-use introduction remains ordinary prose. Only dedicated, filled callouts are patch notes. */

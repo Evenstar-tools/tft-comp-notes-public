@@ -30,7 +30,8 @@ export function traitScopeKey(url?: string, released: readonly string[] = []) {
 }
 
 export function compatibleTraitBatch(edition: string, set: number, queue: string, patch: string) {
-  const season = "s" + set + "-" + queue.toLowerCase() + "-";
+  const mode = queue.toLowerCase();
+  const season = "s" + set + "-" + (["ranked", "ranked_tft", "1100"].includes(mode) ? "live" : mode) + "-";
   if (!edition.startsWith(season)) return false;
   const version = edition.slice(season.length);
   // Game-data editions carry the numeric build; MetaTFT can append a hotfix letter to the patch.

@@ -82,6 +82,7 @@ export function appendCompTrendBatch(history, input, { review, patch, unitNames,
     version: 1, seasonId: input.seasonId, set: input.set, queue: input.queue, scope, source: input.source,
     sourceUrl: input.sourceUrl, batches: [], series: [], discoveries: [],
   };
+  delete output.sampleStatus;
   const id = [input.model, input.patch, input.days, capturedAt].join("|");
   const effectiveAt = iso(patch?.effectiveAt);
   const verifiedPatch = input.build && patch?.build === input.build && effectiveAt &&

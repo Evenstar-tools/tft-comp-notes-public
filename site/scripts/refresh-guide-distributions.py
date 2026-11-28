@@ -170,6 +170,8 @@ def main():
     parser.add_argument("--hours", type=int, help="Collect a current-build window for the selected boards")
     args = parser.parse_args()
     batch = json.loads(BATCH.read_text(encoding="utf-8"))
+    if batch.get("sampleStatus") == "pending" and args.team:
+        parser.error("The first ranked placement snapshot requires the full guide refresh")
     cohort = current_cohort(DATA)
     build, window = cohort.build, dict(cohort.window)
     edition = json.loads((DATA / "season.json").read_text(encoding="utf-8"))["id"]
@@ -227,6 +229,7 @@ def main():
     )
     if not args.team:
         batch["date"] = observed
+        batch.pop("sampleStatus", None)
     if core:
         batch["renataNasusReference"] = {"url": core, "observedOn": observed, "placementCounts": snapshots[core]}
     apply_auxiliary_counts(comparisons, formation, formation_groups, snapshots, observed, now_iso, window=window)

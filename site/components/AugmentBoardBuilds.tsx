@@ -27,7 +27,7 @@ export function AugmentBoardBuilds({ boards, boardLinks }: {
             {board && <a href={board.href}>{board.label}</a>}
             <span>{unitMap.get(first.unitId)?.name}三星</span>
           </div>
-          <a href={first.url} target="_blank" rel="noreferrer" title={first.label + " · MetaTFT · " + first.date}>出装数据</a>
+          <a href={first.url} target="_blank" rel="noreferrer" title={[first.label, "MetaTFT", first.date].filter(Boolean).join(" · ")}>出装数据</a>
         </div>
         <ul>{entries.map(build => <li key={build.itemIds.join(",")}>
           <div className="augment-build-gear">
@@ -40,7 +40,7 @@ export function AugmentBoardBuilds({ boards, boardLinks }: {
             })}
           </div>
           <div className="augment-build-result">
-            {build.sourcePeriod && <span title={build.sourcePeriod.patch + " · " + build.sourcePeriod.window}>历史 · {build.date.slice(5)}</span>}
+            {build.sourcePeriod && <span title={build.sourcePeriod.patch + " · " + build.sourcePeriod.window}>历史{build.date && " · " + build.date.slice(5)}</span>}
             {build.games > 0 && build.mean !== undefined ? <>
               <strong>均名 {build.mean.toFixed(2)}</strong><span>{number.format(build.games)} 场</span>
             </> : <span>暂无同装战绩</span>}

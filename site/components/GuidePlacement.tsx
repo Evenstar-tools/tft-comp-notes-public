@@ -1,4 +1,5 @@
 import batch from "@/data/guide-placement.json";
+import currentPatch from "@/data/current-patch.json";
 import { season } from "@/data";
 import { findPlacement, placementEvidenceKind, type PlacementBatch, type PlacementRating } from "@/domain/guide-placement";
 import { AD_GRAVES_BOARD_IDS } from "@/domain/guide-identities";
@@ -7,9 +8,11 @@ import { traitCounts, usedPopulation } from "@/domain/team";
 import { heroAugmentCategory, heroAugmentForGuide } from "@/domain/hero-augments";
 import type { Section } from "@/domain/document";
 import type { Team } from "@/domain/types";
+import { isLiveLaunchTransition, isOfficialEdition, sameEdition } from "@/domain/version-updates";
 
 const frequency = new Intl.NumberFormat("zh-CN");
 const placementBatch = batch as PlacementBatch;
+const metaTftPatch: { patch: string; bPatch?: string } = currentPatch.metaTftPatch;
 const placementScopes = ["fixed", "core", "lineup", "augment"] as const;
 type PlacementScope = typeof placementScopes[number];
 const scopedBatches = new Map(placementScopes.map(scope => [scope, {
@@ -29,12 +32,28 @@ const boardSampleTeams = new Set([
   ...AD_GRAVES_BOARD_IDS,
 ]);
 
+export function guideStatsLaunch(edition: string) {
+  return isLiveLaunchTransition(currentPatch) && sameEdition(edition, currentPatch.seasonId);
+}
+
+export function currentGuidePlacementBatch(edition: string) {
+  return sameEdition(edition, currentPatch.seasonId) && placementBatch.build === currentPatch.build &&
+    placementBatch.patch === "Ranked " + metaTftPatch.patch + (metaTftPatch.bPatch ?? "");
+}
+
 export function teamPlacement(team: Team, section: Section, scope?: PlacementScope) {
   const augment = heroAugmentForGuide(section);
   if (section.category === heroAugmentCategory && !augment) return;
   const data = section.gameData ?? season;
   const traitLevels = Object.fromEntries(traitCounts(team.pieces, data.units, data.traits, data.items).map(({ id, level }) => [id, level]));
-  return findPlacement((scope && scopedBatches.get(scope)) || placementBatch, team.pieces.map(piece => piece.unitId), usedPopulation(team.pieces), {
+  const samples = (scope && scopedBatches.get(scope)) || placementBatch;
+  if (isOfficialEdition(data.id) && sameEdition(data.id, currentPatch.seasonId) && !currentGuidePlacementBatch(data.id)) return;
+  const visibleSamples = guideStatsLaunch(data.id) ? {
+    ...samples,
+    records: samples.records.filter(record => !record.sourcePeriod && record.games >=
+      (placementEvidenceKind(record) === "augment" ? 1 : samples.minGames)),
+  } : samples;
+  return findPlacement(visibleSamples, team.pieces.map(piece => piece.unitId), usedPopulation(team.pieces), {
     edition: data.id,
     augmentId: augment?.name,
     teamId: team.id,
@@ -108,6 +127,6 @@ export function PlacementMethod({ rating }: { rating?: PlacementRating }) {
   return <div className="placement-method">
     <p>{scope}</p>
     <a href={rating.url} target="_blank" rel="noreferrer">MetaTFT ↗</a>
-    <span> · {rating.patch} · {rating.referencesAugment ? "按主 C 出装识别" : rating.window} · {rating.date}</span>
+    <span> · {rating.patch} · {rating.referencesAugment ? "按主 C 出装识别" : rating.window}{rating.date && " · " + rating.date}</span>
   </div>;
 }

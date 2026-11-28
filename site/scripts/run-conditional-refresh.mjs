@@ -1,5 +1,5 @@
 import { spawnSync } from "node:child_process";
-import { mkdtempSync, rmdirSync, rmSync } from "node:fs";
+import { appendFileSync, mkdtempSync, rmdirSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { parseArgs } from "node:util";
@@ -70,7 +70,7 @@ function main() {
     run(process.execPath, [...refresh, "--receipt", receipt]);
     if (!run(process.execPath, ["scripts/check-auto-refresh.mjs", "verify", "--profile", profile, "--receipt", receipt], { allowSkip: true })) {
       console.log("结果：所选模块已采集和核验，本轮快照未变化");
-      return;
+      return true;
     }
     run(npm, ["run", "verify:public"]);
     run(npm, ["run", "data:verify"]);
@@ -79,6 +79,7 @@ function main() {
       return;
     }
     run(process.execPath, ["scripts/publish-auto-refresh.mjs", "--profile", profile, "--receipt", receipt]);
+    return true;
   } finally {
     rmSync(reportPath, { force: true });
     rmSync(receipt, { force: true });
@@ -87,7 +88,7 @@ function main() {
 }
 
 try {
-  main();
+  if (main() && process.env.GITHUB_OUTPUT) appendFileSync(process.env.GITHUB_OUTPUT, "collected=true\n", "utf8");
 } catch (error) {
   console.error(error.message);
   process.exitCode = 1;

@@ -9,13 +9,13 @@ export interface ItemWearers {
 }
 
 export interface WearerSnapshot {
-  updatedAt?: string;
+  updatedAt?: string | null;
   rankedScope?: string;
   queue?: string;
   source: string;
   version: string;
   window: string;
-  date: string;
+  date?: string | null;
   minGames: number;
   items: Record<string, ItemWearers>;
 }

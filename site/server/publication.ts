@@ -2,7 +2,7 @@ import { attachBoundRegions, duplicatePublishedTeam, isBoardCaption, readableSec
 import { itemMap, season, traitMap, unitMap } from "@/data";
 import { allBlocks, authoredParagraphs, guideSectionWithCurrentNames, isEditorialSection } from "@/domain/guide-reading";
 import { guideExecutionUnitIds } from "@/domain/guide-execution";
-import { isVersionUpdate, sameEdition } from "@/domain/version-updates";
+import { isS19LaunchUpgrade, isVersionUpdate, sameEdition } from "@/domain/version-updates";
 import { getPublishedPatchRecommendations, sectionsAfterPartialPublish } from "@/domain/patch-recommendations";
 import { boardContentVersion, publishedBoardContent, publishedBoardEdits, publishedBoardLayouts, type PublishedBoardOverride } from "@/domain/published-board-layout";
 import { isRepositoryBoardRevision, publicationWithBoardRevision, type PublicationRecord } from "@/domain/publication-record";
@@ -48,7 +48,7 @@ async function publishedSnapshotId(): Promise<string | null> {
 }
 
 function legacyRepositoryOverrides(base: Publication, legacy: Publication): PublishedBoardOverride[] {
-  if (!sameEdition(base.season.id, legacy.season.id)) return [];
+  if (!sameEdition(base.season.id, legacy.season.id) && !isS19LaunchUpgrade(legacy.season.id, base.season.id)) return [];
   const key = ({ sectionId, teamId }: { sectionId: string; teamId: string }) => JSON.stringify([sectionId, teamId]);
   const bundled = new Set([...(base.boardEdits ?? []), ...(base.boardLayouts ?? [])].map(key));
   const edits = publishedBoardEdits(base.sections, legacy.boardEdits).filter(change => !bundled.has(key(change)));
@@ -97,7 +97,22 @@ async function storedPublication(id?: string): Promise<PublishedSource | null> {
 
 export async function publishedSnapshotSource(): Promise<PublishedSource> {
   const saved = hasDatabase() ? await storedPublication() : null;
-  return saved ?? { publication: await bundlePreviewSnapshot(), repository: true };
+  if (!saved) return { publication: await bundlePreviewSnapshot(), repository: true };
+  const stored = saved.publication;
+  const migratedOverrides = stored.boardOverrides?.map(edit => isS19LaunchUpgrade(edit.edition, season.id)
+    ? { ...edit, edition: season.id } : edit);
+  const publication = { ...stored, boardOverrides: migratedOverrides };
+  if (!isS19LaunchUpgrade(publication.season.id, season.id)) return { ...saved, publication };
+  const sections = publication.sections.map(section => {
+    const previous = section.gameData ?? publication.season;
+    if (!isS19LaunchUpgrade(previous.id, season.id)) return section;
+    if (isVersionUpdate(section)) return { ...section, updateEdition: section.updateEdition ?? previous.id };
+    const compatible = sectionTeams(section).every(board => board.pieces.every(piece =>
+      [piece, piece.alternate].every(loadout => !loadout || unitMap.has(loadout.unitId) &&
+        loadout.items.every(id => itemMap.has(id)))));
+    return { ...section, gameData: compatible ? undefined : previous };
+  });
+  return { ...saved, publication: { ...publication, season, sections } };
 }
 
 // Index pages only need the published chapters and boards. Reading the full guide also restores legacy media bindings.

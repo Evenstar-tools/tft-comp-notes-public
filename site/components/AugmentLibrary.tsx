@@ -165,10 +165,10 @@ function Detail({ entry, guide, samples, results, returnTo }: {
 type Props = {
   guides: Record<string, AugmentGuide>; samples: Record<string, AugmentBoard[]>;
   initialId: string; initialSeason?: string; initialRealm?: string; initialQuery: string;
-  initialView?: string; initialPatch?: string; currentPatch: string; initialFilters?: AugmentParams;
+  initialView?: string; initialPatch?: string; currentPatch: string; launchPatch?: string; initialFilters?: AugmentParams;
 };
 
-export function AugmentLibrary({guides, samples, initialId, initialSeason, initialRealm, initialQuery, initialView, initialPatch, currentPatch, initialFilters}: Props) {
+export function AugmentLibrary({guides, samples, initialId, initialSeason, initialRealm, initialQuery, initialView, initialPatch, currentPatch, launchPatch, initialFilters}: Props) {
   const stats = initialView === "stats" || initialView === "full" || !!initialSeason && (initialSeason !== "19" || initialRealm === "live");
   const scope = {season:initialSeason, realm:initialRealm, patch:initialPatch};
   const initial = { ...initialFilters, view:initialView, id:initialId, q:initialQuery, season:initialSeason, realm:initialRealm, patch:initialPatch };
@@ -177,28 +177,31 @@ export function AugmentLibrary({guides, samples, initialId, initialSeason, initi
       <nav aria-label="海克斯查询"><a href={stats ? augmentUrl({q:initialQuery, tier:initialFilters?.tier}) : "/augments"} aria-current={!stats ? "page" : undefined}>强化图鉴</a>
         {stats ? <span aria-current="page">选取战绩</span> :
           <a href={augmentUrl({view:"stats",...scope,q:initialQuery,tier:initialFilters?.tier})}>选取战绩</a>}</nav>
-      {!stats && <details className="aug-catalog-source">
+      {!stats && launchPatch === undefined && <details className="aug-catalog-source">
         <summary>资料来源</summary>
         <a href={catalog.source} target="_blank" rel="noreferrer" aria-label={`PBE ${currentPatch} 海克斯来源`}>PBE {currentPatch} ↗</a>
       </details>}
     </header>
-    {stats ? <AugmentStats snapshots={snapshots} currentPatch={currentPatch} initial={initial}/> :
-      <Catalog guides={guides} samples={samples} currentPatch={currentPatch} initial={initial}/>}
+    {stats ? <AugmentStats snapshots={snapshots} currentPatch={currentPatch} launchPatch={launchPatch} initial={initial}/> :
+      <Catalog guides={guides} samples={samples} currentPatch={currentPatch} launchPatch={launchPatch} initial={initial}/>}
   </section>;
 }
 
-function Catalog({guides,samples,currentPatch,initial}:Pick<Props,"guides"|"samples"|"currentPatch"> & {initial:AugmentParams}) {
+function Catalog({guides,samples,currentPatch,launchPatch,initial}:Pick<Props,"guides"|"samples"|"currentPatch"|"launchPatch"> & {initial:AugmentParams}) {
   const {filters,change,limit} = useAugmentFilters(initial);
-  const {q:query="", tier:rarity="", round="", kind="", sort="default", id:open=""} = filters;
-  const selection = currentSelectionSnapshot(snapshots,19,"pbe",currentPatch);
+  const {q:query="", tier:rarity="", round="", kind="", sort:chosenSort="default", id:open=""} = filters;
+  const hasBoardStats = launchPatch === undefined || Object.keys(samples).length > 0;
+  const sort = !hasBoardStats && chosenSort === "board" ? "default" : chosenSort;
+  const selection = currentSelectionSnapshot(snapshots,19,launchPatch === undefined ? "pbe" : "live",launchPatch ?? currentPatch);
   const selectionById = useMemo(() => {
     const lookup = new Map<string,SelectionRow[]>();
     for (const row of selection?.rows ?? []) {
+      if (launchPatch !== undefined && (row.games ?? 0) < 100) continue;
       const entry = matchSelectionEntry(row,catalog.rows);
       if (entry) lookup.set(entry.id, [...(lookup.get(entry.id) ?? []), row]);
     }
     return lookup;
-  }, [selection]);
+  }, [selection, launchPatch]);
   const initialId = initial.limit ? "" : initial.id;
   const representative = useMemo(() => Object.fromEntries(Object.entries(samples)
     .map(([name, boards]) => [name, sampleForSort(boards)])), [samples]);
@@ -237,7 +240,7 @@ function Catalog({guides,samples,currentPatch,initial}:Pick<Props,"guides"|"samp
               onChange={event => change({ q: event.target.value })}/>
           </label>
           <div className="aug-sort-segments" role="group" aria-label="排序">
-            {catalogSorts.map(([value, label]) => <button type="button" key={value}
+            {catalogSorts.filter(([value]) => hasBoardStats || value !== "board").map(([value, label]) => <button type="button" key={value}
               aria-pressed={sort === value} onClick={() => change({ sort: value })}>{label}</button>)}
           </div>
         </div>

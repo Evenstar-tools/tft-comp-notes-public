@@ -9,6 +9,7 @@ import { changedDataFiles, preflightReason, verifyAlignment, verifyCollectedModu
 import { automaticRefreshModules } from "../scripts/run-data-refresh.mjs";
 import { refreshCohort, verifyLookup } from "../scripts/refresh-cohort.mjs";
 import { checkUpstream, formatDotSummary, summarizeRefresh } from "../scripts/check-refresh-alerts.mjs";
+import { completedLaunchWindow, selectDataRefreshPlan } from "../scripts/select-data-refresh-plan.mjs";
 
 const current = {
   seasonId: "s19-pbe",
@@ -34,13 +35,43 @@ test("scheduled and manual runs use the protected-PR refresh entry point", () =>
   const workflow = readFileSync(new URL("../../.github/workflows/data-refresh.yml", import.meta.url), "utf8");
   const fastTimes = [1, 7, 13, 19].map(hour => `17 ${hour} * * *`);
   assert.deepEqual([...workflow.matchAll(/cron: '([^']+)'/g)].map(match => match[1]).sort(),
-    [...fastTimes, "53 2 * * *"].sort());
-  assert.match(workflow, /'schedule:53 2 \* \* \*'\) profile=daily/);
-  assert.ok(workflow.includes(fastTimes.map(cron => `'schedule:${cron}'`).join("|") + ") profile=fast"));
+    [...fastTimes, "53 2 * * *", "37 * * * *"].sort());
+  for (const schedule of fastTimes) assert.deepEqual(selectDataRefreshPlan({ event: "schedule", schedule, current }), { profile: "fast" });
+  assert.deepEqual(selectDataRefreshPlan({ event: "schedule", schedule: "53 2 * * *", current }), { profile: "daily" });
+  assert.deepEqual(selectDataRefreshPlan({ event: "schedule", schedule: "37 * * * *", current }), {});
   assert.match(workflow, /workflow_dispatch:/);
+  assert.match(workflow, /node scripts\/select-data-refresh-plan\.mjs/);
+  assert.match(workflow, /steps\.refresh\.outputs\.collected == 'true'/);
   assert.match(workflow, /run-conditional-refresh\.mjs --profile "\$PROFILE" --dry-run/);
   assert.match(workflow, /GH_TOKEN: \$\{\{ secrets\.DATA_REFRESH_TOKEN \}\}/);
   assert.doesNotMatch(workflow, /git push|scripts\/run-data-refresh\.mjs|scripts\/publish-auto-refresh\.mjs/);
+});
+
+test("launch schedules retry each window until the matching verified collection completes", async () => {
+  const live = { ...current, seasonId: "s19-live", launchTransition: true,
+    metaTftPatch: { patch: "19.1" }, effectiveAt: "2026-12-02T17:30:00Z" };
+  const native = { ...family, queue: "RANKED" };
+  const planAt = (hours, batch = native, schedule = "37 * * * *") => selectDataRefreshPlan({ event: "schedule", schedule,
+    current: live, family: batch, now: Date.parse(live.effectiveAt) + hours * 3600000 });
+  assert.deepEqual(planAt(3.99), {});
+  assert.match(planAt(4, { ...native, sampleStatus: "pending" }).reason, /等待人工验收/);
+  assert.equal(planAt(4).profile, "fast");
+  assert.match(planAt(7.99).launchKey, /\/\+4h$/);
+  assert.equal(planAt(8, native, "53 2 * * *").profile, "fast");
+  assert.match(planAt(8).launchKey, /\/\+8h$/);
+  assert.equal(planAt(12).profile, "daily");
+  assert.deepEqual(planAt(16), {});
+  assert.deepEqual(planAt(16, native, "17 13 * * *"), { profile: "fast" });
+
+  const plan = planAt(4.5);
+  const check = async (conclusion, launchKey = plan.launchKey) => await completedLaunchWindow(plan, {
+    repository: "example/site", token: "test", fetcher: async url => Response.json(url.includes("/workflows/")
+      ? { workflow_runs: [{ id: 42, updated_at: "2026-12-02T22:00:00Z" }] }
+      : { jobs: [{ steps: [{ name: `Verified launch data ${launchKey}`, conclusion, completed_at: "2026-12-02T22:00:00Z" }] }] }),
+  });
+  assert.equal(await check("skipped"), false);
+  assert.equal(await check("success", planAt(8).launchKey), false);
+  assert.equal(await check("success"), true);
 });
 
 test("S19 ranked preflight verifies season, patch, model and freshness without querying the PBE build", async () => {
@@ -68,6 +99,11 @@ test("S19 ranked preflight verifies season, patch, model and freshness without q
   assert.match(check({ sampledAt: "2026-11-26T07:00:00Z" }), /早于/);
   assert.match(check({ sampledAt: undefined }), /完整/);
   assert.match(preflightReason(live, family, { upstream: probe }), /队列/);
+  const launch = { ...live, launchTransition: true };
+  const pending = { ...ranked, sampleStatus: "pending", model: null, updatedAt: null };
+  assert.match(preflightReason(launch, pending, { upstream: probe }), /人工验收首批正式服/);
+  assert.match(preflightReason(launch, { ...pending, queue: "PBE" }, { upstream: probe }), /队列/);
+  assert.equal(preflightReason(launch, ranked, { upstream: probe }), null);
   const wrongSource = await checkUpstream(live, ranked, async () => Response.json({ ...source, tft_set: "TFTSet18" }));
   assert.match(preflightReason(live, ranked, { upstream: wrongSource }), /完整/);
 });

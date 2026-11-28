@@ -229,7 +229,8 @@ const { previous: _older, ...previousSnapshot } = previousBatch || {};
 // MetaTFT can retain a hotfix group after Riot rolls out another build.
 const spansBuilds = Date.parse(updatedAt) - 3 * 86400000 < patchStart &&
   [prior, published, published.previous].some(batch =>
-    batch?.patch === patch && (batch.build !== currentPatch.build || batch.spansBuilds));
+    batch?.seasonId === season.id && cohort.queueMatches(batch.queue) &&
+    batch.sampleStatus !== "pending" && batch.patch === patch && (batch.build !== currentPatch.build || batch.spansBuilds));
 const accepted={seasonId:season.id,set:bindings.set,queue:bindings.queue,patch,build:currentPatch.build,days:3,updatedAt,model:model.cluster_id,
   spansBuilds:spansBuilds || undefined,
   ...(!cohort.pbe && { rankedScope: "international" }),

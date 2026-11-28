@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import current from "@/data/current-patch.json";
 import { getStatPeriod, statPeriods, type StatPeriod } from "@/domain/stat-periods";
+import { editionScope, isLiveLaunchTransition } from "@/domain/version-updates";
 import "./stat-period.css";
 
 export function useStatPeriod() {
@@ -44,10 +45,14 @@ export function StatPeriodSelect({ period, onChange }: {
   period: StatPeriod | undefined;
   onChange: (id: string) => void;
 }) {
+  const currentSeason = editionScope(current.seasonId)?.split("-")[0];
+  const options = isLiveLaunchTransition(current) ? statPeriods.filter(entry =>
+    entry.id === period?.id || entry.season === currentSeason && entry.channel === "ranked") : statPeriods;
+  if (!options.length) return null;
   return <label className="stat-period">
     <select aria-label="数据批次" value={period?.id ?? ""} onChange={event => onChange(event.target.value)}>
       <option value="">当前 · {current.label.split(" · ")[0]}</option>
-      {statPeriods.map(entry => <option key={entry.id} value={entry.id}>{entry.label}</option>)}
+      {options.map(entry => <option key={entry.id} value={entry.id}>{entry.label}</option>)}
     </select>
   </label>;
 }

@@ -4,10 +4,12 @@ import { formationComparisonFor, formationSourcePeriod, remainingPlacements, typ
 import { usedPopulation } from "@/domain/team";
 import { tierPerformance } from "@/domain/trait-performance";
 import type { Team } from "@/domain/types";
+import { guideStatsLaunch } from "./GuidePlacement";
 
 const stats = batch as PlacementBatch;
+const metaTftPatch: { patch: string; bPatch?: string } = currentPatch.metaTftPatch;
 const currentPeriod = {
-  patch: currentPatch.metaTftPatch.patch + currentPatch.metaTftPatch.bPatch,
+  patch: metaTftPatch.patch + (metaTftPatch.bPatch ?? ""),
   build: currentPatch.build,
 };
 const number = new Intl.NumberFormat("zh-CN");
@@ -19,7 +21,38 @@ const checkedDate = new Intl.DateTimeFormat("zh-CN", {
 export function formationEvidence(team: Team, edition: string) {
   const evidence = formationComparisonFor(stats.formationComparisons ?? [], edition,
     team.pieces.map(piece => piece.unitId), usedPopulation(team.pieces));
-  return evidence && { ...evidence, period: formationSourcePeriod(evidence.group, currentPeriod) };
+  if (!evidence) return;
+  const { group, board } = evidence;
+  const period = formationSourcePeriod(group, currentPeriod);
+  const launch = guideStatsLaunch(edition);
+  if (launch) {
+    if (period.historical || group.build !== currentPeriod.build ||
+        !(Date.parse(group.checkedAt) >= Date.parse(currentPatch.effectiveAt))) return;
+    const subset = board.subset;
+    const remaining = subset && remainingPlacements(board.sample.placementCounts, subset.sample.placementCounts);
+    const comparisonGames = [
+      ...group.boards.map(({ sample }) => sample.placementCounts),
+      group.coreSummary?.placementCounts,
+      remaining,
+      remaining ? subset?.sample.placementCounts : undefined,
+    ].flatMap(counts => {
+      const games = tierPerformance(counts)?.games;
+      return games !== undefined && games >= stats.minGames ? [games] : [];
+    });
+    if (!comparisonGames.length && !currentFormationFamilyReference(board.familyReference)) return;
+    return { ...evidence, period, comparisonGames };
+  }
+  return { ...evidence, period, comparisonGames: undefined };
+}
+
+function enoughGames(counts?: number[]) {
+  return (tierPerformance(counts)?.games ?? 0) >= stats.minGames;
+}
+
+export function currentFormationFamilyReference(sample?: FormationFamilyReference) {
+  if (!sample || sample.build !== currentPeriod.build || formationSourcePeriod(sample, currentPeriod).historical ||
+      !(Date.parse(sample.checkedAt) >= Date.parse(currentPatch.effectiveAt)) || !enoughGames(sample.placementCounts)) return;
+  return sample;
 }
 
 export function formationCoreResult(team: Team, edition: string, build?: string) {
@@ -66,22 +99,26 @@ function ComparisonTable({ rows, caption }: { rows: Row[]; caption: string }) {
 
 export function GuideFormationStats({ evidence }: { evidence: NonNullable<ReturnType<typeof formationEvidence>> }) {
   const { group, board, period } = evidence;
-  const rows = group.boards.map(({ name, sample }) => ({ name, counts: sample.placementCounts, url: sample.url }));
+  const launch = guideStatsLaunch(group.edition);
+  const rows = group.boards.map(({ name, sample }) => ({ name, counts: sample.placementCounts, url: sample.url }))
+    .filter(row => !launch || enoughGames(row.counts));
   const core = group.coreSummary;
   const coreResult = core && tierPerformance(core.placementCounts);
   const subset = board.subset;
   const remaining = subset && remainingPlacements(board.sample.placementCounts, subset.sample.placementCounts);
+  const subsetRows = subset && remaining ? [
+    { name: subset.remainder, counts: remaining },
+    { name: subset.condition, counts: subset.sample.placementCounts, url: subset.sample.url },
+  ].filter(row => !launch || enoughGames(row.counts)) : [];
+  if (launch && !rows.length && !subsetRows.length && !enoughGames(core?.placementCounts)) return null;
   return <details className="guide-formation" open>
     <summary>{period.historical && "历史 · "}同条件阵容对照</summary>
     <p>{group.population} 级结算 · {group.condition} · {group.exclusions}</p>
     {core && coreResult && coreResult.games >= stats.minGames && <p>
       <a href={core.url} target="_blank" rel="noreferrer">{core.label} ↗</a> · 恰好九张不同棋子 · 均名 {coreResult.mean.toFixed(2)} · {number.format(coreResult.games)} 场
     </p>}
-    <ComparisonTable rows={rows} caption={group.condition} />
-    {subset && remaining && <ComparisonTable caption={board.name + " · 同盘成型对照"} rows={[
-      { name: subset.remainder, counts: remaining },
-      { name: subset.condition, counts: subset.sample.placementCounts, url: subset.sample.url },
-    ]} />}
+    {(!launch || rows.length > 0) && <ComparisonTable rows={rows} caption={group.condition} />}
+    {!!subsetRows.length && <ComparisonTable caption={board.name + " · 同盘成型对照"} rows={subsetRows} />}
     <small>MetaTFT · {period.patch} · {period.window} · {checkedDate.format(new Date(group.checkedAt))} 北京时间取数</small>
   </details>;
 }

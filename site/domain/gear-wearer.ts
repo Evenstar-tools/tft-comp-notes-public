@@ -6,14 +6,26 @@ import { unitSearchNames } from "./unit-search.mjs";
 export type GearWearerSample = { games: number; mean?: number | null; winRate?: number | null };
 export type GearOrder = "mean" | "games" | "wins";
 
-export function currentWearerSnapshot(snapshot: { version: string; updatedAt?: string }, patch: {
+type GearPatch = {
   seasonId: string; effectiveAt: string; metaTftPatch?: { patch: string; bPatch?: string };
-}) {
+};
+
+export function currentWearerSnapshot(snapshot: { version: string; updatedAt?: string | null }, patch: GearPatch) {
   const source = patch.metaTftPatch;
   if (!source) return false;
   const [season, mode] = patch.seasonId.toUpperCase().split("-");
-  return snapshot.version === `${season} ${mode} ${source.patch}${source.bPatch ?? ""}` &&
+  const [snapshotSeason, queue, version, ...rest] = snapshot.version.split(" ");
+  return !rest.length && snapshotSeason === season &&
+    (queue === mode || mode === "LIVE" && queue?.toUpperCase() === "RANKED") &&
+    version === source.patch + (source.bPatch ?? "") &&
     Date.parse(snapshot.updatedAt ?? "") >= Date.parse(patch.effectiveAt);
+}
+
+export function currentEmblemSnapshot(snapshot: { set: string; mode: string; patch: string; updatedAt?: string | null }, patch: GearPatch) {
+  return currentWearerSnapshot({
+    version: [snapshot.set, snapshot.mode, snapshot.patch].join(" "),
+    updatedAt: snapshot.updatedAt,
+  }, patch);
 }
 
 export function gearSampleMinimum(category: Item["category"], pbe: boolean, minGames: number) {

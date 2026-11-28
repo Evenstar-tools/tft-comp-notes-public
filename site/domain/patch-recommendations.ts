@@ -14,6 +14,7 @@ export type PatchRecommendation = {
   override?: OwnerRecommendationOverride;
   pinOrder?: number;
   manualBadge?: string;
+  launchEntry?: boolean;
   timing?: string;
   upgrade?: string;
   sources?: string[];
@@ -60,7 +61,7 @@ export function applyHomeRecommendationOverrides(batch: PatchRecommendationBatch
     const current = entries.get(id);
     entries.set(id, current ? {
       ...current, group: override.group ?? current.group,
-      override: override.override, pinOrder: override.pinOrder, manualBadge: override.manualBadge,
+      override: override.override, pinOrder: override.pinOrder, manualBadge: override.manualBadge, launchEntry: override.launchEntry,
       note: override.note, sources: override.sources ?? current.sources,
     } : override);
   }

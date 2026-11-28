@@ -8,16 +8,17 @@ import { season, unitMap } from "@/data";
 import { augmentArtPath } from "@/data/augment-art";
 import augmentCatalog from "@/data/augment-catalog.json";
 import bundledItems from "@/data/item-art.json";
-import familyStats from "@/data/guide-family-stats.json";
+import familyData from "@/data/guide-family-stats.json";
 import { patchReferences } from "@/data/patch-notes";
 import { chapterMatchesPatch, patchGuideImpactLabels, publishedPatchCallouts, splitHighlightLine, type PatchReference } from "@/domain/patch-reference";
 import { readablePatchIntroduction } from "@/domain/patch-recommendations";
 import { recommendationBoardTitle } from "@/domain/guide-families";
+import type { GuideFamilyBatch } from "@/domain/guide-family-stats";
 import { sectionTeams } from "@/domain/document-flow";
 import { guideLink, guideRoster, readingNotes } from "@/domain/guide-reading";
 import { currentPatchRecommendations } from "@/server/patch-recommendations";
 import currentPatch from "@/data/current-patch.json";
-import { isOfficialEdition, isPatchIntroduction, isVersionUpdate, officialPatchNotes, publishedVersionUpdates, sameEdition, versionUpdateLink } from "@/domain/version-updates";
+import { isLiveLaunchTransition, isOfficialEdition, isPatchIntroduction, isVersionUpdate, officialPatchNotes, publishedVersionUpdates, sameEdition, versionUpdateLink } from "@/domain/version-updates";
 import { publishedSnapshot } from "@/server/publication";
 import { currentOwner } from "@/server/access";
 import placement from "@/data/guide-placement.json";
@@ -27,6 +28,8 @@ import "./patch-notes.css";
 
 export const metadata = { title: "版本更新" };
 export const dynamic = "force-dynamic";
+const familyStats = familyData as GuideFamilyBatch;
+const duringLaunch = isLiveLaunchTransition(currentPatch);
 
 function patchTitle(title: string, date?: string) {
   const cleaned = title.replace(/\s*·\s*\d{7,}\s*$/, "").trim();
@@ -89,16 +92,18 @@ export default async function VersionUpdates({ searchParams }: { searchParams: P
   const observations = callouts?.observation.length ? callouts.observation : patchObservations;
   const impacts = patch?.impacts ?? [];
   const placementBatch = placement as PlacementBatch;
-  const sampledBoards = placementBatch.records.flatMap(row => {
+  const currentPlacements = sameEdition(placementBatch.edition ?? "", season.id) && placementBatch.build === currentPatch.build;
+  const sampledBoards = (duringLaunch && !currentPlacements ? [] : placementBatch.records).flatMap(row => {
     const note = row.boardObservation;
     const mean = row.mean;
-    return note && note.patchId === patch?.id && row.games > 100 && mean !== undefined ? [{ row, note, mean }] : [];
+    return note && note.patchId === patch?.id && row.games > 100 && mean !== undefined && (!duringLaunch || !row.sourcePeriod)
+      ? [{ row, note, mean }] : [];
   }).sort((a, b) => a.mean - b.mean);
   const guideTitles = Object.fromEntries((samePublication?.sections ?? [])
     .filter(section => section.kind !== "category" && !isVersionUpdate(section) && (section.team || section.teams?.length))
     .map(section => [section.id, section.title]));
   const hasChanges = patch && Object.keys(patch.groups).length > 0;
-  const observationStats = patch?.observationStats;
+  const observationStats = duringLaunch ? patch?.observationStats?.filter(row => row.games >= 100) : patch?.observationStats;
   const showObservation = !current?.chapter && (observations.length > 0 || !!observationStats?.length);
   const hasDetails = showObservation || impacts.length > 0 || sampledBoards.length > 0;
   const sections = [
@@ -113,6 +118,7 @@ export default async function VersionUpdates({ searchParams }: { searchParams: P
       {patch?.source.name ?? "Riot 公告"}
     </a>
     {sameBuild && familyStats.spansBuilds && familyStats.build === currentPatch.build && sameEdition(familyStats.seasonId, season.id) &&
+      (!duringLaunch || familyStats.rows.some(row => row.games >= 100)) &&
       <span>近 {familyStats.days} 天战绩跨构建</span>}
   </div>;
   const sectionLinks = (sections.length > 1 || sections.length === 1 && (hasChanges || current?.chapter)) &&
@@ -204,7 +210,7 @@ export default async function VersionUpdates({ searchParams }: { searchParams: P
             </section>}
             {!!sampledBoards.length && <section className="patch-board-observation" id="eight-board-samples">
               <h3>八级棋盘实测</h3>
-              <p>MetaTFT · PBE 19.1 近三天 · <span title="固定八人，排除纹章和冠冕">固定八人无纹章<span className="sr-only">、无冠冕</span></span></p>
+              <p>MetaTFT · {placementBatch.patch} {placementBatch.window} · <span title="固定八人，排除纹章和冠冕">固定八人无纹章<span className="sr-only">、无冠冕</span></span></p>
               <ul>
                 {sampledBoards.map(({ row, note, mean }) => {
                   const tone = mean <= placementBatch.greenThrough ? "strong" : mean >= placementBatch.redFrom ? "weak" : "middle";
@@ -213,7 +219,7 @@ export default async function VersionUpdates({ searchParams }: { searchParams: P
                   return <li key={row.url}>
                     <div className="patch-board-heading">
                       <h4>{guide ? <PatchReadingLink href={guide.pathname + guide.search}>{note.title}</PatchReadingLink> : note.title}</h4>
-                      <PlacementBadge rating={{ ...row, tone, patch: placementBatch.patch, window: placementBatch.window, date: row.observedOn ?? placementBatch.date }} />
+                      <PlacementBadge rating={{ ...row, tone, patch: placementBatch.patch, window: placementBatch.window, date: row.observedOn ?? placementBatch.date ?? "" }} />
                       <a className="patch-source patch-sample-links" href={row.url} target="_blank" rel="noreferrer">查对局</a>
                     </div>
                     <p>{note.play}</p>
