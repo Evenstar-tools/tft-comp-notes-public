@@ -3910,6 +3910,41 @@
       "winRate": 0.3333333333333333
     },
     {
+      "population": 8,
+      "roster": [
+        "alune",
+        "braum",
+        "illaoi",
+        "k-sante",
+        "leona",
+        "neeko",
+        "sett",
+        "yuumi"
+      ],
+      "games": 2,
+      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Alune19-1&unit=DA_Braum19-1&unit=DA_Illaoi19-1&unit=DA_KSante19-1&unit=DA_Leona19-1&unit=DA_Neeko19-1&unit=DA_Sett19-1&unit=DA_Yuumi19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "conditions": {
+        "kind": "full",
+        "teamId": "449f6054-46e9-4bbd-ad34-5ea5b2c24a0d",
+        "population": 8
+      },
+      "sampleScope": "固定名单 · 不限星级与装备 · 无纹章、人口装或重复棋子",
+      "observedOn": "2026-11-28",
+      "placementCounts": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0
+      ],
+      "mean": 6.5,
+      "topFourRate": 0,
+      "winRate": 0
+    },
+    {
       "population": 9,
       "roster": [
         "alune",

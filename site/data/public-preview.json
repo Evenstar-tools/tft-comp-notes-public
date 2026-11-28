@@ -23464,7 +23464,7 @@
           "elements": [
             {
               "text_run": {
-                "content": "八级先搜，稳血再上九。",
+                "content": "八级找两星拉露恩、悠米和蕾欧娜。",
                 "text_element_style": {
                   "bold": true,
                   "inline_code": false,
@@ -23476,7 +23476,7 @@
             },
             {
               "text_run": {
-                "content": "七级先让四名不同的心之钢或天才上场解锁拉露恩。八级谁先两星、能接三件法装就让谁稳血。悠米拿法爆和回蓝，拉露恩拿回蓝、重伤和减魔抗。三经纪有蒙多就让他拿肉装，没两星蒙多先给两星蕾欧娜。血量差或只能配一个主 C 时，优先保当前主 C 和前排质量。",
+                "content": "七级先上四名不同的心之钢或天才解锁拉露恩。只有一套法装就给先两星的，肉装先给蕾欧娜。稳血再升九，蒙多两星后接肉装，开三经纪人。",
                 "text_element_style": {
                   "bold": false,
                   "inline_code": false,
@@ -23488,7 +23488,7 @@
             }
           ],
           "level": 0,
-          "text": "八级先搜，稳血再上九。七级先让四名不同的心之钢或天才上场解锁拉露恩。八级谁先两星、能接三件法装就让谁稳血。悠米拿法爆和回蓝，拉露恩拿回蓝、重伤和减魔抗。三经纪有蒙多就让他拿肉装，没两星蒙多先给两星蕾欧娜。血量差或只能配一个主 C 时，优先保当前主 C 和前排质量。"
+          "text": "八级找两星拉露恩、悠米和蕾欧娜。七级先上四名不同的心之钢或天才解锁拉露恩。只有一套法装就给先两星的，肉装先给蕾欧娜。稳血再升九，蒙多两星后接肉装，开三经纪人。"
         },
         {
           "id": "alune-yuumi-playstyle",
@@ -23506,10 +23506,94 @@
           "id": "web-headliner-alune-yuumi-nine-roles",
           "type": "text",
           "text": "棋盘配装 · 九级 · 三大触三经纪拉露恩悠米\n主C：拉露恩。虚空之杖、莫雷洛秘典、朔极之矛。\n主C：悠米。珠光护手、朔极之矛、巨人杀手。\n主坦：蒙多医生。石像鬼石板甲、冕卫、适应性头盔。"
+        },
+        {
+          "id": "web-headliner-alune-yuumi-eight-roles",
+          "type": "text",
+          "text": "棋盘配装 · 八级 · 三大触稳血\n主C：拉露恩。虚空之杖、莫雷洛秘典、朔极之矛。\n主C：悠米。珠光护手、朔极之矛、巨人杀手。\n主坦：蕾欧娜。石像鬼石板甲、冕卫、适应性头盔。"
         }
       ],
       "kind": "guide",
       "teams": [
+        {
+          "id": "449f6054-46e9-4bbd-ad34-5ea5b2c24a0d",
+          "name": "八级 · 三大触稳血",
+          "category": "待分类",
+          "notes": "",
+          "revision": 1,
+          "updatedAt": "2026-11-28T16:02:02.457Z",
+          "sectionId": "sample-block-0870",
+          "pieces": [
+            {
+              "instanceId": "80a00015-a55c-45de-a95b-0ae59b2fade3",
+              "unitId": "leona",
+              "stars": 2,
+              "items": [
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_Crownguard",
+                "TFT_Item_AdaptiveHelm"
+              ],
+              "position": 4
+            },
+            {
+              "instanceId": "ad421361-3f66-45dc-8562-acefa7b3fd7c",
+              "unitId": "braum",
+              "stars": 1,
+              "items": [],
+              "position": 6
+            },
+            {
+              "instanceId": "bacf81cb-c027-460b-b8f3-2da0072b4065",
+              "unitId": "illaoi",
+              "stars": 2,
+              "items": [],
+              "position": 10
+            },
+            {
+              "instanceId": "34c26b4d-8f0b-4030-8e82-250837ad13ad",
+              "unitId": "sett",
+              "stars": 1,
+              "items": [],
+              "position": 11
+            },
+            {
+              "instanceId": "7925014c-34ad-499a-bcfa-e4195e73881c",
+              "unitId": "k-sante",
+              "stars": 2,
+              "items": [],
+              "position": 12
+            },
+            {
+              "instanceId": "40d5db89-511c-43e9-a7eb-1337651ba5f8",
+              "unitId": "alune",
+              "stars": 2,
+              "items": [
+                "TFT_Item_StatikkShiv",
+                "TFT_Item_Morellonomicon",
+                "TFT_Item_SpearOfShojin"
+              ],
+              "position": 21
+            },
+            {
+              "instanceId": "90f5c90e-4d62-47be-928b-26690f08e334",
+              "unitId": "neeko",
+              "stars": 2,
+              "items": [],
+              "position": 22
+            },
+            {
+              "instanceId": "4f173de0-c5a6-401b-a350-16065a0a3c11",
+              "unitId": "yuumi",
+              "stars": 2,
+              "items": [
+                "TFT_Item_JeweledGauntlet",
+                "TFT_Item_SpearOfShojin",
+                "TFT_Item_MadredsBloodrazor"
+              ],
+              "position": 27
+            }
+          ]
+        },
         {
           "id": "00000000-0000-4000-8000-000000001167",
           "name": "九级 · 三大触三经纪拉露恩悠米",
@@ -23600,64 +23684,55 @@
         }
       ],
       "team": {
-        "id": "00000000-0000-4000-8000-000000001167",
-        "name": "九级 · 三大触三经纪拉露恩悠米",
+        "id": "449f6054-46e9-4bbd-ad34-5ea5b2c24a0d",
+        "name": "八级 · 三大触稳血",
         "category": "待分类",
         "notes": "",
         "revision": 1,
-        "updatedAt": "2026-11-24T11:23:35.912Z",
+        "updatedAt": "2026-11-28T16:02:02.457Z",
         "sectionId": "sample-block-0870",
         "pieces": [
           {
-            "instanceId": "00000000-0000-4000-8000-000000001148",
-            "unitId": "dr-mundo",
+            "instanceId": "80a00015-a55c-45de-a95b-0ae59b2fade3",
+            "unitId": "leona",
             "stars": 2,
             "items": [
               "TFT_Item_GargoyleStoneplate",
               "TFT_Item_Crownguard",
               "TFT_Item_AdaptiveHelm"
             ],
-            "position": 1
-          },
-          {
-            "instanceId": "00000000-0000-4000-8000-000000001102",
-            "unitId": "leona",
-            "stars": 2,
-            "items": [
-              "TFT_Item_RedBuff"
-            ],
             "position": 4
           },
           {
-            "instanceId": "00000000-0000-4000-8000-000000001114",
+            "instanceId": "ad421361-3f66-45dc-8562-acefa7b3fd7c",
             "unitId": "braum",
             "stars": 1,
             "items": [],
             "position": 6
           },
           {
-            "instanceId": "00000000-0000-4000-8000-000000001153",
+            "instanceId": "bacf81cb-c027-460b-b8f3-2da0072b4065",
             "unitId": "illaoi",
             "stars": 2,
             "items": [],
             "position": 10
           },
           {
-            "instanceId": "00000000-0000-4000-8000-000000001129",
+            "instanceId": "34c26b4d-8f0b-4030-8e82-250837ad13ad",
             "unitId": "sett",
             "stars": 1,
             "items": [],
             "position": 11
           },
           {
-            "instanceId": "00000000-0000-4000-8000-000000001174",
+            "instanceId": "7925014c-34ad-499a-bcfa-e4195e73881c",
             "unitId": "k-sante",
             "stars": 2,
             "items": [],
             "position": 12
           },
           {
-            "instanceId": "00000000-0000-4000-8000-000000001149",
+            "instanceId": "40d5db89-511c-43e9-a7eb-1337651ba5f8",
             "unitId": "alune",
             "stars": 2,
             "items": [
@@ -23668,14 +23743,14 @@
             "position": 21
           },
           {
-            "instanceId": "00000000-0000-4000-8000-000000001141",
+            "instanceId": "90f5c90e-4d62-47be-928b-26690f08e334",
             "unitId": "neeko",
             "stars": 2,
             "items": [],
             "position": 22
           },
           {
-            "instanceId": "00000000-0000-4000-8000-000000001163",
+            "instanceId": "4f173de0-c5a6-401b-a350-16065a0a3c11",
             "unitId": "yuumi",
             "stars": 2,
             "items": [
@@ -23686,7 +23761,12 @@
             "position": 27
           }
         ]
-      }
+      },
+      "primaryTeamId": "449f6054-46e9-4bbd-ad34-5ea5b2c24a0d",
+      "stageTeamIds": [
+        "00000000-0000-4000-8000-000000001167"
+      ],
+      "summaryBlockId": "sample-block-0907"
     },
     {
       "id": "sample-block-1020",
@@ -27975,7 +28055,7 @@
     },
     {
       "id": "arcanist-taliyah-vladimir",
-      "title": "法师编舞岩雀吸血鬼",
+      "title": "岩雀吸血鬼",
       "category": "八级运营",
       "kind": "guide",
       "blocks": [
@@ -28038,11 +28118,11 @@
         {
           "id": "arcanist-taliyah-vladimir-double-unlock",
           "type": "text",
-          "text": "八级双解锁：砂槌放第三排，1–5 费各站一格强化格，前两排只留一人贴砂槌站第二排。双解锁后换回成型站位。",
+          "text": "八级双解锁：砂槌放第三排，1–5 费各站一格强化格，前两排只留一人贴砂槌站第二排。解锁后换回成型站位，两张五费一星就能上，稳血再存钱升九。",
           "elements": [
             {
               "text_run": {
-                "content": "八级双解锁：砂槌放第三排，1–5 费各站一格强化格，前两排只留一人贴砂槌站第二排。双解锁后换回成型站位。"
+                "content": "八级双解锁：砂槌放第三排，1–5 费各站一格强化格，前两排只留一人贴砂槌站第二排。解锁后换回成型站位，两张五费一星就能上，稳血再存钱升九。"
               }
             }
           ]
@@ -28098,11 +28178,11 @@
         {
           "id": "arcanist-taliyah-vladimir-gear",
           "type": "text",
-          "text": "棋盘配装 · 八级 · 法师编舞岩雀吸血鬼\n主C：弗拉基米尔。珠光护手、纳什之牙、纳什之牙。\n副C：塔莉垭。莫雷洛秘典、虚空之杖、珠光护手。\n主坦：盖伦。石像鬼石板甲、狂徒铠甲、振奋盔甲。",
+          "text": "棋盘配装 · 八级 · 双解锁\n主C：弗拉基米尔。珠光护手、纳什之牙、纳什之牙。\n副C：塔莉垭。莫雷洛秘典、虚空之杖、珠光护手。\n主坦：盖伦。石像鬼石板甲、狂徒铠甲、振奋盔甲。",
           "elements": [
             {
               "text_run": {
-                "content": "棋盘配装 · 八级 · 法师编舞岩雀吸血鬼\n主C：弗拉基米尔。珠光护手、纳什之牙、纳什之牙。\n副C：塔莉垭。莫雷洛秘典、虚空之杖、珠光护手。\n主坦：盖伦。石像鬼石板甲、狂徒铠甲、振奋盔甲。"
+                "content": "棋盘配装 · 八级 · 双解锁\n主C：弗拉基米尔。珠光护手、纳什之牙、纳什之牙。\n副C：塔莉垭。莫雷洛秘典、虚空之杖、珠光护手。\n主坦：盖伦。石像鬼石板甲、狂徒铠甲、振奋盔甲。"
               }
             }
           ]
@@ -28122,7 +28202,7 @@
       ],
       "team": {
         "id": "14d668d4-7d3a-4445-a5b5-bfcfc6aa555b",
-        "name": "八级 · 法师编舞岩雀吸血鬼",
+        "name": "八级 · 双解锁",
         "category": "待分类",
         "notes": "",
         "revision": 1,
@@ -28205,7 +28285,7 @@
       "teams": [
         {
           "id": "14d668d4-7d3a-4445-a5b5-bfcfc6aa555b",
-          "name": "八级 · 法师编舞岩雀吸血鬼",
+          "name": "八级 · 双解锁",
           "category": "待分类",
           "notes": "",
           "revision": 1,
@@ -28323,7 +28403,7 @@
               "instanceId": "625c118b-ea09-40b8-9215-8bc45ab64ee2",
               "unitId": "vladimir",
               "position": 16,
-              "stars": 1,
+              "stars": 2,
               "items": [
                 "TFT_Item_JeweledGauntlet",
                 "TFT_Item_Leviathan",
@@ -28341,7 +28421,7 @@
               "instanceId": "9323bfee-6be8-44ca-9773-dcd7e199a86e",
               "unitId": "taliyah",
               "position": 21,
-              "stars": 1,
+              "stars": 2,
               "items": [
                 "TFT_Item_Morellonomicon",
                 "TFT_Item_StatikkShiv",

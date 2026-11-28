@@ -205,6 +205,7 @@ const guideSlugs: Record<string, GuideSlugs> = {
     "00000000-0000-4000-8000-000000001121": "lv9-mel",
   } },
   "sample-block-0870": { slug: "headliner-alune-yuumi", boards: {
+    "449f6054-46e9-4bbd-ad34-5ea5b2c24a0d": "lv8",
     "00000000-0000-4000-8000-000000001167": "95-lv9",
   } },
   "sample-block-1020": { slug: "hitmaker-draven", boards: {
@@ -229,7 +230,7 @@ const guideSlugs: Record<string, GuideSlugs> = {
     "83cebafb-502e-4f5d-8a17-db9871730b44": "95-lv9",
     "3f5c63e5-1ea1-4310-bbc0-9871308b936d": "95-lv8",
   } },
-  "arcanist-taliyah-vladimir": { slug: "arcanist-taliyah-vladimir", searchAliases: { "lv8": ["隆吸水"], "lv9-nidalee": ["隆吸水九级"] }, boards: {
+  "arcanist-taliyah-vladimir": { slug: "arcanist-taliyah-vladimir", searchAliases: { "lv8": ["隆吸水", "法师编舞岩雀吸血鬼", "法师编舞师岩雀吸血鬼"], "lv9-nidalee": ["隆吸水九级"] }, boards: {
     "14d668d4-7d3a-4445-a5b5-bfcfc6aa555b": "lv8",
     "1c4768e0-686a-495f-96f4-cda4348c8fdc": "lv9-nidalee",
   } },
