@@ -14,7 +14,7 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 from urllib.parse import parse_qsl, urlencode, urlsplit
 
-from guide_stats_window import current_window
+from guide_stats_window import WINDOW_KEYS, current_cohort
 import requests
 from bs4 import BeautifulSoup
 from requests.adapters import HTTPAdapter
@@ -23,8 +23,6 @@ from urllib3.util.retry import Retry
 DATA = Path(__file__).resolve().parents[1] / "data"
 ENDPOINT = "https://api-hc.metatft.com/tft-explorer-api/traits"
 NOXU = "https://noxutft.com/zh/tft-traits"
-S19_LOOKUP = "https://data.metatft.com/lookups/TFTSet19_pbe_zh_cn.json"
-RENATA = "https://www.metatft.com/explorer?set=TFTSet19&level=8&unit=DA_RenataGlasc19-1_3_3&unit=DA_Nasus19-1"
 DAYS = 3
 BOARD_FILTERS = {
     "duplicate_unit_count": ("无重复弈子", "重复弈子"),
@@ -45,12 +43,14 @@ def fetch(url, params=None):
         return response
 
 
-def published_scopes(mapping):
+def published_scopes(mapping, set_name):
     groups = {}
-    for url in [RENATA, *(row["url"] for row in load(DATA / "guide-placement.json")["records"])]:
+    batch = load(DATA / "guide-placement.json")
+    core = (batch.get("renataNasusReference") or {}).get("url")
+    for url in [*([core] if core else []), *(row["url"] for row in batch["records"])]:
         parts = [(key, value) for key, value in parse_qsl(urlsplit(url).query)
-                 if key not in {"queue", "patch", "b_patch", "days"}]
-        if ("set", "TFTSet19") not in parts:
+                 if key not in WINDOW_KEYS]
+        if ("set", set_name) not in parts:
             continue
         units = sorted(set(v for k, v in parts if k == "unit"))
         levels = [v for k, v in parts if k == "level"]
@@ -61,7 +61,7 @@ def published_scopes(mapping):
             raise ValueError(f"Invalid board restrictions: {url}")
         pins = sorted(set(v for k, v in parts if k == "trait"))
         if any(pin not in mapping for pin in pins):
-            raise ValueError(f"Unknown S19 board trait in {url}")
+            raise ValueError(f"Unknown board trait in {url}")
         # Keep every other pin while comparing a particular trait's tiers.
         compared_traits = {mapping[pin][0] for pin in pins}
         variants = [pins, *([pin for pin in pins if mapping[pin][0] != compared] for compared in compared_traits)]
@@ -92,8 +92,6 @@ def placements(window, filters=()):
 
 
 def lookup_mapping(lookup, season):
-    if lookup["_metadata"]["set"] != "TFTSet19" or lookup["_metadata"]["patch"] != "pbe":
-        raise ValueError("S19 PBE lookup is required")
     traits = {row["en_name"].casefold(): row for row in lookup["traits"]}
     mapping = {}
     sources = {}
@@ -125,7 +123,7 @@ def summarize(rows, mapping):
     return result
 
 
-def guide_scope(job, mapping, names, window, trait_names):
+def guide_scope(job, mapping, names, window, trait_names, set_name):
     key, (levels, units, fixed, restrictions) = job
     params = [("level", level) for level in levels] + restrictions
     labels = [level + "级结算" for level in levels]
@@ -144,7 +142,7 @@ def guide_scope(job, mapping, names, window, trait_names):
     for pin in fixed:
         trait, tier = mapping[pin]
         labels.append(tier + trait_names[trait])
-    url = "https://www.metatft.com/explorer?" + urlencode([("set", "TFTSet19"), ("tab", "traits"), *(("level", n) for n in levels), *(("unit", u) for u in units), *(("trait", pin) for pin in fixed), *restrictions, *window.items()])
+    url = "https://www.metatft.com/explorer?" + urlencode([("set", set_name), ("tab", "traits"), *(("level", n) for n in levels), *(("unit", u) for u in units), *(("trait", pin) for pin in fixed), *restrictions, *window.items()])
     stats = summarize(placements(window, params), mapping)
     return key, {"labels": labels, "url": url, "rows": stats}
 
@@ -198,29 +196,29 @@ def main():
     args.add_argument("--output", type=Path, default=DATA / "trait-stats.json")
     opts = args.parse_args()
     season = load(DATA / "season.json")
-    _, window = current_window(DATA)
-    lookup = fetch(S19_LOOKUP).json()
+    cohort = current_cohort(DATA)
+    window = cohort.window
+    if not season["id"].startswith(cohort.edition + "."):
+        raise ValueError("Season data does not match the active patch")
+    lookup = fetch(cohort.lookup_url("zh_cn")).json()
+    cohort.verify_lookup(lookup)
     mapping, sources = lookup_mapping(lookup, season)
-    patch = ".".join(lookup["_metadata"]["release"].split("-", 1)[1].split(".")[:2])
-    if patch != window["patch"] or not season["id"].startswith(f"s19-pbe-{patch}."):
-        raise ValueError("Local season and MetaTFT PBE patch differ")
     overall = summarize(placements(window), mapping)
     required = {row["id"] for row in season["traits"] if row["axis"] != "special" and not row["dynamic"]}
     if required - overall.keys():
-        raise ValueError(f"Incomplete S19 snapshot, missing {required - overall.keys()}")
+        raise ValueError(f"Incomplete trait snapshot, missing {required - overall.keys()}")
     names = {unit["apiName"]: unit["name"] for unit in lookup["units"]}
-    jobs = published_scopes(mapping).items()
+    jobs = published_scopes(mapping, cohort.set_name).items()
     trait_names = {row["id"]: row["name"] for row in season["traits"]}
     with ThreadPoolExecutor(max_workers=3) as pool:
-        scopes = dict(pool.map(lambda job: guide_scope(job, mapping, names, window, trait_names), jobs))
+        scopes = dict(pool.map(lambda job: guide_scope(job, mapping, names, window, trait_names, cohort.set_name), jobs))
     try:
         comparison = crosscheck()
     except (requests.RequestException, ValueError, KeyError, AttributeError) as exc:
         print(f"NoxuTFT comparison unavailable: {exc}", file=sys.stderr)
         comparison = load(opts.output).get("comparison") if opts.output.exists() else None
-    patch += window["b_patch"]
-    snapshot = {"season": 19, "queue": "PBE", "patch": patch, "sourcePatch": patch, "days": DAYS, "asOf": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-                "metaUrl": "https://www.metatft.com/explorer?" + urlencode({"set": "TFTSet19", "tab": "traits", **window}), "sources": sources,
+    snapshot = {"season": cohort.number, "queue": cohort.queue, "patch": cohort.version, "sourcePatch": cohort.version, "days": DAYS, "asOf": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                "metaUrl": "https://www.metatft.com/explorer?" + urlencode({"set": cohort.set_name, "tab": "traits", **window}), "sources": sources,
                 "rows": overall, "scopes": scopes, "comparison": comparison}
     with NamedTemporaryFile("w", dir=opts.output.parent, encoding="utf-8", delete=False) as file:
         json.dump(snapshot, file, ensure_ascii=False, separators=(",", ":"), allow_nan=False)

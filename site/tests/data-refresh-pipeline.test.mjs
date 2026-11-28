@@ -23,7 +23,7 @@ function fixture(t, { gitRepository = false } = {}) {
   if (gitRepository) mkdirSync(cwd);
   mkdirSync(join(cwd, "scripts"));
   mkdirSync(join(cwd, "public"));
-  for (const name of ["run-data-refresh.mjs", "verify-data-integrity.py", "archive-stat-period.mjs"]) {
+  for (const name of ["run-data-refresh.mjs", "verify-data-integrity.py", "archive-stat-period.mjs", "refresh-cohort.mjs"]) {
     cpSync(join(site, "scripts", name), join(cwd, "scripts", name));
   }
   for (const name of ["data", "public/stats-history"]) {
@@ -343,22 +343,30 @@ test("guide-placement refresh preserves existing stats on transient single-board
 test("daily dry-run lists every step in order and leaves the checkout unchanged", t => {
   const cwd = fixture(t);
   const baseline = snapshot(cwd);
-  const result = run(cwd, "--profile", "daily", "--dry-run");
+  const result = run(cwd, "--profile", "daily", "--archive", "--dry-run");
   assert.equal(result.status, 0, result.stderr);
   const steps = result.stdout.trim().split(/\r?\n/).slice(1);
   assert.deepEqual(steps.map(line => line.split(" · ")[0].replace(/^\d+\. /, "")), [
-    "hero-stats", "item-wearers", "special-item-wearers", "guide-placement", "trait-stats",
+    "hero-stats", "item-wearers", "special-item-wearers", "emblem-stats", "guide-placement", "trait-stats",
     "guide-family-stats + comp-trends", "guide-carry-stats",
-    "patch-recommendations", "patch-recommendation-stats", "data:verify",
+    "patch-recommendations", "patch-recommendation-stats", "data:verify", "archive", "data:verify",
   ]);
   assert.match(steps[0], /node scripts\/prepare-hero-stats\.mjs$/);
-  assert.match(steps[3], /scripts\/refresh-guide-distributions\.py$/);
-  assert.match(steps[5], /scripts\/refresh-guide-families\.mjs --catalog outputs\/family-review\/catalog\.json --trends data\/comp-trends\.json$/);
+  assert.match(steps[3], /scripts\/prepare-emblem-stats\.mjs$/);
+  assert.match(steps[4], /scripts\/refresh-guide-distributions\.py$/);
+  assert.match(steps[6], /scripts\/refresh-guide-families\.mjs --catalog outputs\/family-review\/catalog\.json --trends data\/comp-trends\.json$/);
+  assert.match(steps.at(-2), /archive-stat-period\.mjs --channel pbe$/);
   assert.match(steps.at(-1), /scripts\/verify-data-integrity\.py$/);
-  const ranked = run(cwd, "--archive", "--channel", "ranked", "--patch", "19.1", "--dry-run");
+  assert.deepEqual(snapshot(cwd), baseline);
+
+  const config = join(cwd, "data", "current-patch.json");
+  writeFileSync(config, JSON.stringify({ ...readJson(config), seasonId: "s19-live", queue: "RANKED",
+    tierFilter: "DIAMOND,MASTER", metaTftPatch: { patch: "19.1" } }));
+  const liveBaseline = snapshot(cwd);
+  const ranked = run(cwd, "--profile", "daily", "--archive", "--dry-run");
   assert.equal(ranked.status, 0, ranked.stderr);
   assert.match(ranked.stdout, /archive-stat-period\.mjs --channel ranked --patch 19\.1/);
-  assert.deepEqual(snapshot(cwd), baseline);
+  assert.deepEqual(snapshot(cwd), liveBaseline);
 });
 
 test("the runner restores a collected file when the gate fails", t => {
@@ -429,12 +437,54 @@ test("the archive writer recreates heroes and equipment archives from one batch"
   for (const [index, file] of archivedFiles.entries()) {
     writeFileSync(join(cwd, "data", file), JSON.stringify(expected[index]));
   }
-  const result = spawnSync(process.execPath, ["scripts/archive-stat-period.mjs", "--channel", "pbe"], {
+  const archive = () => spawnSync(process.execPath, ["scripts/archive-stat-period.mjs"], {
     cwd, encoding: "utf8", timeout: 20000,
   });
+  const result = archive();
   assert.equal(result.status, 0, result.stderr || result.stdout);
   assert.deepEqual(readJson(join(directory, "heroes.json")), heroes);
   assert.deepEqual(readJson(join(directory, "equipment.json")), equipment);
   assert.ok(readJson(historyFile).some(batch => batch.id === latest.id));
+  const files = [historyFile, join(directory, "heroes.json"), join(directory, "equipment.json")];
+  const first = files.map(file => readFileSync(file));
+  const repeated = archive();
+  assert.equal(repeated.status, 0, repeated.stderr || repeated.stdout);
+  assert.deepEqual(files.map(file => readFileSync(file)), first);
   assert.equal(run(cwd, "--verify").status, 0);
+});
+
+test("a new PBE build archives the same date and hotfix without replacing the old batch", t => {
+  const cwd = fixture(t);
+  const historyFile = join(cwd, "data", "stats-history.json");
+  const before = readJson(historyFile);
+  const prior = before.find(batch => batch.channel === "pbe" && batch.build && batch.metaTft &&
+    batch.id === `pbe-${batch.season}-${batch.date}-${batch.metaTft.patch}${batch.metaTft.bPatch}`);
+  if (!prior) return t.skip("no retained PBE archive to replay");
+  const directory = join(cwd, "public", "stats-history", prior.id);
+  const previousFiles = ["heroes.json", "equipment.json"].map(file => [file, readFileSync(join(directory, file))]);
+  const [heroes, equipment] = previousFiles.map(([, bytes]) => JSON.parse(bytes));
+  const build = String(Number(prior.build) + 1);
+  const effectiveAt = new Date(Math.min(...[heroes, equipment.standard, equipment.special].map(item =>
+    Date.parse(item.updatedAt))) - 1000).toISOString();
+  writeFileSync(join(cwd, "data", "current-patch.json"), JSON.stringify({
+    seasonId: `${prior.season}-pbe`, build, effectiveAt, metaTftPatch: prior.metaTft,
+  }));
+  for (const [index, data] of [heroes, equipment.standard, equipment.special].entries()) {
+    writeFileSync(join(cwd, "data", archivedFiles[index]), JSON.stringify(data));
+  }
+  const archive = () => spawnSync(process.execPath, ["scripts/archive-stat-period.mjs", "--channel", "pbe"],
+    { cwd, encoding: "utf8", timeout: 20000 });
+  const id = `${prior.id}-${build}`;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const result = archive();
+    assert.equal(result.status, 0, result.stderr || result.stdout);
+    assert.match(result.stdout, new RegExp(`已归档 ${id}$`, "m"));
+    const history = readJson(historyFile);
+    assert.deepEqual(history.filter(batch => batch.id !== id), before);
+    assert.equal(history.find(batch => batch.id === id).build, build);
+    for (const [file, bytes] of previousFiles) {
+      assert.deepEqual(readFileSync(join(directory, file)), bytes);
+      assert.deepEqual(readJson(join(cwd, "public", "stats-history", id, file)), JSON.parse(bytes));
+    }
+  }
 });

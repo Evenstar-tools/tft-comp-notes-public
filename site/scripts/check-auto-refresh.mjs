@@ -1,37 +1,46 @@
 import { spawnSync } from "node:child_process";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, lstatSync, readFileSync } from "node:fs";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { isDeepStrictEqual, parseArgs } from "node:util";
 import { automaticRefreshModules } from "./run-data-refresh.mjs";
+import { archiveBatchId, refreshCohort } from "./refresh-cohort.mjs";
 
 const site = fileURLToPath(new URL("../", import.meta.url));
 const repo = fileURLToPath(new URL("../../", import.meta.url));
 const buildModules = new Set(["guide-family-stats", "comp-trends", "guide-placement", "guide-carry-stats"]);
 const familyPath = "site/data/guide-family-stats.json";
+const manifestPath = "site/data/stats-history.json";
+const archivePath = id => `site/public/stats-history/${id}/`;
 
 const readJson = file => JSON.parse(readFileSync(file, "utf8").replace(/^\uFEFF/, ""));
 const numeric = value => (typeof value === "number" || typeof value === "string") && /^\d+$/.test(String(value));
 const time = value => typeof value === "number" ? value : Date.parse(value);
 
 export function preflightReason(current, family, { upstream } = {}) {
-  const season = /^s(\d+)-pbe$/.exec(current.seasonId ?? "");
-  const { patch, bPatch } = current.metaTftPatch ?? {};
+  let cohort;
+  try {
+    cohort = refreshCohort(current);
+  } catch (error) {
+    return error.message;
+  }
   const effective = time(current.effectiveAt);
-  if (!season || !/^\d+\.\d+$/.test(patch ?? "") || !/^[a-z]?$/.test(bPatch ?? "#") ||
-      !numeric(current.build) || !Number.isFinite(effective) || family.queue !== "PBE" ||
-      family.set !== "TFTSet" + season[1] || !Number.isSafeInteger(family.model)) {
+  if ((cohort.pbe && (!numeric(current.build) || family.queue !== cohort.queue)) ||
+      !Number.isFinite(effective) || !cohort.queueMatches(family.queue) || family.set !== cohort.set ||
+      !Number.isSafeInteger(family.model)) {
     return "本地版本或赛季、队列、体系模型口径有缺项";
   }
   if (!upstream || !Array.isArray(upstream.warnings) || upstream.warnings.length ||
       !/^\d+\.\d+[a-z]?$/.test(upstream.patch ?? "") ||
-      !/^\d+\.\d+$/.test(upstream.lookupPatch ?? "") || !numeric(upstream.build) ||
+      (cohort.pbe && (!/^\d+\.\d+$/.test(upstream.lookupPatch ?? "") || !numeric(upstream.build))) ||
       !Number.isSafeInteger(upstream.model) || !Number.isFinite(time(upstream.sampledAt))) {
     return "尚未取得完整的上游补丁、构建、体系模型和采样时间";
   }
-  if (upstream.patch !== patch + bPatch || upstream.lookupPatch !== patch || String(upstream.build) !== String(current.build)) {
+  if (cohort.pbe && (upstream.patch !== cohort.version || upstream.lookupPatch !== cohort.patch ||
+      String(upstream.build) !== String(current.build))) {
     return "上游补丁或构建待复核（" + upstream.patch + " / " + upstream.build +
-      "，站内 " + patch + bPatch + " / " + current.build + "）";
+      "，站内 " + cohort.version + " / " + current.build + "）";
   }
+  if (upstream.patch !== cohort.version) return "上游正式服补丁待复核（" + upstream.patch + "，站内 " + cohort.version + "）";
   if (upstream.model !== family.model) {
     return "上游体系模型待复核（" + upstream.model + "，站内 " + family.model + "）";
   }
@@ -42,7 +51,7 @@ export function preflightReason(current, family, { upstream } = {}) {
 }
 
 function run(command, args, cwd) {
-  const result = spawnSync(command, args, { cwd, encoding: "utf8", maxBuffer: 16 * 1024 * 1024 });
+  const result = spawnSync(command, args, { cwd, encoding: "utf8", maxBuffer: 16 * 1024 * 1024, timeout: 45_000 });
   if (result.error) throw result.error;
   if (result.status !== 0) throw new Error(result.stderr.trim() || command + " 执行失败");
   return result.stdout;
@@ -50,16 +59,26 @@ function run(command, args, cwd) {
 
 const git = (...args) => run("git", args, repo);
 const dataUrl = file => new URL("../data/" + file, import.meta.url);
+const repoUrl = path => new URL("../../" + path, import.meta.url);
+const committedJson = (path, ref = "HEAD") => JSON.parse(git("show", ref + ":" + path).replace(/^\uFEFF/, ""));
 
 export function readPublishedFamily(ref = "HEAD") {
-  return JSON.parse(git("show", ref + ":" + familyPath).replace(/^\uFEFF/, ""));
+  return committedJson(familyPath, ref);
 }
 
-export function changedDataFiles(status, profile) {
-  const allowed = new Set(automaticRefreshModules(profile).map(id => "site/data/" + id + ".json"));
+export function changedDataFiles(status, profile, { archiveId } = {}) {
+  const archive = archiveId !== undefined;
+  if (archive && (typeof archiveId !== "string" ||
+      !/^(?:pbe-s[1-9]\d*-\d{4}-\d{2}-\d{2}-\d+\.\d+[a-z]?(?:-\d+)?|ranked-s[1-9]\d*-\d+\.\d+[a-z]?)$/.test(archiveId))) {
+    throw new Error("采集回执含无效归档批次");
+  }
+  const allowed = new Set(automaticRefreshModules(profile, { archive }).map(id => "site/data/" + id + ".json"));
+  if (archive) allowed.add(manifestPath);
+  const exports = archive ? new Set(["heroes.json", "equipment.json"].map(name => archivePath(archiveId) + name)) : new Set();
   return status.split("\0").filter(Boolean).map(entry => {
     const path = entry.slice(3);
-    if (!entry.startsWith(" M ") || !allowed.has(path)) {
+    const type = entry.slice(0, 3);
+    if (!(type === " M " && allowed.has(path)) && !((type === " M " || type === "?? ") && exports.has(path))) {
       throw new Error("自动提交包含未授权或非修改文件 " + JSON.stringify(entry));
     }
     return path;
@@ -67,7 +86,7 @@ export function changedDataFiles(status, profile) {
 }
 
 export function verifyCollectedModules(profile, receipt, summary) {
-  const expected = automaticRefreshModules(profile);
+  const expected = automaticRefreshModules(profile, { archive: receipt?.archiveId !== undefined });
   const completed = receipt?.modules;
   if (receipt?.profile !== profile || !Array.isArray(completed)) throw new Error("采集回执与本轮配置不符");
   const missing = expected.filter(id => !completed.includes(id));
@@ -149,16 +168,39 @@ export function verifyFamilyContinuity(baseline, candidate, { bindings, trend, c
   }
 }
 
-function verify(profile, receiptPath) {
+function verifyArchive(archiveId) {
+  const current = readJson(dataUrl("current-patch.json"));
+  const cohort = refreshCohort(current);
+  const heroes = readJson(dataUrl("hero-stats.json"));
+  const base = committedJson(manifestPath);
+  if (archiveId !== archiveBatchId(cohort, heroes.date, base)) throw new Error("归档回执与当前采集批次不符");
+  const history = readJson(repoUrl(manifestPath));
+  const entry = history.find(row => row.id === archiveId);
+  if (!entry || entry.date !== heroes.date || entry.channel !== (cohort.pbe ? "pbe" : "ranked") ||
+      entry.season !== cohort.season.toLowerCase() || (cohort.pbe &&
+      (entry.build !== String(current.build) || entry.metaTft?.patch !== cohort.patch || entry.metaTft?.bPatch !== cohort.bPatch)) ||
+      !isDeepStrictEqual(history.filter(row => row.id !== archiveId), base.filter(row => row.id !== archiveId))) {
+    throw new Error("归档清单与本轮批次不符或包含其他历史改动");
+  }
+  const directory = archivePath(archiveId);
+  const [heroFile, gearFile] = ["heroes.json", "equipment.json"].map(name => repoUrl(directory + name));
+  if (![heroFile, gearFile].every(file => lstatSync(file).isFile()) || !isDeepStrictEqual(readJson(heroFile), heroes) ||
+      !isDeepStrictEqual(readJson(gearFile), { standard: readJson(dataUrl("item-wearers.json")),
+        special: readJson(dataUrl("special-item-wearers.json")) })) {
+    throw new Error("归档文件与本轮采集快照不一致");
+  }
+}
+
+export function verifyRefreshChanges(profile, receiptPath) {
   const receipt = readJson(receiptPath);
+  const status = git("status", "--porcelain=v1", "-z", "--untracked-files=all", "--no-renames");
+  const changed = changedDataFiles(status, profile, { archiveId: receipt?.archiveId });
   const summary = JSON.parse(run(process.execPath, ["scripts/run-data-refresh.mjs", "--status", "--json"], site));
   verifyCollectedModules(profile, receipt, summary);
-  const changed = changedDataFiles(git("status", "--porcelain=v1", "-z", "--untracked-files=all", "--no-renames"), profile);
-  const files = changed.filter(path => {
-    const committed = JSON.parse(git("show", "HEAD:" + path).replace(/^\uFEFF/, ""));
-    return !isDeepStrictEqual(committed, readJson(new URL("../../" + path, import.meta.url)));
-  });
-  if (!files.length) return "所选模块已采集并核验，本轮没有实质数据变更";
+  if (receipt.archiveId !== undefined) verifyArchive(receipt.archiveId);
+  const added = new Set(status.split("\0").filter(entry => entry.startsWith("?? ")).map(entry => entry.slice(3)));
+  const files = changed.filter(path => added.has(path) || !isDeepStrictEqual(committedJson(path), readJson(repoUrl(path))));
+  if (!files.length) return [];
   const baseline = readPublishedFamily();
   const family = readJson(dataUrl("guide-family-stats.json"));
   const mapFile = dataUrl("guide-family-map.json");
@@ -171,7 +213,7 @@ function verify(profile, receiptPath) {
     familyChanged: files.includes("site/data/guide-family-stats.json"),
   });
   console.log("已核对可发布文件 " + files.join("、"));
-  return null;
+  return files.map(path => ({ path, change: added.has(path) ? "A" : "M" }));
 }
 
 function main() {
@@ -182,10 +224,13 @@ function main() {
   if (positionals.length === 1 && positionals[0] === "preflight" && values.report && !values.profile && !values.receipt) {
     // The exact collector and the upstream probe can observe different cache ages.
     // The lower bound is the published batch, even after collection has updated the worktree.
-    reason = preflightReason(readJson(dataUrl("current-patch.json")), readPublishedFamily(), readJson(values.report));
-    if (!reason) console.log("上游版本、构建、模型和样本时间已对齐");
+    const current = readJson(dataUrl("current-patch.json"));
+    reason = preflightReason(current, readPublishedFamily(), readJson(values.report));
+    if (!reason) console.log(refreshCohort(current).pbe ? "上游版本、构建、模型和样本时间已对齐" : "上游正式服版本、模型和样本时间已对齐");
   } else if (positionals.length === 1 && positionals[0] === "verify" && values.profile && values.receipt && !values.report) {
-    reason = verify(values.profile, values.receipt);
+    if (!verifyRefreshChanges(values.profile, values.receipt).length) {
+      reason = "所选模块已采集并核验，本轮没有实质数据变更";
+    }
   } else {
     throw new Error("用法：preflight --report <报告文件> 或 verify --profile <fast|daily|all> --receipt <采集回执>");
   }

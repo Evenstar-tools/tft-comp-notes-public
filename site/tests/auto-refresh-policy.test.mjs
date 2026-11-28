@@ -7,7 +7,8 @@ import test from "node:test";
 import { fileURLToPath } from "node:url";
 import { changedDataFiles, preflightReason, verifyAlignment, verifyCollectedModules, verifyFamilyContinuity } from "../scripts/check-auto-refresh.mjs";
 import { automaticRefreshModules } from "../scripts/run-data-refresh.mjs";
-import { formatDotSummary, summarizeRefresh } from "../scripts/check-refresh-alerts.mjs";
+import { refreshCohort, verifyLookup } from "../scripts/refresh-cohort.mjs";
+import { checkUpstream, formatDotSummary, summarizeRefresh } from "../scripts/check-refresh-alerts.mjs";
 
 const current = {
   seasonId: "s19-pbe",
@@ -31,14 +32,44 @@ test("the scheduled fast profile refreshes the two snapshots allowed by the publ
 
 test("scheduled and manual runs use the protected-PR refresh entry point", () => {
   const workflow = readFileSync(new URL("../../.github/workflows/data-refresh.yml", import.meta.url), "utf8");
-  assert.match(workflow, /cron: '53 2 \* \* \*'/);
-  assert.match(workflow, /cron: '17 13 \* \* \*'/);
+  const fastTimes = [1, 7, 13, 19].map(hour => `17 ${hour} * * *`);
+  assert.deepEqual([...workflow.matchAll(/cron: '([^']+)'/g)].map(match => match[1]).sort(),
+    [...fastTimes, "53 2 * * *"].sort());
   assert.match(workflow, /'schedule:53 2 \* \* \*'\) profile=daily/);
-  assert.match(workflow, /'schedule:17 13 \* \* \*'\) profile=fast/);
+  assert.ok(workflow.includes(fastTimes.map(cron => `'schedule:${cron}'`).join("|") + ") profile=fast"));
   assert.match(workflow, /workflow_dispatch:/);
   assert.match(workflow, /run-conditional-refresh\.mjs --profile "\$PROFILE" --dry-run/);
   assert.match(workflow, /GH_TOKEN: \$\{\{ secrets\.DATA_REFRESH_TOKEN \}\}/);
   assert.doesNotMatch(workflow, /git push|scripts\/run-data-refresh\.mjs|scripts\/publish-auto-refresh\.mjs/);
+});
+
+test("S19 ranked preflight verifies season, patch, model and freshness without querying the PBE build", async () => {
+  const live = { ...current, seasonId: "s19-live", queue: "RANKED", build: undefined,
+    tierFilter: ["Master", "Diamond"], metaTftPatch: { patch: "19.1" } };
+  const ranked = { ...family, queue: "RANKED" };
+  const source = { tft_set: "TFTSet19", queue_id: 1100, cluster_id: family.model };
+  const fetcher = async raw => {
+    const url = new URL(raw);
+    assert.equal(url.hostname, "api-hc.metatft.com");
+    assert.equal(url.searchParams.get("queue"), "1100");
+    assert.equal(url.searchParams.get("patch"), "current");
+    if (url.pathname.endsWith("/comps_data")) return Response.json(source);
+    assert.ok(url.pathname.endsWith("/comps_stats"));
+    assert.equal(url.searchParams.get("rank"), "DIAMOND,MASTER");
+    return Response.json({ ...source, resolved_patch: { patch: "19.1", b_patch_version: "" }, updated: upstream.sampledAt });
+  };
+  const probe = await checkUpstream(live, ranked, fetcher);
+  assert.deepEqual(probe, { warnings: [], patch: "19.1", model: family.model,
+    sampledAt: new Date(upstream.sampledAt).toISOString() });
+  const check = overrides => preflightReason(live, ranked, { upstream: { ...probe, ...overrides } });
+  assert.equal(check({}), null);
+  assert.match(check({ patch: "19.1a" }), /正式服补丁待复核/);
+  assert.match(check({ model: 430 }), /体系模型待复核/);
+  assert.match(check({ sampledAt: "2026-11-26T07:00:00Z" }), /早于/);
+  assert.match(check({ sampledAt: undefined }), /完整/);
+  assert.match(preflightReason(live, family, { upstream: probe }), /队列/);
+  const wrongSource = await checkUpstream(live, ranked, async () => Response.json({ ...source, tft_set: "TFTSet18" }));
+  assert.match(preflightReason(live, ranked, { upstream: wrongSource }), /完整/);
 });
 
 test("scheduled refresh can proceed only with the confirmed patch, build, model and fresh sample", () => {
@@ -66,6 +97,7 @@ test("the second preflight compares against the committed batch after collection
     mkdirSync(join(site, "data"));
     copyFileSync(new URL("../scripts/check-auto-refresh.mjs", import.meta.url), script);
     copyFileSync(new URL("../scripts/run-data-refresh.mjs", import.meta.url), join(site, "scripts", "run-data-refresh.mjs"));
+    copyFileSync(new URL("../scripts/refresh-cohort.mjs", import.meta.url), join(site, "scripts", "refresh-cohort.mjs"));
     writeFileSync(join(site, "data", "current-patch.json"), JSON.stringify(current));
     writeFileSync(batch, JSON.stringify(family));
     git("init", "--quiet");
@@ -87,13 +119,93 @@ test("the refresh path policy only accepts tracked edits to the selected stats",
     ["site/data/guide-family-stats.json"]);
   assert.deepEqual(changedDataFiles("", "fast"), []);
   assert.throws(() => changedDataFiles(" M site/data/hero-stats.json\0", "fast"), /未授权/);
-  assert.throws(() => changedDataFiles(" M site/data/emblem-stats.json\0", "daily"), /未授权/);
+  assert.deepEqual(changedDataFiles(" M site/data/emblem-stats.json\0", "daily"), ["site/data/emblem-stats.json"]);
   assert.deepEqual(changedDataFiles(" M site/data/emblem-stats.json\0", "all"), ["site/data/emblem-stats.json"]);
   for (const change of [" M site/data/current-patch.json", " M site/data/patch-recommendations.json",
     " M .github/workflows/checks.yml", " D site/data/guide-family-stats.json", "?? site/data/comp-trends.json",
     "M  site/data/guide-family-stats.json", " T site/data/comp-trends.json"]) {
     assert.throws(() => changedDataFiles(change + "\0", "fast"), /未授权或非修改/);
   }
+});
+
+test("the ranked scope refuses either PBE marker on an otherwise matching lookup", () => {
+  const ranked = refreshCohort({ ...current, seasonId: "s19-live" });
+  const metadata = { set: "TFTSet19", patch: "19.1", release: "rls-19.1.0.6045507.Set19.Shipping" };
+  assert.doesNotThrow(() => verifyLookup({ _metadata: metadata }, ranked));
+  for (const changes of [{ patch: "pbe" }, { release: metadata.release + ".pbe" }]) {
+    assert.throws(() => verifyLookup({ _metadata: { ...metadata, ...changes } }, ranked), /lookup does not match/);
+  }
+});
+
+test("archive paths require a receipt for the exact batch and accept only allowed change types", () => {
+  const archiveId = "pbe-s19-2026-11-27-19.1c";
+  const dir = `site/public/stats-history/${archiveId}`;
+  const valid = [" M site/data/stats-history.json", `?? ${dir}/heroes.json`, ` M ${dir}/equipment.json`];
+  const status = entries => entries.map(entry => entry + "\0").join("");
+  assert.deepEqual(changedDataFiles(status(valid), "daily", { archiveId }), valid.map(entry => entry.slice(3)));
+  const newBuildId = archiveId + "-6045507";
+  const newFile = `site/public/stats-history/${newBuildId}/heroes.json`;
+  assert.deepEqual(changedDataFiles(status(["?? " + newFile]), "daily", { archiveId: newBuildId }), [newFile]);
+  assert.throws(() => changedDataFiles(status([` M ${dir}/heroes.json`]), "daily", { archiveId: newBuildId }), /未授权/);
+  for (const entry of valid) assert.throws(() => changedDataFiles(status([entry]), "daily"), /未授权/);
+  for (const entry of [
+    "?? site/data/stats-history.json", "?? site/data/hero-stats.json", " M site/data/current-patch.json",
+    `?? ${dir}/other.json`, `?? ${dir}/nested/heroes.json`, ` D ${dir}/heroes.json`, ` T ${dir}/heroes.json`,
+    `A  ${dir}/heroes.json`, `?? ${dir}/../heroes.json`, "?? site/public/stats-history/ranked-s19-19.1/heroes.json",
+  ]) assert.throws(() => changedDataFiles(status([entry]), "daily", { archiveId }), /未授权/);
+  assert.throws(() => changedDataFiles("", "daily", { archiveId: "../other" }), /无效归档批次/);
+});
+
+test("the release guard verifies newly archived content and rejects edits to other history entries", t => {
+  const repo = mkdtempSync(join(fileURLToPath(new URL("../", import.meta.url)), ".archive-policy-test-"));
+  t.after(() => rmSync(repo, { recursive: true, force: true }));
+  const site = join(repo, "site");
+  const oldArchiveId = "pbe-s19-2026-11-27-19.1c";
+  const archiveId = oldArchiveId + "-" + current.build;
+  const directory = join(site, "public", "stats-history", archiveId);
+  const guard = join(site, "scripts", "check-auto-refresh.mjs");
+  const receipt = join(repo, ".git", "test-receipt.json");
+  mkdirSync(join(site, "scripts"), { recursive: true });
+  mkdirSync(join(site, "data"));
+  const writeData = (id, value) => writeFileSync(join(site, "data", id + ".json"), JSON.stringify(value));
+  for (const name of ["check-auto-refresh.mjs", "refresh-cohort.mjs"]) {
+    copyFileSync(new URL("../scripts/" + name, import.meta.url), join(site, "scripts", name));
+  }
+  const modules = automaticRefreshModules("fast", { archive: true });
+  const summary = { ok: true, currentPatch: { patch: "19.1c", build: current.build },
+    modules: modules.map(id => ({ id, file: `data/${id}.json`, patch: "19.1c", build: current.build, alignment: "aligned" })) };
+  writeFileSync(join(site, "scripts", "run-data-refresh.mjs"),
+    `export const automaticRefreshModules = () => ${JSON.stringify(modules)};
+if (process.argv.includes("--status")) console.log(${JSON.stringify(JSON.stringify(summary))});\n`);
+  const heroes = { date: "2026-11-27", rows: { hero: { games: 100 } } };
+  const equipment = { standard: { items: { standard: {} } }, special: { items: { special: {} } } };
+  const prior = { id: oldArchiveId, build: "6035000" };
+  writeData("current-patch", current);
+  writeData("hero-stats", heroes);
+  writeData("item-wearers", equipment.standard);
+  writeData("special-item-wearers", equipment.special);
+  writeData("guide-family-stats", family);
+  writeData("comp-trends", {});
+  writeData("stats-history", [prior]);
+  const git = (...args) => execFileSync("git", args, { cwd: repo });
+  git("init", "--quiet");
+  git("add", "site");
+  git("-c", "user.name=Data Refresh Test", "-c", "user.email=refresh@example.invalid", "commit", "--quiet", "-m", "published");
+  writeFileSync(receipt, JSON.stringify({ profile: "fast", modules, archiveId }));
+  const entry = { id: archiveId, channel: "pbe", season: "s19", date: heroes.date,
+    build: current.build, metaTft: current.metaTftPatch };
+  writeData("stats-history", [entry, prior]);
+  mkdirSync(directory, { recursive: true });
+  writeFileSync(join(directory, "heroes.json"), JSON.stringify(heroes));
+  writeFileSync(join(directory, "equipment.json"), JSON.stringify(equipment));
+  const verify = () => execFileSync(process.execPath, [guard, "verify", "--profile", "fast", "--receipt", receipt],
+    { encoding: "utf8", stdio: "pipe" });
+  assert.match(verify(), /stats-history\.json.*heroes\.json|heroes\.json.*stats-history\.json/);
+  writeData("stats-history", [entry, { ...prior, label: "unexpected history change" }]);
+  assert.throws(verify, error => error.status === 1 && /其他历史改动/.test(error.stderr));
+  writeData("stats-history", [entry, prior]);
+  writeFileSync(join(directory, "equipment.json"), JSON.stringify({ ...equipment, special: {} }));
+  assert.throws(verify, error => error.status === 1 && /归档文件与本轮采集快照不一致/.test(error.stderr));
 });
 
 test("an edited module must align to the active batch and preserve available build metadata", () => {
@@ -123,7 +235,7 @@ test("the all profile requires a receipt and a valid status for every selected c
   assert.doesNotThrow(() => verifyCollectedModules("all", complete, summary));
   assert.throws(() => verifyCollectedModules("all", undefined, summary), /采集回执/);
   assert.throws(() => verifyCollectedModules("all", { ...complete, profile: "daily" }, summary), /采集回执/);
-  assert.throws(() => verifyCollectedModules("all", { ...complete, modules: automaticRefreshModules("daily") }, summary), /未完整.*emblem-stats/);
+  assert.throws(() => verifyCollectedModules("all", { ...complete, modules: modules.filter(id => id !== "emblem-stats") }, summary), /未完整.*emblem-stats/);
   assert.throws(() => verifyCollectedModules("all", { ...complete, modules: [...modules, modules[0]] }, summary), /重复或意外/);
   assert.throws(() => verifyCollectedModules("all", complete, {
     ...summary, modules: summary.modules.filter(module => module.id !== "emblem-stats"),
