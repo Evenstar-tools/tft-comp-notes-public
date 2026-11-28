@@ -10321,7 +10321,7 @@
               "instanceId": "00000000-0000-4000-8000-000000000721",
               "unitId": "ashe",
               "position": 21,
-              "stars": 2,
+              "stars": 3,
               "items": [
                 "TFT_Item_Deathblade",
                 "TFT_Item_GuinsoosRageblade",
@@ -23263,6 +23263,28 @@
           "id": "web-spellweaver-karthus-nine-roles",
           "type": "text",
           "text": "棋盘配装 · 九级 · 六法四主宰卡尔萨斯梅尔\n主C：卡尔萨斯。海克斯科技枪刃、珠光护手、蓝霸符。\n主坦：安妮。狂徒铠甲、石像鬼石板甲、振奋盔甲。\n副C：梅尔。朔极之矛、莫雷洛秘典、虚空之杖。\n副坦：斯维因。石像鬼石板甲、石像鬼石板甲、冕卫。"
+        },
+        {
+          "id": "karthus-stage-board-source",
+          "type": "text",
+          "text": "六级棋盘参考 · La Casita del TFT",
+          "elements": [
+            {
+              "text_run": {
+                "content": "六级棋盘参考 · La Casita del TFT",
+                "text_element_style": {
+                  "link": {
+                    "url": "https://lacasitadeltft.com/en/tierlist/comps/19/good-collab-karthus"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "web-spellweaver-karthus-six-roles",
+          "type": "text",
+          "text": "棋盘配装 · 六级 · 四法追三\n主C：卡尔萨斯。海克斯科技枪刃、珠光护手、蓝霸符。\n主坦：安妮。狂徒铠甲、石像鬼石板甲、振奋盔甲。"
         }
       ],
       "kind": "guide",
@@ -23358,6 +23380,68 @@
               "position": 27
             }
           ]
+        },
+        {
+          "id": "fe42c7e4-1f6b-46cf-9532-80aadbe065e3",
+          "name": "六级 · 四法追三",
+          "category": "待分类",
+          "notes": "安妮还没三星时，斯维因先两星可先接肉。死歌三星后再升人口。",
+          "revision": 1,
+          "updatedAt": "2026-11-25T05:52:59.340Z",
+          "sectionId": "sample-block-0988",
+          "boardRole": "stage",
+          "pieces": [
+            {
+              "instanceId": "a1cffeda-324c-412b-93ad-f67c339a94b5",
+              "unitId": "annie",
+              "position": 1,
+              "stars": 3,
+              "items": [
+                "TFT_Item_WarmogsArmor",
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_Redemption"
+              ]
+            },
+            {
+              "instanceId": "79935285-8734-4bfc-9aaf-bdaa8f42af98",
+              "unitId": "olaf",
+              "position": 2,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "df5e9be5-955a-491b-a9e5-e2b37d6c5712",
+              "unitId": "renekton",
+              "position": 3,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "dccbcba8-d904-4656-8341-2f3bbef6dda0",
+              "unitId": "swain",
+              "position": 12,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "5f5fda5b-bd2d-48a1-855a-f39a25995576",
+              "unitId": "karthus",
+              "position": 21,
+              "stars": 3,
+              "items": [
+                "TFT_Item_HextechGunblade",
+                "TFT_Item_JeweledGauntlet",
+                "TFT_Item_BlueBuff"
+              ]
+            },
+            {
+              "instanceId": "d92c6946-b821-42d7-807d-965f91e383c2",
+              "unitId": "zoe",
+              "position": 23,
+              "stars": 2,
+              "items": []
+            }
+          ]
         }
       ],
       "team": {
@@ -23451,7 +23535,12 @@
             "position": 27
           }
         ]
-      }
+      },
+      "primaryTeamId": "00000000-0000-4000-8000-000000001121",
+      "stageTeamIds": [
+        "fe42c7e4-1f6b-46cf-9532-80aadbe065e3"
+      ],
+      "summaryBlockId": "sample-block-0897"
     },
     {
       "id": "sample-block-0870",

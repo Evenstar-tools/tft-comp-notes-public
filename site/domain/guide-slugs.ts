@@ -202,6 +202,7 @@ const guideSlugs: Record<string, GuideSlugs> = {
     "00000000-0000-4000-8000-000000001126": "lv6-4-spellweaver",
   } },
   "sample-block-0988": { slug: "spellweaver-karthus", boards: {
+    "fe42c7e4-1f6b-46cf-9532-80aadbe065e3": "lv6",
     "00000000-0000-4000-8000-000000001121": "lv9-mel",
   } },
   "sample-block-0870": { slug: "headliner-alune-yuumi", boards: {
