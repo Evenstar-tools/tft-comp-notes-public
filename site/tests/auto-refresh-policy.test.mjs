@@ -10,6 +10,7 @@ import { automaticRefreshModules } from "../scripts/run-data-refresh.mjs";
 import { refreshCohort, verifyLookup } from "../scripts/refresh-cohort.mjs";
 import { checkUpstream, formatDotSummary, summarizeRefresh } from "../scripts/check-refresh-alerts.mjs";
 import { completedLaunchWindow, selectDataRefreshPlan } from "../scripts/select-data-refresh-plan.mjs";
+import { writeReviewCandidate } from "../scripts/run-conditional-refresh.mjs";
 
 const current = {
   seasonId: "s19-pbe",
@@ -31,7 +32,7 @@ test("the scheduled fast profile refreshes the two snapshots allowed by the publ
   assert.doesNotMatch(plan, /hero-stats|guide-placement/);
 });
 
-test("scheduled and manual runs use the protected-PR refresh entry point", () => {
+test("scheduled and manual runs export candidates without pushing or merging", () => {
   const workflow = readFileSync(new URL("../../.github/workflows/data-refresh.yml", import.meta.url), "utf8");
   const fastTimes = [1, 7, 13, 19].map(hour => `17 ${hour} * * *`);
   assert.deepEqual([...workflow.matchAll(/cron: '([^']+)'/g)].map(match => match[1]).sort(),
@@ -41,10 +42,55 @@ test("scheduled and manual runs use the protected-PR refresh entry point", () =>
   assert.deepEqual(selectDataRefreshPlan({ event: "schedule", schedule: "37 * * * *", current }), {});
   assert.match(workflow, /workflow_dispatch:/);
   assert.match(workflow, /node scripts\/select-data-refresh-plan\.mjs/);
-  assert.match(workflow, /steps\.refresh\.outputs\.collected == 'true'/);
   assert.match(workflow, /run-conditional-refresh\.mjs --profile "\$PROFILE" --dry-run/);
-  assert.match(workflow, /GH_TOKEN: \$\{\{ secrets\.DATA_REFRESH_TOKEN \}\}/);
-  assert.doesNotMatch(workflow, /git push|scripts\/run-data-refresh\.mjs|scripts\/publish-auto-refresh\.mjs/);
+  assert.match(workflow, /run-conditional-refresh\.mjs --profile "\$PROFILE" --output "\$REVIEW_OUTPUT"/);
+  assert.match(workflow, /steps\.refresh\.outputs\.candidate == 'true'\s+uses: actions\/upload-artifact@v4/);
+  assert.match(workflow, /steps\.plan\.outputs\.launch_marker != '' && steps\.review\.outcome == 'success'/);
+  assert.doesNotMatch(workflow, /DATA_REFRESH_TOKEN|git push|gh pr |scripts\/run-data-refresh\.mjs|scripts\/publish-auto-refresh\.mjs/);
+});
+
+test("a review artifact applies to its recorded base and contains only verified paths", t => {
+  const scratch = mkdtempSync(join(tmpdir(), "tft-data-review-"));
+  t.after(() => rmSync(scratch, { recursive: true, force: true }));
+  const repo = join(scratch, "repo");
+  const data = join(repo, "site", "data");
+  const preview = join(scratch, "preview");
+  const output = join(scratch, "artifact");
+  const receipt = join(scratch, "input.json");
+  const git = (cwd, ...args) => execFileSync("git", args, { cwd, encoding: "utf8" });
+  mkdirSync(data, { recursive: true });
+  writeFileSync(join(data, "snap.json"), '{"status":"old"}\n');
+  writeFileSync(join(data, "unrelated.json"), "{}\n");
+  git(repo, "init", "--quiet");
+  git(repo, "add", "site/data");
+  git(repo, "-c", "user.name=Review test", "-c", "user.email=review@example.invalid", "commit", "--quiet", "-m", "base");
+  const base = git(repo, "rev-parse", "HEAD").trim();
+  git(repo, "worktree", "add", "--detach", "--quiet", preview, base);
+
+  const newText = '{"status":"fresh"}\n';
+  const binary = Buffer.from([0, 1, 128, 255]);
+  const receiptBody = '{"profile":"daily","modules":[]}\n';
+  writeFileSync(join(data, "snap.json"), newText);
+  writeFileSync(join(data, "new.json"), binary);
+  writeFileSync(join(data, "unrelated.json"), '{"notApproved":true}\n');
+  writeFileSync(receipt, receiptBody);
+  const changes = [
+    { path: "site/data/snap.json", change: "M" },
+    { path: "site/data/new.json", change: "A" },
+  ];
+  writeReviewCandidate({ profile: "daily", receipt, output, changes, cwd: repo });
+  const candidate = JSON.parse(readFileSync(join(output, "candidate.json"), "utf8"));
+  assert.equal(candidate.base, base);
+  assert.equal(candidate.profile, "daily");
+  assert.deepEqual(candidate.changes, changes);
+  assert.equal(readFileSync(join(output, "receipt.json"), "utf8"), receiptBody);
+  const patch = join(output, "candidate.patch");
+  assert.match(readFileSync(patch, "utf8"), /GIT binary patch/);
+  git(preview, "apply", "--check", "--index", patch);
+  git(preview, "apply", "--index", patch);
+  assert.equal(readFileSync(join(preview, "site", "data", "snap.json"), "utf8").replace(/\r\n/g, "\n"), newText);
+  assert.deepEqual(readFileSync(join(preview, "site", "data", "new.json")), binary);
+  assert.equal(readFileSync(join(preview, "site", "data", "unrelated.json"), "utf8").trim(), "{}");
 });
 
 test("launch schedules retry each window until the matching verified collection completes", async () => {

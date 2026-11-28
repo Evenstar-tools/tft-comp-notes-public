@@ -2,7 +2,7 @@
 
 [公开版本](https://github.com/Evenstar-tools/tft-comp-notes-public/releases) · [问题反馈](https://github.com/Evenstar-tools/tft-comp-notes-public/issues)
 
-本仓库是项目后续开发、代码评审和 EdgeOne 发布的入口。Makers 生产分支为 `main`，`deploy/edgeone-preview` 用于预览。构建根目录为 `site`，框架预设为 Next，Node.js 使用 22.17.1，安装命令为 `npm ci`，构建命令为 `npm run build`，输出目录为 `.next`。
+本仓库是项目后续开发、代码评审和 EdgeOne 发布的入口。Makers 生产分支为 `main`，日常验收走本地预览。构建根目录为 `site`，框架预设为 Next，Node.js 使用 22.17.1，安装命令为 `npm ci`，构建命令为 `npm run build`，输出目录为 `.next`。
 
 这是一个社区阵容工具，包含棋盘编辑器、英雄图鉴、羁绊与装备速查，以及按需配置的飞书发布集成。普通阵容编辑器支持匿名使用，阵容保存在当前浏览器。代码位于 `site/`。
 
@@ -29,7 +29,7 @@ npm run build
 
 ## 仓库维护（单源开发）
 
-- **本仓库 `main` 是唯一代码真源**：新功能、UI 优化、战绩与清理改动统一从 `main` 新建功能分支，开 PR 并在 `Project checks` 全绿后合入。GitHub Releases 用于保留已验证的公开版本。
+- **本仓库 `main` 是唯一代码真源**：新功能、UI 优化、战绩与清理改动统一从 `main` 新建功能分支。站主确认本地预览后提 PR，`Project checks` 全绿后合批更新主线。GitHub Releases 用于保留已验证的公开版本。
 - EdgeOne 的正式域名为 [tftnotes.com](https://tftnotes.com/)。合并后按[单源发布与验收](site/docs/双站发布.md)确认正式站。GPTsite 留作历史归档。
 - 公开仓库仅保存可公开的内容，原始快照、私有 ID 映射与部署凭据始终放在私有目录或 Makers 项目环境变量中。
 - 问题反馈请带上版本、入口和复现步骤。涉及安全漏洞时使用仓库的私密报告入口。
