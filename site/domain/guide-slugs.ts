@@ -150,8 +150,9 @@ const guideSlugs: Record<string, GuideSlugs> = {
   "sample-block-0273": { slug: "bite-elise", boards: {
     "00000000-0000-4000-8000-000000000073": "lv5",
     "00000000-0000-4000-8000-000000000103": "lv8",
+    "b2559fb0-7e2a-411d-a273-0877484997e9": "lv9-ionic",
   } },
-  "sample-block-0064": { slug: "electric-kennen", boards: {
+  "sample-block-0064": { slug: "electric-kennen", searchAliases: { "lv8-6-bodyguard": ["六保镖凯南"] }, boards: {
     "00000000-0000-4000-8000-000000000012": "lv8-6-bodyguard",
     "00000000-0000-4000-8000-000000000040": "lv5",
     "00000000-0000-4000-8000-000000000045": "lv8",
@@ -161,6 +162,7 @@ const guideSlugs: Record<string, GuideSlugs> = {
   "sample-block-0281": { slug: "ranged-olaf", boards: {
     "00000000-0000-4000-8000-000000000051": "lv5",
     "00000000-0000-4000-8000-000000000097": "lv8",
+    "8408938c-f54a-44ab-948a-49ec8f8c00c1": "lv9-ocean",
   } },
   "sample-block-0258": { slug: "haymaker-sett", boards: {
     "00000000-0000-4000-8000-000000000061": "lv8",
