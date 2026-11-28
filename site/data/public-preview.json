@@ -8744,6 +8744,203 @@
       "summaryBlockId": "sample-block-0537"
     },
     {
+      "id": "choreographer-draven-viego",
+      "title": "编舞师德莱文佛耶戈",
+      "category": "慢搜阵容",
+      "blocks": [
+        {
+          "id": "choreographer-draven-viego-start",
+          "type": "text",
+          "text": "德莱文、佛耶戈来得早，大剑和水滴多就走。"
+        },
+        {
+          "id": "choreographer-draven-viego-style",
+          "type": "text",
+          "text": "打法：三费慢搜"
+        },
+        {
+          "id": "choreographer-draven-viego-tempo",
+          "type": "text",
+          "text": "七级先搜德莱文、佛耶戈、布隆两星稳血，再慢搜三张三星。佛耶戈越早上场越容易攒击杀。"
+        },
+        {
+          "id": "choreographer-draven-viego-items",
+          "type": "text",
+          "text": "先做德莱文输出装和布隆肉装。青龙刀可换蓝霸符，佛耶戈优先夜刃防暴毙。"
+        },
+        {
+          "id": "choreographer-draven-viego-cap",
+          "type": "text",
+          "text": "调音台攻击力和生命值各分 5 分贝。追完三星再升八，有崔斯特就补上开三花式射手。"
+        },
+        {
+          "id": "choreographer-draven-viego-credit",
+          "type": "text",
+          "text": "阵容原创：琴吹唯（koyui）"
+        },
+        {
+          "id": "choreographer-draven-viego-loadouts",
+          "type": "heading",
+          "text": "各棋盘配装"
+        },
+        {
+          "id": "choreographer-draven-viego-lv7-items",
+          "type": "text",
+          "text": "棋盘配装 · 七级 · 双C成型\n主C：德莱文。朔极之矛、死亡之刃、无尽之刃。\n主C：佛耶戈。夜之锋刃、无尽之刃、正义之手。\n主坦：布隆。石像鬼石板甲、狂徒铠甲、振奋盔甲。"
+        }
+      ],
+      "kind": "guide",
+      "teams": [
+        {
+          "id": "00000000-0000-4000-8000-000000001177",
+          "name": "七级 · 双C成型",
+          "category": "慢搜阵容",
+          "notes": "七级先搜德莱文、佛耶戈、布隆两星稳血，再慢搜三张三星。佛耶戈越早上场越容易攒击杀。",
+          "revision": 0,
+          "updatedAt": "2026-11-25T05:52:59.340Z",
+          "sectionId": "choreographer-draven-viego",
+          "pieces": [
+            {
+              "instanceId": "888a36ce-97c0-4429-9dc7-17707b6fd903",
+              "unitId": "braum",
+              "position": 3,
+              "stars": 3,
+              "items": [
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_WarmogsArmor",
+                "TFT_Item_Redemption"
+              ]
+            },
+            {
+              "instanceId": "36baf593-7b73-4984-910c-c00b3d845209",
+              "unitId": "yone",
+              "position": 8,
+              "stars": 1,
+              "items": []
+            },
+            {
+              "instanceId": "9a8473a8-6a94-417c-bf06-4ba85cf13c05",
+              "unitId": "garen",
+              "position": 9,
+              "stars": 1,
+              "items": []
+            },
+            {
+              "instanceId": "0964597e-c600-464f-a0ae-777393912291",
+              "unitId": "yorick",
+              "position": 10,
+              "stars": 1,
+              "items": []
+            },
+            {
+              "instanceId": "a622ac9f-d27f-4539-bfe8-8529ab079f7c",
+              "unitId": "viego",
+              "position": 12,
+              "stars": 3,
+              "items": [
+                "TFT_Item_GuardianAngel",
+                "TFT_Item_InfinityEdge",
+                "TFT_Item_UnstableConcoction"
+              ]
+            },
+            {
+              "instanceId": "3b5a8f98-fcfb-42f7-8515-01e488043eb8",
+              "unitId": "gnar",
+              "position": 24,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "84d0c82e-de3a-4b11-8610-95f26594b07f",
+              "unitId": "draven",
+              "position": 27,
+              "stars": 3,
+              "items": [
+                "TFT_Item_SpearOfShojin",
+                "TFT_Item_Deathblade",
+                "TFT_Item_InfinityEdge"
+              ]
+            }
+          ]
+        }
+      ],
+      "team": {
+        "id": "00000000-0000-4000-8000-000000001177",
+        "name": "七级 · 双C成型",
+        "category": "慢搜阵容",
+        "notes": "七级先搜德莱文、佛耶戈、布隆两星稳血，再慢搜三张三星。佛耶戈越早上场越容易攒击杀。",
+        "revision": 0,
+        "updatedAt": "2026-11-25T05:52:59.340Z",
+        "sectionId": "choreographer-draven-viego",
+        "pieces": [
+          {
+            "instanceId": "888a36ce-97c0-4429-9dc7-17707b6fd903",
+            "unitId": "braum",
+            "position": 3,
+            "stars": 3,
+            "items": [
+              "TFT_Item_GargoyleStoneplate",
+              "TFT_Item_WarmogsArmor",
+              "TFT_Item_Redemption"
+            ]
+          },
+          {
+            "instanceId": "36baf593-7b73-4984-910c-c00b3d845209",
+            "unitId": "yone",
+            "position": 8,
+            "stars": 1,
+            "items": []
+          },
+          {
+            "instanceId": "9a8473a8-6a94-417c-bf06-4ba85cf13c05",
+            "unitId": "garen",
+            "position": 9,
+            "stars": 1,
+            "items": []
+          },
+          {
+            "instanceId": "0964597e-c600-464f-a0ae-777393912291",
+            "unitId": "yorick",
+            "position": 10,
+            "stars": 1,
+            "items": []
+          },
+          {
+            "instanceId": "a622ac9f-d27f-4539-bfe8-8529ab079f7c",
+            "unitId": "viego",
+            "position": 12,
+            "stars": 3,
+            "items": [
+              "TFT_Item_GuardianAngel",
+              "TFT_Item_InfinityEdge",
+              "TFT_Item_UnstableConcoction"
+            ]
+          },
+          {
+            "instanceId": "3b5a8f98-fcfb-42f7-8515-01e488043eb8",
+            "unitId": "gnar",
+            "position": 24,
+            "stars": 2,
+            "items": []
+          },
+          {
+            "instanceId": "84d0c82e-de3a-4b11-8610-95f26594b07f",
+            "unitId": "draven",
+            "position": 27,
+            "stars": 3,
+            "items": [
+              "TFT_Item_SpearOfShojin",
+              "TFT_Item_Deathblade",
+              "TFT_Item_InfinityEdge"
+            ]
+          }
+        ]
+      },
+      "primaryTeamId": "00000000-0000-4000-8000-000000001177",
+      "stageTeamIds": [],
+      "summaryBlockId": "choreographer-draven-viego-start"
+    },
+    {
       "id": "sample-block-0407",
       "title": "四酷炫德莱文",
       "category": "慢搜阵容",

@@ -79,6 +79,8 @@ test("legacy paths, UUID board queries and merged routes resolve directly to the
     ["jazz-jinx", jinxLv8, jinx, jinxLv8, "/guides/jazz-jinx", "lv8"],
     ["sample-block-0452", gravesPyke, graves, gravesPyke, "/guides/ocean-graves", "lv9-pyke"],
     ["0452", undefined, graves, "00000000-0000-4000-8000-000000001261", "/guides/ocean-graves", "4-jugg-graves"],
+    ["showoff-draven", "lv7-viego", "choreographer-draven-viego", "00000000-0000-4000-8000-000000001177", "/guides/choreographer-draven-viego", "lv7"],
+    ["sample-block-0407", "00000000-0000-4000-8000-000000001177", "choreographer-draven-viego", "00000000-0000-4000-8000-000000001177", "/guides/choreographer-draven-viego", "lv7"],
   ];
   for (const [id, rawTeam, sectionId, teamId, pathname, boardSlug] of cases) {
     const { redirectTo } = resolveGuideRequest(id, rawTeam, published.sections, params);
