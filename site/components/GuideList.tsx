@@ -28,7 +28,8 @@ import { HomeGuideBanner } from "./GuideNavigation";
 import { SiteSearchResults, useSiteSearch } from "./SiteSearchResults";
 import { siteSearchIntent, type SiteSearchResponse } from "@/domain/site-search";
 import { sameEdition } from "@/domain/version-updates";
-import { guideBoardKind, recommendationBoardSample } from "./GuidePlacement";
+import { guideBoardKind, recommendationBoardSample, teamPlacement } from "./GuidePlacement";
+import { guideHeaderCoreSample } from "@/domain/guide-variant-strip";
 import { formationCoreResult } from "./GuideFormationStats";
 import { PatchRecommendationList, type RecommendationCard } from "./PatchRecommendationList";
 import { GuideConditionIcon } from "./GuideEquipmentConditions";
@@ -312,9 +313,9 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
   const familyDataEnd = Date.parse(familyStats.updatedAt);
   const patchStart = patch ? Date.parse(patch.effectiveAt) : NaN;
   const familyWindowNote = familyDataEnd < patchStart ? "上一版快照"
-    : familyStats.spansBuilds ? "采样窗口跨版本更新"
+    : familyStats.spansBuilds ? `近 ${familyStats.days} 天含热补前对局`
     : familyStats.build === patch?.build && patch?.build ? "仅当前构建"
-    : familyDataEnd - familyStats.days * 86400000 < patchStart ? "采样窗口跨版本更新" : undefined;
+    : familyDataEnd - familyStats.days * 86400000 < patchStart ? `近 ${familyStats.days} 天含热补前对局` : undefined;
   const [expiredAt, setExpiredAt] = useState(0);
   const now = Math.max(checkedAt, expiredAt);
   const latestDeadline = previousRecommendationDeadline(homeFamilyStats, season.id, patch, now);
@@ -505,6 +506,53 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
         winRate: stat.games < 100 ? null : familyMetricValue(stat, "winRate"),
       };
     }) : [];
+  const nativeSectionIds = new Set(statsRows.map(row => row.id.replace(/^guide-card-/, "").split("-stats-")[0]));
+  const coreSortMetric = performance.metric === "pickRate" ? "mean" : performance.metric;
+  const coreSortDirection = performance.metric === "pickRate" ? "asc" : performance.direction;
+  const coreStatsRows: GuideStatsTableRow[] = ranked ? candidates.flatMap(entry => {
+    if (nativeSectionIds.has(entry.section.id) || entry.section.category === heroAugmentCategory) return [];
+    const boards = entry.teams.length ? entry.teams : entry.team ? [entry.team] : [];
+    const primaryBoard = entry.team ?? boards[0];
+    if (!primaryBoard) return [];
+    const core = guideHeaderCoreSample(primaryFirst(boards, primaryBoard.id), board => teamPlacement(board, entry.section, "core"), 100);
+    if (!core || core.mean === undefined || core.topFourRate === undefined || core.winRate === undefined) return [];
+    const tier = boardTier(entry.section, primaryBoard, { games: core.games, mean: core.mean, winRate: core.winRate });
+    if (tierFilter && tierLabels[tier] !== tierFilter) return [];
+    return [{ entry, team: primaryBoard, core, tier }];
+  }).sort((a, b) => {
+    const pick = (row: { core: { mean?: number; topFourRate?: number; winRate?: number; games: number } }) =>
+      coreSortMetric === "mean" ? (row.core.mean ?? 9)
+        : coreSortMetric === "topFourRate" ? (row.core.topFourRate ?? 0)
+        : (row.core.winRate ?? 0);
+    const diff = pick(a) - pick(b);
+    return (coreSortDirection === "asc" ? diff : -diff) || b.core.games - a.core.games;
+  }).map(({ entry, team, core, tier }) => {
+    const { section, data, playstyle } = entry;
+    const notes = readingNotes(section, team, data);
+    const name = guideTitleWithoutPlaystyle(displayGuideName(section.title), playstyle);
+    const decision = decisions.get(`${section.id}:${team.id}`);
+    const advice = decision?.status === "recommended" || decision?.status === "conditional" ? decision.note : notes.opening;
+    const context = entry.matches.find(match => match.board.id === team.id)?.context;
+    const roster = guideRoster(team, data, notes.roles);
+    const cores = roster.filter(({ role }) => role === "主C" || role === "主输出" || role === "主坦");
+    const tank = cores.find(({ role }) => role === "主坦");
+    const carry = cores.find(({ role }) => role !== "主坦") ?? roster[0];
+    const ordered = [carry, tank, ...cores, ...roster].filter(item => item !== undefined);
+    const portraits = [...new Map(ordered.map(({ unit }) => [unit.id, unit])).values()].slice(0, 4);
+    const cardId = section.id + "-core-stats";
+    const href = guideLink(section.id, team.id, homeGuideReturn(home, cardId, team.id));
+    return {
+      id: "guide-card-" + cardId, name, note: displayTraitNames(context || homeOpening(advice, name)), tier,
+      style: playstyle ?? (entry.filterStyle?.includes("慢搜") ? "慢搜" : undefined),
+      link: <a className="guide-stats-link" href={href} data-home-board={team.id}>{name}</a>,
+      units: portraits.map(unit => <span className="guide-stats-unit" key={unit.id} title={unit.name}>
+        <img className={"cost-" + unit.cost} src={unit.image} alt={unit.name} width={38} height={38} loading="lazy" />
+        <span aria-hidden="true">{unit.id === "renata-glasc" ? "烈娜塔" : unit.name.split(" · ")[0]}</span>
+      </span>),
+      games: core.games, mean: core.mean ?? null,
+      pickRate: null, topFourRate: core.topFourRate ?? null, winRate: core.winRate ?? null,
+    };
+  }) : [];
   type Card = Result & { rating?: Pick<GuideFamilyStat, "mean" | "games" | "name" | "topFourRate" | "winRate">;
     core?: boolean; fixedSample?: string; routeName?: string; clusterId?: GuideFamilyStat["clusterId"]; routes?: Team[]; cardId: string; tier: ReturnType<typeof recommendationTier> };
   const results = ranked || recommended ? [] : grouped.flatMap<Card>(entry => {
@@ -744,7 +792,7 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
   function conditionLink(sectionId: string, boardId: string, cardId: string) {
     return guideLink(sectionId, boardId, homeGuideReturn(home, cardId, boardId)) + "#" + guideConditionsAnchor;
   }
-  const displayedCount = recommended ? recommendationCards.length : ranked ? statsRows.length : results.length;
+  const displayedCount = recommended ? recommendationCards.length : ranked ? statsRows.length + coreStatsRows.length : results.length;
   const crossTab = needle && !displayedCount && !equipmentQuery && (!recommended || hasUnitQuery)
     ? candidatesFor(library[recommended || isHeroList ? "regular" : "hero-augments"], conditions, false)
       .sort((a,b) => b.rank - a.rank).slice(0, 8)
@@ -1126,8 +1174,8 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
           )}
         </select>
       </label>}
-      {ranked && statsRows.length > 0 && <div className="guide-rank-meta">
-        <span>{statsRows.length} 套{familyWindowNote && <> · {familyWindowNote}</>}</span>
+      {ranked && (statsRows.length > 0 || coreStatsRows.length > 0) && <div className="guide-rank-meta">
+        <span>{statsRows.length} 套体系{coreStatsRows.length > 0 && ` · ${coreStatsRows.length} 套核心`}{familyWindowNote && <> · {familyWindowNote}</>}</span>
         <details className="guide-rank-source"><summary>数据来源</summary>
           <div><a href={familyStats.sourceUrl} target="_blank" rel="noreferrer">MetaTFT</a> · {familyStats.queue} {familyStats.patch} · 近 {familyStats.days} 天
             <p>更新于 <time dateTime={familyStats.updatedAt} title="北京时间">{beijingDateTime.format(new Date(familyStats.updatedAt))}</time></p>
@@ -1184,6 +1232,15 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
         metric, direction: previous.metric === metric ? (previous.direction === "asc" ? "desc" : "asc") : metric === "mean" ? "asc" : "desc",
       }))} />
     </>}
+    {ranked && coreStatsRows.length > 0 && <section className="guide-core-stats-section" aria-labelledby="guide-core-stats-heading">
+      <header className="guide-core-stats-head">
+        <h3 id="guide-core-stats-heading">核心样本对照（{coreStatsRows.length} 套）</h3>
+        <p>暂无 MetaTFT 原生体系聚类，按当期核心棋子同场统计，不计算全盘出场率。</p>
+      </header>
+      <GuideStatsTable rows={coreStatsRows} metric={coreSortMetric} direction={coreSortDirection} onSort={metric => setPerformance(previous => ({
+        metric, direction: previous.metric === metric ? (previous.direction === "asc" ? "desc" : "asc") : metric === "mean" ? "asc" : "desc",
+      }))} />
+    </section>}
     {!recommended && groups.length > 0 && <div className="guide-sections">{groups.map(([name, entries], index) => {
       const preview = archiveReady ? entries : entries.slice(0, index === 0 ? 6 : 2);
       const cards = renderCards(preview, name, index === 0);
