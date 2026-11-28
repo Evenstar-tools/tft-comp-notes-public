@@ -74,10 +74,13 @@ export type GuideCorePlacement = Pick<PlacementRating,
   "games" | "mean" | "topFourRate" | "winRate" | "conditions" | "referencesAugment" |
   "patch" | "window" | "url" | "sampleScope" | "tone">;
 
-export function guideCorePlacement(section: Section, boards: Team[], entryId: string | undefined): GuideCorePlacement | undefined {
+export function guideCorePlacement(section: Section, boards: Team[], entryId: string | undefined,
+  { boundOnly = false } = {}): GuideCorePlacement | undefined {
   const ordered = primaryFirst(boards, entryId);
-  const placement = placementBatch.build === currentPatch.build && guideHeaderCoreSample(ordered,
-    board => teamPlacement(board, section, "core") ?? teamPlacement(board, section, "lineup"), placementBatch.minGames);
+  const placement = placementBatch.build === currentPatch.build && guideHeaderCoreSample(ordered, board => {
+    const sample = teamPlacement(board, section, "core") ?? teamPlacement(board, section, "lineup");
+    return !boundOnly || sample?.conditions?.teamId === board.id ? sample : undefined;
+  }, placementBatch.minGames);
   if (placement) return placement;
   if (!canRankRecommendations(coreStats, (section.gameData ?? season).id, currentPatch)) return;
   for (const board of ordered) {

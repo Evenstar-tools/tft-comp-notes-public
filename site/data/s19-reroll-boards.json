@@ -1599,6 +1599,21 @@
     ],
     "stages": [
       {
+        "teamId": "144cb8a8-4046-4b85-8acc-f6610fa882c1",
+        "parentTeamId": "00000000-0000-4000-8000-000000000089",
+        "name": "6级过渡",
+        "notes": "",
+        "boardRole": "stage",
+        "entry": true
+      },
+      {
+        "teamId": "f8b6749a-eb90-491d-9ada-35e35aa0a9eb",
+        "parentTeamId": "00000000-0000-4000-8000-000000000089",
+        "name": "7级开五高能",
+        "notes": "",
+        "boardRole": "stage"
+      },
+      {
         "teamId": "00000000-0000-4000-8000-000000000066",
         "name": "5级追三",
         "notes": "两星吉格斯带一件开可酷伯，没来用瑟提先扛。",

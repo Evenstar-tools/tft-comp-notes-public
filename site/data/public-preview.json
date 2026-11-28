@@ -3779,6 +3779,30 @@
               }
             }
           ]
+        },
+        {
+          "id": "sample-block-0420-four-lead-early-loadout",
+          "type": "text",
+          "text": "棋盘配装 · 六级 · 四高能过渡\n主C：吉格斯。鬼索的狂暴之刃、珠光护手、强袭者的链枷。\n主坦：可酷伯。石像鬼石板甲、振奋盔甲、狂徒铠甲。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "棋盘配装 · 六级 · 四高能过渡\n主C：吉格斯。鬼索的狂暴之刃、珠光护手、强袭者的链枷。\n主坦：可酷伯。石像鬼石板甲、振奋盔甲、狂徒铠甲。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "sample-block-0420-four-lead-mid-loadout",
+          "type": "text",
+          "text": "棋盘配装 · 七级 · 提莫开五高能\n主C：吉格斯。鬼索的狂暴之刃、珠光护手、强袭者的链枷。\n主坦：可酷伯。石像鬼石板甲、振奋盔甲、狂徒铠甲。\n副C：萨勒芬妮。莫雷洛秘典、朔极之矛、虚空之杖。\n副C：提莫。珠光护手、强袭者的链枷、朔极之矛。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "棋盘配装 · 七级 · 提莫开五高能\n主C：吉格斯。鬼索的狂暴之刃、珠光护手、强袭者的链枷。\n主坦：可酷伯。石像鬼石板甲、振奋盔甲、狂徒铠甲。\n副C：萨勒芬妮。莫雷洛秘典、朔极之矛、虚空之杖。\n副C：提莫。珠光护手、强袭者的链枷、朔极之矛。"
+              }
+            }
+          ]
         }
       ],
       "kind": "guide",
@@ -4045,6 +4069,145 @@
               "items": []
             }
           ]
+        },
+        {
+          "id": "144cb8a8-4046-4b85-8acc-f6610fa882c1",
+          "name": "六级 · 四高能过渡",
+          "category": "待分类",
+          "notes": "",
+          "revision": 0,
+          "updatedAt": "2026-11-25T05:52:59.340Z",
+          "sectionId": "sample-block-0420",
+          "boardRole": "stage",
+          "pieces": [
+            {
+              "instanceId": "92b8d2b5-de1a-474a-ae0c-fdde868d2e9e",
+              "unitId": "kobuko",
+              "position": 3,
+              "stars": 2,
+              "items": [
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_Redemption",
+                "TFT_Item_WarmogsArmor"
+              ]
+            },
+            {
+              "instanceId": "562481a3-d61c-4f27-a10f-5c55b5eb0b01",
+              "unitId": "elise",
+              "position": 10,
+              "stars": 1,
+              "items": []
+            },
+            {
+              "instanceId": "801dc70d-d31e-4c7c-bddb-927b68c0a4f0",
+              "unitId": "ziggs",
+              "position": 21,
+              "stars": 2,
+              "items": [
+                "TFT_Item_GuinsoosRageblade",
+                "TFT_Item_JeweledGauntlet",
+                "TFT_Item_PowerGauntlet"
+              ]
+            },
+            {
+              "instanceId": "e69c89bb-953f-4120-93c0-c0074e69393d",
+              "unitId": "seraphine",
+              "position": 22,
+              "stars": 1,
+              "items": []
+            },
+            {
+              "instanceId": "5241b283-9eae-4c7b-a832-ae6ec2eccb3f",
+              "unitId": "lulu",
+              "position": 23,
+              "stars": 1,
+              "items": []
+            },
+            {
+              "instanceId": "2a7b7246-e48c-47f9-8e00-30a962ba7eaa",
+              "unitId": "tristana",
+              "position": 24,
+              "stars": 1,
+              "items": []
+            }
+          ]
+        },
+        {
+          "id": "f8b6749a-eb90-491d-9ada-35e35aa0a9eb",
+          "name": "七级 · 提莫开五高能",
+          "category": "待分类",
+          "notes": "",
+          "revision": 0,
+          "updatedAt": "2026-11-25T05:52:59.340Z",
+          "sectionId": "sample-block-0420",
+          "boardRole": "stage",
+          "pieces": [
+            {
+              "instanceId": "a6ec2694-4f61-4f02-b384-5298f63b4c26",
+              "unitId": "kobuko",
+              "position": 3,
+              "stars": 3,
+              "items": [
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_Redemption",
+                "TFT_Item_WarmogsArmor"
+              ]
+            },
+            {
+              "instanceId": "8de78ce4-93f6-4703-8182-f6b03214ea57",
+              "unitId": "swain",
+              "position": 10,
+              "stars": 1,
+              "items": []
+            },
+            {
+              "instanceId": "7c25f1a1-bf64-4388-b482-890ada56ea6c",
+              "unitId": "ziggs",
+              "position": 21,
+              "stars": 3,
+              "items": [
+                "TFT_Item_GuinsoosRageblade",
+                "TFT_Item_JeweledGauntlet",
+                "TFT_Item_PowerGauntlet"
+              ]
+            },
+            {
+              "instanceId": "8eba28b1-5696-4757-b2a5-f54b080ccb31",
+              "unitId": "seraphine",
+              "position": 22,
+              "stars": 3,
+              "items": [
+                "TFT_Item_Morellonomicon",
+                "TFT_Item_SpearOfShojin",
+                "TFT_Item_StatikkShiv"
+              ]
+            },
+            {
+              "instanceId": "b4e178b8-389d-4310-9689-462e302705c5",
+              "unitId": "lulu",
+              "position": 23,
+              "stars": 3,
+              "items": []
+            },
+            {
+              "instanceId": "e9b3db4e-11fa-4a25-a452-7fccb4fe80a8",
+              "unitId": "tristana",
+              "position": 24,
+              "stars": 3,
+              "items": []
+            },
+            {
+              "instanceId": "d929d1cf-77d4-4fb2-bbd7-008c50064d80",
+              "unitId": "teemo",
+              "position": 25,
+              "stars": 1,
+              "items": [
+                "TFT_Item_JeweledGauntlet",
+                "TFT_Item_PowerGauntlet",
+                "TFT_Item_SpearOfShojin"
+              ]
+            }
+          ]
         }
       ],
       "team": {
@@ -4143,7 +4306,11 @@
         ],
         "webTitle": "九级上限 · 五高能三编舞师"
       },
-      "summaryBlockId": "sample-block-0672"
+      "summaryBlockId": "sample-block-0672",
+      "stageTeamIds": [
+        "144cb8a8-4046-4b85-8acc-f6610fa882c1",
+        "f8b6749a-eb90-491d-9ada-35e35aa0a9eb"
+      ]
     },
     {
       "id": "sample-block-0229",
