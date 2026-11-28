@@ -113,6 +113,9 @@
   align-items: center;
   column-gap: 8px;
 }
+.trait-lookup-entry-heading:has(.trait-reward-link):not(:has(> .trait-lookup-members)) {
+  grid-template-columns: minmax(max-content, 1fr) minmax(0, auto);
+}
 .trait-lookup-entry-heading:has(> .trait-lookup-members) { row-gap: 2px; }
 .trait-lookup-entry-heading:has(> .trait-lookup-members) .trait-entry-actions { grid-area: 2 / 1; justify-content: start; }
 .trait-lookup-title {
@@ -123,6 +126,7 @@
 .trait-lookup-title h3 { margin: 0; font-size: 18px; font-weight: 650; line-height: 1.25; min-width: 0; scroll-margin-block-start: 84px; }
 .trait-entry-actions { display: flex; flex-wrap: wrap; justify-content: end; gap: 0 10px; font-size: 13px; }
 .trait-entry-actions a { display: inline-flex; align-items: center; min-height: 32px; color: var(--accent); white-space: nowrap; }
+.trait-entry-actions .trait-reward-link { font-weight: 650; gap: 3px; }
 .trait-entry-actions a:hover, .trait-entry-actions a:focus-visible { text-decoration: underline; text-underline-offset: 3px; }
 .trait-lookup-entry .matrix-trait-info { margin-block: 6px 0; }
 .trait-lookup-entry .matrix-trait-info > p { margin: 0 0 6px; }
