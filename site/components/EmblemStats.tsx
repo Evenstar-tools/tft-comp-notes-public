@@ -237,7 +237,7 @@ export function EmblemStats({ traitId, holderId, initialFilters, guideHref, guid
         </summary>
         <div className="emblem-method-panel">
           <p>{snapshot.set} · 近 {snapshot.days} 天 · <time dateTime={updatedAt}>{time}</time>（北京时间）</p>
-          <p>最佳使用者 ≥ {snapshot.minGames} 场；均名变化 = 携装均名 − 总体均名。</p>
+          <p>最佳使用者 ≥ {displayMinimum} 场；均名变化 = 携装均名 − 总体均名。</p>
           <a href="https://www.metatft.com/items?set=TFTSet19" target="_blank" rel="noreferrer">MetaTFT 数据</a>
           {!duringLaunch && <a href="https://www.datatft.com/explorerForPBE" target="_blank" rel="noreferrer">DataTFT 检索</a>}
         </div>
