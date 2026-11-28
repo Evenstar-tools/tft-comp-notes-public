@@ -2,7 +2,7 @@ import type { Publication, Section } from "./document";
 import { sectionTeams } from "./document-flow.ts";
 import type { BoardSetup, Piece, PieceLoadout, Team } from "./types";
 import { sameEdition } from "./version-updates.ts";
-import { boardQuerySignature } from "./owner-board-query.ts";
+import { boardQuerySignature, supportsOrdinaryBoardQuery } from "./owner-board-query.ts";
 
 export type BoardLayout = {
   pieces: Pick<Piece, "instanceId" | "unitId" | "position">[];
@@ -142,8 +142,12 @@ export function applyBoardOverrides(publication: Publication): Publication {
         const edit = boards.get(team.id);
         if (!edit || boardContentVersion(team) !== boardContentVersion(edit.source)) return team;
         const publishedRosterChanged = boardQuerySignature(team.pieces) !== boardQuerySignature(edit.content.pieces);
-        return { ...team, ...edit.content, instrumentPositions: edit.content.instrumentPositions,
-          conditions: edit.content.conditions, ...(publishedRosterChanged && { publishedRosterChanged: true as const }) };
+        const updated = { ...team, ...edit.content, instrumentPositions: edit.content.instrumentPositions, conditions: edit.content.conditions };
+        const data = section.gameData ?? publication.season;
+        const needsReview = !supportsOrdinaryBoardQuery(section, updated, data) &&
+          (publishedRosterChanged || supportsOrdinaryBoardQuery(section, team, data));
+        return { ...updated, ...(publishedRosterChanged && { publishedRosterChanged: true as const }),
+          ...(needsReview && { publishedRosterNeedsReview: true as const }) };
       };
       return { ...section, team: section.team && replace(section.team), teams: section.teams?.map(replace) };
     }),

@@ -297,7 +297,8 @@ export function guideFamilyBoardIds(batch: GuideFamilyBatch, seasonId: string, s
 }
 
 export function familyRosterMatches(stat: Pick<GuideFamilyStat, "boardSignatures">, team: Team) {
-  return !team.publishedRosterChanged || stat.boardSignatures?.[team.id] === boardQuerySignature(team.pieces);
+  return !team.publishedRosterNeedsReview &&
+    (!team.publishedRosterChanged || stat.boardSignatures?.[team.id] === boardQuerySignature(team.pieces));
 }
 
 export function guideFamilyRows(batch: GuideFamilyBatch, seasonId: string, sectionId: string, teams: Team[], { includeSmallSamples = false } = {}) {

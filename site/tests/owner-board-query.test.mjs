@@ -10,9 +10,9 @@ const unitIds = { a: "TFT19_A", b: "TFT19_B", c: "TFT19_C" };
 const piece = (unitId, position, instanceId = unitId) => ({ unitId, instanceId, position, stars: 2, items: [] });
 const original = { id: "board", pieces: [piece("a", 0), piece("b", 9)] };
 
-function published(pieces, { conditions, category = "普通攻略", source = original } = {}) {
+function published(pieces, { conditions, category = "普通攻略", source = original, items = [] } = {}) {
   return applyBoardOverrides({
-    season: { id: edition, items: [] },
+    season: { id: edition, items },
     sections: [{ id: "guide", category, team: original }],
     boardOverrides: [{
       sectionId: "guide", teamId: "board", edition,
@@ -59,6 +59,27 @@ test("必需条件、英雄强化与重复棋子交数据维护复核，冲突�
     assert.deepEqual(boards, []);
     assert.equal(review[0].teamId, "board");
   }
+  const signature = boardQuerySignature(roster);
+  const stats = { boardSignatures: { board: signature } };
+  const placement = { build, records: [{ build, conditions: { teamId: "board" }, querySignature: signature }] };
+  const restricted = published(roster, { conditions: [{ kind: "required", augmentId: "special" }] });
+  assert.equal(familyRosterMatches(stats, restricted.sections[0].team), false);
+  assert.equal(publishedBoardRefreshPlan(restricted, placement, build, unitIds).review.length, 1);
+
+  const sameRoster = published(original.pieces, { conditions: [{ kind: "required", augmentId: "special" }] });
+  assert.equal(familyRosterMatches({ boardSignatures: { board: boardQuerySignature(original.pieces) } }, sameRoster.sections[0].team), false);
+  assert.equal(publishedBoardRefreshPlan(sameRoster, { build, records: [] }, build, unitIds).review.length, 1);
+
+  for (const itemId of ["TFT_Item_ForceOfNature", "TFT_Item_TacticiansRing", "TFT_Item_TacticiansScepter"]) {
+    const withPopulation = published([{ ...roster[0], items: [itemId] }, roster[1]], {
+      items: [{ id: itemId, category: "team-size" }],
+    });
+    const { boards, review } = publishedBoardRefreshPlan(withPopulation, placement, build, unitIds);
+    assert.deepEqual(boards, []);
+    assert.equal(review.length, 1);
+    assert.equal(familyRosterMatches(stats, withPopulation.sections[0].team), false);
+  }
+
   const stale = published(roster, { source: { ...original, pieces: [piece("b", 0), piece("c", 9)] } });
   assert.deepEqual(publishedBoardRefreshPlan(stale, { build, records: [] }, build, unitIds), { boards: [], review: [] });
   assert.equal(boardQuerySignature([piece("baron-nashor", 0)]), '[2,["baron-nashor"]]');

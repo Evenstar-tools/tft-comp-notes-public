@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { changeSignals, compareBoards, matchBoundCluster, sourceProfile, makeReviewQueue } from "../scripts/family-review.mjs";
+import { changeSignals, compareBoards, exactFamilyBoardSignature, matchBoundCluster, sourceProfile, makeReviewQueue } from "../scripts/family-review.mjs";
 import { crossCheck } from "../scripts/family-evidence.mjs";
 
 const meta = {set:"S19",queue:"PBE",patch:"19.1 Nov-20",days:3,model:427};
@@ -35,6 +35,38 @@ test("单局吃鸡或同站重复引用不能完成交叉核实",()=>{
   e.secondSource.url="https://www.datatft.com/explorerForPBE"; e.player.matches.push({...e.player.matches[0],id:"2",placement:7});
   assert.equal(crossCheck([e],{id:"x"},after).status,"可人工决定收录");
 });
+test("站主换人后的主盘和共用盘分别用本轮来源名单核验", () => {
+  const roster = ["braum", "draven", "gragas", "kai-sa", "leona", "lillia", "samira"];
+  const group = { units_string: roster.map(id => "API_" + id).join(", "), levelling: "lvl 7" };
+  const unitIds = new Map([...roster, "thresh", "baron-nashor"].map(id => ["API_" + id, id]));
+  const carries = ["draven", "kai-sa"];
+  const board = (units, overrides = {}) => ({
+    units, familyQueryEligible: true, rollLevel: 7,
+    querySignature: JSON.stringify([units.length, [...units].sort()]),
+    roles: [{ label: "主C", units: ["draven"] }], ...overrides,
+  });
+  const matching = board([...roster].reverse());
+  const mismatched = board([...roster.slice(0, -1), "thresh"]);
+  assert.deepEqual([matching, mismatched].map(team => exactFamilyBoardSignature(team, group, unitIds, carries)),
+    [matching.querySignature, undefined]);
+  assert.equal(exactFamilyBoardSignature(matching, {
+    ...group, units_string: group.units_string + ", API_braum",
+  }, unitIds, carries), undefined);
+  assert.equal(exactFamilyBoardSignature(matching, {
+    ...group, units_string: group.units_string.replace("API_braum", "API_unknown"),
+  }, unitIds, carries), undefined);
+  assert.equal(exactFamilyBoardSignature(board(roster, { familyQueryEligible: false }), group, unitIds, carries), undefined);
+  assert.equal(exactFamilyBoardSignature(board(roster, { rollLevel: 6 }), group, unitIds, carries), undefined);
+
+  const baronRoster = [...roster.slice(0, -1), "baron-nashor"];
+  const baronSource = { ...group, units_string: baronRoster.map(id => "API_" + id).join(", ") };
+  const baronSignature = JSON.stringify([8, [...baronRoster].sort()]);
+  assert.equal(exactFamilyBoardSignature(board(baronRoster, { querySignature: baronSignature }), baronSource, unitIds, carries),
+    baronSignature);
+  assert.equal(exactFamilyBoardSignature(board(roster, { roles: [{ label: "主C", units: ["samira"] }] }),
+    group, unitIds, carries), undefined);
+});
+
 test("代表盘兼容 1–2 张挂件微调，主 C 丢失或大幅换阵必须阻断",()=>{
   const mapPairs = [
     ["DA_Amumu19","amumu"],["DA_Briar19","briar"],["DA_Camille19","camille"],["DA_Garen19","garen"],

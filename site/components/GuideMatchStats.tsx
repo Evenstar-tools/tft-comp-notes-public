@@ -75,8 +75,8 @@ export function guideMatchEvidence({ team, teams, section, edition, augmentName,
       .filter((sample): sample is PlacementRating => !!sample?.games);
     const carry = carryEvidence(edition, section.id, board, augmentName);
     const rows = matchingFamily ? familyRows.filter(row => row.boards.some(entry => entry.id === board.id) && familyRosterMatches(row.stat, board)) : [];
-    const rare = board.publishedRosterChanged ? [] : rareRows.filter(stat => (stat.teamId ?? teams[0]?.id) === board.id);
-    const formation = !heroGuide ? formationEvidence(board, edition) : undefined;
+    const rare = rareRows.filter(stat => (stat.teamId ?? teams[0]?.id) === board.id && familyRosterMatches(stat, board));
+    const formation = !heroGuide && !board.publishedRosterNeedsReview ? formationEvidence(board, edition) : undefined;
     const candidateReference = !rows.length && !rare.length ? formation?.board.familyReference : undefined;
     const reference = launch ? currentFormationFamilyReference(candidateReference) : candidateReference;
     function distributionGroups(view: "board" | "carry") {

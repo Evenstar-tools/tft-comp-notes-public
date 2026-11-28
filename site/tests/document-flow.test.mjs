@@ -56,7 +56,7 @@ test("a repository board revision follows new guide content and yields when the 
   const edited = { ...team, pieces: [{ ...team.pieces[0], position: 26, items: ["red"] }],
     instrumentPositions: undefined, conditions: undefined };
   const variant = { id: "variant", pieces: [] };
-  const current = { id: "new-base", publishedAt: "2026-11-27T00:00:00Z", season: { id: "s19-pbe-19.1c" },
+  const current = { id: "new-base", publishedAt: "2026-11-27T00:00:00Z", season: { id: "s19-pbe-19.1c", items: [{ id: "red", category: "completed" }] },
     sections: [{ id: "guide", title: "新版正文", team, teams: [team, variant] }, { id: "new-guide" }] };
   const revision = { kind: "repository-board-revision", id: "edit", previousId: "old-base", publishedAt: "2026-11-26T00:00:00Z",
     boardOverrides: [{ sectionId: "guide", teamId: team.id, edition: "s19-pbe-19.1b",

@@ -90,6 +90,7 @@ export interface Team extends BoardSetup {
   boardRole?: "variant" | "stage";
   conditions?: TeamCondition[];
   publishedRosterChanged?: true;
+  publishedRosterNeedsReview?: true;
 }
 export interface Season {
   id: string;
