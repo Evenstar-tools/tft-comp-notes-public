@@ -100,7 +100,7 @@ export function posterTitle(section: Section | undefined, team: Team) {
   const title = /^备选\s*·\s*/.test(team.name) ? guideBoardName(team) : section?.title ?? team.name;
   if (team.mainStage || team.stages) return { title, subtitle: posterStageTitle(team) };
   const { level, name } = teamCaption(team);
-  return { title, subtitle: level + (name && !title.includes(name) ? " · " + name : "") };
+  return { title, subtitle: level + (name && !shortText(title).includes(name) ? " · " + name : "") };
 }
 
 export function posterFilename(section: Section | undefined, team: Team, format: PosterFormat) {

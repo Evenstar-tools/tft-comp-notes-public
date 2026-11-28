@@ -89,6 +89,9 @@ function GearResult({ hit, intent, onToggleExclusion, onToggleSeven, groupKind }
     </details>
   </div> : <ResultLink hit={hit} resultType={groupKind} />;
   const hasHolders = gear.holders.length > 0;
+  const hasCarries = gear.carries.length > 0;
+  const hasTerminals = gear.examples.length > 0;
+  const hasStageBoards = Boolean(gear.stageBoards?.length);
   const columns = <span className="site-lookup-column-names" aria-hidden="true"><span>均名</span><span>场数</span></span>;
   const snapshotLabel = gear.snapshot?.label.match(/^(.*?)(\d{4}-\d{2}-\d{2})$/);
   return <div className="site-lookup-gear">
@@ -101,7 +104,7 @@ function GearResult({ hit, intent, onToggleExclusion, onToggleSeven, groupKind }
       {!onToggleSeven && gear.type === "emblem" && onToggleExclusion && <button type="button" aria-pressed={gear.exclude === "rakan"}
         onClick={() => onToggleExclusion(gear.exclude === "rakan" ? "none" : "rakan")}>剔除洛</button>}
     </div>
-    <div className="site-lookup-evidence-grid">
+    <div className="site-lookup-evidence-grid" data-single-column={!hasCarries || undefined}>
       <section className="site-lookup-evidence" aria-label="最佳使用者">
         <header><h3>最佳使用者</h3>{hasHolders && <>
           <span className="site-lookup-order">{gear.holderOrder === "games" ? "按场数" : "按携带均名"}</span>{columns}
@@ -110,20 +113,19 @@ function GearResult({ hit, intent, onToggleExclusion, onToggleSeven, groupKind }
           primary={i === 0 && intent === "holders"} />)}
         {!hasHolders && <p className="site-lookup-message">暂无携带者战绩</p>}
       </section>
-      <section className="site-lookup-evidence" aria-label="主 C 候选">
-        <header><h3>主 C 候选</h3>{gear.carries.length > 0 && <><span className="site-lookup-order">终盘优先</span>{columns}</>}</header>
+      {hasCarries && <section className="site-lookup-evidence" aria-label="主 C 候选">
+        <header><h3>主 C 候选</h3><span className="site-lookup-order">终盘优先</span>{columns}</header>
         {gear.carries.map(carry => <ResultLink key={carry.id} hit={carry} numericColumns resultType="guide" />)}
-        {!gear.carries.length && <p className="site-lookup-message">暂无有携带战绩的攻略主 C</p>}
-      </section>
+      </section>}
     </div>
-    <section className="site-lookup-evidence site-lookup-terminals" aria-label="阵容终盘">
+    {(hasTerminals || hasStageBoards) ? <section className="site-lookup-evidence site-lookup-terminals" aria-label="阵容终盘">
       <header><h3>阵容终盘</h3><span className="site-lookup-order">按体系均名 · 排除 7 费</span></header>
       {gear.examples.map((example, i) => <ResultLink key={example.id} hit={example} resultType="guide" terminal primary={i === 0 && intent === "comps"} />)}
       {gear.routeNote && <p className="site-lookup-message">{gear.routeNote}</p>}
-    </section>
-    {!!gear.stageBoards?.length && <details className="site-lookup-board-evidence">
+    </section> : gear.routeNote && <p className="site-lookup-message site-lookup-empty-route">{gear.routeNote}</p>}
+    {hasStageBoards && <details className="site-lookup-board-evidence">
       <summary>查看实戴棋盘</summary>
-      {gear.stageBoards.map(board => <ResultLink key={board.id} hit={board} resultType="guide" />)}
+      {gear.stageBoards!.map(board => <ResultLink key={board.id} hit={board} resultType="guide" />)}
     </details>}
   </div>;
 }

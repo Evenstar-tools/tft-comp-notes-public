@@ -1,5 +1,10 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { createRequire } from "node:module";
 import { test } from "node:test";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import ts from "typescript";
 import { boardSearchQuery } from "../domain/board-search-query.ts";
 import { guideBoardBySearchAlias, guideSearchKey } from "../domain/guide-search.ts";
 import { boardPublicSlug } from "../domain/guide-slugs.ts";
@@ -129,4 +134,32 @@ test("holder averages use individual sample counts and sort qualified rows by pl
   assert.deepEqual(rankedWearers(fishbones,100).map(x=>x.unitId),["graves","jinx"]);
   assert.deepEqual(rankedWearers(fishbones,200).map(x=>[x.unitId,x.games,x.mean]),
     [["jinx",157,undefined],["graves",130,undefined],["lucian",28,undefined]]);
+});
+
+test("equipment lookup collapses to single column and compact footer when no carries or terminals exist", () => {
+  const source = readFileSync(new URL("../components/SiteSearchResults.tsx", import.meta.url), "utf8");
+  const { outputText } = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX } });
+  const require = createRequire(import.meta.url);
+  const stubs = new Map([["./HeroAugmentSearchCard", { HeroAugmentSearchCard: () => null }], ["./site-search-results.css", {}]]);
+  const mod = {};
+  new Function("require", "exports", outputText)(id => stubs.get(id) ?? require(id), mod);
+  const holder = { id: "mel", name: "梅尔", href: "/units/mel", games: 2313, mean: 3.05 };
+  const baseHit = { id: "emblem", name: "非主流纹章", href: "/items/emblem", detail: "纹章", gear: {
+    type: "emblem", totalGames: 45887, holderOrder: "mean", holders: [holder], carries: [], examples: [],
+    routeNote: "暂无实戴这件装备的已发布棋盘。",
+  } };
+  const collapsed = renderToStaticMarkup(createElement(mod.SiteSearchResults, {
+    search: { phase: "ready", result: { query: "非主流转", intent: "holders", groups: [{ kind: "items", title: "装备与纹章", hits: [baseHit] }] } },
+  }));
+  assert.match(collapsed, /data-single-column="true"/);
+  assert.doesNotMatch(collapsed, /主 C 候选|阵容终盘/);
+  assert.match(collapsed, /site-lookup-empty-route/);
+  const fullHit = { ...baseHit, gear: { ...baseHit.gear, carries: [{ id: "sera", name: "萨勒芬妮", href: "/guides/kda", games: 312, mean: 3.92 }],
+    examples: [{ id: "kda", name: "K/DA 萨勒芬妮", href: "/guides/kda", games: 312, mean: 3.92 }] } };
+  const expanded = renderToStaticMarkup(createElement(mod.SiteSearchResults, {
+    search: { phase: "ready", result: { query: "KDA转", intent: "holders", groups: [{ kind: "items", title: "装备与纹章", hits: [fullHit] }] } },
+  }));
+  assert.doesNotMatch(expanded, /data-single-column=/);
+  assert.match(expanded, /主 C 候选/);
+  assert.match(expanded, /阵容终盘/);
 });
