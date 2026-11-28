@@ -134,7 +134,7 @@ test("other authored branches retain independent cores and choose the best valid
   assert.equal(renekton.find(system => system.teamId === id("0100"))?.stat, undefined);
   assert(renekton.some(system => system.teamId === id("0100") && system.boardIds.includes(id("0032"))));
   const { systems: kayle, comparison } = guide(GUIDE_SECTION_IDS.pentakillKayle);
-  assert.deepEqual(kayle.map(system => system.teamId), ["0064", "0106"].map(id));
+  assert.deepEqual(kayle.map(system => system.teamId), [id("0064"), "19b143ef-e315-4b8e-8081-31e13a6ec3f0", id("0106")]);
   assert.deepEqual(comparison(kayle[0]).map(row => row.board.id), ["0019", "0064"].map(id));
   const sister = { ...zeri[0], sectionId: "cross-guide", stat: { ...zeri[0].stat, mean: 3.7 } };
   assert.equal(rankGuideSystems([...zeri, sister])[0], sister);

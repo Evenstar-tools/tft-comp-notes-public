@@ -156,11 +156,16 @@ const guideSlugs: Record<string, GuideSlugs> = {
     "00000000-0000-4000-8000-000000000007": "lv8",
     "00000000-0000-4000-8000-000000000031": "lv9",
   } },
-  "sample-block-0219": { slug: "pentakill-kayle", boards: {
+  "sample-block-0219": { slug: "pentakill-kayle", searchAliases: {
+    "lv8-locke": ["三迅击鼓手三摇滚恶魔洛克", "三迅击洛克", "摇滚洛克", "洛克天使"],
+    "lv9-locke": ["洛克补芮尔", "九级洛克"],
+  }, boards: {
     "00000000-0000-4000-8000-000000000019": "lv9-swain",
     "00000000-0000-4000-8000-000000000064": "lv8",
     "00000000-0000-4000-8000-000000000106": "lv9-pyke-zeri",
     "00000000-0000-4000-8000-000000000120": "lv8-jugg-zeri",
+    "19b143ef-e315-4b8e-8081-31e13a6ec3f0": "lv8-locke",
+    "7f18bb65-1662-403f-b1e2-fff9634c755f": "lv9-locke",
   } },
   "sample-block-0051": { slug: "classical-jhin", boards: {
     "00000000-0000-4000-8000-000000000006": "lv8-6-classical",
@@ -213,10 +218,6 @@ const guideSlugs: Record<string, GuideSlugs> = {
   } },
   "mosher-yasuo-yone": { slug: "mosher-yasuo-yone", boards: {
     "edad46b7-e909-4233-b0c5-79d6899db862": "lv8",
-  } },
-  "swiftstriker-locke": { slug: "swiftstriker-locke", boards: {
-    "19b143ef-e315-4b8e-8081-31e13a6ec3f0": "lv8",
-    "7f18bb65-1662-403f-b1e2-fff9634c755f": "lv9",
   } },
   "true-damage-akali": { slug: "true-damage-akali", boards: {
     "bace6643-9e7b-4b21-9ceb-36e58a535ee4": "lv9",

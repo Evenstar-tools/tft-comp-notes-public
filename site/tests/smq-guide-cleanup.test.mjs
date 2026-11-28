@@ -141,6 +141,10 @@ test("merged links select their retained boards and retired guides are omitted f
   assert.deepEqual(dest("1120"), { sectionId: graves.id, teamId: board(graves, "1261").id });
   assert.equal(dest("1120", board(graves, "1262").id).teamId, board(graves, "1262").id);
   assert.equal(dest("0154"), undefined);
+  assert.deepEqual(legacyGuideDestination("swiftstriker-locke", undefined, preview.sections),
+    { sectionId: kayle.id, teamId: "19b143ef-e315-4b8e-8081-31e13a6ec3f0" });
+  assert.deepEqual(legacyGuideDestination("swiftstriker-locke", "lv9", preview.sections),
+    { sectionId: kayle.id, teamId: "7f18bb65-1662-403f-b1e2-fff9634c755f" });
   assert.equal(graves.primaryTeamId, board(graves, "0076").id);
   const variants = ["1261", "1262", "0093"].map(id => board(graves, id));
   assert.deepEqual(variants.map(team => guidePlaystyle(graves, team)), ["84", "84", "95"]);
@@ -166,7 +170,7 @@ test("merged links select their retained boards and retired guides are omitted f
     { ...graves, id: "sample-block-0452", teams: variants },
   ] };
   const updated = migrateS19GuideSnapshot(legacy);
-  assert.deepEqual(updated.sections.map(s => [s.id, s.teams.length]), [[five.id, 2], [anchor.id, 6], [kayle.id, 3], [graves.id, 8]]);
+  assert.deepEqual(updated.sections.map(s => [s.id, s.teams.length]), [[five.id, 2], [anchor.id, 6], [kayle.id, 5], [graves.id, 8]]);
   assert.equal(updated.sections[2].team, kayle.team);
   assert.equal(updated.sections[3].team, graves.team);
   assert.deepEqual(updated.sections[3].teams.slice(-3), variants);

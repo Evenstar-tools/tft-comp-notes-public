@@ -19273,6 +19273,67 @@
           ],
           "level": 0,
           "text": "棋盘配装 · 九级 · 四主宰派克泽丽\n主C：凯尔。羊刀先做，鬼书补重伤。\n主坦：扎克。肉装先给打工塔里克。\n副C：泽丽。吃剩余物理装。\n副坦：约里克。薄暮跟泽丽同侧。"
+        },
+        {
+          "id": "sample-block-kayle-locke-heading",
+          "type": "heading",
+          "level": 3,
+          "text": "八级 · 三迅击三摇滚洛克",
+          "elements": [
+            {
+              "text_run": {
+                "content": "八级 · 三迅击三摇滚洛克"
+              }
+            }
+          ]
+        },
+        {
+          "id": "sample-block-kayle-locke-start",
+          "type": "text",
+          "text": "拳套、大棒多且未凑齐七五杀时转这套，4-2 拉八搜两星洛克与两星约里克即停 D 存钱；法爆、正义先给凯尔或巴德打工，肉装先给奥拉夫或斯维因，洛克夜刃可换饮血或帽子。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "拳套、大棒多且未凑齐七五杀时转这套，4-2 拉八搜两星洛克与两星约里克即停 D 存钱；法爆、正义先给凯尔或巴德打工，肉装先给奥拉夫或斯维因，洛克夜刃可换饮血或帽子。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "sample-block-kayle-locke-cap",
+          "type": "text",
+          "text": "双两星稳血上九补芮尔开双 R&B；战士装多用史密奇替芮尔，巴德可换两星泽丽。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "双两星稳血上九补芮尔开双 R&B；战士装多用史密奇替芮尔，巴德可换两星泽丽。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "sample-block-kayle-locke-items-lv8",
+          "type": "text",
+          "text": "棋盘配装 · 八级 · 三迅击三摇滚洛克\n主C：洛克。珠光护手、正义之手、夜之锋刃。\n主坦：约里克。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副C：凯尔。鬼索的狂暴之刃、珠光护手、强袭者的链枷。\n功能装：梅尔。莫雷洛秘典、虚空之杖。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "棋盘配装 · 八级 · 三迅击三摇滚洛克\n主C：洛克。珠光护手、正义之手、夜之锋刃。\n主坦：约里克。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副C：凯尔。鬼索的狂暴之刃、珠光护手、强袭者的链枷。\n功能装：梅尔。莫雷洛秘典、虚空之杖。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "sample-block-kayle-locke-items-lv9",
+          "type": "text",
+          "text": "棋盘配装 · 九级 · 洛克补芮尔上限\n主C：洛克。珠光护手、正义之手、夜之锋刃。\n主坦：约里克。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副C：凯尔。鬼索的狂暴之刃、珠光护手、强袭者的链枷。\n功能装：梅尔。莫雷洛秘典、虚空之杖。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "棋盘配装 · 九级 · 洛克补芮尔上限\n主C：洛克。珠光护手、正义之手、夜之锋刃。\n主坦：约里克。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副C：凯尔。鬼索的狂暴之刃、珠光护手、强袭者的链枷。\n功能装：梅尔。莫雷洛秘典、虚空之杖。"
+              }
+            }
+          ]
         }
       ],
       "kind": "guide",
@@ -19544,6 +19605,195 @@
             }
           ],
           "boardRole": "variant"
+        },
+        {
+          "id": "19b143ef-e315-4b8e-8081-31e13a6ec3f0",
+          "name": "八级 · 三迅击三摇滚洛克",
+          "category": "待分类",
+          "notes": "两星泽丽可替换巴德补攻速上限。",
+          "revision": 1,
+          "updatedAt": "2026-11-27T14:21:20.000Z",
+          "sectionId": "sample-block-0219",
+          "pieces": [
+            {
+              "instanceId": "8526ea7a-52c3-4d60-8155-ca58fa1b680c",
+              "unitId": "yorick",
+              "position": 3,
+              "stars": 2,
+              "items": [
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_WarmogsArmor",
+                "TFT_Item_Redemption"
+              ]
+            },
+            {
+              "instanceId": "a447bd75-f094-4c3d-9159-f502aaa1b7fe",
+              "unitId": "swain",
+              "position": 9,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "cc0491a2-cc20-4bbc-9fe2-0732cbb2bdbb",
+              "unitId": "galio",
+              "position": 10,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "45c1492a-e67a-472f-8c88-688452d89c70",
+              "unitId": "olaf",
+              "position": 11,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "fcba8693-55d5-407c-8ffe-5941db252b90",
+              "unitId": "locke",
+              "position": 12,
+              "stars": 2,
+              "items": [
+                "TFT_Item_JeweledGauntlet",
+                "TFT_Item_UnstableConcoction",
+                "TFT_Item_GuardianAngel"
+              ]
+            },
+            {
+              "instanceId": "236987f0-1a19-4179-9c2d-5f293fa99f8d",
+              "unitId": "bard",
+              "position": 21,
+              "stars": 2,
+              "items": [],
+              "alternate": {
+                "instanceId": "25efa196-f256-4750-8a5a-cfda78f7ae84",
+                "unitId": "zeri",
+                "stars": 2,
+                "items": []
+              }
+            },
+            {
+              "instanceId": "f58fad4d-5d6f-408b-87ed-b8c14313d34c",
+              "unitId": "mel",
+              "position": 24,
+              "stars": 2,
+              "items": [
+                "TFT_Item_Morellonomicon",
+                "TFT_Item_StatikkShiv"
+              ]
+            },
+            {
+              "instanceId": "d39586d1-3b8d-43e6-af69-57522eb231ab",
+              "unitId": "kayle",
+              "position": 27,
+              "stars": 2,
+              "items": [
+                "TFT_Item_GuinsoosRageblade",
+                "TFT_Item_JeweledGauntlet",
+                "TFT_Item_PowerGauntlet"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "7f18bb65-1662-403f-b1e2-fff9634c755f",
+          "name": "九级 · 洛克补芮尔上限",
+          "category": "待分类",
+          "notes": "战士装多时用史密奇替换芮尔，两星泽丽可替换巴德。",
+          "revision": 1,
+          "updatedAt": "2026-11-27T14:21:20.000Z",
+          "sectionId": "sample-block-0219",
+          "pieces": [
+            {
+              "instanceId": "a5a3ea49-d959-4496-81a4-f37d5ce18eac",
+              "unitId": "yorick",
+              "position": 3,
+              "stars": 2,
+              "items": [
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_WarmogsArmor",
+                "TFT_Item_Redemption"
+              ]
+            },
+            {
+              "instanceId": "2e3f118a-91ec-486e-9896-c8c739483b3c",
+              "unitId": "swain",
+              "position": 9,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "1de20101-7188-48c4-9063-b8d910f99f9c",
+              "unitId": "galio",
+              "position": 10,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "e887e86a-f7b5-4f05-8046-905a7cd738c2",
+              "unitId": "olaf",
+              "position": 11,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "50469606-45ca-488a-a3c2-3b291e8e58c6",
+              "unitId": "locke",
+              "position": 12,
+              "stars": 2,
+              "items": [
+                "TFT_Item_JeweledGauntlet",
+                "TFT_Item_UnstableConcoction",
+                "TFT_Item_GuardianAngel"
+              ]
+            },
+            {
+              "instanceId": "48b76e86-b472-4fec-8787-18cb75d90afa",
+              "unitId": "bard",
+              "position": 21,
+              "stars": 2,
+              "items": [],
+              "alternate": {
+                "instanceId": "e022f9fd-d55a-42b6-9d7f-f48a9bfc8132",
+                "unitId": "zeri",
+                "stars": 2,
+                "items": []
+              }
+            },
+            {
+              "instanceId": "bb882a1e-b324-4a22-90a3-21f0afe5bea6",
+              "unitId": "mel",
+              "position": 24,
+              "stars": 2,
+              "items": [
+                "TFT_Item_Morellonomicon",
+                "TFT_Item_StatikkShiv"
+              ]
+            },
+            {
+              "instanceId": "3f43bceb-067d-4e67-99a1-63dd8cbcd5d7",
+              "unitId": "kayle",
+              "position": 27,
+              "stars": 2,
+              "items": [
+                "TFT_Item_GuinsoosRageblade",
+                "TFT_Item_JeweledGauntlet",
+                "TFT_Item_PowerGauntlet"
+              ]
+            },
+            {
+              "instanceId": "ab38ff12-f08e-448d-aa66-1e3a2d4e5068",
+              "unitId": "rell",
+              "position": 8,
+              "stars": 2,
+              "items": [],
+              "alternate": {
+                "instanceId": "83252530-c45e-4b4b-b6ad-2d3fb2982bd5",
+                "unitId": "smeech",
+                "stars": 2,
+                "items": []
+              }
+            }
+          ]
         }
       ],
       "team": {
@@ -24395,383 +24645,6 @@
       "primaryTeamId": "edad46b7-e909-4233-b0c5-79d6899db862",
       "stageTeamIds": [],
       "summaryBlockId": "mosher-yasuo-yone-start"
-    },
-    {
-      "id": "swiftstriker-locke",
-      "title": "三迅击鼓手三摇滚恶魔洛克",
-      "category": "高费阵容",
-      "blocks": [
-        {
-          "id": "swiftstriker-locke-start",
-          "type": "text",
-          "text": "拳套、大棒多且前期能连胜稳血就走，4-2 拉八搜两星洛克与两星约里克即停 D 存钱。",
-          "elements": [
-            {
-              "text_run": {
-                "content": "拳套、大棒多且前期能连胜稳血就走，4-2 拉八搜两星洛克与两星约里克即停 D 存钱。"
-              }
-            }
-          ]
-        },
-        {
-          "id": "swiftstriker-locke-tempo",
-          "type": "text",
-          "text": "打法：84",
-          "elements": [
-            {
-              "text_run": {
-                "content": "打法：84"
-              }
-            }
-          ]
-        },
-        {
-          "id": "swiftstriker-locke-roll",
-          "type": "text",
-          "text": "法爆、正义先给凯尔或巴德打工，肉装先给奥拉夫或斯维因；洛克夜刃可换饮血或帽子。",
-          "elements": [
-            {
-              "text_run": {
-                "content": "法爆、正义先给凯尔或巴德打工，肉装先给奥拉夫或斯维因；洛克夜刃可换饮血或帽子。"
-              }
-            }
-          ]
-        },
-        {
-          "id": "swiftstriker-locke-cap",
-          "type": "text",
-          "text": "双两星稳血上九补芮尔开双 R&B；战士装多用史密奇替芮尔，巴德可换两星泽丽。",
-          "elements": [
-            {
-              "text_run": {
-                "content": "双两星稳血上九补芮尔开双 R&B；战士装多用史密奇替芮尔，巴德可换两星泽丽。"
-              }
-            }
-          ]
-        },
-        {
-          "id": "swiftstriker-locke-loadouts",
-          "type": "heading",
-          "level": 3,
-          "text": "各棋盘配装",
-          "elements": [
-            {
-              "text_run": {
-                "content": "各棋盘配装"
-              }
-            }
-          ]
-        },
-        {
-          "id": "swiftstriker-locke-items-lv8",
-          "type": "text",
-          "text": "棋盘配装 · 八级 · 三迅击鼓手三摇滚恶魔洛克\n主C：洛克。珠光护手、正义之手、夜之锋刃。\n主坦：约里克。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副C：凯尔。鬼索的狂暴之刃、珠光护手、强袭者的链枷。\n功能装：梅尔。莫雷洛秘典、虚空之杖。",
-          "elements": [
-            {
-              "text_run": {
-                "content": "棋盘配装 · 八级 · 三迅击鼓手三摇滚恶魔洛克\n主C：洛克。珠光护手、正义之手、夜之锋刃。\n主坦：约里克。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副C：凯尔。鬼索的狂暴之刃、珠光护手、强袭者的链枷。\n功能装：梅尔。莫雷洛秘典、虚空之杖。"
-              }
-            }
-          ]
-        },
-        {
-          "id": "swiftstriker-locke-items-lv9",
-          "type": "text",
-          "text": "棋盘配装 · 九级 · 补芮尔上限\n主C：洛克。珠光护手、正义之手、夜之锋刃。\n主坦：约里克。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副C：凯尔。鬼索的狂暴之刃、珠光护手、强袭者的链枷。\n功能装：梅尔。莫雷洛秘典、虚空之杖。",
-          "elements": [
-            {
-              "text_run": {
-                "content": "棋盘配装 · 九级 · 补芮尔上限\n主C：洛克。珠光护手、正义之手、夜之锋刃。\n主坦：约里克。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副C：凯尔。鬼索的狂暴之刃、珠光护手、强袭者的链枷。\n功能装：梅尔。莫雷洛秘典、虚空之杖。"
-              }
-            }
-          ]
-        }
-      ],
-      "kind": "guide",
-      "teams": [
-        {
-          "id": "19b143ef-e315-4b8e-8081-31e13a6ec3f0",
-          "name": "八级 · 三迅击鼓手三摇滚恶魔洛克",
-          "category": "待分类",
-          "notes": "两星泽丽可替换巴德补攻速上限。",
-          "revision": 1,
-          "updatedAt": "2026-11-27T14:21:20.000Z",
-          "sectionId": "swiftstriker-locke",
-          "pieces": [
-            {
-              "instanceId": "8526ea7a-52c3-4d60-8155-ca58fa1b680c",
-              "unitId": "yorick",
-              "position": 3,
-              "stars": 2,
-              "items": [
-                "TFT_Item_GargoyleStoneplate",
-                "TFT_Item_WarmogsArmor",
-                "TFT_Item_Redemption"
-              ]
-            },
-            {
-              "instanceId": "a447bd75-f094-4c3d-9159-f502aaa1b7fe",
-              "unitId": "swain",
-              "position": 9,
-              "stars": 2,
-              "items": []
-            },
-            {
-              "instanceId": "cc0491a2-cc20-4bbc-9fe2-0732cbb2bdbb",
-              "unitId": "galio",
-              "position": 10,
-              "stars": 2,
-              "items": []
-            },
-            {
-              "instanceId": "45c1492a-e67a-472f-8c88-688452d89c70",
-              "unitId": "olaf",
-              "position": 11,
-              "stars": 2,
-              "items": []
-            },
-            {
-              "instanceId": "fcba8693-55d5-407c-8ffe-5941db252b90",
-              "unitId": "locke",
-              "position": 12,
-              "stars": 2,
-              "items": [
-                "TFT_Item_JeweledGauntlet",
-                "TFT_Item_UnstableConcoction",
-                "TFT_Item_GuardianAngel"
-              ]
-            },
-            {
-              "instanceId": "236987f0-1a19-4179-9c2d-5f293fa99f8d",
-              "unitId": "bard",
-              "position": 21,
-              "stars": 2,
-              "items": [],
-              "alternate": {
-                "instanceId": "25efa196-f256-4750-8a5a-cfda78f7ae84",
-                "unitId": "zeri",
-                "stars": 2,
-                "items": []
-              }
-            },
-            {
-              "instanceId": "f58fad4d-5d6f-408b-87ed-b8c14313d34c",
-              "unitId": "mel",
-              "position": 24,
-              "stars": 2,
-              "items": [
-                "TFT_Item_Morellonomicon",
-                "TFT_Item_StatikkShiv"
-              ]
-            },
-            {
-              "instanceId": "d39586d1-3b8d-43e6-af69-57522eb231ab",
-              "unitId": "kayle",
-              "position": 27,
-              "stars": 2,
-              "items": [
-                "TFT_Item_GuinsoosRageblade",
-                "TFT_Item_JeweledGauntlet",
-                "TFT_Item_PowerGauntlet"
-              ]
-            }
-          ]
-        },
-        {
-          "id": "7f18bb65-1662-403f-b1e2-fff9634c755f",
-          "name": "九级 · 补芮尔上限",
-          "category": "待分类",
-          "notes": "战士装多时用史密奇替换芮尔，两星泽丽可替换巴德。",
-          "revision": 1,
-          "updatedAt": "2026-11-27T14:21:20.000Z",
-          "sectionId": "swiftstriker-locke",
-          "pieces": [
-            {
-              "instanceId": "a5a3ea49-d959-4496-81a4-f37d5ce18eac",
-              "unitId": "yorick",
-              "position": 3,
-              "stars": 2,
-              "items": [
-                "TFT_Item_GargoyleStoneplate",
-                "TFT_Item_WarmogsArmor",
-                "TFT_Item_Redemption"
-              ]
-            },
-            {
-              "instanceId": "2e3f118a-91ec-486e-9896-c8c739483b3c",
-              "unitId": "swain",
-              "position": 9,
-              "stars": 2,
-              "items": []
-            },
-            {
-              "instanceId": "1de20101-7188-48c4-9063-b8d910f99f9c",
-              "unitId": "galio",
-              "position": 10,
-              "stars": 2,
-              "items": []
-            },
-            {
-              "instanceId": "e887e86a-f7b5-4f05-8046-905a7cd738c2",
-              "unitId": "olaf",
-              "position": 11,
-              "stars": 2,
-              "items": []
-            },
-            {
-              "instanceId": "50469606-45ca-488a-a3c2-3b291e8e58c6",
-              "unitId": "locke",
-              "position": 12,
-              "stars": 2,
-              "items": [
-                "TFT_Item_JeweledGauntlet",
-                "TFT_Item_UnstableConcoction",
-                "TFT_Item_GuardianAngel"
-              ]
-            },
-            {
-              "instanceId": "48b76e86-b472-4fec-8787-18cb75d90afa",
-              "unitId": "bard",
-              "position": 21,
-              "stars": 2,
-              "items": [],
-              "alternate": {
-                "instanceId": "e022f9fd-d55a-42b6-9d7f-f48a9bfc8132",
-                "unitId": "zeri",
-                "stars": 2,
-                "items": []
-              }
-            },
-            {
-              "instanceId": "bb882a1e-b324-4a22-90a3-21f0afe5bea6",
-              "unitId": "mel",
-              "position": 24,
-              "stars": 2,
-              "items": [
-                "TFT_Item_Morellonomicon",
-                "TFT_Item_StatikkShiv"
-              ]
-            },
-            {
-              "instanceId": "3f43bceb-067d-4e67-99a1-63dd8cbcd5d7",
-              "unitId": "kayle",
-              "position": 27,
-              "stars": 2,
-              "items": [
-                "TFT_Item_GuinsoosRageblade",
-                "TFT_Item_JeweledGauntlet",
-                "TFT_Item_PowerGauntlet"
-              ]
-            },
-            {
-              "instanceId": "ab38ff12-f08e-448d-aa66-1e3a2d4e5068",
-              "unitId": "rell",
-              "position": 8,
-              "stars": 2,
-              "items": [],
-              "alternate": {
-                "instanceId": "83252530-c45e-4b4b-b6ad-2d3fb2982bd5",
-                "unitId": "smeech",
-                "stars": 2,
-                "items": []
-              }
-            }
-          ]
-        }
-      ],
-      "team": {
-        "id": "19b143ef-e315-4b8e-8081-31e13a6ec3f0",
-        "name": "八级 · 三迅击鼓手三摇滚恶魔洛克",
-        "category": "待分类",
-        "notes": "两星泽丽可替换巴德补攻速上限。",
-        "revision": 1,
-        "updatedAt": "2026-11-27T14:21:20.000Z",
-        "sectionId": "swiftstriker-locke",
-        "pieces": [
-          {
-            "instanceId": "8526ea7a-52c3-4d60-8155-ca58fa1b680c",
-            "unitId": "yorick",
-            "position": 3,
-            "stars": 2,
-            "items": [
-              "TFT_Item_GargoyleStoneplate",
-              "TFT_Item_WarmogsArmor",
-              "TFT_Item_Redemption"
-            ]
-          },
-          {
-            "instanceId": "a447bd75-f094-4c3d-9159-f502aaa1b7fe",
-            "unitId": "swain",
-            "position": 9,
-            "stars": 2,
-            "items": []
-          },
-          {
-            "instanceId": "cc0491a2-cc20-4bbc-9fe2-0732cbb2bdbb",
-            "unitId": "galio",
-            "position": 10,
-            "stars": 2,
-            "items": []
-          },
-          {
-            "instanceId": "45c1492a-e67a-472f-8c88-688452d89c70",
-            "unitId": "olaf",
-            "position": 11,
-            "stars": 2,
-            "items": []
-          },
-          {
-            "instanceId": "fcba8693-55d5-407c-8ffe-5941db252b90",
-            "unitId": "locke",
-            "position": 12,
-            "stars": 2,
-            "items": [
-              "TFT_Item_JeweledGauntlet",
-              "TFT_Item_UnstableConcoction",
-              "TFT_Item_GuardianAngel"
-            ]
-          },
-          {
-            "instanceId": "236987f0-1a19-4179-9c2d-5f293fa99f8d",
-            "unitId": "bard",
-            "position": 21,
-            "stars": 2,
-            "items": [],
-            "alternate": {
-              "instanceId": "25efa196-f256-4750-8a5a-cfda78f7ae84",
-              "unitId": "zeri",
-              "stars": 2,
-              "items": []
-            }
-          },
-          {
-            "instanceId": "f58fad4d-5d6f-408b-87ed-b8c14313d34c",
-            "unitId": "mel",
-            "position": 24,
-            "stars": 2,
-            "items": [
-              "TFT_Item_Morellonomicon",
-              "TFT_Item_StatikkShiv"
-            ]
-          },
-          {
-            "instanceId": "d39586d1-3b8d-43e6-af69-57522eb231ab",
-            "unitId": "kayle",
-            "position": 27,
-            "stars": 2,
-            "items": [
-              "TFT_Item_GuinsoosRageblade",
-              "TFT_Item_JeweledGauntlet",
-              "TFT_Item_PowerGauntlet"
-            ]
-          }
-        ]
-      },
-      "primaryTeamId": "19b143ef-e315-4b8e-8081-31e13a6ec3f0",
-      "stageTeamIds": [
-        "7f18bb65-1662-403f-b1e2-fff9634c755f"
-      ],
-      "summaryBlockId": "swiftstriker-locke-start"
     },
     {
       "id": "true-damage-akali",

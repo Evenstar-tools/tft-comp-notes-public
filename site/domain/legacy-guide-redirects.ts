@@ -34,6 +34,16 @@ const legacyGuideRedirects: Record<string, { sectionId: string; teamId: string; 
     teamId: adGraves,
     teams: { [PYKE_GRAVES_BOARD_ID]: PYKE_GRAVES_BOARD_ID, [adGraves]: adGraves, [adGravesTwistedFate]: adGravesTwistedFate },
   },
+  "swiftstriker-locke": {
+    sectionId: GUIDE_SECTION_IDS.pentakillKayle,
+    teamId: "19b143ef-e315-4b8e-8081-31e13a6ec3f0",
+    teams: {
+      "lv8": "19b143ef-e315-4b8e-8081-31e13a6ec3f0",
+      "lv9": "7f18bb65-1662-403f-b1e2-fff9634c755f",
+      "19b143ef-e315-4b8e-8081-31e13a6ec3f0": "19b143ef-e315-4b8e-8081-31e13a6ec3f0",
+      "7f18bb65-1662-403f-b1e2-fff9634c755f": "7f18bb65-1662-403f-b1e2-fff9634c755f",
+    },
+  },
 };
 
 export const mergedGuideIds = Object.keys(legacyGuideRedirects);
