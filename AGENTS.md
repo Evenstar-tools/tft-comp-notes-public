@@ -31,4 +31,4 @@
 2. `npm run check`（`tsc --noEmit` + 全量单测 + `verify:public` + `data:verify`）
 3. `npm run data:alerts`（涉及数据刷新或体系绑定）
 4. `npx next build --webpack`（与 EdgeOne Pages 同款生产构建）
-5. 合入 `main` 且 EdgeOne 部署生效后，访问正式站 `https://tftnotes.com`（加 `?rum_ignore=1`）或跑 `node scripts/verify-live-guides.mjs` 读回核验。
+5. 合入 `main` 后核对 EdgeOne 生产提交和正式域名。以游客点验本批入口、首页版本标记和对应构建。涉及攻略、棋盘或数据时，对照搜索、原直链和样本。存在站主线上覆盖时按发版前实盘复核。验收结果回填《改动明细》。 [正式域名读回](site/docs/阵容撰写与维护全流程规范.md#step-4上线后正式域名读回与收尾)
