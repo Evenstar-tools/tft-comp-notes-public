@@ -1070,8 +1070,9 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
 
   const filterChips = [
     ...(category ? [{ id: "category", text: category, remove: () => choose({ category: "" }) }] : []),
-    ...(cost ? [{ id: "cost", text: cost + " 费主C", remove: () => choose({ cost: 0 }) }] : []),
+    ...(!showTiers && cost ? [{ id: "cost", text: cost + " 费主C", remove: () => choose({ cost: 0 }) }] : []),
   ];
+  const canClearFilters = Number(Boolean(category)) + Number(Boolean(styleKey)) + Number(Boolean(cost)) > 1;
   const closeFilters = () => {
     setFiltersOpen(false);
     filterPanel.current?.querySelector("summary")?.focus();
@@ -1193,7 +1194,7 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
                 {tierOrder.map(value => <option key={value} value={value}>{value}</option>)}
               </select>
             </label>}
-            {costs.length > 0 && <label className="guide-filter-field">
+            {!showTiers && costs.length > 0 && <label className="guide-filter-field">
               <span>主C费用</span>
               <select aria-label="按主C费用筛选" value={cost} onChange={event => choose({ cost: Number(event.target.value) })}>
                 <option value={0}>全部</option>{costs.map(gold => <option key={gold} value={gold}>{gold} 费</option>)}
@@ -1205,7 +1206,8 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
           </div>
           <div className="guide-filter-backdrop" onClick={closeFilters} aria-hidden="true" />
         </details>}
-        {(hasUnitQuery || filterChips.length > 0 || (!ranked && needle && displayedCount > 0) || (!selectedGear && conditions.length>1)) && <div className="guide-filter-chips">
+        {(hasUnitQuery || filterChips.length > 0 || canClearFilters || (!ranked && needle && displayedCount > 0) ||
+          (!selectedGear && conditions.length>1)) && <div className="guide-filter-chips">
           {!selectedGear && conditions.length>1 && <div className="quick-conditions" aria-label="查询条件">{conditions.map(term=><button type="button" key={term} className="guide-filter-chip" aria-label={"移除"+term} onClick={()=>changeQuery(conditions.filter(t=>t!==term).join(" + "))}>{term} <span aria-hidden>×</span></button>)}</div>}
           {hasUnitQuery && <div className="guide-search-scope" role="group" aria-label="棋子检索范围">
             {(["all","carry","unit"] as const).map((option, index) => <button key={option} type="button" aria-pressed={intent.scope === option}
@@ -1213,7 +1215,7 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
           </div>}
           {filterChips.map(chip => <button key={chip.id} type="button" className="guide-filter-chip" aria-label={"移除" + chip.text} onClick={chip.remove}>{chip.text} <span aria-hidden="true">×</span></button>)}
           {!ranked && displayedCount > 0 && <span className="guide-result-count" aria-hidden="true">{displayedCount} 套阵容</span>}
-          {filterChips.length + Number(Boolean(styleKey)) > 1 && <button type="button" className="guide-filter-clear" onClick={() => choose(emptyFilters)}>清除筛选</button>}
+          {canClearFilters && <button type="button" className="guide-filter-clear" onClick={() => choose(emptyFilters)}>清除筛选</button>}
         </div>}
       </div>}
     </div>
@@ -1222,7 +1224,7 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
       {artifactRanking}
     </>}
     {!showingTrends && <>
-    {view === "regular" && !recommendationTab && <div className="home-archive-tools">
+    {showTiers && <div className="home-archive-tools">
       <nav className="home-archive-switch" aria-label="全部攻略视图">
           {archiveViews.filter(([option]) => !launchTransition || option === "category" || (hasCurrentStats && familyStats.rows.length > 0) || hasCurrentCore).map(([option, label]) =>
           <a key={option} href={homeLink("regular", active, option)} aria-current={sort === option ? "true" : undefined}
@@ -1248,6 +1250,13 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
             {familyStats.updatedAt && <p>更新于 <time dateTime={familyStats.updatedAt} title="北京时间">{beijingDateTime.format(new Date(familyStats.updatedAt))}</time></p>}
           </div>
         </details>
+      </div>}
+      {costs.length > 0 && <div className="chip-group home-archive-costs" role="group" aria-label="主C费用">
+        <button type="button" className="chip" aria-pressed={!cost} onClick={() => choose({ cost: 0 })}>全部</button>
+        {costs.map(gold => <button type="button" key={gold} className={`chip cost-chip cost-${gold}`} aria-pressed={cost === gold}
+          onClick={() => choose({ cost: cost === gold ? 0 : gold })}>
+          <i aria-hidden />{gold} 费
+        </button>)}
       </div>}
       {groupLinks.length > 0 && <nav className="home-group-jumps" aria-label="跳到阵容分组">
         {groupLinks.map(group => <a key={group.id} href={"#" + group.id}>{group.label}</a>)}

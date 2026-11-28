@@ -89,7 +89,11 @@
 .home-archive-tools {
   display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 7px 12px; margin-block: 0 12px;
 }
-.home-archive-tools .home-group-jumps { flex: 1; justify-content: end; margin: 0; }
+.home-archive-tools .home-group-jumps { margin: 0; }
+.home-archive-costs {
+  margin-inline-start: auto; flex-wrap: wrap; gap: 3px; max-inline-size: 100%;
+}
+.home-archive-costs .chip { white-space: nowrap; }
 .home-archive-switch {
   display: flex; align-items: stretch; flex: none; gap: 2px; padding: 3px; border: 1px solid var(--line);
   border-radius: 7px; background: var(--panel);
@@ -109,6 +113,8 @@
   .guide-featured-conditions { margin-inline: 12px; }
   .guide-featured-conditions a { min-height: 36px; }
   .home-archive-switch a { min-height: 36px; padding-inline: 7px; }
+  .home-archive-costs { flex-basis: 100%; margin-inline-start: 0; }
+  .home-archive-costs .chip { min-height: 36px; padding-inline: 4px; gap: 3px; }
   .home-stats-sort { display: block; }
   .home-stats-sort select {
     appearance: none; min-height: 44px; max-width: 100%; padding: 4px 18px 4px 7px; border: 1px solid var(--line);
