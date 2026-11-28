@@ -535,8 +535,11 @@ test("fast refresh rebuilds a published board query and preserves its old exact 
   });
   const after = readJson(placementPath);
   assert.equal(after.date, before.date);
-  const [current] = after.records.filter(row => row.querySignature);
-  assert.equal(after.records.filter(row => row.querySignature).length, 1);
+  const refreshedSamples = after.records.filter(row => row.querySignature && row.conditions?.teamId === teamId);
+  assert.equal(refreshedSamples.length, 1);
+  assert.deepEqual(after.records.filter(row => row.querySignature && row.conditions?.teamId !== teamId),
+    before.records.filter(row => row.querySignature && row.conditions?.teamId !== teamId));
+  const [current] = refreshedSamples;
   assert.equal(current.querySignature, board.signature);
   assert.deepEqual(current.roster, [...roster].sort());
   assert.deepEqual(current.placementCounts, [8, 7, 6, 5, 4, 3, 2, 1]);

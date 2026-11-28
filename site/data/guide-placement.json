@@ -3972,7 +3972,11 @@
         0,
         0,
         0
-      ]
+      ],
+      "sourcePeriod": {
+        "patch": "PBE 19.1c",
+        "window": "旧棋盘 · 近三天 · 19.1c 滚动"
+      }
     },
     {
       "population": 9,
@@ -7087,6 +7091,43 @@
         0,
         0
       ]
+    },
+    {
+      "sectionId": "sample-block-1020",
+      "population": 7,
+      "roster": [
+        "braum",
+        "draven",
+        "gragas",
+        "kai-sa",
+        "leona",
+        "lillia",
+        "samira"
+      ],
+      "querySignature": "[7,[\"braum\",\"draven\",\"gragas\",\"kai-sa\",\"leona\",\"lillia\",\"samira\"]]",
+      "build": "6045507",
+      "conditions": {
+        "kind": "full",
+        "teamId": "00000000-0000-4000-8000-000000001158",
+        "population": 7
+      },
+      "sampleScope": "固定名单 · 不限星级与装备 · 无纹章、人口装或重复棋子",
+      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=7&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Braum19-1&unit=DA_Draven19-1&unit=DA_Gragas19-1&unit=DA_Kaisa19-1&unit=DA_Leona19-1&unit=DA_Lillia19-1&unit=DA_Samira19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "placementCounts": [
+        27,
+        55,
+        128,
+        246,
+        394,
+        453,
+        442,
+        288
+      ],
+      "games": 2033,
+      "observedOn": "2026-11-28",
+      "mean": 5.7,
+      "topFourRate": 0.22429906542056074,
+      "winRate": 0.013280865715691098
     }
   ],
   "edition": "s19-pbe-19.1",

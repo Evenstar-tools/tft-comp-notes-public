@@ -7,7 +7,7 @@ export interface GuideFamilyStat {
   teamId?: string;
   landingTeamId?: string;
   sharedTeamIds?: string[];
-  boardSignatures?: Record<string, string>;
+  boardSignatures?: Partial<Record<string, string>>;
   clusterId: string | number;
   name: string;
   sourceName: string;
