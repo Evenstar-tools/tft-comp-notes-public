@@ -4401,11 +4401,11 @@
         {
           "id": "sample-block-0229-adjustment",
           "type": "text",
-          "text": "艾克优先狂徒、石像鬼、冕卫，布隆带日炎补重伤。七级双核追出并稳住后再升级，八级先补前排。买齐五种不同稀有度的乐器且最强玛尔扎哈累计打满 60,000 伤害后，九级上占两人口的男爵，优先蓝霸符。",
+          "text": "艾克优先狂徒、石像鬼、冕卫，布隆带日炎补重伤。七级双核追出并稳住后再升级，八级补蕾欧娜开双经纪人。买齐五种不同稀有度的乐器且最强玛尔扎哈累计打满 60,000 伤害后，九级上占两人口的男爵，优先蓝霸符。",
           "elements": [
             {
               "text_run": {
-                "content": "艾克优先狂徒、石像鬼、冕卫，布隆带日炎补重伤。七级双核追出并稳住后再升级，八级先补前排。买齐五种不同稀有度的乐器且最强玛尔扎哈累计打满 60,000 伤害后，九级上占两人口的男爵，优先蓝霸符。"
+                "content": "艾克优先狂徒、石像鬼、冕卫，布隆带日炎补重伤。七级双核追出并稳住后再升级，八级补蕾欧娜开双经纪人。买齐五种不同稀有度的乐器且最强玛尔扎哈累计打满 60,000 伤害后，九级上占两人口的男爵，优先蓝霸符。"
               }
             }
           ]
@@ -4436,6 +4436,30 @@
           ]
         },
         {
+          "id": "sample-block-0229-lv8-heading",
+          "type": "heading",
+          "text": "八级 · 补蕾欧娜",
+          "elements": [
+            {
+              "text_run": {
+                "content": "八级 · 补蕾欧娜"
+              }
+            }
+          ]
+        },
+        {
+          "id": "sample-block-0229-lv8-tempo",
+          "type": "text",
+          "text": "先用蕾欧娜开双经纪人。男爵还差乐器或伤害时留八级保血，艾克继续拿主坦装。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "先用蕾欧娜开双经纪人。男爵还差乐器或伤害时留八级保血，艾克继续拿主坦装。"
+              }
+            }
+          ]
+        },
+        {
           "id": "sample-block-0229-slow-nine",
           "type": "heading",
           "level": 3,
@@ -4451,11 +4475,11 @@
         {
           "id": "sample-block-0229-slow-unlock",
           "type": "text",
-          "text": "七级追三稳血后再升级，八级先补前排。商店买齐五种不同稀有度的神秘乐器，同时让最强的玛尔扎哈累计打满 60,000 伤害，就能解锁男爵。男爵占两人口，九级上场，优先蓝霸符启动。",
+          "text": "七级追三稳血后再升级，八级补蕾欧娜。商店买齐五种不同稀有度的神秘乐器，同时让最强的玛尔扎哈累计打满 60,000 伤害，就能解锁男爵。男爵占两人口，九级上场，优先蓝霸符启动。",
           "elements": [
             {
               "text_run": {
-                "content": "七级追三稳血后再升级，八级先补前排。商店买齐五种不同稀有度的神秘乐器，同时让最强的玛尔扎哈累计打满 60,000 伤害，就能解锁男爵。男爵占两人口，九级上场，优先蓝霸符启动。"
+                "content": "七级追三稳血后再升级，八级补蕾欧娜。商店买齐五种不同稀有度的神秘乐器，同时让最强的玛尔扎哈累计打满 60,000 伤害，就能解锁男爵。男爵占两人口，九级上场，优先蓝霸符启动。"
               }
             }
           ]
@@ -4781,6 +4805,18 @@
           ]
         },
         {
+          "id": "sample-block-0229-lv8-leona-loadout",
+          "type": "text",
+          "text": "棋盘配装 · 八级 · 补蕾欧娜\n主C：玛尔扎哈。珠光护手、灭世者的死亡之帽、强袭者的链枷。\n主坦：艾克。狂徒铠甲、石像鬼石板甲、冕卫。\n功能装：玛尔扎哈。技能范围脉冲施加 30% 魔抗击碎，持续 4 秒。\n功能装：布隆。日炎斗篷，前排重伤。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "棋盘配装 · 八级 · 补蕾欧娜\n主C：玛尔扎哈。珠光护手、灭世者的死亡之帽、强袭者的链枷。\n主坦：艾克。狂徒铠甲、石像鬼石板甲、冕卫。\n功能装：玛尔扎哈。技能范围脉冲施加 30% 魔抗击碎，持续 4 秒。\n功能装：布隆。日炎斗篷，前排重伤。"
+              }
+            }
+          ]
+        },
+        {
           "id": "sample-block-0139",
           "type": "text",
           "text": "棋盘配装 · 九人口五天才 · 男爵上限\n主C：玛尔扎哈。珠光护手、灭世者的死亡之帽、强袭者的链枷。\n主坦：艾克。狂徒铠甲、石像鬼石板甲、冕卫。\n副C：纳什男爵。蓝霸符、无尽之刃、夜之锋刃。\n功能装：玛尔扎哈。技能范围脉冲施加 30% 魔抗击碎，持续 4 秒。\n功能装：布隆。日炎斗篷，前排重伤。",
@@ -4871,6 +4907,90 @@
             }
           ],
           "webTitle": "7级 · 五天才追出后"
+        },
+        {
+          "id": "cfbd78c8-4f01-485f-8045-bcb096aa1b05",
+          "name": "八级 · 补蕾欧娜",
+          "category": "条件定阵",
+          "notes": "七级追出双三星后补蕾欧娜开双经纪人。",
+          "revision": 1,
+          "updatedAt": "2026-11-28T16:01:17.474Z",
+          "sectionId": "sample-block-0229",
+          "pieces": [
+            {
+              "instanceId": "769e2482-90e8-48aa-935a-fc75aa0d1c07",
+              "unitId": "braum",
+              "position": 11,
+              "stars": 3,
+              "items": [
+                "TFT_Item_RedBuff"
+              ]
+            },
+            {
+              "instanceId": "6228044b-8be5-4446-b8a6-1ce8552c2fb1",
+              "unitId": "ekko",
+              "position": 3,
+              "stars": 3,
+              "items": [
+                "TFT_Item_WarmogsArmor",
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_Crownguard"
+              ]
+            },
+            {
+              "instanceId": "1c21a1b0-4719-4c3a-a4fa-3bf9a8815e89",
+              "unitId": "neeko",
+              "position": 8,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "c7c242af-afc8-4b0e-81f6-7a98bb40612e",
+              "unitId": "yuumi",
+              "position": 21,
+              "stars": 1,
+              "items": []
+            },
+            {
+              "instanceId": "1a1dd1ac-add0-4f8c-af22-845aa6521f43",
+              "unitId": "lux",
+              "position": 23,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "8c75d66d-8644-4be2-9601-b119dd497052",
+              "unitId": "alune",
+              "position": 25,
+              "stars": 1,
+              "items": [],
+              "alternate": {
+                "instanceId": "7255e593-66d7-483b-9f56-8db6eff18342",
+                "unitId": "swain",
+                "stars": 2,
+                "items": []
+              }
+            },
+            {
+              "instanceId": "4873abe2-65c5-47fe-8a1a-0748b536a0cf",
+              "unitId": "malzahar",
+              "position": 27,
+              "stars": 3,
+              "items": [
+                "TFT_Item_JeweledGauntlet",
+                "TFT_Item_RabadonsDeathcap",
+                "TFT_Item_PowerGauntlet"
+              ]
+            },
+            {
+              "unitId": "leona",
+              "stars": 2,
+              "position": 13,
+              "instanceId": "4b71ac00-fc74-41f0-bcdc-26d442dbb2dc",
+              "items": []
+            }
+          ],
+          "boardRole": "stage"
         },
         {
           "id": "00000000-0000-4000-8000-000000000071",
@@ -5033,6 +5153,7 @@
       },
       "primaryTeamId": "00000000-0000-4000-8000-000000000017",
       "stageTeamIds": [
+        "cfbd78c8-4f01-485f-8045-bcb096aa1b05",
         "00000000-0000-4000-8000-000000000071"
       ],
       "summaryBlockId": "sample-block-0463"
@@ -8771,7 +8892,38 @@
         {
           "id": "choreographer-draven-viego-cap",
           "type": "text",
-          "text": "调音台攻击力和生命值各分 5 分贝。追完三星再升八，有崔斯特就补上开三花式射手。"
+          "text": "调音台攻击力和生命值各分 5 分贝。追出三星后升八开三花式。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "调音台攻击力和生命值各分 5 分贝。追出三星后升八开三花式。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "choreographer-draven-viego-lv8-heading",
+          "type": "heading",
+          "text": "八级 · 三花式",
+          "elements": [
+            {
+              "text_run": {
+                "content": "八级 · 三花式"
+              }
+            }
+          ]
+        },
+        {
+          "id": "choreographer-draven-viego-lv8-tempo",
+          "type": "text",
+          "text": "有崔斯特就替掉卡莎，继续开三花式。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "有崔斯特就替掉卡莎，继续开三花式。"
+              }
+            }
+          ]
         },
         {
           "id": "choreographer-draven-viego-credit",
@@ -8787,6 +8939,18 @@
           "id": "choreographer-draven-viego-lv7-items",
           "type": "text",
           "text": "棋盘配装 · 七级 · 双C成型\n主C：德莱文。朔极之矛、死亡之刃、无尽之刃。\n主C：佛耶戈。夜之锋刃、无尽之刃、正义之手。\n主坦：布隆。石像鬼石板甲、狂徒铠甲、振奋盔甲。"
+        },
+        {
+          "id": "choreographer-draven-viego-lv8-kaisa-loadout",
+          "type": "text",
+          "text": "棋盘配装 · 八级 · 三花式\n主C：德莱文。朔极之矛、死亡之刃、无尽之刃。\n主C：佛耶戈。夜之锋刃、无尽之刃、正义之手。\n主坦：布隆。石像鬼石板甲、狂徒铠甲、振奋盔甲。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "棋盘配装 · 八级 · 三花式\n主C：德莱文。朔极之矛、死亡之刃、无尽之刃。\n主C：佛耶戈。夜之锋刃、无尽之刃、正义之手。\n主坦：布隆。石像鬼石板甲、狂徒铠甲、振奋盔甲。"
+              }
+            }
+          ]
         }
       ],
       "kind": "guide",
@@ -8862,6 +9026,86 @@
               ]
             }
           ]
+        },
+        {
+          "id": "fbe3bfcb-cb2d-4811-badd-a4b3e983feb1",
+          "name": "八级 · 三花式",
+          "category": "慢搜阵容",
+          "notes": "双 C 成型后升八补卡莎。",
+          "revision": 1,
+          "updatedAt": "2026-11-28T16:01:17.474Z",
+          "sectionId": "choreographer-draven-viego",
+          "pieces": [
+            {
+              "instanceId": "8db56cc3-1f81-4f1e-9c96-4b8bdf25e09f",
+              "unitId": "braum",
+              "position": 3,
+              "stars": 3,
+              "items": [
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_WarmogsArmor",
+                "TFT_Item_Redemption"
+              ]
+            },
+            {
+              "instanceId": "c46724b9-8254-48ac-b041-ea2d1eae1496",
+              "unitId": "yone",
+              "position": 8,
+              "stars": 1,
+              "items": []
+            },
+            {
+              "instanceId": "7269510b-470d-4a77-a7de-1acd7ff9f437",
+              "unitId": "garen",
+              "position": 9,
+              "stars": 1,
+              "items": []
+            },
+            {
+              "instanceId": "9b68d29a-060e-4963-a95e-5c05b7ac2e72",
+              "unitId": "yorick",
+              "position": 10,
+              "stars": 1,
+              "items": []
+            },
+            {
+              "instanceId": "ed7eff52-8b3b-43c8-91d0-a16854139d25",
+              "unitId": "viego",
+              "position": 12,
+              "stars": 3,
+              "items": [
+                "TFT_Item_GuardianAngel",
+                "TFT_Item_InfinityEdge",
+                "TFT_Item_UnstableConcoction"
+              ]
+            },
+            {
+              "instanceId": "8ff9bcd8-b76a-45db-82ae-1db529e9e927",
+              "unitId": "gnar",
+              "position": 24,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "312b5867-02cb-4bfe-9bf4-de37c6097036",
+              "unitId": "draven",
+              "position": 27,
+              "stars": 3,
+              "items": [
+                "TFT_Item_SpearOfShojin",
+                "TFT_Item_Deathblade",
+                "TFT_Item_InfinityEdge"
+              ]
+            },
+            {
+              "unitId": "kai-sa",
+              "stars": 2,
+              "position": 25,
+              "instanceId": "09c7b1a6-7bce-4a6f-b7ab-d16292dee582",
+              "items": []
+            }
+          ],
+          "boardRole": "stage"
         }
       ],
       "team": {
@@ -8937,7 +9181,9 @@
         ]
       },
       "primaryTeamId": "00000000-0000-4000-8000-000000001177",
-      "stageTeamIds": [],
+      "stageTeamIds": [
+        "fbe3bfcb-cb2d-4811-badd-a4b3e983feb1"
+      ],
       "summaryBlockId": "choreographer-draven-viego-start"
     },
     {

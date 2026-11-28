@@ -32,6 +32,7 @@ const guideSlugs: Record<string, GuideSlugs> = {
   "sample-block-0229": { slug: "prodigy-baron", searchAliases: { "95-lv9": ["大龙95", "95大龙", "速九大龙"] }, boards: {
     "00000000-0000-4000-8000-000000000005": "lv7-open",
     "00000000-0000-4000-8000-000000000017": "lv7",
+    "cfbd78c8-4f01-485f-8045-bcb096aa1b05": "lv8-leona",
     "00000000-0000-4000-8000-000000000071": "lv9-reroll",
     "a56a62e0-a4de-4986-9917-7acfaab6c105": "95-lv8",
     "0dd45d5d-496c-459b-9db2-8e05355bd6c2": "95-lv9",
@@ -75,6 +76,7 @@ const guideSlugs: Record<string, GuideSlugs> = {
   } },
   "choreographer-draven-viego": { slug: "choreographer-draven-viego", searchAliases: { "lv7": ["德莱文佛爷", "佛爷德莱文", "德莱文佛耶戈", "佛耶戈德莱文", "琴吹唯德莱文", "琴吹唯"] }, boards: {
     "00000000-0000-4000-8000-000000001177": "lv7",
+    "fbe3bfcb-cb2d-4811-badd-a4b3e983feb1": "lv8-kaisa",
   } },
   "sample-block-0327": { slug: "ocean-ashe", boards: {
     "00000000-0000-4000-8000-000000000020": "lv6",
