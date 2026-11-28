@@ -6,8 +6,8 @@ import "./site-footer.css";
 const references: { label: string; links: { name: string; href: string; logo?: string }[] }[] = [
   { label: "国内数据站", links: [
     { name: "DataTFT", href: "https://www.datatft.com/", logo: "/footer/datatft.webp" },
-    { name: "TFTable", href: "https://tftable.cc/meta" },
-    { name: "猫咪 TFT", href: "https://maomitft.com/" },
+    { name: "TFTable", href: "https://tftable.cc/meta", logo: "/footer/tftable.svg" },
+    { name: "猫咪 TFT", href: "https://maomitft.com/", logo: "/footer/maomitft.png" },
   ] },
   { label: "海外参考", links: [
     { name: "MetaTFT", href: "https://www.metatft.com/" },
