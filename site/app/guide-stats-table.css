@@ -114,6 +114,17 @@
 }
 .guide-rank-source a { text-decoration: underline; text-underline-offset: 2px; }
 .guide-rank-source p { margin: 2px 0 0; }
+.guide-core-stats-section { margin-block-start: 20px; }
+.guide-core-stats-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 12px;
+  margin-block-end: 8px;
+}
+.guide-core-stats-head h3 { margin: 0; font-size: 1rem; font-weight: 700; color: var(--text); }
+.guide-core-stats-head p { margin: 0; font-size: .8125rem; color: var(--muted); }
 @media (min-width: 761px) {
   .guide-stats-table tbody td.guide-stats-units { padding-block: 7px; }
   .guide-stats-table thead th:nth-child(2) { padding-inline-start: clamp(20px, 2vw, 32px); }

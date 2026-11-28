@@ -782,6 +782,212 @@
         "DA_Yasuo19",
         "DA_Yone19"
       ]
+    },
+    {
+      "clusterId": "429044",
+      "sourceName": "Arcanist Mel",
+      "name": "四法师梅尔吸血鬼",
+      "sectionId": "arcanist-mel-vladimir",
+      "teamId": "1c424859-acec-469d-afda-be5244334c5d",
+      "aliases": [
+        "四法梅尔",
+        "梅尔吸血鬼"
+      ],
+      "carryIds": [
+        "mel",
+        "vladimir"
+      ],
+      "url": "https://www.metatft.com/pbe-comps#DA_Arcanist19-DA_Mel19",
+      "representativeUnits": [
+        "DA_Annie19",
+        "DA_DrMundo19",
+        "DA_Leona19",
+        "DA_Mel19",
+        "DA_Nasus19",
+        "DA_Nunu19",
+        "DA_Rell19",
+        "DA_Swain19",
+        "DA_Vladimir19"
+      ]
+    },
+    {
+      "clusterId": "429053",
+      "sourceName": "True Damage Yasuo",
+      "name": "五真实伤害阿卡丽亚索",
+      "sectionId": "true-damage-akali",
+      "teamId": "bace6643-9e7b-4b21-9ceb-36e58a535ee4",
+      "aliases": [
+        "五真伤阿卡丽",
+        "真伤亚索阿卡丽"
+      ],
+      "carryIds": [
+        "akali-true-damage",
+        "yasuo"
+      ],
+      "url": "https://www.metatft.com/pbe-comps#DA_TrueDamage19-DA_Yasuo19",
+      "representativeUnits": [
+        "DA_Akali_TrueDamage19",
+        "DA_DrMundo19",
+        "DA_Ekko19",
+        "DA_Kennen19",
+        "DA_Leona19",
+        "DA_MissFortune19",
+        "DA_Senna19",
+        "DA_Yasuo19",
+        "DA_Yone19"
+      ]
+    },
+    {
+      "clusterId": "429059",
+      "sourceName": "Renegade Qiyana",
+      "name": "五非主流奇亚娜莎弥拉",
+      "sectionId": "renegade-qiyana-samira",
+      "teamId": "9c60581e-2adb-400b-be09-8e04fb2bdef2",
+      "aliases": [
+        "非主流奇亚娜",
+        "赌奇亚娜莎弥拉"
+      ],
+      "carryIds": [
+        "qiyana",
+        "samira"
+      ],
+      "url": "https://www.metatft.com/pbe-comps#DA_Renegade19-DA_Qiyana19",
+      "representativeUnits": [
+        "DA_Aurora19",
+        "DA_Ekko19",
+        "DA_Evelynn19",
+        "DA_Graves19",
+        "DA_Kennen19",
+        "DA_Nasus19",
+        "DA_Qiyana19",
+        "DA_Samira19"
+      ]
+    },
+    {
+      "clusterId": "429047",
+      "sourceName": "True Damage Senna",
+      "name": "真伤制作人赛娜",
+      "sectionId": "true-damage-senna",
+      "teamId": "cfd4c9e6-f92d-4fd6-819b-486ec2461c03",
+      "aliases": [
+        "真伤赛娜",
+        "赌赛娜"
+      ],
+      "carryIds": [
+        "senna"
+      ],
+      "url": "https://www.metatft.com/pbe-comps#DA_TrueDamage19-DA_Senna19",
+      "representativeUnits": [
+        "DA_Akali_TrueDamage19",
+        "DA_Ezreal19",
+        "DA_Galio19",
+        "DA_KSante19",
+        "DA_Kennen19",
+        "DA_Lucian19",
+        "DA_Senna19",
+        "DA_Sett19"
+      ]
+    },
+    {
+      "clusterId": "429022",
+      "sourceName": "Ocean Song Ashe Jax",
+      "name": "海之歌艾希",
+      "sectionId": "sample-block-0327",
+      "teamId": "00000000-0000-4000-8000-000000000122",
+      "aliases": [
+        "海洋艾希",
+        "八级扎克蔚艾希"
+      ],
+      "carryIds": [
+        "ashe"
+      ],
+      "url": "https://www.metatft.com/pbe-comps#DA_OceanSong19-DA_Ashe19-DA_Jax19",
+      "representativeUnits": [
+        "DA_Ashe19",
+        "DA_Bard19",
+        "DA_Galio19",
+        "DA_Jax19",
+        "DA_KSante19",
+        "DA_Renekton19",
+        "DA_Vi19",
+        "DA_Zac19"
+      ]
+    },
+    {
+      "clusterId": "429051",
+      "sourceName": "K/DA Evelynn",
+      "name": "K/DA伊芙琳&卡莎",
+      "sectionId": "sample-block-0764",
+      "teamId": "00000000-0000-4000-8000-000000000043",
+      "aliases": [
+        "K/DA伊芙琳",
+        "寡妇卡莎"
+      ],
+      "carryIds": [
+        "evelynn",
+        "kai-sa"
+      ],
+      "url": "https://www.metatft.com/pbe-comps#DA_KDA19-DA_Evelynn19",
+      "representativeUnits": [
+        "DA_Ekko19",
+        "DA_Evelynn19",
+        "DA_Gragas19",
+        "DA_Kaisa19",
+        "DA_Lillia19",
+        "DA_Neeko19",
+        "DA_Samira19"
+      ]
+    },
+    {
+      "clusterId": "429054",
+      "sourceName": "Arcanist Karthus",
+      "name": "六法四主宰卡尔萨斯",
+      "sectionId": "sample-block-0988",
+      "teamId": "00000000-0000-4000-8000-000000001121",
+      "aliases": [
+        "六法死歌",
+        "法师卡尔萨斯"
+      ],
+      "carryIds": [
+        "karthus",
+        "mel"
+      ],
+      "url": "https://www.metatft.com/pbe-comps#DA_Arcanist19-DA_Karthus19",
+      "representativeUnits": [
+        "DA_Annie19",
+        "DA_Karthus19",
+        "DA_Mel19",
+        "DA_Olaf19",
+        "DA_Swain19",
+        "DA_Vladimir19",
+        "DA_Yorick19",
+        "DA_Zoe19"
+      ]
+    },
+    {
+      "clusterId": "429052",
+      "sourceName": "Heartsteel Yone",
+      "name": "心之钢永恩",
+      "sectionId": "sample-block-0411",
+      "teamId": "00000000-0000-4000-8000-000000000095",
+      "aliases": [
+        "五心之钢永恩"
+      ],
+      "carryIds": [
+        "yone"
+      ],
+      "url": "https://www.metatft.com/pbe-comps#DA_Heartsteel19-DA_Yone19",
+      "representativeUnits": [
+        "DA_Draven19",
+        "DA_Galio19",
+        "DA_Illaoi19",
+        "DA_Lucian19",
+        "DA_MissFortune19",
+        "DA_Rell19",
+        "DA_Smeech19",
+        "DA_TwistedFate19",
+        "DA_Yone19"
+      ]
     }
   ]
 }
