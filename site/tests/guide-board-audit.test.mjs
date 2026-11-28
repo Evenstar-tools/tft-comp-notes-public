@@ -175,7 +175,7 @@ test("the 14 featured guides pass on the combined public boards and retain roles
   const publication = prepareAuditPublication(preview);
   const report = auditGuidePublication(publication, recommendations);
   assert.deepEqual(report.guides.map(guide => guide.sectionId), featuredGuideIds);
-  assert.deepEqual(report.summary, { guides: 14, boards: 57, errors: 0, warnings: 0, waived: 9 });
+  assert.deepEqual(report.summary, { guides: 14, boards: 60, errors: 0, warnings: 0, waived: 11 });
   const catalog = buildFamilyCatalog(preview);
   const selected = new Map();
   const roleOrder = ["主C", "主坦", "副C"];

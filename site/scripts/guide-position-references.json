@@ -28,5 +28,17 @@
     "teamId": "1808c76f-5fa3-4ccd-b1e3-8fdf6f5f03fe",
     "positions": {"galio": 0, "dr-mundo": 1, "k-sante": 2, "yone": 3, "leona": 4, "garen": 5, "smeech": 20, "aphelios": 24, "ahri": 27},
     "checks": [{"rule": "crowded-frontline"}, {"rule": "stoneplate-crowded", "unitId": "dr-mundo"}]
+  },
+  {
+    "sectionId": "sample-block-1020",
+    "teamId": "00000000-0000-4000-8000-000000001158",
+    "positions": {"lillia": 1, "leona": 2, "gragas": 3, "braum": 4, "samira": 23, "kai-sa": 25, "draven": 27},
+    "checks": [{"rule": "crowded-frontline"}]
+  },
+  {
+    "sectionId": "sample-block-1020",
+    "teamId": "2c797a5f-2ed1-442c-86b9-f2fe48f39526",
+    "positions": {"lillia": 1, "leona": 2, "gragas": 3, "braum": 4, "samira": 23, "kai-sa": 25, "draven": 27, "vayne": 21},
+    "checks": [{"rule": "crowded-frontline"}]
   }
 ]

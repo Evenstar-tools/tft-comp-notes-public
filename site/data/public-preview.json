@@ -506,7 +506,7 @@
     },
     {
       "id": "sample-block-1060",
-      "title": "四主宰海之歌艾克辛德拉",
+      "title": "四主宰艾克辛德拉",
       "category": "慢搜阵容",
       "blocks": [
         {
@@ -4401,11 +4401,11 @@
         {
           "id": "sample-block-0229-adjustment",
           "type": "text",
-          "text": "艾克优先狂徒、石像鬼、冕卫，布隆带日炎补重伤。七级双核追出并稳住后再升级，八级先补前排。买齐五种不同稀有度的乐器且最强玛尔扎哈累计打满 60,000 伤害后，九级上占两人口的男爵，优先蓝霸符。",
+          "text": "艾克优先狂徒、石像鬼、冕卫，布隆带日炎补重伤。七级双核追出并稳住后再升级，八级补蕾欧娜开双经纪人。买齐五种不同稀有度的乐器且最强玛尔扎哈累计打满 60,000 伤害后，九级上占两人口的男爵，优先蓝霸符。",
           "elements": [
             {
               "text_run": {
-                "content": "艾克优先狂徒、石像鬼、冕卫，布隆带日炎补重伤。七级双核追出并稳住后再升级，八级先补前排。买齐五种不同稀有度的乐器且最强玛尔扎哈累计打满 60,000 伤害后，九级上占两人口的男爵，优先蓝霸符。"
+                "content": "艾克优先狂徒、石像鬼、冕卫，布隆带日炎补重伤。七级双核追出并稳住后再升级，八级补蕾欧娜开双经纪人。买齐五种不同稀有度的乐器且最强玛尔扎哈累计打满 60,000 伤害后，九级上占两人口的男爵，优先蓝霸符。"
               }
             }
           ]
@@ -4436,6 +4436,30 @@
           ]
         },
         {
+          "id": "sample-block-0229-lv8-heading",
+          "type": "heading",
+          "text": "八级 · 补蕾欧娜",
+          "elements": [
+            {
+              "text_run": {
+                "content": "八级 · 补蕾欧娜"
+              }
+            }
+          ]
+        },
+        {
+          "id": "sample-block-0229-lv8-tempo",
+          "type": "text",
+          "text": "先用蕾欧娜开双经纪人。男爵还差乐器或伤害时留八级保血，艾克继续拿主坦装。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "先用蕾欧娜开双经纪人。男爵还差乐器或伤害时留八级保血，艾克继续拿主坦装。"
+              }
+            }
+          ]
+        },
+        {
           "id": "sample-block-0229-slow-nine",
           "type": "heading",
           "level": 3,
@@ -4451,11 +4475,11 @@
         {
           "id": "sample-block-0229-slow-unlock",
           "type": "text",
-          "text": "七级追三稳血后再升级，八级先补前排。商店买齐五种不同稀有度的神秘乐器，同时让最强的玛尔扎哈累计打满 60,000 伤害，就能解锁男爵。男爵占两人口，九级上场，优先蓝霸符启动。",
+          "text": "七级追三稳血后再升级，八级补蕾欧娜。商店买齐五种不同稀有度的神秘乐器，同时让最强的玛尔扎哈累计打满 60,000 伤害，就能解锁男爵。男爵占两人口，九级上场，优先蓝霸符启动。",
           "elements": [
             {
               "text_run": {
-                "content": "七级追三稳血后再升级，八级先补前排。商店买齐五种不同稀有度的神秘乐器，同时让最强的玛尔扎哈累计打满 60,000 伤害，就能解锁男爵。男爵占两人口，九级上场，优先蓝霸符启动。"
+                "content": "七级追三稳血后再升级，八级补蕾欧娜。商店买齐五种不同稀有度的神秘乐器，同时让最强的玛尔扎哈累计打满 60,000 伤害，就能解锁男爵。男爵占两人口，九级上场，优先蓝霸符启动。"
               }
             }
           ]
@@ -4781,6 +4805,18 @@
           ]
         },
         {
+          "id": "sample-block-0229-lv8-leona-loadout",
+          "type": "text",
+          "text": "棋盘配装 · 八级 · 补蕾欧娜\n主C：玛尔扎哈。珠光护手、灭世者的死亡之帽、强袭者的链枷。\n主坦：艾克。狂徒铠甲、石像鬼石板甲、冕卫。\n功能装：玛尔扎哈。技能范围脉冲施加 30% 魔抗击碎，持续 4 秒。\n功能装：布隆。日炎斗篷，前排重伤。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "棋盘配装 · 八级 · 补蕾欧娜\n主C：玛尔扎哈。珠光护手、灭世者的死亡之帽、强袭者的链枷。\n主坦：艾克。狂徒铠甲、石像鬼石板甲、冕卫。\n功能装：玛尔扎哈。技能范围脉冲施加 30% 魔抗击碎，持续 4 秒。\n功能装：布隆。日炎斗篷，前排重伤。"
+              }
+            }
+          ]
+        },
+        {
           "id": "sample-block-0139",
           "type": "text",
           "text": "棋盘配装 · 九人口五天才 · 男爵上限\n主C：玛尔扎哈。珠光护手、灭世者的死亡之帽、强袭者的链枷。\n主坦：艾克。狂徒铠甲、石像鬼石板甲、冕卫。\n副C：纳什男爵。蓝霸符、无尽之刃、夜之锋刃。\n功能装：玛尔扎哈。技能范围脉冲施加 30% 魔抗击碎，持续 4 秒。\n功能装：布隆。日炎斗篷，前排重伤。",
@@ -4871,6 +4907,90 @@
             }
           ],
           "webTitle": "7级 · 五天才追出后"
+        },
+        {
+          "id": "cfbd78c8-4f01-485f-8045-bcb096aa1b05",
+          "name": "八级 · 补蕾欧娜",
+          "category": "条件定阵",
+          "notes": "七级追出双三星后补蕾欧娜开双经纪人。",
+          "revision": 1,
+          "updatedAt": "2026-11-28T16:01:17.474Z",
+          "sectionId": "sample-block-0229",
+          "pieces": [
+            {
+              "instanceId": "769e2482-90e8-48aa-935a-fc75aa0d1c07",
+              "unitId": "braum",
+              "position": 11,
+              "stars": 3,
+              "items": [
+                "TFT_Item_RedBuff"
+              ]
+            },
+            {
+              "instanceId": "6228044b-8be5-4446-b8a6-1ce8552c2fb1",
+              "unitId": "ekko",
+              "position": 3,
+              "stars": 3,
+              "items": [
+                "TFT_Item_WarmogsArmor",
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_Crownguard"
+              ]
+            },
+            {
+              "instanceId": "1c21a1b0-4719-4c3a-a4fa-3bf9a8815e89",
+              "unitId": "neeko",
+              "position": 8,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "c7c242af-afc8-4b0e-81f6-7a98bb40612e",
+              "unitId": "yuumi",
+              "position": 21,
+              "stars": 1,
+              "items": []
+            },
+            {
+              "instanceId": "1a1dd1ac-add0-4f8c-af22-845aa6521f43",
+              "unitId": "lux",
+              "position": 23,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "8c75d66d-8644-4be2-9601-b119dd497052",
+              "unitId": "alune",
+              "position": 25,
+              "stars": 1,
+              "items": [],
+              "alternate": {
+                "instanceId": "7255e593-66d7-483b-9f56-8db6eff18342",
+                "unitId": "swain",
+                "stars": 2,
+                "items": []
+              }
+            },
+            {
+              "instanceId": "4873abe2-65c5-47fe-8a1a-0748b536a0cf",
+              "unitId": "malzahar",
+              "position": 27,
+              "stars": 3,
+              "items": [
+                "TFT_Item_JeweledGauntlet",
+                "TFT_Item_RabadonsDeathcap",
+                "TFT_Item_PowerGauntlet"
+              ]
+            },
+            {
+              "unitId": "leona",
+              "stars": 2,
+              "position": 13,
+              "instanceId": "4b71ac00-fc74-41f0-bcdc-26d442dbb2dc",
+              "items": []
+            }
+          ],
+          "boardRole": "stage"
         },
         {
           "id": "00000000-0000-4000-8000-000000000071",
@@ -5033,6 +5153,7 @@
       },
       "primaryTeamId": "00000000-0000-4000-8000-000000000017",
       "stageTeamIds": [
+        "cfbd78c8-4f01-485f-8045-bcb096aa1b05",
         "00000000-0000-4000-8000-000000000071"
       ],
       "summaryBlockId": "sample-block-0463"
@@ -7417,6 +7538,11 @@
           ],
           "level": 0,
           "text": "棋盘配装 · 八级 · 无卡莎阿狸\n主C：妮蔻。蓝霸符、强袭者的链枷、珠光护手。\n主坦：古拉加斯。石像鬼石板甲、狂徒铠甲、冕卫。\n副C：阿狸。妮蔻三件后拿余下的朔极之矛、正义之手。\n功能装：蕾欧娜。离子火花、日炎斗篷、圣盾使的誓约。\n夺冠示例 1 局，站位为建议。"
+        },
+        {
+          "id": "web-kda-neeko-lv9-ekko-roles",
+          "type": "text",
+          "text": "棋盘配装 · 九级 · 补艾克\n主C：妮蔻。朔极之矛、珠光护手、强袭者的链枷。\n主坦：莉莉娅。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n功能装：古拉加斯。离子火花、日炎斗篷。"
         }
       ],
       "kind": "guide",
@@ -7713,6 +7839,98 @@
               "items": []
             }
           ]
+        },
+        {
+          "id": "9b4ff401-a78b-48ae-b895-9ac931684465",
+          "name": "九级 · 补艾克",
+          "category": "待分类",
+          "notes": "三星妮蔻和三星莉莉娅在八级稳住后再升九。艾克和妮蔻开双天才，与酒桶开双主宰。",
+          "revision": 1,
+          "updatedAt": "2026-11-28T16:08:07.822Z",
+          "sectionId": "sample-block-0464",
+          "boardRole": "stage",
+          "pieces": [
+            {
+              "instanceId": "9b2a8f0f-fa39-4655-9873-fa0a42901502",
+              "unitId": "leona",
+              "position": 8,
+              "stars": 1,
+              "items": []
+            },
+            {
+              "instanceId": "7df912fa-02a1-4cc6-baa1-3450ffe6cedc",
+              "unitId": "lillia",
+              "position": 3,
+              "stars": 3,
+              "items": [
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_WarmogsArmor",
+                "TFT_Item_Redemption"
+              ]
+            },
+            {
+              "instanceId": "a2e603e1-3836-4fda-8e96-31bbcf4c1dd4",
+              "unitId": "gragas",
+              "position": 1,
+              "stars": 2,
+              "items": [
+                "TFT_Item_IonicSpark",
+                "TFT_Item_RedBuff"
+              ]
+            },
+            {
+              "instanceId": "a5e08ed1-4764-430e-93f5-24bca4f6fb38",
+              "unitId": "akali-kda",
+              "position": 17,
+              "stars": 1,
+              "items": [],
+              "alternate": {
+                "instanceId": "4f842abd-462b-4076-bec5-b007dcaeeb40",
+                "unitId": "varus",
+                "stars": 2,
+                "items": []
+              }
+            },
+            {
+              "instanceId": "294998ed-a045-44d0-88a8-fd042931264d",
+              "unitId": "neeko",
+              "position": 21,
+              "stars": 3,
+              "items": [
+                "TFT_Item_SpearOfShojin",
+                "TFT_Item_JeweledGauntlet",
+                "TFT_Item_PowerGauntlet"
+              ]
+            },
+            {
+              "instanceId": "7956e3f2-89d8-4235-9fef-4201f21034df",
+              "unitId": "kai-sa",
+              "position": 27,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "fcfc0d03-0c3f-49c8-9e52-9323d5e4f102",
+              "unitId": "evelynn",
+              "position": 11,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "8a099e69-2c40-4ff5-95f0-654ef6e3d91e",
+              "unitId": "ahri",
+              "position": 25,
+              "stars": 1,
+              "items": []
+            },
+            {
+              "instanceId": "27645186-d27a-456d-96b8-a03fb9aa2d72",
+              "unitId": "ekko",
+              "position": 12,
+              "stars": 2,
+              "items": []
+            }
+          ]
         }
       ],
       "team": {
@@ -7800,7 +8018,8 @@
       "primaryTeamId": "00000000-0000-4000-8000-000000000039",
       "stageTeamIds": [
         "00000000-0000-4000-8000-000000000113",
-        "00000000-0000-4000-8000-000000000053"
+        "00000000-0000-4000-8000-000000000053",
+        "9b4ff401-a78b-48ae-b895-9ac931684465"
       ]
     },
     {
@@ -8771,7 +8990,38 @@
         {
           "id": "choreographer-draven-viego-cap",
           "type": "text",
-          "text": "调音台攻击力和生命值各分 5 分贝。追完三星再升八，有崔斯特就补上开三花式射手。"
+          "text": "调音台攻击力和生命值各分 5 分贝。追出三星后升八开三花式。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "调音台攻击力和生命值各分 5 分贝。追出三星后升八开三花式。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "choreographer-draven-viego-lv8-heading",
+          "type": "heading",
+          "text": "八级 · 三花式",
+          "elements": [
+            {
+              "text_run": {
+                "content": "八级 · 三花式"
+              }
+            }
+          ]
+        },
+        {
+          "id": "choreographer-draven-viego-lv8-tempo",
+          "type": "text",
+          "text": "有崔斯特就替掉卡莎，继续开三花式。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "有崔斯特就替掉卡莎，继续开三花式。"
+              }
+            }
+          ]
         },
         {
           "id": "choreographer-draven-viego-credit",
@@ -8787,6 +9037,18 @@
           "id": "choreographer-draven-viego-lv7-items",
           "type": "text",
           "text": "棋盘配装 · 七级 · 双C成型\n主C：德莱文。朔极之矛、死亡之刃、无尽之刃。\n主C：佛耶戈。夜之锋刃、无尽之刃、正义之手。\n主坦：布隆。石像鬼石板甲、狂徒铠甲、振奋盔甲。"
+        },
+        {
+          "id": "choreographer-draven-viego-lv8-kaisa-loadout",
+          "type": "text",
+          "text": "棋盘配装 · 八级 · 三花式\n主C：德莱文。朔极之矛、死亡之刃、无尽之刃。\n主C：佛耶戈。夜之锋刃、无尽之刃、正义之手。\n主坦：布隆。石像鬼石板甲、狂徒铠甲、振奋盔甲。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "棋盘配装 · 八级 · 三花式\n主C：德莱文。朔极之矛、死亡之刃、无尽之刃。\n主C：佛耶戈。夜之锋刃、无尽之刃、正义之手。\n主坦：布隆。石像鬼石板甲、狂徒铠甲、振奋盔甲。"
+              }
+            }
+          ]
         }
       ],
       "kind": "guide",
@@ -8862,6 +9124,86 @@
               ]
             }
           ]
+        },
+        {
+          "id": "fbe3bfcb-cb2d-4811-badd-a4b3e983feb1",
+          "name": "八级 · 三花式",
+          "category": "慢搜阵容",
+          "notes": "双 C 成型后升八补卡莎。",
+          "revision": 1,
+          "updatedAt": "2026-11-28T16:01:17.474Z",
+          "sectionId": "choreographer-draven-viego",
+          "pieces": [
+            {
+              "instanceId": "8db56cc3-1f81-4f1e-9c96-4b8bdf25e09f",
+              "unitId": "braum",
+              "position": 3,
+              "stars": 3,
+              "items": [
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_WarmogsArmor",
+                "TFT_Item_Redemption"
+              ]
+            },
+            {
+              "instanceId": "c46724b9-8254-48ac-b041-ea2d1eae1496",
+              "unitId": "yone",
+              "position": 8,
+              "stars": 1,
+              "items": []
+            },
+            {
+              "instanceId": "7269510b-470d-4a77-a7de-1acd7ff9f437",
+              "unitId": "garen",
+              "position": 9,
+              "stars": 1,
+              "items": []
+            },
+            {
+              "instanceId": "9b68d29a-060e-4963-a95e-5c05b7ac2e72",
+              "unitId": "yorick",
+              "position": 10,
+              "stars": 1,
+              "items": []
+            },
+            {
+              "instanceId": "ed7eff52-8b3b-43c8-91d0-a16854139d25",
+              "unitId": "viego",
+              "position": 12,
+              "stars": 3,
+              "items": [
+                "TFT_Item_GuardianAngel",
+                "TFT_Item_InfinityEdge",
+                "TFT_Item_UnstableConcoction"
+              ]
+            },
+            {
+              "instanceId": "8ff9bcd8-b76a-45db-82ae-1db529e9e927",
+              "unitId": "gnar",
+              "position": 24,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "312b5867-02cb-4bfe-9bf4-de37c6097036",
+              "unitId": "draven",
+              "position": 27,
+              "stars": 3,
+              "items": [
+                "TFT_Item_SpearOfShojin",
+                "TFT_Item_Deathblade",
+                "TFT_Item_InfinityEdge"
+              ]
+            },
+            {
+              "unitId": "kai-sa",
+              "stars": 2,
+              "position": 25,
+              "instanceId": "09c7b1a6-7bce-4a6f-b7ab-d16292dee582",
+              "items": []
+            }
+          ],
+          "boardRole": "stage"
         }
       ],
       "team": {
@@ -8937,7 +9279,9 @@
         ]
       },
       "primaryTeamId": "00000000-0000-4000-8000-000000001177",
-      "stageTeamIds": [],
+      "stageTeamIds": [
+        "fbe3bfcb-cb2d-4811-badd-a4b3e983feb1"
+      ],
       "summaryBlockId": "choreographer-draven-viego-start"
     },
     {
@@ -10075,7 +10419,7 @@
               "instanceId": "00000000-0000-4000-8000-000000000721",
               "unitId": "ashe",
               "position": 21,
-              "stars": 2,
+              "stars": 3,
               "items": [
                 "TFT_Item_Deathblade",
                 "TFT_Item_GuinsoosRageblade",
@@ -10527,7 +10871,7 @@
     },
     {
       "id": "sample-block-0235",
-      "title": "双电子泽丽 · 95",
+      "title": "双电子泽丽",
       "category": "高费阵容",
       "blocks": [
         {
@@ -13235,6 +13579,31 @@
           "text": "七级无卡莎的 16 星夺冠局"
         },
         {
+          "id": "kda-seraphine-nine-heading",
+          "type": "heading",
+          "text": "九级 · 补艾克",
+          "level": 2,
+          "elements": [
+            {
+              "text_run": {
+                "content": "九级 · 补艾克"
+              }
+            }
+          ]
+        },
+        {
+          "id": "kda-seraphine-nine-notes",
+          "type": "text",
+          "text": "八级已经稳血再升九。补艾克开双天才，芬妮与酒桶继续带装。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "八级已经稳血再升九。补艾克开双天才，芬妮与酒桶继续带装。"
+              }
+            }
+          ]
+        },
+        {
           "id": "sample-block-0646",
           "type": "heading",
           "elements": [
@@ -13319,7 +13688,7 @@
             },
             {
               "text_run": {
-                "content": "\n主C：萨勒芬妮。K/DA纹章、朔极之矛、珠光护手。\n主坦：古拉加斯。石像鬼石板甲、离子火花。\n副C：妮蔻。有对应余装再补。\n功能装：莉莉娅。莉莉娅日炎先覆盖前排重伤。\n功能装：古拉加斯。酒桶贴脸带离子破魔抗。\n",
+                "content": "\n主C：萨勒芬妮。K/DA纹章、朔极之矛、珠光护手。\n主坦：古拉加斯。石像鬼石板甲、离子火花、振奋盔甲。\n副C：妮蔻。有对应余装再补。\n功能装：莉莉娅。莉莉娅日炎先覆盖前排重伤。\n功能装：古拉加斯。酒桶贴脸带离子破魔抗。\n",
                 "text_element_style": {
                   "bold": false,
                   "inline_code": false,
@@ -13346,7 +13715,7 @@
             }
           ],
           "level": 0,
-          "text": "棋盘配装 · 六级追芬妮\n主C：萨勒芬妮。K/DA纹章、朔极之矛、珠光护手。\n主坦：古拉加斯。石像鬼石板甲、离子火花。\n副C：妮蔻。有对应余装再补。\n功能装：莉莉娅。莉莉娅日炎先覆盖前排重伤。\n功能装：古拉加斯。酒桶贴脸带离子破魔抗。\n结算 7 局"
+          "text": "棋盘配装 · 六级追芬妮\n主C：萨勒芬妮。K/DA纹章、朔极之矛、珠光护手。\n主坦：古拉加斯。石像鬼石板甲、离子火花、振奋盔甲。\n副C：妮蔻。有对应余装再补。\n功能装：莉莉娅。莉莉娅日炎先覆盖前排重伤。\n功能装：古拉加斯。酒桶贴脸带离子破魔抗。\n结算 7 局"
         },
         {
           "id": "sample-block-0093",
@@ -13366,7 +13735,7 @@
             },
             {
               "text_run": {
-                "content": "\n主C：萨勒芬妮。K/DA纹章、朔极之矛。\n主坦：古拉加斯。石像鬼石板甲、离子火花。\n副C：妮蔻。有对应余装再补。\n功能装：莉莉娅。莉莉娅日炎先覆盖前排重伤。\n功能装：古拉加斯。酒桶贴脸带离子破魔抗。\n",
+                "content": "\n主C：萨勒芬妮。K/DA纹章、朔极之矛、珠光护手。\n主坦：古拉加斯。石像鬼石板甲、离子火花、振奋盔甲。\n副C：妮蔻。有对应余装再补。\n功能装：莉莉娅。莉莉娅日炎先覆盖前排重伤。\n功能装：古拉加斯。酒桶贴脸带离子破魔抗。\n",
                 "text_element_style": {
                   "bold": false,
                   "inline_code": false,
@@ -13393,7 +13762,24 @@
             }
           ],
           "level": 0,
-          "text": "棋盘配装 · 五级追一费\n主C：萨勒芬妮。K/DA纹章、朔极之矛。\n主坦：古拉加斯。石像鬼石板甲、离子火花。\n副C：妮蔻。有对应余装再补。\n功能装：莉莉娅。莉莉娅日炎先覆盖前排重伤。\n功能装：古拉加斯。酒桶贴脸带离子破魔抗。\n结算 16 局"
+          "text": "棋盘配装 · 五级追一费\n主C：萨勒芬妮。K/DA纹章、朔极之矛、珠光护手。\n主坦：古拉加斯。石像鬼石板甲、离子火花、振奋盔甲。\n副C：妮蔻。有对应余装再补。\n功能装：莉莉娅。莉莉娅日炎先覆盖前排重伤。\n功能装：古拉加斯。酒桶贴脸带离子破魔抗。\n结算 16 局"
+        },
+        {
+          "id": "kda-seraphine-nine-roles",
+          "type": "text",
+          "text": "棋盘配装 · 九级 · 补艾克\n主C：萨勒芬妮。K/DA纹章、朔极之矛、珠光护手。\n主坦：古拉加斯。石像鬼石板甲、振奋盔甲、离子火花。\n功能装：莉莉娅。日炎斗篷。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "棋盘配装 · 九级 · 补艾克\n主C：萨勒芬妮。K/DA纹章、朔极之矛、珠光护手。\n主坦：古拉加斯。石像鬼石板甲、振奋盔甲、离子火花。\n功能装：莉莉娅。日炎斗篷。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "web-kda-seraphine-lv8-akali-roles",
+          "type": "text",
+          "text": "棋盘配装 · 八级 · 补阿卡丽\n主C：萨勒芬妮。K/DA纹章、朔极之矛、珠光护手。\n主坦：古拉加斯。石像鬼石板甲、振奋盔甲、离子火花。\n功能装：莉莉娅。日炎斗篷。"
         }
       ],
       "kind": "guide",
@@ -13586,6 +13972,169 @@
               "items": []
             }
           ]
+        },
+        {
+          "id": "99816bd6-efbd-4541-856b-6a0bf0def3a0",
+          "name": "八级 · 补阿卡丽",
+          "category": "待分类",
+          "notes": "芬妮三星后再拉人口。K/DA 阿卡丽解锁并到手后先上，余下战士装给她。",
+          "revision": 1,
+          "updatedAt": "2026-11-28T16:08:07.824Z",
+          "sectionId": "sample-block-0367",
+          "boardRole": "stage",
+          "pieces": [
+            {
+              "instanceId": "a52c338b-5c5c-4107-a419-ffc36053d4b6",
+              "unitId": "lillia",
+              "position": 2,
+              "stars": 3,
+              "items": [
+                "TFT_Item_RedBuff"
+              ]
+            },
+            {
+              "instanceId": "2999b6c4-a134-485f-9a0b-ff9a29ee14ca",
+              "unitId": "gragas",
+              "position": 3,
+              "stars": 3,
+              "items": [
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_Redemption",
+                "TFT_Item_IonicSpark"
+              ]
+            },
+            {
+              "instanceId": "e1b7e26c-cc1b-4e67-95ac-46d6ffee0883",
+              "unitId": "leona",
+              "position": 10,
+              "stars": 1,
+              "items": []
+            },
+            {
+              "instanceId": "111899b5-7150-48fb-958f-d24e5344fda7",
+              "unitId": "evelynn",
+              "position": 8,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "d4bedc39-2017-472c-a497-ce4056f8d441",
+              "unitId": "neeko",
+              "position": 23,
+              "stars": 3,
+              "items": []
+            },
+            {
+              "instanceId": "5e3f2f84-212b-40cb-ba49-557771dc55cc",
+              "unitId": "seraphine",
+              "position": 27,
+              "stars": 3,
+              "items": [
+                "emblem-k-da",
+                "TFT_Item_SpearOfShojin",
+                "TFT_Item_JeweledGauntlet"
+              ]
+            },
+            {
+              "instanceId": "793ee7e1-f297-4e98-8a70-12c680f6e754",
+              "unitId": "ahri",
+              "position": 25,
+              "stars": 1,
+              "items": []
+            },
+            {
+              "instanceId": "7c62b45c-3a6d-42a6-bbb6-5306572cba74",
+              "unitId": "akali-kda",
+              "position": 12,
+              "stars": 1,
+              "items": []
+            }
+          ]
+        },
+        {
+          "id": "fa58c8aa-702c-45cc-bc2d-75e78b8666ea",
+          "name": "九级 · 补艾克",
+          "category": "待分类",
+          "notes": "八级已经稳血再升九。补艾克开双天才，芬妮与酒桶继续带装。",
+          "revision": 1,
+          "updatedAt": "2026-11-28T16:08:07.824Z",
+          "sectionId": "sample-block-0367",
+          "boardRole": "stage",
+          "pieces": [
+            {
+              "instanceId": "b334625c-d3f1-4599-b07e-0a8a083ad592",
+              "unitId": "lillia",
+              "position": 2,
+              "stars": 3,
+              "items": [
+                "TFT_Item_RedBuff"
+              ]
+            },
+            {
+              "instanceId": "979235a0-972f-4ad5-aa43-189c6d713930",
+              "unitId": "gragas",
+              "position": 3,
+              "stars": 3,
+              "items": [
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_Redemption",
+                "TFT_Item_IonicSpark"
+              ]
+            },
+            {
+              "instanceId": "63e79ec3-1756-41e8-a46f-12b51f049fb2",
+              "unitId": "leona",
+              "position": 10,
+              "stars": 1,
+              "items": []
+            },
+            {
+              "instanceId": "0c08f537-46ce-4f60-98b5-8cf41d92e4c8",
+              "unitId": "evelynn",
+              "position": 8,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "56e95707-c89b-4d45-aa55-471615aa8f6a",
+              "unitId": "neeko",
+              "position": 23,
+              "stars": 3,
+              "items": []
+            },
+            {
+              "instanceId": "321842b9-cbc7-4e33-8126-8f26c43a65d2",
+              "unitId": "seraphine",
+              "position": 27,
+              "stars": 3,
+              "items": [
+                "emblem-k-da",
+                "TFT_Item_SpearOfShojin",
+                "TFT_Item_JeweledGauntlet"
+              ]
+            },
+            {
+              "instanceId": "bdaab006-ba23-4d62-8382-e36f6d4b2c54",
+              "unitId": "ahri",
+              "position": 25,
+              "stars": 1,
+              "items": []
+            },
+            {
+              "instanceId": "32a57fbe-fe34-4743-83db-da4a2dc4e433",
+              "unitId": "akali-kda",
+              "position": 12,
+              "stars": 1,
+              "items": []
+            },
+            {
+              "unitId": "ekko",
+              "stars": 2,
+              "position": 9,
+              "items": [],
+              "instanceId": "f360a8cb-0b9e-4ebe-b7bd-ea17b8ba6400"
+            }
+          ]
         }
       ],
       "team": {
@@ -13654,7 +14203,9 @@
       "primaryTeamId": "00000000-0000-4000-8000-000000000094",
       "stageTeamIds": [
         "00000000-0000-4000-8000-000000000086",
-        "00000000-0000-4000-8000-000000000055"
+        "00000000-0000-4000-8000-000000000055",
+        "99816bd6-efbd-4541-856b-6a0bf0def3a0",
+        "fa58c8aa-702c-45cc-bc2d-75e78b8666ea"
       ]
     },
     {
@@ -13767,12 +14318,12 @@
           "elements": [
             {
               "text_run": {
-                "content": "格温要累计 250 次离子火花粉丝欢呼。七级后，三件装的芸阿娜已满足金克丝的解锁条件。有哪张先用哪张。九级顺风可补蔚，和贾克斯开双电子，和安妮开双主宰。"
+                "content": "格温要累计 250 次离子火花粉丝欢呼。七级后，三件装的芸阿娜已满足金克丝的解锁条件。有哪张先用哪张。九级两张高费离子都到手时，金克丝换拉克丝，补蔚开双电子、双主宰。格温没开就留拉克丝。"
               }
             }
           ],
           "level": 0,
-          "text": "格温要累计 250 次离子火花粉丝欢呼。七级后，三件装的芸阿娜已满足金克丝的解锁条件。有哪张先用哪张。九级顺风可补蔚，和贾克斯开双电子，和安妮开双主宰。"
+          "text": "格温要累计 250 次离子火花粉丝欢呼。七级后，三件装的芸阿娜已满足金克丝的解锁条件。有哪张先用哪张。九级两张高费离子都到手时，金克丝换拉克丝，补蔚开双电子、双主宰。格温没开就留拉克丝。"
         },
         {
           "id": "sample-block-0522",
@@ -13806,6 +14357,18 @@
           ],
           "level": 0,
           "text": "棋盘配装 · 五级慢搜\n主C：芸阿娜。鬼索的狂暴之刃、海妖之怒、最后的轻语。已由前排稳定破甲时，第三件可用死亡之刃。\n主坦：伊莉丝。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副C：吉格斯。朔极之矛。\n功能装：芸阿娜。轻语减护甲。\n功能装：安妮。两星穿一件装备解锁提伯斯。"
+        },
+        {
+          "id": "ionic-yunara-nine-loadout",
+          "type": "text",
+          "text": "棋盘配装 · 九级 · 七离子双电子\n主C：芸阿娜。鬼索的狂暴之刃、海妖之怒、最后的轻语。\n主坦：伊莉丝。石像鬼石板甲、狂徒铠甲、振奋盔甲。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "棋盘配装 · 九级 · 七离子双电子\n主C：芸阿娜。鬼索的狂暴之刃、海妖之怒、最后的轻语。\n主坦：伊莉丝。石像鬼石板甲、狂徒铠甲、振奋盔甲。"
+              }
+            }
+          ]
         },
         {
           "id": "ionic-yunara-hyperpop-pivot",
@@ -14404,7 +14967,7 @@
           "elements": [
             {
               "text_run": {
-                "content": "七级补奎桑提、蕾欧娜开六保镖。蕾欧娜没来，二星安妮带一件可解锁提伯斯顶位。八级补阿狸开双编舞。前排容易倒就走六保镖，四保镖已能顶住可留十星 K/DA。",
+                "content": "七级补奎桑提、蕾欧娜开六护卫。蕾欧娜没来，二星安妮带一件可解锁提伯斯顶位。八级补阿狸开双编舞。前排容易倒就走六保镖，四保镖已能顶住可留十星 K/DA。",
                 "text_element_style": {
                   "bold": false,
                   "inline_code": false,
@@ -14416,7 +14979,7 @@
             }
           ],
           "level": 0,
-          "text": "七级补奎桑提、蕾欧娜开六保镖。蕾欧娜没来，二星安妮带一件可解锁提伯斯顶位。八级补阿狸开双编舞。前排容易倒就走六保镖，四保镖已能顶住可留十星 K/DA。"
+          "text": "七级补奎桑提、蕾欧娜开六护卫。蕾欧娜没来，二星安妮带一件可解锁提伯斯顶位。八级补阿狸开双编舞。前排容易倒就走六保镖，四保镖已能顶住可留十星 K/DA。"
         },
         {
           "id": "sample-block-0462",
@@ -14481,6 +15044,11 @@
           ],
           "level": 0,
           "text": "棋盘配装 · 六保镖莉莉娅\n主C：莉莉娅。离子火花、正义之手、夜之锋刃。\n主坦：内瑟斯。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n功能装：烈娜塔。朔极之矛、莫雷洛秘典。"
+        },
+        {
+          "id": "web-kda-lillia-lv9-vi-roles",
+          "type": "text",
+          "text": "棋盘配装 · 九级 · 六护卫补蔚\n主C：莉莉娅。离子火花、正义之手、夜之锋刃。\n主坦：内瑟斯。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n功能装：烈娜塔·戈拉斯克。朔极之矛、莫雷洛秘典。"
         }
       ],
       "kind": "guide",
@@ -14694,6 +15262,92 @@
               "items": []
             }
           ]
+        },
+        {
+          "id": "9b4479a2-b2c9-4a1a-9d33-47e628170f50",
+          "name": "九级 · 六护卫补蔚",
+          "category": "待分类",
+          "notes": "莉莉娅三星、内瑟斯两星能稳血时再升九，补蔚和贾克斯开双电子。",
+          "revision": 1,
+          "updatedAt": "2026-11-28T16:11:57.718Z",
+          "sectionId": "sample-block-0020",
+          "boardRole": "stage",
+          "pieces": [
+            {
+              "instanceId": "bbcca6df-b149-4784-b8fd-c9a99927b304",
+              "unitId": "lillia",
+              "position": 9,
+              "stars": 3,
+              "items": [
+                "TFT_Item_IonicSpark",
+                "TFT_Item_UnstableConcoction",
+                "TFT_Item_GuardianAngel"
+              ]
+            },
+            {
+              "instanceId": "fe43129f-0514-457d-ace7-a8d92703facc",
+              "unitId": "kennen",
+              "position": 10,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "6a1182f5-b761-4d09-a6b9-0d3d27b1a99b",
+              "unitId": "nasus",
+              "position": 2,
+              "stars": 2,
+              "items": [
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_WarmogsArmor",
+                "TFT_Item_Redemption"
+              ]
+            },
+            {
+              "instanceId": "f7f760fb-21af-4c57-87db-67017564a4db",
+              "unitId": "jax",
+              "position": 1,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "afb98c96-27db-45d5-83b7-99334b0a9c28",
+              "unitId": "k-sante",
+              "position": 11,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "5afa149b-1e42-4c70-94f7-4aae45c67bb0",
+              "unitId": "leona",
+              "position": 12,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "05b7b5b1-c8e2-4fd0-8f34-f61c275efc0a",
+              "unitId": "renata-glasc",
+              "position": 23,
+              "stars": 2,
+              "items": [
+                "TFT_Item_SpearOfShojin",
+                "TFT_Item_Morellonomicon"
+              ]
+            },
+            {
+              "instanceId": "d45a1cf5-cfac-4dc0-8216-7bad62080d88",
+              "unitId": "ahri",
+              "position": 25,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "8db85bfa-ef45-462d-95ca-4c445b62b225",
+              "unitId": "vi",
+              "position": 8,
+              "stars": 1,
+              "items": []
+            }
+          ]
         }
       ],
       "team": {
@@ -14776,7 +15430,8 @@
       },
       "primaryTeamId": "00000000-0000-4000-8000-000000000091",
       "stageTeamIds": [
-        "00000000-0000-4000-8000-000000000072"
+        "00000000-0000-4000-8000-000000000072",
+        "9b4479a2-b2c9-4a1a-9d33-47e628170f50"
       ]
     },
     {
@@ -16352,7 +17007,7 @@
           "elements": [
             {
               "text_run": {
-                "content": "五级利息 D 伊莉丝、瑟提，两星安妮先带一件装备。伊莉丝三星就升，瑟提只差一两张再补。六级补布隆开 2 主唱，七级补斯维因，八级上希瓦娜，格温到手换吉格斯。",
+                "content": "五级利息 D 伊莉丝、瑟提，两星安妮先带一件装备。伊莉丝三星就升，瑟提只差一两张再补。六级补布隆开双主宰，七级补斯维因，八级上希瓦娜开四主唱。格温到手换吉格斯。",
                 "text_element_style": {
                   "bold": false,
                   "inline_code": false,
@@ -16364,7 +17019,7 @@
             }
           ],
           "level": 0,
-          "text": "五级利息 D 伊莉丝、瑟提，两星安妮先带一件装备。伊莉丝三星就升，瑟提只差一两张再补。六级补布隆开 2 主唱，七级补斯维因，八级上希瓦娜，格温到手换吉格斯。"
+          "text": "五级利息 D 伊莉丝、瑟提，两星安妮先带一件装备。伊莉丝三星就升，瑟提只差一两张再补。六级补布隆开双主宰，七级补斯维因，八级上希瓦娜开四主唱。格温到手换吉格斯。"
         },
         {
           "id": "sample-block-0516",
@@ -16432,7 +17087,7 @@
           "elements": [
             {
               "text_run": {
-                "content": "格温需离子粉丝累计欢呼 250 次。格温未开，用带一件装备的二星安妮先解锁提伯斯，在八级上提伯斯开 5 离子。两张都没到就留吉格斯。",
+                "content": "格温需离子粉丝累计欢呼 250 次。格温未开，用带一件装备的二星安妮先解锁提伯斯，在八级上提伯斯开 5 离子。两张都没到就留吉格斯。上九凑七离子火花时，下布隆和芸阿娜，上提伯斯、金克丝、阿萝拉。格温或金克丝没到齐，先留五离子火花。",
                 "text_element_style": {
                   "bold": false,
                   "inline_code": false,
@@ -16444,7 +17099,7 @@
             }
           ],
           "level": 0,
-          "text": "格温需离子粉丝累计欢呼 250 次。格温未开，用带一件装备的二星安妮先解锁提伯斯，在八级上提伯斯开 5 离子。两张都没到就留吉格斯。"
+          "text": "格温需离子粉丝累计欢呼 250 次。格温未开，用带一件装备的二星安妮先解锁提伯斯，在八级上提伯斯开 5 离子。两张都没到就留吉格斯。上九凑七离子火花时，下布隆和芸阿娜，上提伯斯、金克丝、阿萝拉。格温或金克丝没到齐，先留五离子火花。"
         },
         {
           "id": "sample-block-0345",
@@ -16538,10 +17193,25 @@
                   "underline": false
                 }
               }
+            },
+            {
+              "text_run": {
+                "content": " · "
+              }
+            },
+            {
+              "text_run": {
+                "content": "Mobalytics 七离子火花九级参考",
+                "text_element_style": {
+                  "link": {
+                    "url": "https://mobalytics.gg/tft/set19/comps-guide/elise-hero-augment-3MSkstqOkQ6iGhaZTcEudm3m7N5"
+                  }
+                }
+              }
             }
           ],
           "level": 0,
-          "text": "MetaTFT S19 PBE 强化技能与解锁数据 · La Casita PBE 咬痕伊莉丝成型参考 · TFT Ninja 咬痕强化说明"
+          "text": "MetaTFT S19 PBE 强化技能与解锁数据 · La Casita PBE 咬痕伊莉丝成型参考 · TFT Ninja 咬痕强化说明 · Mobalytics 七离子火花九级参考"
         },
         {
           "id": "sample-block-0528",
@@ -16581,7 +17251,7 @@
             },
             {
               "text_run": {
-                "content": "\n主C：伊莉丝。灭世者的死亡之帽、海克斯科技枪刃。\n主坦：瑟提。石像鬼石板甲。\n",
+                "content": "\n主C：伊莉丝。灭世者的死亡之帽、海克斯科技枪刃、珠光护手。\n主坦：瑟提。石像鬼石板甲、狂徒铠甲、冕卫。\n",
                 "text_element_style": {
                   "bold": false,
                   "inline_code": false,
@@ -16605,7 +17275,7 @@
             }
           ],
           "level": 0,
-          "text": "棋盘配装 · 五级慢 D｜瑟提顶、伊莉丝收第一口\n主C：伊莉丝。灭世者的死亡之帽、海克斯科技枪刃。\n主坦：瑟提。石像鬼石板甲。\n功能装：安妮。技能带灼烧、重伤。两星带一件装备可解锁提伯斯。"
+          "text": "棋盘配装 · 五级慢 D｜瑟提顶、伊莉丝收第一口\n主C：伊莉丝。灭世者的死亡之帽、海克斯科技枪刃、珠光护手。\n主坦：瑟提。石像鬼石板甲、狂徒铠甲、冕卫。\n功能装：安妮。技能带灼烧、重伤。两星带一件装备可解锁提伯斯。"
         },
         {
           "id": "sample-block-0299",
@@ -16613,7 +17283,7 @@
           "elements": [
             {
               "text_run": {
-                "content": "棋盘配装 · 八级成型｜5 离子火花 · 4 泰坦",
+                "content": "棋盘配装 · 八级成型｜5 离子火花 · 4 主唱",
                 "text_element_style": {
                   "bold": true,
                   "inline_code": false,
@@ -16649,14 +17319,19 @@
             }
           ],
           "level": 0,
-          "text": "棋盘配装 · 八级成型｜5 离子火花 · 4 泰坦\n主C：伊莉丝。灭世者的死亡之帽、珠光护手、海克斯科技枪刃。\n主坦：瑟提。石像鬼石板甲、狂徒铠甲、冕卫。\n副C：格温。蓝霸符、珠光护手。\n功能装：布隆。离子火花，和伊莉丝同侧削目标魔抗。\n功能装：斯维因。鬼书补持续重伤。有安妮技能覆盖时优先做主C、主坦装。"
+          "text": "棋盘配装 · 八级成型｜5 离子火花 · 4 主唱\n主C：伊莉丝。灭世者的死亡之帽、珠光护手、海克斯科技枪刃。\n主坦：瑟提。石像鬼石板甲、狂徒铠甲、冕卫。\n副C：格温。蓝霸符、珠光护手。\n功能装：布隆。离子火花，和伊莉丝同侧削目标魔抗。\n功能装：斯维因。鬼书补持续重伤。有安妮技能覆盖时优先做主C、主坦装。"
+        },
+        {
+          "id": "bite-elise-nine-loadout",
+          "type": "text",
+          "text": "棋盘配装 · 九级 · 七离子火花\n主C：伊莉丝。灭世者的死亡之帽、珠光护手、海克斯科技枪刃。\n主坦：瑟提。石像鬼石板甲、狂徒铠甲、冕卫。\n副C：格温。蓝霸符、珠光护手。\n功能装：提伯斯。离子火花，与伊莉丝同侧。\n功能装：斯维因。莫雷洛秘典。"
         }
       ],
       "kind": "guide",
       "teams": [
         {
           "id": "00000000-0000-4000-8000-000000000103",
-          "name": "八级成型｜5 离子火花 · 4 泰坦",
+          "name": "八级成型｜5 离子火花 · 4 主唱",
           "category": "待分类",
           "notes": "三星伊莉丝靠瑟提和离子火花的范围打第一口。格温锁着先上提伯斯，提伯斯也没到就留吉格斯。",
           "revision": 1,
@@ -16742,7 +17417,7 @@
           "id": "00000000-0000-4000-8000-000000000073",
           "name": "五级慢 D｜瑟提顶、伊莉丝收第一口",
           "category": "待分类",
-          "notes": "3 离子火花、2 泰坦、2 法师、2 疾风射手。瑟提先吃集火，让伊莉丝沿同侧咬到能击杀的目标。安妮两星有一件装备即可把提伯斯加入牌池。",
+          "notes": "3 离子火花、2 主唱、2 法师、2 迅击鼓手。瑟提先吃集火，让伊莉丝沿同侧咬到能击杀的目标。安妮两星有一件装备即可把提伯斯加入牌池。",
           "revision": 1,
           "updatedAt": "2026-11-19T16:07:14.029Z",
           "sectionId": "sample-block-0273",
@@ -16793,11 +17468,102 @@
               "items": []
             }
           ]
+        },
+        {
+          "id": "b2559fb0-7e2a-411d-a273-0877484997e9",
+          "name": "九级 · 七离子火花",
+          "category": "待分类",
+          "notes": "九级换提伯斯、金克丝、阿萝拉，开七离子火花。提伯斯接离子火花，与伊莉丝同侧。",
+          "revision": 1,
+          "updatedAt": "2026-11-28T16:29:38.396Z",
+          "sectionId": "sample-block-0273",
+          "pieces": [
+            {
+              "instanceId": "92719c13-c5e9-40f8-88c8-df365d1457bb",
+              "unitId": "sett",
+              "position": 1,
+              "stars": 3,
+              "items": [
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_WarmogsArmor",
+                "TFT_Item_Crownguard"
+              ]
+            },
+            {
+              "instanceId": "837e2c55-c3fd-46f1-be2a-94549cdb22a5",
+              "unitId": "annie",
+              "position": 3,
+              "stars": 2,
+              "items": [
+                "TFT_Item_Crownguard"
+              ]
+            },
+            {
+              "instanceId": "f120ee6d-e2a4-4f54-bfc7-6fb9d2cd7c03",
+              "unitId": "shyvana",
+              "position": 5,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "4ad7b14c-b14a-4d2b-904f-0e013916cabc",
+              "unitId": "tibbers",
+              "stars": 2,
+              "items": [
+                "TFT_Item_IonicSpark"
+              ],
+              "position": 7
+            },
+            {
+              "instanceId": "cfd93f47-408a-4df8-b2f5-59ec427f38fd",
+              "unitId": "elise",
+              "position": 8,
+              "stars": 3,
+              "items": [
+                "TFT_Item_RabadonsDeathcap",
+                "TFT_Item_JeweledGauntlet",
+                "TFT_Item_HextechGunblade"
+              ]
+            },
+            {
+              "instanceId": "c12efa33-638e-4a5e-97e1-9807eb9b96fa",
+              "unitId": "swain",
+              "position": 10,
+              "stars": 2,
+              "items": [
+                "TFT_Item_Morellonomicon"
+              ]
+            },
+            {
+              "instanceId": "acf384c4-5946-4a6d-a143-76659ded52ab",
+              "unitId": "gwen",
+              "position": 12,
+              "stars": 2,
+              "items": [
+                "TFT_Item_BlueBuff",
+                "TFT_Item_JeweledGauntlet"
+              ]
+            },
+            {
+              "instanceId": "f560c79c-0d56-46ee-9993-dfbf5d02d851",
+              "unitId": "aurora",
+              "stars": 2,
+              "items": [],
+              "position": 24
+            },
+            {
+              "instanceId": "46fc2c51-f8e3-404b-a731-9a6a86f3334f",
+              "unitId": "jinx",
+              "stars": 2,
+              "items": [],
+              "position": 26
+            }
+          ]
         }
       ],
       "team": {
         "id": "00000000-0000-4000-8000-000000000103",
-        "name": "八级成型｜5 离子火花 · 4 泰坦",
+        "name": "八级成型｜5 离子火花 · 4 主唱",
         "category": "待分类",
         "notes": "三星伊莉丝靠瑟提和离子火花的范围打第一口。格温锁着先上提伯斯，提伯斯也没到就留吉格斯。",
         "revision": 1,
@@ -16880,7 +17646,8 @@
         ]
       },
       "stageTeamIds": [
-        "00000000-0000-4000-8000-000000000073"
+        "00000000-0000-4000-8000-000000000073",
+        "b2559fb0-7e2a-411d-a273-0877484997e9"
       ],
       "primaryTeamId": "00000000-0000-4000-8000-000000000103"
     },
@@ -17017,7 +17784,7 @@
           "elements": [
             {
               "text_run": {
-                "content": "五级卡利息 D 凯南和莉莉娅，奇亚娜、艾克开 3 真实伤害走 A 面打胜。六级上古拉加斯开 2 主唱，七级补赛娜，八级补亚索开 5 真伤。凯南先三且莉莉娅两星能站住就升。",
+                "content": "五级卡利息 D 凯南和莉莉娅，奇亚娜、艾克开 3 真实伤害走 A 面打胜。六级上古拉加斯，与艾克开双主宰，七级补赛娜，八级补亚索开 5 真伤。凯南先三且莉莉娅两星能站住就升。凯南和亚索稳住后，有余钱上九，已解锁的真伤阿卡丽可接余法装。",
                 "text_element_style": {
                   "bold": false,
                   "inline_code": false,
@@ -17029,7 +17796,7 @@
             }
           ],
           "level": 0,
-          "text": "五级卡利息 D 凯南和莉莉娅，奇亚娜、艾克开 3 真实伤害走 A 面打胜。六级上古拉加斯开 2 主唱，七级补赛娜，八级补亚索开 5 真伤。凯南先三且莉莉娅两星能站住就升。"
+          "text": "五级卡利息 D 凯南和莉莉娅，奇亚娜、艾克开 3 真实伤害走 A 面打胜。六级上古拉加斯，与艾克开双主宰，七级补赛娜，八级补亚索开 5 真伤。凯南先三且莉莉娅两星能站住就升。凯南和亚索稳住后，有余钱上九，已解锁的真伤阿卡丽可接余法装。"
         },
         {
           "id": "sample-block-0431",
@@ -17228,7 +17995,7 @@
             },
             {
               "text_run": {
-                "content": "\n主C：凯南。蓝霸符、珠光护手。\n主坦：莉莉娅。石像鬼石板甲、日炎斗篷。\n",
+                "content": "\n主C：凯南。蓝霸符、珠光护手、海克斯科技枪刃。\n主坦：莉莉娅。石像鬼石板甲、日炎斗篷、狂徒铠甲。\n",
                 "text_element_style": {
                   "bold": false,
                   "inline_code": false,
@@ -17252,7 +18019,7 @@
             }
           ],
           "level": 0,
-          "text": "棋盘配装 · 五级慢 D｜3 真伤抢击杀\n主C：凯南。蓝霸符、珠光护手。\n主坦：莉莉娅。石像鬼石板甲、日炎斗篷。\n功能装：莉莉娅。日炎灼烧、重伤，让凯南更快压到收割线。"
+          "text": "棋盘配装 · 五级慢 D｜3 真伤抢击杀\n主C：凯南。蓝霸符、珠光护手、海克斯科技枪刃。\n主坦：莉莉娅。石像鬼石板甲、日炎斗篷、狂徒铠甲。\n功能装：莉莉娅。日炎灼烧、重伤，让凯南更快压到收割线。"
         },
         {
           "id": "sample-block-0277",
@@ -17304,7 +18071,7 @@
           "elements": [
             {
               "text_run": {
-                "content": "六保镖凯南",
+                "content": "六护卫凯南",
                 "text_element_style": {
                   "bold": true,
                   "inline_code": false,
@@ -17316,7 +18083,7 @@
             }
           ],
           "level": 0,
-          "text": "六保镖凯南",
+          "text": "六护卫凯南",
           "label": true
         },
         {
@@ -17325,7 +18092,7 @@
           "elements": [
             {
               "text_run": {
-                "content": "2-1 拿凯南专属。五级上凯南、莉莉娅、内瑟斯、贾克斯、烈娜塔，四保镖双古典，优先追凯南三星。",
+                "content": "2-1 拿凯南专属。五级上凯南、莉莉娅、内瑟斯、贾克斯、烈娜塔，开四护卫和双古典乐，优先追凯南三星。",
                 "text_element_style": {
                   "bold": false,
                   "inline_code": false,
@@ -17337,7 +18104,7 @@
             }
           ],
           "level": 0,
-          "text": "2-1 拿凯南专属。五级上凯南、莉莉娅、内瑟斯、贾克斯、烈娜塔，四保镖双古典，优先追凯南三星。"
+          "text": "2-1 拿凯南专属。五级上凯南、莉莉娅、内瑟斯、贾克斯、烈娜塔，开四护卫和双古典乐，优先追凯南三星。"
         },
         {
           "id": "sample-block-0448",
@@ -17345,7 +18112,7 @@
           "elements": [
             {
               "text_run": {
-                "content": "七级补奎桑提、蕾欧娜开六保镖。蕾欧娜没来，二星安妮带一件可解锁提伯斯顶位。八级补阿狸开双编舞。狗头和烈娜塔先来、前排撑不住时转六保镖，三真伤能连赢可保原路线。",
+                "content": "七级补奎桑提、蕾欧娜开六护卫。蕾欧娜没来，二星安妮带一件可解锁提伯斯顶位。八级补阿狸开双编舞。狗头和烈娜塔先来、前排撑不住时转六护卫，三真伤能连赢可保原路线。",
                 "text_element_style": {
                   "bold": false,
                   "inline_code": false,
@@ -17357,7 +18124,7 @@
             }
           ],
           "level": 0,
-          "text": "七级补奎桑提、蕾欧娜开六保镖。蕾欧娜没来，二星安妮带一件可解锁提伯斯顶位。八级补阿狸开双编舞。狗头和烈娜塔先来、前排撑不住时转六保镖，三真伤能连赢可保原路线。"
+          "text": "七级补奎桑提、蕾欧娜开六护卫。蕾欧娜没来，二星安妮带一件可解锁提伯斯顶位。八级补阿狸开双编舞。狗头和烈娜塔先来、前排撑不住时转六护卫，三真伤能连赢可保原路线。"
         },
         {
           "id": "sample-block-0044",
@@ -17385,7 +18152,7 @@
           "elements": [
             {
               "text_run": {
-                "content": "棋盘配装 · 六保镖凯南",
+                "content": "棋盘配装 · 六护卫凯南",
                 "text_element_style": {
                   "bold": true,
                   "inline_code": false,
@@ -17421,16 +18188,16 @@
             }
           ],
           "level": 0,
-          "text": "棋盘配装 · 六保镖凯南\n主C：凯南。蓝霸符、珠光护手、海克斯科技枪刃。\n主坦：内瑟斯。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n功能装：烈娜塔。朔极之矛、莫雷洛秘典。"
+          "text": "棋盘配装 · 六护卫凯南\n主C：凯南。蓝霸符、珠光护手、海克斯科技枪刃。\n主坦：内瑟斯。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n功能装：烈娜塔。朔极之矛、莫雷洛秘典。"
         }
       ],
       "kind": "guide",
       "teams": [
         {
           "id": "00000000-0000-4000-8000-000000000012",
-          "name": "六保镖凯南",
+          "name": "六护卫凯南",
           "category": "待分类",
-          "notes": "五级四保镖双古典追凯南，七级开六保镖，八级补阿狸。狗头顶第一波，凯南从第二排找击杀。",
+          "notes": "五级四护卫双古典乐追凯南，七级开六护卫，八级补阿狸。狗头顶第一波，凯南从第二排找击杀。",
           "revision": 1,
           "updatedAt": "2026-11-20T03:48:50.413Z",
           "sectionId": "sample-block-0064",
@@ -17591,7 +18358,7 @@
           "id": "00000000-0000-4000-8000-000000000040",
           "name": "五级慢 D｜3 真伤抢击杀",
           "category": "待分类",
-          "notes": "3 真实伤害、2 保镖、2 天才、3 星 K/DA 档。莉莉娅第一排，凯南第二排同侧，看对手换边，用 3 格范围碰到目标。",
+          "notes": "3 真实伤害、2 护卫、2 天才、5 星 K/DA 档。莉莉娅第一排，凯南第二排同侧，看对手换边，用 3 格范围碰到目标。",
           "revision": 1,
           "updatedAt": "2026-11-19T16:07:42.766Z",
           "sectionId": "sample-block-0064",
@@ -17644,9 +18411,9 @@
       ],
       "team": {
         "id": "00000000-0000-4000-8000-000000000012",
-        "name": "六保镖凯南",
+        "name": "六护卫凯南",
         "category": "待分类",
-        "notes": "五级四保镖双古典追凯南，七级开六保镖，八级补阿狸。狗头顶第一波，凯南从第二排找击杀。",
+        "notes": "五级四护卫双古典乐追凯南，七级开六护卫，八级补阿狸。狗头顶第一波，凯南从第二排找击杀。",
         "revision": 1,
         "updatedAt": "2026-11-20T03:48:50.413Z",
         "sectionId": "sample-block-0064",
@@ -17822,11 +18589,11 @@
         {
           "id": "sample-block-0281-step-3",
           "type": "bullet",
-          "text": "六级补古拉加斯开四主宰。七级同上奥拉夫、塔里克、安妮、古拉加斯、艾克，凑五名不同的海之歌或主宰解锁扎克。八级上扎克，约里克换古拉加斯开六主宰，两星约里克接余肉。",
+          "text": "六级补古拉加斯开四主宰。七级同上奥拉夫、塔里克、安妮、古拉加斯、艾克，凑五名不同的海之歌或主宰解锁扎克。八级上扎克，约里克换古拉加斯开六主宰，两星约里克接余肉。八级稳住再升九。下艾克和纳尔，上布隆、格雷福斯、派克，保留六主宰和三五杀，开三海之歌。纳尔的轻语、红霸符换给格雷福斯。派克未解锁先上艾希。",
           "elements": [
             {
               "text_run": {
-                "content": "六级补古拉加斯开四主宰。七级同上奥拉夫、塔里克、安妮、古拉加斯、艾克，凑五名不同的海之歌或主宰解锁扎克。八级上扎克，约里克换古拉加斯开六主宰，两星约里克接余肉。"
+                "content": "六级补古拉加斯开四主宰。七级同上奥拉夫、塔里克、安妮、古拉加斯、艾克，凑五名不同的海之歌或主宰解锁扎克。八级上扎克，约里克换古拉加斯开六主宰，两星约里克接余肉。八级稳住再升九。下艾克和纳尔，上布隆、格雷福斯、派克，保留六主宰和三五杀，开三海之歌。纳尔的轻语、红霸符换给格雷福斯。派克未解锁先上艾希。"
               }
             }
           ]
@@ -17859,11 +18626,11 @@
         {
           "id": "sample-block-0250",
           "type": "text",
-          "text": "棋盘配装 · 八级六主唱\n主C：奥拉夫。鬼索的狂暴之刃、海妖之怒、无尽之刃。\n主坦：塔里克。石像鬼石板甲、坚定之心。\n主坦：约里克。狂徒铠甲。\n副C：卡尔萨斯。升星后接对应余装。\n功能装：纳尔。轻语减甲，红霸符补重伤覆盖。\n功能装：安妮。技能命中的目标自带重伤。",
+          "text": "棋盘配装 · 八级六主宰\n主C：奥拉夫。鬼索的狂暴之刃、海妖之怒、无尽之刃。\n主坦：塔里克。石像鬼石板甲、坚定之心、狂徒铠甲。\n主坦：约里克。狂徒铠甲、石像鬼石板甲、振奋盔甲。\n副C：卡尔萨斯。升星后接对应余装。\n功能装：纳尔。轻语减甲，红霸符补重伤覆盖。\n功能装：安妮。技能命中的目标自带重伤。",
           "elements": [
             {
               "text_run": {
-                "content": "棋盘配装 · 八级六主唱\n主C：奥拉夫。鬼索的狂暴之刃、海妖之怒、无尽之刃。\n主坦：塔里克。石像鬼石板甲、坚定之心。\n主坦：约里克。狂徒铠甲。\n副C：卡尔萨斯。升星后接对应余装。\n功能装：纳尔。轻语减甲，红霸符补重伤覆盖。\n功能装：安妮。技能命中的目标自带重伤。"
+                "content": "棋盘配装 · 八级六主宰\n主C：奥拉夫。鬼索的狂暴之刃、海妖之怒、无尽之刃。\n主坦：塔里克。石像鬼石板甲、坚定之心、狂徒铠甲。\n主坦：约里克。狂徒铠甲、石像鬼石板甲、振奋盔甲。\n副C：卡尔萨斯。升星后接对应余装。\n功能装：纳尔。轻语减甲，红霸符补重伤覆盖。\n功能装：安妮。技能命中的目标自带重伤。"
               }
             }
           ]
@@ -17871,23 +18638,28 @@
         {
           "id": "sample-block-0094",
           "type": "text",
-          "text": "棋盘配装 · 五级慢 D\n主C：奥拉夫。鬼索的狂暴之刃、海妖之怒。\n主坦：塔里克。石像鬼石板甲、坚定之心。\n副C：卡尔萨斯。升星后接对应余装。\n功能装：纳尔。轻语减甲，跟奥拉夫集火。\n功能装：安妮。用技能给近侧前排挂重伤。",
+          "text": "棋盘配装 · 五级慢 D\n主C：奥拉夫。鬼索的狂暴之刃、海妖之怒、无尽之刃。\n主坦：塔里克。石像鬼石板甲、坚定之心、狂徒铠甲。\n副C：卡尔萨斯。升星后接对应余装。\n功能装：纳尔。轻语减甲，跟奥拉夫集火。\n功能装：安妮。用技能给近侧前排挂重伤。",
           "elements": [
             {
               "text_run": {
-                "content": "棋盘配装 · 五级慢 D\n主C：奥拉夫。鬼索的狂暴之刃、海妖之怒。\n主坦：塔里克。石像鬼石板甲、坚定之心。\n副C：卡尔萨斯。升星后接对应余装。\n功能装：纳尔。轻语减甲，跟奥拉夫集火。\n功能装：安妮。用技能给近侧前排挂重伤。"
+                "content": "棋盘配装 · 五级慢 D\n主C：奥拉夫。鬼索的狂暴之刃、海妖之怒、无尽之刃。\n主坦：塔里克。石像鬼石板甲、坚定之心、狂徒铠甲。\n副C：卡尔萨斯。升星后接对应余装。\n功能装：纳尔。轻语减甲，跟奥拉夫集火。\n功能装：安妮。用技能给近侧前排挂重伤。"
               }
             }
           ]
+        },
+        {
+          "id": "ranged-olaf-nine-loadout",
+          "type": "text",
+          "text": "棋盘配装 · 九级 · 六主宰三海之歌\n主C：奥拉夫。鬼索的狂暴之刃、海妖之怒、无尽之刃。\n主坦：塔里克。石像鬼石板甲、坚定之心、狂徒铠甲。\n主坦：约里克。狂徒铠甲、石像鬼石板甲、振奋盔甲。\n功能装：格雷福斯。最后的轻语、红霸符。"
         }
       ],
       "kind": "guide",
       "teams": [
         {
           "id": "00000000-0000-4000-8000-000000000097",
-          "name": "八级六主唱",
+          "name": "八级六主宰",
           "category": "待分类",
-          "notes": "八级补扎克开六主唱，约里克接剩余肉装。",
+          "notes": "八级补扎克开六主宰。塔里克没追到三星，约里克两星后可接肉装。",
           "revision": 1,
           "updatedAt": "2026-11-19T16:08:24.733Z",
           "sectionId": "sample-block-0281",
@@ -18032,13 +18804,111 @@
               "items": []
             }
           ]
+        },
+        {
+          "id": "8408938c-f54a-44ab-948a-49ec8f8c00c1",
+          "name": "九级 · 六主宰三海之歌",
+          "category": "待分类",
+          "notes": "下艾克、纳尔，上布隆、格雷福斯、派克。格雷福斯接轻语和红霸符，跟奥拉夫同侧。派克要在七级或以上结算时存够 85 金解锁。派克没到先用艾希开三海之歌。",
+          "revision": 1,
+          "updatedAt": "2026-11-28T16:30:42.846Z",
+          "sectionId": "sample-block-0281",
+          "pieces": [
+            {
+              "instanceId": "4918b46e-d509-44e4-ba4c-0ec95972ba20",
+              "unitId": "taric",
+              "position": 2,
+              "stars": 3,
+              "items": [
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_NightHarvester",
+                "TFT_Item_WarmogsArmor"
+              ]
+            },
+            {
+              "instanceId": "23b9a1e8-f1bf-46ac-bb63-d78402c552e0",
+              "unitId": "yorick",
+              "position": 5,
+              "stars": 2,
+              "items": [
+                "TFT_Item_WarmogsArmor",
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_Redemption"
+              ]
+            },
+            {
+              "instanceId": "e0e2b664-46cb-4d2e-b766-966d0201b350",
+              "unitId": "zac",
+              "position": 8,
+              "stars": 1,
+              "items": []
+            },
+            {
+              "instanceId": "3f2a3400-dedb-41c0-84d0-cf5f5d4385bd",
+              "unitId": "braum",
+              "stars": 2,
+              "items": [],
+              "position": 11
+            },
+            {
+              "instanceId": "b2f3ebcb-afdd-4a24-9432-5072c5646943",
+              "unitId": "pyke",
+              "stars": 2,
+              "items": [],
+              "position": 12
+            },
+            {
+              "instanceId": "1f7345ba-698a-4520-aa66-8deab4287cdc",
+              "unitId": "annie",
+              "position": 16,
+              "stars": 2,
+              "items": [],
+              "alternate": {
+                "instanceId": "4e5ad13b-293d-4e7a-85d5-d2a721d81266",
+                "unitId": "zoe",
+                "stars": 2,
+                "items": []
+              }
+            },
+            {
+              "instanceId": "21c2cb43-891f-442e-99a7-568c37f20148",
+              "unitId": "olaf",
+              "position": 21,
+              "stars": 3,
+              "items": [
+                "TFT_Item_GuinsoosRageblade",
+                "TFT_Item_RunaansHurricane",
+                "TFT_Item_InfinityEdge"
+              ]
+            },
+            {
+              "instanceId": "504213e4-a91b-4826-9861-8418fd32843a",
+              "unitId": "graves",
+              "stars": 2,
+              "items": [
+                "TFT_Item_LastWhisper",
+                "TFT_Item_RapidFireCannon"
+              ],
+              "position": 22
+            },
+            {
+              "instanceId": "beacfac7-7270-4b40-8d3f-e990f288169a",
+              "unitId": "karthus",
+              "position": 27,
+              "stars": 2,
+              "items": []
+            }
+          ],
+          "instrumentPositions": {
+            "maracas": 9
+          }
         }
       ],
       "team": {
         "id": "00000000-0000-4000-8000-000000000097",
-        "name": "八级六主唱",
+        "name": "八级六主宰",
         "category": "待分类",
-        "notes": "八级补扎克开六主唱，约里克接剩余肉装。",
+        "notes": "八级补扎克开六主宰。塔里克没追到三星，约里克两星后可接肉装。",
         "revision": 1,
         "updatedAt": "2026-11-19T16:08:24.733Z",
         "sectionId": "sample-block-0281",
@@ -18123,7 +18993,8 @@
         ]
       },
       "stageTeamIds": [
-        "00000000-0000-4000-8000-000000000051"
+        "00000000-0000-4000-8000-000000000051",
+        "8408938c-f54a-44ab-948a-49ec8f8c00c1"
       ],
       "primaryTeamId": "00000000-0000-4000-8000-000000000097",
       "summaryBlockId": "sample-block-0048"
@@ -18424,6 +19295,53 @@
           "text": "MetaTFT S19 PBE 强化、英雄与解锁数据 · La Casita 11 月 19 日 PBE 飞拳瑟提和装备参考"
         },
         {
+          "id": "haymaker-sett-nine-heading",
+          "type": "heading",
+          "level": 2,
+          "text": "九级 · 七心之钢"
+        },
+        {
+          "id": "haymaker-sett-nine-notes",
+          "type": "text",
+          "text": "先留两星拉露恩开厄斐琉斯。九级上厄斐琉斯，悠米、俄洛伊换伊莉丝和蕾欧娜，奎桑提继续扛。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "先留两星拉露恩开厄斐琉斯。九级上厄斐琉斯，悠米、俄洛伊换伊莉丝和蕾欧娜，奎桑提继续扛。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "haymaker-sett-nine-source",
+          "type": "text",
+          "text": "La Casita 九级阵容参考",
+          "elements": [
+            {
+              "text_run": {
+                "content": "La Casita 九级阵容参考",
+                "text_element_style": {
+                  "link": {
+                    "url": "https://lacasitadeltft.com/en/tierlist/comps/19/punch-line-sett"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "haymaker-sett-nine-loadout",
+          "type": "text",
+          "text": "棋盘配装 · 九级 · 七心之钢\n主C：瑟提。饮血剑、泰坦的坚决、斯特拉克的挑战护手。\n主坦：奎桑提。石像鬼石板甲、狂徒铠甲、坚定之心。\n副C：永恩。死亡之刃。\n功能装：伊泽瑞尔带最后的轻语，蕾欧娜带日炎斗篷。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "棋盘配装 · 九级 · 七心之钢\n主C：瑟提。饮血剑、泰坦的坚决、斯特拉克的挑战护手。\n主坦：奎桑提。石像鬼石板甲、狂徒铠甲、坚定之心。\n副C：永恩。死亡之刃。\n功能装：伊泽瑞尔带最后的轻语，蕾欧娜带日炎斗篷。"
+              }
+            }
+          ]
+        },
+        {
           "id": "sample-block-0813",
           "type": "heading",
           "elements": [
@@ -18461,7 +19379,7 @@
             },
             {
               "text_run": {
-                "content": "\n主C：瑟提。饮血剑、泰坦的坚决。\n主坦：伊莉丝。石像鬼石板甲、日炎斗篷。\n副C：伊泽瑞尔。最后的轻语。\n功能装：伊泽瑞尔。轻语减甲。\n",
+                "content": "\n主C：瑟提。饮血剑、泰坦的坚决、斯特拉克的挑战护手。\n主坦：伊莉丝。石像鬼石板甲、日炎斗篷、狂徒铠甲。\n副C：伊泽瑞尔。最后的轻语。\n功能装：伊泽瑞尔。轻语减甲。\n",
                 "text_element_style": {
                   "bold": false,
                   "inline_code": false,
@@ -18485,7 +19403,7 @@
             }
           ],
           "level": 0,
-          "text": "棋盘配装 · 五级慢 D\n主C：瑟提。饮血剑、泰坦的坚决。\n主坦：伊莉丝。石像鬼石板甲、日炎斗篷。\n副C：伊泽瑞尔。最后的轻语。\n功能装：伊泽瑞尔。轻语减甲。\n功能装：伊莉丝。日炎重伤和前排承伤。"
+          "text": "棋盘配装 · 五级慢 D\n主C：瑟提。饮血剑、泰坦的坚决、斯特拉克的挑战护手。\n主坦：伊莉丝。石像鬼石板甲、日炎斗篷、狂徒铠甲。\n副C：伊泽瑞尔。最后的轻语。\n功能装：伊泽瑞尔。轻语减甲。\n功能装：伊莉丝。日炎重伤和前排承伤。"
         },
         {
           "id": "sample-block-0039",
@@ -23017,6 +23935,28 @@
           "id": "web-spellweaver-karthus-nine-roles",
           "type": "text",
           "text": "棋盘配装 · 九级 · 六法四主宰卡尔萨斯梅尔\n主C：卡尔萨斯。海克斯科技枪刃、珠光护手、蓝霸符。\n主坦：安妮。狂徒铠甲、石像鬼石板甲、振奋盔甲。\n副C：梅尔。朔极之矛、莫雷洛秘典、虚空之杖。\n副坦：斯维因。石像鬼石板甲、石像鬼石板甲、冕卫。"
+        },
+        {
+          "id": "karthus-stage-board-source",
+          "type": "text",
+          "text": "六级棋盘参考 · La Casita del TFT",
+          "elements": [
+            {
+              "text_run": {
+                "content": "六级棋盘参考 · La Casita del TFT",
+                "text_element_style": {
+                  "link": {
+                    "url": "https://lacasitadeltft.com/en/tierlist/comps/19/good-collab-karthus"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "web-spellweaver-karthus-six-roles",
+          "type": "text",
+          "text": "棋盘配装 · 六级 · 四法追三\n主C：卡尔萨斯。海克斯科技枪刃、珠光护手、蓝霸符。\n主坦：安妮。狂徒铠甲、石像鬼石板甲、振奋盔甲。"
         }
       ],
       "kind": "guide",
@@ -23112,6 +24052,68 @@
               "position": 27
             }
           ]
+        },
+        {
+          "id": "fe42c7e4-1f6b-46cf-9532-80aadbe065e3",
+          "name": "六级 · 四法追三",
+          "category": "待分类",
+          "notes": "安妮还没三星时，斯维因先两星可先接肉。死歌三星后再升人口。",
+          "revision": 1,
+          "updatedAt": "2026-11-25T05:52:59.340Z",
+          "sectionId": "sample-block-0988",
+          "boardRole": "stage",
+          "pieces": [
+            {
+              "instanceId": "a1cffeda-324c-412b-93ad-f67c339a94b5",
+              "unitId": "annie",
+              "position": 1,
+              "stars": 3,
+              "items": [
+                "TFT_Item_WarmogsArmor",
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_Redemption"
+              ]
+            },
+            {
+              "instanceId": "79935285-8734-4bfc-9aaf-bdaa8f42af98",
+              "unitId": "olaf",
+              "position": 2,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "df5e9be5-955a-491b-a9e5-e2b37d6c5712",
+              "unitId": "renekton",
+              "position": 3,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "dccbcba8-d904-4656-8341-2f3bbef6dda0",
+              "unitId": "swain",
+              "position": 12,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "5f5fda5b-bd2d-48a1-855a-f39a25995576",
+              "unitId": "karthus",
+              "position": 21,
+              "stars": 3,
+              "items": [
+                "TFT_Item_HextechGunblade",
+                "TFT_Item_JeweledGauntlet",
+                "TFT_Item_BlueBuff"
+              ]
+            },
+            {
+              "instanceId": "d92c6946-b821-42d7-807d-965f91e383c2",
+              "unitId": "zoe",
+              "position": 23,
+              "stars": 2,
+              "items": []
+            }
+          ]
         }
       ],
       "team": {
@@ -23205,7 +24207,12 @@
             "position": 27
           }
         ]
-      }
+      },
+      "primaryTeamId": "00000000-0000-4000-8000-000000001121",
+      "stageTeamIds": [
+        "fe42c7e4-1f6b-46cf-9532-80aadbe065e3"
+      ],
+      "summaryBlockId": "sample-block-0897"
     },
     {
       "id": "sample-block-0870",
@@ -23213,12 +24220,18 @@
       "category": "阵容储备",
       "blocks": [
         {
+          "id": "alune-yuumi-shared-rounds",
+          "type": "heading",
+          "level": 3,
+          "text": "通用运营"
+        },
+        {
           "id": "sample-block-0907",
           "type": "text",
           "elements": [
             {
               "text_run": {
-                "content": "八级先搜，稳血再上九。",
+                "content": "八级先搜两星拉露恩、悠米和蕾欧娜。",
                 "text_element_style": {
                   "bold": true,
                   "inline_code": false,
@@ -23230,7 +24243,7 @@
             },
             {
               "text_run": {
-                "content": "七级先让四名不同的心之钢或天才上场解锁拉露恩。八级谁先两星、能接三件法装就让谁稳血。悠米拿法爆和回蓝，拉露恩拿回蓝、重伤和减魔抗。三经纪有蒙多就让他拿肉装，没两星蒙多先给两星蕾欧娜。血量差或只能配一个主 C 时，优先保当前主 C 和前排质量。",
+                "content": "七级先上四名不同的心之钢或天才解锁拉露恩。只有一套法装就给先两星的，肉装先给蕾欧娜。稳血再升九，蒙多两星后接肉装，开三经纪人。",
                 "text_element_style": {
                   "bold": false,
                   "inline_code": false,
@@ -23242,7 +24255,7 @@
             }
           ],
           "level": 0,
-          "text": "八级先搜，稳血再上九。七级先让四名不同的心之钢或天才上场解锁拉露恩。八级谁先两星、能接三件法装就让谁稳血。悠米拿法爆和回蓝，拉露恩拿回蓝、重伤和减魔抗。三经纪有蒙多就让他拿肉装，没两星蒙多先给两星蕾欧娜。血量差或只能配一个主 C 时，优先保当前主 C 和前排质量。"
+          "text": "八级先搜两星拉露恩、悠米和蕾欧娜。七级先上四名不同的心之钢或天才解锁拉露恩。只有一套法装就给先两星的，肉装先给蕾欧娜。稳血再升九，蒙多两星后接肉装，开三经纪人。"
         },
         {
           "id": "alune-yuumi-playstyle",
@@ -23260,10 +24273,94 @@
           "id": "web-headliner-alune-yuumi-nine-roles",
           "type": "text",
           "text": "棋盘配装 · 九级 · 三大触三经纪拉露恩悠米\n主C：拉露恩。虚空之杖、莫雷洛秘典、朔极之矛。\n主C：悠米。珠光护手、朔极之矛、巨人杀手。\n主坦：蒙多医生。石像鬼石板甲、冕卫、适应性头盔。"
+        },
+        {
+          "id": "web-headliner-alune-yuumi-eight-roles",
+          "type": "text",
+          "text": "棋盘配装 · 八级 · 三大触稳血\n主C：拉露恩。虚空之杖、莫雷洛秘典、朔极之矛。\n主C：悠米。珠光护手、朔极之矛、巨人杀手。\n主坦：蕾欧娜。石像鬼石板甲、冕卫、适应性头盔。"
         }
       ],
       "kind": "guide",
       "teams": [
+        {
+          "id": "449f6054-46e9-4bbd-ad34-5ea5b2c24a0d",
+          "name": "八级 · 三大触稳血",
+          "category": "待分类",
+          "notes": "",
+          "revision": 1,
+          "updatedAt": "2026-11-28T16:02:02.457Z",
+          "sectionId": "sample-block-0870",
+          "pieces": [
+            {
+              "instanceId": "80a00015-a55c-45de-a95b-0ae59b2fade3",
+              "unitId": "leona",
+              "stars": 2,
+              "items": [
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_Crownguard",
+                "TFT_Item_AdaptiveHelm"
+              ],
+              "position": 4
+            },
+            {
+              "instanceId": "ad421361-3f66-45dc-8562-acefa7b3fd7c",
+              "unitId": "braum",
+              "stars": 1,
+              "items": [],
+              "position": 6
+            },
+            {
+              "instanceId": "bacf81cb-c027-460b-b8f3-2da0072b4065",
+              "unitId": "illaoi",
+              "stars": 2,
+              "items": [],
+              "position": 10
+            },
+            {
+              "instanceId": "34c26b4d-8f0b-4030-8e82-250837ad13ad",
+              "unitId": "sett",
+              "stars": 1,
+              "items": [],
+              "position": 11
+            },
+            {
+              "instanceId": "7925014c-34ad-499a-bcfa-e4195e73881c",
+              "unitId": "k-sante",
+              "stars": 2,
+              "items": [],
+              "position": 12
+            },
+            {
+              "instanceId": "40d5db89-511c-43e9-a7eb-1337651ba5f8",
+              "unitId": "alune",
+              "stars": 2,
+              "items": [
+                "TFT_Item_StatikkShiv",
+                "TFT_Item_Morellonomicon",
+                "TFT_Item_SpearOfShojin"
+              ],
+              "position": 21
+            },
+            {
+              "instanceId": "90f5c90e-4d62-47be-928b-26690f08e334",
+              "unitId": "neeko",
+              "stars": 2,
+              "items": [],
+              "position": 22
+            },
+            {
+              "instanceId": "4f173de0-c5a6-401b-a350-16065a0a3c11",
+              "unitId": "yuumi",
+              "stars": 2,
+              "items": [
+                "TFT_Item_JeweledGauntlet",
+                "TFT_Item_SpearOfShojin",
+                "TFT_Item_MadredsBloodrazor"
+              ],
+              "position": 27
+            }
+          ]
+        },
         {
           "id": "00000000-0000-4000-8000-000000001167",
           "name": "九级 · 三大触三经纪拉露恩悠米",
@@ -23354,64 +24451,55 @@
         }
       ],
       "team": {
-        "id": "00000000-0000-4000-8000-000000001167",
-        "name": "九级 · 三大触三经纪拉露恩悠米",
+        "id": "449f6054-46e9-4bbd-ad34-5ea5b2c24a0d",
+        "name": "八级 · 三大触稳血",
         "category": "待分类",
         "notes": "",
         "revision": 1,
-        "updatedAt": "2026-11-24T11:23:35.912Z",
+        "updatedAt": "2026-11-28T16:02:02.457Z",
         "sectionId": "sample-block-0870",
         "pieces": [
           {
-            "instanceId": "00000000-0000-4000-8000-000000001148",
-            "unitId": "dr-mundo",
+            "instanceId": "80a00015-a55c-45de-a95b-0ae59b2fade3",
+            "unitId": "leona",
             "stars": 2,
             "items": [
               "TFT_Item_GargoyleStoneplate",
               "TFT_Item_Crownguard",
               "TFT_Item_AdaptiveHelm"
             ],
-            "position": 1
-          },
-          {
-            "instanceId": "00000000-0000-4000-8000-000000001102",
-            "unitId": "leona",
-            "stars": 2,
-            "items": [
-              "TFT_Item_RedBuff"
-            ],
             "position": 4
           },
           {
-            "instanceId": "00000000-0000-4000-8000-000000001114",
+            "instanceId": "ad421361-3f66-45dc-8562-acefa7b3fd7c",
             "unitId": "braum",
             "stars": 1,
             "items": [],
             "position": 6
           },
           {
-            "instanceId": "00000000-0000-4000-8000-000000001153",
+            "instanceId": "bacf81cb-c027-460b-b8f3-2da0072b4065",
             "unitId": "illaoi",
             "stars": 2,
             "items": [],
             "position": 10
           },
           {
-            "instanceId": "00000000-0000-4000-8000-000000001129",
+            "instanceId": "34c26b4d-8f0b-4030-8e82-250837ad13ad",
             "unitId": "sett",
             "stars": 1,
             "items": [],
             "position": 11
           },
           {
-            "instanceId": "00000000-0000-4000-8000-000000001174",
+            "instanceId": "7925014c-34ad-499a-bcfa-e4195e73881c",
             "unitId": "k-sante",
             "stars": 2,
             "items": [],
             "position": 12
           },
           {
-            "instanceId": "00000000-0000-4000-8000-000000001149",
+            "instanceId": "40d5db89-511c-43e9-a7eb-1337651ba5f8",
             "unitId": "alune",
             "stars": 2,
             "items": [
@@ -23422,14 +24510,14 @@
             "position": 21
           },
           {
-            "instanceId": "00000000-0000-4000-8000-000000001141",
+            "instanceId": "90f5c90e-4d62-47be-928b-26690f08e334",
             "unitId": "neeko",
             "stars": 2,
             "items": [],
             "position": 22
           },
           {
-            "instanceId": "00000000-0000-4000-8000-000000001163",
+            "instanceId": "4f173de0-c5a6-401b-a350-16065a0a3c11",
             "unitId": "yuumi",
             "stars": 2,
             "items": [
@@ -23440,7 +24528,12 @@
             "position": 27
           }
         ]
-      }
+      },
+      "primaryTeamId": "449f6054-46e9-4bbd-ad34-5ea5b2c24a0d",
+      "stageTeamIds": [
+        "00000000-0000-4000-8000-000000001167"
+      ],
+      "summaryBlockId": "sample-block-0907"
     },
     {
       "id": "sample-block-1020",
@@ -23495,11 +24588,11 @@
         {
           "id": "sample-block-1020-step-1",
           "type": "bullet",
-          "text": "七级开 3 花式射手、2 大触打击乐。莉莉娅、蕾欧娜、古拉加斯和布隆顶前排，莎弥拉、卡莎和德莱文站最后一排。",
+          "text": "七级搜德莱文、卡莎和布隆两星，先开三花式、双大触稳血。",
           "elements": [
             {
               "text_run": {
-                "content": "七级开 3 花式射手、2 大触打击乐。莉莉娅、蕾欧娜、古拉加斯和布隆顶前排，莎弥拉、卡莎和德莱文站最后一排。"
+                "content": "七级搜德莱文、卡莎和布隆两星，先开三花式、双大触稳血。"
               }
             }
           ]
@@ -23507,11 +24600,11 @@
         {
           "id": "sample-block-1020-step-2",
           "type": "bullet",
-          "text": "先把德莱文、卡莎和布隆搜到两星，再卡利息追三星。按图星级成型后开 7 K/DA。",
+          "text": "三张来得多再停七追三。莉莉娅、蕾欧娜和古拉加斯留场，星级跟上就开 7 K/DA。",
           "elements": [
             {
               "text_run": {
-                "content": "先把德莱文、卡莎和布隆搜到两星，再卡利息追三星。按图星级成型后开 7 K/DA。"
+                "content": "三张来得多再停七追三。莉莉娅、蕾欧娜和古拉加斯留场，星级跟上就开 7 K/DA。"
               }
             }
           ]
@@ -23519,11 +24612,11 @@
         {
           "id": "sample-block-1020-step-3",
           "type": "bullet",
-          "text": "三张追到三星再升人口。血量吃紧时，先把双 C 和前排搜到两星稳住。",
+          "text": "血量紧先稳双 C 和前排两星，追完三张再升八。",
           "elements": [
             {
               "text_run": {
-                "content": "三张追到三星再升人口。血量吃紧时，先把双 C 和前排搜到两星稳住。"
+                "content": "血量紧先稳双 C 和前排两星，追完三张再升八。"
               }
             }
           ]
@@ -23536,6 +24629,30 @@
             {
               "text_run": {
                 "content": "德莱文站右下角，卡莎靠同侧隔一格。德莱文先做青龙刀和无尽，布隆接肉装，卡莎用轻语补破甲。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "sample-block-1020-lv8-vayne-heading",
+          "type": "heading",
+          "text": "八级 · 补薇恩",
+          "elements": [
+            {
+              "text_run": {
+                "content": "八级 · 补薇恩"
+              }
+            }
+          ]
+        },
+        {
+          "id": "sample-block-1020-lv8-vayne-tempo",
+          "type": "text",
+          "text": "薇恩补第四花式，双 C 都有三件后才分剩余物理装。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "薇恩补第四花式，双 C 都有三件后才分剩余物理装。"
               }
             }
           ]
@@ -23556,11 +24673,23 @@
         {
           "id": "sample-block-1140",
           "type": "text",
-          "text": "棋盘配装 · 八级 · 四花式三大触卡莎德莱文\n主C：德莱文。朔极之矛、无尽之刃、强袭者的链枷。\n主坦：布隆。冕卫、石像鬼石板甲、狂徒铠甲。\n副C：卡莎。鬼索的狂暴之刃、海妖之怒、最后的轻语。",
+          "text": "棋盘配装 · 七级 · 双C追三\n主C：德莱文。朔极之矛、无尽之刃、强袭者的链枷。\n主C：卡莎。鬼索的狂暴之刃、海妖之怒、最后的轻语。\n主坦：布隆。冕卫、石像鬼石板甲、狂徒铠甲。",
           "elements": [
             {
               "text_run": {
-                "content": "棋盘配装 · 八级 · 四花式三大触卡莎德莱文\n主C：德莱文。朔极之矛、无尽之刃、强袭者的链枷。\n主坦：布隆。冕卫、石像鬼石板甲、狂徒铠甲。\n副C：卡莎。鬼索的狂暴之刃、海妖之怒、最后的轻语。"
+                "content": "棋盘配装 · 七级 · 双C追三\n主C：德莱文。朔极之矛、无尽之刃、强袭者的链枷。\n主C：卡莎。鬼索的狂暴之刃、海妖之怒、最后的轻语。\n主坦：布隆。冕卫、石像鬼石板甲、狂徒铠甲。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "sample-block-1020-lv8-vayne-loadout",
+          "type": "text",
+          "text": "棋盘配装 · 八级 · 补薇恩\n主C：德莱文。朔极之矛、无尽之刃、强袭者的链枷。\n主C：卡莎。鬼索的狂暴之刃、海妖之怒、最后的轻语。\n主坦：布隆。冕卫、石像鬼石板甲、狂徒铠甲。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "棋盘配装 · 八级 · 补薇恩\n主C：德莱文。朔极之矛、无尽之刃、强袭者的链枷。\n主C：卡莎。鬼索的狂暴之刃、海妖之怒、最后的轻语。\n主坦：布隆。冕卫、石像鬼石板甲、狂徒铠甲。"
               }
             }
           ]
@@ -23570,19 +24699,33 @@
       "teams": [
         {
           "id": "00000000-0000-4000-8000-000000001158",
-          "name": "八级 · 四花式三大触卡莎德莱文",
+          "name": "七级 · 双C追三",
           "category": "待分类",
-          "notes": "",
+          "notes": "七级追德莱文、卡莎和布隆三星。",
           "revision": 1,
           "updatedAt": "2026-11-24T11:25:00.483Z",
           "sectionId": "sample-block-1020",
           "pieces": [
             {
-              "instanceId": "00000000-0000-4000-8000-000000001082",
-              "unitId": "thresh",
+              "instanceId": "9f0953b2-e5d2-4178-afe3-ae25f8a9036c",
+              "unitId": "lillia",
               "stars": 2,
               "items": [],
               "position": 1
+            },
+            {
+              "instanceId": "385ec680-13be-400b-bdac-5008d5f12fef",
+              "unitId": "leona",
+              "stars": 1,
+              "items": [],
+              "position": 2
+            },
+            {
+              "instanceId": "b911b6a2-d90a-471d-a96f-001ce90a365b",
+              "unitId": "gragas",
+              "stars": 1,
+              "items": [],
+              "position": 3
             },
             {
               "instanceId": "00000000-0000-4000-8000-000000001088",
@@ -23593,21 +24736,14 @@
                 "TFT_Item_GargoyleStoneplate",
                 "TFT_Item_WarmogsArmor"
               ],
-              "position": 3
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000001105",
-              "unitId": "graves",
-              "stars": 2,
-              "items": [],
-              "position": 7
+              "position": 4
             },
             {
               "instanceId": "00000000-0000-4000-8000-000000001093",
               "unitId": "samira",
               "stars": 2,
               "items": [],
-              "position": 19
+              "position": 23
             },
             {
               "instanceId": "00000000-0000-4000-8000-000000001124",
@@ -23615,26 +24751,10 @@
               "stars": 3,
               "items": [
                 "TFT_Item_GuinsoosRageblade",
-                "TFT_Item_RapidFireCannon",
-                "TFT_Item_MadredsBloodrazor"
+                "TFT_Item_RunaansHurricane",
+                "TFT_Item_LastWhisper"
               ],
-              "position": 21
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000001107",
-              "unitId": "illaoi",
-              "stars": 2,
-              "items": [
-                "TFT_Item_RedBuff"
-              ],
-              "position": 12
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000001073",
-              "unitId": "vayne",
-              "stars": 2,
-              "items": [],
-              "position": 24
+              "position": 25
             },
             {
               "instanceId": "00000000-0000-4000-8000-000000001133",
@@ -23643,28 +24763,122 @@
               "items": [
                 "TFT_Item_SpearOfShojin",
                 "TFT_Item_InfinityEdge",
-                "TFT_Item_LastWhisper"
+                "TFT_Item_PowerGauntlet"
               ],
               "position": 27
             }
           ]
+        },
+        {
+          "id": "2c797a5f-2ed1-442c-86b9-f2fe48f39526",
+          "name": "八级 · 补薇恩",
+          "category": "待分类",
+          "notes": "追完三星再升八，薇恩开四花式。",
+          "revision": 1,
+          "updatedAt": "2026-11-28T16:04:27.136Z",
+          "sectionId": "sample-block-1020",
+          "pieces": [
+            {
+              "instanceId": "b28a55b8-7b4f-4574-8227-da1e6807f9ad",
+              "unitId": "lillia",
+              "stars": 2,
+              "items": [],
+              "position": 1
+            },
+            {
+              "instanceId": "6861920f-cd1b-4534-9438-e60c886684df",
+              "unitId": "leona",
+              "stars": 1,
+              "items": [],
+              "position": 2
+            },
+            {
+              "instanceId": "06a66322-fc1a-4961-842a-8b9b38cd1a3f",
+              "unitId": "gragas",
+              "stars": 1,
+              "items": [],
+              "position": 3
+            },
+            {
+              "instanceId": "66a87b3e-206f-4279-939b-9490afbb6dc5",
+              "unitId": "braum",
+              "stars": 3,
+              "items": [
+                "TFT_Item_Crownguard",
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_WarmogsArmor"
+              ],
+              "position": 4
+            },
+            {
+              "instanceId": "48ae7ff0-c3db-4b34-bcf6-f90ea14e179a",
+              "unitId": "samira",
+              "stars": 2,
+              "items": [],
+              "position": 23
+            },
+            {
+              "instanceId": "a174dcac-22d8-42a0-acfe-b8fb794c421a",
+              "unitId": "kai-sa",
+              "stars": 3,
+              "items": [
+                "TFT_Item_GuinsoosRageblade",
+                "TFT_Item_RunaansHurricane",
+                "TFT_Item_LastWhisper"
+              ],
+              "position": 25
+            },
+            {
+              "instanceId": "b5259762-07cc-4041-ba95-719632c8301c",
+              "unitId": "draven",
+              "stars": 3,
+              "items": [
+                "TFT_Item_SpearOfShojin",
+                "TFT_Item_InfinityEdge",
+                "TFT_Item_PowerGauntlet"
+              ],
+              "position": 27
+            },
+            {
+              "unitId": "vayne",
+              "instanceId": "75277ed4-dd1d-4aff-a21c-382d94f559f6",
+              "position": 21,
+              "stars": 2,
+              "items": []
+            }
+          ],
+          "boardRole": "stage"
         }
       ],
       "team": {
         "id": "00000000-0000-4000-8000-000000001158",
-        "name": "八级 · 四花式三大触卡莎德莱文",
+        "name": "七级 · 双C追三",
         "category": "待分类",
-        "notes": "",
+        "notes": "七级追德莱文、卡莎和布隆三星。",
         "revision": 1,
         "updatedAt": "2026-11-24T11:25:00.483Z",
         "sectionId": "sample-block-1020",
         "pieces": [
           {
-            "instanceId": "00000000-0000-4000-8000-000000001082",
-            "unitId": "thresh",
+            "instanceId": "9f0953b2-e5d2-4178-afe3-ae25f8a9036c",
+            "unitId": "lillia",
             "stars": 2,
             "items": [],
             "position": 1
+          },
+          {
+            "instanceId": "385ec680-13be-400b-bdac-5008d5f12fef",
+            "unitId": "leona",
+            "stars": 1,
+            "items": [],
+            "position": 2
+          },
+          {
+            "instanceId": "b911b6a2-d90a-471d-a96f-001ce90a365b",
+            "unitId": "gragas",
+            "stars": 1,
+            "items": [],
+            "position": 3
           },
           {
             "instanceId": "00000000-0000-4000-8000-000000001088",
@@ -23675,21 +24889,14 @@
               "TFT_Item_GargoyleStoneplate",
               "TFT_Item_WarmogsArmor"
             ],
-            "position": 3
-          },
-          {
-            "instanceId": "00000000-0000-4000-8000-000000001105",
-            "unitId": "graves",
-            "stars": 2,
-            "items": [],
-            "position": 7
+            "position": 4
           },
           {
             "instanceId": "00000000-0000-4000-8000-000000001093",
             "unitId": "samira",
             "stars": 2,
             "items": [],
-            "position": 19
+            "position": 23
           },
           {
             "instanceId": "00000000-0000-4000-8000-000000001124",
@@ -23697,26 +24904,10 @@
             "stars": 3,
             "items": [
               "TFT_Item_GuinsoosRageblade",
-              "TFT_Item_RapidFireCannon",
-              "TFT_Item_MadredsBloodrazor"
+              "TFT_Item_RunaansHurricane",
+              "TFT_Item_LastWhisper"
             ],
-            "position": 21
-          },
-          {
-            "instanceId": "00000000-0000-4000-8000-000000001107",
-            "unitId": "illaoi",
-            "stars": 2,
-            "items": [
-              "TFT_Item_RedBuff"
-            ],
-            "position": 12
-          },
-          {
-            "instanceId": "00000000-0000-4000-8000-000000001073",
-            "unitId": "vayne",
-            "stars": 2,
-            "items": [],
-            "position": 24
+            "position": 25
           },
           {
             "instanceId": "00000000-0000-4000-8000-000000001133",
@@ -23725,13 +24916,17 @@
             "items": [
               "TFT_Item_SpearOfShojin",
               "TFT_Item_InfinityEdge",
-              "TFT_Item_LastWhisper"
+              "TFT_Item_PowerGauntlet"
             ],
             "position": 27
           }
         ]
       },
-      "summaryBlockId": "sample-block-0927"
+      "summaryBlockId": "sample-block-0927",
+      "primaryTeamId": "00000000-0000-4000-8000-000000001158",
+      "stageTeamIds": [
+        "2c797a5f-2ed1-442c-86b9-f2fe48f39526"
+      ]
     },
     {
       "id": "sample-block-0854",
@@ -24773,7 +25968,7 @@
     },
     {
       "id": "sample-block-1180",
-      "title": "探戈爵士卡牌 95",
+      "title": "探戈爵士卡牌",
       "category": "高费阵容",
       "blocks": [
         {
@@ -25107,7 +26302,7 @@
     },
     {
       "id": "sample-block-1181",
-      "title": "三心之钢三经纪月男 95",
+      "title": "三心之钢三经纪月男",
       "category": "高费阵容",
       "blocks": [
         {
@@ -27729,7 +28924,7 @@
     },
     {
       "id": "arcanist-taliyah-vladimir",
-      "title": "法师编舞岩雀吸血鬼",
+      "title": "岩雀吸血鬼",
       "category": "八级运营",
       "kind": "guide",
       "blocks": [
@@ -27792,11 +28987,11 @@
         {
           "id": "arcanist-taliyah-vladimir-double-unlock",
           "type": "text",
-          "text": "八级双解锁：砂槌放第三排，1–5 费各站一格强化格，前两排只留一人贴砂槌站第二排。双解锁后换回成型站位。",
+          "text": "八级双解锁：砂槌放第三排，1–5 费各站一格强化格，前两排只留一人贴砂槌站第二排。解锁后换回成型站位，两张五费一星就能上，稳血再存钱升九。",
           "elements": [
             {
               "text_run": {
-                "content": "八级双解锁：砂槌放第三排，1–5 费各站一格强化格，前两排只留一人贴砂槌站第二排。双解锁后换回成型站位。"
+                "content": "八级双解锁：砂槌放第三排，1–5 费各站一格强化格，前两排只留一人贴砂槌站第二排。解锁后换回成型站位，两张五费一星就能上，稳血再存钱升九。"
               }
             }
           ]
@@ -27852,11 +29047,11 @@
         {
           "id": "arcanist-taliyah-vladimir-gear",
           "type": "text",
-          "text": "棋盘配装 · 八级 · 法师编舞岩雀吸血鬼\n主C：弗拉基米尔。珠光护手、纳什之牙、纳什之牙。\n副C：塔莉垭。莫雷洛秘典、虚空之杖、珠光护手。\n主坦：盖伦。石像鬼石板甲、狂徒铠甲、振奋盔甲。",
+          "text": "棋盘配装 · 八级 · 双解锁\n主C：弗拉基米尔。珠光护手、纳什之牙、纳什之牙。\n副C：塔莉垭。莫雷洛秘典、虚空之杖、珠光护手。\n主坦：盖伦。石像鬼石板甲、狂徒铠甲、振奋盔甲。",
           "elements": [
             {
               "text_run": {
-                "content": "棋盘配装 · 八级 · 法师编舞岩雀吸血鬼\n主C：弗拉基米尔。珠光护手、纳什之牙、纳什之牙。\n副C：塔莉垭。莫雷洛秘典、虚空之杖、珠光护手。\n主坦：盖伦。石像鬼石板甲、狂徒铠甲、振奋盔甲。"
+                "content": "棋盘配装 · 八级 · 双解锁\n主C：弗拉基米尔。珠光护手、纳什之牙、纳什之牙。\n副C：塔莉垭。莫雷洛秘典、虚空之杖、珠光护手。\n主坦：盖伦。石像鬼石板甲、狂徒铠甲、振奋盔甲。"
               }
             }
           ]
@@ -27876,7 +29071,7 @@
       ],
       "team": {
         "id": "14d668d4-7d3a-4445-a5b5-bfcfc6aa555b",
-        "name": "八级 · 法师编舞岩雀吸血鬼",
+        "name": "八级 · 双解锁",
         "category": "待分类",
         "notes": "",
         "revision": 1,
@@ -27959,7 +29154,7 @@
       "teams": [
         {
           "id": "14d668d4-7d3a-4445-a5b5-bfcfc6aa555b",
-          "name": "八级 · 法师编舞岩雀吸血鬼",
+          "name": "八级 · 双解锁",
           "category": "待分类",
           "notes": "",
           "revision": 1,
@@ -28077,7 +29272,7 @@
               "instanceId": "625c118b-ea09-40b8-9215-8bc45ab64ee2",
               "unitId": "vladimir",
               "position": 16,
-              "stars": 1,
+              "stars": 2,
               "items": [
                 "TFT_Item_JeweledGauntlet",
                 "TFT_Item_Leviathan",
@@ -28095,7 +29290,7 @@
               "instanceId": "9323bfee-6be8-44ca-9773-dcd7e199a86e",
               "unitId": "taliyah",
               "position": 21,
-              "stars": 1,
+              "stars": 2,
               "items": [
                 "TFT_Item_Morellonomicon",
                 "TFT_Item_StatikkShiv",
