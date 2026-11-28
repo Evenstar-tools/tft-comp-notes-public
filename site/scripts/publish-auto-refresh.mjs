@@ -6,12 +6,12 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { parseArgs } from "node:util";
 import { preflightReason, readPublishedFamily } from "./check-auto-refresh.mjs";
 import { checkUpstream } from "./check-refresh-alerts.mjs";
+import { automaticRefreshModules } from "./run-data-refresh.mjs";
 
 const repository = "Evenstar-tools/tft-comp-notes-public";
 const remoteHome = `https://github.com/${repository}`;
 const repoRoot = fileURLToPath(new URL("../../", import.meta.url));
 const guardFile = fileURLToPath(new URL("./check-auto-refresh.mjs", import.meta.url));
-const profiles = new Set(["fast", "daily", "all"]);
 const ciPath = "checks.yml";
 const requiredCheck = "domain-tests";
 const prFields = [
@@ -56,8 +56,8 @@ function requireCurrentMain(base) {
   if (main !== base) throw new Error("公开 main 已变化，请用新基线重新采集和校验");
 }
 
-function validatedPaths(profile) {
-  const guard = invoke(process.execPath, [guardFile, "verify", "--profile", profile]);
+function validatedPaths(profile, receipt) {
+  const guard = invoke(process.execPath, [guardFile, "verify", "--profile", profile, "--receipt", receipt]);
   if (guard.stdout) process.stdout.write(guard.stdout);
   if (guard.status === 2) return [];
   if (guard.status !== 0) {
@@ -116,12 +116,32 @@ async function confirmMerge(url, head) {
   throw new Error("GitHub 尚未读回这笔合并");
 }
 
-async function main() {
-  const { values } = parseArgs({ options: { profile: { type: "string" } } });
-  const profile = values.profile;
-  if (!profiles.has(profile)) throw new Error("请指定 --profile fast、daily 或 all");
+async function waitForProduction(merge) {
+  const verifier = fileURLToPath(new URL("./verify-live-guides.mjs", import.meta.url));
+  const deadline = Date.now() + 7 * 60 * 1000;
+  let result;
+  do {
+    result = invoke(process.execPath, [verifier, "--data-at", "candidate"], 35_000);
+    if (result.status === 0) {
+      process.stdout.write(result.stdout);
+      return;
+    }
+    const [main] = git("ls-remote", "--exit-code", "origin", "refs/heads/main").trim().split(/\s+/);
+    if (main !== merge) throw new Error("本批已合并，公开 main 已切到更新的提交，按新提交继续生产读回");
+    await delay(15_000);
+  } while (Date.now() < deadline);
+  if (result?.stdout) process.stdout.write(result.stdout);
+  if (result?.stderr) process.stderr.write(result.stderr);
+  throw new Error("本批已合并，EdgeOne 正式域名在等待时间内未读回本批目录和数据时间");
+}
 
-  const paths = validatedPaths(profile);
+async function main() {
+  const { values: { profile, receipt } } = parseArgs({ options: {
+    profile: { type: "string" }, receipt: { type: "string" },
+  } });
+  automaticRefreshModules(profile);
+  if (!receipt) throw new Error("自动发布须提供本次采集回执 --receipt");
+  const paths = validatedPaths(profile, receipt);
   if (!paths.length) return;
   verifyRemote();
   const base = git("rev-parse", "HEAD").trim();
@@ -160,7 +180,9 @@ async function main() {
   requireCurrentMain(base);
   gh("pr", "merge", url, "--squash", "--match-head-commit", head);
   const merge = await confirmMerge(url, head);
-  console.log(`已合并到公开 main ${merge} · ${url}`);
+  console.log(`已合并到公开 main ${merge} · ${url}，等待正式域名读回`);
+  await waitForProduction(merge);
+  console.log(`EdgeOne 正式域名已读回本批数据 · ${url}`);
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

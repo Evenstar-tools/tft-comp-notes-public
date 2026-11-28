@@ -30,7 +30,7 @@ npm run build
 ## 仓库维护（单源开发）
 
 - **本仓库 `main` 是唯一代码真源**：新功能、UI 优化、战绩与清理改动统一从 `main` 新建功能分支，开 PR 并在 `Project checks` 全绿后合入。GitHub Releases 用于保留已验证的公开版本。
-- **禁止双份手工移植**：如过渡期仍需同步到 GPTsite，使用 `site/scripts/sync-to-public.py` 自动同步共享目录、保护 17 个平台适配壳并自动完成 ID 重映射，详见[单源双站协作与发布规范](site/docs/双站发布.md)。
+- EdgeOne 的正式域名为 [tftnotes.com](https://tftnotes.com/)。合并后按[单源发布与验收](site/docs/双站发布.md)确认正式站。GPTsite 留作历史归档。
 - 公开仓库仅保存可公开的内容，原始快照、私有 ID 映射与部署凭据始终放在私有目录或 Makers 项目环境变量中。
 - 问题反馈请带上版本、入口和复现步骤。涉及安全漏洞时使用仓库的私密报告入口。
 

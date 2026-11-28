@@ -4,6 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { parseArgs } from "node:util";
 import { fileURLToPath } from "node:url";
+import { automaticRefreshModules } from "./run-data-refresh.mjs";
 
 const site = fileURLToPath(new URL("../", import.meta.url));
 const repo = fileURLToPath(new URL("../../", import.meta.url));
@@ -39,33 +40,45 @@ function main() {
     "dry-run": { type: "boolean" },
   } });
   const { profile } = values;
-  if (!["fast", "daily", "all"].includes(profile)) throw new Error("无效的自动刷新配置");
+  automaticRefreshModules(profile);
   if (!values["dry-run"]) requireCleanCheckout();
 
   const tempDir = mkdtempSync(join(tmpdir(), "tft-refresh-"));
   const reportPath = join(tempDir, "upstream.json");
+  const receipt = join(tempDir, "collected.json");
   const upstreamIsAligned = () => {
     run(process.execPath, ["scripts/check-refresh-alerts.mjs", "--check-upstream", "--dot", "--json-out", reportPath]);
     return run(process.execPath, ["scripts/check-auto-refresh.mjs", "preflight", "--report", reportPath], { allowSkip: true });
   };
   try {
-    if (!upstreamIsAligned()) return;
+    if (!upstreamIsAligned()) {
+      console.log("结果：上游条件待核，本轮未采集");
+      return;
+    }
     const refresh = ["scripts/run-data-refresh.mjs", "--profile", profile];
     if (values["dry-run"]) {
       run(process.execPath, [...refresh, "--dry-run"]);
+      console.log("结果：采集计划预览完成");
       return;
     }
 
     run(npm, ["ci", "--ignore-scripts", "--no-audit", "--no-fund"]);
     run(process.execPath, ["scripts/export-family-catalog.mjs"]);
-    run(process.execPath, refresh);
-    if (!run(process.execPath, ["scripts/check-auto-refresh.mjs", "verify", "--profile", profile], { allowSkip: true })) return;
+    run(process.execPath, [...refresh, "--receipt", receipt]);
+    if (!run(process.execPath, ["scripts/check-auto-refresh.mjs", "verify", "--profile", profile, "--receipt", receipt], { allowSkip: true })) {
+      console.log("结果：所选模块已采集和核验，本轮快照未变化");
+      return;
+    }
     run(npm, ["run", "verify:public"]);
     run(npm, ["run", "data:verify"]);
-    if (!upstreamIsAligned()) return;
-    run(process.execPath, ["scripts/publish-auto-refresh.mjs", "--profile", profile]);
+    if (!upstreamIsAligned()) {
+      console.log("结果：已完成采集，上游条件变化，本轮保留生产批次");
+      return;
+    }
+    run(process.execPath, ["scripts/publish-auto-refresh.mjs", "--profile", profile, "--receipt", receipt]);
   } finally {
     rmSync(reportPath, { force: true });
+    rmSync(receipt, { force: true });
     rmdirSync(tempDir);
   }
 }

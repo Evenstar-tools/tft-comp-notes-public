@@ -1,7 +1,7 @@
 import { spawnSync } from "node:child_process";
-import { open, readFile, rename, rm, writeFile } from "node:fs/promises";
+import { open, readFile, rename, rm, stat, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { parseArgs } from "node:util";
 
 const root = new URL("../", import.meta.url);
@@ -30,6 +30,12 @@ const profiles = {
   guides,
   all: Object.keys(scripts),
 };
+const automaticProfiles = new Set(["fast", "daily", "all"]);
+
+export function automaticRefreshModules(profile) {
+  if (!automaticProfiles.has(profile)) throw new Error("未知自动刷新配置 " + profile);
+  return profiles[profile].filter(id => scripts[id]);
+}
 
 function findPython() {
   const candidates = process.platform === "win32"
@@ -181,6 +187,11 @@ async function execute(steps, catalogFile, options) {
       return { file, bytes: await readFile(file) };
     }));
     let archived = false;
+    const completed = [];
+    const outputStamp = async id => {
+      const { ino, mtimeNs, ctimeNs } = await stat(new URL(`data/${id}.json`, root), { bigint: true });
+      return [ino, mtimeNs, ctimeNs].join(":");
+    };
     try {
       for (const { ids, command } of steps) {
         if (!command) {
@@ -188,8 +199,21 @@ async function execute(steps, catalogFile, options) {
           continue;
         }
         console.log(`${ids.join(" + ")} · ${commandLine(command)}`);
+        const collecting = options.receipt && Object.hasOwn(scripts, ids[0]);
+        const before = collecting ? await Promise.all(ids.map(outputStamp)) : [];
         run(command);
+        if (collecting) {
+          const after = await Promise.all(ids.map(outputStamp));
+          const missing = ids.filter((_, i) => before[i] === after[i]);
+          if (missing.length) throw new Error("采集器未产出数据：" + missing.join("、"));
+          completed.push(...ids);
+        }
         if (ids[0] === "archive") archived = true;
+      }
+      if (options.receipt) {
+        await writeFile(options.receipt, JSON.stringify({ profile: options.profile, modules: completed }) + "\n",
+          { encoding: "utf8", flag: "wx" });
+        console.log("本轮采集并通过数据门禁：" + completed.join("、"));
       }
     } catch (error) {
       if (!archived) {
@@ -225,7 +249,7 @@ async function main() {
     status: { type: "boolean" }, json: { type: "boolean" }, verify: { type: "boolean" },
     profile: { type: "string" }, module: { type: "string", multiple: true },
     archive: { type: "boolean" }, channel: { type: "string" }, patch: { type: "string" },
-    catalog: { type: "string" }, "dry-run": { type: "boolean" }, help: { type: "boolean", short: "h" },
+    catalog: { type: "string" }, receipt: { type: "string" }, "dry-run": { type: "boolean" }, help: { type: "boolean", short: "h" },
   } });
   if (values.help) {
     console.log("node scripts/run-data-refresh.mjs --status [--json] | --verify");
@@ -242,6 +266,10 @@ async function main() {
   if (values.status) return status(verify, values.json);
   if (values.verify) return run(verify);
   const { steps, catalogFile } = planFor(values, verify, python);
+  if (values.receipt !== undefined) {
+    automaticRefreshModules(values.profile);
+    if (!values.receipt || values.archive || values["dry-run"]) throw new Error("采集回执仅用于自动刷新实跑");
+  }
   if (values["dry-run"]) {
     console.log("仅预览 · 工作目录 site/");
     for (const [index, { ids, command }] of steps.entries()) {
@@ -252,7 +280,9 @@ async function main() {
   await execute(steps, catalogFile, values);
 }
 
-main().catch(error => {
-  console.error(error.message);
-  process.exitCode = 1;
-});
+if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
+  main().catch(error => {
+    console.error(error.message);
+    process.exitCode = 1;
+  });
+}
