@@ -104,7 +104,7 @@ test("runtime-db auto-initializes schema on a brand-new database", async () => {
     const tables = await database()
       .prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name")
       .all();
-    assert.deepEqual(tables.results.map(row => row.name), ["settings", "snapshots", "sync_jobs", "teams"]);
+    assert.deepEqual(tables.results.map(row => row.name), ["owner_content", "settings", "snapshots", "sync_jobs", "teams"]);
 
     const inserted = await database()
       .prepare("INSERT INTO teams (id,owner_id,body,revision,updated_at) VALUES (?,?,?,?,?)")

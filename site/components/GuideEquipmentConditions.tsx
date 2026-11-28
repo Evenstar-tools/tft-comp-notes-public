@@ -1,4 +1,5 @@
 import { ArrowRight } from "lucide-react";
+import type { ReactNode } from "react";
 import { ItemIcon } from "./ItemIcon";
 import { guideConditionHasName, guideConditionName, guideConditionTag, guideConditionsAnchor, type GuideCondition, type guideEquipmentConditions } from "@/domain/guide-equipment-conditions";
 import { itemLink } from "@/domain/links";
@@ -9,19 +10,20 @@ export function GuideConditionIcon({ condition, size }: { condition: GuideCondit
     : <span className="item-icon is-fallback" aria-hidden style={{ width: size, height: size }}>{condition.name.slice(0, 1)}</span>;
 }
 
-export function GuideEquipmentConditions({ conditions, guideHref, onViewBoard, anchored = true }: {
+export function GuideEquipmentConditions({ conditions, guideHref, onViewBoard, anchored = true, editor }: {
   conditions: NonNullable<ReturnType<typeof guideEquipmentConditions>>;
   guideHref?: string;
   onViewBoard?: () => void;
   anchored?: boolean;
+  editor?: ReactNode;
 }) {
   const { board, guideWide, label, rows, source, wearer } = conditions;
   const title = guideWide ? "定阵条件" : rows.some(row => row.featured) ? "顶级条件"
     : rows.some(row => row.category === "海克斯" || row.recipient) ? "阵容条件" : "装备条件";
   const singleAugment = rows.length === 1 && rows[0].category === "海克斯" && !label && !source && !board?.conditions;
   return <section id={anchored ? guideConditionsAnchor : undefined} className="guide-equipment-conditions" aria-label={title}>
-    {!singleAugment && <div className="guide-equipment-conditions-head">
-      <h3>{title}</h3>
+    {(!singleAugment || editor) && <div className="guide-equipment-conditions-head">
+      {editor ? <div className="owner-page-anchor"><h3>{title}</h3>{editor}</div> : <h3>{title}</h3>}
       {(label || wearer) && <span className="guide-equipment-conditions-context">
         {label && (onViewBoard ? <button type="button" onClick={onViewBoard} aria-label={`查看${label}棋盘`}>{label}</button> : label)}
         {wearer && (label ? " · " : "") + wearer.name}
@@ -48,7 +50,7 @@ export function GuideEquipmentConditions({ conditions, guideHref, onViewBoard, a
           </a>
         </>}
         {tag && <span className="guide-condition-tag">{tag}</span>}
-        {row.kind === "option" && <span className="guide-equipment-condition-detail">可选</span>}
+        {row.kind !== "required" && <span className="guide-equipment-condition-detail">{row.kind === "upgrade" ? "升档" : "可选"}</span>}
         {row.detail && <span className="guide-equipment-condition-detail">{row.detail}</span>}
       </li>;
     })}</ul>

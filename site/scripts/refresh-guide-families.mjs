@@ -2,7 +2,7 @@ import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
-import { changeSignals, heroAugmentSourceUnits, makeReviewQueue, matchBoundCluster, sourceProfile } from "./family-review.mjs";
+import { changeSignals, exactFamilyBoardSignature, heroAugmentSourceUnits, makeReviewQueue, matchBoundCluster, sourceProfile } from "./family-review.mjs";
 import { crossCheck } from "./family-evidence.mjs";
 import { saveCompTrendBatch } from "./refresh-comp-trends.mjs";
 import { refreshCohort, verifyLookup } from "./refresh-cohort.mjs";
@@ -142,6 +142,7 @@ for (const b of bindings.rows) {
   }
   const info = { ...b };
   delete info.representativeUnits;
+  delete info.boardSignatures;
   const anchor = publicBoardById.get(info.teamId);
   const augmentUnits = heroAugmentSourceUnits(group.name_string);
   const heroAugment = anchor?.special === "英雄强化" && augmentUnits.some(apiId => info.carryIds.includes(unitIds.get(apiId)));
@@ -154,6 +155,14 @@ for (const b of bindings.rows) {
     review.push({id:b.clusterId,guide:b.name,reason:match.reason,roster:match.roster,added:match.added,removed:match.removed});
   }
   if (heroAugment) info.heroAugment = true;
+  const verifyBoard = board => {
+    const signature = exactFamilyBoardSignature(board, group, unitIds, info.carryIds);
+    if (signature) (info.boardSignatures ??= {})[board.teamId] = signature;
+    else if (board?.publishedRosterChanged) {
+      review.push({ id: b.clusterId, guide: b.name, teamIds: [board.teamId], reason: "站主换人后的棋盘缺少同一体系的名单或条件依据，留待复核" });
+    }
+  };
+  verifyBoard(anchor);
   if (!metric) {
     smallSamples.push({ ...info, places: [0, 0, 0, 0, 0, 0, 0, 0], games: 0, mean: null, winRate: null, topFourRate: null });
     review.push({ id: b.clusterId, guide: b.name, reason: "当前补丁暂无对局，留在攻略检索", games: 0 });
@@ -179,6 +188,7 @@ for (const b of bindings.rows) {
   if (info.sharedTeamIds) info.sharedTeamIds = info.sharedTeamIds.filter(id => compatible.includes(id));
   if (info.landingTeamId && !compatible.includes(info.landingTeamId)) delete info.landingTeamId;
   if (compatible.length !== ids.length) review.push({id:b.clusterId,guide:b.name,reason:"变阵主 C、搜牌条件或目录已变",teamIds:ids.filter(id => !compatible.includes(id))});
+  for (const id of compatible) verifyBoard(publicBoardById.get(id));
   const teamIds = [...new Set([info.teamId, ...compatible])];
   if (teamIds.some(id => matchedBoardIds.has(id))) throw Error("同一棋盘绑定多个体系：" + teamIds.join(", "));
   for (const id of teamIds) matchedBoardIds.add(id);

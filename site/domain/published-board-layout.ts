@@ -2,6 +2,7 @@ import type { Publication, Section } from "./document";
 import { sectionTeams } from "./document-flow.ts";
 import type { BoardSetup, Piece, PieceLoadout, Team } from "./types";
 import { sameEdition } from "./version-updates.ts";
+import { boardQuerySignature, supportsOrdinaryBoardQuery } from "./owner-board-query.ts";
 
 export type BoardLayout = {
   pieces: Pick<Piece, "instanceId" | "unitId" | "position">[];
@@ -44,16 +45,19 @@ export function boardContentVersion(board: PublishedBoardContent): string {
   return JSON.stringify(publishedBoardContent(board));
 }
 
-export function publishedBoardEdits(sections: Section[], edits?: PublishedBoardEdit[]) {
+export function publishedBoardEdits(sections: Section[], edits?: PublishedBoardEdit[], renderedSections?: Section[]) {
   return (edits ?? []).filter(({ sectionId, teamId, source }) => {
     const section = sections.find(entry => entry.id === sectionId);
-    const team = section && sectionTeams(section).find(entry => entry.id === teamId);
+    if (!section) return false;
+    const original = sectionTeams(section).find(entry => entry.id === teamId);
+    const generated = !original && renderedSections?.find(entry => entry.id === sectionId && entry.reroll?.added.includes(teamId));
+    const team = original ?? (generated && sectionTeams(generated).find(entry => entry.id === teamId));
     return team && JSON.stringify(publishedBoardContent(team)) === JSON.stringify(source);
   });
 }
 
 export function applyPublishedBoardEdits(source: Publication, rendered: Publication): Publication {
-  const edits = publishedBoardEdits(source.sections, source.boardEdits);
+  const edits = publishedBoardEdits(source.sections, source.boardEdits, rendered.sections);
   if (!edits.length) return rendered;
   return {
     ...rendered,
@@ -136,8 +140,14 @@ export function applyBoardOverrides(publication: Publication): Publication {
       if (!boards.size) return section;
       const replace = (team: Team) => {
         const edit = boards.get(team.id);
-        return edit && boardContentVersion(team) === boardContentVersion(edit.source)
-          ? { ...team, ...edit.content, instrumentPositions: edit.content.instrumentPositions, conditions: edit.content.conditions } : team;
+        if (!edit || boardContentVersion(team) !== boardContentVersion(edit.source)) return team;
+        const publishedRosterChanged = boardQuerySignature(team.pieces) !== boardQuerySignature(edit.content.pieces);
+        const updated = { ...team, ...edit.content, instrumentPositions: edit.content.instrumentPositions, conditions: edit.content.conditions };
+        const data = section.gameData ?? publication.season;
+        const needsReview = !supportsOrdinaryBoardQuery(section, updated, data) &&
+          (publishedRosterChanged || supportsOrdinaryBoardQuery(section, team, data));
+        return { ...updated, ...(publishedRosterChanged && { publishedRosterChanged: true as const }),
+          ...(needsReview && { publishedRosterNeedsReview: true as const }) };
       };
       return { ...section, team: section.team && replace(section.team), teams: section.teams?.map(replace) };
     }),

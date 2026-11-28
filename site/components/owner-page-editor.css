@@ -1,0 +1,80 @@
+.owner-page-flag,.owner-page-pencil {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+}
+.owner-page-flag {border-color: var(--line); margin-inline-start: auto;}
+.owner-page-flag[aria-pressed="true"],.owner-page-flag:hover,.owner-page-pencil:hover,.owner-page-pencil:focus-visible {
+  color: var(--accent);
+  background: var(--raised);
+  border-color: var(--line);
+}
+.owner-page-anchor {display: flex; flex-wrap: wrap; align-items: center; gap: 5px;}
+.owner-page-anchor > :is(h1,h2,h3) {margin-block: 0;}
+.guide-page-heading:has(> .owner-page-flag) {position: relative; padding-inline-end: 40px;}
+.guide-page-heading > .owner-page-flag {position: absolute; inset: 0 0 auto auto;}
+.owner-home-banner {position: relative;}
+.owner-home-banner > .owner-page-flag {position: absolute; inset: 8px 8px auto auto; z-index: 1; background: var(--panel);}
+.owner-home-intro {margin-block: 0 14px; padding-block: 9px 12px; border-block-end: 1px solid var(--line);}
+.owner-home-intro h2 {font-size: 1rem;}
+.owner-home-intro p,.owner-page-guide-copy {white-space: pre-line; overflow-wrap: anywhere;}
+.home-patch-card[data-owner-editing] {position: relative;}
+.home-patch-card[data-owner-editing] .home-patch-card-link {padding-inline-end: 46px;}
+.owner-home-card-action {position: absolute; inset: 3px 3px auto auto;}
+.owner-page-board-name {font-size: .875rem; color: var(--muted); margin-block: 2px 6px;}
+.owner-page-conditions {min-width: 0;}
+.owner-page-conditions .guide-equipment-conditions {margin-block-start: 0;}
+.owner-page-bar {display: flex; align-items: center; flex-wrap: wrap; justify-content: flex-end; gap: 5px; margin-block: 6px 10px;}
+.owner-page-bar > [role="status"] {margin-inline-end: 6px; color: var(--muted); font-size: .81rem;}
+.owner-page-bar button,.owner-page-drawer button {min-height: 34px; padding: 5px 9px; border: 1px solid var(--line); border-radius: 6px; font: inherit; font-size: .875rem; background: var(--panel); color: var(--text);}
+.owner-page-bar button:disabled,.owner-page-drawer button:disabled {opacity: .55;}
+.owner-page-bar .owner-page-primary,.owner-page-drawer .owner-page-primary {background: var(--accent); color: var(--on-accent);}
+.owner-page-layout {display: inline-flex; align-items: center;}
+.owner-page-error {font-size: .875rem; color: light-dark(#9a3837,#f2a3a6);}
+.owner-page-drawer {
+  position: fixed;
+  inset: 0 0 0 auto;
+  margin: 0;
+  width: min(440px, 100%);
+  max-width: 100%;
+  height: 100dvh;
+  max-height: 100dvh;
+  box-sizing: border-box;
+  padding: 0;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--text);
+}
+.owner-page-drawer[open] {display: grid; grid-template-rows: auto minmax(0,1fr) auto;}
+.owner-page-drawer::backdrop {background: #0007;}
+.owner-page-drawer > :is(header,footer) {display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 14px 16px; border-bottom: 1px solid var(--line);}
+.owner-page-drawer h2 {margin: 0; font-size: 1.15rem;}
+.owner-page-drawer footer {justify-content: flex-end; border-top: 1px solid var(--line); border-bottom: 0;}
+.owner-page-fields {display: grid; align-content: start; gap: 14px; min-height: 0; padding: 16px; overflow: auto;}
+.owner-page-fields :is(label,p) {margin: 0; line-height: 1.5;}
+.owner-page-fields label {display: grid; gap: 5px;}
+.owner-page-fields :is(input,textarea,select) {min-width: 0; width: 100%; padding: 8px 9px; font: inherit; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--text);}
+.owner-page-fields textarea {resize: vertical;}
+.owner-page-order {display: grid; gap: 6px; margin: 0; padding: 0; list-style: none;}
+.owner-page-order li {display: flex; align-items: center; gap: 4px; padding-block-end: 5px; border-block-end: 1px solid var(--line);}
+.owner-page-order li > span {flex: 1;}
+@media (hover:hover) and (pointer:fine) {
+  .owner-page-pencil {opacity: 0;}
+  :is(.owner-page-anchor,.home-patch-card):is(:hover,:focus-within,[data-owner-selected]) .owner-page-pencil {
+    opacity: 1;
+  }
+}
+@media (max-width:600px) {
+  .owner-page-flag,.owner-page-pencil {width: 40px; height: 40px;}
+  .guide-page-heading:has(> .owner-page-flag) {padding-inline-end: 46px;}
+  .owner-page-bar button {min-height: 40px;}
+  .owner-page-drawer {width: 100%; border: 0;}
+  .owner-page-drawer footer {padding-block-end: max(14px,env(safe-area-inset-bottom));}
+}

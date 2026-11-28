@@ -1,3 +1,5 @@
+import { usedPopulation } from "../domain/team.ts";
+
 // Items here only identify representative output and tank builds. Mixed, utility and unknown builds stay unclassified.
 const damage = new Set("ArchangelsStaff Bloodthirster BlueBuff Deathblade GiantSlayer GuinsoosRageblade HandOfJustice HextechGunblade InfinityEdge JeweledGauntlet KrakensFury LastWhisper NashorsTooth RabadonsDeathcap SpearOfShojin StrikersFlail".split(" "));
 const defense = new Set("BrambleVest DragonsClaw Evenshroud GargoyleStoneplate ProtectorsVow SpiritVisage SunfireCape WarmogsArmor".split(" "));
@@ -60,6 +62,22 @@ export function sourceProfile(group, sourceIds) {
 function roleIds(board, label) {
   return board.roles.filter(role => role.label === label || (label === "主C" && role.label === "主输出"))
     .flatMap(role => role.units).filter(id => board.units.includes(id));
+}
+
+export function exactFamilyBoardSignature(board, group, unitIds, carryIds) {
+  if (board?.familyQueryEligible !== true || board.special || board.emblems?.length) return;
+  const roster = (group.units_string ?? "").split(",").map(id => unitIds.get(id.trim()));
+  if (roster.some(id => !id) || new Set(roster).size !== roster.length) return;
+  const population = usedPopulation(roster.map(unitId => ({ unitId })));
+  if (JSON.stringify([population, roster.sort()]) !== board.querySignature) return;
+
+  const source = sourceProfile(group, unitIds);
+  const carries = roleIds(board, "主C").filter(id => carryIds.includes(id));
+  const sourceCarries = new Set(source.builds.filter(build => build.role === "输出").map(build => build.unitId));
+  if (!carries.length || (sourceCarries.size && !carries.some(id => sourceCarries.has(id))) ||
+      (source.rollLevel && board.rollLevel && source.rollLevel !== board.rollLevel)) return;
+
+  return board.querySignature;
 }
 
 export function compareBoards(source, boards) {

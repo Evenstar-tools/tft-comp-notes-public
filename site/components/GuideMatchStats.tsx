@@ -4,7 +4,7 @@ import currentPatch from "@/data/current-patch.json";
 import familyData from "@/data/guide-family-stats.json";
 import placements from "@/data/guide-placement.json";
 import type { Section } from "@/domain/document";
-import { guideFamilyRows, recommendationTier, type GuideFamilyBatch, type GuideFamilySmallSample } from "@/domain/guide-family-stats";
+import { familyRosterMatches, guideFamilyRows, recommendationTier, type GuideFamilyBatch, type GuideFamilySmallSample } from "@/domain/guide-family-stats";
 import { guideBoardName } from "@/domain/guide-reading";
 import { currentLaunchGuideFamily } from "@/domain/guide-variant-strip";
 import { displayGuideName } from "@/domain/trait-names.mjs";
@@ -74,9 +74,9 @@ export function guideMatchEvidence({ team, teams, section, edition, augmentName,
     const related = heroGuide ? [] : [teamPlacement(board, section, "lineup"), teamPlacement(board, section, "core")]
       .filter((sample): sample is PlacementRating => !!sample?.games);
     const carry = carryEvidence(edition, section.id, board, augmentName);
-    const rows = matchingFamily ? familyRows.filter(row => row.boards.some(entry => entry.id === board.id)) : [];
-    const rare = rareRows.filter(stat => (stat.teamId ?? teams[0]?.id) === board.id);
-    const formation = !heroGuide ? formationEvidence(board, edition) : undefined;
+    const rows = matchingFamily ? familyRows.filter(row => row.boards.some(entry => entry.id === board.id) && familyRosterMatches(row.stat, board)) : [];
+    const rare = rareRows.filter(stat => (stat.teamId ?? teams[0]?.id) === board.id && familyRosterMatches(stat, board));
+    const formation = !heroGuide && !board.publishedRosterNeedsReview ? formationEvidence(board, edition) : undefined;
     const candidateReference = !rows.length && !rare.length ? formation?.board.familyReference : undefined;
     const reference = launch ? currentFormationFamilyReference(candidateReference) : candidateReference;
     function distributionGroups(view: "board" | "carry") {

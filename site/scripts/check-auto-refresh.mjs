@@ -71,13 +71,14 @@ export function readPublishedFamily(ref = "HEAD") {
   return committedJson(familyPath, ref);
 }
 
-export function changedDataFiles(status, profile, { archiveId } = {}) {
+export function changedDataFiles(status, profile, { archiveId, boardQueries } = {}) {
   const archive = archiveId !== undefined;
   if (archive && (typeof archiveId !== "string" ||
       !/^(?:pbe-s[1-9]\d*-\d{4}-\d{2}-\d{2}-\d+\.\d+[a-z]?(?:-\d+)?|ranked-s[1-9]\d*-\d+\.\d+[a-z]?)$/.test(archiveId))) {
     throw new Error("采集回执含无效归档批次");
   }
-  const allowed = new Set(automaticRefreshModules(profile, { archive }).map(id => "site/data/" + id + ".json"));
+  const allowed = new Set(automaticRefreshModules(profile, { archive, boardQueries: boardQueries === true })
+    .map(id => "site/data/" + id + ".json"));
   if (archive) allowed.add(manifestPath);
   const exports = archive ? new Set(["heroes.json", "equipment.json"].map(name => archivePath(archiveId) + name)) : new Set();
   return status.split("\0").filter(Boolean).map(entry => {
@@ -91,7 +92,8 @@ export function changedDataFiles(status, profile, { archiveId } = {}) {
 }
 
 export function verifyCollectedModules(profile, receipt, summary) {
-  const expected = automaticRefreshModules(profile, { archive: receipt?.archiveId !== undefined });
+  if (receipt?.boardQueries !== undefined && receipt.boardQueries !== true) throw new Error("棋盘查询回执无效");
+  const expected = automaticRefreshModules(profile, { archive: receipt?.archiveId !== undefined, boardQueries: receipt?.boardQueries === true });
   const completed = receipt?.modules;
   if (receipt?.profile !== profile || !Array.isArray(completed)) throw new Error("采集回执与本轮配置不符");
   const missing = expected.filter(id => !completed.includes(id));
@@ -199,7 +201,7 @@ function verifyArchive(archiveId) {
 export function verifyRefreshChanges(profile, receiptPath) {
   const receipt = readJson(receiptPath);
   const status = git("status", "--porcelain=v1", "-z", "--untracked-files=all", "--no-renames");
-  const changed = changedDataFiles(status, profile, { archiveId: receipt?.archiveId });
+  const changed = changedDataFiles(status, profile, { archiveId: receipt?.archiveId, boardQueries: receipt?.boardQueries });
   const summary = JSON.parse(run(process.execPath, ["scripts/run-data-refresh.mjs", "--status", "--json"], site));
   verifyCollectedModules(profile, receipt, summary);
   if (receipt.archiveId !== undefined) verifyArchive(receipt.archiveId);

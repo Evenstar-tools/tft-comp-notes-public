@@ -1,4 +1,5 @@
 import type { Team } from "./types";
+import { boardQuerySignature } from "./owner-board-query.ts";
 import { editionScope } from "./version-updates.ts";
 
 export interface GuideFamilyStat {
@@ -6,6 +7,7 @@ export interface GuideFamilyStat {
   teamId?: string;
   landingTeamId?: string;
   sharedTeamIds?: string[];
+  boardSignatures?: Record<string, string>;
   clusterId: string | number;
   name: string;
   sourceName: string;
@@ -294,6 +296,11 @@ export function guideFamilyBoardIds(batch: GuideFamilyBatch, seasonId: string, s
     .filter(id => id !== undefined));
 }
 
+export function familyRosterMatches(stat: Pick<GuideFamilyStat, "boardSignatures">, team: Team) {
+  return !team.publishedRosterNeedsReview &&
+    (!team.publishedRosterChanged || stat.boardSignatures?.[team.id] === boardQuerySignature(team.pieces));
+}
+
 export function guideFamilyRows(batch: GuideFamilyBatch, seasonId: string, sectionId: string, teams: Team[], { includeSmallSamples = false } = {}) {
   if (batch.seasonId !== seasonId || !batch.patch || !batch.updatedAt || batch.days < 1) return [];
   const rows: GuideFamilySmallSample[] = includeSmallSamples ? [...batch.rows, ...(batch.smallSamples ?? [])] : batch.rows;
@@ -301,10 +308,10 @@ export function guideFamilyRows(batch: GuideFamilyBatch, seasonId: string, secti
     const countOnly = includeSmallSamples && Number.isSafeInteger(stat.games) && stat.games > 0 && stat.games < 100;
     if (stat.sectionId !== sectionId || (!countOnly && recommendationTier(stat) === "review")) return [];
     const team = stat.teamId ? teams.find(t => t.id === stat.teamId) : teams[0];
-    if (!team) return [];
+    if (!team || !familyRosterMatches(stat, team)) return [];
     // The collector has not checked alternate board links for count-only samples.
     const ids = new Set(countOnly ? [team.id] : familyBoardIds(stat, team.id));
-    const boards = [...ids].flatMap(id => teams.find(option => option.id === id) ?? []);
+    const boards = [...ids].flatMap(id => teams.find(option => option.id === id && familyRosterMatches(stat, option)) ?? []);
     return [{ stat: stat as GuideFamilyStat, team, boards }];
   });
 }

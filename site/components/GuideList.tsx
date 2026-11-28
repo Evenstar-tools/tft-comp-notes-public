@@ -32,6 +32,9 @@ import { isLiveLaunchTransition, sameEdition } from "@/domain/version-updates";
 import { guideBoardKind, guideDirectoryCorePlacements, type GuideCorePlacement } from "./GuidePlacement";
 import { formationCoreResult } from "./GuideFormationStats";
 import { PatchRecommendationList, type RecommendationCard } from "./PatchRecommendationList";
+import { useOwnerSession } from "./OwnerSession";
+import { OwnerEditBar, OwnerEditFlag, OwnerInlineEdit, OwnerPageDrawer, useOwnerPageEditor } from "./OwnerPageEditor";
+import { applyOwnerHomeRecommendations, homeContentBlocks, type HomeFields } from "@/domain/owner-content";
 import { GuideConditionIcon } from "./GuideEquipmentConditions";
 import { guideConditionName, guideConditionsAnchor, guideEquipmentConditions } from "@/domain/guide-equipment-conditions";
 import { HomeGearSearch, isHomeGear } from "./HomeGearSearch";
@@ -120,16 +123,25 @@ const homeFamilyStats: GuideFamilySnapshot & { previous?: GuideFamilySnapshot } 
 const familyStats = homeFamilyStats;
 const coreStats: RecommendationStats = coreData;
 
-export function GuideList({ index, season = currentSeason, initial = {}, initialSearch, recommendations, artifactRanking, patch, fromItem, checkedAt }: {
+export function GuideList({ index, season = currentSeason, initial = {}, initialSearch, recommendations: publishedRecommendations,
+  baseRecommendations, ownerHome, artifactRanking, patch, fromItem, checkedAt }: {
   index: string; season?: Season; initial?: GuideFilters;
   initialSearch?: SiteSearchResponse;
   recommendations?: PatchRecommendationBatch;
+  baseRecommendations?: PatchRecommendationBatch;
+  ownerHome?: HomeFields;
   artifactRanking?: ReactNode;
   patch?: { seasonId: string; build: string; label: string; updateId: string; effectiveAt: string; launchTransition?: boolean;
     metaTftPatch: { patch: string; bPatch?: string } };
   fromItem?: string;
   checkedAt: number;
 }) {
+  const { session } = useOwnerSession();
+  const ownerEditor = useOwnerPageEditor<HomeFields>(patch && session?.isOwner && session.databaseConfigured ? { home: true } : undefined);
+  const preview = ownerEditor.previewFields;
+  const recommendations = patch && preview?.recommendations
+    ? applyOwnerHomeRecommendations(ownerHome?.recommendations ? baseRecommendations : publishedRecommendations, preview.recommendations, patch)
+    : publishedRecommendations;
   const { sections, heroSections, trends } = useMemo(() => decodeHomeGuideIndex(index), [index]);
   const launchTransition = isLiveLaunchTransition(patch);
   const initialView = filterView(launchTransition && !trends && initial.view === "comp-trends" ? undefined : initial.view);
@@ -355,14 +367,18 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
   const decisions = new Map((recommendations?.entries ?? []).map(record => [`${record.sectionId}:${record.teamId}`, record]));
   const homeOverrides = new Map(activeHomeRecommendationOverrides(recommendations, patch)
     .map(record => [`${record.sectionId}:${record.teamId}`, record]));
+  const webSelections = new Set((preview?.recommendations ?? ownerHome?.recommendations ?? [])
+    .filter(record => record.override === "pin" || record.override === "include")
+    .map(record => `${record.sectionId}:${record.teamId}`));
   const openingOrder = launchTransition ? new Map([...homeOverrides.values()]
     .filter(record => record.launchEntry)
     .map((record, index) => [record.teamId, index])) : undefined;
   function canShowBoard(section: Section, team: Team) {
     if (!recommended && !showingTrends) return true;
     const key = `${section.id}:${team.id}`;
+    if (homeOverrides.get(key)?.override === "exclude") return false;
     const status = decisions.get(key)?.status;
-    return status !== "review" && status !== "avoid" && homeOverrides.get(key)?.override !== "exclude";
+    return webSelections.has(key) || (status !== "review" && status !== "avoid");
   }
   const nextSelections = (target: View) => {
     if (target === "comp-trends") return emptyFilters;
@@ -668,8 +684,10 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
         (!entry.matches || entry.matches.some(match => match.board.id === board.id));
       function ownerOverride(board: Team) {
         if (!useOwnerOverrides) return;
-        const record = homeOverrides.get(`${section.id}:${board.id}`);
+        const key = `${section.id}:${board.id}`;
+        const record = homeOverrides.get(key);
         if (record?.override !== "pin" && record?.override !== "include") return;
+        if (webSelections.has(key)) return record;
         // A native landing board can be a formation even if the share route calls it a phase.
         if (!(launchTransition && record.launchEntry) && guideBoardKind(section, board, entry.teams[0]) === "过渡" &&
             !entry.rows.some(row => row.stat.landingTeamId === board.id)) return;
@@ -795,7 +813,8 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
       manualReason: !hasHomeRecommendationSample(rating) && decision ? displayTraitNames(decision.note) : undefined,
       timing: decision?.timing && displayTraitNames(decision.timing),
       upgrade: decision?.upgrade && displayTraitNames(decision.upgrade),
-      entryTeamId: !oceanGraves && (!needle || exact?.namedFamily) ? rerollEntryTeamId(section, team.id) : undefined,
+      entryTeamId: !oceanGraves && !webSelections.has(`${section.id}:${team.id}`) && (!needle || exact?.namedFamily)
+        ? rerollEntryTeamId(section, team.id) : undefined,
       stages: [...stages.values()],
       conditions,
       strategy,
@@ -1096,8 +1115,25 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
     }
   }
 
+  const introTitle = preview?.introTitle ?? ownerHome?.introTitle;
+  const introText = preview?.intro ?? ownerHome?.intro;
+  const intro = (introTitle || introText || ownerEditor.editing) && <section className="owner-home-intro" aria-label="首页介绍">
+    <div className="owner-page-anchor" data-owner-selected={ownerEditor.active?.kind === "intro" || undefined}>
+      <h2>{introTitle || "首页介绍"}</h2>
+      {ownerEditor.editing && <OwnerInlineEdit label="编辑首页介绍" onClick={() => ownerEditor.open("intro")} />}
+    </div>
+    {introText && <p>{introText}</p>}
+  </section>;
+  const homeOrder = preview?.blocks ?? ownerHome?.blocks ?? homeContentBlocks;
+  const recommendationChoices = ownerEditor.active?.kind === "recommendations"
+    ? homeEntries.flatMap(({ section, teams }) => teams.map(team => ({
+      sectionId: section.id, teamId: team.id, label: section.title + " · " + guideBoardName(team),
+    }))) : [];
   return <div ref={libraryRoot} className="home-guide-library" data-archive={view === "regular" && !recommended || undefined} data-trends={showingTrends || undefined} onClickCapture={handleLibraryClickCapture}>
-    <HomeGuideBanner patch={patch} />
+    {ownerEditor.available ? <div className="owner-home-banner"><HomeGuideBanner patch={patch} /><OwnerEditFlag editor={ownerEditor} /></div>
+      : <HomeGuideBanner patch={patch} />}
+    <OwnerEditBar editor={ownerEditor} />
+    <OwnerPageDrawer editor={ownerEditor} kind="home" scope={patch?.label ?? "首页"} choices={recommendationChoices} />
     {fromItem && <a className="text-link guide-gear-return" href={fromItem}>返回装备图鉴</a>}
     <div className="home-browse-controls">
       <div className="guide-order-row">
@@ -1111,6 +1147,10 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
           {(!launchTransition || trends) && <a href={homeLink("comp-trends", emptyFilters, sort)} aria-current={showingTrends ? "page" : undefined}
             onClick={event => changeView(event, "comp-trends")}>阵容趋势</a>}
         </nav>
+        {recommendationTab && ownerEditor.editing && <div className="owner-page-anchor"
+          data-owner-selected={ownerEditor.active?.kind === "recommendations" && !ownerEditor.active?.entry || undefined}>
+          <OwnerInlineEdit label="管理本版推荐" onClick={() => ownerEditor.open("recommendations")} />
+        </div>}
       </div>
       {!showingTrends && <div className="filters guide-filters" data-inline-style={styles.size ? true : undefined}>
         <div className="guide-search-field" data-equipment={selectedGear ? true : undefined}>
@@ -1246,9 +1286,13 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
     {searching && <p className="site-lookup-message" role="status">正在搜索…</p>}
 
     {recommended && <>
+      {homeOrder[0] === "intro" && intro}
       <PatchRecommendationList stats={!launchTransition || homeSelections.some(route => hasHomeRecommendationSample(route.rating)) ? recommendationSnapshot : undefined}
         cards={recommendationCards} home={home} quietUnrated={launchTransition}
-        previousBuild={!!recommendationSnapshot && !currentHomeReady} />
+        previousBuild={!!recommendationSnapshot && !currentHomeReady}
+        selectedEntry={ownerEditor.active?.kind === "recommendations" ? ownerEditor.active.entry : undefined}
+        onEdit={ownerEditor.editing ? (sectionId, teamId) => ownerEditor.open("recommendations", sectionId + ":" + teamId) : undefined} />
+      {homeOrder[0] === "recommendations" && intro}
       {!displayedCount && !crossTab.length && !showLookup && !searching && (needle || hasFilter ? emptyState : <div className="empty-inline">{!launchTransition && <p>{currentHomeEvidence ? "暂无符合条件的本版推荐" : "本版体系数据待更新"}</p>}
         {archiveLink}
       </div>)}

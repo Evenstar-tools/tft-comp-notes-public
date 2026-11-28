@@ -242,6 +242,9 @@
       "name": "四花式卡莎德莱文",
       "sectionId": "sample-block-1020",
       "teamId": "00000000-0000-4000-8000-000000001158",
+      "boardSignatures": {
+        "00000000-0000-4000-8000-000000001158": "[7,[\"braum\",\"draven\",\"gragas\",\"kai-sa\",\"leona\",\"lillia\",\"samira\"]]"
+      },
       "carryIds": [
         "kai-sa",
         "draven"

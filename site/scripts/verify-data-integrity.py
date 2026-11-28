@@ -584,8 +584,9 @@ def check_sample_bindings(boards, current, errors):
     by_team = {team_id: (section_id, board) for (section_id, team_id), board in boards.items()}
     placement = read_json("data/guide-placement.json", dict, errors)
     s19_pbe = current.get("seasonId") == "s19-pbe"
+    active_patch = re.fullmatch(r"(\d+\.\d+)([a-z]?)", current.get("patch") or "")
     source_ids = {}
-    if s19_pbe:
+    if current.get("seasonId") in ("s19-pbe", "s19-live"):
         reference = read_json("data/conditional-gear-unit-ids.json", dict, errors)
         source_ids = {api_id: unit_id for unit_id, api_id in reference.get("units", {}).items()}
     for index, row in enumerate(placement.get("records") or []):
@@ -599,9 +600,25 @@ def check_sample_bindings(boards, current, errors):
         if not isinstance(team_id, str) or team_id not in by_team:
             errors.append(f"{path}：战绩绑定的公开棋盘不存在")
             continue
-        _, board = by_team[team_id]
+        section_id, board = by_team[team_id]
         units = board_units(board)
-        if scope.get("population") is not None and scope["population"] != board_population(board):
+        population = board_population(board)
+        signature = row.get("querySignature")
+        if signature is not None:
+            # The public editor can update the board before its roster is synchronized to Git.
+            roster = row.get("roster")
+            if (scope.get("kind") != "full" or row.get("sectionId") != section_id or row.get("build") != placement.get("build")
+                    or not isinstance(roster, list) or not roster or any(not isinstance(unit, str) for unit in roster)
+                    or len(roster) != len(set(roster))):
+                errors.append(f"{path}：线上原盘查询签名、棋盘身份或版本不符")
+                continue
+            units = Counter(roster)
+            population = len(roster) + ("baron-nashor" in units)
+            if (scope.get("population") != population
+                    or signature != json.dumps([population, sorted(roster)], ensure_ascii=False, separators=(",", ":"))):
+                errors.append(f"{path}：线上原盘查询签名未与实际人口、名单对齐")
+                continue
+        if scope.get("population") is not None and scope["population"] != population:
             errors.append(f"{path}：统计条件人口与公开棋盘不一致")
         if scope.get("kind") == "core":
             core = scope.get("coreRoster")
@@ -610,21 +627,28 @@ def check_sample_bindings(boards, current, errors):
             continue
         try:
             url = urlsplit(row.get("url") or "")
-            query = parse_qs(url.query)
+            query = parse_qs(url.query, keep_blank_values=True)
         except (ValueError, TypeError):
             errors.append(f"{path}：样本查询链接无效")
             continue
         if query.get("tab") != ["comps"]:
-            if scope.get("kind") == "fixed":
+            if scope.get("kind") == "fixed" or signature is not None:
                 errors.append(f"{path}：固定终盘需要精确名单查询")
             continue
+        if signature is not None:
+            if (url.scheme != "https" or url.netloc != "www.metatft.com" or url.path != "/explorer"
+                    or query.get("set") != ["TFTSet19"] or query.get("queue") != (["PBE"] if s19_pbe else ["1100"])
+                    or not active_patch or query.get("patch") != [active_patch[1]] or query.get("b_patch") != [active_patch[2]]
+                    or any(query.get(key) != ["0"] for key in ("emblem_count", "tactician_item_count", "duplicate_unit_count"))
+                    or any(not re.fullmatch(r"[A-Za-z0-9_]+-1", token) for token in query.get("unit", []))):
+                errors.append(f"{path}：线上固定终盘的来源、版本或排除条件不符")
         roster = row.get("roster")
-        if (row.get("population") != board_population(board) or not isinstance(roster, list)
+        if (row.get("population") != population or not isinstance(roster, list)
                 or not all(isinstance(unit, str) for unit in roster) or Counter(roster) != units):
             errors.append(f"{path}：固定终盘样本的人口或名单与公开棋盘不一致")
         if query.get("level") != [str(row.get("population"))]:
             errors.append(f"{path}：来源查询的结算等级与固定终盘样本不一致")
-        if s19_pbe:
+        if s19_pbe or signature is not None:
             query_units = Counter(source_ids.get(token.split("-", 1)[0]) for token in query.get("unit", []))
             if query_units != units:
                 errors.append(f"{path}：来源查询的棋子名单与绑定棋盘不一致")

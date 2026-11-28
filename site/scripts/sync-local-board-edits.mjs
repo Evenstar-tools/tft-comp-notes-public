@@ -52,9 +52,20 @@ function nonPositionContent(board) {
   });
 }
 
+function withoutBoardOverlays(snapshot, keys) {
+  const candidate = { ...snapshot };
+  for (const field of ["boardEdits", "boardLayouts", "boardOverrides"]) {
+    if (!candidate[field]) continue;
+    candidate[field] = candidate[field].filter(entry => !keys.has(boardKey(entry)));
+    if (!candidate[field].length) delete candidate[field];
+  }
+  return candidate;
+}
+
 export function planLocalBoardEdits(snapshot, overrides) {
   const raw = migrateS19GuideSnapshot(snapshot);
   const rendered = prepareFamilyPublication(snapshot);
+  let generatedSource;
   const seen = new Set();
   const changes = [];
   const report = { ready: [], already: [], conflicts: [] };
@@ -62,7 +73,6 @@ export function planLocalBoardEdits(snapshot, overrides) {
   for (const override of overrides) {
     const { sectionId, teamId, edition, source, content } = override;
     const key = boardKey(override);
-    const original = findBoard(raw, sectionId, teamId);
     const current = findBoard(rendered, sectionId, teamId);
     const entry = { sectionId, teamId, href: canonicalGuidePath(sectionId, teamId) };
     if (seen.has(key)) {
@@ -70,7 +80,7 @@ export function planLocalBoardEdits(snapshot, overrides) {
       continue;
     }
     seen.add(key);
-    if (!original?.board || !current?.board ||
+    if (!current?.board ||
         !sameEdition(edition, currentGuideSeason.id) ||
         !sameEdition(edition, current.section.gameData?.id ?? rendered.season.id)) {
       report.conflicts.push({ ...entry, reason: "原棋盘不存在或赛季不符" });
@@ -85,21 +95,23 @@ export function planLocalBoardEdits(snapshot, overrides) {
       report.conflicts.push({ ...entry, reason: "公开候选的同一棋盘已有其他修改，需逐盘核对" });
       continue;
     }
-    changes.push({ sectionId, teamId, source: publishedBoardContent(original.board), content: publishedBoardContent(content) });
+    let original = findBoard(raw, sectionId, teamId)?.board;
+    if (!original && current.section.reroll?.added.includes(teamId)) {
+      // Keep the generated stage as the baseline when a later save replaces an earlier overlay.
+      generatedSource ??= prepareFamilyPublication(withoutBoardOverlays(snapshot, new Set(overrides.map(boardKey))));
+      original = findBoard(generatedSource, sectionId, teamId)?.board;
+    }
+    if (!original) {
+      report.conflicts.push({ ...entry, reason: "找不到原棋盘的配置" });
+      continue;
+    }
+    changes.push({ sectionId, teamId, source: publishedBoardContent(original), content: publishedBoardContent(content) });
     report.ready.push({ ...entry, kind: nonPositionContent(source) === nonPositionContent(content) ? "站位" : "阵容配置" });
   }
 
   if (report.conflicts.length || !changes.length) return { ...report, snapshot };
-  const touched = new Set(changes.map(boardKey));
-  const candidate = {
-    ...snapshot,
-    boardEdits: [...(snapshot.boardEdits ?? []).filter(entry => !touched.has(boardKey(entry))), ...changes],
-  };
-  for (const field of ["boardLayouts", "boardOverrides"]) {
-    if (!candidate[field]) continue;
-    candidate[field] = candidate[field].filter(entry => !touched.has(boardKey(entry)));
-    if (!candidate[field].length) delete candidate[field];
-  }
+  const candidate = withoutBoardOverlays(snapshot, new Set(changes.map(boardKey)));
+  candidate.boardEdits = [...(candidate.boardEdits ?? []), ...changes];
   const next = prepareFamilyPublication(candidate);
   for (const edit of changes) {
     const updated = findBoard(next, edit.sectionId, edit.teamId)?.board;

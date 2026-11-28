@@ -16,6 +16,7 @@ import type {
 import type { Season, Team } from "@/domain/types";
 import { database, setting, ApiError } from "./access";
 import { includeWebDetails, refreshWebDetails } from "./guide-details";
+import { applyPublishedOwnerContent } from "./owner-content";
 import { includeRerollBoards } from "./reroll-guides";
 import { migrateS19GuideSnapshot } from "./s19-guide-cleanup";
 import {
@@ -85,7 +86,8 @@ async function storedPublication(id?: string): Promise<PublishedSource | null> {
     return { publication: publicationWithBoardRevision(await bundlePreviewSnapshot(), record), repository: true };
   }
   // Older board writes stored a complete copy, without the draft or archive used for document publications.
-  if (!row.has_document && record.previousId && (record.boardEdits?.length || record.boardLayouts?.length)) {
+  if (!row.has_document && !Array.isArray(record.boardOverrides) && record.previousId &&
+      (record.boardEdits?.length || record.boardLayouts?.length)) {
     const base = await bundlePreviewSnapshot();
     const boardOverrides = legacyRepositoryOverrides(base, record);
     return { publication: publicationWithBoardRevision(base, {
@@ -131,9 +133,8 @@ export async function livePublication(): Promise<Publication | null> {
   const publication = await publishedSnapshot();
   return publication ? prepareForReading(publication) : null;
 }
-async function buildPublicGuidePublication(): Promise<Publication | null> {
+export async function ownerContentBasePublication(): Promise<Publication> {
   const publication = await publishedSnapshot();
-  if (!publication) return null;
   const prepared = await prepareForReading(includeRerollBoards(migrateS19GuideSnapshot(publication), season));
   return {
     ...prepared,
@@ -141,17 +142,20 @@ async function buildPublicGuidePublication(): Promise<Publication | null> {
       (section.kind === "guide" || sectionTeams(section).length) ? guideSectionWithCurrentNames(section) : section),
   };
 }
+
+async function buildPublicGuidePublication(): Promise<Publication> {
+  const publication = await ownerContentBasePublication();
+  return hasDatabase() ? applyPublishedOwnerContent(publication) : publication;
+}
 export async function publicGuidePublication(): Promise<Publication | null> {
   if (!hasDatabase()) {
     previewPublicGuideCache ??= buildPublicGuidePublication().then(pub => pub!);
     return previewPublicGuideCache;
   }
-  const id = await publishedSnapshotId();
-  if (!id) {
-    dbPublicGuideCache = null;
-    previewPublicGuideCache ??= buildPublicGuidePublication().then(pub => pub!);
-    return previewPublicGuideCache;
-  }
+  const versions = await database().prepare(
+    "SELECT (SELECT value FROM settings WHERE key='published_id') AS board_id, (SELECT COALESCE(SUM(published_revision),0) FROM owner_content) AS contents",
+  ).first<{ board_id: string | null; contents: number }>();
+  const id = JSON.stringify(versions);
   if (dbPublicGuideCache?.id === id) return dbPublicGuideCache.value;
   const value = buildPublicGuidePublication().catch(error => {
     if (dbPublicGuideCache?.id === id) dbPublicGuideCache = null;

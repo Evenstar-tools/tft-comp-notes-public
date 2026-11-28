@@ -33,9 +33,10 @@ const profiles = {
 };
 const automaticProfiles = new Set(["fast", "daily", "all"]);
 
-export function automaticRefreshModules(profile, { archive = false } = {}) {
+export function automaticRefreshModules(profile, { archive = false, boardQueries = false } = {}) {
   if (!automaticProfiles.has(profile)) throw new Error("未知自动刷新配置 " + profile);
-  return [...new Set([...profiles[profile], ...(archive ? archiveModules : [])])].filter(id => scripts[id]);
+  return [...new Set([...profiles[profile], ...(boardQueries ? ["guide-placement"] : []), ...(archive ? archiveModules : [])])]
+    .filter(id => scripts[id]);
 }
 
 const readJson = async file => JSON.parse((await readFile(new URL(file, root), "utf8")).replace(/^\uFEFF/, ""));
@@ -110,6 +111,9 @@ async function planFor(options, verify, python) {
   for (const id of modules) if (!Object.hasOwn(scripts, id)) throw new Error(`未知模块 ${id}`);
   if ((channel || patch) && !archive) throw new Error("--channel 和 --patch 用于归档，请搭配 --archive");
   const selected = new Set(profile ? profiles[profile] : modules);
+  const boardQueries = options["board-queries"];
+  if (boardQueries && !automaticProfiles.has(profile)) throw new Error("--board-queries 只用于定时采集配置");
+  if (boardQueries) selected.add("guide-placement");
   const cohort = archive || [...selected].some(id => scripts[id] && id !== "comp-trends")
     ? refreshCohort(await readJson("data/current-patch.json")) : undefined;
   const archiveChannel = cohort?.pbe ? "pbe" : "ranked";
@@ -136,6 +140,9 @@ async function planFor(options, verify, python) {
     if (id === "guide-family-stats") {
       ids.push("comp-trends");
       args.push("--catalog", catalogFile, "--trends", "data/comp-trends.json");
+    } else if (id === "guide-placement" && boardQueries) {
+      args.push("--board-queries", boardQueries);
+      if (profile === "fast") args.push("--board-queries-only");
     } else if (id === "comp-trends") {
       if (selected.has("guide-family-stats")) continue;
       args.push("--patch", "data/current-patch.json");
@@ -212,7 +219,8 @@ async function execute(steps, catalogFile, options) {
         const archiveId = archived ? archiveBatchId(
           options.cohort, (await readJson("data/hero-stats.json")).date, await readJson("data/stats-history.json"),
         ) : undefined;
-        await writeFile(options.receipt, JSON.stringify({ profile: options.profile, modules: completed, archiveId }) + "\n",
+        await writeFile(options.receipt, JSON.stringify({ profile: options.profile, modules: completed, archiveId,
+          ...(options["board-queries"] && { boardQueries: true }) }) + "\n",
           { encoding: "utf8", flag: "wx" });
         console.log("本轮采集并通过数据门禁：" + completed.join("、"));
       }
@@ -251,6 +259,7 @@ async function main() {
     profile: { type: "string" }, module: { type: "string", multiple: true },
     archive: { type: "boolean" }, channel: { type: "string" }, patch: { type: "string" },
     catalog: { type: "string" }, receipt: { type: "string" }, "dry-run": { type: "boolean" }, help: { type: "boolean", short: "h" },
+    "board-queries": { type: "string" },
   } });
   if (values.help) {
     console.log("node scripts/run-data-refresh.mjs --status [--json] | --verify");

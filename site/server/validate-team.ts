@@ -27,7 +27,7 @@ export const teamBoardSchema = z.object({
     )
     .max(28),
 }).strict();
-const conditionKind = z.enum(["required", "option"]);
+const conditionKind = z.enum(["required", "option", "upgrade"]);
 const conditionId = z.string().min(1).max(180);
 const condition = z.union([
   z.object({ kind: conditionKind, augmentId: conditionId }).strict(),

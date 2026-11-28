@@ -162,6 +162,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
   const incomingCombo = params.get("combo");
   const comboDraft = useMemo(() => incomingCombo ? teamFromCombo(incomingCombo, season.units, season.traits) : null, [incomingCombo]);
   const guideBoardId = params.get("guideBoard");
+  const openImportedConditions = params.get("conditions") === "1";
   const [guideTransfer, setGuideTransfer] = useState<{
     id: string;
     source: ReturnType<typeof readGuideBoardTransfer>;
@@ -188,6 +189,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
   const [draftTeam, setDraftTeam] = useState<Team>(emptyTeam);
   const backupInput = useRef<HTMLInputElement>(null);
   const [stage, setStage] = useState<BoardStage>("late");
+  const publishOriginal = !!guideTarget && stage === "late";
   const team = useMemo(() => readTeamStage(draftTeam, stage), [draftTeam, stage]);
   const [showPoster, setShowPoster] = useState(false);
   const [saved, setSaved] = useState<Team[] | null>(initialTeams ?? null);
@@ -411,7 +413,8 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
     }
   }, [draftTeam, stage, guideBoardSource, draftChecked, importKey, ownerMode, params, notify]);
 
-  const guidePublished = !!guideBoardSource?.published && guideBoardSource.published === JSON.stringify(publishedBoardContent(draftTeam));
+  const guidePublished = !!guideBoardSource?.published &&
+    guideBoardSource.published === boardContentVersion(readTeamStage(draftTeam, "late"));
   const priorGuideCopy = guideTarget && !known && !history.length && saved?.find(entry =>
     entry.id !== draftTeam.id && !entry.sectionId && entry.name === draftTeam.name);
   const incomingGuideSource = pendingGuide?.source?.sourceGuide;
@@ -440,7 +443,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
   const finishImport = useCallback((incoming: Team | null) => {
     handledImport.current = importKey;
     const url = new URL(window.location.href);
-    for (const key of ["guideBoard", "combo", "copy", "publication", "section"]) url.searchParams.delete(key);
+    for (const key of ["guideBoard", "combo", "copy", "publication", "section", "conditions"]) url.searchParams.delete(key);
     const origin = url.searchParams.get("from");
     url.searchParams.delete("from");
     window.history.replaceState(window.history.state, "", url.pathname + url.search);
@@ -470,6 +473,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
     setComboOrigin(guide ? "" : copyQuery && sectionId && copyId ? guideLink(sectionId, copyId) : origin?.startsWith("/combos?") ? origin : "/combos");
     setRestore(null);
     showDraft(draft, undefined, source);
+    if (guide && ownerMode && openImportedConditions) setConditionsOpen(true);
     setReplacement(null); setMobileReplace(false);
     setHistory([]); setFuture([]); setWantedForm(null);
     const focus = (guide ? draft.pieces.find(piece => piece.unitId === guide.focusUnit) ??
@@ -477,7 +481,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
     setSelectedId(focus?.unitId ?? null);
     setPieceSelection(focus ? { id: focus.instanceId } : null);
     if (!guide) notify({ kind: "ok", text: copyQuery ? "棋盘已复制到新草稿" : "八人口组合已带入新草稿" });
-  }, [importKey, guideBoardId, pendingGuide, playerGuideCopy, copyQuery, sectionId, copyId, ownerMode, restorePlayerDraft, notify, showDraft]);
+  }, [importKey, guideBoardId, pendingGuide, playerGuideCopy, copyQuery, sectionId, copyId, ownerMode, openImportedConditions, restorePlayerDraft, notify, showDraft]);
   useEffect(() => {
     if (!importKey || handledImport.current === importKey || !draftChecked || !saved) return;
     if (guideBoardId ? !pendingGuide : copyQuery && !incomingDraft) return;
@@ -801,10 +805,10 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
   const publishGuideNow = () => run("save", async () => {
     if (!guideTarget || !guideBoardSource) return;
     const current = draftRef.current;
-    if (current.stages || stageRef.current !== (current.mainStage ?? "late"))
-      throw new Error("请在带入的阶段编辑原棋盘。新增的阶段可单独保存到云端副本。");
-    if (!current.pieces.length) throw new Error("棋盘至少需要一枚棋子");
-    const board = publishedBoardContent(await save(current));
+    if (stageRef.current !== "late") throw new Error("切回带入的后期盘再发布原棋盘。");
+    if (!readTeamStage(current, "late").pieces.length) throw new Error("棋盘至少需要一枚棋子");
+    const saved = await save(current);
+    const board = publishedBoardContent(readTeamStage(saved, "late"));
     const { publicationId, team: publishedTeam } = await request<{ publicationId: string; team: Team }>("/api/publication/board", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -1046,7 +1050,9 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
       <h1 className="sr-only">阵容构建器</h1>
       {guideBoardSource && <div className="editor-guide-source" data-mobile-open={sourceOpen || undefined}>
         <div className="editor-guide-source-title"><strong>来自{guideBoardSource.title}</strong><small aria-live="polite">{guideTarget
-          ? guidePublished ? "已发布到原棋盘" : known && !dirty ? "副本已保存 · 原棋盘待发布" : "原棋盘待发布"
+          ? publishOriginal
+            ? guidePublished ? "已发布到原棋盘" : known && !dirty ? "副本已保存 · 原棋盘待发布" : "原棋盘待发布"
+            : known && !dirty ? "副本已保存到云端" : "云端副本草稿"
           : ownerMode ? known && !dirty ? "副本已保存到云端" : "云端副本草稿"
           : known && !dirty ? guideBoardSource.restoredPlayerTeam ? "· 已恢复本机站位" : "已保存在本机"
           : "本地草稿"}</small></div>
@@ -1059,7 +1065,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
             setGuideBoardSource(source);
             activate(priorGuideCopy, "已带入同名云端副本");
           }}>使用已存副本</button>}
-          {guideTarget && <button type="button" className="btn ghost sm" disabled={!!busy || !team.name.trim()} onClick={saveNow}>仅保存副本</button>}
+          {publishOriginal && <button type="button" className="btn ghost sm" disabled={!!busy || !team.name.trim()} onClick={saveNow}>仅保存副本</button>}
           <a href={guideBoardSource.href}>返回原棋盘</a>
           {!ownerMode && guideBoardSource.officialBoard && <button type="button" className="btn ghost sm" disabled={!!busy}
             onClick={resetGuideBoard}>重置为官方原盘</button>}
@@ -1430,19 +1436,19 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
         </div>
         <button
           type="button"
-          className={`btn primary tb-save${guideTarget ? " tb-publish-board" : ""}`}
+          className={`btn primary tb-save${publishOriginal ? " tb-publish-board" : ""}`}
           disabled={!!busy || !team.name.trim() || mixedForms(team.pieces)}
-          onClick={guideTarget ? publishGuideNow : saveNow}
-          aria-label={guideTarget ? "保存并发布原棋盘" : undefined}
-          title={guideTarget ? "更新攻略中的原棋盘" : ownerMode ? "保存到云端（Ctrl+S）" : "保存到此浏览器（Ctrl+S）"}
+          onClick={publishOriginal ? publishGuideNow : saveNow}
+          aria-label={publishOriginal ? "保存并发布原棋盘" : undefined}
+          title={publishOriginal ? "更新攻略中的原棋盘" : ownerMode ? "保存到云端（Ctrl+S）" : "保存到此浏览器（Ctrl+S）"}
         >
           {busy === "save" ? (
             <LoaderCircle size={16} className="spin" aria-hidden />
           ) : (
             <Save size={16} aria-hidden />
           )}
-          {guideTarget ? <><span className="guide-save-full">保存并发布原棋盘</span><span className="guide-save-compact">发布棋盘</span></>
-            : ownerMode ? "保存到云端" : "保存"}
+          {publishOriginal ? <><span className="guide-save-full">保存并发布原棋盘</span><span className="guide-save-compact">发布棋盘</span></>
+            : guideTarget ? "保存副本" : ownerMode ? "保存到云端" : "保存"}
         </button>
       </div>
 

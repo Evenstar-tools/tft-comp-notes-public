@@ -47,7 +47,7 @@ export function currentGuidePlacementBatch(edition: string) {
 
 export function teamPlacement(team: Team, section: Section, scope?: PlacementScope) {
   const augment = heroAugmentForGuide(section);
-  if (section.category === heroAugmentCategory && !augment) return;
+  if ((section.category === heroAugmentCategory && !augment) || (team.publishedRosterNeedsReview && scope !== "augment")) return;
   const data = section.gameData ?? season;
   const traitLevels = Object.fromEntries(traitCounts(team.pieces, data.units, data.traits, data.items).map(({ id, level }) => [id, level]));
   const samples = (scope && scopedBatches.get(scope)) || placementBatch;
@@ -85,7 +85,7 @@ export function guideCorePlacement(section: Section, boards: Team[], entryId: st
   if (!canRankRecommendations(coreStats, (section.gameData ?? season).id, currentPatch)) return;
   for (const board of ordered) {
     const row = coreStats.rows.find(entry => entry.sectionId === section.id && entry.teamId === board.id);
-    if (!row || row.games < placementBatch.minGames) continue;
+    if (board.publishedRosterChanged || board.publishedRosterNeedsReview || !row || row.games < placementBatch.minGames) continue;
     return {
       ...row, conditions: { kind: "core" },
       patch: coreStats.patch, window: `近 ${coreStats.hours} 小时`,

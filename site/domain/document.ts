@@ -1,4 +1,5 @@
 import type { PublishedBoardEdit, PublishedBoardLayout, PublishedBoardOverride } from "./published-board-layout";
+import type { HomeFields } from "./owner-content";
 import type { Season, Team } from "./types";
 export interface RichElement {
   text_run?: {
@@ -41,6 +42,8 @@ export interface ContentBlock {
 export interface Section {
   id: string;
   title: string;
+  ownerTitle?: string;
+  ownerOpening?: string;
   category: string;
   updateEdition?: string;
   blocks: ContentBlock[];
@@ -78,4 +81,5 @@ export interface Publication extends DocumentDraft {
   boardLayouts?: PublishedBoardLayout[];
   boardEdits?: PublishedBoardEdit[];
   boardOverrides?: PublishedBoardOverride[];
+  ownerHome?: HomeFields;
 }

@@ -1,3 +1,5 @@
+import type { GuideContentBlock } from "./owner-content";
+
 export interface Trait {
   gameName?: string;
   id: string;
@@ -62,7 +64,7 @@ export interface Piece extends PieceLoadout {
 }
 export type BoardInstrumentId = "maracas" | "rainstick" | "infernalIdol";
 export type BoardStage = "early" | "mid" | "late";
-export type TeamCondition = { kind: "required" | "option" } &
+export type TeamCondition = { kind: "required" | "option" | "upgrade" } &
   ({ augmentId: string } | { itemId: string; recipientId: string; replaces?: string });
 export interface BoardSetup {
   pieces: Piece[];
@@ -73,6 +75,9 @@ export interface Team extends BoardSetup {
   id: string;
   name: string;
   webTitle?: string;
+  ownerBoardTitle?: string;
+  ownerNotes?: string;
+  ownerBlocks?: GuideContentBlock[];
   category: string;
   mainStage?: BoardStage;
   stages?: Partial<Record<"early" | "mid", BoardSetup>>;
@@ -84,6 +89,8 @@ export interface Team extends BoardSetup {
   posterFormat?: "full" | "quick";
   boardRole?: "variant" | "stage";
   conditions?: TeamCondition[];
+  publishedRosterChanged?: true;
+  publishedRosterNeedsReview?: true;
 }
 export interface Season {
   id: string;

@@ -15,6 +15,7 @@ type SampleBoard = {
 export interface PlacementRecord {
   population: number;
   roster: string[];
+  querySignature?: string;
   games: number;
   mean?: number;
   topFourRate?: number;

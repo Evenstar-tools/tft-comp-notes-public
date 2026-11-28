@@ -53,6 +53,42 @@ test("imports a saved original board, preserves its link and unrelated boards, a
   assert.equal(boardContentVersion(renderedBoard(replacement.snapshot)), boardContentVersion(next));
 });
 
+test("imports and updates an original board generated from a guide stage", () => {
+  const sectionId = "sample-block-0338";
+  const teamId = "00000000-0000-4000-8000-000000001283";
+  const findSection = snapshot => prepareFamilyPublication(snapshot).sections.find(section => section.id === sectionId);
+  const section = findSection(preview);
+  const team = sectionTeams(section).find(board => board.id === teamId);
+  assert.equal(team.pieces.length, 8);
+  assert.equal(section.reroll.stages.find(stage => stage.teamId === teamId).parentTeamId, "00000000-0000-4000-8000-000000000078");
+  assert.ok(section.reroll.added.includes(teamId));
+  const content = movedBoard(team);
+  const firstEdit = {
+    sectionId, teamId, edition: currentGuideSeason.id, source: publishedBoardContent(team), content,
+  };
+  const result = planLocalBoardEdits(preview, [firstEdit]);
+  assert.deepEqual(result.conflicts, []);
+  assert.deepEqual(result.ready, [{ sectionId, teamId, href: "/guides/rock-vayne?team=lv8", kind: "站位" }]);
+  assert.deepEqual(result.snapshot.sections, preview.sections);
+  const updated = findSection(result.snapshot);
+  const updatedBoard = sectionTeams(updated).find(board => board.id === teamId);
+  assert.equal(boardContentVersion(updatedBoard), boardContentVersion(content));
+  assert.deepEqual(updatedBoard.instrumentPositions, { infernalIdol: 4 });
+  assert.deepEqual(sectionTeams(updated).filter(board => board.id !== teamId), sectionTeams(section).filter(board => board.id !== teamId));
+  assert.equal(planLocalBoardEdits(result.snapshot, [firstEdit]).already.length, 1);
+
+  const next = structuredClone(content);
+  next.pieces.find(piece => piece.unitId === "vayne").stars = 3;
+  const nextEdit = { ...firstEdit, source: publishedBoardContent(updatedBoard), content: next };
+  const replacement = planLocalBoardEdits(result.snapshot, [nextEdit]);
+  assert.deepEqual(replacement.conflicts, []);
+  assert.equal(replacement.ready[0].kind, "阵容配置");
+  assert.equal(replacement.snapshot.boardEdits.length, result.snapshot.boardEdits.length);
+  assert.deepEqual(replacement.snapshot.boardEdits.find(edit => edit.teamId === teamId).source, firstEdit.source);
+  assert.equal(boardContentVersion(sectionTeams(findSection(replacement.snapshot)).find(board => board.id === teamId)), boardContentVersion(next));
+  assert.equal(planLocalBoardEdits(result.snapshot, [{ ...firstEdit, content: next }]).conflicts.length, 1);
+});
+
 test("a conflicting or missing board leaves the entire candidate unchanged", () => {
   const before = renderedBoard(preview);
   const changed = planLocalBoardEdits(preview, [override(before, movedBoard(before))]).snapshot;

@@ -16,24 +16,27 @@ export async function editablePublishedBoard(publicationId: string, sectionId: s
   if (snapshot.id !== publicationId) throw new ApiError(409, "公开棋盘已有新版本，请返回攻略后重新打开");
   const migrated = migrateS19GuideSnapshot(snapshot);
   const section = migrated.sections.find(entry => entry.id === sectionId);
-  const source = section && sectionTeams(section).find(team => team.id === teamId);
-  if (!section || !source || !source.pieces.length || isEditorialSection(section))
+  if (!section || isEditorialSection(section))
     throw new ApiError(404, "此章节没有对应的可发布棋盘");
   const edition = (section.gameData ?? migrated.season).id;
   if (!sameEdition(edition, season.id))
     throw new ApiError(409, "该棋盘与当前编辑器赛季不同");
+  const source = sectionTeams(section).find(team => team.id === teamId);
   const renderedSection = includeRerollBoards(migrated, season).sections.find(entry => entry.id === sectionId);
   const team = renderedSection && sectionTeams(renderedSection).find(entry => entry.id === teamId);
-  if (!team) throw new ApiError(404, "此章节没有对应的可发布棋盘");
+  const generated = !source && !!renderedSection?.reroll?.added.includes(teamId);
+  if (!team?.pieces.length || (!generated && !source?.pieces.length))
+    throw new ApiError(404, "此章节没有对应的可发布棋盘");
   const publication = snapshot.sections.includes(section) ? snapshot : migrated;
-  const useBoardOverride = repository || !!publication.boardOverrides?.some(edit => edit.sectionId === sectionId && edit.teamId === teamId);
-  return { publication, source, team, repository, useBoardOverride, edition };
+  const requireVersion = repository || generated;
+  const useBoardOverride = requireVersion || !!publication.boardOverrides?.some(edit => edit.sectionId === sectionId && edit.teamId === teamId);
+  return { publication, source: source ?? team, team, repository, requireVersion, useBoardOverride, edition };
 }
 
 type EditableBoard = Awaited<ReturnType<typeof editablePublishedBoard>>;
 
-function requireCurrentBoard({ repository, team }: EditableBoard, expectedBoard?: string) {
-  if ((repository || expectedBoard !== undefined) && expectedBoard !== boardContentVersion(team))
+function requireCurrentBoard({ requireVersion, team }: EditableBoard, expectedBoard?: string) {
+  if ((requireVersion || expectedBoard !== undefined) && expectedBoard !== boardContentVersion(team))
     throw new ApiError(409, "公开棋盘已有新版本，请返回攻略后重新打开");
 }
 
@@ -110,7 +113,10 @@ export async function publishBoardFormation(publicationId: string, sectionId: st
   const content = publishedBoardContent(submitted);
   if (boardContentVersion(content) === boardContentVersion(team)) return { publicationId, team };
   if (useBoardOverride) return publishBoardOverride(current, sectionId, content);
-  const contents = publishedBoardEdits(publication.sections, publication.boardEdits)
+  const uneditedSections = publication.boardEdits?.length
+    ? includeRerollBoards({ ...publication, boardEdits: undefined, boardLayouts: undefined, boardOverrides: undefined }, season).sections
+    : undefined;
+  const contents = publishedBoardEdits(publication.sections, publication.boardEdits, uneditedSections)
     .filter(edit => edit.sectionId !== sectionId || edit.teamId !== team.id);
   const layouts = publishedBoardLayouts(publication.sections, publication.boardLayouts)
     .filter(edit => edit.sectionId !== sectionId || edit.teamId !== team.id);

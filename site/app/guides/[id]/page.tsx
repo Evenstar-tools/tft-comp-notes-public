@@ -11,7 +11,7 @@ import { season } from "@/data";
 import { validHomeReturn } from "@/lib/home-position";
 import { validHeroReturn } from "@/domain/library-navigation";
 import { validAugmentReturn } from "@/domain/augment-library";
-import { ownerGuideDefaultBoard, validVersionReturn } from "@/domain/guide-reading";
+import { validVersionReturn } from "@/domain/guide-reading";
 import { currentPatchRecommendations } from "@/server/patch-recommendations";
 import { patchRecommendationLabels } from "@/domain/patch-recommendations";
 import currentPatch from "@/data/current-patch.json";
@@ -20,8 +20,6 @@ import placementBatch from "@/data/guide-placement.json";
 import { readPosterShare, validItemLibraryReturn } from "@/domain/links";
 import { boardStages } from "@/domain/team-stages";
 import { resolveGuideRequest } from "@/domain/legacy-guide-redirects";
-import { databaseConfigured } from "@/server/access";
-import { hasOwnerSession } from "@/server/owner-session";
 import "./guide-detail.css";
 export const metadata = { title: "阵容笔记" };
 export const dynamic = "force-dynamic";
@@ -70,10 +68,7 @@ export default async function Guide({
   const bestLocal = localSystems.find(system => recommendationTier(system.stat) === "recommended");
   const siblingEntry = team === undefined && !initialStage && !initialFlex && !linkParams.poster && !linkParams.stats &&
     best && best.sectionId !== section.id ? live.sections.find(candidate => candidate.id === best.sectionId) : undefined;
-  const defaultSection = siblingEntry ?? section;
-  const entryTeam = siblingEntry ? best?.teamId : bestLocal?.teamId ?? section.reroll?.entryTeamId ?? preferred?.id;
-  const ownerBoard = ownerGuideDefaultBoard(defaultSection, entryTeam);
-  const defaultTeam = !teamId && ownerBoard !== entryTeam && databaseConfigured() && await hasOwnerSession() ? ownerBoard : entryTeam;
+  const defaultTeam = siblingEntry ? best?.teamId : bestLocal?.teamId ?? section.reroll?.entryTeamId ?? preferred?.id;
   if (siblingEntry) {
     redirect(canonicalGuidePath(siblingEntry.id, defaultTeam, linkParams));
   }

@@ -6,6 +6,7 @@ const SCHEMA_STATEMENTS = [
   "CREATE TABLE IF NOT EXISTS `snapshots` (`id` text PRIMARY KEY NOT NULL, `body` text NOT NULL, `created_at` text NOT NULL)",
   "CREATE TABLE IF NOT EXISTS `sync_jobs` (`id` text PRIMARY KEY NOT NULL, `kind` text NOT NULL, `status` text NOT NULL, `detail` text NOT NULL, `updated_at` text NOT NULL)",
   "CREATE TABLE IF NOT EXISTS `teams` (`id` text PRIMARY KEY NOT NULL, `owner_id` text NOT NULL, `body` text NOT NULL, `revision` integer DEFAULT 1 NOT NULL, `updated_at` text NOT NULL)",
+  "CREATE TABLE IF NOT EXISTS owner_content (scope text NOT NULL, target text NOT NULL, revision integer NOT NULL, published_revision integer NOT NULL, published text NOT NULL, drafts text NOT NULL, PRIMARY KEY (scope,target))",
 ];
 
 let cachedKey: string | undefined;
