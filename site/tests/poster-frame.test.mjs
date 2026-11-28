@@ -30,7 +30,7 @@ test("exports the saved stages once in play order, including two boards at the s
     },
   });
   try {
-    const { defaultPosterFormat, posterLayout, posterStageTitle } = await import("../domain/poster.ts");
+    const { defaultPosterFormat, posterLayout, posterStageTitle, posterTitle } = await import("../domain/poster.ts");
     const piece = position => ({ instanceId: "p", unitId: "kayn", position, stars: 2, items: [] });
     const team = { id: "team", name: "心之钢", notes: "", pieces: [piece(7)],
       stages: { early: { pieces: [piece(1)] }, mid: { pieces: [piece(2)], instrumentPositions: { maracas: 8 } } } };
@@ -47,6 +47,16 @@ test("exports the saved stages once in play order, including two boards at the s
     const single = { ...team, mainStage: "early", stages: undefined };
     assert.deepEqual(layout("full", undefined, single).boards, [single]);
     assert.equal(defaultPosterFormat(single), "quick");
+    const editorCopy = { id: "copy", name: "四花式射手卡莎德莱文 · 八级 · 四花式射手三大触卡莎德莱文", notes: "",
+      pieces: Array.from({ length: 8 }, (_, position) => piece(position)) };
+    assert.deepEqual(posterTitle(undefined, editorCopy), {
+      title: "四花式射手卡莎德莱文 · 八级 · 四花式射手三大触卡莎德莱文",
+      subtitle: "8级",
+    });
+    assert.deepEqual(posterTitle({ title: "四花式射手卡莎德莱文" }, { ...editorCopy, name: "八级 · 四花式射手三大触卡莎德莱文" }), {
+      title: "四花式射手卡莎德莱文",
+      subtitle: "8级 · 四花式射手三大触卡莎德莱文",
+    });
   } finally {
     hooks.deregister();
   }
