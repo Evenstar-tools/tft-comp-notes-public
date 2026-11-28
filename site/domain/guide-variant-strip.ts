@@ -1,12 +1,13 @@
 import type { Section } from "./document";
 import { sectionTeams } from "./document-flow.ts";
-import { currentRecommendationEvidence, familyBoardIds, recommendationTier, type GuideFamilyBatch, type GuideFamilyStat } from "./guide-family-stats.ts";
+import { currentFamilyBatch, currentRecommendationEvidence, familyBoardIds, recommendationTier, type GuideFamilyBatch, type GuideFamilyStat } from "./guide-family-stats.ts";
 import { fixedBoardPlacementDetail, placementEvidenceKind, type PlacementBatch, type PlacementRating } from "./guide-placement.ts";
 import { guideBoardName, primaryFirst } from "./guide-reading.ts";
 import { heroAugmentForGuide, heroAugmentCategory } from "./hero-augments.ts";
 import { rerollEntryTeamId } from "./reroll-stages.ts";
 import { usedPopulation } from "./team.ts";
 import type { Team } from "./types";
+import { isLiveLaunchTransition } from "./version-updates.ts";
 
 export type GuideSystem = { sectionId: string; teamId: string; boardIds: string[]; title: string; stat?: GuideFamilyStat; change?: string };
 type Group = { anchor: Team; boards: Team[]; row?: GuideFamilyStat };
@@ -33,15 +34,24 @@ export function rankGuideSystems(systems: GuideSystem[]) {
     (b.stat?.games ?? 0) - (a.stat?.games ?? 0));
 }
 
+type GuidePatch = NonNullable<Parameters<typeof currentRecommendationEvidence>[2]> & { launchTransition?: boolean };
+
+export function currentLaunchGuideFamily(batch: GuideFamilyBatch, edition: string, patch?: GuidePatch) {
+  return !!patch?.build && batch.build === patch.build && !batch.spansBuilds && currentFamilyBatch(batch, edition, patch);
+}
+
 export function guideSystems(section: Section, batch: GuideFamilyBatch, edition: string,
-  patch: Parameters<typeof currentRecommendationEvidence>[2], minGames: number, reviewedRollingPatch?: string): GuideSystem[] {
+  patch: GuidePatch | undefined, minGames: number, reviewedRollingPatch?: string): GuideSystem[] {
+  const launch = isLiveLaunchTransition(patch);
+  const validBatch = launch ? currentLaunchGuideFamily(batch, edition, patch)
+    : currentRecommendationEvidence(batch, edition, patch, reviewedRollingPatch);
   const teams = primaryFirst(sectionTeams(section), section.primaryTeamId);
   const primary = teams[0];
   if (!primary) return [];
   const byId = new Map(teams.map(board => [board.id, board]));
   const hero = !!heroAugmentForGuide(section) || section.category === heroAugmentCategory;
   const sameGuide = (row: Pick<GuideFamilyStat, "sectionId" | "heroAugment">) =>
-    batch.seasonId === edition && row.sectionId === section.id && !!row.heroAugment === hero;
+    (!launch || validBatch) && batch.seasonId === edition && row.sectionId === section.id && !!row.heroAugment === hero;
   const rows = batch.rows.filter(row => sameGuide(row) && recommendationTier(row) !== "review" && row.games >= minGames &&
     Number.isFinite(row.winRate) && Number.isFinite(row.topFourRate) && row.winRate >= 0 &&
     row.winRate <= row.topFourRate && row.topFourRate <= 1);
@@ -106,7 +116,6 @@ export function guideSystems(section: Section, batch: GuideFamilyBatch, edition:
   }
   for (const board of teams) assign(board);
 
-  const validBatch = currentRecommendationEvidence(batch, edition, patch, reviewedRollingPatch);
   return rankGuideSystems(groups.map(({ anchor, boards, row }) => {
     const preferred = [rerollEntryTeamId(section, anchor.id), rerollEntryTeamId(section, primary.id),
       row?.landingTeamId, primary.id, anchor.id];

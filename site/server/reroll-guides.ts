@@ -102,12 +102,13 @@ function editBoard(team: Team, edit: BoardEdit, data: Season) {
 
 // Keep these site-authored boards out of the synchronized document and stored snapshots.
 export function includeRerollBoards(snapshot: Publication, current: Season): Publication {
-  if (editionScope(current.id) !== "s19-pbe") return applyBoardOverrides(applyPublishedBoardLayouts(snapshot, applyPublishedBoardEdits(snapshot, snapshot)));
+  const scope = editionScope(current.id);
+  if (scope !== "s19-pbe" && scope !== "s19-live") return applyBoardOverrides(applyPublishedBoardLayouts(snapshot, applyPublishedBoardEdits(snapshot, snapshot)));
   const sections = snapshot.sections.map(section => {
     const guide = guides.get(section.id);
     const base = section.gameData ?? snapshot.season;
     const originals = sectionTeams(section);
-    if (!guide || editionScope(base.id) !== "s19-pbe" || !originals.length) return section;
+    if (!guide || editionScope(base.id) !== scope || !originals.length) return section;
     const teams = new Map(originals.map(team => [team.id, team]));
     const advice: Record<string, string> = {};
     const added: string[] = [];

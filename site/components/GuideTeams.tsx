@@ -8,8 +8,8 @@ import { GuideEquipmentConditions } from "./GuideEquipmentConditions";
 import { GuideEditorLink } from "./GuideEditorLink";
 import { GuideBoardPositionEditor } from "./GuideBoardPositionEditor";
 import { GuidePoster } from "./GuidePoster";
-import { guideBoardKind, teamPlacement } from "./GuidePlacement";
-import { GuideMatchStats, type MatchStatsView } from "./GuideMatchStats";
+import { guideBoardKind, guideStatsLaunch, teamPlacement } from "./GuidePlacement";
+import { GuideMatchStats, guideMatchEvidence, type MatchStatsView } from "./GuideMatchStats";
 import { ItemIcon } from "./ItemIcon";
 import { GuideBoardZoom } from "./GuideBoardZoom";
 import { UnitDetails } from "./UnitBrowser";
@@ -31,11 +31,12 @@ import { boardStages, readTeamStage, stageLabels } from "@/domain/team-stages";
 import { traitCounts, traitGroup, usedPopulation } from "@/domain/team";
 import { displayTraitNames } from "@/domain/trait-names.mjs";
 import { heroAugmentForGuide, heroAugmentCategory, omitRepeatedHeroEntry } from "@/domain/hero-augments";
-import familyStats from "@/data/guide-family-stats.json";
-import { guideFamilyRows } from "@/domain/guide-family-stats";
+import familyData from "@/data/guide-family-stats.json";
+import { guideFamilyRows, recommendationTier, type GuideFamilyBatch } from "@/domain/guide-family-stats";
+import currentPatch from "@/data/current-patch.json";
 import type { Section } from "@/domain/document";
 import { boardRosterChange, familyVariants, groupGuides, type PosterVariant } from "@/domain/guide-families";
-import { guideHeaderCoreSample, guidePromotionRows, guideSystemDisplayBoards, guideSystemPhases, guideSystemSample, systemMeanTone, type GuideSystem } from "@/domain/guide-variant-strip";
+import { currentLaunchGuideFamily, guideHeaderCoreSample, guidePromotionRows, guideSystemDisplayBoards, guideSystemPhases, guideSystemSample, systemMeanTone, type GuideSystem } from "@/domain/guide-variant-strip";
 import type { BoardStage, Season, Team } from "@/domain/types";
 import { season } from "@/data";
 import { sameEdition } from "@/domain/version-updates";
@@ -45,6 +46,7 @@ export type GuidePassage = { source: string; text: string; brief: boolean; block
 export type GuidePatchAdvice = { teamId: string; note: string; label: string; href: string };
 
 const percent = new Intl.NumberFormat("zh-CN", { style: "percent", maximumFractionDigits: 1 });
+const familyStats = familyData as GuideFamilyBatch;
 const sampleScopes = { fixed: "固定终盘", core: "核心样本", lineup: "名单共现", augment: "强化样本" };
 
 export function GuideTeams({ section, data, initialTeam, defaultTeam, initialStage, initialFlex, publicationId, returnTo, renderHeader, renderNotes, variants, systems, openPoster, initialPosterShare, patchAdvice }: {
@@ -143,6 +145,7 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
     return () => window.removeEventListener("keydown", dismissOnEscape);
   }, [selectedPiece, closePiece]);
   if (!team) return null;
+  const launchStats = guideStatsLaunch(data.id);
   const currentSystem = systems?.find(system => system.sectionId === section.id && system.boardIds.includes(team.id));
   const systemBoards = currentSystem ? teams.filter(board => currentSystem.boardIds.includes(board.id)) : teams;
   const systemEntry = currentSystem && systemBoards.find(board => board.id === currentSystem.teamId);
@@ -208,7 +211,10 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
   const familyRows = systems ? systems.flatMap(system => {
     const anchor = system.sectionId === section.id && teams.find(board => board.id === system.teamId);
     return anchor && system.stat ? [{ stat: system.stat, team: anchor, boards: teams.filter(board => system.boardIds.includes(board.id)) }] : [];
-  }) : guideFamilyRows(familyStats, data.id, section.id, teams).filter(({ stat }) => Boolean(stat.heroAugment) === heroGuide);
+  }) : !launchStats || currentLaunchGuideFamily(familyStats, data.id, currentPatch)
+    ? guideFamilyRows(familyStats, data.id, section.id, teams).filter(({ stat }) =>
+      Boolean(stat.heroAugment) === heroGuide && (!launchStats || recommendationTier(stat) !== "review" && stat.games >= placementBatch.minGames))
+    : [];
   const matchingFamily = familyRows.filter(row => row.boards.some(board => board.id === team.id));
   const overall = matchingFamily.length === 1 ? matchingFamily[0].stat : undefined;
   const showMatchStats = mainBoardActive && !showFlex;
@@ -485,7 +491,7 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
             <strong>{system.title}</strong>{current && <small className="guide-variant-current">当前</small>}
             {change && <small className="guide-variant-change" title={change}>{swap?.describe(3) || change}</small>}
           </span>
-          {optionStats(sample, undefined, source)}
+          {(!launchStats || system.stat) && optionStats(sample, undefined, source)}
         </>;
         return <li key={system.sectionId + ":" + system.teamId}>{board
           ? <button type="button" className="guide-variant-option" aria-pressed={current} onClick={() => {
@@ -502,9 +508,10 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
   }
   function renderPromotionComparison() {
     if (!currentSystem) return null;
-    const rows = guidePromotionRows(displayedSystemBoards, board => teamPlacement(board, section, "fixed") ??
+    const allRows = guidePromotionRows(displayedSystemBoards, board => teamPlacement(board, section, "fixed") ??
       (heroGuide ? teamPlacement(board, section, "augment") : undefined), placementBatch);
-    if (rows.length < 2 || !rows.some(row => row.mean !== undefined)) return null;
+    if (allRows.length < 2 || !allRows.some(row => row.mean !== undefined)) return null;
+    const rows = launchStats ? allRows.filter(row => row.mean !== undefined) : allRows;
     return <section className="guide-promotion-comparison" aria-label="上人口与补卡对照">
       <h3>上人口与补卡对照</h3>
       <p>同套棋盘停级和升人口后的结算名次，仅用于比较补卡。</p>
@@ -575,9 +582,13 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
       ))}</dl>
     </details>}
   </details>;
-  const matchStats = showMatchStats && <GuideMatchStats key={team.id} id={sampleId} team={team} teams={displayedSystemBoards} section={section}
-    stage={inStage} edition={data.id} augmentName={augment?.name}
-    heroGuide={heroGuide} familyRows={familyRows} view={sampleView} onSelectView={setSampleView} onPickTeam={selectSampleTeam} />;
+  const matchEvidence = showMatchStats ? guideMatchEvidence({
+    team, teams: displayedSystemBoards, section, edition: data.id, augmentName: augment?.name, heroGuide, familyRows,
+  }) : undefined;
+  const matchStats = matchEvidence && (!launchStats || matchEvidence.populatedViews.length > 0) &&
+    <GuideMatchStats key={team.id} id={sampleId} team={team} teams={displayedSystemBoards} section={section}
+      stage={inStage} edition={data.id} heroGuide={heroGuide} evidence={matchEvidence}
+      view={sampleView} onSelectView={setSampleView} onPickTeam={selectSampleTeam} />;
   const conditions = <>
     {equipmentConditions && <GuideEquipmentConditions conditions={equipmentConditions} guideHref={guideHref} />}
     {referenceConditions && <GuideEquipmentConditions conditions={referenceConditions} guideHref={guideHref}
@@ -595,7 +606,7 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
       </p>}
       {conditions}
     </section>;
-  const stats = (showMatchStats || stageComparison) && <section className="guide-overview-card" aria-label="对局表现">
+  const stats = (overview || matchStats || stageComparison) && <section className="guide-overview-card" aria-label="对局表现">
     {overview && <>
       <div className="guide-overview-head">
         <h3>对局表现快览</h3>
@@ -611,8 +622,8 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
         {placement && overview.games < placementBatch.minGames && " · 少量样本"}
       </p>
     </>}
-    {inStage && showMatchStats && !overview && <p className="guide-overview-source">当前阶段暂无快览数据。</p>}
-    {showMatchStats && (!inStage || overview ? <details className="guide-match-details" ref={matchDetails}>
+    {!launchStats && inStage && showMatchStats && !overview && <p className="guide-overview-source">当前阶段暂无快览数据。</p>}
+    {matchStats && (!inStage || overview ? <details className="guide-match-details" ref={matchDetails}>
       <summary>对局数据</summary>{matchStats}
     </details> : matchStats)}
     {stageComparison}

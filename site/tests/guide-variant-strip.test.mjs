@@ -185,6 +185,29 @@ test("only current reviewed stats with proper percentages can rank a system", ()
   }
 });
 
+test("live launch displays qualified ranked evidence as it arrives and preserves authored boards", () => {
+  const section = publication.sections.find(entry => entry.id === oceanGraves);
+  const edition = "s19-live-19.1.1.7100001";
+  const live = { seasonId: "s19-live", label: "19.1", build: "7100001",
+    effectiveAt: "2026-12-02T15:00:00Z", launchTransition: true };
+  const current = {
+    ...family, seasonId: edition, queue: "1100", patch: "19.1", build: live.build,
+    updatedAt: "2026-12-02T17:00:00Z", rows: [family.rows[0], { ...family.rows[1], games: 99 }],
+  };
+  const readSystems = batch => guideSystems(section, batch, edition, live, placement.minGames);
+  const empty = readSystems({ ...current, rows: [] });
+  const ready = readSystems(current);
+  assert.equal(ready.find(system => system.teamId === id("0075"))?.stat?.mean, 4.15);
+  assert.equal(ready.find(system => system.teamId === id("1261"))?.stat, undefined);
+  for (const batch of [
+    { ...current, queue: "PBE" },
+    { ...current, build: "7100000" },
+    { ...current, updatedAt: "2026-12-02T14:59:00Z" },
+    { ...current, spansBuilds: true },
+  ]) assert.deepEqual(readSystems(batch), empty);
+  assert.deepEqual(new Set(empty.flatMap(system => system.boardIds)), new Set(sectionTeams(section).map(team => team.id)));
+});
+
 test("a count-only cluster cannot claim another board or supply its preferred landing", () => {
   const small = row(oceanGraves, "0119", "小样本", 1.5, {
     games: 12, landingTeamId: id("0030"), sharedTeamIds: [id("0030"), id("0075")],

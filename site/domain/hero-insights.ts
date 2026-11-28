@@ -2,7 +2,7 @@ import type { Item, Unit } from "./types";
 
 export type HeroResult = { games: number; mean: number; top4Rate: number; winRate: number };
 export type HeroItemSample = { itemId: string; games: number; mean?: number; rate?: number; placementDelta?: number };
-export type HeroItemSource = { source: string; version: string; window: string; date: string; minGames: number };
+export type HeroItemSource = { source: string; version: string; window: string; date?: string | null; minGames: number };
 
 export function rankHeroes(
   units: Pick<Unit, "id" | "cost">[], results: Record<string, HeroResult>, minGames: number,

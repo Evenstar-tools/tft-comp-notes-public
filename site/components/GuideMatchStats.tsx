@@ -1,16 +1,19 @@
 "use client";
 
+import currentPatch from "@/data/current-patch.json";
 import familyData from "@/data/guide-family-stats.json";
+import placements from "@/data/guide-placement.json";
 import type { Section } from "@/domain/document";
-import { guideFamilyRows, type GuideFamilyBatch, type GuideFamilySmallSample } from "@/domain/guide-family-stats";
+import { guideFamilyRows, recommendationTier, type GuideFamilyBatch, type GuideFamilySmallSample } from "@/domain/guide-family-stats";
 import { guideBoardName } from "@/domain/guide-reading";
+import { currentLaunchGuideFamily } from "@/domain/guide-variant-strip";
 import { displayGuideName } from "@/domain/trait-names.mjs";
 import type { Team } from "@/domain/types";
 import { fixedBoardPlacementDetail, type PlacementRating } from "@/domain/guide-placement";
 import { carryEvidence, GuideCarryStats } from "./GuideCarryStats";
-import { GuideDistribution } from "./GuideDistribution";
-import { formationEvidence, GuideFormationFamilyReference, GuideFormationStats } from "./GuideFormationStats";
-import { PlacementBadge, PlacementMethod, PlacementRates, rankedOceanBoards, teamPlacement } from "./GuidePlacement";
+import { GuideDistribution, guideDistributionSamples } from "./GuideDistribution";
+import { currentFormationFamilyReference, formationEvidence, GuideFormationFamilyReference, GuideFormationStats } from "./GuideFormationStats";
+import { guideStatsLaunch, PlacementBadge, PlacementMethod, PlacementRates, rankedOceanBoards, teamPlacement } from "./GuidePlacement";
 
 const family = familyData as GuideFamilyBatch;
 const views = [["family", "体系战绩"], ["board", "固定终盘"], ["carry", "核心与装备"]] as const;
@@ -55,35 +58,58 @@ function PlacementSummary({ rating, stage = false }: { rating: PlacementRating; 
   </div>;
 }
 
-export function GuideMatchStats({ id, stage, team, teams, section, edition, augmentName, heroGuide, familyRows, view, onSelectView, onPickTeam }: {
-  id: string; stage: boolean; team: Team; teams: Team[];
-  section: Section; edition: string; augmentName?: string; heroGuide: boolean; view?: MatchStatsView;
+type MatchEvidenceInput = {
+  team: Team; teams: Team[]; section: Section; edition: string; augmentName?: string; heroGuide: boolean;
   familyRows: ReturnType<typeof guideFamilyRows>;
-  onSelectView: (view: MatchStatsView) => void;
-  onPickTeam: (team: Team, view: MatchStatsView) => void;
-}) {
-  const rareRows = family.seasonId === edition
-    ? family.smallSamples?.filter(stat => stat.sectionId === section.id && stat.games > 0) ?? [] : [];
-  const viewLabel = (value: MatchStatsView) => value === "board" && heroGuide ? "强化样本" : views.find(([key]) => key === value)?.[1];
+};
+
+export function guideMatchEvidence({ team, teams, section, edition, augmentName, heroGuide, familyRows }: MatchEvidenceInput) {
+  const launch = guideStatsLaunch(edition);
+  const matchingFamily = !launch || currentLaunchGuideFamily(family, edition, currentPatch);
+  const rareRows = family.seasonId === edition && matchingFamily
+    ? family.smallSamples?.filter(stat => stat.sectionId === section.id &&
+      (launch ? recommendationTier(stat) !== "review" && stat.games >= placements.minGames : stat.games > 0)) ?? [] : [];
   function evidenceFor(board: Team) {
     const rating = teamPlacement(board, section, heroGuide ? "augment" : "fixed");
     const related = heroGuide ? [] : [teamPlacement(board, section, "lineup"), teamPlacement(board, section, "core")]
       .filter((sample): sample is PlacementRating => !!sample?.games);
     const carry = carryEvidence(edition, section.id, board, augmentName);
-    const rows = familyRows.filter(row => row.boards.some(entry => entry.id === board.id));
+    const rows = matchingFamily ? familyRows.filter(row => row.boards.some(entry => entry.id === board.id)) : [];
     const rare = rareRows.filter(stat => (stat.teamId ?? teams[0]?.id) === board.id);
     const formation = !heroGuide ? formationEvidence(board, edition) : undefined;
-    const reference = !rows.length && !rare.length ? formation?.board.familyReference : undefined;
+    const candidateReference = !rows.length && !rare.length ? formation?.board.familyReference : undefined;
+    const reference = launch ? currentFormationFamilyReference(candidateReference) : candidateReference;
+    function distributionGroups(view: "board" | "carry") {
+      if (!launch) return [];
+      return guideDistributionSamples({ team: board, sectionId: section.id, edition, heroGuide, view }).options
+        .map(option => ({ games: option.counts.reduce((sum, count) => sum + count, 0) }));
+    }
+    const formationGroups = !formation ? [] : launch ? (formation.comparisonGames ?? []).map(games => ({ games }))
+      : [{ games: formation.board.sample.placementCounts.reduce((n, count) => n + count, 0) }];
+    const carryGroups = [...related, ...carry.rows, ...carry.builds];
     const groups = {
-      board: rating?.games ? [rating] : formation ? [{ games: formation.board.sample.placementCounts.reduce((n, count) => n + count, 0) }] : [],
-      carry: [...related, ...carry.rows, ...carry.builds],
+      board: rating?.games ? [rating] : formationGroups.length ? formationGroups : distributionGroups("board"),
+      carry: carryGroups.length ? carryGroups : distributionGroups("carry"),
       family: reference ? [{ games: reference.placementCounts.reduce((n, count) => n + count, 0) }]
         : [...rows.map(row => row.stat), ...rare],
     };
     return { rating, related, carry, rows, rare, groups, formation, reference };
   }
-  const { rating, related, carry, rows, rare, groups, formation, reference } = evidenceFor(team);
-  const populatedViews = views.filter(([value]) => groups[value].some(sample => sample.games > 0));
+  const selected = evidenceFor(team);
+  const populatedViews = views.filter(([value]) => selected.groups[value].some(sample => sample.games > 0));
+  return { evidenceFor, selected, populatedViews, launch };
+}
+
+export function GuideMatchStats({ id, stage, team, teams, section, edition, heroGuide, evidence, view, onSelectView, onPickTeam }: {
+  id: string; stage: boolean; team: Team; teams: Team[];
+  section: Section; edition: string; heroGuide: boolean; view?: MatchStatsView;
+  evidence: ReturnType<typeof guideMatchEvidence>;
+  onSelectView: (view: MatchStatsView) => void;
+  onPickTeam: (team: Team, view: MatchStatsView) => void;
+}) {
+  const { evidenceFor, selected: { rating, related, carry, rows, rare, groups, formation, reference }, populatedViews, launch } = evidence;
+  if (launch && !populatedViews.length) return null;
+  const viewLabel = (value: MatchStatsView) => value === "board" && heroGuide ? "强化样本" : views.find(([key]) => key === value)?.[1];
   const visibleViews = populatedViews.length > 0 ? populatedViews : views;
   const preferredView = view ?? (["family", "board", "carry"] as const)
     .find(type => groups[type].some(sample => sample.games > 0)) ?? "board";
@@ -141,14 +167,14 @@ export function GuideMatchStats({ id, stage, team, teams, section, edition, augm
     <div className="guide-stat-body">
       {activeView === "board" && <>
         {rating?.games ? <PlacementSummary rating={rating} stage={stage} />
-          : (!formation || formation.period.historical) && <p className="muted">{heroGuide ? "本盘暂无强化样本。"
+          : !launch && (!formation || formation.period.historical) && <p className="muted">{heroGuide ? "本盘暂无强化样本。"
             : formation ? "本盘暂无当前补丁的固定终盘样本。" : "本盘暂无固定名单样本。"}</p>}
         {formation && <GuideFormationStats evidence={formation} />}
         <GuideDistribution team={team} sectionId={section.id} ratings={rating ? [rating] : []} edition={edition} heroGuide={heroGuide} view="board" />
       </>}
       {activeView === "carry" && <>
         {related.map(sample => <PlacementSummary key={sample.url} rating={sample} />)}
-        {(carry.rows.length > 0 || carry.builds.length > 0 || !related.length) && <GuideCarryStats {...carry} />}
+        {(carry.rows.length > 0 || carry.builds.length > 0 || !launch && !related.length) && <GuideCarryStats {...carry} />}
         <GuideDistribution team={team} sectionId={section.id} ratings={related} edition={edition} heroGuide={heroGuide} view="carry" />
       </>}
       {activeView === "family" && (reference ? <GuideFormationFamilyReference sample={reference} /> : <FamilyStats rows={rows} rare={rare} />)}

@@ -153,21 +153,29 @@ function SelectionTable({ snapshot, current, filters, change, limit, picker }: {
   </section>;
 }
 
-export function AugmentStats({ snapshots, currentPatch, initial }: { snapshots: SelectionSnapshot[]; currentPatch: string; initial: AugmentParams }) {
+export function AugmentStats({ snapshots, currentPatch, launchPatch, initial }: { snapshots: SelectionSnapshot[]; currentPatch: string; launchPatch?: string; initial: AugmentParams }) {
+  const defaultScope = launchPatch === undefined ? "19-pbe" : "19-live";
   const requestedSeason = initial.season || "19";
-  const requestedRealm = initial.realm || (requestedSeason === "19" ? defaultRealm : "live");
+  const requestedRealm = initial.realm || (requestedSeason === "19" && launchPatch === undefined ? defaultRealm : "live");
   const requestedScope = requestedSeason + "-" + requestedRealm;
-  const scopes = new Map<string,string>([["19-pbe", scopeLabel(19, "pbe")]]);
-  for (const snapshot of snapshots) scopes.set(snapshot.season + "-" + snapshot.realm,scopeLabel(snapshot.season,snapshot.realm));
-  const scope = scopes.has(requestedScope) ? requestedScope : "19-pbe";
+  const scopes = new Map<string,string>([[defaultScope, scopeLabel(19, launchPatch === undefined ? defaultRealm : "live")]]);
+  for (const snapshot of snapshots) {
+    const key = snapshot.season + "-" + snapshot.realm;
+    if (launchPatch === undefined || key === requestedScope) scopes.set(key, scopeLabel(snapshot.season,snapshot.realm));
+  }
+  const scope = scopes.has(requestedScope) ? requestedScope : defaultScope;
   const [seasonString, realm] = scope.split("-");
   const season = Number(seasonString);
   const versions = snapshots.filter(snapshot => snapshot.season === season && snapshot.realm === realm).sort((a,b) => b.date.localeCompare(a.date));
-  const currentRealm = season === 19 && realm === defaultRealm;
-  const patches = new Set([...(currentRealm ? [currentPatch] : []), ...versions.map(snapshot => snapshot.patch || archivePatch)]);
-  const preferred = currentRealm ? currentPatch : versions[0]?.patch || archivePatch;
+  const currentRealm = scope === defaultScope;
+  const activePatch = launchPatch ?? currentPatch;
+  const patches = new Set([...(currentRealm ? [activePatch] : []), ...versions.map(snapshot => snapshot.patch || archivePatch)]);
+  const preferred = currentRealm ? activePatch : versions[0]?.patch || archivePatch;
   const patch = requestedScope === scope && initial.patch && patches.has(initial.patch) ? initial.patch : preferred;
-  const snapshot = versions.find(entry => (entry.patch || archivePatch) === patch);
+  const picked = versions.find(entry => (entry.patch || archivePatch) === patch);
+  const current = currentRealm && patch === activePatch;
+  const snapshot = picked && (launchPatch === undefined || !current ? picked :
+    { ...picked, rows: picked.rows.filter(row => (row.games ?? 0) >= 100) });
   const view = initial.view === "full" ? "full" : "stats";
   const {filters, change, limit} = useAugmentFilters({...initial,view,season:seasonString,realm,patch:patch === archivePatch ? undefined : patch});
   const urlFor = (nextSeason:string, nextRealm:string, nextPatch?:string) =>
@@ -183,7 +191,7 @@ export function AugmentStats({ snapshots, currentPatch, initial }: { snapshots: 
       {patches.size > 1 && <label>补丁<select aria-label="战绩补丁" value={patch} onChange={event => location.assign(urlFor(seasonString,realm,event.target.value))}>
         {Array.from(patches,option => <option key={option} value={option}>{option === archivePatch ? "补丁未标注" : option}</option>)}</select></label>}
     </div>;
-  return snapshot ? <SelectionTable key={scope + patch} snapshot={snapshot} current={currentRealm && patch === currentPatch} filters={filters} change={change} limit={limit} picker={picker}/> :
+  return snapshot && (launchPatch === undefined || !current || snapshot.rows.length) ? <SelectionTable key={scope + patch} snapshot={snapshot} current={current} filters={filters} change={change} limit={limit} picker={picker}/> :
     <div className="aug-stats-context aug-stats-pending">{picker}
       <p className="aug-unavailable" role="status">{patch !== archivePatch && patch ? `${patch} 暂无选取战绩` : "暂无选取战绩"}</p>
     </div>;

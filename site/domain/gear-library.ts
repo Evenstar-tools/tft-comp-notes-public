@@ -1,6 +1,6 @@
 import { itemMap, season, traitMap, unitMap } from "@/data";
 import { itemReference } from "@/data/item-reference";
-import emblemSnapshot from "@/data/emblem-stats.json";
+import rawEmblemSnapshot from "@/data/emblem-stats.json";
 import { emblemItemId } from "./links";
 import { gearWearerMatches, type GearOrder } from "./gear-wearer";
 import { emblemSearchNames, makeItemSearchTerms } from "./item-search";
@@ -38,6 +38,13 @@ export const itemsByGroup: Record<ItemGroup, Item[]> = {
   special: season.items.filter(item => item.category === "artifact" || item.category === "support"),
   radiant: season.items.filter(item => item.category === "radiant"),
 };
+export type EmblemSample = { games: number; mean: number | null; winRate: number | null };
+type EmblemHolder = { unitId: string; games: number; mean: number; winRate: number; delta: number | null };
+export type EmblemStat = EmblemSample & { sourceId: string; holders: EmblemHolder[] };
+export const emblemSnapshot: {
+  set: string; mode: string; patch: string; updatedAt?: string | null; source: string; days: number; minGames: number;
+  emblems: Record<string, EmblemStat>;
+} = rawEmblemSnapshot;
 export const emblemEntries = Object.entries(emblemSnapshot.emblems)
   .filter(([id]) => itemMap.has(emblemItemId(id)));
 

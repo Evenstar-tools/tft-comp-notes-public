@@ -25,11 +25,12 @@ export type RecommendationCard = {
   hit?: string;
 };
 
-export function PatchRecommendationList({ stats, cards, home, previousBuild }: {
+export function PatchRecommendationList({ stats, cards, home, previousBuild, quietUnrated }: {
   stats?: Pick<GuideFamilyBatch, "patch" | "queue" | "days" | "updatedAt" | "spansBuilds">;
   cards: RecommendationCard[];
   home: string;
   previousBuild?: boolean;
+  quietUnrated?: boolean;
 }) {
   if (!cards.length) return null;
   const groups = recommendationGroups.map(group => ({
@@ -37,7 +38,7 @@ export function PatchRecommendationList({ stats, cards, home, previousBuild }: {
   })).filter(group => group.entries.length > 0);
   const showJumps = groups.length > 1;
   const showMeta = showJumps || Boolean(previousBuild && stats);
-  const updatedSample = stats && <p className="home-patch-sample">
+  const updatedSample = stats?.updatedAt && <p className="home-patch-sample">
     {previousBuild ? <>上一版参考 · {stats.queue} {stats.patch} · </> : "数据更新 "}
     <time dateTime={stats.updatedAt} title="北京时间">{beijingDateTime.format(new Date(stats.updatedAt))}</time>
     {stats.spansBuilds && " · 采样窗口跨热补"}
@@ -65,11 +66,11 @@ export function PatchRecommendationList({ stats, cards, home, previousBuild }: {
             const href = guideLink(rating.sectionId, entryTeamId ?? team.id, back);
             const note = opening || (!strategy ? badgeLabel : "");
             const hasAdvice = Boolean(timing || upgrade);
-            const ratingId = id + (rating.mean === undefined ? "-manual" : "-mean");
+            const ratingId = rating.mean === undefined && quietUnrated ? undefined : id + (rating.mean === undefined ? "-manual" : "-mean");
             let placement;
             if (rating.mean === undefined) {
               const label = manualBadge?.trim() || "站主推荐";
-              placement = <span id={ratingId} className="home-patch-manual-badge" role="group" title={manualReason}
+              placement = !quietUnrated && <span id={ratingId} className="home-patch-manual-badge" role="group" title={manualReason}
                 aria-label={manualReason ? label + " · " + manualReason : label}>{label}</span>;
             } else {
               const tone = rating.mean < 4.5 ? "strong" : rating.mean > 4.5 ? "weak" : "middle";

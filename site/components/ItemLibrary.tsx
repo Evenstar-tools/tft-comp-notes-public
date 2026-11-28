@@ -2,18 +2,19 @@
 import { Fragment, useEffect, useId, useLayoutEffect, useRef, useState, type MouseEvent } from "react";
 import Image from "next/image";
 import { itemMap, season, unitMap, unitLabel } from "@/data";
-import emblemSnapshot from "@/data/emblem-stats.json";
+import currentPatch from "@/data/current-patch.json";
 import { itemReference } from "@/data/item-reference";
 import { itemWearers, type WearerSnapshot } from "@/data/item-wearers";
 import { specialItemWearers } from "@/data/special-item-wearers";
 import { guideLink } from "@/domain/guide-reading";
-import { gearSampleMinimum } from "@/domain/gear-wearer";
-import { compareGearWearerSamples, cookware, emblemMatches, filterEmblems, filterGear, gearFilters, gearGroups, gearHref, gearMatches, gearWearerStats, isCookRecipe, itemName, recipeParts, searchGear, selectableWearers,
+import { currentEmblemSnapshot, currentWearerSnapshot, gearSampleMinimum } from "@/domain/gear-wearer";
+import { compareGearWearerSamples, cookware, emblemMatches, emblemSnapshot, filterEmblems, filterGear, gearFilters, gearGroups, gearHref, gearMatches, gearWearerStats, isCookRecipe, itemName, recipeParts, searchGear, selectableWearers,
   type GearFilters, type GearGroup, type GearOrder, type ItemGroup } from "@/domain/gear-library";
 import { emblemItemId, type itemGuideOrigin } from "@/domain/links";
 import { itemAliases } from "@/domain/roster-import";
 import { withStatPeriod } from "@/domain/stat-periods";
 import type { Item } from "@/domain/types";
+import { isLiveLaunchTransition } from "@/domain/version-updates";
 import { ArrowUpRight, ChevronDown } from "lucide-react";
 import { ConditionalGear } from "./ConditionalGear";
 import { ItemIcon } from "./ItemIcon";
@@ -46,7 +47,19 @@ const number = new Intl.NumberFormat("zh-CN");
 const percent = new Intl.NumberFormat("zh-CN", { style: "percent", maximumFractionDigits: 1 });
 const carryRateLabel = (rate: number) => rate > 0 && rate < 0.0005 ? "<0.1%" : percent.format(rate);
 const isGlossary = (line: string) => /^(?:灼烧|重伤|技能暴击|魔抗击碎|护甲击碎)[：:]/.test(line);
-const currentEquipment: EquipmentStats = { standard: itemWearers, special: specialItemWearers };
+const duringLaunch = isLiveLaunchTransition(currentPatch);
+
+function displayCurrentWearers(snapshot: WearerSnapshot): WearerSnapshot {
+  if (!duringLaunch) return snapshot;
+  if (!currentWearerSnapshot(snapshot, currentPatch)) return { ...snapshot, items: {} };
+  return { ...snapshot, items: Object.fromEntries(Object.entries(snapshot.items).map(([id, sample]) => [
+    id, { ...sample, rows: sample.rows.filter(row => row.games >= snapshot.minGames) },
+  ])) };
+}
+
+const currentEquipment: EquipmentStats = {
+  standard: displayCurrentWearers(itemWearers), special: displayCurrentWearers(specialItemWearers),
+};
 
 function itemSampleMinimum(item: Item, snapshot: WearerSnapshot) {
   return gearSampleMinimum(item.category, /\bPBE\b/i.test(snapshot.version), snapshot.minGames);
@@ -124,11 +137,13 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
     return [{ entry, category, sample: gearWearerStats(row, minGames), rankedMinimum: snapshot.minGames,
       rate: row.games >= minGames ? row.rate : undefined, trait: "" }];
   }) : [];
-  if (reverse && group === "all" && !period) {
+  if (reverse && group === "all" && !period && (!duringLaunch || currentEmblemSnapshot(emblemSnapshot, currentPatch))) {
     for (const [trait, stats] of filterEmblems(query)) {
       const entry = itemMap.get(emblemItemId(trait));
       const holder = stats.holders.find(row => row.unitId === filters.wearer);
-      if (entry && holder) reverseRows.push({ entry, category: "emblems", sample: holder, rankedMinimum: emblemSnapshot.minGames, trait });
+      if (entry && holder && (!duringLaunch || holder.games >= emblemSnapshot.minGames)) {
+        reverseRows.push({ entry, category: "emblems", sample: holder, rankedMinimum: emblemSnapshot.minGames, trait });
+      }
     }
   }
   const hasWins = reverseRows.some(({ sample }) => sample.winRate != null);

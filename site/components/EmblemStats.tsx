@@ -5,13 +5,14 @@ import { Tooltip } from "radix-ui";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { itemMap, unitMap } from "@/data";
 import currentPatch from "@/data/current-patch.json";
-import snapshot from "@/data/emblem-stats.json";
 import { itemReference } from "@/data/item-reference";
-import { compareGearWearerSamples, filterEmblems, gearFilters, gearHref, selectableWearers, type GearFilters, type GearOrder } from "@/domain/gear-library";
-import { gearSampleMinimum } from "@/domain/gear-wearer";
+import { compareGearWearerSamples, emblemMatches, emblemSnapshot as snapshot, filterEmblems, gearFilters, gearHref, selectableWearers,
+  type EmblemSample as Sample, type EmblemStat as Emblem, type GearFilters, type GearOrder } from "@/domain/gear-library";
+import { currentEmblemSnapshot, gearSampleMinimum } from "@/domain/gear-wearer";
 import { guideLink } from "@/domain/guide-reading";
 import { emblemItemId } from "@/domain/links";
 import type { Item } from "@/domain/types";
+import { isLiveLaunchTransition } from "@/domain/version-updates";
 import { ItemIcon } from "./ItemIcon";
 import { EmblemEntryPosition } from "./EmblemEntryPosition";
 import { usePageReturnView } from "./usePageReturnView";
@@ -19,9 +20,6 @@ import { WearerExclusion } from "./WearerExclusion";
 import { GearCategoryEmpty, GearCategoryNav } from "./GearCategoryNav";
 import { GearWearerSearch } from "./GearWearerSearch";
 
-type Sample = { games: number; mean: number | null; winRate: number | null };
-type Holder = { unitId: string; games: number; mean: number; winRate: number; delta: number | null };
-type Emblem = Sample & { sourceId: string; holders: Holder[] };
 type Order = "mean" | "winRate" | "games";
 type HolderOptions = { order: Order; lowCosts: boolean; more: boolean };
 type EmblemView = GearFilters & { holders: HolderOptions };
@@ -29,19 +27,24 @@ type EmblemVisit = { url: string; view: EmblemView; top: number; panels: number[
 export type EmblemGuideUse = { unitId: string; sectionId: string; teamId: string; title: string; board: string };
 const defaultHolders: HolderOptions = { order: "mean", lowCosts: false, more: false };
 
-const data: Record<string, Emblem> = snapshot.emblems;
+const duringLaunch = isLiveLaunchTransition(currentPatch);
+const catalogIds = [...itemMap.values()].flatMap(item => item.category === "emblem" && item.traitId ? [item.traitId] : []);
 const visitKey = "emblemLibraryVisit";
-const openEmblem = (trait: string | null | undefined) => trait && Object.hasOwn(data, trait) ? trait : "";
 
 const number = new Intl.NumberFormat("zh-CN");
 const percent = new Intl.NumberFormat("zh-CN", { style: "percent", minimumFractionDigits: 1, maximumFractionDigits: 1 });
-const time = new Intl.DateTimeFormat("zh-CN", {
+const updatedAt = snapshot.updatedAt ?? "";
+const time = Number.isFinite(Date.parse(updatedAt)) ? new Intl.DateTimeFormat("zh-CN", {
   timeZone: "Asia/Shanghai", month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false,
-}).format(new Date(snapshot.updatedAt));
+}).format(new Date(updatedAt)) : undefined;
 const displayMinimum = gearSampleMinimum("emblem", snapshot.mode === "PBE", snapshot.minGames);
 const currentPatchVersion = currentPatch.metaTftPatch
   ? currentPatch.metaTftPatch.patch + (currentPatch.metaTftPatch.bPatch ?? "") : "";
 const isPreviousPatch = Boolean(currentPatchVersion && snapshot.patch && snapshot.patch !== currentPatchVersion);
+const currentData = !duringLaunch || currentEmblemSnapshot(snapshot, currentPatch);
+const data: Record<string, Emblem | undefined> = currentData ? snapshot.emblems : {};
+const openEmblem = (trait: string | null | undefined) =>
+  trait && (duringLaunch ? catalogIds.includes(trait) : Object.hasOwn(data, trait)) ? trait : "";
 const hasSample = (sample: Sample) => sample.games >= displayMinimum;
 const isSmallSample = (sample: Sample) => hasSample(sample) && sample.games < snapshot.minGames;
 
@@ -125,13 +128,13 @@ function Holders({ traitId, item, entry, highlight, guideHref, options, onOption
 }
 
 function WearerEmblemDetails({ traitId, item, entry, uses, returnHref }: {
-  traitId: string; item: Item; entry: Emblem; uses: EmblemGuideUse[]; returnHref: string;
+  traitId: string; item: Item; entry?: Emblem; uses: EmblemGuideUse[]; returnHref: string;
 }) {
   const hasGuides = uses.length > 0;
   return <div className="emblem-detail" data-attributes-only={!hasGuides || undefined} id={"wearers-" + traitId}>
     <section className="emblem-equipment-summary" aria-label={item.name + "装备属性"}>
       <EmblemAttributes item={item} />
-      {!hasGuides && <div className="emblem-detail-bottom"><EmblemSourceLink entry={entry} /></div>}
+      {!hasGuides && entry && <div className="emblem-detail-bottom"><EmblemSourceLink entry={entry} /></div>}
     </section>
     {hasGuides && <div className="emblem-holder-list">
       <div className="emblem-detail-tools"><h2>配装攻略</h2></div>
@@ -139,7 +142,7 @@ function WearerEmblemDetails({ traitId, item, entry, uses, returnHref }: {
         <a className="text-link" href={guideLink(use.sectionId, use.teamId, returnHref)}>{use.title}</a>
         {use.board && use.title !== use.board && <span>{use.board}</span>}
       </li>)}</ul>
-      <div className="emblem-detail-bottom"><EmblemSourceLink entry={entry} /></div>
+      {entry && <div className="emblem-detail-bottom"><EmblemSourceLink entry={entry} /></div>}
     </div>}
   </div>;
 }
@@ -187,15 +190,24 @@ export function EmblemStats({ traitId, holderId, initialFilters, guideHref, guid
     if (row?.pushed) rememberVisit(view);
   }, [open, view]);
 
-  const visible = filterEmblems(query).flatMap(([id, entry]) => {
-    const sample = selectedUnit ? entry.holders.find(holder => holder.unitId === wearer) : entry;
-    return sample ? [{ id, entry, sample }] : [];
+  const candidates = duringLaunch
+    ? catalogIds.filter(id => emblemMatches(id, query)).map(id => [id, data[id]] as const)
+    : filterEmblems(query);
+  const visible = candidates.flatMap(([id, entry]) => {
+    const sample = selectedUnit ? entry?.holders.find(holder => holder.unitId === wearer) : entry;
+    const qualified = sample && (!duringLaunch || hasSample(sample)) ? sample : undefined;
+    const hasGuideUse = selectedUnit && guideUses[emblemItemId(id)]?.some(use => use.unitId === wearer);
+    return qualified || duringLaunch && (!selectedUnit || hasGuideUse || id === open)
+      ? [{ id, entry, sample: qualified }] : [];
   }).sort((a, b) => {
+    if (!a.sample || !b.sample) return Number(Boolean(b.sample)) - Number(Boolean(a.sample));
     if (selectedUnit) return compareGearWearerSamples(a.sample, b.sample, order, displayMinimum);
     if (order === "games") return b.sample.games - a.sample.games;
     if (hasSample(a.sample) !== hasSample(b.sample)) return Number(hasSample(b.sample)) - Number(hasSample(a.sample));
     return order === "wins" ? (b.sample.winRate ?? -1) - (a.sample.winRate ?? -1) : (a.sample.mean ?? 9) - (b.sample.mean ?? 9);
   });
+  const hasStats = visible.some(({ sample }) => sample);
+  const showStatsControls = !duringLaunch || hasStats;
 
   function resultHref(next: string, nextFilters: GearFilters) {
     const highlight = next && next === traitId ? holderId : undefined;
@@ -216,28 +228,28 @@ export function EmblemStats({ traitId, holderId, initialFilters, guideHref, guid
     <header className="page-heading emblem-heading">
       <h1>装备图鉴</h1>
       <div className="emblem-catalog-tabs"><GearCategoryNav current="emblems" filters={filters} /></div>
-      <details className="emblem-method">
+      {time && (!duringLaunch || hasStats) && <details className="emblem-method">
         <summary>
           <span>数据批次 {snapshot.mode} {snapshot.patch}</span>
           {isPreviousPatch && <span className="emblem-stale-badge">上一版</span>}
         </summary>
         <div className="emblem-method-panel">
-          <p>{snapshot.set} · 近 {snapshot.days} 天 · <time dateTime={snapshot.updatedAt}>{time}</time>（北京时间）</p>
+          <p>{snapshot.set} · 近 {snapshot.days} 天 · <time dateTime={updatedAt}>{time}</time>（北京时间）</p>
           <p>最佳使用者 ≥ {snapshot.minGames} 场；均名变化 = 携装均名 − 总体均名。</p>
           <a href="https://www.metatft.com/items?set=TFTSet19" target="_blank" rel="noreferrer">MetaTFT 数据</a>
-          <a href="https://www.datatft.com/explorerForPBE" target="_blank" rel="noreferrer">DataTFT 检索</a>
+          {!duringLaunch && <a href="https://www.datatft.com/explorerForPBE" target="_blank" rel="noreferrer">DataTFT 检索</a>}
         </div>
-      </details>
+      </details>}
     </header>
     <div className="emblem-toolbar">
       <GearWearerSearch filters={filters} onChange={changeFilters} label="搜索羁绊、纹章或英雄" inputRef={searchInput} />
-      <label className="emblem-select"><span className="sr-only">转职排行排序</span><select aria-label="转职排行排序" value={order}
+      {showStatsControls && <label className="emblem-select"><span className="sr-only">转职排行排序</span><select aria-label="转职排行排序" value={order}
         onChange={event => changeFilters({ ...filters, order: event.target.value as GearOrder })}>
         <option value="mean">均名最低</option><option value="wins">登顶率最高</option><option value="games">场数最多</option>
-      </select></label>
-      {!selectedUnit && <WearerExclusion units={selectableWearers} excluded={excluded} onChange={excluded => changeFilters({ ...filters, excluded })} />}
+      </select></label>}
+      {showStatsControls && !selectedUnit && <WearerExclusion units={selectableWearers} excluded={excluded} onChange={excluded => changeFilters({ ...filters, excluded })} />}
     </div>
-    {visible.length > 0 && <div className="emblem-column-head" aria-hidden="true">
+    {hasStats && <div className="emblem-column-head" aria-hidden="true">
       <span>纹章</span><span>均名</span><span>登顶率</span><span>场数</span>
       {!selectedUnit && (visible.some(({ id }) => id !== open)
         ? <span className="emblem-best-heading" title={`满 ${snapshot.minGames} 场，按均名排序`}>最佳使用者<small>均名 · 场数</small></span>
@@ -248,14 +260,16 @@ export function EmblemStats({ traitId, holderId, initialFilters, guideHref, guid
       {visible.map(({ id, entry, sample }) => {
         const item = itemMap.get(emblemItemId(id));
         if (!item) return null;
-        const holders = entry.holders.filter(holder => !excluded.includes(holder.unitId));
+        const holders = entry?.holders.filter(holder => !excluded.includes(holder.unitId)) ?? [];
         const expanded = open === id;
-        const smallSample = isSmallSample(sample);
+        const smallSample = sample && isSmallSample(sample);
+        const uses = (guideUses[item.id] ?? []).filter(use => !selectedUnit || use.unitId === wearer);
         const best = expanded || selectedUnit ? [] : holders.filter(holder => holder.games >= snapshot.minGames && unitMap.has(holder.unitId))
           .sort((a, b) => a.mean - b.mean || b.games - a.games).slice(0, 3);
         return <li key={id} className="emblem-result">
           <Tooltip.Root>
-            <button type="button" className="emblem-row" data-trait={id} data-small-sample={smallSample || undefined} aria-expanded={expanded}
+            <button type="button" className="emblem-row" data-trait={id} data-small-sample={smallSample || undefined}
+              data-attributes-only={!sample || undefined} aria-expanded={expanded}
               aria-controls={expanded ? "wearers-" + id : undefined} onClick={event => {
                 const element = event.currentTarget;
                 clickedRow.current = { element, top: element.getBoundingClientRect().top, pushed: !!selectedUnit };
@@ -275,7 +289,7 @@ export function EmblemStats({ traitId, holderId, initialFilters, guideHref, guid
                 </Tooltip.Trigger>}
                 <span>{item.name}</span>
               </span>
-              <span className="emblem-metric"><Mean sample={sample} /><small>均名</small></span>
+              {sample && <><span className="emblem-metric"><Mean sample={sample} /><small>均名</small></span>
               <span className="emblem-metric"><Win sample={sample} /><small>登顶率</small></span>
               <span className="emblem-count">{number.format(sample.games)}<small className={smallSample ? "sr-only" : undefined}>场数</small>
                 {smallSample && <span className="emblem-small-sample">少样本</span>}
@@ -285,7 +299,7 @@ export function EmblemStats({ traitId, holderId, initialFilters, guideHref, guid
                 {best.length ? best.map(holder => <span key={holder.unitId} className="emblem-best-entry">
                   <Wearer id={holder.unitId} /><span className="emblem-best-mean"><b>{holder.mean.toFixed(2)}</b><small>{number.format(holder.games)} 场</small></span>
                 </span>) : <span className="emblem-best-empty" title={`暂无满 ${snapshot.minGames} 场的使用者`} aria-label={`暂无满 ${snapshot.minGames} 场的使用者`}>—</span>}
-              </span>}
+              </span>}</>}
               <ChevronDown size={15} className="emblem-chevron" aria-hidden />
             </button>
             {!expanded && <Tooltip.Portal>
@@ -295,9 +309,8 @@ export function EmblemStats({ traitId, holderId, initialFilters, guideHref, guid
               </Tooltip.Content>
             </Tooltip.Portal>}
           </Tooltip.Root>
-          {expanded && (selectedUnit
-            ? <WearerEmblemDetails traitId={id} item={item} entry={entry} returnHref={resultHref(id, filters)}
-                uses={(guideUses[item.id] ?? []).filter(use => use.unitId === wearer)} />
+          {expanded && (selectedUnit || !entry || !sample
+            ? <WearerEmblemDetails traitId={id} item={item} entry={sample ? entry : undefined} returnHref={resultHref(id, filters)} uses={uses} />
             : <Holders traitId={id} item={item} entry={{ ...entry, holders }} highlight={id === traitId ? holderId : undefined} guideHref={guideHref}
                 options={view.holders} onOptions={options => setView({ ...view, holders: options })} />)}
         </li>;

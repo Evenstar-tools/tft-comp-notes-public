@@ -30,7 +30,7 @@ export interface GuideFamilyBatch {
   queue: string;
   patch: string;
   days: number;
-  updatedAt: string;
+  updatedAt?: string | null;
   totalFinishes?: number;
   build?: string;
   spansBuilds?: boolean;
@@ -81,7 +81,7 @@ export function currentFamilyBatch(
   batch: FamilyBatchMetadata, seasonId: string, patch?: FamilyPatch,
 ): boolean {
   if (!patch || !matchesFamilyScope(batch, seasonId, patch) ||
-      !(Date.parse(batch.updatedAt) >= Date.parse(patch.effectiveAt))) return false;
+      !(Date.parse(batch.updatedAt ?? "") >= Date.parse(patch.effectiveAt))) return false;
   // MetaTFT can name the same build differently from the site's Riot patch label.
   const version = /\b(\d+\.\d+)([a-z]?)\b/i;
   const source = batch.patch?.match(version), current = patch.label.match(version);
@@ -97,7 +97,7 @@ export function currentRecommendationEvidence(
   // A reviewed rolling cohort can keep the same source patch across a Riot hotfix.
   if (batch.spansBuilds) return !!patch.build && batch.build === patch.build && batch.patch === reviewedRollingPatch;
   return batch.build ? batch.build === patch.build :
-    Date.parse(batch.updatedAt) - batch.days * day >= Date.parse(patch.effectiveAt);
+    Date.parse(batch.updatedAt ?? "") - batch.days * day >= Date.parse(patch.effectiveAt);
 }
 
 export function previousRecommendationDeadline(
@@ -107,7 +107,7 @@ export function previousRecommendationDeadline(
       (patch.build && batch.build === patch.build)) return;
   const effectiveAt = Date.parse(patch.effectiveAt);
   const expiresAt = effectiveAt + recommendationGrace;
-  if (Date.parse(batch.updatedAt) < effectiveAt && now >= effectiveAt && now < expiresAt) return expiresAt;
+  if (Date.parse(batch.updatedAt ?? "") < effectiveAt && now >= effectiveAt && now < expiresAt) return expiresAt;
 }
 
 export type GuideFamilyMetric = "pickRate" | "mean" | "topFourRate" | "winRate";
@@ -184,12 +184,12 @@ export type RecommendationStats = {
   patch: string;
   build: string;
   hours: number;
-  updatedAt: string;
-  rows: RecommendationStat[];
+  updatedAt?: string | null;
+  rows: (RecommendationStat & Pick<GuideFamilyStat, "topFourRate" | "winRate">)[];
 };
 
 export function canRankRecommendations(stats: RecommendationStats, seasonId: string, patch: { build: string; effectiveAt: string }) {
-  const end = Date.parse(stats.updatedAt);
+  const end = Date.parse(stats.updatedAt ?? "");
   const start = end - stats.hours * 3600000;
   return stats.seasonId === seasonId && stats.build === patch.build &&
     stats.hours > 0 && start >= Date.parse(patch.effectiveAt);
@@ -208,6 +208,7 @@ type HomeRecommendationCandidate = {
   rating: HomeRecommendationRating;
   override?: OwnerRecommendationOverride;
   pinOrder?: number;
+  launchOrder?: number;
 };
 
 function compareHomeRoutes(a: HomeRecommendationCandidate, b: HomeRecommendationCandidate) {
@@ -221,12 +222,13 @@ function compareHomeRoutes(a: HomeRecommendationCandidate, b: HomeRecommendation
   if (aSample && !bSample) return -1;
   if (bSample && !aSample) return 1;
   const sampleDifference = aSample && bSample ? aSample.mean - bSample.mean || bSample.games - aSample.games : 0;
-  return sampleDifference || (a.familyId < b.familyId ? -1 : Number(a.familyId > b.familyId));
+  return sampleDifference || ((a.launchOrder ?? homeMaxVisible) - (b.launchOrder ?? homeMaxVisible)) ||
+    (a.familyId < b.familyId ? -1 : Number(a.familyId > b.familyId));
 }
 
 function homeSelectionPriority(route: HomeRecommendationCandidate) {
   if (route.override === "pin") return 0;
-  return route.override === "include" && !hasHomeRecommendationSample(route.rating) ? 1 : 2;
+  return route.launchOrder !== undefined || (route.override === "include" && !hasHomeRecommendationSample(route.rating)) ? 1 : 2;
 }
 
 export function selectRecommendationRoutes<T extends HomeRecommendationCandidate>(candidates: T[]) {
@@ -237,7 +239,9 @@ export function selectRecommendationRoutes<T extends HomeRecommendationCandidate
 
     const key = `${group}:${rating.sectionId}`;
     const current = bestByGuideGroup.get(key);
-    if (!current || compareHomeRoutes(candidate, current) < 0) bestByGuideGroup.set(key, candidate);
+    const launchPriority = current && (candidate.launchOrder !== undefined || current.launchOrder !== undefined)
+      ? homeSelectionPriority(candidate) - homeSelectionPriority(current) : 0;
+    if (!current || (launchPriority || compareHomeRoutes(candidate, current)) < 0) bestByGuideGroup.set(key, candidate);
   }
 
   const ranked = [...bestByGuideGroup.values()].sort((a, b) =>

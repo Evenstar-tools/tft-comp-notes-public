@@ -2,18 +2,18 @@ import { season, unitMap, traitMap } from "@/data";
 import { augmentArtPath } from "@/data/augment-art";
 import augments from "@/data/augment-catalog.json";
 import currentPatch from "@/data/current-patch.json";
-import emblemSnapshot from "@/data/emblem-stats.json";
-import familyStats from "@/data/guide-family-stats.json";
+import familyData from "@/data/guide-family-stats.json";
 import { itemWearers } from "@/data/item-wearers";
 import { specialItemWearers } from "@/data/special-item-wearers";
-import coreStats from "@/data/patch-recommendation-stats.json";
+import coreData from "@/data/patch-recommendation-stats.json";
 import { boardSearchQuery, type BoardSearchQuery } from "@/domain/board-search-query";
 import type { Publication, Section } from "@/domain/document";
 import { readableSection, sectionTeams } from "@/domain/document-flow";
-import { itemName, itemTerms } from "@/domain/gear-library";
-import { currentWearerSnapshot, gearSampleMinimum } from "@/domain/gear-wearer";
+import { emblemSnapshot, itemName, itemTerms } from "@/domain/gear-library";
+import { currentEmblemSnapshot, currentWearerSnapshot, gearSampleMinimum } from "@/domain/gear-wearer";
 import { boardTitle } from "@/domain/guide-families";
-import { canRankRecommendations, currentFamilyBatch, currentRecommendationEvidence, guideFamilyRows, recommendationGroup, recommendationTier } from "@/domain/guide-family-stats";
+import { canRankRecommendations, currentFamilyBatch, currentRecommendationEvidence, guideFamilyRows, recommendationGroup, recommendationTier,
+  type GuideFamilyBatch, type RecommendationStats } from "@/domain/guide-family-stats";
 import { guideBoardName, guideFacets, guideLink, guidePlaystyle, guideRollLevel, guideUnitMatch, isEditorialSection, primaryFirst, readingNotes, sourceSummary } from "@/domain/guide-reading";
 import { guideBoardBySearchAlias, guideSearchKey, guideTraitNames, guideWearerQuery, homeGuideFilter, openingSearch } from "@/domain/guide-search";
 import { heroAugmentCategory, heroAugmentForGuide } from "@/domain/hero-augments";
@@ -31,7 +31,7 @@ import type { Item, Team, Unit } from "@/domain/types";
 import { guideBoardKind, traitCounts, usedPopulation } from "@/domain/team";
 import { displayGuideName } from "@/domain/trait-names.mjs";
 import { unitSearchNames } from "@/domain/unit-search.mjs";
-import { isVersionUpdate, sameEdition } from "@/domain/version-updates";
+import { isLiveLaunchTransition, isVersionUpdate, sameEdition } from "@/domain/version-updates";
 import { recommendationBoardSample } from "@/components/GuidePlacement";
 import { boardSearchEvidence, currentSearchPlacements, fixedSearchSample } from "./board-search-evidence";
 import { heroAugmentSearchHit } from "./hero-augment-search";
@@ -39,7 +39,10 @@ import { currentPatchRecommendations } from "./patch-recommendations";
 import { publicGuidePublication } from "./publication";
 
 const limit = 6;
-const emblemRows: Record<string, (typeof emblemSnapshot.emblems)[keyof typeof emblemSnapshot.emblems]> = emblemSnapshot.emblems;
+const duringLaunch = isLiveLaunchTransition(currentPatch);
+const familyStats = familyData as GuideFamilyBatch;
+const coreStats = coreData as RecommendationStats;
+const emblemRows = emblemSnapshot.emblems;
 const chinaDate = new Intl.DateTimeFormat("zh-CN", { timeZone: "Asia/Shanghai", month: "numeric", day: "numeric" });
 const key = guideSearchKey;
 
@@ -96,8 +99,9 @@ function searchGuides(live: Publication | null) {
         recommendationBoardSample(board, section, "fixed", build) ?? recommendationBoardSample(board, section, "core", build)));
       const [tier] = tiers;
       const status = decisions.get(id)?.status;
-      const label = section.category === heroAugmentCategory ? "英雄强化" : status === "review" || status === "avoid" ? patchRecommendationLabels[status] :
-        tiers.size > 1 ? "全部攻略" : labels[tier];
+      const label = section.category === heroAugmentCategory ? "英雄强化" :
+        duringLaunch ? status ? patchRecommendationLabels[status] : "全部攻略" :
+        status === "review" || status === "avoid" ? patchRecommendationLabels[status] : tiers.size > 1 ? "全部攻略" : labels[tier];
       return [board.id, label] as const;
     }));
     return { section, teams, families, familiesByBoard, boardLabels, decisions };
@@ -339,33 +343,34 @@ function gearRoutes(item: Item, context: Context, sampled: ReadonlySet<string>, 
 
 function gearDetails(item: Item, context: Context): SearchGearDetail {
   const excluded = context.exclusion;
-  const entry = item.traitId ? emblemRows[item.traitId] : undefined;
   const samples = specialItemWearers.items[item.id] ? specialItemWearers : itemWearers;
-  const sampled = samples.items[item.id];
+  const emblemCurrent = sameEdition(context.live?.season.id ?? season.id, currentPatch.seasonId) &&
+    currentEmblemSnapshot(emblemSnapshot, currentPatch);
+  const entry = item.traitId && (!duringLaunch || emblemCurrent) ? emblemRows[item.traitId] : undefined;
+  const sampled = !duringLaunch || currentWearerSnapshot(samples, currentPatch) ? samples.items[item.id] : undefined;
   const minGames = entry ? emblemSnapshot.minGames : samples.minGames;
   const pbe = entry ? emblemSnapshot.mode === "PBE" : /\bPBE\b/i.test(samples.version);
   const eligible = (row: { unitId: string }) => {
     const unit = unitMap.get(row.unitId);
     return unit && row.unitId !== excluded && (!context.extra.lowCosts || unit.cost <= 3);
   };
-  const snapshot = entry ? {
+  const displayMinimum = gearSampleMinimum(item.category, pbe, minGames);
+  const totalGames = entry?.games ?? sampled?.totalGames;
+  const snapshot = entry && emblemSnapshot.updatedAt && (!duringLaunch || entry.games >= displayMinimum) ? {
     href: "https://www.metatft.com/items/" + encodeURIComponent(entry.sourceId) + "?set=TFTSet19",
     label: [emblemSnapshot.source, emblemSnapshot.set + " " + emblemSnapshot.mode + " " + emblemSnapshot.patch,
       "近 " + emblemSnapshot.days + " 天", chinaDate.format(new Date(emblemSnapshot.updatedAt))].join(" · "),
-  } : sampled ? {
+  } : sampled && (!duringLaunch || (totalGames ?? 0) >= displayMinimum) ? {
     href: sampled.url, label:[samples.source,samples.version,samples.window,samples.date].join(" · "),
   } : undefined;
-  const rows = (entry?.holders ?? sampled?.rows ?? []).filter(eligible);
-  const displayMinimum = gearSampleMinimum(item.category, pbe, minGames);
+  const rows = (entry?.holders ?? sampled?.rows ?? []).filter(row => eligible(row) && (!duringLaunch || row.games >= displayMinimum));
   const ranked = rankedWearerEvidence(rows.filter(row => context.includeSeven || unitMap.get(row.unitId)?.cost !== 7), minGames, displayMinimum);
   const wearerHit = ({ unitId, games, mean }: typeof ranked.holders[number], href?: string): CarryHit => {
     const unit = unitMap.get(unitId)!;
     return { id: unit.id, name: unit.name, image: unit.image, games, mean,
       href: href ?? (item.traitId ? emblemLink(item.traitId, unit.id, excluded) : itemLink(item.id, unit.id)) };
   };
-  const currentBatch = entry ? context.live !== null && sameEdition(context.live.season.id, currentPatch.seasonId) &&
-    emblemSnapshot.patch === currentPatch.metaTftPatch.patch + currentPatch.metaTftPatch.bPatch &&
-    Date.parse(emblemSnapshot.updatedAt) >= Date.parse(currentPatch.effectiveAt) : Boolean(sampled && currentWearerSnapshot(samples, currentPatch));
+  const currentBatch = entry ? context.live !== null && emblemCurrent : Boolean(sampled && currentWearerSnapshot(samples, currentPatch));
   const candidateRows = rows.filter(row => row.games > 0 && unitMap.get(row.unitId)?.cost !== 7);
   const candidates = rankedWearerEvidence(candidateRows, displayMinimum, displayMinimum, Infinity);
   const qualified = candidates.order === "mean" ? candidates.holders : [];
@@ -408,7 +413,7 @@ function gearDetails(item: Item, context: Context): SearchGearDetail {
     examplesAvailable: Boolean(context.live),
     examples, routeNote, includeSeven: context.includeSeven,
     stageBoards: matching,
-    totalGames: entry?.games ?? sampled?.totalGames,
+    totalGames: !duringLaunch || (totalGames ?? 0) >= displayMinimum ? totalGames : undefined,
     snapshot,
     exclude: excluded,
   };

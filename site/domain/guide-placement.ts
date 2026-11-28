@@ -44,14 +44,14 @@ export interface PlacementRecord {
 export interface PlacementBatch {
   patch: string;
   window: string;
-  date: string;
+  date?: string;
   edition?: string;
   build?: string;
   minGames: number;
   greenThrough: number;
   redFrom: number;
   records: PlacementRecord[];
-  renataNasusReference?: { url: string; observedOn: string; placementCounts: number[] };
+  renataNasusReference?: { url: string; observedOn?: string; placementCounts?: number[] };
   boardComparisons?: {
     sectionId: string;
     teamId?: string;
@@ -62,7 +62,7 @@ export interface PlacementBatch {
 }
 
 type FormationSample = { url: string; placementCounts: number[] };
-export type FormationFamilyReference = FormationSample & { name: string; checkedAt: string; windowHours: number; patch?: string; window?: string };
+export type FormationFamilyReference = FormationSample & { name: string; checkedAt: string; windowHours: number; patch?: string; build?: string; window?: string };
 
 export type FormationComparison = {
   edition: string;
@@ -123,7 +123,7 @@ export type PlacementRating = PlacementRecord & {
   tone: "strong" | "middle" | "weak" | "limited";
   patch: string;
   window: string;
-  date: string;
+  date?: string;
 };
 
 export function fixedBoardPlacementDetail(rating: PlacementRating): PlacementRating {
@@ -149,7 +149,7 @@ export type AugmentBoard = NonNullable<PlacementRecord["augmentBuild"]> & {
   itemIds: string[];
 };
 
-export function augmentBoardSamples(records: PlacementRecord[], defaultDate: string) {
+export function augmentBoardSamples(records: PlacementRecord[], defaultDate = "") {
   const byName: Record<string, AugmentBoard[]> = {};
   for (const record of records) {
     const name = record.referencesAugment;

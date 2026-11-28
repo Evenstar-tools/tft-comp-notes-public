@@ -25,8 +25,13 @@ export function preflightReason(current, family, { upstream } = {}) {
   }
   const effective = time(current.effectiveAt);
   if ((cohort.pbe && (!numeric(current.build) || family.queue !== cohort.queue)) ||
-      !Number.isFinite(effective) || !cohort.queueMatches(family.queue) || family.set !== cohort.set ||
-      !Number.isSafeInteger(family.model)) {
+      !Number.isFinite(effective) || !cohort.queueMatches(family.queue) || family.set !== cohort.set) {
+    return "本地版本或赛季、队列、体系模型口径有缺项";
+  }
+  if (family.sampleStatus === "pending" && !cohort.pbe && current.launchTransition === true) {
+    return "等待人工验收首批正式服体系与模型基线";
+  }
+  if (family.sampleStatus === "pending" || !Number.isSafeInteger(family.model)) {
     return "本地版本或赛季、队列、体系模型口径有缺项";
   }
   if (!upstream || !Array.isArray(upstream.warnings) || upstream.warnings.length ||

@@ -88,7 +88,7 @@ function status(verify, json) {
     console.log(JSON.stringify({ ...summary, modules }, null, 2));
   } else {
     const { label, build } = summary.currentPatch;
-    const states = { aligned: "已对齐", lagging: "独立批次", error: "错误", unchecked: "待核对" };
+    const states = { aligned: "已对齐", pending: "待采集", lagging: "独立批次", error: "错误", unchecked: "待核对" };
     console.log(`当前 ${label} / 构建 ${build}`);
     console.table(modules.map(row => ({
       模块: row.id, 文件: row.file, 刷新脚本: row.script ?? "人工维护",

@@ -3,14 +3,17 @@ import { useLayoutEffect, useMemo, useRef, useSyncExternalStore } from "react";
 import { useSearchParams } from "next/navigation";
 import { ArrowUpRight } from "lucide-react";
 import { itemMap, season, unitMap, traitMap } from "@/data";
-import liveStats from "@/data/hero-stats.json";
+import rawLiveStats from "@/data/hero-stats.json";
+import currentPatch from "@/data/current-patch.json";
 import type { WearerSnapshot } from "@/data/item-wearers";
-import { commonHeroItems, type HeroItemSample, type HeroItemSource } from "@/domain/hero-insights";
+import { currentWearerSnapshot } from "@/domain/gear-wearer";
+import { commonHeroItems, type HeroItemSample } from "@/domain/hero-insights";
 import type { Unit } from "@/domain/types";
 import { hasUnlockCondition, unlockText } from "@/domain/unlocks";
 import { guideLink } from "@/domain/guide-reading";
 import { heroGuideGroups, type HeroGuideIndex } from "@/domain/hero-guides";
 import { heroAugmentForUnit } from "@/domain/hero-augments";
+import { isLiveLaunchTransition } from "@/domain/version-updates";
 import {
   UnitBrowser,
   UnitDetails,
@@ -24,6 +27,11 @@ import { StatPeriodSelect, useStatArchive, useStatPeriod } from "./StatPeriod";
 import { usePageReturnView } from "./usePageReturnView";
 
 const lockedCount = season.units.filter(hasUnlockCondition).length;
+const duringLaunch = isLiveLaunchTransition(currentPatch);
+const liveStats: HeroStats = rawLiveStats;
+const qualifiedHeroRows = duringLaunch && currentWearerSnapshot(liveStats, currentPatch)
+  ? Object.fromEntries(Object.entries(liveStats.rows).filter(([, row]) => row.games >= liveStats.minGames)) : {};
+const currentHeroStats = duringLaunch ? Object.keys(qualifiedHeroRows).length ? { ...liveStats, rows: qualifiedHeroRows } : undefined : liveStats;
 const release = season.unlockRelease;
 const updatedDate = release?.date ?? season.sourceDate;
 const libraryList = ".hero-results-scroll, .unit-list-scroll, .trait-grid-scroll";
@@ -72,7 +80,7 @@ function HeroUnlockList({ units, onSelect }: { units: Unit[]; onSelect: (id: str
 export function HeroLibrary({ guides, commonItems, gearSource: liveGearSource }: {
   guides: HeroGuideIndex | null;
   commonItems: Record<string, HeroItemSample[]>;
-  gearSource: HeroItemSource;
+  gearSource: Omit<WearerSnapshot, "items">;
 }) {
   const pageParams = useSearchParams();
   const queryString = useSyncExternalStore(subscribeToHeroQuery, browserQuery, () => pageParams.toString());
@@ -85,12 +93,13 @@ export function HeroLibrary({ guides, commonItems, gearSource: liveGearSource }:
   const archivedGear = gearArchive.data?.standard;
   const previousItems = useMemo(() => archivedGear ?
     commonHeroItems(itemMap, archivedGear.items, archivedGear.minGames) : undefined, [archivedGear]);
-  const stats = period ? heroArchive.data : liveStats;
+  const stats = period ? heroArchive.data : currentHeroStats;
+  const currentGear = !duringLaunch || currentWearerSnapshot(liveGearSource, currentPatch);
   const gearSource = period ? archivedGear : liveGearSource;
-  const availableItems = period ? previousItems : commonItems;
+  const availableItems = period ? previousItems : currentGear ? commonItems : undefined;
   const selector = <StatPeriodSelect period={period} onChange={selectPeriod} />;
   const dataControls = <div className="hero-profile-stat-period">
-    {selector}<HeroStatSources stats={stats} gearSource={gearSource} />
+    {selector}<HeroStatSources stats={stats} gearSource={period || currentGear ? gearSource : undefined} />
   </div>;
   const library = useRef<HTMLDivElement>(null);
   const [sort, setSort] = usePageReturnView<HeroSort>("heroLibraryVisit", { field: "mean", order: "ascending" }, scrollPanels);
@@ -146,7 +155,7 @@ export function HeroLibrary({ guides, commonItems, gearSource: liveGearSource }:
 
   const editorHref = unit ? "/editor?" + new URLSearchParams({ unit:unit.id, from:returnHref }) : undefined;
   const heroArchiveNotice = <p className="stat-period-note" role="status">
-    {heroArchive.status === "error" ? "这批英雄数据暂不可读。" : "正在读取这批英雄数据…"}
+    {!period ? "暂无当期样本" : heroArchive.status === "error" ? "这批英雄数据暂不可读。" : "正在读取这批英雄数据…"}
   </p>;
   const gearArchiveNotice = <p className="stat-period-note" role="status">
     {gearArchive.status === "error" ? "这批装备数据暂不可读。" : "正在读取这批装备数据…"}

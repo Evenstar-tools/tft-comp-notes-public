@@ -12,10 +12,11 @@ import { HeroItemPlacementDelta } from "./HeroItemPlacementDelta";
 
 export type HeroStats = {
   source: string;
-  sourceUrl: string;
+  sourceUrl?: string;
   version: string;
   days: number;
-  date: string;
+  date?: string | null;
+  updatedAt?: string | null;
   minGames: number;
   rows: Record<string, HeroResult>;
 };
@@ -23,7 +24,7 @@ export type HeroStats = {
 const shortGames = new Intl.NumberFormat("zh-CN", { notation: "compact", maximumFractionDigits: 1 });
 const exactGames = new Intl.NumberFormat("zh-CN");
 const percent = (rate: number) => `${(rate * 100).toFixed(1)}%`;
-const windowLabel = (stats: HeroStats) => `${stats.version} · 近 ${stats.days} 天 · ${stats.date}`;
+const windowLabel = (stats: HeroStats) => [stats.version, `近 ${stats.days} 天`, stats.date].filter(Boolean).join(" · ");
 const dataColumns = [
   { field: "mean", label: "均名", order: "ascending" },
   { field: "top4Rate", label: "前四率", order: "descending" },
@@ -34,9 +35,9 @@ const dataColumns = [
 export function HeroStatSources({ stats, gearSource }: { stats?: HeroStats; gearSource?: HeroItemSource }) {
   if (!stats && !gearSource) return null;
   const battleWindow = stats && windowLabel(stats);
-  const itemWindow = gearSource && `${gearSource.version} · ${gearSource.window.replace(/^最近(?=\s)/, "近")} · ${gearSource.date}`;
+  const itemWindow = gearSource && [gearSource.version, gearSource.window.replace(/^最近(?=\s)/, "近"), gearSource.date].filter(Boolean).join(" · ");
   const sharedWindow = stats && gearSource && stats.source === gearSource.source && battleWindow === itemWindow;
-  const provider = stats && <a className="hero-data-source" href={stats.sourceUrl} target="_blank" rel="noreferrer">
+  const provider = stats?.sourceUrl && <a className="hero-data-source" href={stats.sourceUrl} target="_blank" rel="noreferrer">
     {stats.source}<ArrowUpRight size={12} aria-hidden />
   </a>;
   return <details className="hero-stat-sources">

@@ -77,7 +77,7 @@ const snapshot = {
   version: `${cohort.season} ${cohort.label} ${cohort.version}`,
   days, minGames: 100, date, updatedAt: updated.toISOString(), rows,
 };
-if (saved?.source === snapshot.source && saved.version === snapshot.version && saved.days === snapshot.days &&
+if (saved?.sampleStatus !== "pending" && saved?.source === snapshot.source && saved.version === snapshot.version && saved.days === snapshot.days &&
     new URL(saved.sourceUrl).searchParams.get("rank") === (cohort.rank || null)) {
   if (saved.updatedAt > snapshot.updatedAt) throw new Error("The published source returned an older hero snapshot");
   if (saved.date < date) {

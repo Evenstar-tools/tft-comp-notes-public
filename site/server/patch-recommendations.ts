@@ -4,7 +4,7 @@ import type { Publication } from "@/domain/document";
 import { recommendationTier } from "@/domain/guide-family-stats";
 import { sectionTeams } from "@/domain/document-flow";
 import { applyHomeRecommendationOverrides, getPublishedPatchRecommendations, type PatchRecommendationBatch } from "@/domain/patch-recommendations";
-import { sameEdition } from "@/domain/version-updates";
+import { isLiveLaunchTransition, sameEdition } from "@/domain/version-updates";
 
 export function currentPatchRecommendations(publication: Publication | null): PatchRecommendationBatch | undefined {
   const patch = currentPatch;
@@ -14,7 +14,7 @@ export function currentPatchRecommendations(publication: Publication | null): Pa
   const patchStart = Date.parse(patch.effectiveAt);
   const defaults = initial && initial.seasonId === patch.seasonId && initial.build === patch.build &&
     Date.parse(initial.reviewedAt) >= patchStart ? initial : undefined;
-  const batch = published.declared ? published.batch : defaults;
+  const batch = published.batch ?? (!published.declared || isLiveLaunchTransition(patch) ? defaults : undefined);
   if (!batch) return;
   const boardsByGuide = new Map(publication.sections.map(guide => [guide.id, new Set(sectionTeams(guide).map(team => team.id))]));
   const configured = batch === defaults ? batch.entries : applyHomeRecommendationOverrides(batch, defaults);

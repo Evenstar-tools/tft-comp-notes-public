@@ -85,7 +85,7 @@ function TraitEntry({ trait, members, memberQuery, overall, picked, onPick, link
 
 export function TraitsLibrary({ initialQuery, initialTrait, initialTier, meta, overall, context, links, comparison }: {
   initialQuery: string; initialTrait?: string; initialTier?: number;
-  meta: { patch: string; on: string; days: number; url: string; current: boolean };
+  meta: { patch: string; queue: string; on: string; days: number; url?: string; current: boolean };
   overall: TierCounts; context?: TraitContext;
   links: TraitBoardIndex; comparison: TraitCrosscheck | null;
 }) {
@@ -160,8 +160,8 @@ export function TraitsLibrary({ initialQuery, initialTrait, initialTier, meta, o
             {meta.current ? <details className="trait-lookup-source-details">
               <summary>数据来源</summary>
               <div>
-                <a href={scopeOn && contextScope ? contextScope.url : meta.url} target="_blank" rel="noreferrer">MetaTFT ↗</a>
-                <span>PBE {meta.patch} · 近 {meta.days} 天 · <time dateTime={meta.on} title="北京时间">{collectionDate.format(new Date(meta.on))}</time></span>
+                {(scopeOn && contextScope || meta.url) && <a href={scopeOn && contextScope ? contextScope.url : meta.url} target="_blank" rel="noreferrer">MetaTFT ↗</a>}
+                <span>{meta.queue === "PBE" ? "PBE" : "正式服"} {meta.patch} · 近 {meta.days} 天 · <time dateTime={meta.on} title="北京时间">{collectionDate.format(new Date(meta.on))}</time></span>
               </div>
             </details> : <span>本版本战绩待更新</span>}
             <a href="/traits/medley">合奏组合</a>

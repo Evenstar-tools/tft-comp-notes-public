@@ -3,6 +3,7 @@ import { carryMinGames, carryPeriod, guideCarryRows, type CarrySample } from "@/
 import { augmentBoardSamples, type PlacementBatch } from "@/domain/guide-placement";
 import type { Team } from "@/domain/types";
 import { AugmentBoardBuilds } from "./AugmentBoardBuilds";
+import { currentGuidePlacementBatch, guideStatsLaunch } from "./GuidePlacement";
 
 const fmt = new Intl.NumberFormat("zh-CN");
 const buildBatch = placements as PlacementBatch;
@@ -31,11 +32,16 @@ function Sample({ row }: {row: CarrySample}) {
 
 export function carryEvidence(seasonId: string, sectionId: string, team: Team, augmentName?: string) {
   const units = new Set(team.pieces.map(piece => piece.unitId));
+  const launch = guideStatsLaunch(seasonId);
   const rows = guideCarryRows(seasonId, sectionId, team.id, true)
-    .filter(r => (r.kind !== "augment" || r.games > 0) && units.has(r.carryId) && r.anchorIds.every(id => units.has(id)));
+    .filter(r => {
+      const enoughGames = r.kind === "augment" ? r.games > 0 : !launch || r.games >= carryMinGames;
+      return enoughGames && units.has(r.carryId) && r.anchorIds.every(id => units.has(id));
+    });
   const buildEdition = buildBatch.edition && (seasonId === buildBatch.edition || seasonId.startsWith(buildBatch.edition + "."));
-  const builds = augmentName && buildEdition
-    ? (augmentBuilds[augmentName] ?? []).filter(sample => sample.teamId === team.id)
+  const builds = augmentName && buildEdition && (!launch || currentGuidePlacementBatch(seasonId))
+    ? (augmentBuilds[augmentName] ?? []).filter(sample => sample.teamId === team.id &&
+      (!launch || !sample.sourcePeriod && sample.games > 0 && sample.mean !== undefined))
     : [];
   return { rows, builds };
 }
