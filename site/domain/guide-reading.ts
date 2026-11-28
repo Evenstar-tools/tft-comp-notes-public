@@ -50,6 +50,16 @@ const boardLoadoutPrefix = "棋盘配装 · ";
 
 const creditLine = /^(B站|阵容原创)[：:][ \t]*(\S[^\r\n]*)$/u;
 
+export function guideStageCredit(section: Section, teamId: string) {
+  const source = section.reroll?.stages.find(stage => stage.teamId === teamId)?.bilibili;
+  if (!source || !/^BV[A-Za-z0-9]{10}$/.test(source.videoId)) return;
+  return {
+    label: "B站：",
+    name: source.author,
+    href: "https://www.bilibili.com/video/" + source.videoId + "/?t=" + source.startSeconds,
+  };
+}
+
 export function guideCredit(section: Section) {
   for (const block of section.blocks) {
     if (block.type !== "text") continue;

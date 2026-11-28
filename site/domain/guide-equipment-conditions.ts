@@ -180,6 +180,7 @@ export function guideEquipmentConditions(section: Section, teams: Team[], data: 
 }
 
 export function guideReferenceConditions(section: Section, teams: Team[], data: Season, selectedBoard: Team) {
+  if (section.reroll?.stages.some(stage => stage.teamId === selectedBoard.id && stage.ownEvidenceOnly)) return;
   const boardId = guideConditions[section.id]?.boardId;
   if (!boardId || boardId === selectedBoard.id) return;
   const board = teams.find(team => team.id === boardId);

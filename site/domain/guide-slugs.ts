@@ -91,7 +91,10 @@ const guideSlugs: Record<string, GuideSlugs> = {
     "00000000-0000-4000-8000-000000000105": "95-lv9",
     "00000000-0000-4000-8000-000000001275": "lv9-jazz",
   } },
-  "sample-block-0251": { slug: "ocean-graves", searchAliases: { "4-jugg-graves": ["四主宰男枪"] }, boards: {
+  "sample-block-0251": { slug: "ocean-graves", searchAliases: {
+    "4-jugg-graves": ["四主宰男枪"],
+    "lv8-pentakill-rock": ["闭环男枪"],
+  }, boards: {
     "00000000-0000-4000-8000-000000000030": "lv9-ocean-pyke",
     "00000000-0000-4000-8000-000000000062": "lv7-zac",
     "00000000-0000-4000-8000-000000000075": "lv8-ashe",
