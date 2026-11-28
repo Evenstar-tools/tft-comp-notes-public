@@ -1,3 +1,7 @@
+import { setTimeout as delay } from "node:timers/promises";
+
+class ItemHistogramMismatch extends Error {}
+
 export const rounded = value => Number(value.toFixed(6));
 
 export function placements(places) {
@@ -55,8 +59,24 @@ export function itemCohort(data, itemId, patch, days) {
   // Accept a trailing calendar bucket only when it reconciles every placement exactly.
   const boundaryAligns = holders.every((count, index) => count === totals[index] + boundary[index]);
   if (!aligns && !boundaryAligns)
-    throw new Error("Item and wearer placement histograms disagree for " + itemId);
+    throw new ItemHistogramMismatch("Item and wearer placement histograms disagree for " + itemId);
   // The item and all individual wearers now share a single capture. Count every
   // wearer before mapping shop units or applying the best-wearer threshold.
   return { version: cohort.join(""), stats };
+}
+
+export async function fetchItemCohort(url, itemId, patch, days, fetcher = fetch) {
+  const backoff = [750, 4_500, 15_000];
+  for (let attempt = 0; ; attempt++) {
+    const response = await fetcher(url, { signal: AbortSignal.timeout(18000), cache: "no-store" });
+    if (!response.ok) throw new Error(`HTTP ${response.status} · ${itemId}`);
+    const data = await response.json();
+    try {
+      return { data, ...itemCohort(data, itemId, patch, days) };
+    } catch (error) {
+      if (!(error instanceof ItemHistogramMismatch) || attempt === backoff.length) throw error;
+      // These two aggregates briefly disagree when the source rolls its calendar buckets.
+      await delay(backoff[attempt]);
+    }
+  }
 }

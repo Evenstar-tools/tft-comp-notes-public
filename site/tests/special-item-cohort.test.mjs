@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { itemCohort, itemPlacementDelta } from "../scripts/special-item-cohort.mjs";
+import { fetchItemCohort, itemCohort, itemPlacementDelta } from "../scripts/special-item-cohort.mjs";
 
 test("item placement delta compares against the same hero without the item", () => {
   const overall = [100, 0, 100, 0, 0, 0, 0, 0];
@@ -54,4 +54,22 @@ test("a rolling wearer cohort may span one extra day bucket from the same hotfix
   };
   assert.equal(itemCohort(result, "emblem", "19.1", 3).stats.games, 485);
   assert.throws(() => itemCohort({ ...result, dates: result.dates.filter(row => row.day !== 4) }, "emblem", "19.1", 3), /disagree/);
+});
+
+test("transient item rollup mismatch is retried without accepting the inconsistent counts", async () => {
+  const patch = ["19.1", "c"];
+  const places = [20, 15, 15, 15, 10, 10, 10, 5];
+  const aligned = {
+    updated: 1, queue_id: "pbe", tft_set: "TFTSet19", unit_games: [{ patch }],
+    dates: [{ itemName: "fishbones", patch, day: 1, places }], units: [{ places }],
+  };
+  const inconsistent = { ...aligned, units: [{ places: [100, 0, 0, 0, 0, 0, 0, 0] }] };
+  let calls = 0;
+  const result = await fetchItemCohort("https://example.test/items", "fishbones", "19.1", 3, async () => {
+    calls++;
+    return Response.json(calls === 1 ? inconsistent : aligned);
+  });
+  assert.equal(calls, 2);
+  assert.equal(result.stats.winRate, 0.2);
+  assert.deepEqual(result.data, aligned);
 });

@@ -1,6 +1,6 @@
 import { readFile, rename, rm, writeFile } from "node:fs/promises";
 import { EOL } from "node:os";
-import { itemCohort, placements, rounded } from "./special-item-cohort.mjs";
+import { fetchItemCohort, placements, rounded } from "./special-item-cohort.mjs";
 
 const lookupUrl = "https://data.metatft.com/lookups/TFTSet19_pbe_en_us.json";
 const api = "https://api-hc.metatft.com/tft-stat-api/item_detail";
@@ -54,8 +54,8 @@ async function collect(itemId) {
   const params = new URLSearchParams({
     itemName: itemId, queue: "PBE", patch, b_patch: cohort.bPatch, days: String(days), permit_filter_adjustment: "false",
   });
-  const data = await getJson(api + "?" + params);
-  const { version, stats: { games: totalGames, mean, winRate } } = itemCohort(data, itemId, patch, days);
+  const { data, version, stats: { games: totalGames, mean, winRate } } =
+    await fetchItemCohort(api + "?" + params, itemId, patch, days);
   if (version !== patch + cohort.bPatch) throw new Error("Unexpected PBE hotfix for " + itemId);
   const overall = new Map(data.units_overall.map(row => [row.unit, placements(row.places).games]));
   const rows = data.units.flatMap(row => {
