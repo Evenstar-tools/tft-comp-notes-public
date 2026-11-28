@@ -122,11 +122,11 @@ body:has(.site-search-dialog[open]) {overflow:hidden}
   .masthead-season {font-size:.6875rem}
   .masthead-inner {grid-template-columns:minmax(0,1fr) 44px;grid-template-areas:"brand search" "sections sections"}
   .masthead-tools > :is(.theme-toggle,.studio-nav),.task-nav > .task-reference-link {display:none}
-  .task-nav {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:stretch;position:relative;gap:0}
+  .task-nav {display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:stretch;position:relative;gap:0}
   .task-nav > a.task-editor-link {display:flex}
   .task-nav > :is(.task-notes-link,.combo-tool-link) {margin:0;padding-inline:6px}
   .task-nav > .combo-tool-link::before {display:none}
-  .task-nav > a,.task-menu > summary {min-height:44px;padding-inline:6px;font-size:.875rem}
+  .task-nav > a,.task-menu > summary {min-height:44px;padding-inline:2px;font-size:.875rem}
   .task-menu {display:block;position:static}
   .task-reference .task-menu-panel {inset-inline:0;transform:none;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 12px;padding:10px}
   .task-menu-panel strong {padding-inline:6px;white-space:normal}
