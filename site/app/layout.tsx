@@ -10,6 +10,7 @@ import "./task-navigation.css";
 import { OwnerSession } from "@/components/OwnerSession";
 import { SiteAnalytics } from "@/components/SiteAnalytics";
 import { SiteNav } from "@/components/SiteNav";
+import { SiteFooter } from "@/components/SiteFooter";
 import { BrandMark } from "@/components/Glyphs";
 import { season } from "@/data";
 import { isOfficialEdition } from "@/domain/version-updates";
@@ -51,25 +52,7 @@ export default function RootLayout({
             <main id="main" className="page-shell">
               {children}
             </main>
-            <footer className="site-footer" aria-label="数据来源">
-              <a
-                href="https://www.metatft.com/new-set"
-                target="_blank"
-                rel="noreferrer"
-              >
-                MetaTFT
-              </a>
-              <a
-                href="https://www.datatft.com/database?season=19"
-                target="_blank"
-                rel="noreferrer"
-              >
-                DataTFT
-              </a>
-              <a href="https://noxutft.com/zh/tft-traits" target="_blank" rel="noreferrer">
-                NoxuTFT
-              </a>
-            </footer>
+            <SiteFooter siteName={siteName} brandIcon={brandIcon} />
           </OwnerSession>
         </ThemeProvider>
       </body>

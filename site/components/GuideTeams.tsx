@@ -36,7 +36,7 @@ import { guideFamilyRows, recommendationTier, type GuideFamilyBatch } from "@/do
 import currentPatch from "@/data/current-patch.json";
 import type { Section } from "@/domain/document";
 import { boardRosterChange, familyVariants, groupGuides, type PosterVariant } from "@/domain/guide-families";
-import { currentLaunchGuideFamily, guidePromotionRows, guideSystemDisplayBoards, guideSystemPhases, guideSystemSample, systemMeanTone, type GuideSystem } from "@/domain/guide-variant-strip";
+import { currentLaunchGuideFamily, guidePromotionRows, guideSameLevelSwaps, guideSystemDisplayBoards, guideSystemPhases, guideSystemSample, systemMeanTone, type GuideSystem } from "@/domain/guide-variant-strip";
 import type { BoardStage, Season, Team } from "@/domain/types";
 import { season } from "@/data";
 import { sameEdition } from "@/domain/version-updates";
@@ -229,7 +229,10 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
   const reviewedPhases = reviewedGuidePhases(section.id, teams, data);
   const authoredPhases = reviewedPhases ?? route?.phases;
   const fallbackPhases = (!currentSystem || systemBoards.includes(primary)) ? mainRoute?.phases.filter(step => step.team) : undefined;
-  const phaseSteps = systemEntry ? guideSystemPhases(displayedSystemBoards, systemEntry, team, authoredPhases ?? fallbackPhases ?? []) : authoredPhases;
+  const sameLevelSwaps = guideSameLevelSwaps(section, displayedSystemBoards);
+  const swapIds = new Set(sameLevelSwaps.map(({ board }) => board.id));
+  const phaseBoards = displayedSystemBoards.filter(board => board.id === team.id || !swapIds.has(board.id));
+  const phaseSteps = systemEntry ? guideSystemPhases(phaseBoards, systemEntry, team, authoredPhases ?? fallbackPhases ?? []) : authoredPhases;
   const linkedPhases = phaseSteps ?? fallbackPhases ?? [];
   const firstPhases = linkedPhases.length > 3 && linkedPhases.at(-1)?.team
     ? [...linkedPhases.slice(0, 2), linkedPhases.at(-1)!] : linkedPhases.slice(0, 3);
@@ -431,8 +434,11 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
   }
   const shownPopulation = usedPopulation(shownBoard.pieces);
   const formation = guideStrategyLabel(section, team, data, primary)?.match(/^(\d+)级成型$/)?.[1];
-  const cap = mainBoardActive && (reviewedPhases ? reviewedPhases.at(-1)?.team.id === team.id
-    : kind === "上限" || currentPhase?.label.endsWith("级上限") ||
+  const parentId = section.reroll?.stages.find(stage => stage.teamId === team.id && stage.boardRole === "stage")?.parentTeamId;
+  const stageParent = displayedSystemBoards.find(board => board.id === parentId);
+  const capKind = stageParent ? guideBoardKind(section, team, stageParent) : kind;
+  const cap = mainBoardActive && !swapIds.has(team.id) && (reviewedPhases ? reviewedPhases.at(-1)?.team.id === team.id
+    : capKind === "上限" || currentPhase?.label.endsWith("级上限") ||
       (kind === "主阵" && formation && shownPopulation > Number(formation)));
   const boardTitle = cap ? shownPopulation + "级上限棋盘" : shownPopulation + " 人口棋盘";
   const selectedBoardLabel = mainBoardActive ? guideBoardName(team) : stageLabels[activeStage];
@@ -558,11 +564,14 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
     const allRows = guidePromotionRows(displayedSystemBoards, board => teamPlacement(board, section, "fixed") ??
       (heroGuide ? teamPlacement(board, section, "augment") : undefined), placementBatch);
     const rows = launchStats ? allRows.filter(row => row.mean !== undefined) : allRows;
-    if (allRows.length < 2 || !rows.some(row => row.games)) return null;
-    return <section className="guide-promotion-comparison" aria-label="上人口与补卡对照">
+    const showComparison = allRows.length >= 2 && rows.some(row => row.games);
+    const visibleIds = new Set(showComparison ? rows.map(row => row.board.id) : []);
+    const fallbackChoices = [...new Set(sameLevelSwaps.filter(({ board, parent }) =>
+      !visibleIds.has(board.id) || !visibleIds.has(parent.id)).flatMap(({ board, parent }) => [parent, board]))];
+    const comparison = showComparison && <section className="guide-promotion-comparison" aria-label="上人口与补卡对照">
       <h3>上人口与补卡对照</h3>
       <p>同套棋盘停级和升人口后的结算名次，仅用于比较补卡。</p>
-      <ul role="list">{rows.map(({ board, label, stat, scope, source, games, mean, note }) => {
+      <ul role="list">{rows.map(({ board, level, label, stat, scope, source, games, mean, note }) => {
         const current = mainBoardActive && !showFlex && board.id === team.id;
         return <li key={board.id}>
           <button type="button" className="guide-variant-option" aria-pressed={current}
@@ -572,7 +581,7 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
               else if (!mainBoardActive) pickStage(mainStage);
             }}>
             <span className="guide-variant-option-copy">
-              <small className="guide-promotion-level">{label}</small>
+              <small className="guide-promotion-level">{swapIds.has(board.id) ? level + "级换卡" : label}</small>
               <strong>{guideBoardName(board)}</strong>{current && <small className="guide-variant-current">当前</small>}
               {note && <small className="guide-promotion-note">{note}</small>}
             </span>
@@ -581,6 +590,14 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
         </li>;
       })}</ul>
     </section>;
+    return <>
+      {comparison}
+      {fallbackChoices.length > 0 && <div className="guide-flex-slot" role="group" aria-label="同级换卡">
+        <strong className="guide-flex-label">同级换卡</strong>
+        {fallbackChoices.map(option => <button key={option.id} type="button"
+          aria-pressed={option.id === team.id} onClick={() => pickTeam(option)}>{guideBoardName(option)}</button>)}
+      </div>}
+    </>;
   }
   const boardActions = <div className="guide-board-actions">
     <button type="button" className="guide-zoom-trigger guide-board-zoom" aria-label="放大棋盘" title="放大棋盘" aria-haspopup="dialog" onClick={() => setZoomed(true)}>

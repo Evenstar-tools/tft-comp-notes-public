@@ -84,20 +84,36 @@ export function guideSystems(section: Section, batch: GuideFamilyBatch, edition:
     if (board.id !== parent && byId.has(parent) && (stage ? stage.boardRole !== "variant"
       : section.stageTeamIds?.includes(board.id) || board.boardRole === "stage")) parents.set(board.id, parent);
   }
-  // A count-only sample can identify its own board, but the authored route still owns its stages.
-  for (const row of (batch.smallSamples ?? []).filter(sameGuide)) {
-    const board = row.teamId && byId.get(row.teamId);
-    if (board && !parents.has(board.id) && !owners.has(board.id)) create(board);
-  }
   function attachStages() {
     let previous: number;
     do {
       previous = owners.size;
+      const parentClaims = new Map<string, Set<Group>>();
       for (const [id, parent] of parents) {
         const group = owners.get(parent);
-        if (group) add(group, byId.get(id));
+        if (group) {
+          add(group, byId.get(id));
+          continue;
+        }
+        // The native cluster may measure an upgrade of the authored entry board.
+        const childGroup = owners.get(id);
+        const stage = authored.get(id);
+        if (!childGroup?.row || stage?.boardRole !== "stage" || stage.parentTeamId !== parent) continue;
+        const claims = parentClaims.get(parent) ?? new Set<Group>();
+        claims.add(childGroup);
+        parentClaims.set(parent, claims);
+      }
+      for (const [parent, claims] of parentClaims) {
+        const [group, other] = claims;
+        if (group && !other) add(group, byId.get(parent));
       }
     } while (owners.size > previous);
+  }
+  attachStages();
+  // A count-only sample can identify its own board, but the authored route still owns its stages.
+  for (const row of (batch.smallSamples ?? []).filter(sameGuide)) {
+    const board = row.teamId && byId.get(row.teamId);
+    if (board && !parents.has(board.id) && !owners.has(board.id)) create(board);
   }
   function assign(board: Team) {
     if (owners.has(board.id)) return;
@@ -136,6 +152,16 @@ export function guideSystemDisplayBoards(section: Section, boards: Team[], curre
   // An existing legacy link still shows that board in place of its canonical stage.
   const replaced = equivalents.get(current.id);
   return boards.filter(board => board.id === current.id || (board.id !== replaced && !equivalents.has(board.id)));
+}
+
+export function guideSameLevelSwaps(section: Section, boards: Team[]) {
+  const byId = new Map(boards.map(board => [board.id, board]));
+  return (section.reroll?.stages ?? []).flatMap(stage => {
+    if (stage.boardRole !== "stage" || !stage.parentTeamId) return [];
+    const board = byId.get(stage.teamId);
+    const parent = byId.get(stage.parentTeamId);
+    return board && parent && board !== parent && population(board) === population(parent) ? [{ board, parent }] : [];
+  });
 }
 
 export function guideSystemPhases(boards: Team[], entry: Team, current: Team, authored: Phase[]) {
