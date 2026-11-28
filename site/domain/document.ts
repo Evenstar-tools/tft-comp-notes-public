@@ -63,6 +63,8 @@ export interface Section {
       parentTeamId?: string;
       entry?: true;
       equivalentStageId?: string;
+      directoryTitle?: string;
+      archived?: true;
       roles?: { label: string; units: string[] }[];
       ownEvidenceOnly?: true;
       bilibili?: { author: string; videoId: string; startSeconds: number };

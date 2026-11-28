@@ -7,7 +7,7 @@ const guideSlugs: Record<string, GuideSlugs> = {
     "00000000-0000-4000-8000-000000001252": "lv8",
     "00000000-0000-4000-8000-000000001253": "lv9-rell",
   } },
-  "sample-block-1060": { slug: "ocean-ekko-syndra", boards: {
+  "sample-block-1060": { slug: "ocean-ekko-syndra", searchAliases: { "lv8-yuumi": ["四主宰海之歌艾克辛德拉"] }, boards: {
     "00000000-0000-4000-8000-000000001201": "lv8-yuumi",
     "00000000-0000-4000-8000-000000001202": "lv7",
     "00000000-0000-4000-8000-000000001203": "lv9-nidalee",
@@ -29,9 +29,13 @@ const guideSlugs: Record<string, GuideSlugs> = {
     "00000000-0000-4000-8000-000000000096": "lv6",
     "00000000-0000-4000-8000-000000000098": "lv8-jazz",
   } },
-  "sample-block-0229": { slug: "prodigy-baron", searchAliases: { "95-lv9": ["大龙95", "95大龙", "速九大龙"] }, boards: {
+  "sample-block-0229": { slug: "prodigy-baron", searchAliases: {
+    "lv7": ["五天才阿木木", "五天才双三", "五天才玛尔扎哈阿木木"],
+    "95-lv9": ["大龙95", "95大龙", "速九大龙", "两星玛尔扎哈开大龙"],
+  }, boards: {
     "00000000-0000-4000-8000-000000000005": "lv7-open",
     "00000000-0000-4000-8000-000000000017": "lv7",
+    "cfbd78c8-4f01-485f-8045-bcb096aa1b05": "lv8-leona",
     "00000000-0000-4000-8000-000000000071": "lv9-reroll",
     "a56a62e0-a4de-4986-9917-7acfaab6c105": "95-lv8",
     "0dd45d5d-496c-459b-9db2-8e05355bd6c2": "95-lv9",
@@ -54,6 +58,7 @@ const guideSlugs: Record<string, GuideSlugs> = {
     "3356f4a8-25be-44b1-a0bf-702e866cfa63": "lv8-briar",
   } },
   "sample-block-0464": { slug: "kda-neeko", boards: {
+    "9b4ff401-a78b-48ae-b895-9ac931684465": "lv9-ekko",
     "00000000-0000-4000-8000-000000000039": "lv8-akali",
     "00000000-0000-4000-8000-000000000053": "lv5",
     "00000000-0000-4000-8000-000000000113": "lv7-kaisa",
@@ -75,6 +80,7 @@ const guideSlugs: Record<string, GuideSlugs> = {
   } },
   "choreographer-draven-viego": { slug: "choreographer-draven-viego", searchAliases: { "lv7": ["德莱文佛爷", "佛爷德莱文", "德莱文佛耶戈", "佛耶戈德莱文", "琴吹唯德莱文", "琴吹唯"] }, boards: {
     "00000000-0000-4000-8000-000000001177": "lv7",
+    "fbe3bfcb-cb2d-4811-badd-a4b3e983feb1": "lv8-kaisa",
   } },
   "sample-block-0327": { slug: "ocean-ashe", boards: {
     "00000000-0000-4000-8000-000000000020": "lv6",
@@ -85,7 +91,7 @@ const guideSlugs: Record<string, GuideSlugs> = {
     "00000000-0000-4000-8000-000000001241": "lv8",
     "00000000-0000-4000-8000-000000001242": "lv9-rell",
   } },
-  "sample-block-0235": { slug: "edm-zeri", boards: {
+  "sample-block-0235": { slug: "edm-zeri", searchAliases: { "95-lv9": ["双电子泽丽 95"] }, boards: {
     "00000000-0000-4000-8000-000000000003": "95-lv8",
     "00000000-0000-4000-8000-000000000049": "lv9-miss-fortune",
     "00000000-0000-4000-8000-000000000105": "95-lv9",
@@ -110,6 +116,8 @@ const guideSlugs: Record<string, GuideSlugs> = {
     "00000000-0000-4000-8000-000000000082": "lv9",
   } },
   "sample-block-0367": { slug: "kda-seraphine", boards: {
+    "99816bd6-efbd-4541-856b-6a0bf0def3a0": "lv8-akali",
+    "fa58c8aa-702c-45cc-bc2d-75e78b8666ea": "lv9-ekko",
     "00000000-0000-4000-8000-000000000033": "lv5-early",
     "00000000-0000-4000-8000-000000000055": "lv6",
     "00000000-0000-4000-8000-000000000086": "lv5",
@@ -122,9 +130,11 @@ const guideSlugs: Record<string, GuideSlugs> = {
     "f17f1c69-ba22-4477-9680-8fa09b4b6b66": "lv6-5-ionic",
     "b5bce8cb-2f60-45ac-a99c-35b3e44bfabe": "lv7-shyvana",
     "323e2a9e-0573-4d84-8389-846a29659e7e": "lv8-7-ionic",
+    "57c1decb-f161-4a28-9c3f-e7183a781289": "lv9-jinx-vi",
   } },
   "sample-block-0020": { slug: "kda-lillia", boards: {
     "00000000-0000-4000-8000-000000000038": "lv8-6-bodyguard",
+    "9b4479a2-b2c9-4a1a-9d33-47e628170f50": "lv9-vi",
     "00000000-0000-4000-8000-000000000056": "lv5-4-guardian",
     "00000000-0000-4000-8000-000000000072": "lv5",
     "00000000-0000-4000-8000-000000000091": "lv8",
@@ -143,8 +153,9 @@ const guideSlugs: Record<string, GuideSlugs> = {
   "sample-block-0273": { slug: "bite-elise", boards: {
     "00000000-0000-4000-8000-000000000073": "lv5",
     "00000000-0000-4000-8000-000000000103": "lv8",
+    "b2559fb0-7e2a-411d-a273-0877484997e9": "lv9-ionic",
   } },
-  "sample-block-0064": { slug: "electric-kennen", boards: {
+  "sample-block-0064": { slug: "electric-kennen", searchAliases: { "lv8-6-bodyguard": ["六保镖凯南"] }, boards: {
     "00000000-0000-4000-8000-000000000012": "lv8-6-bodyguard",
     "00000000-0000-4000-8000-000000000040": "lv5",
     "00000000-0000-4000-8000-000000000045": "lv8",
@@ -154,10 +165,12 @@ const guideSlugs: Record<string, GuideSlugs> = {
   "sample-block-0281": { slug: "ranged-olaf", boards: {
     "00000000-0000-4000-8000-000000000051": "lv5",
     "00000000-0000-4000-8000-000000000097": "lv8",
+    "8408938c-f54a-44ab-948a-49ec8f8c00c1": "lv9-ocean",
   } },
   "sample-block-0258": { slug: "haymaker-sett", boards: {
     "00000000-0000-4000-8000-000000000061": "lv8",
     "00000000-0000-4000-8000-000000000063": "lv5",
+    "e37e7094-74df-4839-a1ca-e9005bbee85f": "lv9-heartsteel",
   } },
   "sample-block-0307": { slug: "ionic-jinx", boards: {
     "00000000-0000-4000-8000-000000000007": "lv8",
@@ -200,13 +213,16 @@ const guideSlugs: Record<string, GuideSlugs> = {
     "00000000-0000-4000-8000-000000001126": "lv6-4-spellweaver",
   } },
   "sample-block-0988": { slug: "spellweaver-karthus", boards: {
+    "fe42c7e4-1f6b-46cf-9532-80aadbe065e3": "lv6",
     "00000000-0000-4000-8000-000000001121": "lv9-mel",
   } },
   "sample-block-0870": { slug: "headliner-alune-yuumi", boards: {
+    "449f6054-46e9-4bbd-ad34-5ea5b2c24a0d": "lv8",
     "00000000-0000-4000-8000-000000001167": "95-lv9",
   } },
   "sample-block-1020": { slug: "hitmaker-draven", boards: {
     "00000000-0000-4000-8000-000000001158": "lv8-kaisa",
+    "2c797a5f-2ed1-442c-86b9-f2fe48f39526": "lv8-vayne",
   } },
   "sample-block-0854": { slug: "choreo-ahri", searchAliases: {
     "lv8-flex": ["编舞狐狸", "双编舞阿狸", "阿狸盖伦", "阿狸梅尔", "编舞师阿狸Flex"],
@@ -219,15 +235,15 @@ const guideSlugs: Record<string, GuideSlugs> = {
     "1808c76f-5fa3-4ccd-b1e3-8fdf6f5f03fe": "lv9-heartsteel",
     "00000000-0000-4000-8000-000000001146": "95-lv9",
   } },
-  "sample-block-1180": { slug: "tango-twisted-fate", boards: {
+  "sample-block-1180": { slug: "tango-twisted-fate", searchAliases: { "95-lv9": ["探戈爵士卡牌 95", "探戈爵士乐卡牌 95"] }, boards: {
     "752a22a6-a1e1-4c6a-b4ab-a66ae4fc3b80": "95-lv9",
     "9294d9e9-bdbd-42c3-ae67-d1884a0198d6": "95-lv8",
   } },
-  "sample-block-1181": { slug: "heartsteel-aphelios", boards: {
+  "sample-block-1181": { slug: "heartsteel-aphelios", searchAliases: { "95-lv9": ["三心之钢三经纪月男 95"] }, boards: {
     "83cebafb-502e-4f5d-8a17-db9871730b44": "95-lv9",
     "3f5c63e5-1ea1-4310-bbc0-9871308b936d": "95-lv8",
   } },
-  "arcanist-taliyah-vladimir": { slug: "arcanist-taliyah-vladimir", searchAliases: { "lv8": ["隆吸水"], "lv9-nidalee": ["隆吸水九级"] }, boards: {
+  "arcanist-taliyah-vladimir": { slug: "arcanist-taliyah-vladimir", searchAliases: { "lv8": ["隆吸水", "法师编舞岩雀吸血鬼", "法师编舞师岩雀吸血鬼"], "lv9-nidalee": ["隆吸水九级"] }, boards: {
     "14d668d4-7d3a-4445-a5b5-bfcfc6aa555b": "lv8",
     "1c4768e0-686a-495f-96f4-cda4348c8fdc": "lv9-nidalee",
   } },

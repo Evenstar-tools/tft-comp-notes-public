@@ -13,6 +13,7 @@ import { currentEmblemSnapshot, currentWearerSnapshot, gearSampleMinimum, visibl
 import { boardTitle } from "@/domain/guide-families";
 import { currentRecommendationEvidence, guideDirectoryTier, guideFamilyRows, guideTierLabels, recommendationGroup, recommendationTier,
   type GuideFamilyBatch } from "@/domain/guide-family-stats";
+import { authoredDirectoryRoutes, isArchivedRerollBoard } from "@/domain/reroll-stages";
 import { guideBoardName, guideFacets, guideLink, guidePlaystyle, guideRollLevel, guideUnitMatch, isEditorialSection, primaryFirst, readingNotes, sourceSummary } from "@/domain/guide-reading";
 import { guideBoardBySearchAlias, guideSearchKey, guideTraitNames, guideWearerQuery, homeGuideFilter, openingSearch } from "@/domain/guide-search";
 import { heroAugmentCategory, heroAugmentForGuide } from "@/domain/hero-augments";
@@ -83,7 +84,7 @@ function buildSearchGuideIndex(live: Publication) {
   const withFamilies = currentRecommendationEvidence(familyStats, live.season.id, currentPatch, recommendations?.reviewedRollingPatch);
   const decisions = new Map(recommendations?.entries.map(row => [row.sectionId + ":" + row.teamId, row]));
   return live.sections.filter(section => readableSection(section) && !isEditorialSection(section) && !isVersionUpdate(section)).map(section => {
-    const teams = primaryFirst(sectionTeams(section), section.primaryTeamId);
+    const teams = primaryFirst(sectionTeams(section).filter(board => !isArchivedRerollBoard(section, board.id)), section.primaryTeamId);
     const edition = section.gameData?.id ?? live.season.id;
     const families = withFamilies ? guideFamilyRows(familyStats, edition, section.id, teams) : [];
     const familiesByBoard = new Map<string, typeof families>();
@@ -213,7 +214,8 @@ function searchRows<T extends { hit: SiteSearchHit; terms: string[] }>(rows: T[]
 
 function guideHit(guide: SearchGuide, team: Team, detail?: string, unit?: Unit): BoardHit {
   const { section, boardLabels, teams } = guide;
-  const name = guideBoardKind(section, team, teams[0]) === "过渡" ? section.title : boardTitle(section, team);
+  const routeTitle = authoredDirectoryRoutes(section).find(route => route.teamId === team.id)?.directoryTitle;
+  const name = routeTitle ?? (guideBoardKind(section, team, teams[0]) === "过渡" ? section.title : boardTitle(section, team));
   const note = detail ?? team.webTitle;
   return {
     id:team.id, name, href:guideLink(section.id,team.id), image:unit?.image,

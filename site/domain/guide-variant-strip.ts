@@ -4,7 +4,7 @@ import { currentFamilyBatch, currentRecommendationEvidence, familyBoardIds, fami
 import { fixedBoardPlacementDetail, placementEvidenceKind, type PlacementBatch, type PlacementRating } from "./guide-placement.ts";
 import { guideBoardName, primaryFirst } from "./guide-reading.ts";
 import { heroAugmentForGuide, heroAugmentCategory } from "./hero-augments.ts";
-import { rerollEntryTeamId } from "./reroll-stages.ts";
+import { authoredDirectoryRoutes, isArchivedRerollBoard, rerollEntryTeamId } from "./reroll-stages.ts";
 import { usedPopulation } from "./team.ts";
 import type { Team } from "./types";
 import { isLiveLaunchTransition } from "./version-updates.ts";
@@ -45,13 +45,15 @@ export function guideSystems(section: Section, batch: GuideFamilyBatch, edition:
   const launch = isLiveLaunchTransition(patch);
   const validBatch = launch ? currentLaunchGuideFamily(batch, edition, patch)
     : currentRecommendationEvidence(batch, edition, patch, reviewedRollingPatch);
-  const teams = primaryFirst(sectionTeams(section), section.primaryTeamId);
+  const teams = primaryFirst(sectionTeams(section).filter(board => !isArchivedRerollBoard(section, board.id)), section.primaryTeamId);
   const primary = teams[0];
   if (!primary) return [];
   const byId = new Map(teams.map(board => [board.id, board]));
   const hero = !!heroAugmentForGuide(section) || section.category === heroAugmentCategory;
-  const sameGuide = (row: Pick<GuideFamilyStat, "sectionId" | "heroAugment">) =>
-    (!launch || validBatch) && batch.seasonId === edition && row.sectionId === section.id && !!row.heroAugment === hero;
+  const directoryRoutes = authoredDirectoryRoutes(section);
+  const sameGuide = (row: Pick<GuideFamilyStat, "sectionId" | "heroAugment" | "teamId">) =>
+    (!launch || validBatch) && batch.seasonId === edition && row.sectionId === section.id && !!row.heroAugment === hero &&
+    (!directoryRoutes.length || directoryRoutes.some(route => route.teamId === (row.teamId ?? primary.id)));
   const rows = batch.rows.filter(row => sameGuide(row) && recommendationTier(row) !== "review" && row.games >= minGames &&
     Number.isFinite(row.winRate) && Number.isFinite(row.topFourRate) && row.winRate >= 0 &&
     row.winRate <= row.topFourRate && row.topFourRate <= 1);
@@ -147,7 +149,8 @@ export function guideSystems(section: Section, batch: GuideFamilyBatch, edition:
     const entry = preferred.map(id => boards.find(board => board.id === id)).find(Boolean) ?? anchor;
     const name = guideBoardName(anchor);
     const branch = name.replace(/^[一二三四五六七八九十\d]+(?:级|人口)(?:上限|成型|稳血)?\s*(?:[·｜]\s*)?/, "");
-    const title = row?.name || branch || (anchor.id === primary.id ? section.title : name);
+    const title = directoryRoutes.find(route => route.teamId === entry.id)?.directoryTitle ??
+      (row?.name || branch || (anchor.id === primary.id ? section.title : name));
     const stat = validBatch ? row : undefined;
     return { sectionId: section.id, teamId: entry.id, boardIds: boards.map(board => board.id), title, ...(stat && { stat }) };
   }));

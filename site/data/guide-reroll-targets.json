@@ -7,7 +7,10 @@
       "00000000-0000-4000-8000-000000000089": ["ziggs", "kobuko"]
     }
   },
-  "sample-block-0229": { "targets": ["malzahar", "ekko"] },
+  "sample-block-0229": {
+    "targets": ["malzahar", "ekko"],
+    "boards": { "0dd45d5d-496c-459b-9db2-8e05355bd6c2": [] }
+  },
   "sample-block-0464": {
     "targets": ["neeko", "lillia"],
     "boards": { "00000000-0000-4000-8000-000000000114": ["neeko", "lillia", "gragas"] }

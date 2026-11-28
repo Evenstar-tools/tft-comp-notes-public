@@ -3985,6 +3985,41 @@
       "winRate": 0.3333333333333333
     },
     {
+      "population": 8,
+      "roster": [
+        "alune",
+        "braum",
+        "illaoi",
+        "k-sante",
+        "leona",
+        "neeko",
+        "sett",
+        "yuumi"
+      ],
+      "games": 2,
+      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Alune19-1&unit=DA_Braum19-1&unit=DA_Illaoi19-1&unit=DA_KSante19-1&unit=DA_Leona19-1&unit=DA_Neeko19-1&unit=DA_Sett19-1&unit=DA_Yuumi19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "conditions": {
+        "kind": "full",
+        "teamId": "449f6054-46e9-4bbd-ad34-5ea5b2c24a0d",
+        "population": 8
+      },
+      "sampleScope": "固定名单 · 不限星级与装备 · 无纹章、人口装或重复棋子",
+      "observedOn": "2026-11-28",
+      "placementCounts": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0
+      ],
+      "mean": 6.5,
+      "topFourRate": 0,
+      "winRate": 0
+    },
+    {
       "population": 9,
       "roster": [
         "alune",
@@ -7203,6 +7238,277 @@
       "mean": 5.7,
       "topFourRate": 0.22429906542056074,
       "winRate": 0.013280865715691098
+    },
+    {
+      "sectionId": "choreographer-draven-viego",
+      "population": 8,
+      "roster": [
+        "braum",
+        "draven",
+        "garen",
+        "gnar",
+        "kai-sa",
+        "viego",
+        "yone",
+        "yorick"
+      ],
+      "games": 612,
+      "placementCounts": [
+        98,
+        117,
+        118,
+        99,
+        82,
+        45,
+        39,
+        14
+      ],
+      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Braum19-1&unit=DA_Draven19-1&unit=DA_Garen19-1&unit=DA_Gnar19-1&unit=DA_Kaisa19-1&unit=DA_Viego19-1&unit=DA_Yone19-1&unit=DA_Yorick19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "sampleScope": "8级结算 · 固定棋盘名单 · 不限星级和装备 · 无纹章、额外人口或重复棋子",
+      "observedOn": "2026-11-28",
+      "conditions": {
+        "kind": "full",
+        "teamId": "fbe3bfcb-cb2d-4811-badd-a4b3e983feb1",
+        "population": 8
+      },
+      "querySignature": "[8,[\"braum\",\"draven\",\"garen\",\"gnar\",\"kai-sa\",\"viego\",\"yone\",\"yorick\"]]",
+      "build": "6045507",
+      "mean": 3.51,
+      "topFourRate": 0.7058823529411765,
+      "winRate": 0.16013071895424835
+    },
+    {
+      "sectionId": "sample-block-0229",
+      "population": 8,
+      "roster": [
+        "alune",
+        "braum",
+        "ekko",
+        "leona",
+        "lux",
+        "malzahar",
+        "neeko",
+        "yuumi"
+      ],
+      "games": 162,
+      "placementCounts": [
+        21,
+        48,
+        38,
+        29,
+        15,
+        7,
+        4,
+        0
+      ],
+      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Alune19-1&unit=DA_Braum19-1&unit=DA_Ekko19-1&unit=DA_Leona19-1&unit=DA_Lux19-1&unit=DA_Malzahar19-1&unit=DA_Neeko19-1&unit=DA_Yuumi19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "sampleScope": "8级结算 · 固定棋盘名单 · 不限星级和装备 · 无纹章、额外人口或重复棋子",
+      "observedOn": "2026-11-28",
+      "conditions": {
+        "kind": "full",
+        "teamId": "cfbd78c8-4f01-485f-8045-bcb096aa1b05",
+        "population": 8
+      },
+      "querySignature": "[8,[\"alune\",\"braum\",\"ekko\",\"leona\",\"lux\",\"malzahar\",\"neeko\",\"yuumi\"]]",
+      "build": "6045507",
+      "mean": 3.04,
+      "topFourRate": 0.8395061728395061,
+      "winRate": 0.12962962962962962
+    },
+    {
+      "sectionId": "sample-block-0203",
+      "population": 9,
+      "roster": [
+        "annie",
+        "elise",
+        "gwen",
+        "jax",
+        "jinx",
+        "shyvana",
+        "tibbers",
+        "vi",
+        "yunara"
+      ],
+      "querySignature": "[9,[\"annie\",\"elise\",\"gwen\",\"jax\",\"jinx\",\"shyvana\",\"tibbers\",\"vi\",\"yunara\"]]",
+      "build": "6045507",
+      "conditions": {
+        "kind": "full",
+        "teamId": "57c1decb-f161-4a28-9c3f-e7183a781289",
+        "population": 9
+      },
+      "sampleScope": "9级结算 · 固定名单 · 不限星级与配装 · 无纹章、人口装或重复棋子",
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=comps&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Annie19-1&unit=DA_Elise19-1&unit=DA_Gwen19-1&unit=DA_Jax19-1&unit=DA_Jinx19-1&unit=DA_Shyvana19-1&unit=DA_Tibbers19-1&unit=DA_Vi19-1&unit=DA_Yunara19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "games": 89,
+      "placementCounts": [
+        14,
+        13,
+        21,
+        20,
+        8,
+        8,
+        3,
+        2
+      ],
+      "mean": 3.46,
+      "topFourRate": 0.7640449438202247,
+      "winRate": 0.15730337078651685,
+      "observedOn": "2026-11-28"
+    },
+    {
+      "sectionId": "sample-block-1020",
+      "population": 8,
+      "roster": [
+        "braum",
+        "draven",
+        "gragas",
+        "kai-sa",
+        "leona",
+        "lillia",
+        "samira",
+        "vayne"
+      ],
+      "games": 274,
+      "placementCounts": [
+        47,
+        63,
+        58,
+        42,
+        31,
+        23,
+        5,
+        5
+      ],
+      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Braum19-1&unit=DA_Draven19-1&unit=DA_Gragas19-1&unit=DA_Kaisa19-1&unit=DA_Leona19-1&unit=DA_Lillia19-1&unit=DA_Samira19-1&unit=DA_Vayne19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "sampleScope": "8级结算 · 固定棋盘名单 · 不限星级和装备 · 无纹章、额外人口或重复棋子",
+      "observedOn": "2026-11-28",
+      "conditions": {
+        "kind": "full",
+        "teamId": "2c797a5f-2ed1-442c-86b9-f2fe48f39526",
+        "population": 8
+      },
+      "querySignature": "[8,[\"braum\",\"draven\",\"gragas\",\"kai-sa\",\"leona\",\"lillia\",\"samira\",\"vayne\"]]",
+      "build": "6045507",
+      "mean": 3.22,
+      "topFourRate": 0.7664233576642335,
+      "winRate": 0.17153284671532848
+    },
+    {
+      "sectionId": "sample-block-0258",
+      "population": 9,
+      "roster": [
+        "alune",
+        "aphelios",
+        "elise",
+        "ezreal",
+        "k-sante",
+        "kayn",
+        "leona",
+        "sett",
+        "yone"
+      ],
+      "querySignature": "[9,[\"alune\",\"aphelios\",\"elise\",\"ezreal\",\"k-sante\",\"kayn\",\"leona\",\"sett\",\"yone\"]]",
+      "build": "6045507",
+      "conditions": {
+        "kind": "full",
+        "teamId": "e37e7094-74df-4839-a1ca-e9005bbee85f",
+        "population": 9
+      },
+      "sampleScope": "9级结算 · 固定名单 · 未限定英雄强化、星级与配装",
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=comps&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Leona19-1&unit=DA_KSante19-1&unit=DA_Sett19-1&unit=DA_Elise19-1&unit=DA_Kayn19-1&unit=DA_Aphelios19-1&unit=DA_Ezreal19-1&unit=DA_Alune19-1&unit=DA_Yone19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "games": 28,
+      "placementCounts": [
+        2,
+        5,
+        6,
+        6,
+        3,
+        5,
+        1,
+        0
+      ],
+      "mean": 3.79,
+      "topFourRate": 0.6785714285714286,
+      "winRate": 0.07142857142857142,
+      "observedOn": "2026-11-28"
+    },
+    {
+      "sectionId": "sample-block-0367",
+      "population": 9,
+      "roster": [
+        "ahri",
+        "akali-kda",
+        "ekko",
+        "evelynn",
+        "gragas",
+        "leona",
+        "lillia",
+        "neeko",
+        "seraphine"
+      ],
+      "build": "6045507",
+      "conditions": {
+        "kind": "full",
+        "teamId": "fa58c8aa-702c-45cc-bc2d-75e78b8666ea",
+        "population": 9
+      },
+      "sampleScope": "9级结算 · 固定名单 · 1枚纹章，未限定纹章种类",
+      "sampleLabel": "单纹章均名",
+      "sampleNote": "单纹章样本，未限定纹章种类",
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=comps&level=9&emblem_count=1&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Lillia19-1&unit=DA_Gragas19-1&unit=DA_Leona19-1&unit=DA_Evelynn19-1&unit=DA_Neeko19-1&unit=DA_Seraphine19_Indie-1&unit=DA_19_Ahri-1&unit=DA_AkaliKDA19-1&unit=DA_Ekko19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "games": 97,
+      "placementCounts": [
+        56,
+        27,
+        9,
+        2,
+        1,
+        1,
+        1,
+        0
+      ],
+      "mean": 1.68,
+      "topFourRate": 0.9690721649484536,
+      "winRate": 0.5773195876288659,
+      "observedOn": "2026-11-28"
+    },
+    {
+      "sectionId": "sample-block-0464",
+      "population": 9,
+      "roster": [
+        "ahri",
+        "akali-kda",
+        "ekko",
+        "evelynn",
+        "gragas",
+        "kai-sa",
+        "leona",
+        "lillia",
+        "neeko"
+      ],
+      "querySignature": "[9,[\"ahri\",\"akali-kda\",\"ekko\",\"evelynn\",\"gragas\",\"kai-sa\",\"leona\",\"lillia\",\"neeko\"]]",
+      "build": "6045507",
+      "conditions": {
+        "kind": "full",
+        "teamId": "9b4ff401-a78b-48ae-b895-9ac931684465",
+        "population": 9
+      },
+      "sampleScope": "9级结算 · 固定名单 · 无纹章、人口装或重复棋子",
+      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&queue=PBE&patch=19.1&b_patch=c&days=3&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Leona19-1&unit=DA_Lillia19-1&unit=DA_Gragas19-1&unit=DA_AkaliKDA19-1&unit=DA_Neeko19-1&unit=DA_Kaisa19-1&unit=DA_Evelynn19-1&unit=DA_19_Ahri-1&unit=DA_Ekko19-1",
+      "games": 280,
+      "placementCounts": [
+        64,
+        58,
+        55,
+        48,
+        26,
+        18,
+        7,
+        4
+      ],
+      "mean": 3.06,
+      "topFourRate": 0.8035714285714286,
+      "winRate": 0.22857142857142856,
+      "observedOn": "2026-11-28"
     }
   ],
   "edition": "s19-pbe-19.1",
