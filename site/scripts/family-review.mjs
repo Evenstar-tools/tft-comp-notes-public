@@ -64,6 +64,23 @@ function roleIds(board, label) {
     .flatMap(role => role.units).filter(id => board.units.includes(id));
 }
 
+export function compatibleFamilyBoard(info, board, anchor, sourceRoster) {
+  if (!board) return false;
+  const eightToNine = board.teamId === info.landingTeamId && board.units.length === 8 && anchor.units.length === 9;
+  // The reviewed roster is a route entry. Only the nine-unit anchor represents the source lineup.
+  const matchesReviewedLanding = Array.isArray(info.landingRoster) && info.landingRoster.length === 8 &&
+    board.familyQueryEligible && anchor.familyQueryEligible &&
+    JSON.stringify([...board.units].sort()) === JSON.stringify([...info.landingRoster].sort()) &&
+    sourceRoster && JSON.stringify([...anchor.units].sort()) === JSON.stringify([...sourceRoster].sort());
+  const eligibleLanding = eightToNine && (info.landingRoster
+    ? matchesReviewedLanding
+    : board.units.every(unit => anchor.units.includes(unit)));
+  return board.sectionId === info.sectionId && board.special === anchor.special && !board.emblems?.length &&
+    (board.teamId === info.landingTeamId && info.landingRoster ? eligibleLanding : board.kind !== "过渡" || eligibleLanding) &&
+    roleIds(board, "主C").some(id => info.carryIds.includes(id)) &&
+    (!anchor.rollLevel || !board.rollLevel || anchor.rollLevel === board.rollLevel);
+}
+
 export function exactFamilyBoardSignature(board, group, unitIds, carryIds) {
   if (board?.familyQueryEligible !== true || board.special || board.emblems?.length) return;
   const roster = (group.units_string ?? "").split(",").map(id => unitIds.get(id.trim()));

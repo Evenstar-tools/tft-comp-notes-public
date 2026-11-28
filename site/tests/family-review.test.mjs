@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { changeSignals, compareBoards, exactFamilyBoardSignature, matchBoundCluster, sourceProfile, makeReviewQueue } from "../scripts/family-review.mjs";
+import { changeSignals, compareBoards, compatibleFamilyBoard, exactFamilyBoardSignature, matchBoundCluster, sourceProfile, makeReviewQueue } from "../scripts/family-review.mjs";
 import { crossCheck } from "../scripts/family-evidence.mjs";
 
 const meta = {set:"S19",queue:"PBE",patch:"19.1 Nov-20",days:3,model:427};
@@ -127,4 +127,23 @@ test("代表盘兼容 1–2 张挂件微调，主 C 丢失或大幅换阵必须�
   }, unitIds);
   assert.equal(hijackedCarry.ok, false);
   assert.equal(hijackedCarry.reason, "代表棋盘与主C配装有变");
+});
+
+test("史密奇体系保留已核八级换卡入口，名单或条件变化仍拒绝", () => {
+  const landingRoster = ["bard", "galio", "kayle", "locke", "mel", "olaf", "swain", "yorick"];
+  const nine = ["bard", "camille", "galio", "kayle", "mel", "olaf", "smeech", "swain", "yorick"];
+  const board = {
+    teamId: "eight", sectionId: "smeech", kind: "过渡", units: [...landingRoster].reverse(),
+    roles: [{ label: "主C", units: ["kayle"] }], familyQueryEligible: true,
+  };
+  const anchor = { teamId: "nine", sectionId: "smeech", units: nine, familyQueryEligible: true, rollLevel: 8 };
+  const info = { sectionId: "smeech", landingTeamId: "eight", carryIds: ["smeech", "kayle"] };
+  const reviewed = { ...info, landingRoster };
+  assert.equal(compatibleFamilyBoard(info, board, anchor, nine), false);
+  assert.equal(compatibleFamilyBoard(reviewed, board, anchor, nine), true);
+  assert.equal(compatibleFamilyBoard(reviewed, { ...board, teamId: "shared" }, anchor, nine), false);
+  assert.equal(compatibleFamilyBoard(reviewed, { ...board, emblems: [{ unitId: "kayle" }] }, anchor, nine), false);
+  assert.equal(compatibleFamilyBoard(reviewed, { ...board, units: board.units.map(id => id === "locke" ? "garen" : id) }, anchor, nine), false);
+  assert.equal(compatibleFamilyBoard(reviewed, board, anchor, nine.map(id => id === "camille" ? "garen" : id)), false);
+  assert.equal(compatibleFamilyBoard(info, { ...board, units: nine.filter(id => id !== "smeech") }, anchor, nine), true);
 });

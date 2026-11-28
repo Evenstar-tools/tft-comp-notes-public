@@ -179,6 +179,7 @@
       "sectionId": "sample-block-0275",
       "teamId": "00000000-0000-4000-8000-000000000082",
       "landingTeamId": "00000000-0000-4000-8000-000000000014",
+      "landingRoster": ["bard", "galio", "kayle", "locke", "mel", "olaf", "swain", "yorick"],
       "carryIds": [
         "smeech",
         "kayle"
