@@ -154,10 +154,12 @@ export function auditGuideCopy(section) {
   const oldUnlock = /薇恩[^。！？\n]{0,24}(?:打满|打|挂满|战斗|上场)[^。！？\n]{0,12}[三3]\s*回合|(?:打满|打|挂满|战斗|上场)[^。！？\n]{0,12}[三3]\s*回合[^。！？\n]{0,24}(?:开|解锁)[^。！？\n]{0,4}薇恩/;
   const oldStats = /(?:\bPBE\s*)?\b19\.1[a-z]?\b[^。！？\n]{0,40}\d[\d,，]*\s*场|棋盘均名\s*·/i;
   const oldThresholdTag = /【特殊运营门槛】/;
+  const authorChatter = /作者(?:把这套叫|示范|原称|称之为)/;
   return passages.flatMap(({ text = "", linkedSample, richText = [], ...source }) => [
     ...(oldUnlock.test(text) ? [{ rule: "obsolete-unlock", severity: "error", message: "正文仍有薇恩旧版三回合解锁说明", ...source }] : []),
     ...(!linkedSample && oldStats.test(text) ? [{ rule: "obsolete-stats", severity: "error", message: "正文仍有写死的旧战绩", ...source }] : []),
     ...(oldThresholdTag.test(text) ? [{ rule: "bracket-threshold-tag", severity: "error", message: "正文禁用【特殊运营门槛】重括号前缀，请直接用简短人话写清进场或解锁条件", ...source }] : []),
+    ...(authorChatter.test(text) ? [{ rule: "author-chatter", severity: "error", message: "正文禁写「作者把这套叫／作者示范」等无关叙事，署名走独立署名行、外号放 searchAliases", ...source }] : []),
     ...([text, ...richText].some(value => value && videoDomain.test(value))
       ? [{ rule: "video-link", severity: "error", message: "正文仍有视频平台外链", ...source }] : []),
   ]);
