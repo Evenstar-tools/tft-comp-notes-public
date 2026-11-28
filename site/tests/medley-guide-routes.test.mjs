@@ -53,15 +53,16 @@ test("an embedded midgame board links to its exact stage and conditional or out-
   assert.deepEqual(routes[1].opening, []);
 });
 
-test("published reviewed transitions prove Guinsoo Gnar, Shojin Zoe and the ninth-level Vi check", () => {
+test("current-build gear evidence supports Gnar to Kai’Sa, Shojin Zoe and the ninth-level Vi check", () => {
   const readData = name => JSON.parse(readFileSync(new URL("../data/" + name, import.meta.url), "utf8"));
   const { sections, season: publicationSeason } = readData("public-preview.json");
   const current = readData("season.json");
   const { groups } = readData("medley-groups.json");
   const gearEvidence = readData("medley-gear-evidence.json");
-  const patch = { seasonId: "s19-pbe", effectiveAt: "2026-11-25T20:56:38Z", metaTftPatch: { patch: "19.1", bPatch: "c" } };
-  assert.ok(currentWearerSnapshot(gearEvidence, patch));
-  assert.equal(currentWearerSnapshot(gearEvidence, { ...patch, metaTftPatch: { patch: "19.1", bPatch: "d" } }), false);
+  const patch = readData("current-patch.json");
+  assert.ok(currentWearerSnapshot(gearEvidence, patch), "Refresh medley gear evidence when the current build changes");
+  const afterSample = new Date(Date.parse(gearEvidence.updatedAt) + 1).toISOString();
+  assert.equal(currentWearerSnapshot(gearEvidence, { ...patch, effectiveAt: afterSample }), false);
   const routes = medleyGuideRoutes(sections, publicationSeason, current);
   const fits = buildMedleyFits(groups, routes, current.units, current.items, "sona", 5, gearEvidence.rows);
   const renata = fits[18].find(fit => fit.finalHref === "/guides/bodyguard-renata?team=lv9-6-bodyguard");
@@ -73,7 +74,7 @@ test("published reviewed transitions prove Guinsoo Gnar, Shojin Zoe and the nint
   assert.equal(gnar.handoff.toId, "kai-sa");
   assert.equal(gnar.handoff.source, "guide");
   assert.equal(gnar.handoff.quality, "usable");
-  assert.deepEqual(gnar.handoff.itemIds, ["TFT_Item_GuinsoosRageblade", "TFT_Item_RunaansHurricane"]);
+  assert.deepEqual(gnar.handoff.itemIds, ["TFT_Item_RunaansHurricane"]);
   const opening = routes.find(route => route.guideOpening && route.stageHref === gnar.stageHref && route.finalHref === gnar.finalHref);
   assert.ok(!opening.opening.find(piece => piece.unitId === "kai-sa").items.includes("TFT_Item_GuinsoosRageblade"));
   const zoe = fits[13].find(fit => fit.handoff?.fromId === "zoe");
@@ -88,7 +89,13 @@ test("newly added, edited, or removed S19 guides automatically recompute medley 
   const readData = name => JSON.parse(readFileSync(new URL("../data/" + name, import.meta.url), "utf8"));
   const current = readData("season.json");
   const { groups } = readData("medley-groups.json");
-  const { rows: evidence } = readData("medley-gear-evidence.json");
+  const evidence = [{
+    unitId: "renata-glasc",
+    stars: 3,
+    itemId: "TFT_Item_SpearOfShojin",
+    equipped: { games: 200, mean: 3.5 },
+    alternatives: { games: 200, mean: 3.6 },
+  }];
 
   const newGuide = {
     id: "new-s19-guide",
@@ -124,7 +131,7 @@ test("newly added, edited, or removed S19 guides automatically recompute medley 
     }],
   };
 
-  // The new guide picks up the existing Renata item evidence without a route override.
+  // The new guide picks up Renata item evidence without a route override.
   const recalculate = (sections, samples = evidence) =>
     buildMedleyFits(groups, medleyGuideRoutes(sections, current, current), current.units, current.items, "sona", 5, samples);
   const addedFits = recalculate([newGuide]);

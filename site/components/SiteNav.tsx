@@ -15,7 +15,7 @@ const referenceLinks = [
   ["/items", "装备"], ["/updates", "更新"],
 ] as const;
 const referenceGroups = [
-  { label: "棋子与羁绊", links: [referenceLinks[0], referenceLinks[1], ["/heroes?view=grid", "羁绊网"], ["/traits/medley", "合奏组合"]] },
+  { label: "棋子与羁绊", links: [referenceLinks[0], referenceLinks[1], ["/heroes?view=grid", "羁绊网"]] },
   { label: "装备与强化", links: [referenceLinks[3], referenceLinks[2]] },
 ];
 
@@ -80,6 +80,7 @@ export function SiteNav() {
 
   function isCurrent(href: string) {
     if (href === "/") return pathname === "/" || pathname === "/find" || pathname.startsWith("/guides/");
+    if (href === "/traits" && pathname === "/traits/medley") return false;
     if (href === "/items") return pathname === "/items" || pathname.startsWith("/items/") || pathname === "/emblems" || pathname.startsWith("/emblems/");
     return pathname === href || pathname.startsWith(href + "/");
   }
@@ -113,6 +114,7 @@ export function SiteNav() {
           </div>
         </details>
         <a className="combo-tool-link" href="/combos" aria-current={isCurrent("/combos") ? "page" : undefined}>凑羁绊</a>
+        <a href="/traits/medley" aria-current={isCurrent("/traits/medley") ? "page" : undefined}>合奏组合</a>
         <a className="task-editor-link" href="/editor" aria-label="阵容编辑器" aria-current={pathname === "/editor" ? "page" : undefined}>编辑器</a>
       </nav>
       <div className="masthead-tools">
