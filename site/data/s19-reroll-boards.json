@@ -899,6 +899,105 @@
             ]
           }
         ]
+      },
+      {
+        "teamId": "57c1decb-f161-4a28-9c3f-e7183a781289",
+        "parentTeamId": "00000000-0000-4000-8000-000000000016",
+        "boardRole": "stage",
+        "name": "九级 · 七离子双电子",
+        "notes": "金克丝与格温都到手时，用金克丝换拉克丝，再补蔚开双电子、双主宰。格温没开就留拉克丝，先保七离子。",
+        "pieces": [
+          {
+            "unitId": "elise",
+            "stars": 3,
+            "position": 3,
+            "items": [
+              "TFT_Item_GargoyleStoneplate",
+              "TFT_Item_WarmogsArmor",
+              "TFT_Item_Redemption"
+            ]
+          },
+          {
+            "unitId": "annie",
+            "stars": 2,
+            "position": 8,
+            "items": [
+              "TFT_Item_Crownguard"
+            ]
+          },
+          {
+            "unitId": "tibbers",
+            "stars": 2,
+            "position": 11,
+            "items": []
+          },
+          {
+            "unitId": "jax",
+            "stars": 2,
+            "position": 12,
+            "items": []
+          },
+          {
+            "unitId": "yunara",
+            "stars": 3,
+            "position": 21,
+            "items": [
+              "TFT_Item_GuinsoosRageblade",
+              "TFT_Item_RunaansHurricane",
+              "TFT_Item_LastWhisper"
+            ]
+          },
+          {
+            "unitId": "jinx",
+            "stars": 2,
+            "position": 26,
+            "items": []
+          },
+          {
+            "unitId": "shyvana",
+            "stars": 2,
+            "position": 9,
+            "items": []
+          },
+          {
+            "unitId": "gwen",
+            "stars": 1,
+            "position": 13,
+            "items": []
+          },
+          {
+            "unitId": "vi",
+            "stars": 2,
+            "position": 4,
+            "items": []
+          }
+        ],
+        "roles": [
+          {
+            "label": "主C",
+            "units": [
+              "yunara"
+            ]
+          },
+          {
+            "label": "主坦",
+            "units": [
+              "elise"
+            ]
+          },
+          {
+            "label": "副坦",
+            "units": [
+              "shyvana"
+            ]
+          },
+          {
+            "label": "副C",
+            "units": [
+              "gwen"
+            ]
+          }
+        ]
       }
     ],
     "edits": [

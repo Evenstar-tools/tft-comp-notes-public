@@ -7239,6 +7239,45 @@
       "mean": 3.04,
       "topFourRate": 0.8395061728395061,
       "winRate": 0.12962962962962962
+    },
+    {
+      "sectionId": "sample-block-0203",
+      "population": 9,
+      "roster": [
+        "annie",
+        "elise",
+        "gwen",
+        "jax",
+        "jinx",
+        "shyvana",
+        "tibbers",
+        "vi",
+        "yunara"
+      ],
+      "querySignature": "[9,[\"annie\",\"elise\",\"gwen\",\"jax\",\"jinx\",\"shyvana\",\"tibbers\",\"vi\",\"yunara\"]]",
+      "build": "6045507",
+      "conditions": {
+        "kind": "full",
+        "teamId": "57c1decb-f161-4a28-9c3f-e7183a781289",
+        "population": 9
+      },
+      "sampleScope": "9级结算 · 固定名单 · 不限星级与配装 · 无纹章、人口装或重复棋子",
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=comps&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Annie19-1&unit=DA_Elise19-1&unit=DA_Gwen19-1&unit=DA_Jax19-1&unit=DA_Jinx19-1&unit=DA_Shyvana19-1&unit=DA_Tibbers19-1&unit=DA_Vi19-1&unit=DA_Yunara19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "games": 89,
+      "placementCounts": [
+        14,
+        13,
+        21,
+        20,
+        8,
+        8,
+        3,
+        2
+      ],
+      "mean": 3.46,
+      "topFourRate": 0.7640449438202247,
+      "winRate": 0.15730337078651685,
+      "observedOn": "2026-11-28"
     }
   ],
   "edition": "s19-pbe-19.1",
