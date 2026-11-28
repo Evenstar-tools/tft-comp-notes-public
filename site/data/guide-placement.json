@@ -7377,6 +7377,8 @@
         "population": 9
       },
       "sampleScope": "9级结算 · 固定名单 · 1枚纹章，未限定纹章种类",
+      "sampleLabel": "单纹章均名",
+      "sampleNote": "单纹章样本，未限定纹章种类",
       "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=comps&level=9&emblem_count=1&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Lillia19-1&unit=DA_Gragas19-1&unit=DA_Leona19-1&unit=DA_Evelynn19-1&unit=DA_Neeko19-1&unit=DA_Seraphine19_Indie-1&unit=DA_19_Ahri-1&unit=DA_AkaliKDA19-1&unit=DA_Ekko19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "games": 97,
       "placementCounts": [
