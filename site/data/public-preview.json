@@ -15044,6 +15044,11 @@
           ],
           "level": 0,
           "text": "棋盘配装 · 六保镖莉莉娅\n主C：莉莉娅。离子火花、正义之手、夜之锋刃。\n主坦：内瑟斯。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n功能装：烈娜塔。朔极之矛、莫雷洛秘典。"
+        },
+        {
+          "id": "web-kda-lillia-lv9-vi-roles",
+          "type": "text",
+          "text": "棋盘配装 · 九级 · 六护卫补蔚\n主C：莉莉娅。离子火花、正义之手、夜之锋刃。\n主坦：内瑟斯。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n功能装：烈娜塔·戈拉斯克。朔极之矛、莫雷洛秘典。"
         }
       ],
       "kind": "guide",
@@ -15257,6 +15262,92 @@
               "items": []
             }
           ]
+        },
+        {
+          "id": "9b4479a2-b2c9-4a1a-9d33-47e628170f50",
+          "name": "九级 · 六护卫补蔚",
+          "category": "待分类",
+          "notes": "莉莉娅三星、内瑟斯两星能稳血时再升九，补蔚和贾克斯开双电子。",
+          "revision": 1,
+          "updatedAt": "2026-11-28T16:11:57.718Z",
+          "sectionId": "sample-block-0020",
+          "boardRole": "stage",
+          "pieces": [
+            {
+              "instanceId": "bbcca6df-b149-4784-b8fd-c9a99927b304",
+              "unitId": "lillia",
+              "position": 9,
+              "stars": 3,
+              "items": [
+                "TFT_Item_IonicSpark",
+                "TFT_Item_UnstableConcoction",
+                "TFT_Item_GuardianAngel"
+              ]
+            },
+            {
+              "instanceId": "fe43129f-0514-457d-ace7-a8d92703facc",
+              "unitId": "kennen",
+              "position": 10,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "6a1182f5-b761-4d09-a6b9-0d3d27b1a99b",
+              "unitId": "nasus",
+              "position": 2,
+              "stars": 2,
+              "items": [
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_WarmogsArmor",
+                "TFT_Item_Redemption"
+              ]
+            },
+            {
+              "instanceId": "f7f760fb-21af-4c57-87db-67017564a4db",
+              "unitId": "jax",
+              "position": 1,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "afb98c96-27db-45d5-83b7-99334b0a9c28",
+              "unitId": "k-sante",
+              "position": 11,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "5afa149b-1e42-4c70-94f7-4aae45c67bb0",
+              "unitId": "leona",
+              "position": 12,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "05b7b5b1-c8e2-4fd0-8f34-f61c275efc0a",
+              "unitId": "renata-glasc",
+              "position": 23,
+              "stars": 2,
+              "items": [
+                "TFT_Item_SpearOfShojin",
+                "TFT_Item_Morellonomicon"
+              ]
+            },
+            {
+              "instanceId": "d45a1cf5-cfac-4dc0-8216-7bad62080d88",
+              "unitId": "ahri",
+              "position": 25,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "8db85bfa-ef45-462d-95ca-4c445b62b225",
+              "unitId": "vi",
+              "position": 8,
+              "stars": 1,
+              "items": []
+            }
+          ]
         }
       ],
       "team": {
@@ -15339,7 +15430,8 @@
       },
       "primaryTeamId": "00000000-0000-4000-8000-000000000091",
       "stageTeamIds": [
-        "00000000-0000-4000-8000-000000000072"
+        "00000000-0000-4000-8000-000000000072",
+        "9b4479a2-b2c9-4a1a-9d33-47e628170f50"
       ]
     },
     {
