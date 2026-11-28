@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { registerHooks } from "node:module";
 import { sectionTeams } from "../domain/document-flow.ts";
+import { guideRoute } from "../domain/guide-reading.ts";
 import { guideHeaderCoreSample, guidePromotionRows, guideSameLevelSwaps, guideSystemDisplayBoards, guideSystemPhases, guideSystemSample, guideSystems, rankGuideSystems, systemMeanTone } from "../domain/guide-variant-strip.ts";
 import { resolveBoardTeamId } from "../domain/guide-slugs.ts";
 import { GUIDE_SECTION_IDS } from "../domain/guide-identities.ts";
@@ -187,6 +188,35 @@ test("authored upgrades and swaps remain accessible within their route", () => {
   assert.equal(asheSystems[0].stat, ashe);
   const zoeSystems = guide("sample-block-1004", batch).systems;
   assert(zoeSystems.find(system => system.teamId === id("1126"))?.boardIds.includes(id("1094")));
+});
+
+test("Viego keeps the six-Slayer board at level seven when moving to and from the Garen upgrade", () => {
+  const { section, systems, boards } = guide("sample-block-0243");
+  const system = systems.find(entry => entry.teamId === id("0074"));
+  assert.ok(system);
+  const routeBoards = boards(system);
+  const seven = routeBoards.find(board => board.id === id("0074"));
+  const eight = routeBoards.find(board => board.id === section.primaryTeamId);
+  const legacySeven = routeBoards.find(board => board.id === id("0041"));
+  assert.ok(seven && eight && legacySeven);
+
+  const roster = board => board.pieces.map(piece => piece.unitId).sort();
+  assert.deepEqual(roster(seven), ["amumu", "briar", "camille", "kayn", "viego", "yasuo", "yone"]);
+  assert.deepEqual(roster(eight), [...roster(seven), "garen"].sort());
+
+  for (const selected of [seven, eight]) {
+    const displayed = guideSystemDisplayBoards(section, routeBoards, selected);
+    const authored = guideRoute(section, sectionTeams(section), selected);
+    const phases = guideSystemPhases(displayed, seven, selected, authored.phases);
+    assert.deepEqual(phases.map(step => [step.label, step.team.id]), [
+      ["7级六舞者", seven.id],
+      ["8级补盖伦", eight.id],
+    ]);
+  }
+
+  const oldLink = guideSystemDisplayBoards(section, routeBoards, legacySeven);
+  assert(oldLink.includes(legacySeven));
+  assert(!oldLink.includes(seven));
 });
 
 test("Kennen opens the authored five-level reroll board within its system", () => {
