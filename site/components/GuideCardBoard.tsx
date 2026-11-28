@@ -28,7 +28,10 @@ export function GuideCardBoard({ team, data, roles, chaseTargets, eager, title, 
   const traits = traitCounts(team.pieces, data.units, data.traits, data.items)
     .filter(trait => traitGroup(trait) === "已开常规").slice(0, 3);
   const itemMap = new Map(data.items.map(item => [item.id, item]));
-  const lineupLabel = roster.map(({ unit, role }) => [unit.name, coreRole(role)].filter(Boolean).join(" ")).join("、");
+  const lineupLabel = roster.map(({ unit, piece, role }) => {
+    const core = coreRole(role);
+    return core ? `${unit.name} ${core} ${piece.stars} 星` : unit.name;
+  }).join("、");
   const action = expanded ? "收起快看" : "快看棋盘";
   const level = usedPopulation(team.pieces);
 
@@ -54,10 +57,10 @@ export function GuideCardBoard({ team, data, roles, chaseTargets, eager, title, 
           const chaseThree = piece.stars === 3 && chaseTargets.includes(unit.id);
           const core = coreRole(role);
           return <span className={"guide-card-avatar cost-" + unit.cost} data-core={core} key={piece.instanceId}
-            title={unit.name + (chaseThree ? " · 追三星" : "")}>
+            title={unit.name + (chaseThree ? " · 追三星" : core ? ` · ${piece.stars} 星` : "")}>
             <span className="guide-card-portrait">
               <img src={unit.image} alt="" width={56} height={42} draggable={false} loading={eager ? "eager" : "lazy"} decoding="async" />
-              {chaseThree && <Stars className="guide-card-stars" count={3} size={12} />}
+              {(core || chaseThree) && <Stars className="guide-card-stars" count={piece.stars} size={12} />}
             </span>
             {core && <>
               {piece.items.length > 0 && <span className="guide-card-items">{piece.items.map((id, index) => {
