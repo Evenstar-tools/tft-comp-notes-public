@@ -69,7 +69,7 @@ const guideSlugs: Record<string, GuideSlugs> = {
     "00000000-0000-4000-8000-000000000099": "lv7-ahri",
     "00000000-0000-4000-8000-000000000118": "lv6-original",
   } },
-  "sample-block-0407": { slug: "showoff-draven", boards: {
+  "sample-block-0407": { slug: "showoff-draven", searchAliases: { "lv7-viego": ["德莱文佛爷", "佛爷德莱文"] }, boards: {
     "00000000-0000-4000-8000-000000000013": "lv7",
     "00000000-0000-4000-8000-000000000029": "lv8",
     "00000000-0000-4000-8000-000000001177": "lv7-viego",
