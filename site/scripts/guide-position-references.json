@@ -1,0 +1,32 @@
+[
+  {
+    "sectionId": "sample-block-0854",
+    "teamId": "b8f3e967-922d-4a3a-83c4-c62d111b208f",
+    "positions": {"swain": 1, "galio": 2, "leona": 3, "k-sante": 4, "garen": 5, "lucian": 21, "mel": 25, "ahri": 27},
+    "checks": [{"rule": "crowded-frontline"}, {"rule": "stoneplate-crowded", "unitId": "leona"}]
+  },
+  {
+    "sectionId": "sample-block-0854",
+    "teamId": "1c6360bc-59b9-4134-98d3-3795b30cf53a",
+    "positions": {"swain": 1, "galio": 2, "leona": 3, "k-sante": 4, "garen": 5, "smeech": 20, "lucian": 21, "mel": 25, "ahri": 27},
+    "checks": [{"rule": "crowded-frontline"}, {"rule": "stoneplate-crowded", "unitId": "leona"}]
+  },
+  {
+    "sectionId": "sample-block-0854",
+    "teamId": "9e3202c6-84e7-4fbc-b092-24f2818bbc3b",
+    "positions": {"swain": 1, "galio": 2, "leona": 3, "k-sante": 4, "garen": 5, "neeko": 20, "lucian": 21, "mel": 25, "ahri": 27},
+    "checks": [{"rule": "crowded-frontline"}, {"rule": "stoneplate-crowded", "unitId": "leona"}]
+  },
+  {
+    "sectionId": "sample-block-0854",
+    "teamId": "2ebc0e10-00bd-415f-9ba9-5f7f888ccf61",
+    "positions": {"dr-mundo": 2, "leona": 3, "k-sante": 4, "garen": 5, "vladimir": 18, "smeech": 20, "renata-glasc": 21, "mel": 25, "ahri": 27},
+    "checks": [{"rule": "crowded-frontline"}]
+  },
+  {
+    "sectionId": "sample-block-0854",
+    "teamId": "1808c76f-5fa3-4ccd-b1e3-8fdf6f5f03fe",
+    "positions": {"galio": 0, "dr-mundo": 1, "k-sante": 2, "yone": 3, "leona": 4, "garen": 5, "smeech": 20, "aphelios": 24, "ahri": 27},
+    "checks": [{"rule": "crowded-frontline"}, {"rule": "stoneplate-crowded", "unitId": "dr-mundo"}]
+  }
+]

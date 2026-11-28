@@ -3,6 +3,7 @@ import { pathToFileURL } from "node:url";
 import { parseArgs } from "node:util";
 import { currentGuideSeason as season, prepareFamilyPublication as prepareAuditPublication } from "./export-family-catalog.mjs";
 import currentPatch from "../data/current-patch.json" with { type: "json" };
+import guidePositionReferences from "./guide-position-references.json" with { type: "json" };
 import { boardNeighbors } from "../domain/board-layout.ts";
 import { readableSection, sectionTeams } from "../domain/document-flow.ts";
 import { allBlocks, isEditorialSection, readingNotes } from "../domain/guide-reading.ts";
@@ -183,11 +184,16 @@ export function auditGuidePublication(publication, recommendations, { sectionIds
       const team = teams.find(entry => entry.id === teamId);
       if (!team) return { teamId, issues: [{ rule: "missing-board", severity: "error", message: "攻略入口或推荐棋盘不存在" }] };
       const roles = readingNotes(section, team, data).roles;
+      const reference = guidePositionReferences.find(entry => entry.sectionId === sectionId && entry.teamId === teamId &&
+        team.pieces.length === Object.keys(entry.positions).length &&
+        team.pieces.every(piece => entry.positions[piece.unitId] === piece.position));
       const issues = auditGuideBoard(team, roles, validData, { rangedOlaf: sectionId === "sample-block-0281" }).map(issue => {
-        const exception = positioningRules.has(issue.rule) && overrides.find(override => override.sectionId === sectionId &&
-          override.teamId === teamId && override.rule === issue.rule && override.reason?.trim() &&
-          (!override.unitId || override.unitId === issue.unitId));
-        return exception ? { ...issue, severity: "waived", reason: exception.reason } : issue;
+        if (!positioningRules.has(issue.rule)) return issue;
+        const matches = ({ rule, unitId }) => rule === issue.rule && (!unitId || unitId === issue.unitId);
+        const exception = overrides.find(override => override.sectionId === sectionId &&
+          override.teamId === teamId && matches(override) && override.reason?.trim());
+        const reason = exception?.reason ?? (reference?.checks.some(matches) ? "按站主指定的原图录入" : undefined);
+        return reason ? { ...issue, severity: "waived", reason } : issue;
       });
       return { teamId, name: team.webTitle ?? team.name, roles: roles.map(({ label, units }) => ({ label, units })), issues };
     });

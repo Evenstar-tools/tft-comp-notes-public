@@ -6,6 +6,7 @@ import { sectionTeams } from "../domain/document-flow.ts";
 import { guideBody, guidePlaystyle, guideRollLevel, guideRoster, guideUnitMatch, isBoardLoadout, readingNotes, sourceSummary } from "../domain/guide-reading.ts";
 import { heroAugmentForGuide } from "../domain/hero-augments.ts";
 import { allGuideIds, auditGuideBoard, auditGuideCopy, auditGuidePublication, featuredGuideIds, prepareAuditPublication } from "../scripts/audit-guide-boards.mjs";
+import guidePositionReferences from "../scripts/guide-position-references.json" with { type: "json" };
 import { buildFamilyCatalog } from "../scripts/export-family-catalog.mjs";
 
 const preview = readData("public-preview");
@@ -149,11 +150,31 @@ test("a board-specific positioning waiver cannot hide invalid equipment", () => 
     [["amumu-position", "waived"], ["invalid-item", "error"]]);
 });
 
+test("reviewed screenshot positions are preserved and a moved piece cannot keep the reference exception", () => {
+  const publication = prepareAuditPublication(structuredClone(preview));
+  for (const reference of guidePositionReferences) {
+    const section = publication.sections.find(section => section.id === reference.sectionId);
+    const board = sectionTeams(section).find(team => team.id === reference.teamId);
+    const positions = Object.fromEntries(board.pieces.map(piece => [piece.unitId, piece.position]));
+    assert.deepEqual(positions, reference.positions, board.name);
+  }
+
+  const sectionId = guidePositionReferences[0].sectionId;
+  const section = publication.sections.find(section => section.id === sectionId);
+  const board = sectionTeams(section).find(team => team.id === guidePositionReferences[0].teamId);
+  const leona = board.pieces.find(piece => piece.unitId === "leona");
+  const galio = board.pieces.find(piece => piece.unitId === "galio");
+  [leona.position, galio.position] = [galio.position, leona.position];
+  const report = auditGuidePublication(publication, recommendations, { sectionIds: [sectionId] });
+  const issues = report.guides[0].boards.find(entry => entry.teamId === board.id).issues;
+  assert.ok(issues.some(issue => issue.rule === "stoneplate-crowded" && issue.severity === "error"));
+});
+
 test("the 14 featured guides pass on the combined public boards and retain roles, routes and catalog parity", () => {
   const publication = prepareAuditPublication(preview);
   const report = auditGuidePublication(publication, recommendations);
   assert.deepEqual(report.guides.map(guide => guide.sectionId), featuredGuideIds);
-  assert.deepEqual(report.summary, { guides: 14, boards: 57, errors: 0, warnings: 0, waived: 0 });
+  assert.deepEqual(report.summary, { guides: 14, boards: 57, errors: 0, warnings: 0, waived: 9 });
   const catalog = buildFamilyCatalog(preview);
   const selected = new Map();
   const roleOrder = ["主C", "主坦", "副C"];
@@ -261,7 +282,7 @@ test("every published guide passes strict board and copy compliance with zero er
   const report = auditGuidePublication(publication, recommendations, { sectionIds });
   const findings = report.guides.flatMap(guide => [
     ...guide.issues.map(issue => `${guide.sectionId} ${guide.title} [${issue.rule}] ${issue.message}`),
-    ...guide.boards.flatMap(board => board.issues.map(issue => `${guide.sectionId} ${board.name ?? board.teamId} [${issue.rule}] ${issue.message}`)),
+    ...guide.boards.flatMap(board => board.issues.filter(issue => issue.severity !== "waived").map(issue => `${guide.sectionId} ${board.name ?? board.teamId} [${issue.rule}] ${issue.message}`)),
   ]);
   assert.deepEqual(findings, []);
   assert.equal(report.summary.errors, 0);

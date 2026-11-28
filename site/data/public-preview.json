@@ -24104,14 +24104,14 @@
             {
               "instanceId": "4f4f56c2-0e0a-4746-9664-f07d5ce2f08c",
               "unitId": "k-sante",
-              "position": 0,
+              "position": 4,
               "stars": 2,
               "items": []
             },
             {
               "instanceId": "c5de4779-71ba-4628-a3cb-2ed082dc4536",
               "unitId": "leona",
-              "position": 4,
+              "position": 3,
               "stars": 2,
               "items": [
                 "TFT_Item_GargoyleStoneplate",
@@ -24122,7 +24122,7 @@
             {
               "instanceId": "75642234-5009-4feb-8c03-595d1b8a1abd",
               "unitId": "garen",
-              "position": 6,
+              "position": 5,
               "stars": 2,
               "items": [
                 "TFT_Item_SteraksGage"
@@ -24131,14 +24131,14 @@
             {
               "instanceId": "09a86397-cd12-4999-9d2c-3e3fd8bd06b0",
               "unitId": "swain",
-              "position": 8,
+              "position": 1,
               "stars": 2,
               "items": []
             },
             {
               "instanceId": "22198b1d-195d-4491-994a-b5e05957d4f6",
               "unitId": "galio",
-              "position": 10,
+              "position": 2,
               "stars": 2,
               "items": []
             },
@@ -24174,7 +24174,7 @@
             {
               "instanceId": "ae62c4f5-ca21-41ae-b4f0-b62880e273b9",
               "unitId": "smeech",
-              "position": 12,
+              "position": 20,
               "stars": 1,
               "items": []
             }
@@ -24194,14 +24194,14 @@
             {
               "instanceId": "e7ad9186-b594-4bfb-9c6d-d63c9a08de27",
               "unitId": "k-sante",
-              "position": 0,
+              "position": 4,
               "stars": 2,
               "items": []
             },
             {
               "instanceId": "fb686836-a96b-47be-9804-23bc5ece6bfc",
               "unitId": "leona",
-              "position": 4,
+              "position": 3,
               "stars": 2,
               "items": [
                 "TFT_Item_GargoyleStoneplate",
@@ -24212,7 +24212,7 @@
             {
               "instanceId": "830030a5-9960-4b98-a57d-e1000a28db43",
               "unitId": "garen",
-              "position": 6,
+              "position": 5,
               "stars": 2,
               "items": [
                 "TFT_Item_SteraksGage"
@@ -24221,14 +24221,14 @@
             {
               "instanceId": "11ae34d1-8a2f-4543-934b-2d6fc26be9ca",
               "unitId": "swain",
-              "position": 8,
+              "position": 1,
               "stars": 2,
               "items": []
             },
             {
               "instanceId": "0dd4625a-f0d7-4997-a618-48fe59ca525c",
               "unitId": "galio",
-              "position": 10,
+              "position": 2,
               "stars": 2,
               "items": []
             },
@@ -24276,14 +24276,14 @@
             {
               "instanceId": "c64ae5cf-d31c-44dc-b0fa-2dbfd9919549",
               "unitId": "k-sante",
-              "position": 0,
+              "position": 4,
               "stars": 2,
               "items": []
             },
             {
               "instanceId": "7d3d5de7-b2c3-463b-843d-7af4258b2db4",
               "unitId": "leona",
-              "position": 4,
+              "position": 3,
               "stars": 2,
               "items": [
                 "TFT_Item_GargoyleStoneplate",
@@ -24294,7 +24294,7 @@
             {
               "instanceId": "1539af03-838f-4399-a69a-98fb7ef48ecb",
               "unitId": "garen",
-              "position": 6,
+              "position": 5,
               "stars": 2,
               "items": [
                 "TFT_Item_SteraksGage"
@@ -24303,14 +24303,14 @@
             {
               "instanceId": "8df61077-6a24-41b5-bf48-21a532903dc4",
               "unitId": "swain",
-              "position": 8,
+              "position": 1,
               "stars": 2,
               "items": []
             },
             {
               "instanceId": "efde2b6a-8328-4d45-80f6-603ac158f809",
               "unitId": "galio",
-              "position": 10,
+              "position": 2,
               "stars": 2,
               "items": []
             },
@@ -24346,7 +24346,7 @@
             {
               "instanceId": "d996a37c-bfde-4fcf-a3a4-04fd3fb47e54",
               "unitId": "neeko",
-              "position": 7,
+              "position": 20,
               "stars": 1,
               "items": []
             }
@@ -24365,14 +24365,14 @@
             {
               "instanceId": "4ffa0a5f-2f9f-40d4-9517-1748096fc817",
               "unitId": "k-sante",
-              "position": 0,
+              "position": 4,
               "stars": 2,
               "items": []
             },
             {
               "instanceId": "db7ab822-7b7b-473e-ae61-9ca09edf3ffa",
               "unitId": "dr-mundo",
-              "position": 3,
+              "position": 2,
               "stars": 2,
               "items": [
                 "TFT_Item_GargoyleStoneplate",
@@ -24392,14 +24392,14 @@
             {
               "instanceId": "6524b0d9-3e3a-407f-b422-56ebc94fd7d6",
               "unitId": "leona",
-              "position": 11,
+              "position": 3,
               "stars": 2,
               "items": []
             },
             {
               "instanceId": "4392680c-5b84-435e-b7c1-39b901881cef",
               "unitId": "smeech",
-              "position": 12,
+              "position": 20,
               "stars": 1,
               "items": []
             },
@@ -24456,14 +24456,14 @@
             {
               "instanceId": "f37beb9e-96ad-4f39-a328-640478004eb8",
               "unitId": "k-sante",
-              "position": 0,
+              "position": 2,
               "stars": 2,
               "items": []
             },
             {
               "instanceId": "f92eb380-0035-40b8-9f4a-217247dc7dad",
               "unitId": "dr-mundo",
-              "position": 3,
+              "position": 1,
               "stars": 2,
               "items": [
                 "TFT_Item_GargoyleStoneplate",
@@ -24483,35 +24483,35 @@
             {
               "instanceId": "c8e8ae68-21a5-4e55-8f81-3f4a9170cc8c",
               "unitId": "galio",
-              "position": 9,
+              "position": 0,
               "stars": 2,
               "items": []
             },
             {
               "instanceId": "4125e0e9-ecf8-4308-be5b-1dc009230711",
               "unitId": "leona",
-              "position": 11,
+              "position": 4,
               "stars": 2,
               "items": []
             },
             {
               "instanceId": "01f6bbcd-939b-4e6d-bcbe-854bd1db063a",
               "unitId": "smeech",
-              "position": 12,
+              "position": 20,
               "stars": 1,
               "items": []
             },
             {
               "instanceId": "aa84da6b-059a-4a38-a481-2f5776215469",
               "unitId": "yone",
-              "position": 13,
+              "position": 3,
               "stars": 2,
               "items": []
             },
             {
               "instanceId": "c27eadb2-9a2d-476c-b692-de5d56813611",
               "unitId": "aphelios",
-              "position": 21,
+              "position": 24,
               "stars": 1,
               "items": [
                 "TFT_Item_GuinsoosRageblade",
