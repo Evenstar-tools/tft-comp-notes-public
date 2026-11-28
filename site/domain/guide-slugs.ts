@@ -55,6 +55,7 @@ const guideSlugs: Record<string, GuideSlugs> = {
     "3356f4a8-25be-44b1-a0bf-702e866cfa63": "lv8-briar",
   } },
   "sample-block-0464": { slug: "kda-neeko", boards: {
+    "9b4ff401-a78b-48ae-b895-9ac931684465": "lv9-ekko",
     "00000000-0000-4000-8000-000000000039": "lv8-akali",
     "00000000-0000-4000-8000-000000000053": "lv5",
     "00000000-0000-4000-8000-000000000113": "lv7-kaisa",
@@ -112,6 +113,7 @@ const guideSlugs: Record<string, GuideSlugs> = {
     "00000000-0000-4000-8000-000000000082": "lv9",
   } },
   "sample-block-0367": { slug: "kda-seraphine", boards: {
+    "99816bd6-efbd-4541-856b-6a0bf0def3a0": "lv8-akali",
     "00000000-0000-4000-8000-000000000033": "lv5-early",
     "00000000-0000-4000-8000-000000000055": "lv6",
     "00000000-0000-4000-8000-000000000086": "lv5",

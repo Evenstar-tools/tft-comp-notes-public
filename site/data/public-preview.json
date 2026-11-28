@@ -7538,6 +7538,11 @@
           ],
           "level": 0,
           "text": "棋盘配装 · 八级 · 无卡莎阿狸\n主C：妮蔻。蓝霸符、强袭者的链枷、珠光护手。\n主坦：古拉加斯。石像鬼石板甲、狂徒铠甲、冕卫。\n副C：阿狸。妮蔻三件后拿余下的朔极之矛、正义之手。\n功能装：蕾欧娜。离子火花、日炎斗篷、圣盾使的誓约。\n夺冠示例 1 局，站位为建议。"
+        },
+        {
+          "id": "web-kda-neeko-lv9-ekko-roles",
+          "type": "text",
+          "text": "棋盘配装 · 九级 · 补艾克\n主C：妮蔻。朔极之矛、珠光护手、强袭者的链枷。\n主坦：莉莉娅。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n功能装：古拉加斯。离子火花、日炎斗篷。"
         }
       ],
       "kind": "guide",
@@ -7834,6 +7839,98 @@
               "items": []
             }
           ]
+        },
+        {
+          "id": "9b4ff401-a78b-48ae-b895-9ac931684465",
+          "name": "九级 · 补艾克",
+          "category": "待分类",
+          "notes": "三星妮蔻和三星莉莉娅在八级稳住后再升九。艾克和妮蔻开双天才，与酒桶开双主宰。",
+          "revision": 1,
+          "updatedAt": "2026-11-28T16:08:07.822Z",
+          "sectionId": "sample-block-0464",
+          "boardRole": "stage",
+          "pieces": [
+            {
+              "instanceId": "9b2a8f0f-fa39-4655-9873-fa0a42901502",
+              "unitId": "leona",
+              "position": 8,
+              "stars": 1,
+              "items": []
+            },
+            {
+              "instanceId": "7df912fa-02a1-4cc6-baa1-3450ffe6cedc",
+              "unitId": "lillia",
+              "position": 3,
+              "stars": 3,
+              "items": [
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_WarmogsArmor",
+                "TFT_Item_Redemption"
+              ]
+            },
+            {
+              "instanceId": "a2e603e1-3836-4fda-8e96-31bbcf4c1dd4",
+              "unitId": "gragas",
+              "position": 1,
+              "stars": 2,
+              "items": [
+                "TFT_Item_IonicSpark",
+                "TFT_Item_RedBuff"
+              ]
+            },
+            {
+              "instanceId": "a5e08ed1-4764-430e-93f5-24bca4f6fb38",
+              "unitId": "akali-kda",
+              "position": 17,
+              "stars": 1,
+              "items": [],
+              "alternate": {
+                "instanceId": "4f842abd-462b-4076-bec5-b007dcaeeb40",
+                "unitId": "varus",
+                "stars": 2,
+                "items": []
+              }
+            },
+            {
+              "instanceId": "294998ed-a045-44d0-88a8-fd042931264d",
+              "unitId": "neeko",
+              "position": 21,
+              "stars": 3,
+              "items": [
+                "TFT_Item_SpearOfShojin",
+                "TFT_Item_JeweledGauntlet",
+                "TFT_Item_PowerGauntlet"
+              ]
+            },
+            {
+              "instanceId": "7956e3f2-89d8-4235-9fef-4201f21034df",
+              "unitId": "kai-sa",
+              "position": 27,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "fcfc0d03-0c3f-49c8-9e52-9323d5e4f102",
+              "unitId": "evelynn",
+              "position": 11,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "8a099e69-2c40-4ff5-95f0-654ef6e3d91e",
+              "unitId": "ahri",
+              "position": 25,
+              "stars": 1,
+              "items": []
+            },
+            {
+              "instanceId": "27645186-d27a-456d-96b8-a03fb9aa2d72",
+              "unitId": "ekko",
+              "position": 12,
+              "stars": 2,
+              "items": []
+            }
+          ]
         }
       ],
       "team": {
@@ -7921,7 +8018,8 @@
       "primaryTeamId": "00000000-0000-4000-8000-000000000039",
       "stageTeamIds": [
         "00000000-0000-4000-8000-000000000113",
-        "00000000-0000-4000-8000-000000000053"
+        "00000000-0000-4000-8000-000000000053",
+        "9b4ff401-a78b-48ae-b895-9ac931684465"
       ]
     },
     {
@@ -13640,6 +13738,11 @@
           ],
           "level": 0,
           "text": "棋盘配装 · 五级追一费\n主C：萨勒芬妮。K/DA纹章、朔极之矛。\n主坦：古拉加斯。石像鬼石板甲、离子火花。\n副C：妮蔻。有对应余装再补。\n功能装：莉莉娅。莉莉娅日炎先覆盖前排重伤。\n功能装：古拉加斯。酒桶贴脸带离子破魔抗。\n结算 16 局"
+        },
+        {
+          "id": "web-kda-seraphine-lv8-akali-roles",
+          "type": "text",
+          "text": "棋盘配装 · 八级 · 补阿卡丽\n主C：萨勒芬妮。K/DA纹章、朔极之矛、珠光护手。\n主坦：古拉加斯。石像鬼石板甲、振奋盔甲、离子火花。\n功能装：莉莉娅。日炎斗篷。"
         }
       ],
       "kind": "guide",
@@ -13832,6 +13935,84 @@
               "items": []
             }
           ]
+        },
+        {
+          "id": "99816bd6-efbd-4541-856b-6a0bf0def3a0",
+          "name": "八级 · 补阿卡丽",
+          "category": "待分类",
+          "notes": "芬妮三星后再拉人口。K/DA 阿卡丽解锁并到手后先上，余下战士装给她。",
+          "revision": 1,
+          "updatedAt": "2026-11-28T16:08:07.824Z",
+          "sectionId": "sample-block-0367",
+          "boardRole": "stage",
+          "pieces": [
+            {
+              "instanceId": "a52c338b-5c5c-4107-a419-ffc36053d4b6",
+              "unitId": "lillia",
+              "position": 2,
+              "stars": 3,
+              "items": [
+                "TFT_Item_RedBuff"
+              ]
+            },
+            {
+              "instanceId": "2999b6c4-a134-485f-9a0b-ff9a29ee14ca",
+              "unitId": "gragas",
+              "position": 3,
+              "stars": 3,
+              "items": [
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_Redemption",
+                "TFT_Item_IonicSpark"
+              ]
+            },
+            {
+              "instanceId": "e1b7e26c-cc1b-4e67-95ac-46d6ffee0883",
+              "unitId": "leona",
+              "position": 10,
+              "stars": 1,
+              "items": []
+            },
+            {
+              "instanceId": "111899b5-7150-48fb-958f-d24e5344fda7",
+              "unitId": "evelynn",
+              "position": 8,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "d4bedc39-2017-472c-a497-ce4056f8d441",
+              "unitId": "neeko",
+              "position": 23,
+              "stars": 3,
+              "items": []
+            },
+            {
+              "instanceId": "5e3f2f84-212b-40cb-ba49-557771dc55cc",
+              "unitId": "seraphine",
+              "position": 27,
+              "stars": 3,
+              "items": [
+                "emblem-k-da",
+                "TFT_Item_SpearOfShojin",
+                "TFT_Item_JeweledGauntlet"
+              ]
+            },
+            {
+              "instanceId": "793ee7e1-f297-4e98-8a70-12c680f6e754",
+              "unitId": "ahri",
+              "position": 25,
+              "stars": 1,
+              "items": []
+            },
+            {
+              "instanceId": "7c62b45c-3a6d-42a6-bbb6-5306572cba74",
+              "unitId": "akali-kda",
+              "position": 12,
+              "stars": 1,
+              "items": []
+            }
+          ]
         }
       ],
       "team": {
@@ -13900,7 +14081,8 @@
       "primaryTeamId": "00000000-0000-4000-8000-000000000094",
       "stageTeamIds": [
         "00000000-0000-4000-8000-000000000086",
-        "00000000-0000-4000-8000-000000000055"
+        "00000000-0000-4000-8000-000000000055",
+        "99816bd6-efbd-4541-856b-6a0bf0def3a0"
       ]
     },
     {
