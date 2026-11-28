@@ -34,6 +34,8 @@ export const GUIDE_SECTION_IDS = {
   edmZeri: "sample-block-0235",
   threeJazzSmeech: "sample-block-0275",
   jazzPykeAurora: "sample-block-1090",
+  showoffDraven: "sample-block-0407",
+  choreographerDravenViego: "choreographer-draven-viego",
   /** K/DA妮蔻 */
   kdaNeeko: "sample-block-0464",
   /** K/DA伊芙琳&卡莎 */
@@ -44,6 +46,8 @@ export const AD_GRAVES_BOARD_IDS = [
   "00000000-0000-4000-8000-000000001261",
   "00000000-0000-4000-8000-000000001262",
 ] as const;
+
+export const DRAVEN_VIEGO_BOARD_ID = "00000000-0000-4000-8000-000000001177";
 
 export const ZERI_JAZZ_BOARD_ID = "00000000-0000-4000-8000-000000001275";
 

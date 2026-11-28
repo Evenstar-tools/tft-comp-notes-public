@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { registerHooks } from "node:module";
 import { sectionTeams } from "../domain/document-flow.ts";
-import { guideRoute } from "../domain/guide-reading.ts";
+import { guideRoute, readingNotes } from "../domain/guide-reading.ts";
 import { guideHeaderCoreSample, guidePromotionRows, guideSameLevelSwaps, guideSystemDisplayBoards, guideSystemPhases, guideSystemSample, guideSystems, rankGuideSystems, systemMeanTone } from "../domain/guide-variant-strip.ts";
 import { resolveBoardTeamId } from "../domain/guide-slugs.ts";
 import { GUIDE_SECTION_IDS } from "../domain/guide-identities.ts";
@@ -34,7 +34,7 @@ const patch = { seasonId: "s19-pbe", label: "PBE 19.1c", build: "6037882", effec
 const placement = { minGames: 100, greenThrough: 3.4, redFrom: 4.25 };
 const metatft = "https://www.metatft.com/explorer?tab=comps";
 const {
-  oceanGraves, classicalJhin, jazzJinx, edmZeri, hyperpopSeraphine, pentakillKayle,
+  oceanGraves, classicalJhin, jazzJinx, edmZeri, hyperpopSeraphine, pentakillKayle, showoffDraven, choreographerDravenViego,
 } = GUIDE_SECTION_IDS;
 const row = (sectionId, suffix, name, mean, overrides = {}) => ({
   sectionId, teamId: id(suffix), clusterId: suffix, name, mean, games: 500, topFourRate: 0.55,
@@ -51,8 +51,8 @@ const family = {
     row(oceanGraves, "0093", "五非主流派克男枪", 4.42),
     row(classicalJhin, "0059", "四古典烬", 3.78, { sharedTeamIds: [id("0034")] }),
     row(jazzJinx, "1251", "爵士金克丝", 3.62, { landingTeamId: id("1252") }),
-    row("sample-block-0407", "1177", "编舞佛耶戈德莱文", 4.49),
-    row("sample-block-0407", "0029", "四酷炫德莱文", 4.63),
+    row(choreographerDravenViego, "1177", "编舞师德莱文佛耶戈", 4.49),
+    row(showoffDraven, "0029", "四酷炫德莱文", 4.63),
     row(edmZeri, "0105", "双电子泽丽", 4.85),
     row(hyperpopSeraphine, "0089", "四主唱高能炸弹", 4.18),
     row("sample-block-0171", "0002", "救生员鳄鱼", 3.75, { heroAugment: true }),
@@ -120,10 +120,22 @@ test("Jazz Jinx has one system and two level-nine additions with their own fixed
   ]);
 });
 
+test("Draven–Viego has its own seven-unit main board, two carries and native cluster", () => {
+  const { systems: original } = guide(showoffDraven);
+  assert.deepEqual(original.map(system => system.teamId), [id("0013")]);
+  assert(!original[0].boardIds.includes(id("1177")));
+
+  const separate = guide(choreographerDravenViego);
+  assert.equal(separate.section.primaryTeamId, id("1177"));
+  assert.deepEqual(separate.systems.map(system => [system.teamId, guideSystemSample(system.stat).mean]),
+    [[id("1177"), "4.49"]]);
+  const [board] = separate.boards(separate.systems[0]);
+  assert.equal(usedPopulation(board.pieces), 7);
+  assert.deepEqual(readingNotes(separate.section, board, season).roles.filter(role => role.label === "主C").flatMap(role => role.units),
+    ["draven", "viego"]);
+});
+
 test("other authored branches retain independent cores and choose the best valid cluster as the default", () => {
-  const { systems: draven } = guide("sample-block-0407");
-  assert.deepEqual(draven.map(system => [system.teamId, guideSystemSample(system.stat).mean, guideSystemSample(system.stat).tone]),
-    [[id("1177"), "4.49", "middle"], [id("0013"), "4.63", "weak"]]);
   assert.deepEqual([3.99, 4.0, 4.34, 4.5, 4.51].map(systemMeanTone), ["strong", "middle", "middle", "middle", "weak"]);
   const { systems: zeri } = guide(GUIDE_SECTION_IDS.edmZeri);
   assert.deepEqual(zeri.map(system => system.teamId), ["0105", "0049", "1275"].map(id));
