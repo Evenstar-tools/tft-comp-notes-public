@@ -3,6 +3,8 @@
   margin: clamp(24px, 8vh, 96px) auto;
   text-align: left;
 }
+.owner-login-in-search { margin: 4px auto 12px; padding-block: 8px; }
+.owner-login-in-search h2 { margin: 0; font-size: 1.25rem; }
 .owner-login form {
   display: grid;
   gap: 10px;
