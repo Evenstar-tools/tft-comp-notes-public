@@ -247,6 +247,8 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
   const firstPhases = linkedPhases.length > 3 && linkedPhases.at(-1)?.team
     ? [...linkedPhases.slice(0, 2), linkedPhases.at(-1)!] : linkedPhases.slice(0, 3);
   const remainingPhases = linkedPhases.filter(step => !firstPhases.includes(step));
+  const boardNameInPhase = detailView && firstPhases.some(step => step.team?.id === team.id);
+  const editBoardName = ownerEditor.editing && <OwnerInlineEdit label="编辑棋盘名称" onClick={() => ownerEditor.open("board")} />;
   const linkedChoices = route?.choices ?? mainRoute?.choices ?? [];
   const compactChoices = !detailView && linkedChoices.some(choice => choice.team?.boardRole === "variant");
   const alternatives = teams.filter(option => !stageTeams.includes(option));
@@ -772,13 +774,14 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
     <div className="reader-layout">
       <div className="reader-play">
         {!detailView && authoredStageControls}
-        <div className="reader-board-title guide-board-head"><h3>{boardTitle}</h3>
-          {detailView ? phaseControls : boardActions}
+        <div className={`reader-board-title guide-board-head${boardNameInPhase && ownerEditor.editing ? " owner-page-anchor" : ""}`}
+          data-owner-selected={boardNameInPhase && ownerEditor.active?.kind === "board" || undefined}>
+          <h3>{boardTitle}</h3>{detailView ? phaseControls : boardActions}
+          {boardNameInPhase && editBoardName}
         </div>
-        {detailView && (publicBoardName || ownerEditor.editing) && <div className="owner-page-anchor owner-page-board-name"
+        {detailView && !boardNameInPhase && (publicBoardName || ownerEditor.editing) && <div className="owner-page-anchor owner-page-board-name"
           data-owner-selected={ownerEditor.active?.kind === "board" || undefined}>
-          <span>{publicBoardName || guideBoardName(team)}</span>
-          {ownerEditor.editing && <OwnerInlineEdit label="编辑棋盘名称" onClick={() => ownerEditor.open("board")} />}
+          <span>{publicBoardName || guideBoardName(team)}</span>{editBoardName}
         </div>}
         {detailView && mobileCoreRoles.length > 0 && <div className="guide-mobile-core" aria-label="棋盘核心">
           {mobileCoreRoles.map(role => <span key={role.label + ":" + role.units.join(",")}>
