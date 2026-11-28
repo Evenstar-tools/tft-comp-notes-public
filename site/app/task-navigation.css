@@ -116,25 +116,12 @@ body:has(.site-search-dialog[open]) {overflow:hidden}
 @media(min-width:941px){
   body:has(.guide-reader) .site-header {position:sticky;top:0;z-index:20}
 }
-@media(min-width:941px) and (max-width:1279px){
-  .masthead-inner {
-    grid-template-columns:minmax(0,1fr) auto;
-    grid-template-areas:"brand studio" "sections sections";
-  }
-  .task-nav {justify-content:center}
-}
 @media(max-width:940px){
   body:has(.editor) .site-header {position:relative}
   .masthead-name {font-size:clamp(1rem,4.65vw,1.125rem)}
   .masthead-season {font-size:.6875rem}
   .masthead-inner {grid-template-columns:minmax(0,1fr) 44px;grid-template-areas:"brand search" "sections sections"}
-  .masthead-inner:has(.studio-owner-access) {
-    grid-template-columns:minmax(0,1fr) auto 44px;
-    grid-template-areas:"brand owner search" "sections sections sections";
-  }
-  .masthead-tools > .theme-toggle,.studio-nav > :not(.studio-owner-access),.task-nav > .task-reference-link {display:none}
-  .masthead-tools > .studio-nav {display:contents}
-  .studio-nav > .studio-owner-access {grid-area:owner;padding-inline:6px}
+  .masthead-tools > :is(.theme-toggle,.studio-nav),.task-nav > .task-reference-link {display:none}
   .task-nav {display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:stretch;position:relative;gap:0}
   .task-nav > a.task-editor-link {display:flex}
   .task-nav > :is(.task-notes-link,.combo-tool-link) {margin:0;padding-inline:6px}

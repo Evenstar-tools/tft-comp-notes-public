@@ -3,8 +3,10 @@
 import { Search, X } from "lucide-react";
 import { useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent, type MouseEvent } from "react";
 import { extractPublicGuideIdFromHref } from "@/domain/analytics";
+import { ownerEditorPath } from "@/domain/links";
 import { requiresSearchSubmit, searchQueryLimit, searchStrategies, type SiteSearchContext } from "@/domain/site-search";
 import { rememberGuideEntry, trackSearchResultOpen, trackSearchResults } from "@/lib/analytics";
+import { OwnerGate } from "./OwnerGate";
 import { SiteSearchResults, useSiteSearch } from "./SiteSearchResults";
 
 const examples = [
@@ -21,8 +23,10 @@ export function SiteSearchOverlay({ inlineQuery }: { inlineQuery?: string } = {}
     submission: requiresSearchSubmit(inlineQuery) ? { attempt: 0 } : undefined } : undefined);
   const [isComposing, setIsComposing] = useState(false);
   const open = !!visit;
+  const query = visit?.query ?? "";
+  const ownerSearch = !isComposing && /^(站主|站主登录)$/.test(query.trim());
   const pending = isComposing || (!!visit && !visit.submission && requiresSearchSubmit(visit.query));
-  const search = useSiteSearch(visit?.query ?? "", visit?.exclude, undefined, undefined, true,
+  const search = useSiteSearch(ownerSearch ? "" : query, visit?.exclude, undefined, undefined, true,
     { pending, includeSeven: visit?.includeSeven, submission: visit?.submission });
   const priorContext = useRef<SiteSearchContext | undefined>(undefined);
   const attempt = useRef(0);
@@ -151,6 +155,10 @@ export function SiteSearchOverlay({ inlineQuery }: { inlineQuery?: string } = {}
 
   function submit(query: string) {
     if (!query.trim() || composing.current) return;
+    if (ownerSearch) {
+      results.current?.querySelector<HTMLInputElement>('input[type="password"]')?.focus();
+      return;
+    }
     if (query === visit?.query && (search.phase === "loading" || search.phase === "ready" && !search.refreshing)) return;
     refine({ query, exclude: undefined, includeSeven: undefined,
       submission: { context: priorContext.current, attempt: ++attempt.current } });
@@ -232,7 +240,9 @@ export function SiteSearchOverlay({ inlineQuery }: { inlineQuery?: string } = {}
         {(conditions.length > 1 || currentContext?.boardLookup && !currentContext.boardLookup.group) &&
           <button type="button" onClick={clearConditions}>清除条件</button>}
       </div>}
-      {search.phase === "idle" ? <div className="site-search-examples" aria-label="搜索示例">
+      {ownerSearch ? <OwnerGate fromSearch>
+        <a className="text-link" href={ownerEditorPath}>进入站主工作区</a>
+      </OwnerGate> : search.phase === "idle" ? <div className="site-search-examples" aria-label="搜索示例">
         {examples.map(({ label, query }) => <button key={query} type="button" onClick={() => {
           submit(query);
           input.current?.focus({ preventScroll: true });
