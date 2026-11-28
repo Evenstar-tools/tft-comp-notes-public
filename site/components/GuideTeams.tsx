@@ -564,10 +564,19 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
   </div>;
   const strategy = detailView && !guidePlaystyle(section, team) ? guideFacets(section, team, data) : undefined;
   const style = strategy?.styleLabel ?? strategy?.style;
+  const matchEvidence = showMatchStats ? guideMatchEvidence({
+    team, teams: displayedSystemBoards, section, edition: data.id, augmentName: augment?.name, heroGuide, familyRows,
+  }) : undefined;
+  const matchStats = matchEvidence && (!launchStats || matchEvidence.populatedViews.length > 0) &&
+    <GuideMatchStats key={team.id} id={sampleId} team={team} teams={displayedSystemBoards} section={section}
+      stage={inStage} edition={data.id} heroGuide={heroGuide} evidence={matchEvidence}
+      view={sampleView} onSelectView={setSampleView} onPickTeam={selectSampleTeam} />;
   const headerTools = <>
     {style && <span className="guide-playstyle-tag" title="打法">{style}</span>}
-    {mean !== undefined ? <div className="guide-title-stats">
-      <a className="guide-title-mean" data-tone={tone} href={"#" + sampleId} onClick={openMatchStats} title={scope + " · " + patch + " · " + windowLabel}>
+    {overview && mean !== undefined ? <div className="guide-title-stats">
+      <a className="guide-title-mean" data-tone={tone} href={matchStats ? "#" + sampleId : overview.url}
+        onClick={matchStats ? openMatchStats : undefined} target={matchStats ? undefined : "_blank"}
+        rel={matchStats ? undefined : "noreferrer"} title={scope + " · " + patch + " · " + windowLabel}>
         {meanLabel} <strong>{mean.toFixed(2)}</strong>
       </a>
       {topFour && <span>前四率 <strong>{topFour}</strong></span>}
@@ -587,13 +596,6 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
       ))}</dl>
     </details>}
   </details>;
-  const matchEvidence = showMatchStats ? guideMatchEvidence({
-    team, teams: displayedSystemBoards, section, edition: data.id, augmentName: augment?.name, heroGuide, familyRows,
-  }) : undefined;
-  const matchStats = matchEvidence && (!launchStats || matchEvidence.populatedViews.length > 0) &&
-    <GuideMatchStats key={team.id} id={sampleId} team={team} teams={displayedSystemBoards} section={section}
-      stage={inStage} edition={data.id} heroGuide={heroGuide} evidence={matchEvidence}
-      view={sampleView} onSelectView={setSampleView} onPickTeam={selectSampleTeam} />;
   const conditions = <>
     {equipmentConditions && <GuideEquipmentConditions conditions={equipmentConditions} guideHref={guideHref} />}
     {referenceConditions && <GuideEquipmentConditions conditions={referenceConditions} guideHref={guideHref}

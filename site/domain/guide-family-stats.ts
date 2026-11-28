@@ -69,12 +69,16 @@ type FamilyPatch = { seasonId?: string; build?: string; label: string; effective
 const day = 24 * 60 * 60 * 1000;
 const recommendationGrace = day / 2;
 
+function matchesEditionQueue(scope: string, queue: string | undefined) {
+  const normalized = queue?.toUpperCase();
+  return scope.endsWith("-pbe") ? normalized === "PBE" : ["RANKED", "RANKED_TFT", "1100"].includes(normalized ?? "");
+}
+
 function matchesFamilyScope(batch: FamilyBatchMetadata, seasonId: string, patch: FamilyPatch) {
   const scope = editionScope(seasonId);
   if (!scope || (patch.seasonId && editionScope(patch.seasonId) !== scope) ||
       batch.seasonId !== seasonId || !Number.isInteger(batch.days) || batch.days < 1) return false;
-  const queue = batch.queue?.toUpperCase();
-  return scope.endsWith("-pbe") ? queue === "PBE" : ["RANKED", "RANKED_TFT", "1100"].includes(queue);
+  return matchesEditionQueue(scope, batch.queue);
 }
 
 export function currentFamilyBatch(
@@ -188,10 +192,18 @@ export type RecommendationStats = {
   rows: (RecommendationStat & Pick<GuideFamilyStat, "topFourRate" | "winRate">)[];
 };
 
-export function canRankRecommendations(stats: RecommendationStats, seasonId: string, patch: { build: string; effectiveAt: string }) {
+export function canRankRecommendations(stats: RecommendationStats, seasonId: string, patch: {
+  build: string;
+  effectiveAt: string;
+  metaTftPatch?: { patch: string; bPatch?: string };
+}) {
+  const scope = editionScope(seasonId);
+  const expected = patch.metaTftPatch;
   const end = Date.parse(stats.updatedAt ?? "");
   const start = end - stats.hours * 3600000;
   return stats.seasonId === seasonId && stats.build === patch.build &&
+    (!scope || matchesEditionQueue(scope, stats.queue)) &&
+    (!expected || stats.patch === expected.patch + (expected.bPatch ?? "")) &&
     stats.hours > 0 && start >= Date.parse(patch.effectiveAt);
 }
 

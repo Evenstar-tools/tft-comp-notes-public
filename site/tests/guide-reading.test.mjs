@@ -340,6 +340,14 @@ test("recommendations compare a single patch window and use the intended roll pl
   assert.equal(canRankRecommendations({ ...stats, hours: 24 }, "S19", patch), false);
   assert.equal(canRankRecommendations({ ...stats, build: "prior" }, "S19", patch), false);
   assert.equal(canRankRecommendations(stats, "S18", patch), false);
+  const hotfix = { ...patch, metaTftPatch: { patch: "19.1", bPatch: "c" } };
+  const pbeStats = { ...stats, seasonId: "s19-pbe-19.1", queue: "PBE", patch: "19.1c" };
+  assert.equal(canRankRecommendations(pbeStats, pbeStats.seasonId, hotfix), true);
+  assert.equal(canRankRecommendations({ ...pbeStats, queue: "1100" }, pbeStats.seasonId, hotfix), false);
+  assert.equal(canRankRecommendations({ ...pbeStats, patch: "19.1b" }, pbeStats.seasonId, hotfix), false);
+  const liveStats = { ...pbeStats, seasonId: "s19-live-19.1" };
+  assert.equal(canRankRecommendations(liveStats, liveStats.seasonId, hotfix), false);
+  assert.equal(canRankRecommendations({ ...liveStats, queue: "1100" }, liveStats.seasonId, hotfix), true);
   assert.equal(recommendationGroup("低费慢搜", [1, 2], 6), "reroll");
   assert.equal(recommendationGroup("三费慢搜", [3], 7), "reroll");
   assert.equal(recommendationGroup("速八运营", [4], 8), "fast8");
