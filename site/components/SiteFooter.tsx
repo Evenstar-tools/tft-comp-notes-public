@@ -29,7 +29,6 @@ export function SiteFooter({ siteName, brandIcon }: { siteName: string; brandIco
         </div>
       </div>
       {references.map(group => <nav key={group.label} className="site-footer-group" aria-label={group.label}>
-        <h2>{group.label}</h2>
         <ul role="list">{group.links.map(({ name, href, logo }) => <li key={name}>
           <a href={href} target="_blank" rel="noreferrer">
             {logo && <Image src={logo} width={20} height={20} alt="" unoptimized />}
