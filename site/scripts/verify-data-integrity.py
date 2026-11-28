@@ -406,7 +406,6 @@ def collect_public_boards(sections, preview, errors, reroll=None):
     boards = {}
     primaries = {}
     sections_by_id = {section["id"]: section for section in sections}
-    original_board_ids = {}
     for section in sections:
         section_id = section["id"]
         section_teams = section.get("teams")
@@ -417,7 +416,6 @@ def collect_public_boards(sections, preview, errors, reroll=None):
         }
         primary = section.get("primaryTeamId")
         primaries[section_id] = primary if isinstance(primary, str) else next(iter(teams), None)
-        original_board_ids[section_id] = set(teams)
         boards.update({(section_id, team_id): team for team_id, team in teams.items()})
     reroll_path = ROOT / "data/s19-reroll-boards.json"
     season_scope = edition(preview.get("season", {}).get("id") if isinstance(preview.get("season"), dict) else None)
@@ -440,7 +438,8 @@ def collect_public_boards(sections, preview, errors, reroll=None):
                 if not isinstance(pieces, list) or not pieces:
                     continue
                 parent_id = stage.get("parentTeamId")
-                if parent_id is not None and parent_id not in original_board_ids.get(section_id, set()):
+                # The renderer also accepts an earlier authored board as a parent.
+                if parent_id is not None and (section_id, parent_id) not in boards:
                     continue
                 key = (section_id, stage["teamId"])
                 if key not in boards:

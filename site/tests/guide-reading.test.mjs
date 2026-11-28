@@ -254,19 +254,24 @@ test("published guide variants stay separate from the chronological transition a
   assert.equal(guideRollLevel(section, ten), undefined);
 });
 
-test("the ocean Graves guide retains its published phases when an eight-level branch is added", () => {
+test("ocean Graves keeps its phases while the eight-level swap follows the AD route", () => {
   const guide = json("../data/s19-reroll-boards.json").find(entry => entry.sectionId === "sample-block-0251");
-  const stage = guide.stages.find(entry => entry.boardRole === "variant");
+  const stage = guide.stages.find(entry => entry.teamId.endsWith("0119"));
   const seven = { id: "seven", name: "七级 · 开扎克", pieces: [], notes: "" };
-  const eight = { id: stage.parentTeamId, name: "八级 · 艾希", pieces: [], notes: "" };
+  const eight = { id: guide.entryTeamId, name: "八级 · 艾希", pieces: [], notes: "" };
   const nine = { id: "nine", name: "九级 · 岩雀", pieces: [], notes: "" };
-  const variant = { ...stage, id: stage.teamId };
-  const teams = [nine, eight, seven, variant];
+  const adEight = { id: "00000000-0000-4000-8000-000000001261", name: "八级 · 四主宰 AD 男枪", pieces: [], notes: "" };
+  const adNine = { id: "00000000-0000-4000-8000-000000001262", name: "九级 · AD 补崔斯特", pieces: [], notes: "" };
+  const swap = { ...stage, id: stage.teamId };
+  const teams = [nine, eight, seven, adEight, adNine, swap];
   const section = { id: guide.sectionId, primaryTeamId: nine.id, teams, blocks: [],
-    reroll: { stages: guide.stages, added: [variant.id], corrected: [], advice: {} } };
-  for (const selected of [nine, eight, variant]) {
+    reroll: { stages: guide.stages, added: [swap.id], corrected: [], advice: {} } };
+  for (const selected of [nine, eight]) {
     assert.deepEqual(guideRoute(section, teams, selected).phases.map(step => step.team.id), [seven.id, eight.id, nine.id]);
   }
+  const route = guideRoute(section, teams, swap);
+  assert.deepEqual(route.phases.map(step => step.team.id), [adEight.id]);
+  assert.deepEqual(route.choices.map(step => step.team.id), [adNine.id]);
 });
 
 test("a ranked family opens its reviewed board and never transfers a missing variant or older season mean to the main board", () => {
