@@ -24004,12 +24004,18 @@
       "category": "阵容储备",
       "blocks": [
         {
+          "id": "alune-yuumi-shared-rounds",
+          "type": "heading",
+          "level": 3,
+          "text": "通用运营"
+        },
+        {
           "id": "sample-block-0907",
           "type": "text",
           "elements": [
             {
               "text_run": {
-                "content": "八级找两星拉露恩、悠米和蕾欧娜。",
+                "content": "八级先搜两星拉露恩、悠米和蕾欧娜。",
                 "text_element_style": {
                   "bold": true,
                   "inline_code": false,
@@ -24033,7 +24039,7 @@
             }
           ],
           "level": 0,
-          "text": "八级找两星拉露恩、悠米和蕾欧娜。七级先上四名不同的心之钢或天才解锁拉露恩。只有一套法装就给先两星的，肉装先给蕾欧娜。稳血再升九，蒙多两星后接肉装，开三经纪人。"
+          "text": "八级先搜两星拉露恩、悠米和蕾欧娜。七级先上四名不同的心之钢或天才解锁拉露恩。只有一套法装就给先两星的，肉装先给蕾欧娜。稳血再升九，蒙多两星后接肉装，开三经纪人。"
         },
         {
           "id": "alune-yuumi-playstyle",
