@@ -3,6 +3,17 @@ import type { PatchReference } from "../domain/patch-reference";
 // Numbers cover the star level or breakpoint named in each row.
 export const patchReferences: PatchReference[] = [
   {
+    id: "pbe-6045507",
+    edition: "s19-pbe",
+    title: "PBE 19.1c 构建更新",
+    date: "2026-11-28",
+    dateLabel: "PBE1 实装 · 北京时间",
+    build: "19.1.0.6045507",
+    source: { name: "PBE1 实装对局", url: "https://matches3.metatft.com/PBE1_4537487353.json" },
+    highlights: [],
+    groups: {},
+  },
+  {
     id: "pbe-6035832",
     edition: "s19-pbe",
     title: "感恩节前 PBE 更新",

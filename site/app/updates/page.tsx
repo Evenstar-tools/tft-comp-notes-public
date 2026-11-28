@@ -10,7 +10,7 @@ import augmentCatalog from "@/data/augment-catalog.json";
 import bundledItems from "@/data/item-art.json";
 import familyData from "@/data/guide-family-stats.json";
 import { patchReferences } from "@/data/patch-notes";
-import { chapterMatchesPatch, patchGuideImpactLabels, publishedPatchCallouts, splitHighlightLine, type PatchReference } from "@/domain/patch-reference";
+import { chapterMatchesPatch, currentBuildReference, patchGuideImpactLabels, publishedPatchCallouts, splitHighlightLine, type PatchReference } from "@/domain/patch-reference";
 import { readablePatchIntroduction } from "@/domain/patch-recommendations";
 import { recommendationBoardTitle } from "@/domain/guide-families";
 import type { GuideFamilyBatch } from "@/domain/guide-family-stats";
@@ -64,6 +64,11 @@ function patchImages(patch: PatchReference) {
 export default async function VersionUpdates({ searchParams }: { searchParams: Promise<{ entry?: string; q?: string; category?: string; lobby?: string }> }) {
   const [publication, { entry, q, category, lobby }, owner] = await Promise.all([publishedSnapshot(), searchParams, currentOwner()]);
   const references = patchReferences.filter(patch => sameEdition(patch.edition, season.id));
+  const currentBuild = sameEdition(currentPatch.seasonId, season.id)
+    ? currentBuildReference(currentPatch, references) : undefined;
+  const currentBuildEntry = currentBuild && !references.includes(currentBuild)
+    ? { id: "current-build:" + currentPatch.build, title: currentBuild.title, chapter: undefined, reference: currentBuild }
+    : undefined;
   const chapters = publishedVersionUpdates(season.id, publication);
   const intro = chapters.find(isPatchIntroduction);
   const catalog = references.map(reference => {
@@ -77,12 +82,15 @@ export default async function VersionUpdates({ searchParams }: { searchParams: P
     ...catalog,
   ];
   const requested = entry === "introduction" && introReference ? introReference.id : entry;
-  const current = requested ? versions.find(version => version.id === requested || version.reference?.id === requested)
-    : versions.find(version => version.reference?.id === currentPatch.updateId) ?? versions[0];
+  const current = requested
+    ? versions.find(version => version.id === requested || version.reference?.id === requested) ??
+      (requested === currentBuild?.id ? currentBuildEntry : undefined)
+    : currentBuildEntry ?? versions.find(version => version.reference?.id === (currentBuild?.id ?? currentPatch.updateId)) ?? versions[0];
+  const versionIndex = currentBuildEntry ? [currentBuildEntry, ...versions] : versions;
   if (entry && !current) notFound();
   const patch = current?.reference;
   const samePublication = publication && sameEdition(season.id, publication.season.id) ? publication : undefined;
-  const sameBuild = patch?.id === currentPatch.updateId;
+  const sameBuild = !!currentBuild && patch === currentBuild;
   const recommendation = sameBuild || current?.chapter === intro && intro
     ? currentPatchRecommendations(samePublication ?? null)
     : undefined;
@@ -127,7 +135,8 @@ export default async function VersionUpdates({ searchParams }: { searchParams: P
   </nav>;
   const leadTools = (source || sectionLinks) && <div className="patch-lead-tools">{source}{sectionLinks}</div>;
   const renderEdition = (version: (typeof versions)[number]) => <PatchReadingLink key={version.id}
-    href={versionUpdateLink(version.id, { query: q, category })} aria-current={version.id === current?.id ? "page" : undefined}>
+    href={version === currentBuildEntry ? "/updates" : versionUpdateLink(version.id, { query: q, category })}
+    aria-current={version === current ? "page" : undefined}>
     {version.reference && <time dateTime={version.reference.date}>{version.reference.date.slice(5).replace("-", ".")}</time>}
     <span>{patchTitle(version.title, version.reference?.date)}</span>
   </PatchReadingLink>;
@@ -135,10 +144,10 @@ export default async function VersionUpdates({ searchParams }: { searchParams: P
     {current ? <div className="patch-layout">
       <aside className="patch-index">
         <h1>版本更新</h1>
-        <nav className="patch-editions patch-editions-desktop" aria-label="版本列表">{versions.map(renderEdition)}</nav>
+        <nav className="patch-editions patch-editions-desktop" aria-label="版本列表">{versionIndex.map(renderEdition)}</nav>
         <details className="patch-editions-mobile">
           <summary>历史版本</summary>
-          <nav className="patch-editions" aria-label="历史版本">{versions.map(renderEdition)}</nav>
+          <nav className="patch-editions" aria-label="历史版本">{versionIndex.map(renderEdition)}</nav>
         </details>
       </aside>
       <div className="patch-content">

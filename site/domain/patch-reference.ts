@@ -1,6 +1,8 @@
 import type { ContentBlock, Section } from "./document";
 import type { Unit } from "./types";
 import { unitSearchNames } from "./unit-search.mjs";
+import { activePatchVersion, isOfficialEdition, sameEdition, type ActivePatchVersion } from "./version-updates.ts";
+import { beijingDate } from "../lib/beijing-time.ts";
 
 export type PatchCategory = "弈子" | "羁绊" | "解锁" | "海克斯" | "装备" | "奇遇" | "修复";
 
@@ -40,6 +42,28 @@ export interface PatchReference {
   observationStats?: { name: string; games: number; mean: number }[];
   impacts?: PatchGuideImpact[];
   groups: Partial<Record<PatchCategory, PatchObject[]>>;
+}
+
+export function currentBuildReference(
+  current: ActivePatchVersion & { build: string; updateId: string; sourceUrl: string },
+  references: readonly PatchReference[],
+): PatchReference {
+  const match = references.find(reference => sameEdition(reference.edition, current.seasonId) &&
+    reference.build.split(".").at(-1) === current.build);
+  if (match) return match;
+
+  const live = isOfficialEdition(current.seasonId);
+  return {
+    id: live ? current.updateId : "pbe-" + current.build,
+    edition: current.seasonId,
+    title: activePatchVersion(current) + " 构建更新",
+    date: beijingDate.format(new Date(current.effectiveAt)),
+    dateLabel: "实装 · 北京时间",
+    build: current.build,
+    source: { name: live ? "实装公告" : "实装对局", url: current.sourceUrl },
+    highlights: [],
+    groups: {},
+  };
 }
 
 export function splitHighlightLine(line: string): { label?: string; text: string } {
