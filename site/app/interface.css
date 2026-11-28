@@ -603,7 +603,6 @@ button.board-alternate {touch-action:none;cursor:pointer}
   .library-columns .trait-tags,.library-columns .detail-actions {padding-inline:18px;margin-bottom:12px}
   .library-columns .detail-actions {padding-bottom:4px}
   .library-columns .detail-section,.library-columns .related-guides {margin-inline:18px;padding-block:18px}
-  .site-footer {padding:20px 14px;gap:12px 18px}
 }
 @media(prefers-reduced-motion:reduce) {
   *,*::before,*::after {scroll-behavior:auto!important;transition:none!important;animation:none!important}
