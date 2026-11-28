@@ -18,6 +18,7 @@ import { EmblemEntryPosition } from "./EmblemEntryPosition";
 import { usePageReturnView } from "./usePageReturnView";
 import { WearerExclusion } from "./WearerExclusion";
 import { GearCategoryEmpty, GearCategoryNav } from "./GearCategoryNav";
+import { GearSortButton, GearSortSelect } from "./GearSortControls";
 import { GearWearerSearch } from "./GearWearerSearch";
 
 type Order = "mean" | "winRate" | "games";
@@ -203,10 +204,7 @@ export function EmblemStats({ traitId, holderId, initialFilters, guideHref, guid
       ? [{ id, entry, sample: qualified }] : [];
   }).sort((a, b) => {
     if (!a.sample || !b.sample) return Number(Boolean(b.sample)) - Number(Boolean(a.sample));
-    if (selectedUnit) return compareGearWearerSamples(a.sample, b.sample, order, displayMinimum);
-    if (order === "games") return b.sample.games - a.sample.games;
-    if (hasSample(a.sample) !== hasSample(b.sample)) return Number(hasSample(b.sample)) - Number(hasSample(a.sample));
-    return order === "wins" ? (b.sample.winRate ?? -1) - (a.sample.winRate ?? -1) : (a.sample.mean ?? 9) - (b.sample.mean ?? 9);
+    return compareGearWearerSamples(a.sample, b.sample, order, displayMinimum);
   });
   const hasStats = visible.some(({ sample }) => sample);
   const showStatsControls = !duringLaunch || hasStats;
@@ -224,6 +222,8 @@ export function EmblemStats({ traitId, holderId, initialFilters, guideHref, guid
     setView({ ...next, holders: view.holders });
     updateUrl(open, next);
   }
+
+  const sortProps = { order, onSort: (next: GearOrder) => changeFilters({ ...filters, order: next }) };
 
   return <div className="emblem-page" data-wearer-view={selectedUnit ? "" : undefined}>
     <EmblemEntryPosition traitId={traitId} holderId={holderId} />
@@ -245,14 +245,14 @@ export function EmblemStats({ traitId, holderId, initialFilters, guideHref, guid
     </header>
     <div className="emblem-toolbar">
       <GearWearerSearch filters={filters} onChange={changeFilters} label="搜索羁绊、纹章或英雄" inputRef={searchInput} />
-      {showStatsControls && <label className="emblem-select"><span className="sr-only">转职排行排序</span><select aria-label="转职排行排序" value={order}
-        onChange={event => changeFilters({ ...filters, order: event.target.value as GearOrder })}>
-        <option value="mean">均名最低</option><option value="wins">登顶率最高</option><option value="games">场数最多</option>
-      </select></label>}
+      {showStatsControls && <div className="emblem-select"><GearSortSelect label="转职排行排序" {...sortProps} /></div>}
       {showStatsControls && !selectedUnit && <WearerExclusion units={selectableWearers} excluded={excluded} onChange={excluded => changeFilters({ ...filters, excluded })} />}
     </div>
-    {hasStats && <div className="emblem-column-head" aria-hidden="true">
-      <span>纹章</span><span>均名</span><span>登顶率</span><span>场数</span>
+    {hasStats && <div className="emblem-column-head" role="group" aria-label="按纹章战绩排序">
+      <span>纹章</span>
+      <GearSortButton metric="mean" {...sortProps} />
+      <GearSortButton metric="wins" {...sortProps} />
+      <GearSortButton metric="games" {...sortProps} />
       {!selectedUnit && (visible.some(({ id }) => id !== open)
         ? <span className="emblem-best-heading" title={`满 ${displayMinimum} 场，按均名排序`}>最佳使用者<small>均名 · 场数</small></span>
         : <span />)}

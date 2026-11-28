@@ -4,7 +4,26 @@ import type { Item, Unit } from "./types";
 import { unitSearchNames } from "./unit-search.mjs";
 
 export type GearWearerSample = { games: number; mean?: number | null; winRate?: number | null };
-export type GearOrder = "mean" | "games" | "wins";
+export const gearSortOrders = {
+  mean: ["mean", "mean-desc"],
+  wins: ["wins", "wins-asc"],
+  games: ["games", "games-asc"],
+} as const;
+export type GearSortMetric = keyof typeof gearSortOrders;
+export type GearOrder = (typeof gearSortOrders)[GearSortMetric][number];
+
+export function parseGearOrder(order: unknown): GearOrder {
+  if (order === "winRate") return "wins";
+  for (const [first, reverse] of Object.values(gearSortOrders)) {
+    if (order === first) return first;
+    if (order === reverse) return reverse;
+  }
+  return "mean";
+}
+
+export function gearSortAscending(order: GearOrder) {
+  return order === "mean" || order === "games-asc" || order === "wins-asc";
+}
 
 type GearPatch = {
   seasonId: string; effectiveAt: string; metaTftPatch?: { patch: string; bPatch?: string };
@@ -54,11 +73,19 @@ export function gearWearerStats(sample: GearWearerSample, minGames: number): Gea
   return games >= minGames ? { games, mean, winRate } : { games };
 }
 
+export function compareGearSamples(a: Partial<GearWearerSample>, b: Partial<GearWearerSample>, order: GearOrder) {
+  const metric = order === "games" || order === "games-asc" ? "games"
+    : order === "wins" || order === "wins-asc" ? "winRate" : "mean";
+  const aValue = a[metric], bValue = b[metric];
+  if (aValue == null || bValue == null) {
+    if (aValue != null) return -1;
+    if (bValue != null) return 1;
+  } else if (aValue !== bValue) {
+    return gearSortAscending(order) ? aValue - bValue : bValue - aValue;
+  }
+  return (b.games ?? 0) - (a.games ?? 0);
+}
+
 export function compareGearWearerSamples(a: GearWearerSample, b: GearWearerSample, order: GearOrder, minGames: number) {
-  const byGames = b.games - a.games;
-  if (order === "games") return byGames;
-  const aStats = gearWearerStats(a, minGames);
-  const bStats = gearWearerStats(b, minGames);
-  if (order === "wins") return (bStats.winRate ?? -Infinity) - (aStats.winRate ?? -Infinity) || byGames;
-  return (aStats.mean ?? Infinity) - (bStats.mean ?? Infinity) || byGames;
+  return compareGearSamples(gearWearerStats(a, minGames), gearWearerStats(b, minGames), order);
 }

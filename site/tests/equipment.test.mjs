@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import { equipItem, indexRecipes, transferEquipment, wornCombinations } from "../domain/equipment.ts";
 import { thirdItems } from "../domain/guide-equipment.ts";
 import { conditionalGearCohorts, conditionalGearRows } from "../domain/conditional-gear.ts";
-import { compareGearWearerSamples, gearSampleMinimum, gearWearerMatches, gearWearerStats, visibleGearSample } from "../domain/gear-wearer.ts";
+import { compareGearWearerSamples, gearSampleMinimum, gearWearerMatches, gearWearerStats, parseGearOrder, visibleGearSample } from "../domain/gear-wearer.ts";
 import { itemGuideOrigin, itemLink } from "../domain/links.ts";
 
 const { items, units } = JSON.parse(readFileSync(new URL("../data/season.json", import.meta.url), "utf8"));
@@ -51,6 +51,11 @@ test("wearer comparisons use the individual sample and hide both rates under 100
   assert.deepEqual(order("mean"), [strong, common, rare]);
   assert.deepEqual(order("wins"), [strong, common, rare]);
   assert.deepEqual(order("games"), [common, strong, rare]);
+  assert.deepEqual(order("mean-desc"), [common, strong, rare]);
+  assert.deepEqual(order("wins-asc"), [common, strong, rare]);
+  assert.deepEqual(order("games-asc"), [rare, strong, common]);
+  assert.equal(parseGearOrder("winRate"), "wins");
+  assert.equal(parseGearOrder("wins-asc"), "wins-asc");
 });
 
 test("artifact, radiant and emblem equipment and wearer rows have inclusive display thresholds", () => {

@@ -7,7 +7,7 @@ import { itemReference } from "@/data/item-reference";
 import { itemWearers, type WearerSnapshot } from "@/data/item-wearers";
 import { specialItemWearers } from "@/data/special-item-wearers";
 import { guideLink } from "@/domain/guide-reading";
-import { currentEmblemSnapshot, currentWearerSnapshot, gearSampleMinimum, visibleGearSample } from "@/domain/gear-wearer";
+import { compareGearSamples, currentEmblemSnapshot, currentWearerSnapshot, gearSampleMinimum, visibleGearSample } from "@/domain/gear-wearer";
 import { compareGearWearerSamples, cookware, emblemMatches, emblemSnapshot, filterEmblems, filterGear, gearFilters, gearGroups, gearHref, gearMatches, gearWearerStats, isCookRecipe, itemName, recipeParts, searchGear, selectableWearers,
   type GearFilters, type GearGroup, type GearOrder, type ItemGroup } from "@/domain/gear-library";
 import { emblemItemId, type itemGuideOrigin } from "@/domain/links";
@@ -21,6 +21,7 @@ import { ItemIcon } from "./ItemIcon";
 import { usePageReturnView } from "./usePageReturnView";
 import { WearerExclusion } from "./WearerExclusion";
 import { GearCategoryEmpty, GearCategoryNav } from "./GearCategoryNav";
+import { GearSortButton, GearSortSelect } from "./GearSortControls";
 import { GearWearerSearch } from "./GearWearerSearch";
 import { StatPeriodSelect, useStatArchive, useStatPeriod } from "./StatPeriod";
 
@@ -150,7 +151,7 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
   }
   const hasWins = reverseRows.some(({ sample }) => sample.winRate != null);
   const hasRate = reverseRows.some(({ rate }) => rate != null);
-  const shownOrder = reverse && order === "wins" && !hasWins ? "mean" : order;
+  const shownOrder = reverse && !hasWins && (order === "wins" || order === "wins-asc") ? "mean" : order;
   reverseRows.sort((a, b) => compareGearWearerSamples(a.sample, b.sample, shownOrder, 0));
   const reverseGroups: GearGroup[] = group === "all" ? ["completed", "special", "radiant", "emblems"] : [group];
   const item = visible.find(entry => entry.id === selected) ?? visible[0];
@@ -295,22 +296,17 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
     const best = (commonOnly ? holders.sort((a, b) => b.games - a.games) :
       qualified.sort((a, b) => a.mean! - b.mean! || b.games - a.games)).slice(0, 3);
     return [{ entry, stats, commonOnly, best, performance: itemPerformance(entry, specialStats) }];
-  }).sort((a, b) => {
-    const games = (b.stats?.totalGames ?? 0) - (a.stats?.totalGames ?? 0);
-    if (order === "games") return games;
-    if (order === "wins") return (b.performance?.winRate ?? -1) - (a.performance?.winRate ?? -1) || games;
-    return (a.performance?.mean ?? Infinity) - (b.performance?.mean ?? Infinity) || games;
-  }) : [];
+  }).sort((a, b) => compareGearSamples(
+    { games: a.stats?.totalGames, mean: a.performance?.mean, winRate: a.performance?.winRate },
+    { games: b.stats?.totalGames, mean: b.performance?.mean, winRate: b.performance?.winRate }, order,
+  )) : [];
   const referenceOnly = ranking && !reverse && specialStats && visible.find(entry =>
     entry.id === selected && !visibleGearSample(entry.category, specialStats.items[entry.id]?.totalGames));
   const holderModes = new Set(rankedEntries.filter(row => row.best.length).map(row => row.commonOnly ? "usual" : "best"));
   const holderMode = holderModes.size === 1 ? [...holderModes][0] : undefined;
   const holderHeading = holderMode === "usual" ? "常用使用者" : holderMode === "best" ? "最佳使用者" : "使用者";
-  const rankOrders = <select aria-label="装备排行排序" value={shownOrder}
-    onChange={event => changeFilters({ ...filters, order: event.target.value as GearOrder })}>
-    <option value="mean">均名最低</option><option value="games">场数最多</option>
-    {(!reverse || hasWins) && <option value="wins">登顶率最高</option>}
-  </select>;
+  const sortProps = { order: shownOrder, onSort: (next: GearOrder) => changeFilters({ ...filters, order: next }) };
+  const rankOrders = <GearSortSelect label="装备排行排序" includeWins={!reverse || hasWins} {...sortProps} />;
   return <>
     <div className={"page-heading gear-heading" + (ranking ? " gear-heading-ranked" : "")} data-wearer={reverse || undefined}>
       <h1>装备图鉴</h1>
@@ -324,10 +320,12 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
     {reverse && reverseWearer ? <section className="gear-rank" data-wearer id="gear-rankings" aria-label={reverseWearer.name + "的" + gearGroups[group]}>
       <div className="gear-rank-tools" data-reverse>{search}{rankOrders}</div>
       {archiveMessage || (reverseRows.length ? <div className="gear-reverse" data-wins={hasWins || undefined} data-rate={hasRate || undefined}>
-        <div className="gear-reverse-head" aria-hidden="true">
+        <div className="gear-reverse-head" role="group" aria-label="按实戴装备战绩排序">
           <span>装备 <small>{reverseRows.length} 件</small></span>
-          <span>均名</span>{hasWins && <span>登顶率</span>}
-          {hasRate && <span className="gear-wearer-rate">携带率</span>}<span>场数</span>
+          <GearSortButton metric="mean" {...sortProps} />
+          {hasWins && <GearSortButton metric="wins" {...sortProps} />}
+          {hasRate && <span className="gear-wearer-rate">携带率</span>}
+          <GearSortButton metric="games" {...sortProps} />
         </div>
         <ul className="gear-rank-list">{reverseGroups.map(category => {
           const rows = reverseRows.filter(row => row.category === category);
@@ -384,7 +382,11 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
         returnHref={itemHref(group, filters, { item: referenceOnly.id, unit: wearer })} origin={origin} />
       </div>}
       {archiveMessage || (rankedEntries.length && specialStats ? <>
-        <div className="gear-rank-head" aria-hidden="true"><span>装备</span><span>均名</span><span>登顶率</span><span>场数</span>
+        <div className="gear-rank-head" role="group" aria-label="按装备战绩排序">
+          <span>装备</span>
+          <GearSortButton metric="mean" {...sortProps} />
+          <GearSortButton metric="wins" {...sortProps} />
+          <GearSortButton metric="games" {...sortProps} />
           <span className="gear-holder-heading" title={holderMode === "usual" ? "按携带场数排序" : holderMode === "best" ? "按均名排序" : undefined}>
             {holderHeading}<small>均名 · 场数</small>
           </span>

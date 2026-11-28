@@ -2,7 +2,7 @@ import { itemMap, season, traitMap, unitMap } from "@/data";
 import { itemReference } from "@/data/item-reference";
 import rawEmblemSnapshot from "@/data/emblem-stats.json";
 import { emblemItemId } from "./links";
-import { gearWearerMatches, type GearOrder } from "./gear-wearer";
+import { gearWearerMatches, parseGearOrder, type GearOrder } from "./gear-wearer";
 import { emblemSearchNames, makeItemSearchTerms } from "./item-search";
 import { itemAliases } from "./roster-import";
 import { legacyEmblemNames } from "./trait-names.mjs";
@@ -61,12 +61,11 @@ export function reverseWearerExact(query: string) {
 }
 
 export function gearFilters(params: GearPageParams): GearFilters {
-  const order = params.order ?? params.sort;
   const ids = typeof params.exclude === "string" ? params.exclude.split(",") : [];
   const excluded = [...new Set(ids.filter(id => unitMap.has(id)))].slice(0, maxExcludedWearers);
   return {
     query: (typeof params.q === "string" ? params.q : "").slice(0, 80),
-    order: order === "games" ? "games" : order === "wins" || order === "winRate" ? "wins" : "mean",
+    order: parseGearOrder(params.order ?? params.sort),
     excluded,
     wearer: params.wearer && unitMap.has(params.wearer) ? params.wearer : "",
   };
