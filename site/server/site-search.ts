@@ -10,7 +10,7 @@ import { boardSearchQuery, type BoardSearchQuery } from "@/domain/board-search-q
 import type { Publication, Section } from "@/domain/document";
 import { readableSection, sectionTeams } from "@/domain/document-flow";
 import { emblemSnapshot, itemName, itemTerms } from "@/domain/gear-library";
-import { currentEmblemSnapshot, currentWearerSnapshot, gearSampleMinimum } from "@/domain/gear-wearer";
+import { currentEmblemSnapshot, currentWearerSnapshot, gearSampleMinimum, visibleGearSample } from "@/domain/gear-wearer";
 import { boardTitle } from "@/domain/guide-families";
 import { canRankRecommendations, currentFamilyBatch, currentRecommendationEvidence, guideFamilyRows, recommendationGroup, recommendationTier,
   type GuideFamilyBatch, type RecommendationStats } from "@/domain/guide-family-stats";
@@ -346,15 +346,16 @@ function gearDetails(item: Item, context: Context): SearchGearDetail {
   const samples = specialItemWearers.items[item.id] ? specialItemWearers : itemWearers;
   const emblemCurrent = sameEdition(context.live?.season.id ?? season.id, currentPatch.seasonId) &&
     currentEmblemSnapshot(emblemSnapshot, currentPatch);
-  const entry = item.traitId && (!duringLaunch || emblemCurrent) ? emblemRows[item.traitId] : undefined;
-  const sampled = !duringLaunch || currentWearerSnapshot(samples, currentPatch) ? samples.items[item.id] : undefined;
+  const rawEntry = item.traitId && (!duringLaunch || emblemCurrent) ? emblemRows[item.traitId] : undefined;
+  const rawSample = !duringLaunch || currentWearerSnapshot(samples, currentPatch) ? samples.items[item.id] : undefined;
+  const entry = rawEntry && visibleGearSample(item.category, rawEntry.games) ? rawEntry : undefined;
+  const sampled = rawSample && visibleGearSample(item.category, rawSample.totalGames) ? rawSample : undefined;
   const minGames = entry ? emblemSnapshot.minGames : samples.minGames;
-  const pbe = entry ? emblemSnapshot.mode === "PBE" : /\bPBE\b/i.test(samples.version);
   const eligible = (row: { unitId: string }) => {
     const unit = unitMap.get(row.unitId);
     return unit && row.unitId !== excluded && (!context.extra.lowCosts || unit.cost <= 3);
   };
-  const displayMinimum = gearSampleMinimum(item.category, pbe, minGames);
+  const displayMinimum = gearSampleMinimum(item.category, minGames);
   const totalGames = entry?.games ?? sampled?.totalGames;
   const snapshot = entry && emblemSnapshot.updatedAt && (!duringLaunch || entry.games >= displayMinimum) ? {
     href: "https://www.metatft.com/items/" + encodeURIComponent(entry.sourceId) + "?set=TFTSet19",
@@ -363,8 +364,9 @@ function gearDetails(item: Item, context: Context): SearchGearDetail {
   } : sampled && (!duringLaunch || (totalGames ?? 0) >= displayMinimum) ? {
     href: sampled.url, label:[samples.source,samples.version,samples.window,samples.date].join(" · "),
   } : undefined;
-  const rows = (entry?.holders ?? sampled?.rows ?? []).filter(row => eligible(row) && (!duringLaunch || row.games >= displayMinimum));
-  const ranked = rankedWearerEvidence(rows.filter(row => context.includeSeven || unitMap.get(row.unitId)?.cost !== 7), minGames, displayMinimum);
+  const rows = (entry?.holders ?? sampled?.rows ?? []).filter(row => eligible(row) &&
+    visibleGearSample(item.category, row.games) && (!duringLaunch || row.games >= displayMinimum));
+  const ranked = rankedWearerEvidence(rows.filter(row => context.includeSeven || unitMap.get(row.unitId)?.cost !== 7), displayMinimum);
   const wearerHit = ({ unitId, games, mean }: typeof ranked.holders[number], href?: string): CarryHit => {
     const unit = unitMap.get(unitId)!;
     return { id: unit.id, name: unit.name, image: unit.image, games, mean,
