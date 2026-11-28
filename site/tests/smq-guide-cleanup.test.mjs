@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readdirSync, readFileSync } from "node:fs";
 import { sectionTeams } from "../domain/document-flow.ts";
-import { guidePlaystyle, guideSectionWithCurrentNames, readingNotes } from "../domain/guide-reading.ts";
+import { guidePlaystyle, guideRollLevel, guideSectionWithCurrentNames, readingNotes } from "../domain/guide-reading.ts";
 import { legacyGuideDestination } from "../domain/legacy-guide-redirects.ts";
 import { rerollEntryTeamId } from "../domain/reroll-stages.ts";
 import { switchAlternate, traitCounts, traitGroup, usedPopulation } from "../domain/team.ts";
@@ -119,6 +119,14 @@ test("guide entry boards follow the playable level and retain the family results
   assert.equal(map.rows.find(row => row.sectionId === vayne.id).teamId, anchor.id);
 });
 
+test("Alune and Yuumi roll on eight with a nine-population cap board", () => {
+  const alune = guide("0870");
+  const cap = board(alune, "1167");
+  assert.equal(usedPopulation(cap.pieces), 9);
+  assert.equal(guidePlaystyle(alune, cap), "84");
+  assert.equal(guideRollLevel(alune, cap), 8);
+});
+
 test("merged links select their retained boards and retired guides are omitted from older public reads", () => {
   const anchor = guide("0051"), graves = guide("0251"), five = guide("0275"), kayle = guide("0219");
   const dest = (id, sourceBoard) => legacyGuideDestination("sample-block-" + id, sourceBoard, preview.sections);
@@ -147,7 +155,7 @@ test("merged links select their retained boards and retired guides are omitted f
     { sectionId: kayle.id, teamId: "7f18bb65-1662-403f-b1e2-fff9634c755f" });
   assert.equal(graves.primaryTeamId, board(graves, "0076").id);
   const variants = ["1261", "1262", "0093"].map(id => board(graves, id));
-  assert.deepEqual(variants.map(team => guidePlaystyle(graves, team)), ["84", "84", "95"]);
+  assert.deepEqual(variants.map(team => guidePlaystyle(graves, team)), ["84", "84", "84"]);
   for (const [index, variant] of variants.entries()) {
     assert.deepEqual(dest("0452", variant.id), { sectionId: graves.id, teamId: variant.id });
     assert.equal(variant.sectionId, graves.id);
