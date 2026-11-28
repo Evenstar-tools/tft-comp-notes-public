@@ -205,7 +205,15 @@ const guideSlugs: Record<string, GuideSlugs> = {
   "sample-block-1020": { slug: "hitmaker-draven", boards: {
     "00000000-0000-4000-8000-000000001158": "lv8-kaisa",
   } },
-  "sample-block-0854": { slug: "choreo-ahri", boards: {
+  "sample-block-0854": { slug: "choreo-ahri", searchAliases: {
+    "lv8-flex": ["编舞狐狸", "双编舞阿狸", "阿狸盖伦", "阿狸梅尔", "编舞师阿狸Flex"],
+    "lv9-smeech": ["编舞史密奇", "阿狸史密奇"],
+  }, boards: {
+    "b8f3e967-922d-4a3a-83c4-c62d111b208f": "lv8-flex",
+    "1c6360bc-59b9-4134-98d3-3795b30cf53a": "lv9-smeech",
+    "9e3202c6-84e7-4fbc-b092-24f2818bbc3b": "lv9-unlock",
+    "2ebc0e10-00bd-415f-9ba9-5f7f888ccf61": "lv9-arcanists",
+    "1808c76f-5fa3-4ccd-b1e3-8fdf6f5f03fe": "lv9-heartsteel",
     "00000000-0000-4000-8000-000000001146": "95-lv9",
   } },
   "sample-block-1180": { slug: "tango-twisted-fate", boards: {
