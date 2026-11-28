@@ -671,7 +671,7 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
             setPiece(""); setZoomed(false);
           }}>{showPlayerBoard ? "查看官方原盘" : "切回我的站位"}</button>
         </div>}
-        <div className="read-board" ref={board}><Board data={boardData} pieces={shownBoard.pieces} instrumentPositions={shownBoard.instrumentPositions} targeting={null} selectedId={selectedPiece} changedPositions={showFlex && flexPreview ? [flexPreview.position] : mainBoardActive ? changed : undefined}
+        <div className="read-board" data-guide-team-id={team.id} ref={board}><Board data={boardData} pieces={shownBoard.pieces} instrumentPositions={shownBoard.instrumentPositions} targeting={null} selectedId={selectedPiece} changedPositions={showFlex && flexPreview ? [flexPreview.position] : mainBoardActive ? changed : undefined}
           onCell={(_, picked, trigger) => selectPiece(picked?.instanceId === selectedPiece ? "" : picked?.instanceId ?? "", trigger)} /></div>
         <div className="guide-board-footer">
           <ul className="read-traits" aria-label="已激活常规羁绊">{counts.map(trait => {

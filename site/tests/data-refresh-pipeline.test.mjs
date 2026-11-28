@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { cpSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
@@ -65,6 +65,26 @@ test("the committed data passes the gate and status reports all 11 modules", () 
     assert.ok(entry.script?.startsWith("scripts/") || entry.id.startsWith("patch-recommendation"));
     if (entry.updatedAtUtc8) assert.match(entry.updatedAtUtc8, /\+08:00$/);
   }
+});
+
+test("the gate rejects an existing but wrong board and a mismatched fixed query", t => {
+  const cwd = fixture(t);
+  const file = join(cwd, "data", "guide-placement.json");
+  const batch = readJson(file);
+  const exact = batch.records.find(row => row.conditions?.teamId && new URL(row.url).searchParams.get("tab") === "comps");
+  const other = batch.records.find(row => row.conditions?.teamId && row.roster.every(unit => !exact.roster.includes(unit)));
+  assert.ok(exact && other);
+  exact.conditions.teamId = other.conditions.teamId;
+  const source = new URL(exact.url);
+  source.searchParams.set("level", String(exact.population + 1));
+  exact.url = source.href;
+  writeFileSync(file, JSON.stringify(batch));
+
+  const result = run(cwd, "--verify");
+  assert.equal(result.status, 1, result.stderr);
+  const { errors } = JSON.parse(result.stdout);
+  assert.ok(errors.some(error => error.includes("固定终盘样本的人口或名单与公开棋盘不一致")));
+  assert.ok(errors.some(error => error.includes("来源查询的结算等级与固定终盘样本不一致")));
 });
 
 test("the gate rejects a bad histogram and a missing history archive", t => {
@@ -318,6 +338,39 @@ test("the runner restores a collected file when the gate fails", t => {
   assert.match(result.stdout, /comp-trends\.json.*series 缺失/);
   assert.deepEqual(readFileSync(file), original);
   assert.ok(!readdirSync(join(cwd, "data")).some(name => name.endsWith(".lock") || name.endsWith(".rollback")));
+});
+
+test("a collector that exits successfully with a missing output cannot create a publish receipt", t => {
+  const cwd = fixture(t);
+  const edition = readJson(join(cwd, "data", "season.json")).id;
+  writeFileSync(join(cwd, "catalog.json"), JSON.stringify({ seasonId: edition, boards: [{ edition }] }));
+  const collector = join(cwd, "scripts", "refresh-guide-families.mjs");
+  const receipt = join(cwd, "collected.json");
+  const family = join(cwd, "data", "guide-family-stats.json");
+  const original = readFileSync(family);
+  const args = ["--profile", "fast", "--catalog", "catalog.json", "--receipt", receipt];
+  const rewriteFamily = [
+    'import { readFileSync, renameSync, writeFileSync } from "node:fs";',
+    'const family = "data/guide-family-stats.json";',
+    'writeFileSync(family + ".tmp", readFileSync(family));',
+    'renameSync(family + ".tmp", family);',
+  ];
+  writeFileSync(collector, rewriteFamily.join("\n"));
+  const partial = run(cwd, ...args);
+  assert.equal(partial.status, 1, partial.stdout);
+  assert.match(partial.stderr, /采集器未产出数据.*comp-trends/);
+  assert.ok(!existsSync(receipt));
+  assert.deepEqual(readFileSync(family), original);
+
+  writeFileSync(collector, [...rewriteFamily,
+    'const trends = "data/comp-trends.json";',
+    'writeFileSync(trends + ".tmp", readFileSync(trends));',
+    'renameSync(trends + ".tmp", trends);',
+  ].join("\n"));
+  const complete = run(cwd, ...args);
+  assert.equal(complete.status, 0, complete.stderr || complete.stdout);
+  assert.deepEqual(readJson(receipt), { profile: "fast", modules: ["guide-family-stats", "comp-trends"] });
+  assert.deepEqual(readFileSync(family), original);
 });
 
 test("the archive writer recreates heroes and equipment archives from one batch", t => {

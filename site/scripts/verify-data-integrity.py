@@ -1,11 +1,15 @@
 """Validate the committed statistics and public archive without network access."""
 
+import argparse
 from collections import Counter
 from datetime import date, datetime, timedelta, timezone
 import json
 from math import isfinite
 from pathlib import Path
 import re
+import os
+from subprocess import CalledProcessError, run
+from urllib.parse import parse_qs, urlsplit
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -325,7 +329,7 @@ def validate_recommendation_overrides(entry, active, path, errors):
     return override if override in RECOMMENDATION_OVERRIDES else None
 
 
-def collect_public_boards(sections, preview, errors):
+def collect_public_boards(sections, preview, errors, reroll=None):
     boards = {}
     primaries = {}
     sections_by_id = {section["id"]: section for section in sections}
@@ -344,8 +348,9 @@ def collect_public_boards(sections, preview, errors):
         boards.update({(section_id, team_id): team for team_id, team in teams.items()})
     reroll_path = ROOT / "data/s19-reroll-boards.json"
     season_scope = edition(preview.get("season", {}).get("id") if isinstance(preview.get("season"), dict) else None)
-    if reroll_path.exists() and season_scope == "s19-pbe":
-        reroll = read_json("data/s19-reroll-boards.json", list, errors)
+    if season_scope == "s19-pbe":
+        if reroll is None:
+            reroll = read_json("data/s19-reroll-boards.json", list, errors) if reroll_path.exists() else []
         for guide in reroll:
             if not isinstance(guide, dict):
                 continue
@@ -492,6 +497,76 @@ def qualified_home_guides(families, primaries, boards, decisions, excluded, sect
             yield section_id, "heroAugment" if is_hero else decisions.get(first, (None, None))[0]
 
 
+def board_units(board):
+    return Counter(piece["unitId"] for piece in (board.get("pieces") or [])
+                   if isinstance(piece, dict) and isinstance(piece.get("unitId"), str))
+
+
+def check_sample_bindings(boards, current, errors):
+    by_team = {team_id: (section_id, board) for (section_id, team_id), board in boards.items()}
+    placement = read_json("data/guide-placement.json", dict, errors)
+    s19_pbe = current.get("seasonId") == "s19-pbe"
+    source_ids = {}
+    if s19_pbe:
+        reference = read_json("data/conditional-gear-unit-ids.json", dict, errors)
+        source_ids = {api_id: unit_id for unit_id, api_id in reference.get("units", {}).items()}
+    for index, row in enumerate(placement.get("records") or []):
+        if not isinstance(row, dict) or row.get("sourcePeriod") or row.get("boardObservation"):
+            continue
+        scope = row.get("conditions") or {}
+        if not isinstance(scope, dict) or "teamId" not in scope:
+            continue
+        team_id = scope["teamId"]
+        path = f"data/guide-placement.json.records[{index}] ({team_id})"
+        if not isinstance(team_id, str) or team_id not in by_team:
+            errors.append(f"{path}：战绩绑定的公开棋盘不存在")
+            continue
+        _, board = by_team[team_id]
+        units = board_units(board)
+        if scope.get("population") is not None and scope["population"] != board_population(board):
+            errors.append(f"{path}：统计条件人口与公开棋盘不一致")
+        if scope.get("kind") == "core":
+            core = scope.get("coreRoster")
+            if not isinstance(core, list) or not core or any(not isinstance(unit, str) or unit not in units for unit in core):
+                errors.append(f"{path}：核心样本包含目标棋盘未上场的棋子")
+            continue
+        try:
+            url = urlsplit(row.get("url") or "")
+            query = parse_qs(url.query)
+        except (ValueError, TypeError):
+            errors.append(f"{path}：样本查询链接无效")
+            continue
+        if query.get("tab") != ["comps"]:
+            if scope.get("kind") == "fixed":
+                errors.append(f"{path}：固定终盘需要精确名单查询")
+            continue
+        roster = row.get("roster")
+        if (row.get("population") != board_population(board) or not isinstance(roster, list)
+                or not all(isinstance(unit, str) for unit in roster) or Counter(roster) != units):
+            errors.append(f"{path}：固定终盘样本的人口或名单与公开棋盘不一致")
+        if query.get("level") != [str(row.get("population"))]:
+            errors.append(f"{path}：来源查询的结算等级与固定终盘样本不一致")
+        if s19_pbe:
+            query_units = Counter(source_ids.get(token.split("-", 1)[0]) for token in query.get("unit", []))
+            if query_units != units:
+                errors.append(f"{path}：来源查询的棋子名单与绑定棋盘不一致")
+
+    for name in ("guide-carry-stats", "patch-recommendation-stats"):
+        snapshot = read_json(f"data/{name}.json", dict, errors)
+        for index, row in enumerate(snapshot.get("rows") or []):
+            if not isinstance(row, dict):
+                continue
+            section_id, team_id = row.get("sectionId"), row.get("teamId")
+            path = f"data/{name}.json.rows[{index}] ({team_id})"
+            if not all(isinstance(key, str) for key in (section_id, team_id)) or (section_id, team_id) not in boards:
+                errors.append(f"{path}：样本绑到了其他攻略或不存在的棋盘")
+                continue
+            anchors = row.get("anchorIds") or []
+            units = board_units(boards[(section_id, team_id)])
+            if not isinstance(anchors, list) or any(not isinstance(unit, str) or unit not in units for unit in [row.get("carryId"), *anchors]):
+                errors.append(f"{path}：主 C 或核心棋子不在绑定棋盘上")
+
+
 def check_family_bindings(family_map, family, boards, family_aligned, errors):
     map_name = "data/guide-family-map.json"
     stats_name = "data/guide-family-stats.json"
@@ -502,6 +577,7 @@ def check_family_bindings(family_map, family, boards, family_aligned, errors):
     if type(model) is not int:
         errors.append(f"{map_name}：缺少有效整数 model")
     seen_clusters = set()
+    used_boards = {}
     for index, row in enumerate(rows):
         if not isinstance(row, dict):
             continue
@@ -527,6 +603,19 @@ def check_family_bindings(family_map, family, boards, family_aligned, errors):
                     not isinstance(tid, str) or (section_id, tid) not in boards for tid in shared
                 ):
                     errors.append(f"{path}.sharedTeamIds：包含未在对应公开攻略中找到的棋盘")
+            shared_ids = row.get("sharedTeamIds")
+            links = [team_id, row.get("landingTeamId"), *(shared_ids if isinstance(shared_ids, list) else [])]
+            carries = row.get("carryIds")
+            for target in dict.fromkeys(key for key in links if isinstance(key, str)):
+                key = (section_id, target)
+                if key not in boards:
+                    continue
+                previous = used_boards.setdefault(key, index)
+                if previous != index:
+                    errors.append(f"{path}：棋盘 {target} 重复绑定多个体系")
+                units = board_units(boards[key])
+                if not isinstance(carries, list) or not any(isinstance(unit, str) and unit in units for unit in carries):
+                    errors.append(f"{path}：棋盘 {target} 不含该体系的主 C")
 
     present = {}
     for collection_key in ("rows", "smallSamples"):
@@ -562,8 +651,10 @@ def check_family_bindings(family_map, family, boards, family_aligned, errors):
                 actual = present[cid]
                 if (actual.get("sectionId") != row.get("sectionId")
                         or actual.get("teamId") != row.get("teamId")
-                        or actual.get("landingTeamId") != row.get("landingTeamId")):
-                    errors.append(f"{stats_name}：体系 {cid} 的攻略、主盘或落点盘与 {map_name} 不一致")
+                        or actual.get("landingTeamId") != row.get("landingTeamId")
+                        or actual.get("sharedTeamIds", []) != row.get("sharedTeamIds", [])
+                        or actual.get("carryIds") != row.get("carryIds")):
+                    errors.append(f"{stats_name}：体系 {cid} 的攻略、主盘、落点盘、共用盘或主 C 与 {map_name} 不一致")
             orphans = sorted(set(present) - seen_clusters)
             if orphans:
                 errors.append(f"{stats_name}：存在未在 {map_name} 登记的残留分组（{'、'.join(orphans[:5])}）")
@@ -596,9 +687,68 @@ def check_references(recommendations, family, current, effective,
                 if not isinstance(section_id, str) or section_id not in ids:
                     errors.append(f"{path}.sectionId：未在公开攻略中找到")
     check_family_bindings(family_map, family, boards, family_aligned, errors)
+    check_sample_bindings(boards, current, errors)
+
+
+def release_inventory(preview, reroll, family_map, placement):
+    sections = [section for section in preview["sections"] if section.get("kind") != "category"]
+    boards, _, _ = collect_public_boards(sections, preview, [], reroll)
+    inventory = {*(f"guide:{section_id}" for section_id, _ in boards),
+                 *(f"board:{section_id}/{team_id}" for section_id, team_id in boards),
+                 *(f"family:{row['clusterId']}" for row in family_map["rows"])}
+    for row in placement["records"]:
+        scope = row.get("conditions") or {}
+        if not scope.get("teamId") or row.get("sourcePeriod") or row.get("boardObservation"):
+            continue
+        kind = "augment" if scope.get("augmentId") or row.get("referencesAugment") else scope.get("kind")
+        if kind in {"full", "fixed"}:
+            kind = "fixed" if parse_qs(urlsplit(row["url"]).query).get("tab") == ["comps"] else "lineup"
+        inventory.add(f"sample:{kind}/{scope['teamId']}")
+    return inventory
+
+
+def check_release_inventory(base, modules, errors):
+    if not re.fullmatch(r"[0-9a-f]{7,40}", base):
+        errors.append("发布对账需要明确的 Git 基线提交")
+        return
+    def read_base(name):
+        result = run(["git", "show", f"{base}:site/data/{name}.json"], cwd=ROOT, check=True, capture_output=True)
+        return json.loads(result.stdout)
+
+    files = ("public-preview", "s19-reroll-boards", "guide-family-map", "guide-placement")
+    try:
+        previous = [read_base(name) for name in files]
+        current = [read_json(f"data/{name}.json", list if name == "s19-reroll-boards" else dict, errors) for name in files]
+        before, after = release_inventory(*previous), release_inventory(*current)
+        if previous[2]["model"] != current[2]["model"] or previous[2]["set"] != current[2]["set"]:
+            before = {key for key in before if not key.startswith("family:")}
+        if any(previous[3].get(key) != current[3].get(key) for key in ("edition", "patch", "build")):
+            before = {key for key in before if not key.startswith("sample:")}
+        if previous[0]["season"]["id"] == current[0]["season"]["id"]:
+            for entry in modules:
+                module = entry["id"]
+                old = check_module(module, read_base(module), {}, None, False, [], [])
+                if old["patch"] != entry["patch"]:
+                    continue
+                parse_date = sample_date if module == "guide-placement" else timestamp
+                before_time, after_time = parse_date(old["sampledAt"]), parse_date(entry["sampledAt"])
+                if before_time and after_time and after_time < before_time:
+                    errors.append(f"data/{module}.json：采样时间倒退（{old['sampledAt']} → {entry['sampledAt']}）")
+    except (CalledProcessError, ValueError, KeyError, TypeError, OSError) as error:
+        errors.append(f"无法生成发布目录对账：{error}")
+        return
+    removed = before - after
+    declared = set(re.findall(r"^\s*- retire `([^`]+)` +[—-] +\S[^\r\n]*$", os.environ.get("RELEASE_PR_BODY", ""), re.M))
+    for key in sorted(removed - declared):
+        errors.append(f"发布目录遗漏 {key}。确需下线时，在 PR 正文逐项写 - retire `{key}` — 原因")
+    for key in sorted(declared - removed):
+        errors.append(f"PR 申报下线 {key}，但本批并未移除该条目")
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--base", help="Also compare guide, board and family inventory with a Git base commit")
+    args = parser.parse_args()
     errors, warnings, modules = [], [], []
     current, effective, valid_patch = current_patch(errors)
     checked = 0
@@ -613,6 +763,8 @@ def main():
         if module == "patch-recommendations":
             check_references(data, family, current, effective, valid_patch, family_aligned, warnings, errors)
     batches = check_history(errors)
+    if args.base and not errors:
+        check_release_inventory(args.base, modules, errors)
     print(json.dumps({
         "ok": not errors, "currentPatch": current, "modules": modules,
         "historyBatches": batches, "checkedDistributions": checked,

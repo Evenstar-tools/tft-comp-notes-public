@@ -543,6 +543,28 @@
       ]
     },
     {
+      "clusterId": "429011",
+      "sourceName": "Frontman Renekton Ashe",
+      "name": "救生员鳄鱼艾希",
+      "sectionId": "sample-block-0171",
+      "teamId": "d78a44d5-edd8-4481-8efb-35333087cd33",
+      "carryIds": [
+        "renekton",
+        "ashe"
+      ],
+      "url": "https://www.metatft.com/pbe-comps#DA_Renekton19_HeroAugment-DA_Ashe19",
+      "representativeUnits": [
+        "DA_Ashe19",
+        "DA_Galio19",
+        "DA_Illaoi19",
+        "DA_Renekton19",
+        "DA_Swain19",
+        "DA_Taric19",
+        "DA_Zac19",
+        "DA_Zoe19"
+      ]
+    },
+    {
       "clusterId": "429005",
       "sourceName": "Lifeguard Renekton",
       "name": "救生员鳄鱼",

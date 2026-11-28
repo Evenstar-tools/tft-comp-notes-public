@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
   pull_request:
+    types: [opened, synchronize, reopened, edited]
 
 permissions:
   contents: read
@@ -17,6 +18,8 @@ jobs:
         working-directory: site
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2  # The PR merge has the target base as its first parent.
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -31,6 +34,16 @@ jobs:
       - name: Run public release hygiene gate
         run: python3 scripts/verify-public-release.py
       - name: Run data integrity gate
-        run: python3 scripts/verify-data-integrity.py
+        env:
+          RELEASE_BASE: ${{ github.event.pull_request.base.sha }}
+          RELEASE_PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          if [ -n "$RELEASE_BASE" ]; then
+            python3 scripts/verify-data-integrity.py --base "$RELEASE_BASE"
+          else
+            python3 scripts/verify-data-integrity.py
+          fi
+      - name: Audit public guide boards
+        run: npm run guides:audit -- --all --strict
       - name: Verify production build
         run: npx next build --webpack

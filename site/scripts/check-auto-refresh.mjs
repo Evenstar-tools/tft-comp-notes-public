@@ -2,14 +2,11 @@ import { spawnSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { isDeepStrictEqual, parseArgs } from "node:util";
+import { automaticRefreshModules } from "./run-data-refresh.mjs";
 
 const site = fileURLToPath(new URL("../", import.meta.url));
 const repo = fileURLToPath(new URL("../../", import.meta.url));
-const fast = ["guide-family-stats", "comp-trends"];
-const daily = [...fast, "hero-stats", "item-wearers", "special-item-wearers",
-  "guide-placement", "guide-carry-stats", "trait-stats"];
-const profiles = { fast, daily, all: [...daily, "emblem-stats"] };
-const buildModules = new Set([...fast, "guide-placement", "guide-carry-stats"]);
+const buildModules = new Set(["guide-family-stats", "comp-trends", "guide-placement", "guide-carry-stats"]);
 const familyPath = "site/data/guide-family-stats.json";
 
 const readJson = file => JSON.parse(readFileSync(file, "utf8").replace(/^\uFEFF/, ""));
@@ -59,8 +56,7 @@ export function readPublishedFamily(ref = "HEAD") {
 }
 
 export function changedDataFiles(status, profile) {
-  if (!Object.hasOwn(profiles, profile)) throw new Error("未知自动刷新配置 " + profile);
-  const allowed = new Set(profiles[profile].map(id => "site/data/" + id + ".json"));
+  const allowed = new Set(automaticRefreshModules(profile).map(id => "site/data/" + id + ".json"));
   return status.split("\0").filter(Boolean).map(entry => {
     const path = entry.slice(3);
     if (!entry.startsWith(" M ") || !allowed.has(path)) {
@@ -68,6 +64,17 @@ export function changedDataFiles(status, profile) {
     }
     return path;
   });
+}
+
+export function verifyCollectedModules(profile, receipt, summary) {
+  const expected = automaticRefreshModules(profile);
+  const completed = receipt?.modules;
+  if (receipt?.profile !== profile || !Array.isArray(completed)) throw new Error("采集回执与本轮配置不符");
+  const missing = expected.filter(id => !completed.includes(id));
+  if (missing.length || completed.length !== expected.length) {
+    throw new Error("采集模块未完整通过：" + (missing.length ? missing.join("、") : "回执含重复或意外模块"));
+  }
+  verifyAlignment(expected.map(id => `site/data/${id}.json`), summary);
 }
 
 export function verifyAlignment(files, summary) {
@@ -142,14 +149,16 @@ export function verifyFamilyContinuity(baseline, candidate, { bindings, trend, c
   }
 }
 
-function verify(profile) {
+function verify(profile, receiptPath) {
+  const receipt = readJson(receiptPath);
+  const summary = JSON.parse(run(process.execPath, ["scripts/run-data-refresh.mjs", "--status", "--json"], site));
+  verifyCollectedModules(profile, receipt, summary);
   const changed = changedDataFiles(git("status", "--porcelain=v1", "-z", "--untracked-files=all", "--no-renames"), profile);
   const files = changed.filter(path => {
     const committed = JSON.parse(git("show", "HEAD:" + path).replace(/^\uFEFF/, ""));
     return !isDeepStrictEqual(committed, readJson(new URL("../../" + path, import.meta.url)));
   });
-  if (!files.length) return "本轮没有实质数据变更";
-  verifyAlignment(files, JSON.parse(run(process.execPath, ["scripts/run-data-refresh.mjs", "--status", "--json"], site)));
+  if (!files.length) return "所选模块已采集并核验，本轮没有实质数据变更";
   const baseline = readPublishedFamily();
   const family = readJson(dataUrl("guide-family-stats.json"));
   const mapFile = dataUrl("guide-family-map.json");
@@ -167,18 +176,18 @@ function verify(profile) {
 
 function main() {
   const { positionals, values } = parseArgs({ allowPositionals: true, options: {
-    report: { type: "string" }, profile: { type: "string" },
+    report: { type: "string" }, profile: { type: "string" }, receipt: { type: "string" },
   } });
   let reason;
-  if (positionals.length === 1 && positionals[0] === "preflight" && values.report && !values.profile) {
+  if (positionals.length === 1 && positionals[0] === "preflight" && values.report && !values.profile && !values.receipt) {
     // The exact collector and the upstream probe can observe different cache ages.
     // The lower bound is the published batch, even after collection has updated the worktree.
     reason = preflightReason(readJson(dataUrl("current-patch.json")), readPublishedFamily(), readJson(values.report));
     if (!reason) console.log("上游版本、构建、模型和样本时间已对齐");
-  } else if (positionals.length === 1 && positionals[0] === "verify" && values.profile && !values.report) {
-    reason = verify(values.profile);
+  } else if (positionals.length === 1 && positionals[0] === "verify" && values.profile && values.receipt && !values.report) {
+    reason = verify(values.profile, values.receipt);
   } else {
-    throw new Error("用法：preflight --report <报告文件> 或 verify --profile <fast|daily|all>");
+    throw new Error("用法：preflight --report <报告文件> 或 verify --profile <fast|daily|all> --receipt <采集回执>");
   }
   if (reason) {
     console.log("跳过自动发布 · " + reason);

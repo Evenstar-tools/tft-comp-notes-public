@@ -5,7 +5,8 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
-import { changedDataFiles, preflightReason, verifyAlignment, verifyFamilyContinuity } from "../scripts/check-auto-refresh.mjs";
+import { changedDataFiles, preflightReason, verifyAlignment, verifyCollectedModules, verifyFamilyContinuity } from "../scripts/check-auto-refresh.mjs";
+import { automaticRefreshModules } from "../scripts/run-data-refresh.mjs";
 import { formatDotSummary, summarizeRefresh } from "../scripts/check-refresh-alerts.mjs";
 
 const current = {
@@ -64,6 +65,7 @@ test("the second preflight compares against the committed batch after collection
     mkdirSync(join(site, "scripts"), { recursive: true });
     mkdirSync(join(site, "data"));
     copyFileSync(new URL("../scripts/check-auto-refresh.mjs", import.meta.url), script);
+    copyFileSync(new URL("../scripts/run-data-refresh.mjs", import.meta.url), join(site, "scripts", "run-data-refresh.mjs"));
     writeFileSync(join(site, "data", "current-patch.json"), JSON.stringify(current));
     writeFileSync(batch, JSON.stringify(family));
     git("init", "--quiet");
@@ -106,6 +108,26 @@ test("an edited module must align to the active batch and preserve available bui
   assert.throws(() => verifyAlignment(files, summary({ build: "6037882" })), /未对齐/);
   assert.throws(() => verifyAlignment(files, summary({ alignment: "lagging" })), /未对齐/);
   assert.throws(() => verifyAlignment(files, { ...summary({}), ok: false }), /状态摘要/);
+});
+
+test("the all profile requires a receipt and a valid status for every selected collector even without a diff", () => {
+  const modules = automaticRefreshModules("all");
+  const summary = {
+    ok: true,
+    currentPatch: { patch: "19.1c", build: "6035832" },
+    modules: modules.map(id => ({ id, file: `data/${id}.json`, patch: "19.1c", build: "6035832", alignment: "aligned" })),
+  };
+  const complete = { profile: "all", modules };
+  assert.ok(modules.includes("emblem-stats"));
+  assert.ok(!modules.includes("patch-recommendation-stats"));
+  assert.doesNotThrow(() => verifyCollectedModules("all", complete, summary));
+  assert.throws(() => verifyCollectedModules("all", undefined, summary), /采集回执/);
+  assert.throws(() => verifyCollectedModules("all", { ...complete, profile: "daily" }, summary), /采集回执/);
+  assert.throws(() => verifyCollectedModules("all", { ...complete, modules: automaticRefreshModules("daily") }, summary), /未完整.*emblem-stats/);
+  assert.throws(() => verifyCollectedModules("all", { ...complete, modules: [...modules, modules[0]] }, summary), /重复或意外/);
+  assert.throws(() => verifyCollectedModules("all", complete, {
+    ...summary, modules: summary.modules.filter(module => module.id !== "emblem-stats"),
+  }), /emblem-stats.*未对齐/);
 });
 
 test("auto-refresh continuity blocks dropped bindings, baseline losses, and incomplete trend batches", () => {
