@@ -81,7 +81,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Install Python collector dependencies
-        if: steps.plan.outputs.profile != '' && inputs.dry_run != true && steps.plan.outputs.profile != 'fast'
+        if: steps.plan.outputs.profile != '' && inputs.dry_run != true
         run: python -m pip install requests beautifulsoup4
       - name: Install Playwright Chromium
         if: steps.plan.outputs.profile != '' && inputs.dry_run != true

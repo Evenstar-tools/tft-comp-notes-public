@@ -3,6 +3,7 @@ import initialRecommendations from "@/data/patch-recommendations.json";
 import type { Publication } from "@/domain/document";
 import { recommendationTier } from "@/domain/guide-family-stats";
 import { sectionTeams } from "@/domain/document-flow";
+import { applyOwnerHomeRecommendations } from "@/domain/owner-content";
 import { applyHomeRecommendationOverrides, getPublishedPatchRecommendations, type PatchRecommendationBatch } from "@/domain/patch-recommendations";
 import { isLiveLaunchTransition, sameEdition } from "@/domain/version-updates";
 
@@ -15,7 +16,7 @@ export function currentPatchRecommendations(publication: Publication | null): Pa
   const defaults = initial && initial.seasonId === patch.seasonId && initial.build === patch.build &&
     Date.parse(initial.reviewedAt) >= patchStart ? initial : undefined;
   const batch = published.batch ?? (!published.declared || isLiveLaunchTransition(patch) ? defaults : undefined);
-  if (!batch) return;
+  if (!batch) return applyOwnerHomeRecommendations(undefined, publication.ownerHome?.recommendations, patch);
   const boardsByGuide = new Map(publication.sections.map(guide => [guide.id, new Set(sectionTeams(guide).map(team => team.id))]));
   const configured = batch === defaults ? batch.entries : applyHomeRecommendationOverrides(batch, defaults);
   const entries = configured.filter(record => boardsByGuide.get(record.sectionId)?.has(record.teamId));
@@ -24,6 +25,7 @@ export function currentPatchRecommendations(publication: Publication | null): Pa
     Date.parse(record.checkedAt) >= patchStart && recommendationTier(record) === "recommended" &&
     !entries.some(entry => entry.sectionId === record.sectionId && entry.teamId === record.teamId &&
       (entry.status === "avoid" || entry.status === "review")));
-  return { ...batch, reviewedRollingPatch: batch.reviewedRollingPatch ?? defaults?.reviewedRollingPatch, fixedBoardRecommendations, entries,
-    ...(entries.length !== configured.length && { summary: undefined }) };
+  const recommendations = { ...batch, reviewedRollingPatch: batch.reviewedRollingPatch ?? defaults?.reviewedRollingPatch,
+    fixedBoardRecommendations, entries, ...(entries.length !== configured.length && { summary: undefined }) };
+  return applyOwnerHomeRecommendations(recommendations, publication.ownerHome?.recommendations, patch);
 }

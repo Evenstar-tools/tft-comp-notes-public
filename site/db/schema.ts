@@ -1,4 +1,4 @@
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { integer, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 export const settings = sqliteTable("settings", {
   key: text("key").primaryKey(),
@@ -23,3 +23,11 @@ export const syncJobs = sqliteTable("sync_jobs", {
   detail: text("detail").notNull(),
   updatedAt: text("updated_at").notNull(),
 });
+export const ownerContent = sqliteTable("owner_content", {
+  scope: text("scope").notNull(),
+  target: text("target").notNull(),
+  revision: integer("revision").notNull(),
+  publishedRevision: integer("published_revision").notNull(),
+  published: text("published").notNull(),
+  drafts: text("drafts").notNull(),
+}, table => [primaryKey({ columns: [table.scope, table.target] })]);

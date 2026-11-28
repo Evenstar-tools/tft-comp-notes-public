@@ -5,6 +5,7 @@ import type { Team, Unit } from "@/domain/types";
 import { beijingDateTime } from "@/lib/beijing-time";
 import { homeGuideReturn } from "@/lib/home-position";
 import { GuideConditionIcon } from "./GuideEquipmentConditions";
+import { OwnerInlineEdit } from "./OwnerPageEditor";
 
 export type RecommendationCard = {
   group: RecommendationGroup;
@@ -25,12 +26,14 @@ export type RecommendationCard = {
   hit?: string;
 };
 
-export function PatchRecommendationList({ stats, cards, home, previousBuild, quietUnrated }: {
+export function PatchRecommendationList({ stats, cards, home, previousBuild, quietUnrated, onEdit, selectedEntry }: {
   stats?: Pick<GuideFamilyBatch, "patch" | "queue" | "days" | "updatedAt" | "spansBuilds">;
   cards: RecommendationCard[];
   home: string;
   previousBuild?: boolean;
   quietUnrated?: boolean;
+  onEdit?: (sectionId: string, teamId: string) => void;
+  selectedEntry?: string;
 }) {
   if (!cards.length) return null;
   const groups = recommendationGroups.map(group => ({
@@ -86,7 +89,8 @@ export function PatchRecommendationList({ stats, cards, home, previousBuild, qui
               </span>;
             }
             const shownStrategy = repeatsFormationLabel(label, strategy) ? undefined : strategy;
-            return <article key={id} id={id} className="home-patch-card">
+            return <article key={id} id={id} className="home-patch-card" data-owner-editing={!!onEdit || undefined}
+              data-owner-selected={!!onEdit && selectedEntry === rating.sectionId + ":" + team.id || undefined}>
               <a href={href} data-home-board={team.id} className="home-patch-card-link"
                 aria-labelledby={id + "-title"} aria-describedby={[id + "-roles", shownStrategy && id + "-strategy",
                   (hasAdvice || note) && id + "-note", ratingId].filter(Boolean).join(" ")}>
@@ -112,6 +116,8 @@ export function PatchRecommendationList({ stats, cards, home, previousBuild, qui
                 </div>
                 {placement}
               </a>
+              {onEdit && <div className="owner-home-card-action"><OwnerInlineEdit label={"调整" + title + "的推荐"}
+                onClick={() => onEdit(rating.sectionId, team.id)} /></div>}
               {!!conditions?.length && <div className="guide-featured-conditions home-patch-conditions" aria-label="定阵条件">
                 <span>定阵条件</span>
                 {conditions.map(condition => <a key={condition.id + ":" + (condition.recipient?.id ?? "")}

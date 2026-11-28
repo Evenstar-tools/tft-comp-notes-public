@@ -492,6 +492,77 @@ test("a collector that exits successfully with a missing output cannot create a 
   assert.deepEqual(readFileSync(family), original);
 });
 
+test("fast refresh rebuilds a published board query and preserves its old exact sample", t => {
+  const cwd = fixture(t);
+  const patch = readJson(join(cwd, "data", "current-patch.json"));
+  const edition = readJson(join(cwd, "data", "season.json")).id;
+  const known = readJson(join(cwd, "data", "conditional-gear-unit-ids.json")).units;
+  const placementPath = join(cwd, "data", "guide-placement.json");
+  const before = readJson(placementPath);
+  const teamId = "00000000-0000-4000-8000-000000001283";
+  const oldSample = before.records.find(row => row.conditions?.kind === "full" && row.conditions.teamId === teamId &&
+    new URL(row.url).searchParams.get("tab") === "comps" && !row.sourcePeriod);
+  assert.ok(oldSample?.roster.includes("varus"));
+  const roster = oldSample.roster.map(unit => unit === "varus" ? "bard" : unit);
+  const board = {
+    sectionId: "sample-block-0338", teamId, population: 8, roster,
+    units: roster.map(unit => known[unit] + "-1"), signature: JSON.stringify([8, [...roster].sort()]),
+  };
+  const duplicates = { ...board, teamId: "00000000-0000-4000-8000-000000000078",
+    roster: ["vayne", "vayne"], units: [known.vayne + "-1", known.vayne + "-1"], population: 2 };
+  writeFileSync(join(cwd, "board-queries.json"), JSON.stringify({ seasonId: patch.seasonId, build: patch.build, boards: [board, duplicates] }));
+  writeFileSync(join(cwd, "catalog.json"), JSON.stringify({ seasonId: edition, boards: [{ edition }] }));
+  cpSync(join(site, "scripts", "guide_stats_window.py"), join(cwd, "scripts", "guide_stats_window.py"));
+  cpSync(join(site, "scripts", "refresh-guide-distributions.py"), join(cwd, "scripts", "collector.py"));
+  writeFileSync(join(cwd, "scripts", "refresh-guide-distributions.py"), [
+    "import collector",
+    "collector.fetch_counts = lambda url, _: [8, 7, 6, 5, 4, 3, 2, 1]",
+    "collector.main()",
+  ].join("\n"));
+  writeFileSync(join(cwd, "scripts", "refresh-guide-families.mjs"), [
+    'import { readFileSync, renameSync, writeFileSync } from "node:fs";',
+    'for (const id of ["guide-family-stats", "comp-trends"]) {',
+    '  const filename = "data/" + id + ".json";',
+    '  writeFileSync(filename + ".tmp", readFileSync(filename));',
+    '  renameSync(filename + ".tmp", filename);',
+    '}',
+  ].join("\n"));
+  const receipt = join(cwd, "collected.json");
+  const result = run(cwd, "--profile", "fast", "--catalog", "catalog.json", "--receipt", receipt, "--board-queries", "board-queries.json");
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+  assert.deepEqual(readJson(receipt), {
+    profile: "fast", modules: ["guide-placement", "guide-family-stats", "comp-trends"], boardQueries: true,
+  });
+  const after = readJson(placementPath);
+  assert.equal(after.date, before.date);
+  const [current] = after.records.filter(row => row.querySignature);
+  assert.equal(after.records.filter(row => row.querySignature).length, 1);
+  assert.equal(current.querySignature, board.signature);
+  assert.deepEqual(current.roster, [...roster].sort());
+  assert.deepEqual(current.placementCounts, [8, 7, 6, 5, 4, 3, 2, 1]);
+  const query = new URL(current.url).searchParams;
+  assert.deepEqual(query.getAll("unit").sort(), [...board.units].sort());
+  assert.equal(query.get("level"), "8");
+  for (const key of ["emblem_count", "tactician_item_count", "duplicate_unit_count"]) assert.equal(query.get(key), "0");
+  const historical = after.records.find(row => row.url === oldSample.url);
+  assert.deepEqual(historical, { ...oldSample, sourcePeriod: { patch: before.patch, window: "旧棋盘 · " + before.window } });
+
+  const nextRoster = roster.map(unit => unit === "bard" ? "amumu" : unit);
+  const next = { ...board, roster: nextRoster, units: nextRoster.map(unit => known[unit] + "-1"),
+    signature: JSON.stringify([8, [...nextRoster].sort()]) };
+  writeFileSync(join(cwd, "board-queries.json"), JSON.stringify({ seasonId: patch.seasonId, build: patch.build, boards: [next] }));
+  const refreshed = run(cwd, "--profile", "fast", "--catalog", "catalog.json", "--board-queries", "board-queries.json");
+  assert.equal(refreshed.status, 0, refreshed.stderr || refreshed.stdout);
+  const accepted = readJson(placementPath);
+  assert.deepEqual(accepted.records.find(row => row.querySignature === current.querySignature),
+    { ...current, sourcePeriod: historical.sourcePeriod });
+  accepted.records.find(row => row.querySignature === next.signature).url = oldSample.url;
+  writeFileSync(placementPath, JSON.stringify(accepted));
+  const mismatched = run(cwd, "--verify");
+  assert.equal(mismatched.status, 1, mismatched.stdout);
+  assert.match(mismatched.stdout, /来源查询的棋子名单与绑定棋盘不一致/);
+});
+
 test("the archive writer recreates heroes and equipment archives from one batch", t => {
   const cwd = fixture(t);
   const latest = readJson(join(cwd, "data", "stats-history.json")).find(batch => batch.channel === "pbe");

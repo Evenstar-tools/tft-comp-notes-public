@@ -59,7 +59,8 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
               trends: homeTrends(live, regularGuides, patch),
             }))}
             season={homeSeason === currentSeason ? undefined : homeSeason} initial={filters} initialSearch={initialSearch}
-            recommendations={currentPatchRecommendations(live)}
+            recommendations={currentPatchRecommendations(live)} ownerHome={live.ownerHome}
+            baseRecommendations={live.ownerHome?.recommendations ? currentPatchRecommendations({ ...live, ownerHome: undefined }) : undefined}
             artifactRanking={<ArtifactTrendRanking edition={live.season.id} />} patch={patch} fromItem={fromItem} checkedAt={Date.now()} />
           <HomeGuidePosition />
         </>

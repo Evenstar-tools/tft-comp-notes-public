@@ -2,6 +2,7 @@ import type { Publication, Section } from "./document";
 import { sectionTeams } from "./document-flow.ts";
 import type { BoardSetup, Piece, PieceLoadout, Team } from "./types";
 import { sameEdition } from "./version-updates.ts";
+import { boardQuerySignature } from "./owner-board-query.ts";
 
 export type BoardLayout = {
   pieces: Pick<Piece, "instanceId" | "unitId" | "position">[];
@@ -139,8 +140,10 @@ export function applyBoardOverrides(publication: Publication): Publication {
       if (!boards.size) return section;
       const replace = (team: Team) => {
         const edit = boards.get(team.id);
-        return edit && boardContentVersion(team) === boardContentVersion(edit.source)
-          ? { ...team, ...edit.content, instrumentPositions: edit.content.instrumentPositions, conditions: edit.content.conditions } : team;
+        if (!edit || boardContentVersion(team) !== boardContentVersion(edit.source)) return team;
+        const publishedRosterChanged = boardQuerySignature(team.pieces) !== boardQuerySignature(edit.content.pieces);
+        return { ...team, ...edit.content, instrumentPositions: edit.content.instrumentPositions,
+          conditions: edit.content.conditions, ...(publishedRosterChanged && { publishedRosterChanged: true as const }) };
       };
       return { ...section, team: section.team && replace(section.team), teams: section.teams?.map(replace) };
     }),

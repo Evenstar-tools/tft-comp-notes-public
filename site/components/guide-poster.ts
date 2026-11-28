@@ -300,7 +300,7 @@ export async function guidePoster({ section, team, data, format = defaultPosterF
       const icon = image && images.get(image);
       const x = pad + (icon ? 29 : 0);
       if (icon) c.drawImage(icon, pad, y, 23, 23);
-      const label = row.category === "海克斯" ? (row.kind === "required" ? "必选海克斯" : "可选海克斯") : guideConditionTag(row);
+      const label = row.category === "海克斯" ? (row.kind === "required" ? "定阵海克斯" : row.kind === "upgrade" ? "升档海克斯" : "可选海克斯") : guideConditionTag(row);
       const detail = row.category === "海克斯" && row.kind === "required" ? row.detail?.split(" · ", 1)[0] : row.detail;
       const top = y;
       y = block(c, [context, label, guideConditionName(row)].filter(Boolean).join(" · "), x, y + 2, W - pad - x, 15.5, accent, 21, 650);

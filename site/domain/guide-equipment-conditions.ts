@@ -108,7 +108,7 @@ export function editableTeamConditions(team: Pick<Team, "id" | "sectionId" | "co
   const entry = team.sectionId && guideConditions[team.sectionId];
   if (!entry || entry.boardId !== team.id) return [];
   return entry.conditions.flatMap<TeamCondition>(rule => {
-    const kind = rule.kind === "required" ? "required" : "option";
+    const { kind } = rule;
     if ("augmentId" in rule) return [{ augmentId: rule.augmentId, kind }];
     const recipientId = rule.recipientId ?? entry.wearerId;
     return recipientId ? [{ itemId: rule.itemId, recipientId, replaces: rule.replaces, kind }] : [];

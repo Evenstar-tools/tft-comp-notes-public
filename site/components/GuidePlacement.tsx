@@ -85,7 +85,7 @@ export function guideCorePlacement(section: Section, boards: Team[], entryId: st
   if (!canRankRecommendations(coreStats, (section.gameData ?? season).id, currentPatch)) return;
   for (const board of ordered) {
     const row = coreStats.rows.find(entry => entry.sectionId === section.id && entry.teamId === board.id);
-    if (!row || row.games < placementBatch.minGames) continue;
+    if (board.publishedRosterChanged || !row || row.games < placementBatch.minGames) continue;
     return {
       ...row, conditions: { kind: "core" },
       patch: coreStats.patch, window: `近 ${coreStats.hours} 小时`,

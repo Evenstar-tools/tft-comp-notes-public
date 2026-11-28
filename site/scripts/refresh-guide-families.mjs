@@ -154,6 +154,7 @@ for (const b of bindings.rows) {
     review.push({id:b.clusterId,guide:b.name,reason:match.reason,roster:match.roster,added:match.added,removed:match.removed});
   }
   if (heroAugment) info.heroAugment = true;
+  if (anchor.querySignature) info.boardSignatures = { [anchor.teamId]: anchor.querySignature };
   if (!metric) {
     smallSamples.push({ ...info, places: [0, 0, 0, 0, 0, 0, 0, 0], games: 0, mean: null, winRate: null, topFourRate: null });
     review.push({ id: b.clusterId, guide: b.name, reason: "当前补丁暂无对局，留在攻略检索", games: 0 });
@@ -179,6 +180,10 @@ for (const b of bindings.rows) {
   if (info.sharedTeamIds) info.sharedTeamIds = info.sharedTeamIds.filter(id => compatible.includes(id));
   if (info.landingTeamId && !compatible.includes(info.landingTeamId)) delete info.landingTeamId;
   if (compatible.length !== ids.length) review.push({id:b.clusterId,guide:b.name,reason:"变阵主 C、搜牌条件或目录已变",teamIds:ids.filter(id => !compatible.includes(id))});
+  for (const id of compatible) {
+    const signature = publicBoardById.get(id)?.querySignature;
+    if (signature) (info.boardSignatures ??= {})[id] = signature;
+  }
   const teamIds = [...new Set([info.teamId, ...compatible])];
   if (teamIds.some(id => matchedBoardIds.has(id))) throw Error("同一棋盘绑定多个体系：" + teamIds.join(", "));
   for (const id of teamIds) matchedBoardIds.add(id);

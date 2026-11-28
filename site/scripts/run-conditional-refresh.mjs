@@ -1,5 +1,5 @@
 import { execFileSync, spawnSync } from "node:child_process";
-import { appendFileSync, copyFileSync, mkdirSync, mkdtempSync, readdirSync, rmdirSync, rmSync, writeFileSync } from "node:fs";
+import { appendFileSync, copyFileSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { parseArgs } from "node:util";
@@ -11,6 +11,43 @@ const site = fileURLToPath(new URL("../", import.meta.url));
 const repo = fileURLToPath(new URL("../../", import.meta.url));
 const npm = process.platform === "win32" ? "npm.cmd" : "npm";
 const defaultProfile = new Date().getUTCHours() < 12 ? "daily" : "fast";
+const readData = name => JSON.parse(readFileSync(new URL(`../data/${name}.json`, import.meta.url), "utf8"));
+
+async function readPublicJson(path, fetcher) {
+  const response = await fetcher(new URL(path, "https://tftnotes.com"), { signal: AbortSignal.timeout(8000) });
+  if (response.status === 404) return null;
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  return response.json();
+}
+
+export async function publishedBoardQueries(current, fetcher = fetch) {
+  try {
+    const plan = await readPublicJson("/api/guides/board-query", fetcher);
+    if (!plan) return null;
+    if (!Array.isArray(plan.boards)) throw new Error("线上查询计划格式不符");
+    if (plan.seasonId !== current.seasonId || plan.build !== current.build) {
+      console.warn("线上棋盘的构建与本轮不同，等待版本对齐后重查");
+      return null;
+    }
+    for (const row of plan.review ?? []) console.warn("棋盘有特殊限制，列入数据复核：" + row.sectionId + "/" + row.teamId);
+    return plan.boards.length ? plan : null;
+  } catch (error) {
+    console.warn("本轮未能读取线上棋盘重查计划：" + error.message);
+    return null;
+  }
+}
+
+export async function publishedBoardCatalog(seasonId, build, fetcher = fetch) {
+  try {
+    const catalog = await readPublicJson("/api/guides/catalog", fetcher);
+    if (catalog?.seasonId === seasonId && catalog.build === build &&
+        Array.isArray(catalog.boards) && catalog.boards.some(board => board.edition === seasonId)) return catalog;
+    console.warn("线上攻略目录与采集赛季或构建不符，沿用仓库目录");
+  } catch (error) {
+    console.warn("线上攻略目录读取失败，沿用仓库目录：" + error.message);
+  }
+  return null;
+}
 
 function run(command, args, { cwd = site, allowSkip = false } = {}) {
   // npm.cmd needs cmd.exe on Windows. Its arguments below are fixed literals.
@@ -58,7 +95,7 @@ export function writeReviewCandidate({ profile, receipt, output, changes, cwd = 
   console.log("已生成本地验收候选：" + directory);
 }
 
-function main() {
+async function main() {
   const { values } = parseArgs({ options: {
     profile: { type: "string", default: defaultProfile },
     "dry-run": { type: "boolean" },
@@ -73,6 +110,8 @@ function main() {
   const tempDir = mkdtempSync(join(tmpdir(), "tft-refresh-"));
   const reportPath = join(tempDir, "upstream.json");
   const receipt = join(tempDir, "collected.json");
+  const boardQueryPath = join(tempDir, "board-queries.json");
+  const catalogPath = join(tempDir, "catalog.json");
   const upstreamIsAligned = () => {
     run(process.execPath, ["scripts/check-refresh-alerts.mjs", "--check-upstream", "--dot", "--json-out", reportPath]);
     return run(process.execPath, ["scripts/check-auto-refresh.mjs", "preflight", "--report", reportPath], { allowSkip: true });
@@ -91,7 +130,21 @@ function main() {
     }
 
     run(npm, ["ci", "--ignore-scripts", "--no-audit", "--no-fund"]);
-    run(process.execPath, ["scripts/export-family-catalog.mjs"]);
+    const current = readData("current-patch");
+    const [boardQueries, catalog] = await Promise.all([
+      publishedBoardQueries(current),
+      publishedBoardCatalog(readData("season").id, current.build),
+    ]);
+    if (boardQueries) {
+      writeFileSync(boardQueryPath, JSON.stringify(boardQueries), "utf8");
+      refresh.push("--board-queries", boardQueryPath);
+    }
+    if (catalog) {
+      writeFileSync(catalogPath, JSON.stringify(catalog), "utf8");
+      refresh.push("--catalog", catalogPath);
+    } else {
+      run(process.execPath, ["scripts/export-family-catalog.mjs"]);
+    }
     run(process.execPath, [...refresh, "--receipt", receipt]);
     const changes = verifyRefreshChanges(profile, receipt);
     if (!changes.length) {
@@ -104,24 +157,33 @@ function main() {
       console.log("结果：已完成采集，上游条件变化，本轮保留生产批次");
       return;
     }
+    if (boardQueries) {
+      const latest = await publishedBoardQueries(current);
+      const signatures = new Map(latest?.boards.map(board => [board.teamId, board.signature]));
+      if (boardQueries.boards.some(board => signatures.get(board.teamId) !== board.signature)) {
+        console.log("结果：采集期间线上原盘已变化，本轮保留生产批次");
+        return;
+      }
+    }
     const output = values.output ?? join(site, "outputs", "data-review", new Date().toISOString().replace(/[:.]/g, "-"));
     writeReviewCandidate({ profile, receipt, output, changes });
     return "candidate";
   } finally {
     rmSync(reportPath, { force: true });
     rmSync(receipt, { force: true });
+    rmSync(boardQueryPath, { force: true });
+    rmSync(catalogPath, { force: true });
     rmdirSync(tempDir);
   }
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  try {
-    const result = main();
+  main().then(result => {
     if (result && process.env.GITHUB_OUTPUT) {
       appendFileSync(process.env.GITHUB_OUTPUT, `collected=true\ncandidate=${result === "candidate"}\n`, "utf8");
     }
-  } catch (error) {
+  }).catch(error => {
     console.error(error.message);
     process.exitCode = 1;
-  }
+  });
 }

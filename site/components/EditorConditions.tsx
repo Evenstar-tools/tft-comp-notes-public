@@ -101,7 +101,7 @@ export function EditorConditions({ team, rows, sharedRows, onChange, onClose }: 
       return <li key={conditionKey(row)} data-editing={!shared && editing === index || undefined}>
         <ConditionIcon id={id} augment={augment} />
         <div><strong>{name}</strong>{wearer && <small>{wearer}{replacement && ` · 替换${replacement}`}</small>}</div>
-        <span className="editor-condition-kind" data-required={row.kind === "required" || undefined}>{row.kind === "required" ? "必选" : "可选"}</span>
+        <span className="editor-condition-kind" data-required={row.kind === "required" || undefined}>{row.kind === "required" ? "定阵" : row.kind === "upgrade" ? "升档" : "可选"}</span>
         {!shared && <>
           <button type="button" className="btn ghost icon sm" aria-label={`编辑${name}`} onClick={() => edit(row, index)}><Pencil size={15} aria-hidden /></button>
           <button type="button" className="btn ghost icon sm" aria-label={`移除${name}`} onClick={() => {
@@ -172,9 +172,10 @@ export function EditorConditions({ team, rows, sharedRows, onChange, onClose }: 
           </label>
         </div>}
         <div className="editor-condition-actions">
-          <div className="editor-condition-kinds" role="group" aria-label="是否必选">
-            <button type="button" className="btn secondary sm" aria-pressed={kind === "required"} onClick={() => setKind("required")}>必选</button>
+          <div className="editor-condition-kinds" role="group" aria-label="条件档位">
+            <button type="button" className="btn secondary sm" aria-pressed={kind === "required"} onClick={() => setKind("required")}>定阵</button>
             <button type="button" className="btn secondary sm" aria-pressed={kind === "option"} onClick={() => setKind("option")}>可选</button>
+            <button type="button" className="btn secondary sm" aria-pressed={kind === "upgrade"} onClick={() => setKind("upgrade")}>升档</button>
           </div>
           {duplicate && <small role="status">这个条件已添加</small>}
           {editing !== null && <button type="button" className="btn ghost sm" onClick={finishEdit}>取消编辑</button>}

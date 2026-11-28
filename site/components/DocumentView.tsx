@@ -279,7 +279,7 @@ export function DocumentView({ section, gameData, publicationId, initialTeam, de
         : returnPath === "/items" ? "返回装备"
           : returnPath === "/emblems" ? "返回转职"
             : returnTo ? "返回阵容列表" : augment ? "英雄强化" : "全部阵容";
-  function header(title: string, guideName?: string, performance?: ReactNode, team?: Team) {
+  function header(title: string, guideName?: string, performance?: ReactNode, team?: Team, editTitle?: ReactNode) {
     const playstyle = guidePlaystyle(section, team);
     const showFolder = !augment && category === heroAugmentCategory;
     const context = guideName ? guideTitleWithoutPlaystyle(guideName, playstyle)
@@ -291,24 +291,27 @@ export function DocumentView({ section, gameData, publicationId, initialTeam, de
         {credit && <span>{credit.label}<strong>{credit.name}</strong></span>}
       </div>}
       <div className="guide-page-heading">
-        <Title className="guide-page-title">{guideTitleWithoutPlaystyle(title, playstyle)}</Title>
+        {editTitle ? <div className="owner-page-anchor"><Title className="guide-page-title">{guideTitleWithoutPlaystyle(title, playstyle)}</Title>
+          {editTitle}</div> : <Title className="guide-page-title">{guideTitleWithoutPlaystyle(title, playstyle)}</Title>}
         {playstyle && <span className="guide-playstyle-tag" title="打法">{playstyle}</span>}
         {performance}
       </div>
       {augment && !augmentAtBoard && <p className="guide-hero-augment"><strong><a href={augmentHref(augment.id)} title={augment.name}>{augment.label} ↗</a></strong> <span>{augment.round} {augment.rarity} · {augment.role}</span></p>}
     </>;
   }
-  function teamHeader(team: Team, performance?: ReactNode) {
+  function teamHeader(team: Team, performance?: ReactNode, owner?: { title?: string; editTitle?: ReactNode }) {
+    const editedTitle = owner?.title ?? section.ownerTitle;
+    if (editedTitle) return header(editedTitle, undefined, performance, team, owner?.editTitle);
     const stage = section.reroll?.stages.find(entry => entry.teamId === team.id);
     const formation = stage && stage.boardRole !== "variant" ? rerollRoute(section, team)?.final ?? team : team;
-    if (section.stageTeamIds?.includes(team.id) && !section.reroll) return header(section.title, undefined, performance, team);
+    if (section.stageTeamIds?.includes(team.id) && !section.reroll) return header(section.title, undefined, performance, team, owner?.editTitle);
     const title = boardTitle(section, formation);
-    if (formation.id !== primary?.id && title !== section.title && !title.startsWith(section.title + " · ")) return header(title, section.title, performance, team);
+    if (formation.id !== primary?.id && title !== section.title && !title.startsWith(section.title + " · ")) return header(title, section.title, performance, team, owner?.editTitle);
     const name = publicationId && formation.id !== primary?.id
       ? guideBoardName(formation).match(/^[一二三四五六七八九十\d]+(?:级|人口)\s*·\s*(.+)$/)?.[1].trim()
       : undefined;
-    if (name && name !== section.title && !/^(主阵|过渡|成型|上限|稳血|变阵)$/.test(name)) return header(name, section.title, performance, team);
-    return header(title, undefined, performance, team);
+    if (name && name !== section.title && !/^(主阵|过渡|成型|上限|稳血|变阵)$/.test(name)) return header(name, section.title, performance, team, owner?.editTitle);
+    return header(title, undefined, performance, team, owner?.editTitle);
   }
   return (
     <article className={primary ? "document-view with-guide-board" : "document-view"}>

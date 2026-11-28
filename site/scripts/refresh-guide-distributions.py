@@ -7,12 +7,70 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from tempfile import NamedTemporaryFile
-from urllib.parse import parse_qsl, urlsplit
+from urllib.parse import parse_qsl, urlencode, urlsplit
 from guide_stats_window import WINDOW_KEYS, current_cohort, scoped_url
 
 DATA = Path(__file__).resolve().parents[1] / "data"
 BATCH = DATA / "guide-placement.json"
 BASE = "https://api-hc.metatft.com/tft-explorer-api/"
+EXPLORER = "https://www.metatft.com/explorer"
+EXACT_EXCLUSIONS = ("emblem_count", "tactician_item_count", "duplicate_unit_count")
+
+
+def prepare_board_queries(batch, plan, active_season, cohort, unit_ids):
+    if plan.get("seasonId") != active_season or plan.get("build") != cohort.build:
+        raise ValueError("Published board query plan belongs to another edition or build")
+    boards = plan.get("boards")
+    if not isinstance(boards, list):
+        raise ValueError("Published board query plan is missing its boards")
+    prepared, seen = [], set()
+    for board in boards:
+        if not isinstance(board, dict):
+            raise ValueError("Invalid published board query")
+        section_id, team_id = board.get("sectionId"), board.get("teamId")
+        if not all(isinstance(value, str) and re.fullmatch(r"[A-Za-z0-9_-]+", value)
+                   for value in (section_id, team_id)) or team_id in seen:
+            raise ValueError("Missing or duplicate stable published board identity")
+        seen.add(team_id)
+        roster, units, population = board.get("roster"), board.get("units"), board.get("population")
+        if (not isinstance(roster, list) or not roster or
+                any(not isinstance(unit, str) or unit not in unit_ids for unit in roster) or
+                units != [unit_ids[unit] + "-1" for unit in roster]):
+            print(f"Board {team_id}: unknown unit mapping, kept for review.")
+            continue
+        if len(roster) != len(set(roster)) or len(units) != len(set(units)):
+            print(f"Board {team_id}: duplicate units are unsupported in the fixed-board sample.")
+            continue
+        if type(population) is not int or population != len(roster) + ("baron-nashor" in roster):
+            raise ValueError(f"Published board query population differs from its roster: {team_id}")
+        signature = json.dumps([population, sorted(roster)], ensure_ascii=False, separators=(",", ":"))
+        if board.get("signature") != signature:
+            raise ValueError(f"Published board query signature differs from its roster: {team_id}")
+        if any(row.get("querySignature") == signature and row.get("build") == cohort.build
+               and row.get("conditions", {}).get("teamId") == team_id and not row.get("sourcePeriod")
+               for row in batch["records"]):
+            continue
+        filters = [("tab", "comps"), ("set", cohort.set_name), ("level", population),
+                   *((key, "0") for key in EXACT_EXCLUSIONS), *(("unit", unit) for unit in sorted(units))]
+        prepared.append({
+            "sectionId": section_id, "population": population, "roster": sorted(roster),
+            "querySignature": signature, "build": cohort.build,
+            "conditions": {"kind": "full", "teamId": team_id, "population": population},
+            "sampleScope": "固定名单 · 不限星级与装备 · 无纹章、人口装或重复棋子",
+            "url": scoped_url(EXPLORER + "?" + urlencode(filters), cohort.window),
+        })
+    return prepared
+
+
+def install_board_queries(batch, records):
+    changed_teams = {row["conditions"]["teamId"] for row in records}
+    for row in batch["records"]:
+        if (row.get("conditions", {}).get("teamId") not in changed_teams or row.get("sourcePeriod")
+                or row.get("boardObservation") or row.get("referencesAugment") or row.get("conditions", {}).get("augmentId")):
+            continue
+        if ("tab", "comps") in parse_qsl(urlsplit(row["url"]).query):
+            row["sourcePeriod"] = {"patch": batch["patch"], "window": "旧棋盘 · " + batch["window"]}
+    batch["records"].extend(records)
 
 
 def fetch_counts(url, set_name):
@@ -104,6 +162,7 @@ def apply_refreshed_counts(records, snapshots, observed, *, window=None, hours=N
             and hours is None
             and not team_scoped
             and _same_patch_scope(r["url"], window)
+            and (not r.get("querySignature") or r.get("build") == build)
             and type(prev_games) is int
             and prev_games >= 20
             and _within_preserve_window(r.get("observedOn"), observed)
@@ -114,6 +173,8 @@ def apply_refreshed_counts(records, snapshots, observed, *, window=None, hours=N
             continue
         r["url"] = target_url
         r.update(placementCounts=counts, games=total, observedOn=observed)
+        if r.get("querySignature"):
+            r["build"] = build
         if hours is not None:
             r.update(windowHours=hours, build=build, checkedAt=now_iso)
         if total:
@@ -168,7 +229,11 @@ def main():
     parser.add_argument("--out", type=Path, default=BATCH)
     parser.add_argument("--team", action="append", help="Refresh only records bound to this board (repeatable)")
     parser.add_argument("--hours", type=int, help="Collect a current-build window for the selected boards")
+    parser.add_argument("--board-queries", type=Path, help="Include verified published-board query plans")
+    parser.add_argument("--board-queries-only", action="store_true", help="Refresh only the new published-board queries")
     args = parser.parse_args()
+    if (args.board_queries_only and not args.board_queries) or (args.board_queries and (args.team or args.hours is not None)):
+        parser.error("Published-board queries use the standard cohort and cannot be combined with --team or --hours")
     batch = json.loads(BATCH.read_text(encoding="utf-8"))
     if batch.get("sampleStatus") == "pending" and args.team:
         parser.error("The first ranked placement snapshot requires the full guide refresh")
@@ -186,6 +251,14 @@ def main():
         if start < datetime.fromisoformat(cohort.effective_at):
             raise ValueError("The requested hours extend before the current build")
         window["days"] = str(args.hours / 24)
+    requested = []
+    if args.board_queries:
+        plan = json.loads(args.board_queries.read_text(encoding="utf-8"))
+        active_season = json.loads((DATA / "current-patch.json").read_text(encoding="utf-8-sig"))["seasonId"]
+        unit_ids = json.loads((DATA / "conditional-gear-unit-ids.json").read_text(encoding="utf-8"))["units"]
+        requested = prepare_board_queries(batch, plan, active_season, cohort, unit_ids)
+        install_board_queries(batch, requested)
+    full_refresh = not args.team and not args.board_queries_only
     # Curated short-window and hero-augment observations keep their own capture date.
     records = [
         row for row in batch["records"]
@@ -200,15 +273,17 @@ def main():
         missing = set(args.team) - {row["conditions"]["teamId"] for row in records}
         if missing:
             raise ValueError(f"No refreshable records for: {', '.join(sorted(missing))}")
-    comparisons = [] if args.team else [sample for group in batch.get("boardComparisons", []) for sample in group["samples"]]
+    if args.board_queries_only:
+        records = requested
+    comparisons = [sample for group in batch.get("boardComparisons", []) for sample in group["samples"]] if full_refresh else []
     core_url = (batch.get("renataNasusReference") or {}).get("url")
-    if not args.team and cohort.number == 19 and not core_url:
+    if full_refresh and cohort.number == 19 and not core_url:
         raise ValueError("Missing the S19 anchor query; keeping the previous snapshot")
-    core = scoped_url(core_url, window) if core_url and not args.team else None
+    core = scoped_url(core_url, window) if core_url and full_refresh else None
     # Comparisons with a separately sampled core stay together as one observation.
     formation_groups = [
         group for group in batch.get("formationComparisons", [])
-        if not args.team and group["patch"] == batch["patch"] and not group.get("coreSummary")
+        if full_refresh and group["patch"] == batch["patch"] and not group.get("coreSummary")
     ]
     formation = [entry for group in formation_groups for board in group["boards"]
                  for entry in [board["sample"], board.get("subset", {}).get("sample")] if entry]
@@ -225,9 +300,9 @@ def main():
     now_iso = now.isoformat(timespec="seconds")
     preserved = apply_refreshed_counts(
         records, snapshots, observed,
-        window=window, hours=args.hours, build=build, now_iso=now_iso, team_scoped=bool(args.team),
+        window=window, hours=args.hours, build=build, now_iso=now_iso, team_scoped=not full_refresh,
     )
-    if not args.team:
+    if full_refresh:
         batch["date"] = observed
         batch.pop("sampleStatus", None)
     if core:

@@ -17,14 +17,15 @@ const imports = new Map([
   ["@/domain/guide-reading", reading], ["@/domain/guide-family-stats", stats],
   ["@/lib/beijing-time", time], ["@/lib/home-position", position],
   ["@/domain/guide-equipment-conditions", {}], ["./GuideEquipmentConditions", {}],
+  ["./OwnerPageEditor", { OwnerInlineEdit: ({ label }) => createElement("button", { "aria-label": label }) }],
 ]);
 const exports = {};
 new Function("require", "exports", outputText)(id => imports.get(id) ?? require(id), exports);
 
 const sampledBatch = { patch: "19.1c", queue: "PBE", updatedAt: "2026-11-26T00:00:00Z", days: 3, spansBuilds: true };
 
-function renderCards(cards, stats) {
-  return renderToStaticMarkup(createElement(exports.PatchRecommendationList, { home: "/", stats, cards }));
+function renderCards(cards, stats, editor = {}) {
+  return renderToStaticMarkup(createElement(exports.PatchRecommendationList, { home: "/", stats, cards, ...editor }));
 }
 
 test("the recommendation card shows only mean placement and exposes the full sample in its label", () => {
@@ -54,6 +55,10 @@ test("an unsampled recommendation shows the owner label and reason without a pla
   assert.match(html, /id="guide-card-patch-guide-board-manual" class="home-patch-manual-badge" role="group" title="七级来牌特别顺才走" aria-label="站主推荐 · 七级来牌特别顺才走">站主推荐<\/span>/);
   assert.match(html, /aria-describedby="[^"]*guide-card-patch-guide-board-manual"/);
   assert.doesNotMatch(html, /均名|平均排名|前四|登顶|home-patch-mean|home-patch-sample|数据更新/);
+  assert.doesNotMatch(html, /owner-home-card-action|data-owner-editing|调整探戈爵士卡牌的推荐/);
+  const editing = renderCards([card], undefined, { onEdit: () => {}, selectedEntry: "guide:board" });
+  assert.match(editing, /data-owner-editing="true" data-owner-selected="true"/);
+  assert.match(editing, /aria-label="调整探戈爵士卡牌的推荐"/);
   const mixed = renderCards([card, {
     ...card, team: { id: "sampled" }, rating: { sectionId: "guide2", mean: 4.12, games: 1200 },
   }], sampledBatch);

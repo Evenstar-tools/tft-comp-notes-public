@@ -10,7 +10,7 @@ import { automaticRefreshModules } from "../scripts/run-data-refresh.mjs";
 import { refreshCohort, verifyLookup } from "../scripts/refresh-cohort.mjs";
 import { checkUpstream, formatDotSummary, summarizeRefresh } from "../scripts/check-refresh-alerts.mjs";
 import { completedLaunchWindow, selectDataRefreshPlan } from "../scripts/select-data-refresh-plan.mjs";
-import { writeReviewCandidate } from "../scripts/run-conditional-refresh.mjs";
+import { publishedBoardCatalog, publishedBoardQueries, writeReviewCandidate } from "../scripts/run-conditional-refresh.mjs";
 
 const current = {
   seasonId: "s19-pbe",
@@ -30,6 +30,35 @@ test("the scheduled fast profile refreshes the two snapshots allowed by the publ
     { cwd: fileURLToPath(site), encoding: "utf8" });
   assert.match(plan, /1\. guide-family-stats \+ comp-trends .*\r?\n2\. data:verify /);
   assert.doesNotMatch(plan, /hero-stats|guide-placement/);
+});
+
+test("a fast refresh adds placement only when the published board query plan matches its build", async () => {
+  const plan = { seasonId: current.seasonId, build: current.build, boards: [{ teamId: "edited-board" }] };
+  const fetcher = async url => {
+    assert.equal(String(url), "https://tftnotes.com/api/guides/board-query");
+    return Response.json(plan);
+  };
+  assert.deepEqual(await publishedBoardQueries(current, fetcher), plan);
+  assert.equal(await publishedBoardQueries({ ...current, build: "123" }, fetcher), null);
+  assert.equal(await publishedBoardQueries(current, async () => new Response(null, { status: 404 })), null);
+  const path = "site/data/guide-placement.json";
+  assert.throws(() => changedDataFiles(` M ${path}\0`, "fast"), /未授权/);
+  assert.deepEqual(changedDataFiles(` M ${path}\0`, "fast", { boardQueries: true }), [path]);
+  assert.throws(() => verifyCollectedModules("fast", { profile: "fast", boardQueries: true,
+    modules: ["guide-family-stats", "comp-trends"] }, {}), /guide-placement/);
+});
+
+test("the live catalog keeps published edits available after the targeted queue clears", async () => {
+  const edition = "s19-pbe-19.1.0.5973071";
+  const catalog = { seasonId: edition, build: current.build, boards: [{ edition, teamId: "edited-board" }] };
+  const fetcher = async url => {
+    if (url.pathname === "/api/guides/board-query") return Response.json({ ...current, boards: [] });
+    assert.equal(String(url), "https://tftnotes.com/api/guides/catalog");
+    return Response.json(catalog);
+  };
+  assert.equal(await publishedBoardQueries(current, fetcher), null);
+  assert.deepEqual(await publishedBoardCatalog(edition, current.build, fetcher), catalog);
+  assert.equal(await publishedBoardCatalog(edition, "123", fetcher), null);
 });
 
 test("scheduled and manual runs export candidates without pushing or merging", () => {

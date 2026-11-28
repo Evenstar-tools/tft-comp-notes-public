@@ -2,6 +2,7 @@ import type { Section } from "./document";
 import type { Season } from "./types";
 import { readableSection, sectionTeams } from "./document-flow";
 import { guideBoardKind } from "./team";
+import { boardQuerySignature } from "./owner-board-query";
 import { guideBoardName, guideFacets, guideRollLevel, primaryFirst, readingNotes } from "./guide-reading";
 import { heroAugmentCategory, heroAugmentForGuide } from "./hero-augments";
 
@@ -17,7 +18,7 @@ export function guideCatalog(sections: Section[], season: Season) {
         data.items.some(item => item.id === id && item.traitId) ? [{ unitId:piece.unitId, itemId:id }] : []));
       return {
         guide:section.title, sectionId:section.id, teamId:team.id, board:guideBoardName(team),
-        edition:data.id, kind, stage:kind === "过渡",
+        edition:data.id, kind, stage:kind === "过渡", querySignature:boardQuerySignature(team.pieces),
         units:team.pieces.map(piece => piece.unitId), roles:roles.map(({label, units}) => ({ label, units })),
         style:guideFacets(section, team, data).style, rollLevel:guideRollLevel(section, team) ?? null,
         special:section.category === heroAugmentCategory ? "英雄强化" : section.category === "纹章阵容" || emblems.length ? "转职" : null,

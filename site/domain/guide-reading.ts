@@ -145,6 +145,7 @@ export function matchGuideTeams(teams: Team[], data: Season, query: string, alia
 }
 
 export function sourceSummary(section: Section) {
+  if (section.ownerOpening !== undefined) return section.ownerOpening;
   const paragraphs = authoredParagraphs(section);
   return paragraphs.find(block => block.id === section.summaryBlockId)?.text?.trim();
 }
@@ -573,7 +574,7 @@ export function readingNotes(section: Section, team: Team, data?: Season) {
   const assigned = data ? boardRoles(section, team, data) : [];
   const revised = section.reroll?.stages.find(entry => entry.teamId === team.id);
   const advice = section.reroll?.advice[team.id];
-  return { opening: revised?.notes || advice || opening, stage, starHint,
+  return { opening: (isPrimary ? section.ownerOpening : undefined) ?? (revised?.notes || advice || opening), stage, starHint,
     roles: revised?.roles?.length ? revised.roles.map(role => ({ ...role, text: "" }))
       : (assigned.length ? assigned : roles).filter(role => role.text && role.units.length),
     shortcuts: revised ? [] : shortcuts };

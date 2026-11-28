@@ -162,6 +162,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
   const incomingCombo = params.get("combo");
   const comboDraft = useMemo(() => incomingCombo ? teamFromCombo(incomingCombo, season.units, season.traits) : null, [incomingCombo]);
   const guideBoardId = params.get("guideBoard");
+  const openImportedConditions = params.get("conditions") === "1";
   const [guideTransfer, setGuideTransfer] = useState<{
     id: string;
     source: ReturnType<typeof readGuideBoardTransfer>;
@@ -442,7 +443,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
   const finishImport = useCallback((incoming: Team | null) => {
     handledImport.current = importKey;
     const url = new URL(window.location.href);
-    for (const key of ["guideBoard", "combo", "copy", "publication", "section"]) url.searchParams.delete(key);
+    for (const key of ["guideBoard", "combo", "copy", "publication", "section", "conditions"]) url.searchParams.delete(key);
     const origin = url.searchParams.get("from");
     url.searchParams.delete("from");
     window.history.replaceState(window.history.state, "", url.pathname + url.search);
@@ -472,6 +473,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
     setComboOrigin(guide ? "" : copyQuery && sectionId && copyId ? guideLink(sectionId, copyId) : origin?.startsWith("/combos?") ? origin : "/combos");
     setRestore(null);
     showDraft(draft, undefined, source);
+    if (guide && ownerMode && openImportedConditions) setConditionsOpen(true);
     setReplacement(null); setMobileReplace(false);
     setHistory([]); setFuture([]); setWantedForm(null);
     const focus = (guide ? draft.pieces.find(piece => piece.unitId === guide.focusUnit) ??
@@ -479,7 +481,7 @@ export function Editor({ ownerMode = false, initialTeams, commonItems, gearSourc
     setSelectedId(focus?.unitId ?? null);
     setPieceSelection(focus ? { id: focus.instanceId } : null);
     if (!guide) notify({ kind: "ok", text: copyQuery ? "棋盘已复制到新草稿" : "八人口组合已带入新草稿" });
-  }, [importKey, guideBoardId, pendingGuide, playerGuideCopy, copyQuery, sectionId, copyId, ownerMode, restorePlayerDraft, notify, showDraft]);
+  }, [importKey, guideBoardId, pendingGuide, playerGuideCopy, copyQuery, sectionId, copyId, ownerMode, openImportedConditions, restorePlayerDraft, notify, showDraft]);
   useEffect(() => {
     if (!importKey || handledImport.current === importKey || !draftChecked || !saved) return;
     if (guideBoardId ? !pendingGuide : copyQuery && !incomingDraft) return;

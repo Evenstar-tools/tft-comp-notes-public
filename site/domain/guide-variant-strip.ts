@@ -1,6 +1,6 @@
 import type { Section } from "./document";
 import { sectionTeams } from "./document-flow.ts";
-import { currentFamilyBatch, currentRecommendationEvidence, familyBoardIds, recommendationTier, type GuideFamilyBatch, type GuideFamilyStat } from "./guide-family-stats.ts";
+import { currentFamilyBatch, currentRecommendationEvidence, familyBoardIds, familyRosterMatches, recommendationTier, type GuideFamilyBatch, type GuideFamilyStat } from "./guide-family-stats.ts";
 import { fixedBoardPlacementDetail, placementEvidenceKind, type PlacementBatch, type PlacementRating } from "./guide-placement.ts";
 import { guideBoardName, primaryFirst } from "./guide-reading.ts";
 import { heroAugmentForGuide, heroAugmentCategory } from "./hero-augments.ts";
@@ -70,10 +70,13 @@ export function guideSystems(section: Section, batch: GuideFamilyBatch, edition:
   // Reserve independent cluster anchors before assigning their landing and shared boards.
   for (const row of rows) {
     const board = byId.get(row.teamId ?? primary.id);
-    if (board && !owners.has(board.id)) create(board, row);
+    if (board && familyRosterMatches(row, board) && !owners.has(board.id)) create(board, row);
   }
   for (const group of groups) {
-    for (const id of familyBoardIds(group.row!, group.anchor.id)) if (id) add(group, byId.get(id));
+    for (const id of familyBoardIds(group.row!, group.anchor.id)) {
+      const board = id && byId.get(id);
+      if (board && familyRosterMatches(group.row!, board)) add(group, board);
+    }
   }
 
   const authored = new Map(section.reroll?.stages.map(stage => [stage.teamId, stage]));

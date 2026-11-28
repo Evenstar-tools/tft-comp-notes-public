@@ -14,6 +14,7 @@ import { ItemIcon } from "./ItemIcon";
 import { GuideBoardZoom } from "./GuideBoardZoom";
 import { UnitDetails } from "./UnitBrowser";
 import { useOwnerSession } from "./OwnerSession";
+import { OwnerEditBar, OwnerEditFlag, OwnerInlineEdit, OwnerPageDrawer, useOwnerPageEditor } from "./OwnerPageEditor";
 import { findPlayerGuideTeam, isPlayerTeamStorageKey, readPlayerTeams, samePlayerBoard } from "./player-team-storage";
 import { sectionTeams } from "@/domain/document-flow";
 import { allBlocks, guideBoardName, guideEditorTitle, guideFacets, guideLink, guidePlaystyle, guideRoute, guideStrategyLabel, oceanGravesUnlockBoardId, primaryFirst, readingNotes, sourceSummary, type GuideRole } from "@/domain/guide-reading";
@@ -32,9 +33,10 @@ import { traitCounts, traitGroup, usedPopulation } from "@/domain/team";
 import { displayTraitNames } from "@/domain/trait-names.mjs";
 import { heroAugmentForGuide, heroAugmentCategory, omitRepeatedHeroEntry } from "@/domain/hero-augments";
 import familyData from "@/data/guide-family-stats.json";
-import { guideFamilyRows, recommendationTier, type GuideFamilyBatch } from "@/domain/guide-family-stats";
+import { familyRosterMatches, guideFamilyRows, recommendationTier, type GuideFamilyBatch } from "@/domain/guide-family-stats";
 import currentPatch from "@/data/current-patch.json";
 import type { Section } from "@/domain/document";
+import { guideContentBlocks, type GuideFields } from "@/domain/owner-content";
 import { boardRosterChange, familyVariants, groupGuides, type PosterVariant } from "@/domain/guide-families";
 import { currentLaunchGuideFamily, guidePromotionRows, guideSameLevelSwaps, guideSystemDisplayBoards, guideSystemPhases, guideSystemSample, systemMeanTone, type GuideSystem } from "@/domain/guide-variant-strip";
 import type { BoardStage, Season, Team } from "@/domain/types";
@@ -92,7 +94,8 @@ function GuideVariantList({ id, overflow, children }: { id: string; overflow: bo
 }
 
 export function GuideTeams({ section, data, initialTeam, defaultTeam, initialStage, initialFlex, publicationId, returnTo, renderHeader, renderNotes, variants, systems, openPoster, initialPosterShare, patchAdvice }: {
-  section: Section; data: Season; initialTeam?: string; defaultTeam?: string; publicationId?: string; returnTo?: string; renderHeader?: (team: Team, performance?: ReactNode) => ReactNode;
+  section: Section; data: Season; initialTeam?: string; defaultTeam?: string; publicationId?: string; returnTo?: string;
+  renderHeader?: (team: Team, performance?: ReactNode, owner?: { title?: string; editTitle?: ReactNode }) => ReactNode;
   initialStage?: BoardStage; initialFlex?: string;
   renderNotes?: (team: Team, passages: GuidePassage[], roles: GuideRole[]) => ReactNode;
   variants?: Record<string, PosterVariant[]>; openPoster?: boolean; initialPosterShare?: PosterShare;
@@ -207,6 +210,12 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
     return canonicalGuidePath(section.id, team.id, { from: returnTo, stage: stage === mainStage ? undefined : stage, flex });
   }
   const guideHref = publicationId ? boardViewLink(activeStage, showFlex ? flexPreview?.id : undefined) : undefined;
+  const canEditTarget = cloudOwner && publicationId && guideHref && currentEdition && mainBoardActive && !showFlex;
+  const ownerEditor = useOwnerPageEditor<GuideFields>(canEditTarget ? { sectionId: section.id, teamId: team.id } : undefined);
+  const canEditPositions = canEditTarget && ownerEditor.editing;
+  const ownerFields = ownerEditor.previewFields;
+  const publicBoardName = ownerFields?.boardTitle ?? team.ownerBoardTitle;
+  const ownerEditTitle = ownerEditor.editing && <OwnerInlineEdit label="编辑阵容名称" onClick={() => ownerEditor.open("identity")} />;
   const isVariantSystem = !!systems && systems.length >= 2 && !!currentSystem && currentSystem !== systems[0];
   const editorBoardName = guideBoardName(team);
   const editorTitle = guideEditorTitle(section.title, editorBoardName,
@@ -265,11 +274,14 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
     ? guideFamilyRows(familyStats, data.id, section.id, teams).filter(({ stat }) =>
       Boolean(stat.heroAugment) === heroGuide && (!launchStats || recommendationTier(stat) !== "review" && stat.games >= placementBatch.minGames))
     : [];
-  const matchingFamily = familyRows.filter(row => row.boards.some(board => board.id === team.id));
+  const matchingFamily = familyRows.filter(row => row.boards.some(board => board.id === team.id) && familyRosterMatches(row.stat, team));
   const overall = matchingFamily.length === 1 ? matchingFamily[0].stat : undefined;
   const showMatchStats = mainBoardActive && !showFlex;
+  const editedBoardSample = team.publishedRosterChanged && teamPlacement(team, section, "fixed");
   const placement = detailView && showMatchStats && !overall && !heroGuide
-    ? guideCorePlacement(section, systemBoards, systemEntry?.id ?? team.id)
+    ? team.publishedRosterChanged
+      ? editedBoardSample && !editedBoardSample.sourcePeriod && editedBoardSample.games >= placementBatch.minGames ? editedBoardSample : undefined
+      : guideCorePlacement(section, systemBoards, systemEntry?.id ?? team.id)
     : undefined;
   const overview = detailView && (showMatchStats ? overall ?? placement : undefined);
   const evidence = placement && placementEvidenceKind(placement);
@@ -277,7 +289,7 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
   const patch = placement?.patch ?? familyStats.patch;
   const windowLabel = placement?.window ?? "近 " + familyStats.days + " 天";
   const mean = overview ? overview.mean : undefined;
-  const meanLabel = overall ? "均名" : evidence === "core" ? "核心均名" : evidence === "lineup" ? "名单共现均名" : "均名";
+  const meanLabel = overall ? "均名" : evidence === "core" ? "核心均名" : evidence === "lineup" ? "名单共现均名" : evidence === "fixed" ? "棋盘均名" : "均名";
   const topFour = overview && overview.topFourRate !== undefined && mean !== undefined
     ? percent.format(overview.topFourRate) : undefined;
   const win = overview && overview.winRate !== undefined && mean !== undefined
@@ -285,7 +297,7 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
   const tone = overall ? systemMeanTone(mean) : (placement?.tone ?? systemMeanTone(mean));
   function openMatchStats() {
     if (matchDetails.current) matchDetails.current.open = true;
-    setSampleView(evidence === "core" || evidence === "lineup" ? "carry" : "family");
+    setSampleView(evidence === "core" || evidence === "lineup" ? "carry" : evidence === "fixed" ? "board" : "family");
   }
   const performance = overall && <a className="guide-family-rating" href={showMatchStats ? "#" + sampleId : overall.url}
     onClick={() => setSampleView("family")} title={overall.sourceName + " · " + familyStats.patch + " · 近 " + familyStats.days + " 天"}>
@@ -312,7 +324,12 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
   const blocks = allBlocks(section.blocks);
   const passages: GuidePassage[] = [];
   const seenCopy = new Set<string>();
-  for (const [raw, copyBoard] of [[entry, primary], [introText, introTeam], [openingText, team], [currentPhase?.text ?? currentChoice?.text, team]] as const) {
+  const authoredOpening = ownerFields?.opening ?? section.ownerOpening;
+  const authoredNotes = ownerFields?.notes ?? team.ownerNotes;
+  for (const [raw, copyBoard] of [[authoredOpening ?? entry, primary],
+    [authoredOpening === undefined ? introText : undefined, introTeam],
+    [authoredOpening === undefined ? openingText : undefined, team],
+    [authoredNotes ?? currentPhase?.text ?? currentChoice?.text, team]] as const) {
     const source = raw?.trim();
     if (!source || passages.some(passage => passage.source.includes(source))) continue;
     const separator = source.search(/[：:]/);
@@ -448,7 +465,6 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
   const phaseAdvice = passages.find(passage => passage !== intro && passage.brief && passage.text);
   const opening = intro?.brief && intro.text ? intro : undefined;
   const inStage = kind === "过渡";
-  const canEditPositions = cloudOwner && publicationId && guideHref && currentEdition && mainBoardActive && !showFlex;
   const openingUnderBoard = !simpleStages && (section.reroll || inStage || !!currentChoice);
   const stageCopy = [openingUnderBoard ? opening : undefined, phaseAdvice].filter(entry => entry !== undefined);
   const openingLine = mainBoardActive && !openingUnderBoard && opening && <p className="guide-opening" id={opening.blockId ? "note-" + opening.blockId : undefined}>{displayTraitNames(opening.text)}</p>;
@@ -489,7 +505,8 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
   }
   function phaseButton(step: (typeof linkedPhases)[number]) {
     const detail = "detail" in step && typeof step.detail === "string" ? step.detail : undefined;
-    const label = compactChoices ? step.label.replace(/ · .*$/, "") : step.label;
+    const fullLabel = step.team?.id === team.id && publicBoardName ? publicBoardName : step.label;
+    const label = compactChoices ? fullLabel.replace(/ · .*$/, "") : fullLabel;
     return <button type="button" key={step.team?.id ?? step.label} aria-label={compactChoices ? step.label : undefined}
       aria-pressed={currentStep(step)}
       onClick={() => step.team ? pickTeam(step.team) : setRouteNote(step.label)}>
@@ -606,6 +623,11 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
       </div>}
     </>;
   }
+  const workspaceAccess = !!(cloudOwner && (!publicationId || ownerEditor.authoringMode));
+  const conditionEditor = canEditPositions && sourceGuide && <GuideEditorLink team={officialBoard} title={editorTitle} href={sourceGuide.href}
+    sourceGuide={sourceGuide} owner conditions
+    sharedConditions={sharedGuideEditorConditions(teams, section.id, team.id)}
+    target={{ publicationId, sectionId: section.id, teamId: team.id }} />;
   const boardActions = <div className="guide-board-actions">
     <button type="button" className="guide-zoom-trigger guide-board-zoom" aria-label="放大棋盘" title="放大棋盘" aria-haspopup="dialog" onClick={() => setZoomed(true)}>
       <Maximize2 size={16} aria-hidden />{detailView && <span>放大棋盘</span>}
@@ -616,7 +638,7 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
     {sourceGuide && currentEdition && <GuideEditorLink team={officialBoard} title={editorTitle}
       href={cloudOwner && showFlex ? boardViewLink(activeStage) : sourceGuide.href}
       sourceGuide={sourceGuide}
-      owner={cloudOwner} secondary={!!canEditPositions} focusUnit={shownRoles.find(role => role.label === "主C")?.units[0]}
+      owner={workspaceAccess} secondary={!!canEditPositions} focusUnit={shownRoles.find(role => role.label === "主C")?.units[0]}
       sharedConditions={sharedGuideEditorConditions(teams, section.id, canEditPositions || officialBoard.conditions ? team.id : undefined)}
       target={canEditPositions ? { publicationId, sectionId: section.id, teamId: team.id } : undefined} />}
     {canEditPositions && <GuideBoardPositionEditor key={team.id} publicationId={publicationId!}
@@ -648,6 +670,7 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
       {topFour && <span>前四率 <strong>{topFour}</strong></span>}
     </div> : performance}
     {boardActions}
+    <OwnerEditFlag editor={ownerEditor} />
   </>;
   const stageComparison = mainBoardActive && !showFlex && hasChanges && <details className="board-diff" key={"board-diff-" + team.id} aria-label="阶段变化">
     <summary aria-label={comparisonFrom + "到" + comparisonTo + "的换人和羁绊"}>与{comparisonFrom}对比</summary>
@@ -663,13 +686,19 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
     </details>}
   </details>;
   const conditions = <>
-    {equipmentConditions && <GuideEquipmentConditions conditions={equipmentConditions} guideHref={guideHref} />}
+    {equipmentConditions && <GuideEquipmentConditions conditions={equipmentConditions} guideHref={guideHref} editor={conditionEditor} />}
     {referenceConditions && <GuideEquipmentConditions conditions={referenceConditions} guideHref={guideHref}
       anchored={!equipmentConditions} onViewBoard={() => pickTeam(referenceConditions.board)} />}
+    {!equipmentConditions && conditionEditor && <div className="owner-page-anchor"><h3>定阵条件</h3>{conditionEditor}</div>}
   </>;
-  const tempo = (tempoPassages.length > 0 || mainBoardActive && (!!advice || !!notes.starHint) || !!equipmentConditions || !!referenceConditions) &&
+  const preferredBlocks = ownerFields?.blocks ?? team.ownerBlocks;
+  const orderedBlocks = preferredBlocks?.some((id, index) => id !== guideContentBlocks[index]) ? preferredBlocks : undefined;
+  const hasConditions = !!(equipmentConditions || referenceConditions || conditionEditor);
+  const tempo = (tempoPassages.length > 0 || mainBoardActive && (!!advice || !!notes.starHint) || !orderedBlocks && hasConditions || ownerEditor.editing) &&
     <section className="guide-tempo-card" aria-label="节奏与解锁要点">
-      <h3>节奏与解锁要点</h3>
+      {ownerEditor.editing ? <div className="owner-page-anchor" data-owner-selected={ownerEditor.active?.kind === "copy" || undefined}>
+        <h3>节奏与解锁要点</h3><OwnerInlineEdit label="编辑攻略文案" onClick={() => ownerEditor.open("copy")} />
+      </div> : <h3>节奏与解锁要点</h3>}
       {tempoPassages.map(passage => <p key={passage.source} id={passage.blockId ? "note-" + passage.blockId : undefined}>
         {passage.source === entry && <span className="guide-tempo-tag">进场</span>}{displayTraitNames(passage.text)}
       </p>)}
@@ -677,7 +706,7 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
       {mainBoardActive && advice && <p className="guide-patch-advice">
         <a className="guide-tempo-tag" href={advice.href}>{advice.label}</a>{displayTraitNames(advice.note)}
       </p>}
-      {conditions}
+      {!orderedBlocks && conditions}
     </section>;
   const stats = (overview || matchStats || stageComparison) && <section className="guide-overview-card" aria-label="对局表现">
     {overview && <>
@@ -701,7 +730,13 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
     </details> : matchStats)}
     {stageComparison}
   </section>;
-  return <>{renderHeader?.(team, detailView ? headerTools : performance)}<section className={`guide-reader${section.reroll ? " guide-reroll" : ""}`} aria-label="阵容棋盘与运营">
+  const equipment = <GuideEquipment key={team.id + activeStage} team={shownBoard} data={boardData} roles={shownRoles} selectedPiece={selectedPiece}
+    onSelectPiece={selectPiece} guideHref={guideHref} sectionId={section.id} guideStats={!showFlex && !showPlayerBoard} detailView={detailView} />;
+  const readerBlocks = { equipment, body: tempo, conditions: hasConditions && <section className="owner-page-conditions" aria-label="定阵条件">{conditions}</section>, stats };
+  return <>{renderHeader?.(team, detailView ? headerTools : performance, { title: ownerFields?.title, editTitle: ownerEditTitle })}
+    <OwnerEditBar editor={ownerEditor} />
+    <OwnerPageDrawer editor={ownerEditor} kind="guide" scope={section.title + " · " + guideBoardName(team)} />
+    <section className={`guide-reader${section.reroll ? " guide-reroll" : ""}`} aria-label="阵容棋盘与运营">
     {!detailView && simpleStageControls}
     {!detailView && openingLine}
     {!detailView && oceanBoards ? <div className="guide-board-options" role="group" aria-label="阵容方案">
@@ -740,6 +775,11 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
         <div className="reader-board-title guide-board-head"><h3>{boardTitle}</h3>
           {detailView ? phaseControls : boardActions}
         </div>
+        {detailView && (publicBoardName || ownerEditor.editing) && <div className="owner-page-anchor owner-page-board-name"
+          data-owner-selected={ownerEditor.active?.kind === "board" || undefined}>
+          <span>{publicBoardName || guideBoardName(team)}</span>
+          {ownerEditor.editing && <OwnerInlineEdit label="编辑棋盘名称" onClick={() => ownerEditor.open("board")} />}
+        </div>}
         {detailView && mobileCoreRoles.length > 0 && <div className="guide-mobile-core" aria-label="棋盘核心">
           {mobileCoreRoles.map(role => <span key={role.label + ":" + role.units.join(",")}>
             <b>{role.label}</b> {role.units.map(name).join("、")}
@@ -818,9 +858,8 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
         </section>}
       </div>
       <aside className="guide-sidebar" aria-label={detailView ? "配装、运营与战绩" : "配装与进场条件"}>
-        <GuideEquipment key={team.id + activeStage} team={shownBoard} data={boardData} roles={shownRoles} selectedPiece={selectedPiece}
-          onSelectPiece={selectPiece} guideHref={guideHref} sectionId={section.id} guideStats={!showFlex && !showPlayerBoard} detailView={detailView} />
-        {detailView ? <>{tempo}{stats}</> : conditions}
+        {detailView && orderedBlocks ? orderedBlocks.map(id => <Fragment key={id}>{readerBlocks[id]}</Fragment>)
+          : <>{equipment}{detailView ? <>{tempo}{stats}</> : conditions}</>}
       </aside>
       <div className="reader-support">
         {mainBoardActive && renderNotes?.(team, detailView ? passages.map(passage => ({ ...passage, brief: !passage.linked })) : passages, notes.roles)}
