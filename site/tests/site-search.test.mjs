@@ -7,7 +7,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import ts from "typescript";
 import { boardSearchQuery } from "../domain/board-search-query.ts";
 import { guideBoardBySearchAlias, guideSearchKey } from "../domain/guide-search.ts";
-import { boardPublicSlug } from "../domain/guide-slugs.ts";
+import { boardPublicSlug, canonicalGuidePath } from "../domain/guide-slugs.ts";
 import publication from "../data/public-preview.json" with { type: "json" };
 import rerollBoards from "../data/s19-reroll-boards.json" with { type: "json" };
 import { heroAugmentSearchQuery } from "../domain/hero-augment-search.ts";
@@ -68,6 +68,10 @@ test("catalog nicknames resolve a published board without intercepting generic s
     assert.equal(boardPublicSlug(sectionId, board?.id ?? ""), slug, query);
     assert.equal(guideBoardBySearchAlias(sectionId, boards.filter(candidate => candidate.id !== board.id), query), undefined);
   }
+  const jazz = publication.sections.find(section => section.id === "sample-block-1090");
+  const jazzBoard = guideBoardBySearchAlias(jazz.id, jazz.teams, "牛牛阿萝拉");
+  assert.equal(canonicalGuidePath(jazz.id, jazzBoard?.id), "/guides/jazz-pyke-aurora?team=lv8");
+  assert.equal(guideBoardBySearchAlias(jazz.id, jazz.teams, "阿萝拉"), undefined);
   const renekton = publication.sections.find(section => section.id === "sample-block-0171");
   assert.equal(guideBoardBySearchAlias(renekton.id, renekton.teams, "救生员鳄鱼"), undefined);
 });

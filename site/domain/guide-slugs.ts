@@ -77,7 +77,7 @@ const guideSlugs: Record<string, GuideSlugs> = {
     "00000000-0000-4000-8000-000000000054": "lv6-jazz",
     "00000000-0000-4000-8000-000000000122": "lv8-zac-vi",
   } },
-  "sample-block-1090": { slug: "jazz-pyke-aurora", boards: {
+  "sample-block-1090": { slug: "jazz-pyke-aurora", searchAliases: { "lv8": ["牛牛阿萝拉"] }, boards: {
     "00000000-0000-4000-8000-000000001241": "lv8",
     "00000000-0000-4000-8000-000000001242": "lv9-rell",
   } },
