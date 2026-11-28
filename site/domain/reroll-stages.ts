@@ -8,15 +8,24 @@ export function rerollEntryTeamId(section: Section, teamId: string) {
   return reroll?.stages.find(stage => stage.entry && stage.parentTeamId === teamId)?.teamId;
 }
 
+export function authoredDirectoryRoutes(section: Section) {
+  return section.reroll?.stages.filter(stage => stage.directoryTitle) ?? [];
+}
+
+export function isArchivedRerollBoard(section: Section, teamId: string) {
+  return section.reroll?.stages.some(stage => stage.teamId === teamId && stage.archived) ?? false;
+}
+
 export function rerollRoute(section: Section, current: Team) {
   const guide = section.reroll;
   if (!guide) return;
   const teams = sectionTeams(section);
   const primary = teams.find(team => team.id === section.primaryTeamId) ?? teams[0];
   const selected = guide.stages.find(stage => stage.teamId === current.id);
+  if (selected?.archived) return { stages: [], variants: [], final: current };
   const finalId = selected ? selected.parentTeamId ?? primary?.id : current.id;
   const final = teams.find(team => team.id === finalId) ?? current;
-  const branch = guide.stages.filter(stage => (stage.parentTeamId ?? primary?.id) === final.id)
+  const branch = guide.stages.filter(stage => !stage.archived && (stage.parentTeamId ?? primary?.id) === final.id)
     .flatMap(stage => {
       const team = teams.find(entry => entry.id === stage.teamId);
       return team ? [{ ...stage, team }] : [];

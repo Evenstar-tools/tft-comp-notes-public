@@ -7,6 +7,7 @@ import { augmentHref } from "./augment-library";
 import type { Section } from "./document";
 import { heroAugmentForGuide } from "./hero-augments";
 import { itemLink } from "./links";
+import { authoredDirectoryRoutes } from "./reroll-stages";
 import { sameEdition } from "./version-updates";
 import type { Item, Season, Team, TeamCondition, Unit } from "./types";
 
@@ -88,7 +89,7 @@ const guideConditions: Partial<Record<string, {
   boardId: "00000000-0000-4000-8000-000000000017",
   label: "七级五天才",
   conditions: [
-    { itemId: "emblem-prodigy", recipientId: "amumu", kind: "required", action: "七级起搜时换下斯维因，提前开 5 天才。" },
+    { itemId: "emblem-prodigy", recipientId: "amumu", kind: "required", action: "七级给阿木木天才纹章。拉露恩到手后接替拉克丝，维持 5 天才。" },
   ],
 }, [GUIDE_SECTION_IDS.rockVayne]: {
   conditions: [
@@ -183,6 +184,8 @@ export function guideReferenceConditions(section: Section, teams: Team[], data: 
   if (section.reroll?.stages.some(stage => stage.teamId === selectedBoard.id && stage.ownEvidenceOnly)) return;
   const boardId = guideConditions[section.id]?.boardId;
   if (!boardId || boardId === selectedBoard.id) return;
+  if (authoredDirectoryRoutes(section).length &&
+      !section.reroll?.stages.some(stage => stage.teamId === selectedBoard.id && stage.parentTeamId === boardId && stage.boardRole !== "variant")) return;
   const board = teams.find(team => team.id === boardId);
   if (!board) return;
   const conditions = guideEquipmentConditions(section, teams, data, undefined, board);
