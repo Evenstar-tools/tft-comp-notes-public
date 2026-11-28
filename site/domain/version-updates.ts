@@ -1,10 +1,27 @@
 import type { DocumentDraft, Section } from "./document";
+import { beijingDate } from "../lib/beijing-time.ts";
 
 export const updatesCategory = "版本更新";
 export const officialPatchNotes = "https://teamfighttactics.leagueoflegends.com/en-us/news/game-updates/";
 
 export function isOfficialEdition(edition: string) {
   return /^s\d+-live(?:-|$)/i.test(edition);
+}
+
+export interface ActivePatchVersion {
+  seasonId: string;
+  effectiveAt: string;
+  metaTftPatch: { patch: string; bPatch?: string };
+}
+
+export function activePatchVersion(patch: ActivePatchVersion) {
+  const version = patch.metaTftPatch.patch + (patch.metaTftPatch.bPatch ?? "");
+  return isOfficialEdition(patch.seasonId) ? version : "PBE " + version;
+}
+
+export function activePatchBadge(patch: ActivePatchVersion) {
+  const date = beijingDate.format(new Date(patch.effectiveAt));
+  return activePatchVersion(patch) + " · " + date.slice(5).replace("-", "/");
 }
 
 export function isLiveLaunchTransition(patch?: { seasonId?: string; launchTransition?: boolean }) {

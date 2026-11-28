@@ -497,6 +497,9 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
         : reviewedPhases ? <><strong>{step.label}</strong>{detail && <small>{detail}</small>}</> : label}
     </button>;
   }
+  const phaseControls = !!firstPhases.length && <div className="stage-options guide-phases" role="group" aria-label="运营阶段">
+    {firstPhases.map(phaseButton)}
+  </div>;
   const simpleStageControls = simpleStages && <nav className="stage-options guide-phases guide-simple-stages" aria-label="棋盘阶段">
     {simpleBoards.map((board, index) => <button type="button" key={board.id} aria-pressed={board.id === team.id} onClick={() => pickTeam(board)}>
       {detailView ? stepLabel(guideBoardName(board), index) : guideBoardName(board)}
@@ -535,8 +538,11 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
         const current = system === currentSystem;
         const swap = !current && board ? boardRosterChange(systemEntry ?? team, board, data) : undefined;
         const change = swap?.describe() || system.change;
-        const sample = guideSystemSample(system.stat);
-        const source = system.stat && `${system.stat.sourceName} · ${familyStats.patch} · 近 ${familyStats.days} 天`;
+        const core = !system.stat && board && !heroGuide ? guideCorePlacement(section,
+          teams.filter(option => system.boardIds.includes(option.id)), board.id, { boundOnly: true }) : undefined;
+        const sample = guideSystemSample(system.stat ?? core);
+        const source = system.stat ? `${system.stat.sourceName} · ${familyStats.patch} · 近 ${familyStats.days} 天`
+          : core && [core.patch, core.window, core.sampleScope].filter(Boolean).join(" · ");
         const contents = <>
           <span className="guide-variant-option-copy">
             <strong>{system.title}</strong>
@@ -544,7 +550,8 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
             {current && <small className="guide-variant-current">当前</small>}
             {change && <small className="guide-variant-change" title={change}>{swap?.describe(3) || change}</small>}
           </span>
-          {(!launchStats || system.stat) && optionStats(sample, undefined, source)}
+          {(!launchStats || system.stat || core) && optionStats(sample,
+            core && (placementEvidenceKind(core) === "lineup" ? "名单共现" : "核心均名"), source)}
         </>;
         return <li key={system.sectionId + ":" + system.teamId}>{board
           ? <button type="button" className="guide-variant-option" aria-pressed={current} onClick={() => {
@@ -708,7 +715,7 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
       })}</div>
     </div> : <div className={`guide-board-options${compactControls ? " guide-board-options--compact" : ""}${reviewedPhases ? " guide-board-options--reviewed" : ""}`}>
       {detailView && simpleStageControls}
-      {!!firstPhases.length && <div className="stage-options guide-phases" role="group" aria-label="运营阶段">{firstPhases.map(phaseButton)}</div>}
+      {!detailView && phaseControls}
       {detailView && authoredStageControls}
       {!!remainingPhases.length && <details className="guide-extra-phases" open={detailView && remainingPhases.some(currentStep) || undefined}><summary>其他运营阶段</summary>
         <div className="stage-options">{remainingPhases.map(phaseButton)}</div>
@@ -731,7 +738,7 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
       <div className="reader-play">
         {!detailView && authoredStageControls}
         <div className="reader-board-title guide-board-head"><h3>{boardTitle}</h3>
-          {!detailView && boardActions}
+          {detailView ? phaseControls : boardActions}
         </div>
         {detailView && mobileCoreRoles.length > 0 && <div className="guide-mobile-core" aria-label="棋盘核心">
           {mobileCoreRoles.map(role => <span key={role.label + ":" + role.units.join(",")}>

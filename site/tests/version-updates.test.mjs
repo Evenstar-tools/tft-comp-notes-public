@@ -2,12 +2,32 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { splitSections } from "../domain/document-flow.ts";
-import { isVersionUpdate, publishedVersionUpdates, versionUpdateLink } from "../domain/version-updates.ts";
-import { findPatchObjects, publishedPatchCallouts, splitHighlightLine } from "../domain/patch-reference.ts";
+import { activePatchBadge, isVersionUpdate, publishedVersionUpdates, versionUpdateLink } from "../domain/version-updates.ts";
+import { currentBuildReference, findPatchObjects, publishedPatchCallouts, splitHighlightLine } from "../domain/patch-reference.ts";
 import { patchReferences } from "../data/patch-notes.ts";
 import { guideLink, validVersionReturn } from "../domain/guide-reading.ts";
 import { itemGuideOrigin, itemLink } from "../domain/links.ts";
 import { sectionTeams } from "../domain/document-flow.ts";
+
+test("the home badge and update landing use the active build at Beijing midnight", () => {
+  const current = { seasonId: "s19-pbe", build: "6045507", updateId: "pbe-6035832",
+    effectiveAt: "2026-11-27T22:35:38Z", metaTftPatch: { patch: "19.1", bPatch: "c" },
+    sourceUrl: "https://matches3.metatft.com/PBE1_4537487353.json" };
+  assert.equal(activePatchBadge(current), "PBE 19.1c · 11/28");
+  assert.equal(currentBuildReference(current, patchReferences).id, "pbe-6045507");
+  assert.equal(patchReferences.find(reference => reference.id === "pbe-6035832").date, "2026-11-25");
+
+  const next = { ...current, build: "6050000", effectiveAt: "2026-11-28T16:05:00Z" };
+  assert.equal(activePatchBadge(next), "PBE 19.1c · 11/29");
+  const nextReference = currentBuildReference(next, patchReferences);
+  assert.equal(nextReference.id, "pbe-6050000");
+  assert.equal(nextReference.date, "2026-11-29");
+  assert.equal(nextReference.source.url, next.sourceUrl);
+
+  const live = { ...next, seasonId: "s19-live", updateId: "s19-live-start", metaTftPatch: { patch: "19.1" } };
+  assert.equal(activePatchBadge(live), "19.1 · 11/29");
+  assert.equal(currentBuildReference(live, patchReferences).id, "s19-live-start");
+});
 
 test("published Feishu briefs stay in their own season and environment after a snapshot is merged", () => {
   const block = (id, text, level) => ({

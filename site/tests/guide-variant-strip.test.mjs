@@ -3,7 +3,9 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { registerHooks } from "node:module";
 import { sectionTeams } from "../domain/document-flow.ts";
+import { guideRoute } from "../domain/guide-reading.ts";
 import { guideHeaderCoreSample, guidePromotionRows, guideSameLevelSwaps, guideSystemDisplayBoards, guideSystemPhases, guideSystemSample, guideSystems, rankGuideSystems, systemMeanTone } from "../domain/guide-variant-strip.ts";
+import { resolveBoardTeamId } from "../domain/guide-slugs.ts";
 import { GUIDE_SECTION_IDS } from "../domain/guide-identities.ts";
 import { usedPopulation } from "../domain/team.ts";
 
@@ -127,14 +129,30 @@ test("other authored branches retain independent cores and choose the best valid
   assert.deepEqual(zeri.map(system => system.teamId), ["0105", "0049", "1275"].map(id));
   assert(zeri[0].boardIds.includes(id("0003")));
   assert.match(zeri[1].title, /双电子.*女枪/);
-  const { systems: ziggs } = guide(GUIDE_SECTION_IDS.hyperpopSeraphine);
-  assert.deepEqual(ziggs.map(system => system.teamId), ["0089", "0096", "0098"].map(id));
-  assert.match(ziggs[1].title, /五高能三编舞/);
   const { systems: kayle, comparison } = guide(GUIDE_SECTION_IDS.pentakillKayle);
   assert.deepEqual(kayle.map(system => system.teamId), [id("0064"), "19b143ef-e315-4b8e-8081-31e13a6ec3f0", id("0106")]);
   assert.deepEqual(comparison(kayle[0]).map(row => row.board.id), ["0019", "0064"].map(id));
   const sister = { ...zeri[0], sectionId: "cross-guide", stat: { ...zeri[0].stat, mean: 3.7 } };
   assert.equal(rankGuideSystems([...zeri, sister])[0], sister);
+});
+
+test("Hyperpop branches keep separate population choices and retain existing board links", () => {
+  const { section, systems, boards } = guide(hyperpopSeraphine);
+  const fourLead = ["lv6-4-lead", "lv7-4-lead", "lv9-4-lead"].map(slug => resolveBoardTeamId(section.id, slug));
+  const fiveHyperpop = ["lv5", "lv6", "lv9-choreo"].map(slug => resolveBoardTeamId(section.id, slug));
+  assert.deepEqual(systems.map(system => system.teamId), [fourLead[0], fiveHyperpop[1], id("0098")]);
+  assert.match(systems[1].title, /五高能三编舞/);
+  for (const [system, ids, populations] of [[systems[0], fourLead, [6, 7, 9]], [systems[1], fiveHyperpop, [5, 6, 9]]]) {
+    const branch = boards(system);
+    const entry = branch.find(board => board.id === system.teamId);
+    const final = branch.find(board => board.id === ids.at(-1));
+    const phases = guideSystemPhases(branch, entry, final, []);
+    assert.deepEqual(phases.map(phase => phase.team.id), ids);
+    assert.deepEqual(phases.map(phase => usedPopulation(phase.team.pieces)), populations);
+  }
+  const actualPatchBatch = read("guide-family-stats");
+  const invalidBatch = { ...actualPatchBatch, rows: [] };
+  assert.equal(guide(hyperpopSeraphine, invalidBatch).systems.length, 3);
 });
 
 test("authored upgrades and swaps remain accessible within their route", () => {
@@ -170,6 +188,35 @@ test("authored upgrades and swaps remain accessible within their route", () => {
   assert.equal(asheSystems[0].stat, ashe);
   const zoeSystems = guide("sample-block-1004", batch).systems;
   assert(zoeSystems.find(system => system.teamId === id("1126"))?.boardIds.includes(id("1094")));
+});
+
+test("Viego keeps the six-Slayer board at level seven when moving to and from the Garen upgrade", () => {
+  const { section, systems, boards } = guide("sample-block-0243");
+  const system = systems.find(entry => entry.teamId === id("0074"));
+  assert.ok(system);
+  const routeBoards = boards(system);
+  const seven = routeBoards.find(board => board.id === id("0074"));
+  const eight = routeBoards.find(board => board.id === section.primaryTeamId);
+  const legacySeven = routeBoards.find(board => board.id === id("0041"));
+  assert.ok(seven && eight && legacySeven);
+
+  const roster = board => board.pieces.map(piece => piece.unitId).sort();
+  assert.deepEqual(roster(seven), ["amumu", "briar", "camille", "kayn", "viego", "yasuo", "yone"]);
+  assert.deepEqual(roster(eight), [...roster(seven), "garen"].sort());
+
+  for (const selected of [seven, eight]) {
+    const displayed = guideSystemDisplayBoards(section, routeBoards, selected);
+    const authored = guideRoute(section, sectionTeams(section), selected);
+    const phases = guideSystemPhases(displayed, seven, selected, authored.phases);
+    assert.deepEqual(phases.map(step => [step.label, step.team.id]), [
+      ["7级六舞者", seven.id],
+      ["8级补盖伦", eight.id],
+    ]);
+  }
+
+  const oldLink = guideSystemDisplayBoards(section, routeBoards, legacySeven);
+  assert(oldLink.includes(legacySeven));
+  assert(!oldLink.includes(seven));
 });
 
 test("Kennen opens the authored five-level reroll board within its system", () => {

@@ -129,7 +129,7 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
   recommendations?: PatchRecommendationBatch;
   artifactRanking?: ReactNode;
   patch?: { seasonId: string; build: string; label: string; updateId: string; effectiveAt: string; launchTransition?: boolean;
-    metaTftPatch?: { patch: string; bPatch?: string } };
+    metaTftPatch: { patch: string; bPatch?: string } };
   fromItem?: string;
   checkedAt: number;
 }) {
