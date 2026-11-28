@@ -12574,11 +12574,11 @@
         {
           "id": "sample-block-0224",
           "type": "text",
-          "text": "经济和血量能上九、能做战士装就走三爵士史密奇。",
+          "text": "八级搜两星凯尔和约里克稳血。能做战士装，升九开史密奇。",
           "elements": [
             {
               "text_run": {
-                "content": "经济和血量能上九、能做战士装就走三爵士史密奇。"
+                "content": "八级搜两星凯尔和约里克稳血。能做战士装，升九开史密奇。"
               }
             }
           ]
@@ -12589,7 +12589,7 @@
           "elements": [
             {
               "text_run": {
-                "content": "打法：速九运营",
+                "content": "打法：84",
                 "text_element_style": {
                   "bold": false,
                   "inline_code": false,
@@ -12601,7 +12601,7 @@
             }
           ],
           "level": 0,
-          "text": "打法：速九运营"
+          "text": "打法：84"
         },
         {
           "id": "sample-block-0275-rhythm",

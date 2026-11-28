@@ -157,12 +157,12 @@
     },
     {
       "sectionId": "sample-block-0275",
-      "teamId": "00000000-0000-4000-8000-000000000082",
+      "teamId": "00000000-0000-4000-8000-000000000014",
       "status": "recommended",
-      "group": "fast9",
-      "note": "战士装与物理装顺，八级五杀爵士稳血且经济够上九。九级补任一心之钢凑 9 羁绊，解锁史密奇后换下。",
-      "timing": "战士与物理装顺，八级五杀爵士稳血且经济够上九。",
-      "upgrade": "九级补任一心之钢凑 9 羁绊，解锁史密奇后换下。",
+      "group": "fast8",
+      "note": "战士装顺，八级搜两星凯尔和约里克稳血。升九补一张心之钢凑满 9 个非唯一羁绊，解锁史密奇后换下。",
+      "timing": "战士装顺，八级搜两星凯尔和约里克稳血。",
+      "upgrade": "稳血后上九，先凑 9 个非唯一羁绊解锁史密奇。",
       "sources": [
         "https://www.metatft.com/pbe-comps#DA_Pentakill19-DA_Kayle19-DA_Mel19"
       ]
@@ -195,7 +195,10 @@
       "sectionId": "sample-block-0235",
       "teamId": "00000000-0000-4000-8000-000000000105",
       "status": "conditional",
-      "note": "本批均名 4.87。血量和经济都够再上九搜两星泽丽和蒙多。",
+      "override": "pin",
+      "note": "高血高经济才进。八级沿用打工盘，直接上九搜两星泽丽和蒙多。",
+      "timing": "高血高经济才进。",
+      "upgrade": "八级用打工盘，直接上九搜两星泽丽和蒙多。",
       "sources": [
         "https://www.metatft.com/pbe-comps#DA_Jazz19-DA_Leona19"
       ],

@@ -157,8 +157,10 @@
       "name": "三爵士五杀史密奇",
       "sectionId": "sample-block-0275",
       "teamId": "00000000-0000-4000-8000-000000000082",
+      "landingTeamId": "00000000-0000-4000-8000-000000000014",
       "carryIds": [
-        "smeech"
+        "smeech",
+        "kayle"
       ],
       "url": "https://www.metatft.com/pbe-comps#DA_Pentakill19-DA_Kayle19-DA_Mel19",
       "places": [

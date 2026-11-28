@@ -8,6 +8,7 @@ import { rerollEntryTeamId } from "../domain/reroll-stages.ts";
 import { switchAlternate, traitCounts, traitGroup, usedPopulation } from "../domain/team.ts";
 import { findPlacement } from "../domain/guide-placement.ts";
 import { guideFamilyBoardIds, guideFamilyRows, homeRecommendationEligible } from "../domain/guide-family-stats.ts";
+import { refreshWebDetails } from "../server/guide-details.ts";
 import { migrateS19GuideSnapshot } from "../server/s19-guide-cleanup.ts";
 
 const json = path => JSON.parse(readFileSync(new URL(path, import.meta.url), "utf8"));
@@ -80,6 +81,12 @@ test("guide entry boards follow the playable level and retain the family results
   const entries = json("../data/s19-reroll-boards.json");
   const map = json("../data/guide-family-map.json");
   const entry = section => entries.find(row => row.sectionId === section.id);
+
+  const smeech = guide("0275");
+  assert.equal(entry(smeech).entryTeamId, board(smeech, "0014").id);
+  assert.equal(usedPopulation(board(smeech, "0014").pieces), 8);
+  assert.equal(guidePlaystyle(smeech, board(smeech, "0014")), "84");
+  assert.equal(guidePlaystyle(smeech, board(smeech, "0082")), "84");
 
   const jinx = guide("1110");
   assert.equal(entry(jinx).entryTeamId, board(jinx, "1252").id);
@@ -219,38 +226,48 @@ test("published guide data resolves every section and board reference", () => {
   assert.ok(placements.find(row => row.conditions?.teamId === board(classical, "1138").id).games >= 617);
 });
 
-test("fast-nine picks retain their reviewed family bindings and board-specific core samples", () => {
+test("Smeech, Zeri and Xayah retain their reviewed families and board-specific core samples", () => {
   const batch = json("../data/guide-placement.json");
   const families = json("../data/guide-family-stats.json");
   const bindings = json("../data/guide-family-map.json");
   const trend = json("../data/comp-trends.json");
   const picks = json("../data/patch-recommendations.json");
-  for (const [suffix, clusterId, status] of [
-    ["0235", "429055", "conditional"],
-    ["0275", "429004", "recommended"],
-    ["0214", "429021", "conditional"],
+  for (const [suffix, clusterId, status, group, landingSuffix] of [
+    ["0235", "429055", "conditional", "fast9"],
+    ["0275", "429004", "recommended", "fast8", "0014"],
+    ["0214", "429021", "conditional", "fast9"],
   ]) {
     const section = guide(suffix);
     const team = section.team;
-    const pick = picks.entries.find(entry => entry.sectionId === section.id && entry.teamId === team.id);
+    const landing = landingSuffix ? board(section, landingSuffix) : undefined;
+    const pick = picks.entries.find(entry => entry.sectionId === section.id && entry.teamId === (landing?.id ?? team.id));
     const binding = bindings.rows.find(row => row.clusterId === clusterId);
     assert.equal(binding.sectionId, section.id);
     assert.equal(binding.teamId, team.id);
     assert.equal(pick.status, status);
-    assert.equal(pick.group, "fast9");
+    assert.equal(pick.group, group);
+    if (suffix === "0235") {
+      assert.equal(pick.override, "pin");
+      assert.equal(homeRecommendationEligible(families.rows.find(row => row.clusterId === clusterId)), false);
+    }
+    if (landing) assert.equal(binding.landingTeamId, landing.id);
     assert.deepEqual(pick.sources, [binding.url]);
     const roles = readingNotes(section, team, preview.season).roles;
     const sourceCarries = roles.find(role => role.label === "主C").units;
     const trendCarries = roles.filter(role => role.label === "主C" || role.label === "副C").flatMap(role =>
       role.units.filter(id => team.pieces.some(piece => piece.unitId === id && piece.items.length)));
-    assert.deepEqual(binding.carryIds, sourceCarries);
-    assert.deepEqual(families.rows.find(row => row.clusterId === clusterId).carryIds, sourceCarries);
+    const landingCarries = landing ? readingNotes(section, landing, preview.season).roles
+      .find(role => role.label === "主C").units : [];
+    const routeCarries = [...new Set([...sourceCarries, ...landingCarries])];
+    assert.deepEqual(binding.carryIds, routeCarries);
+    assert.deepEqual(families.rows.find(row => row.clusterId === clusterId).carryIds, routeCarries);
     const archived = trend.series.find(row => row.sectionId === section.id && row.teamId === team.id);
     assert.deepEqual(archived.carryIds, trendCarries);
     // A provider can change its representative board without changing the model ID.
     for (const family of guideFamilyRows(families, preview.season.id, section.id, sectionTeams(section))) {
       assert.equal(family.stat.clusterId, clusterId);
       assert.equal(family.team.id, team.id);
+      if (landing) assert.deepEqual(family.boards.map(board => board.id), [landing.id, team.id]);
     }
     if (suffix === "0214") continue;
     const records = batch.records.filter(row => !row.windowHours && row.conditions?.kind === "core" && row.conditions.teamId === team.id);
@@ -262,6 +279,14 @@ test("fast-nine picks retain their reviewed family bindings and board-specific c
     assert.equal(sample?.conditions?.population, 9);
     assert.equal(sample.conditions.kind, "core");
   }
+});
+
+test("older published Smeech wording uses the reviewed fast-eight classification", () => {
+  const section = structuredClone(guide("0275"));
+  const style = section.blocks.find(block => block.id === "sample-block-0381");
+  style.text = style.elements[0].text_run.content = "打法：速九运营";
+  refreshWebDetails(section);
+  assert.equal(guidePlaystyle(section), "84");
 });
 
 test("Jazz Jinx shares one native rating from the fast-eight landing to the nine-unit upgrade", () => {
