@@ -1,6 +1,6 @@
 import type { Section } from "./document";
 import { sectionTeams } from "./document-flow.ts";
-import { AD_GRAVES_BOARD_IDS, GUIDE_SECTION_IDS, PYKE_GRAVES_BOARD_ID } from "./guide-identities.ts";
+import { AD_GRAVES_BOARD_IDS, DRAVEN_VIEGO_BOARD_ID, GUIDE_SECTION_IDS, PYKE_GRAVES_BOARD_ID } from "./guide-identities.ts";
 import { boardPublicSlug, canonicalGuidePath, guidePublicSlug, resolveBoardTeamId, resolveGuideSectionId } from "./guide-slugs.ts";
 
 const [adGraves, adGravesTwistedFate] = AD_GRAVES_BOARD_IDS;
@@ -64,6 +64,12 @@ export function resolveGuideRequest(id: string, rawTeam: string | undefined, sec
   if (legacy) return { redirectTo: canonicalGuidePath(legacy.sectionId, legacy.teamId, params) };
 
   const sectionId = resolveGuideSectionId(id);
+  if (sectionId === GUIDE_SECTION_IDS.showoffDraven && (rawTeam === "lv7-viego" || rawTeam === DRAVEN_VIEGO_BOARD_ID)) {
+    const target = sections.find(entry => entry.id === GUIDE_SECTION_IDS.choreographerDravenViego);
+    if (target && sectionTeams(target).some(board => board.id === DRAVEN_VIEGO_BOARD_ID)) {
+      return { redirectTo: canonicalGuidePath(target.id, DRAVEN_VIEGO_BOARD_ID, params) };
+    }
+  }
   const section = sections.find(entry => entry.id === sectionId);
   if (!section) return;
   const teamId = resolveBoardTeamId(sectionId, rawTeam);

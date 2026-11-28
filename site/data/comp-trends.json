@@ -4363,8 +4363,8 @@
       ]
     },
     {
-      "id": "sample-block-0407:00000000-0000-4000-8000-000000001177",
-      "sectionId": "sample-block-0407",
+      "id": "choreographer-draven-viego:00000000-0000-4000-8000-000000001177",
+      "sectionId": "choreographer-draven-viego",
       "points": [
         {
           "batchId": "429|19.1c|3|2026-11-27T12:50:38.149Z",
@@ -4440,7 +4440,7 @@
         }
       ],
       "teamId": "00000000-0000-4000-8000-000000001177",
-      "name": "编舞佛耶戈德莱文",
+      "name": "编舞师德莱文佛耶戈",
       "carryIds": [
         "viego",
         "draven"

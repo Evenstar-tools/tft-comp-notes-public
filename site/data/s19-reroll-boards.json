@@ -2559,27 +2559,6 @@
         "teamId": "00000000-0000-4000-8000-000000000013",
         "name": "7级起搜",
         "notes": "德莱文、布隆先到两星才分别接韦鲁斯的输出装和俄洛伊的肉装。布隆居中顶，轻语卡莎和德莱文同侧隔一格，遇到大范围伤害再分边。"
-      },
-      {
-        "teamId": "00000000-0000-4000-8000-000000001177",
-        "parentTeamId": "00000000-0000-4000-8000-000000000029",
-        "name": "七级 · 佛耶戈（琴吹唯）",
-        "boardRole": "variant",
-        "notes": "阵容与站位来自琴吹唯（koyui）。佛耶戈来得早就上场叠击杀。七级追德莱文、佛耶戈、布隆三星。先做德莱文输出装和布隆肉装，青龙刀可换蓝霸符。佛耶戈拿夜刃、无尽、正义。攻击力和生命值各分 5 分贝。七级追三成型后，八级补崔斯特开三花式射手。",
-        "roles": [
-          {"label": "主C", "units": ["draven"]},
-          {"label": "主坦", "units": ["braum"]},
-          {"label": "副C", "units": ["viego"]}
-        ],
-        "pieces": [
-          {"unitId": "braum", "position": 3, "stars": 3, "items": ["TFT_Item_GargoyleStoneplate", "TFT_Item_WarmogsArmor", "TFT_Item_Redemption"]},
-          {"unitId": "yone", "position": 8, "stars": 1, "items": []},
-          {"unitId": "garen", "position": 9, "stars": 1, "items": []},
-          {"unitId": "yorick", "position": 10, "stars": 1, "items": []},
-          {"unitId": "viego", "position": 12, "stars": 3, "items": ["TFT_Item_GuardianAngel", "TFT_Item_InfinityEdge", "TFT_Item_UnstableConcoction"]},
-          {"unitId": "gnar", "position": 24, "stars": 2, "items": []},
-          {"unitId": "draven", "position": 27, "stars": 3, "items": ["TFT_Item_SpearOfShojin", "TFT_Item_Deathblade", "TFT_Item_InfinityEdge"]}
-        ]
       }
     ],
     "edits": [

@@ -54,8 +54,8 @@ test("community names resolve the current item IDs and keep radiant aliases spec
 test("catalog nicknames resolve a published board without intercepting generic subjects", () => {
   const cases = [
     ["true-damage-senna", "真伤赛娜", "lv7"],
-    ["sample-block-0407", "德莱文佛爷", "lv7-viego"],
-    ["sample-block-0407", "佛爷德莱文", "lv7-viego"],
+    ["choreographer-draven-viego", "德莱文佛爷", "lv7"],
+    ["choreographer-draven-viego", "佛爷德莱文", "lv7"],
     ["ionic-prodigy-lux", "离子拉克丝", "lv6"],
     ["arcanist-taliyah-vladimir", "隆吸水", "lv8"],
     ["arcanist-taliyah-vladimir", "隆吸水九级", "lv9-nidalee"],
