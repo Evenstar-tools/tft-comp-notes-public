@@ -45,17 +45,6 @@
   font-size: clamp(1.5rem, 2.8vw, 1.85rem);
   line-height: 1.2;
 }
-.medley-subtitle {
-  margin: 5px 0 0;
-  font-size: .84rem;
-  color: var(--muted);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-.medley-dot { color: var(--line); }
-
 .medley-how-toggle {
   display: inline-flex;
   align-items: center;
@@ -97,6 +86,7 @@
   color: var(--accent);
 }
 .medley-how-panel p { margin: 0; line-height: 1.65; }
+.medley-how-panel p + p { margin-top: 6px; }
 .medley-how-rules { display: grid; gap: 6px; }
 .medley-how-rule { display: flex; align-items: baseline; gap: 8px; font-size: .8rem; }
 .medley-how-tag {
@@ -200,13 +190,11 @@
   justify-content: space-between;
   gap: 8px 14px;
   flex-wrap: wrap;
-  margin-top: 10px;
-  padding-top: 9px;
-  border-top: 1px solid var(--m-line-soft);
+  margin-top: 6px;
   font-size: .79rem;
   color: var(--muted);
 }
-.medley-count { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.medley-count { margin-inline-start: auto; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .medley-count strong { color: var(--text); font-weight: 700; }
 
 /* Shared Unit Avatar */
@@ -945,7 +933,7 @@
   .medley-toolbar-card { padding: 0 0 12px; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: transparent; box-shadow: none; }
   .medley-search { min-height: 44px; background: var(--panel); }
   .medley-segmented button { min-height: 38px; padding-inline: 8px; font-size: .875rem; }
-  .medley-toolbar-sub { padding-block-start: 0; border: 0; font-size: .875rem; line-height: 1.55; }
+  .medley-toolbar-sub { font-size: .875rem; line-height: 1.55; }
   .medley-count { white-space: normal; }
   .medley-gc-unit > span { font-size: .8125rem; line-height: 1.35; text-wrap: balance; }
   .medley-gc-enter { font-size: .8125rem; }
