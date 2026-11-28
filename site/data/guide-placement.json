@@ -7278,6 +7278,44 @@
       "topFourRate": 0.7640449438202247,
       "winRate": 0.15730337078651685,
       "observedOn": "2026-11-28"
+    },
+    {
+      "sectionId": "sample-block-1020",
+      "population": 8,
+      "roster": [
+        "braum",
+        "draven",
+        "gragas",
+        "kai-sa",
+        "leona",
+        "lillia",
+        "samira",
+        "vayne"
+      ],
+      "games": 274,
+      "placementCounts": [
+        47,
+        63,
+        58,
+        42,
+        31,
+        23,
+        5,
+        5
+      ],
+      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Braum19-1&unit=DA_Draven19-1&unit=DA_Gragas19-1&unit=DA_Kaisa19-1&unit=DA_Leona19-1&unit=DA_Lillia19-1&unit=DA_Samira19-1&unit=DA_Vayne19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "sampleScope": "8级结算 · 固定棋盘名单 · 不限星级和装备 · 无纹章、额外人口或重复棋子",
+      "observedOn": "2026-11-28",
+      "conditions": {
+        "kind": "full",
+        "teamId": "2c797a5f-2ed1-442c-86b9-f2fe48f39526",
+        "population": 8
+      },
+      "querySignature": "[8,[\"braum\",\"draven\",\"gragas\",\"kai-sa\",\"leona\",\"lillia\",\"samira\",\"vayne\"]]",
+      "build": "6045507",
+      "mean": 3.22,
+      "topFourRate": 0.7664233576642335,
+      "winRate": 0.17153284671532848
     }
   ],
   "edition": "s19-pbe-19.1",

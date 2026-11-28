@@ -212,6 +212,7 @@ const guideSlugs: Record<string, GuideSlugs> = {
   } },
   "sample-block-1020": { slug: "hitmaker-draven", boards: {
     "00000000-0000-4000-8000-000000001158": "lv8-kaisa",
+    "2c797a5f-2ed1-442c-86b9-f2fe48f39526": "lv8-vayne",
   } },
   "sample-block-0854": { slug: "choreo-ahri", searchAliases: {
     "lv8-flex": ["编舞狐狸", "双编舞阿狸", "阿狸盖伦", "阿狸梅尔", "编舞师阿狸Flex"],

@@ -23922,11 +23922,11 @@
         {
           "id": "sample-block-1020-step-1",
           "type": "bullet",
-          "text": "七级开 3 花式射手、2 大触打击乐。莉莉娅、蕾欧娜、古拉加斯和布隆顶前排，莎弥拉、卡莎和德莱文站最后一排。",
+          "text": "七级搜德莱文、卡莎和布隆两星，先开三花式、双大触稳血。",
           "elements": [
             {
               "text_run": {
-                "content": "七级开 3 花式射手、2 大触打击乐。莉莉娅、蕾欧娜、古拉加斯和布隆顶前排，莎弥拉、卡莎和德莱文站最后一排。"
+                "content": "七级搜德莱文、卡莎和布隆两星，先开三花式、双大触稳血。"
               }
             }
           ]
@@ -23934,11 +23934,11 @@
         {
           "id": "sample-block-1020-step-2",
           "type": "bullet",
-          "text": "先把德莱文、卡莎和布隆搜到两星，再卡利息追三星。按图星级成型后开 7 K/DA。",
+          "text": "三张来得多再停七追三。莉莉娅、蕾欧娜和古拉加斯留场，星级跟上就开 7 K/DA。",
           "elements": [
             {
               "text_run": {
-                "content": "先把德莱文、卡莎和布隆搜到两星，再卡利息追三星。按图星级成型后开 7 K/DA。"
+                "content": "三张来得多再停七追三。莉莉娅、蕾欧娜和古拉加斯留场，星级跟上就开 7 K/DA。"
               }
             }
           ]
@@ -23946,11 +23946,11 @@
         {
           "id": "sample-block-1020-step-3",
           "type": "bullet",
-          "text": "三张追到三星再升人口。血量吃紧时，先把双 C 和前排搜到两星稳住。",
+          "text": "血量紧先稳双 C 和前排两星，追完三张再升八。",
           "elements": [
             {
               "text_run": {
-                "content": "三张追到三星再升人口。血量吃紧时，先把双 C 和前排搜到两星稳住。"
+                "content": "血量紧先稳双 C 和前排两星，追完三张再升八。"
               }
             }
           ]
@@ -23963,6 +23963,30 @@
             {
               "text_run": {
                 "content": "德莱文站右下角，卡莎靠同侧隔一格。德莱文先做青龙刀和无尽，布隆接肉装，卡莎用轻语补破甲。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "sample-block-1020-lv8-vayne-heading",
+          "type": "heading",
+          "text": "八级 · 补薇恩",
+          "elements": [
+            {
+              "text_run": {
+                "content": "八级 · 补薇恩"
+              }
+            }
+          ]
+        },
+        {
+          "id": "sample-block-1020-lv8-vayne-tempo",
+          "type": "text",
+          "text": "薇恩补第四花式，双 C 都有三件后才分剩余物理装。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "薇恩补第四花式，双 C 都有三件后才分剩余物理装。"
               }
             }
           ]
@@ -23983,11 +24007,23 @@
         {
           "id": "sample-block-1140",
           "type": "text",
-          "text": "棋盘配装 · 八级 · 四花式三大触卡莎德莱文\n主C：德莱文。朔极之矛、无尽之刃、强袭者的链枷。\n主坦：布隆。冕卫、石像鬼石板甲、狂徒铠甲。\n副C：卡莎。鬼索的狂暴之刃、海妖之怒、最后的轻语。",
+          "text": "棋盘配装 · 七级 · 双C追三\n主C：德莱文。朔极之矛、无尽之刃、强袭者的链枷。\n主C：卡莎。鬼索的狂暴之刃、海妖之怒、最后的轻语。\n主坦：布隆。冕卫、石像鬼石板甲、狂徒铠甲。",
           "elements": [
             {
               "text_run": {
-                "content": "棋盘配装 · 八级 · 四花式三大触卡莎德莱文\n主C：德莱文。朔极之矛、无尽之刃、强袭者的链枷。\n主坦：布隆。冕卫、石像鬼石板甲、狂徒铠甲。\n副C：卡莎。鬼索的狂暴之刃、海妖之怒、最后的轻语。"
+                "content": "棋盘配装 · 七级 · 双C追三\n主C：德莱文。朔极之矛、无尽之刃、强袭者的链枷。\n主C：卡莎。鬼索的狂暴之刃、海妖之怒、最后的轻语。\n主坦：布隆。冕卫、石像鬼石板甲、狂徒铠甲。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "sample-block-1020-lv8-vayne-loadout",
+          "type": "text",
+          "text": "棋盘配装 · 八级 · 补薇恩\n主C：德莱文。朔极之矛、无尽之刃、强袭者的链枷。\n主C：卡莎。鬼索的狂暴之刃、海妖之怒、最后的轻语。\n主坦：布隆。冕卫、石像鬼石板甲、狂徒铠甲。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "棋盘配装 · 八级 · 补薇恩\n主C：德莱文。朔极之矛、无尽之刃、强袭者的链枷。\n主C：卡莎。鬼索的狂暴之刃、海妖之怒、最后的轻语。\n主坦：布隆。冕卫、石像鬼石板甲、狂徒铠甲。"
               }
             }
           ]
@@ -23997,19 +24033,33 @@
       "teams": [
         {
           "id": "00000000-0000-4000-8000-000000001158",
-          "name": "八级 · 四花式三大触卡莎德莱文",
+          "name": "七级 · 双C追三",
           "category": "待分类",
-          "notes": "",
+          "notes": "七级追德莱文、卡莎和布隆三星。",
           "revision": 1,
           "updatedAt": "2026-11-24T11:25:00.483Z",
           "sectionId": "sample-block-1020",
           "pieces": [
             {
-              "instanceId": "00000000-0000-4000-8000-000000001082",
-              "unitId": "thresh",
+              "instanceId": "9f0953b2-e5d2-4178-afe3-ae25f8a9036c",
+              "unitId": "lillia",
               "stars": 2,
               "items": [],
               "position": 1
+            },
+            {
+              "instanceId": "385ec680-13be-400b-bdac-5008d5f12fef",
+              "unitId": "leona",
+              "stars": 1,
+              "items": [],
+              "position": 2
+            },
+            {
+              "instanceId": "b911b6a2-d90a-471d-a96f-001ce90a365b",
+              "unitId": "gragas",
+              "stars": 1,
+              "items": [],
+              "position": 3
             },
             {
               "instanceId": "00000000-0000-4000-8000-000000001088",
@@ -24020,21 +24070,14 @@
                 "TFT_Item_GargoyleStoneplate",
                 "TFT_Item_WarmogsArmor"
               ],
-              "position": 3
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000001105",
-              "unitId": "graves",
-              "stars": 2,
-              "items": [],
-              "position": 7
+              "position": 4
             },
             {
               "instanceId": "00000000-0000-4000-8000-000000001093",
               "unitId": "samira",
               "stars": 2,
               "items": [],
-              "position": 19
+              "position": 23
             },
             {
               "instanceId": "00000000-0000-4000-8000-000000001124",
@@ -24042,26 +24085,10 @@
               "stars": 3,
               "items": [
                 "TFT_Item_GuinsoosRageblade",
-                "TFT_Item_RapidFireCannon",
-                "TFT_Item_MadredsBloodrazor"
+                "TFT_Item_RunaansHurricane",
+                "TFT_Item_LastWhisper"
               ],
-              "position": 21
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000001107",
-              "unitId": "illaoi",
-              "stars": 2,
-              "items": [
-                "TFT_Item_RedBuff"
-              ],
-              "position": 12
-            },
-            {
-              "instanceId": "00000000-0000-4000-8000-000000001073",
-              "unitId": "vayne",
-              "stars": 2,
-              "items": [],
-              "position": 24
+              "position": 25
             },
             {
               "instanceId": "00000000-0000-4000-8000-000000001133",
@@ -24070,28 +24097,122 @@
               "items": [
                 "TFT_Item_SpearOfShojin",
                 "TFT_Item_InfinityEdge",
-                "TFT_Item_LastWhisper"
+                "TFT_Item_PowerGauntlet"
               ],
               "position": 27
             }
           ]
+        },
+        {
+          "id": "2c797a5f-2ed1-442c-86b9-f2fe48f39526",
+          "name": "八级 · 补薇恩",
+          "category": "待分类",
+          "notes": "追完三星再升八，薇恩开四花式。",
+          "revision": 1,
+          "updatedAt": "2026-11-28T16:04:27.136Z",
+          "sectionId": "sample-block-1020",
+          "pieces": [
+            {
+              "instanceId": "b28a55b8-7b4f-4574-8227-da1e6807f9ad",
+              "unitId": "lillia",
+              "stars": 2,
+              "items": [],
+              "position": 1
+            },
+            {
+              "instanceId": "6861920f-cd1b-4534-9438-e60c886684df",
+              "unitId": "leona",
+              "stars": 1,
+              "items": [],
+              "position": 2
+            },
+            {
+              "instanceId": "06a66322-fc1a-4961-842a-8b9b38cd1a3f",
+              "unitId": "gragas",
+              "stars": 1,
+              "items": [],
+              "position": 3
+            },
+            {
+              "instanceId": "66a87b3e-206f-4279-939b-9490afbb6dc5",
+              "unitId": "braum",
+              "stars": 3,
+              "items": [
+                "TFT_Item_Crownguard",
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_WarmogsArmor"
+              ],
+              "position": 4
+            },
+            {
+              "instanceId": "48ae7ff0-c3db-4b34-bcf6-f90ea14e179a",
+              "unitId": "samira",
+              "stars": 2,
+              "items": [],
+              "position": 23
+            },
+            {
+              "instanceId": "a174dcac-22d8-42a0-acfe-b8fb794c421a",
+              "unitId": "kai-sa",
+              "stars": 3,
+              "items": [
+                "TFT_Item_GuinsoosRageblade",
+                "TFT_Item_RunaansHurricane",
+                "TFT_Item_LastWhisper"
+              ],
+              "position": 25
+            },
+            {
+              "instanceId": "b5259762-07cc-4041-ba95-719632c8301c",
+              "unitId": "draven",
+              "stars": 3,
+              "items": [
+                "TFT_Item_SpearOfShojin",
+                "TFT_Item_InfinityEdge",
+                "TFT_Item_PowerGauntlet"
+              ],
+              "position": 27
+            },
+            {
+              "unitId": "vayne",
+              "instanceId": "75277ed4-dd1d-4aff-a21c-382d94f559f6",
+              "position": 21,
+              "stars": 2,
+              "items": []
+            }
+          ],
+          "boardRole": "stage"
         }
       ],
       "team": {
         "id": "00000000-0000-4000-8000-000000001158",
-        "name": "八级 · 四花式三大触卡莎德莱文",
+        "name": "七级 · 双C追三",
         "category": "待分类",
-        "notes": "",
+        "notes": "七级追德莱文、卡莎和布隆三星。",
         "revision": 1,
         "updatedAt": "2026-11-24T11:25:00.483Z",
         "sectionId": "sample-block-1020",
         "pieces": [
           {
-            "instanceId": "00000000-0000-4000-8000-000000001082",
-            "unitId": "thresh",
+            "instanceId": "9f0953b2-e5d2-4178-afe3-ae25f8a9036c",
+            "unitId": "lillia",
             "stars": 2,
             "items": [],
             "position": 1
+          },
+          {
+            "instanceId": "385ec680-13be-400b-bdac-5008d5f12fef",
+            "unitId": "leona",
+            "stars": 1,
+            "items": [],
+            "position": 2
+          },
+          {
+            "instanceId": "b911b6a2-d90a-471d-a96f-001ce90a365b",
+            "unitId": "gragas",
+            "stars": 1,
+            "items": [],
+            "position": 3
           },
           {
             "instanceId": "00000000-0000-4000-8000-000000001088",
@@ -24102,21 +24223,14 @@
               "TFT_Item_GargoyleStoneplate",
               "TFT_Item_WarmogsArmor"
             ],
-            "position": 3
-          },
-          {
-            "instanceId": "00000000-0000-4000-8000-000000001105",
-            "unitId": "graves",
-            "stars": 2,
-            "items": [],
-            "position": 7
+            "position": 4
           },
           {
             "instanceId": "00000000-0000-4000-8000-000000001093",
             "unitId": "samira",
             "stars": 2,
             "items": [],
-            "position": 19
+            "position": 23
           },
           {
             "instanceId": "00000000-0000-4000-8000-000000001124",
@@ -24124,26 +24238,10 @@
             "stars": 3,
             "items": [
               "TFT_Item_GuinsoosRageblade",
-              "TFT_Item_RapidFireCannon",
-              "TFT_Item_MadredsBloodrazor"
+              "TFT_Item_RunaansHurricane",
+              "TFT_Item_LastWhisper"
             ],
-            "position": 21
-          },
-          {
-            "instanceId": "00000000-0000-4000-8000-000000001107",
-            "unitId": "illaoi",
-            "stars": 2,
-            "items": [
-              "TFT_Item_RedBuff"
-            ],
-            "position": 12
-          },
-          {
-            "instanceId": "00000000-0000-4000-8000-000000001073",
-            "unitId": "vayne",
-            "stars": 2,
-            "items": [],
-            "position": 24
+            "position": 25
           },
           {
             "instanceId": "00000000-0000-4000-8000-000000001133",
@@ -24152,13 +24250,17 @@
             "items": [
               "TFT_Item_SpearOfShojin",
               "TFT_Item_InfinityEdge",
-              "TFT_Item_LastWhisper"
+              "TFT_Item_PowerGauntlet"
             ],
             "position": 27
           }
         ]
       },
-      "summaryBlockId": "sample-block-0927"
+      "summaryBlockId": "sample-block-0927",
+      "primaryTeamId": "00000000-0000-4000-8000-000000001158",
+      "stageTeamIds": [
+        "2c797a5f-2ed1-442c-86b9-f2fe48f39526"
+      ]
     },
     {
       "id": "sample-block-0854",
