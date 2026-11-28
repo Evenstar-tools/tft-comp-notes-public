@@ -6,10 +6,8 @@ import { guideRerollTargets } from "@/domain/reroll-targets";
 import { season as currentSeason } from "@/data";
 import familyData from "@/data/guide-family-stats.json";
 import coreData from "@/data/patch-recommendation-stats.json";
-import placementBatch from "@/data/guide-placement.json";
 import { displayGuideName, displayTraitNames } from "@/domain/trait-names.mjs";
-import { canRankRecommendations, compareGuideFamilyPerformance, currentFamilyBatch, currentRecommendationEvidence, familyMetricValue, formatRecommendationMean, hasHomeRecommendationSample, homeRecommendationEligible, guideFamilyBoardIds, guideFamilyRows, previousRecommendationDeadline, recommendationGroup, recommendationTier, selectRecommendationRoutes, type GuideFamilyDirection, type GuideFamilyMetric, type GuideFamilySnapshot, type GuideFamilyStat, type HomeRecommendationRating, type RecommendationGroup, type RecommendationStats } from "@/domain/guide-family-stats";
-import { guideHeaderCoreSample, guideSystems } from "@/domain/guide-variant-strip";
+import { canRankRecommendations, compareGuideFamilyPerformance, currentRecommendationEvidence, familyMetricValue, formatRecommendationMean, hasHomeRecommendationSample, homeRecommendationEligible, guideDirectoryTier, guideFamilyBoardIds, guideFamilyRows, guideTierLabels as tierLabels, previousRecommendationDeadline, recommendationGroup, recommendationTier, selectRecommendationRoutes, type GuideFamilyDirection, type GuideFamilyMetric, type GuideFamilySnapshot, type GuideFamilyStat, type HomeRecommendationRating, type RecommendationGroup, type RecommendationStats } from "@/domain/guide-family-stats";
 import { placementEvidenceKind } from "@/domain/guide-placement";
 import { carryMinGames, guideCarryRows } from "@/domain/guide-carry-stats";
 import { sectionTeams } from "@/domain/document-flow";
@@ -31,7 +29,7 @@ import { HomeGuideBanner } from "./GuideNavigation";
 import { SiteSearchResults, useSiteSearch } from "./SiteSearchResults";
 import { siteSearchIntent, type SiteSearchResponse } from "@/domain/site-search";
 import { isLiveLaunchTransition, sameEdition } from "@/domain/version-updates";
-import { guideBoardKind, guideCorePlacement, teamPlacement, type GuideCorePlacement } from "./GuidePlacement";
+import { guideBoardKind, guideDirectoryCorePlacements, type GuideCorePlacement } from "./GuidePlacement";
 import { formationCoreResult } from "./GuideFormationStats";
 import { PatchRecommendationList, type RecommendationCard } from "./PatchRecommendationList";
 import { GuideConditionIcon } from "./GuideEquipmentConditions";
@@ -46,8 +44,7 @@ import { extractPublicGuideIdFromHref, type GuideEntrySource } from "@/domain/an
 import { rememberGuideEntry, trackGuideView, trackSearchResultOpen, trackSearchResults } from "@/lib/analytics";
 
 const backupCategory = "次选";
-const tierLabels = { recommended: "推荐", secondary: backupCategory, review: "待复核" } as const;
-const tierOrder: string[] = [tierLabels.recommended, tierLabels.review, tierLabels.secondary];
+const tierOrder: string[] = [tierLabels.recommended, tierLabels.secondary, tierLabels.review];
 type View = "regular" | "hero-augments" | "comp-trends";
 type ArchiveSort = Exclude<GuideSort, "recommended">;
 type Selections = { category: string; style: string; cost: number };
@@ -164,13 +161,14 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
   const lastInlineSearchKey = useRef<string | null>(null);
   const filterPanel = useRef<HTMLDetailsElement>(null);
   const showingTrends = view === "comp-trends";
-  const recommended = view === "regular" && sort === "recommended";
+  const recommendationTab = view === "regular" && sort === "recommended";
+  const needle = showingTrends ? "" : query.trim();
+  const recommended = recommendationTab && !needle;
   const selections = choices[view] ?? emptyFilters;
-  const active = recommended && tierOrder.includes(selections.category) ? { ...selections, category: "" } : selections;
+  const active = recommendationTab && tierOrder.includes(selections.category) ? { ...selections, category: "" } : selections;
   const { category, style, cost } = active;
   const styleKey = guideStyleKey(style);
   const hasFilter = Boolean(category || style || cost);
-  const needle = showingTrends ? "" : query.trim();
   const inputIntent = homeSearchIntent(needle, scope);
   const hasUnitQuery = Boolean(inputIntent.text && searchUnitIds(inputIntent.text, season).size);
   const intent = hasUnitQuery || inputIntent.scope !== scope ? inputIntent : { ...inputIntent, scope: "all" as const };
@@ -315,7 +313,7 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
   }, [sections, heroSections, season, patch?.build]);
 
   const visible = view === "comp-trends" ? [] : library[view];
-  const hasCurrentStats = currentFamilyBatch(familyStats, season.id, patch);
+  const hasCurrentStats = currentRecommendationEvidence(familyStats, season.id, patch, recommendations?.reviewedRollingPatch);
   const familyDataEnd = Date.parse(familyStats.updatedAt ?? "");
   const patchStart = patch ? Date.parse(patch.effectiveAt) : NaN;
   const familyWindowNote = launchTransition && !familyStats.spansBuilds ? undefined
@@ -335,22 +333,18 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
     return () => window.clearTimeout(timer);
   }, [previousDeadline]);
   const hasCurrentCore = !!patch && canRankRecommendations(coreStats, season.id, patch);
-  const showArchiveCore = view === "regular" && !recommended && sort !== "mean";
+  const showArchiveCore = view === "regular" && !recommended;
   const archiveCorePlacements = useMemo(() => {
     const ratings = new Map<string, GuideCorePlacement>();
     if (!showArchiveCore || !patch) return ratings;
-    for (const { section, data, teams } of library.regular) {
-      const systems = guideSystems(section, familyStats, data.id, patch, placementBatch.minGames, recommendations?.reviewedRollingPatch);
-      for (const system of systems) {
-        if (system.stat) continue;
-        const boards = teams.filter(board => system.boardIds.includes(board.id));
-        const sample = guideCorePlacement(section, boards, system.teamId);
-        if (sample) for (const board of boards) ratings.set(board.id, sample);
+    for (const { section, teams } of library.regular) {
+      for (const [id, sample] of guideDirectoryCorePlacements(section, teams, familyStats, recommendations?.reviewedRollingPatch)) {
+        ratings.set(id, sample);
       }
     }
     return ratings;
   }, [library.regular, patch, recommendations?.reviewedRollingPatch, showArchiveCore]);
-  const showTiers = view === "regular" && !recommended;
+  const showTiers = view === "regular" && !recommendationTab;
   const tierFilter = showTiers ? category : "";
   const homeEntries = [...library.regular, ...library["hero-augments"]];
   const availableFacets = view === "regular" ? homeEntries : visible;
@@ -493,7 +487,8 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
     return [{ stat, team:hits[0].board, boards:hits.map(hit => hit.board) }];
   });
   const boardTier = (section: Section, team: Team | undefined, stat?: Pick<GuideFamilyStat, "games" | "mean"> & { winRate?: number }) =>
-    decisions.get(`${section.id}:${team?.id}`)?.status === "review" ? "review" : recommendationTier(stat);
+    guideDirectoryTier(stat, decisions.get(`${section.id}:${team?.id}`)?.status);
+  const comparedBoards = new Set<string>();
   const statsRows: GuideStatsTableRow[] = ranked ? candidates.flatMap(entry =>
     matchingRows(entry).filter(({team, stat}) => !tierFilter ||
       tierLabels[boardTier(entry.section, team, hasCurrentStats ? stat : undefined)] === tierFilter).map(match => ({ ...match, entry }))
@@ -518,6 +513,7 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
       const portraits = [...new Map(ordered.map(({ unit }) => [unit.id, unit])).values()].slice(0, 4);
       const cardId = section.id + "-stats-" + stat.clusterId;
       const href = guideLink(section.id, team.id, homeGuideReturn(home, cardId, team.id));
+      comparedBoards.add(team.id);
       return {
         id: "guide-card-" + cardId, name, note: displayTraitNames(context || homeOpening(advice, name)), tier: boardTier(section, team, hasCurrentStats ? stat : undefined),
         style: playstyle ?? (entry.filterStyle?.includes("慢搜") ? "慢搜" : undefined),
@@ -537,10 +533,9 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
   const coreSortDirection = performance.metric === "pickRate" ? "asc" : performance.direction;
   const coreStatsRows: GuideStatsTableRow[] = ranked ? candidates.flatMap(entry => {
     if (nativeSectionIds.has(entry.section.id) || entry.section.category === heroAugmentCategory) return [];
-    const boards = entry.teams.length ? entry.teams : entry.team ? [entry.team] : [];
-    const primaryBoard = entry.team ?? boards[0];
+    const primaryBoard = entry.team;
     if (!primaryBoard) return [];
-    const core = guideHeaderCoreSample(primaryFirst(boards, primaryBoard.id), board => teamPlacement(board, entry.section, "core"), 100);
+    const core = archiveCorePlacements.get(primaryBoard.id);
     if (!core || core.mean === undefined || core.topFourRate === undefined || core.winRate === undefined) return [];
     const tier = boardTier(entry.section, primaryBoard, { games: core.games, mean: core.mean, winRate: core.winRate });
     if (tierFilter && tierLabels[tier] !== tierFilter) return [];
@@ -567,6 +562,7 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
     const portraits = [...new Map(ordered.map(({ unit }) => [unit.id, unit])).values()].slice(0, 4);
     const cardId = section.id + "-core-stats";
     const href = guideLink(section.id, team.id, homeGuideReturn(home, cardId, team.id));
+    comparedBoards.add(team.id);
     return {
       id: "guide-card-" + cardId, name, note: displayTraitNames(context || homeOpening(advice, name)), tier,
       style: playstyle ?? (entry.filterStyle?.includes("慢搜") ? "慢搜" : undefined),
@@ -581,7 +577,7 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
   }) : [];
   type Card = Result & { rating?: Pick<GuideFamilyStat, "mean" | "games"> & Partial<Pick<GuideFamilyStat, "topFourRate" | "winRate">>;
     core?: GuideCorePlacement; routeName?: string; clusterId?: GuideFamilyStat["clusterId"]; routes?: Team[]; cardId: string; tier: ReturnType<typeof recommendationTier> };
-  const results = ranked || recommended ? [] : grouped.flatMap<Card>(entry => {
+  const results = (ranked && !needle) || recommended ? [] : grouped.flatMap<Card>(entry => {
     const primaryCard = { ...entry, cardId: entry.section.id, tier: "review" as const };
     if (isHeroList) {
       const rows = hasCurrentStats ? entry.rows.filter(({ stat, boards }) =>
@@ -616,7 +612,8 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
       if (route !== entry && !rating) continue;
       cards.push({ ...entry, ...route, tier: boardTier(route.section, focus, rating), core, rating, cardId: route.section.id });
     }
-    return cards.filter(card => !tierFilter || tierLabels[card.tier] === tierFilter);
+    return cards.filter(card => (!tierFilter || tierLabels[card.tier] === tierFilter) &&
+      (!ranked || !card.team || !comparedBoards.has(card.team.id)));
   });
   if (!isHeroList) results.sort((a, b) => {
     const relevance = needle && tierFilter !== backupCategory ? b.rank - a.rank : 0;
@@ -723,7 +720,7 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
   const currentHomeReady = currentHomeEvidence || currentHomeRoutes.length > 0;
   const recommendationSnapshot = currentHomeReady ? (currentHomeEvidence ? homeFamilyStats : undefined)
     : previousDeadline !== undefined ? previousFamilyStats : undefined;
-  const filteredHome = Boolean(needle || cost || style);
+  const filteredHome = Boolean(cost || style);
   const homeCandidates = !equipmentQuery && recommended
     ? currentHomeReady && !filteredHome ? currentHomeCandidates
       : homeRouteCandidates(recommendationSnapshot, filteredHome ? candidatesFor(homeEntries) : homeEntries, currentHomeReady)
@@ -814,9 +811,9 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
   function conditionLink(sectionId: string, boardId: string, cardId: string) {
     return guideLink(sectionId, boardId, homeGuideReturn(home, cardId, boardId)) + "#" + guideConditionsAnchor;
   }
-  const displayedCount = recommended ? recommendationCards.length : ranked ? statsRows.length + coreStatsRows.length : results.length;
-  const crossTab = needle && !displayedCount && !equipmentQuery && (!recommended || hasUnitQuery)
-    ? candidatesFor(library[recommended || isHeroList ? "regular" : "hero-augments"], conditions, false)
+  const displayedCount = recommended ? recommendationCards.length : statsRows.length + coreStatsRows.length + results.length;
+  const crossTab = needle && !displayedCount && !equipmentQuery
+    ? candidatesFor(library[isHeroList ? "regular" : "hero-augments"], conditions, false)
       .sort((a,b) => b.rank - a.rank).slice(0, 8)
     : [];
   const lookupGroups = lookup.phase === "ready" && conditions.length === 1 && !selectedGear ? lookup.result.groups.filter(group =>
@@ -884,7 +881,7 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
 
   const renderCards = (group: Card[], groupName: string, eager: boolean) => {
     const CardTitle = groupName ? "h3" : "h2";
-    return <div className="guide-list reader-list">{group.map(({ section, data, team, teams, matches, augment, siblings, family, rating: matchedRating, core, routeName, clusterId, rows, routes, cardId, context: searchContext, unitLabel, facet, curated }, index) => {
+    return <div className="guide-list reader-list">{group.map(({ section, data, team, teams, matches, augment, siblings, family, rating: matchedRating, core, routeName, clusterId, rows, routes, cardId, tier, context: searchContext, unitLabel, facet, curated }, index) => {
       const playstyle = guidePlaystyle(section, team);
       const primary = teams[0];
       const kind = team && guideBoardKind(section, team, primary);
@@ -981,6 +978,7 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
               <CardTitle className="guide-result-title" id={titleId}>{title}</CardTitle>
               {styleTag && <span className="guide-playstyle-tag" title="打法">{styleTag}</span>}
               {review && <span className="guide-review-badge" id={reviewId} title={review.note}>待复核</span>}
+              {!review && needle && !isHeroList && tier !== "recommended" && <span className="guide-playstyle-tag">{tierLabels[tier]}</span>}
             </div>
             {rating && <span id={ratingId} className={"guide-placement " + (!showMean ? "limited" : rating.mean < 4.5 ? "strong" : rating.mean > 4.5 ? "weak" : "middle")}
               title={[ratingSource, showMean && rating.topFourRate !== undefined && ("前四 " + (100 * rating.topFourRate).toFixed(1) + "%"),
@@ -1105,9 +1103,9 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
       <div className="guide-order-row">
         <nav className="guide-library-tabs home-patch-tabs" aria-label="阵容分栏">
           <a href={homeLink("regular", nextSelections("regular"), "recommended")}
-            aria-current={recommended ? "page" : undefined} onClick={event => changeView(event, "regular", "recommended")}>本版推荐</a>
+            aria-current={recommendationTab ? "page" : undefined} onClick={event => changeView(event, "regular", "recommended")}>本版推荐</a>
           <a href={homeLink("regular", nextSelections("regular"), archiveSort)}
-            aria-current={view === "regular" && !recommended ? "page" : undefined} onClick={event => changeView(event, "regular", archiveSort)}>全部攻略</a>
+            aria-current={view === "regular" && !recommendationTab ? "page" : undefined} onClick={event => changeView(event, "regular", archiveSort)}>全部攻略</a>
           {heroSections.length > 0 && <a href={homeLink("hero-augments", nextSelections("hero-augments"), sort)}
             aria-current={view === "hero-augments" ? "page" : undefined} onClick={event => changeView(event, "hero-augments")}>英雄强化</a>}
           {(!launchTransition || trends) && <a href={homeLink("comp-trends", emptyFilters, sort)} aria-current={showingTrends ? "page" : undefined}
@@ -1184,13 +1182,13 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
       {artifactRanking}
     </>}
     {!showingTrends && <>
-    {view === "regular" && !recommended && <div className="home-archive-tools">
+    {view === "regular" && !recommendationTab && <div className="home-archive-tools">
       <nav className="home-archive-switch" aria-label="全部攻略视图">
           {archiveViews.filter(([option]) => !launchTransition || option === "category" || (hasCurrentStats && familyStats.rows.length > 0) || hasCurrentCore).map(([option, label]) =>
           <a key={option} href={homeLink("regular", active, option)} aria-current={sort === option ? "true" : undefined}
             onClick={event => changeView(event, "regular", option)}>{label}</a>)}
       </nav>
-      {ranked && <label className="home-stats-sort">
+      {ranked && (statsRows.length > 0 || coreStatsRows.length > 0) && <label className="home-stats-sort">
         <span className="sr-only">战绩排序</span>
         <select value={performance.metric + "-" + performance.direction} onChange={event => {
           const [metric, direction] = event.target.value.split("-");
@@ -1251,7 +1249,6 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
       <PatchRecommendationList stats={!launchTransition || homeSelections.some(route => hasHomeRecommendationSample(route.rating)) ? recommendationSnapshot : undefined}
         cards={recommendationCards} home={home} quietUnrated={launchTransition}
         previousBuild={!!recommendationSnapshot && !currentHomeReady} />
-      {!displayedCount && !crossTab.length && needle && showLookup && !equipmentQuery && <div className="empty-inline">{archiveLink}</div>}
       {!displayedCount && !crossTab.length && !showLookup && !searching && (needle || hasFilter ? emptyState : <div className="empty-inline">{!launchTransition && <p>{currentHomeEvidence ? "暂无符合条件的本版推荐" : "本版体系数据待更新"}</p>}
         {archiveLink}
       </div>)}
@@ -1271,6 +1268,7 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
         metric, direction: previous.metric === metric ? (previous.direction === "asc" ? "desc" : "asc") : metric === "mean" ? "asc" : "desc",
       }))} />
     </section>}
+    {ranked && groups.length > 0 && <header className="guide-core-stats-head"><h3>匹配的攻略</h3></header>}
     {!recommended && groups.length > 0 && <div className="guide-sections">{groups.map(([name, entries], index) => {
       const preview = archiveReady ? entries : entries.slice(0, index === 0 ? 6 : 2);
       const cards = renderCards(preview, name, index === 0);
@@ -1290,7 +1288,7 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
         {textLinks}
       </section> : <Fragment key={name}>{cards}{textLinks}</Fragment>;
     })}</div>}
-    {!recommended && !displayedCount && !searching && (ranked || (!crossTab.length && !showLookup)) && emptyState}
+    {!recommended && !displayedCount && !searching && !crossTab.length && (ranked || !showLookup) && emptyState}
     </>}
   </div>;
 }

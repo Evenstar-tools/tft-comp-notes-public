@@ -41,6 +41,7 @@ export interface GuideFamilyBatch {
 export const placementCutoff = 4.5;
 export const highWinRateCutoff = 0.15;
 export type RecommendationTier = "recommended" | "secondary" | "review";
+export const guideTierLabels = { recommended: "推荐", secondary: "次选", review: "待复核" } as const;
 
 export function recommendationTier(
   stat?: Pick<GuideFamilySmallSample, "games" | "mean"> & { winRate?: number | null },
@@ -50,6 +51,10 @@ export function recommendationTier(
   const highWinRate = stat.winRate !== undefined && stat.winRate !== null && Number.isFinite(stat.winRate) &&
     stat.winRate >= highWinRateCutoff && stat.winRate <= 1;
   return stat.mean <= placementCutoff || highWinRate ? "recommended" : "secondary";
+}
+
+export function guideDirectoryTier(stat: Parameters<typeof recommendationTier>[0], status?: string): RecommendationTier {
+  return status === "review" ? "review" : recommendationTier(stat);
 }
 
 export function formatRecommendationMean(mean: number): string {

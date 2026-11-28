@@ -1,6 +1,6 @@
 import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
 import type { ReactNode } from "react";
-import { formatRecommendationMean, placementCutoff, type RecommendationTier } from "@/domain/guide-family-stats";
+import { guideTierLabels as tierLabels, formatRecommendationMean, placementCutoff, type RecommendationTier } from "@/domain/guide-family-stats";
 import "../app/guide-stats-table.css";
 
 export type GuideStatsMetric = "pickRate" | "mean" | "topFourRate" | "winRate";
@@ -15,7 +15,7 @@ export const guideStatsMetricLabels = {
 
 const metrics = ["mean", "pickRate", "topFourRate", "winRate"] as const;
 const sampleLimits = [100, 200, 500] as const;
-const tierLabels = { recommended: "推荐", secondary: "次选", review: "待复核" } satisfies Record<RecommendationTier, string>;
+
 const formats = {
   pickRate: new Intl.NumberFormat("zh-CN", { style: "percent", maximumFractionDigits: 2, minimumFractionDigits: 2 }),
   mean: new Intl.NumberFormat("zh-CN", { maximumFractionDigits: 2, minimumFractionDigits: 2 }),

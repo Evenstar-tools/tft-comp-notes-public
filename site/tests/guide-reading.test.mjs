@@ -5,7 +5,7 @@ import { primaryFirst, matchGuideTeams, sourceSummary, guideFacets, guidePlaysty
 import { displayGuideName, displayTraitNames } from "../domain/trait-names.mjs";
 import { comboStarMask, comboTierCounts } from "../domain/combo-tiers.ts";
 import { guideStyleKey, guideWearerQuery, homeGuideFilter, matchOpeningSearch, openingSearch, searchPhaseNote } from "../domain/guide-search.ts";
-import { canRankRecommendations, compareGuideFamilyPerformance, currentFamilyBatch, currentRecommendationEvidence, previousRecommendationDeadline, familyMetricValue, formatRecommendationMean, guideFamilyRows, hasHomeRecommendationSample, recommendationGroup, recommendationTier, selectRecommendationRoutes } from "../domain/guide-family-stats.ts";
+import { canRankRecommendations, compareGuideFamilyPerformance, currentFamilyBatch, currentRecommendationEvidence, previousRecommendationDeadline, familyMetricValue, formatRecommendationMean, guideDirectoryTier, guideFamilyRows, hasHomeRecommendationSample, recommendationGroup, recommendationTier, selectRecommendationRoutes } from "../domain/guide-family-stats.ts";
 import { posterShareLink, readPosterShare, validItemLibraryReturn } from "../domain/links.ts";
 import { compactGuideParagraph, compactUtilityCopy, rememberGuideCopy } from "../domain/guide-copy.ts";
 import { heroGuideIndex } from "../domain/hero-guides.ts";
@@ -363,6 +363,9 @@ test("recommendations compare a single patch window and use the intended roll pl
 test("archive and homepage use the same sample threshold and exact placement cutoff", () => {
   const row = { games: 100, mean: 4.5 };
   assert.equal(recommendationTier(row), "recommended");
+  assert.equal(guideDirectoryTier(row, "review"), "review");
+  assert.equal(guideDirectoryTier({ ...row, mean: 5.29 }), "secondary");
+  assert.equal(guideDirectoryTier(undefined, "conditional"), "review");
   assert.equal(recommendationTier({ ...row, mean: 4.49 }), "recommended");
   assert.equal(recommendationTier({ ...row, mean: 4.503923 }), "secondary");
   assert.equal(recommendationTier({ ...row, mean: 4.85, winRate: 0.149 }), "secondary");

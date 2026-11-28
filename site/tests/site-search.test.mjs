@@ -10,6 +10,7 @@ import { guideBoardBySearchAlias, guideSearchKey } from "../domain/guide-search.
 import { boardPublicSlug, canonicalGuidePath } from "../domain/guide-slugs.ts";
 import publication from "../data/public-preview.json" with { type: "json" };
 import rerollBoards from "../data/s19-reroll-boards.json" with { type: "json" };
+import { unitSearchNames } from "../domain/unit-search.mjs";
 import { heroAugmentSearchQuery } from "../domain/hero-augment-search.ts";
 import { emblemSearchNames, makeItemSearchTerms } from "../domain/item-search.ts";
 import { hasSevenCostUnit, indexedEmblemTerms, rankedWearerEvidence, rankedWearers, requiresSearchSubmit,
@@ -53,6 +54,8 @@ test("community names resolve the current item IDs and keep radiant aliases spec
 test("catalog nicknames resolve a published board without intercepting generic subjects", () => {
   const cases = [
     ["true-damage-senna", "真伤赛娜", "lv7"],
+    ["sample-block-0407", "德莱文佛爷", "lv7-viego"],
+    ["sample-block-0407", "佛爷德莱文", "lv7-viego"],
     ["ionic-prodigy-lux", "离子拉克丝", "lv6"],
     ["arcanist-taliyah-vladimir", "隆吸水", "lv8"],
     ["arcanist-taliyah-vladimir", "隆吸水九级", "lv9-nidalee"],
@@ -68,6 +71,7 @@ test("catalog nicknames resolve a published board without intercepting generic s
     assert.equal(boardPublicSlug(sectionId, board?.id ?? ""), slug, query);
     assert.equal(guideBoardBySearchAlias(sectionId, boards.filter(candidate => candidate.id !== board.id), query), undefined);
   }
+  assert.deepEqual(season.units.filter(unit => unitSearchNames(unit).includes("佛爷")).map(unit => unit.id), ["viego"]);
   const jazz = publication.sections.find(section => section.id === "sample-block-1090");
   const jazzBoard = guideBoardBySearchAlias(jazz.id, jazz.teams, "牛牛阿萝拉");
   assert.equal(canonicalGuidePath(jazz.id, jazzBoard?.id), "/guides/jazz-pyke-aurora?team=lv8");

@@ -5,15 +5,14 @@ import currentPatch from "@/data/current-patch.json";
 import familyData from "@/data/guide-family-stats.json";
 import { itemWearers } from "@/data/item-wearers";
 import { specialItemWearers } from "@/data/special-item-wearers";
-import coreData from "@/data/patch-recommendation-stats.json";
 import { boardSearchQuery, type BoardSearchQuery } from "@/domain/board-search-query";
 import type { Publication, Section } from "@/domain/document";
 import { readableSection, sectionTeams } from "@/domain/document-flow";
 import { emblemSnapshot, itemName, itemTerms } from "@/domain/gear-library";
 import { currentEmblemSnapshot, currentWearerSnapshot, gearSampleMinimum, visibleGearSample } from "@/domain/gear-wearer";
 import { boardTitle } from "@/domain/guide-families";
-import { canRankRecommendations, currentFamilyBatch, currentRecommendationEvidence, guideFamilyRows, recommendationGroup, recommendationTier,
-  type GuideFamilyBatch, type RecommendationStats } from "@/domain/guide-family-stats";
+import { currentRecommendationEvidence, guideDirectoryTier, guideFamilyRows, guideTierLabels, recommendationGroup, recommendationTier,
+  type GuideFamilyBatch } from "@/domain/guide-family-stats";
 import { guideBoardName, guideFacets, guideLink, guidePlaystyle, guideRollLevel, guideUnitMatch, isEditorialSection, primaryFirst, readingNotes, sourceSummary } from "@/domain/guide-reading";
 import { guideBoardBySearchAlias, guideSearchKey, guideTraitNames, guideWearerQuery, homeGuideFilter, openingSearch } from "@/domain/guide-search";
 import { heroAugmentCategory, heroAugmentForGuide } from "@/domain/hero-augments";
@@ -32,7 +31,7 @@ import { guideBoardKind, traitCounts, usedPopulation } from "@/domain/team";
 import { displayGuideName } from "@/domain/trait-names.mjs";
 import { unitSearchNames } from "@/domain/unit-search.mjs";
 import { isLiveLaunchTransition, isVersionUpdate, sameEdition } from "@/domain/version-updates";
-import { recommendationBoardSample } from "@/components/GuidePlacement";
+import { guideDirectoryCorePlacements } from "@/components/GuidePlacement";
 import { boardSearchEvidence, currentSearchPlacements, fixedSearchSample } from "./board-search-evidence";
 import { heroAugmentSearchHit } from "./hero-augment-search";
 import { currentPatchRecommendations } from "./patch-recommendations";
@@ -41,7 +40,6 @@ import { publicGuidePublication } from "./publication";
 const limit = 6;
 const duringLaunch = isLiveLaunchTransition(currentPatch);
 const familyStats = familyData as GuideFamilyBatch;
-const coreStats = coreData as RecommendationStats;
 const emblemRows = emblemSnapshot.emblems;
 const chinaDate = new Intl.DateTimeFormat("zh-CN", { timeZone: "Asia/Shanghai", month: "numeric", day: "numeric" });
 const key = guideSearchKey;
@@ -69,17 +67,21 @@ const augmentIndex = augments.rows.map(entry => ({
   terms:[entry.name,entry.english],
 }));
 
+const searchGuideIndexes = new WeakMap<Publication, ReturnType<typeof buildSearchGuideIndex>>();
+
 function searchGuides(live: Publication | null) {
   if (!live) return [];
-  const current = sameEdition(live.season.id, currentPatch.seasonId);
-  const build = current ? currentPatch.build : undefined;
-  const withFamilies = currentFamilyBatch(familyStats, live.season.id, currentPatch);
-  const withCores = current && canRankRecommendations(coreStats, live.season.id, currentPatch);
+  const existing = searchGuideIndexes.get(live);
+  if (existing) return existing;
+  const index = buildSearchGuideIndex(live);
+  searchGuideIndexes.set(live, index);
+  return index;
+}
+
+function buildSearchGuideIndex(live: Publication) {
   const recommendations = currentPatchRecommendations(live);
-  const fixed = new Map(recommendations?.fixedBoardRecommendations?.map(row => [row.teamId, row]));
+  const withFamilies = currentRecommendationEvidence(familyStats, live.season.id, currentPatch, recommendations?.reviewedRollingPatch);
   const decisions = new Map(recommendations?.entries.map(row => [row.sectionId + ":" + row.teamId, row]));
-  const cores = new Map((withCores ? coreStats.rows : []).map(row => [row.sectionId + ":" + row.teamId, row]));
-  const labels = { recommended: "推荐", secondary: "次选", review: "待复核" };
   return live.sections.filter(section => readableSection(section) && !isEditorialSection(section) && !isVersionUpdate(section)).map(section => {
     const teams = primaryFirst(sectionTeams(section), section.primaryTeamId);
     const edition = section.gameData?.id ?? live.season.id;
@@ -90,25 +92,25 @@ function searchGuides(live: Publication | null) {
       if (list) list.push(row);
       else familiesByBoard.set(board.id, [row]);
     }
+    const hero = section.category === heroAugmentCategory;
+    const cores = !hero && !duringLaunch ? guideDirectoryCorePlacements(section, teams, familyStats, recommendations?.reviewedRollingPatch) : undefined;
     const boardLabels = new Map(teams.map(board => {
       const id = section.id + ":" + board.id;
       const rows = familiesByBoard.get(board.id) ?? [];
-      const core = edition === coreStats.seasonId ? cores.get(id) : undefined;
-      const tiers = new Set(rows.map(row => recommendationTier(row.stat)));
-      if (!tiers.size) tiers.add(recommendationTier(core ?? fixed.get(board.id) ??
-        recommendationBoardSample(board, section, "fixed", build) ?? recommendationBoardSample(board, section, "core", build)));
-      const [tier] = tiers;
       const status = decisions.get(id)?.status;
-      const label = section.category === heroAugmentCategory ? "英雄强化" :
-        duringLaunch ? status ? patchRecommendationLabels[status] : "全部攻略" :
-        status === "review" || status === "avoid" ? patchRecommendationLabels[status] : tiers.size > 1 ? "全部攻略" : labels[tier];
+      const core = cores?.get(board.id);
+      const tiers = new Set(rows.length ? rows.map(row => guideDirectoryTier(row.stat, status)) :
+        [guideDirectoryTier(core?.mean === undefined ? undefined : { ...core, mean: core.mean }, status)]);
+      const [tier] = tiers;
+      const label = hero ? "英雄强化" : duringLaunch ? status ? patchRecommendationLabels[status] : "全部攻略"
+        : tiers.size > 1 ? "全部攻略" : guideTierLabels[tier];
       return [board.id, label] as const;
     }));
     return { section, teams, families, familiesByBoard, boardLabels, decisions };
   });
 }
 
-type SearchGuide = ReturnType<typeof searchGuides>[number];
+type SearchGuide = ReturnType<typeof buildSearchGuideIndex>[number];
 type Context = {
   guides: SearchGuide[];
   extra: ReturnType<typeof siteSearchIntent>;
@@ -455,7 +457,9 @@ export async function performSiteSearch(input: string, exclude?: string, publica
     if (hits.length) return { query, intent: "browse", groups: [{ kind: "guides", title: "阵容攻略", hits }] };
   }
 
-  const boardQuery = boardSearchQuery(query, previous);
+  const standaloneFilter = homeGuideFilter(displayGuideName(extra.text), season);
+  const boardQuery = boardSearchQuery(query, previous) ??
+    (extra.intent === "browse" && standaloneFilter?.kind === "trait" ? { terms: [extra.text] } : undefined);
   if (boardQuery && (boardQuery.group || boardQuery.terms?.length || boardQuery.inherited)) {
     const result = boardResults(query, boardQuery, context);
     if (result) return result;
