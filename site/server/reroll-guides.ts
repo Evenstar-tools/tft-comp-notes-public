@@ -1,5 +1,6 @@
 import data from "@/data/s19-reroll-boards.json";
 import { sectionTeams } from "@/domain/document-flow";
+import { boardQuerySignature } from "@/domain/owner-board-query";
 import { guideBoardName } from "@/domain/guide-reading";
 import { boardInstruments } from "@/domain/board-instruments";
 import { applyBoardOverrides, applyPublishedBoardEdits, applyPublishedBoardLayouts } from "@/domain/published-board-layout";
@@ -40,7 +41,7 @@ const guides = new Map((data as Guide[]).map(guide => [guide.sectionId, guide]))
 
 function replaceWording(block: ContentBlock, edits: NonNullable<BoardEdit["wording"]>[]): ContentBlock {
   const children = block.children?.map(child => replaceWording(child, edits));
-  if (block.type !== "text" || !block.text) return children ? { ...block, children } : block;
+  if ((block.type !== "text" && block.type !== "bullet") || !block.text) return children ? { ...block, children } : block;
   let { text, elements } = block;
   for (const { before, after } of edits) {
     if (after.includes(before) && text.includes(after)) continue;
@@ -97,7 +98,11 @@ function editBoard(team: Team, edit: BoardEdit, data: Season) {
   const positions = [...pieces.map(piece => piece.position), ...Object.values(instrumentPositions ?? {})];
   if (new Set(positions).size !== positions.length || positions.some(position => position < 0 || position > 27)) return team;
   if (pieces === team.pieces && !edit.instrumentMoves && !edit.name && !edit.notes) return team;
-  return { ...team, pieces, instrumentPositions, webTitle: edit.name ?? team.webTitle };
+  return {
+    ...team, pieces, instrumentPositions, webTitle: edit.name ?? team.webTitle,
+    ...(edit.replacements && boardQuerySignature(pieces) !== boardQuerySignature(team.pieces) &&
+      { publishedRosterChanged: true as const }),
+  };
 }
 
 // Keep these site-authored boards out of the synchronized document and stored snapshots.

@@ -2,8 +2,9 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import { boardNeighbors } from "../domain/board-layout.ts";
+import { traitCounts } from "../domain/team.ts";
 import { sectionTeams } from "../domain/document-flow.ts";
-import { guideBody, guidePlaystyle, guideRollLevel, guideRoster, guideUnitMatch, isBoardLoadout, readingNotes, sourceSummary } from "../domain/guide-reading.ts";
+import { guideBody, guideFacets, guidePlaystyle, guideRollLevel, guideRoster, guideUnitMatch, isBoardLoadout, readingNotes, sourceSummary } from "../domain/guide-reading.ts";
 import { heroAugmentForGuide } from "../domain/hero-augments.ts";
 import { allGuideIds, auditGuideBoard, auditGuideCopy, auditGuidePublication, featuredGuideIds, prepareAuditPublication } from "../scripts/audit-guide-boards.mjs";
 import guidePositionReferences from "../scripts/guide-position-references.json" with { type: "json" };
@@ -174,7 +175,7 @@ test("the 14 featured guides pass on the combined public boards and retain roles
   const publication = prepareAuditPublication(preview);
   const report = auditGuidePublication(publication, recommendations);
   assert.deepEqual(report.guides.map(guide => guide.sectionId), featuredGuideIds);
-  assert.deepEqual(report.summary, { guides: 14, boards: 57, errors: 0, warnings: 0, waived: 9 });
+  assert.deepEqual(report.summary, { guides: 14, boards: 60, errors: 0, warnings: 0, waived: 11 });
   const catalog = buildFamilyCatalog(preview);
   const selected = new Map();
   const roleOrder = ["主C", "主坦", "副C"];
@@ -225,12 +226,19 @@ test("the 14 featured guides pass on the combined public boards and retain roles
   const prodigy = publication.sections.find(section => section.id.endsWith("0229"));
   assert.equal(prodigy.title, "天才蚂蚱大龙");
   const textOf = blocks => blocks.map(block => block.text).join("\n");
-  const slow = textOf(guideBody(prodigy, board("0229", "0017")).current);
+  const slowBoard = board("0229", "0017");
+  const slow = textOf(guideBody(prodigy, slowBoard).current);
   assert.match(slow, /卡利息追两人三星/);
+  assert.doesNotMatch(slow, /换斯维因开五天才/);
+  assert.deepEqual(slowBoard.pieces.filter(piece => piece.stars === 3).map(piece => piece.unitId).sort(), ["ekko", "malzahar"]);
+  assert.deepEqual(slowBoard.pieces.find(piece => piece.unitId === "amumu").items, ["emblem-prodigy"]);
+  const { units, traits, items } = prodigy.gameData;
+  assert.equal(traitCounts(slowBoard.pieces, units, traits, items).find(trait => trait.id === "prodigy").level, 5);
+  assert.deepEqual(prodigy.reroll.stages.filter(stage => stage.directoryTitle).map(stage => stage.teamId.slice(-4)), ["0017", "d6c2"]);
   assert.doesNotMatch(slow, /打法：95/);
   const fastRoutes = [
-    ["c105", "1342", [/开局有玛尔扎哈/, /2-1 拉 4/, /7 级小启动/, /团队法强/, /冕卫/, /8,000/, /累计近 2 万/, /再打近 4 万/, /6 万/, /蓝霸符/]],
-    ["d6c2", "1343", [/五种不同稀有度/, /60,000 伤害/, /五阶段.*八级.*质量/, /蓝霸符.*第一轮技能.*偷属性/, /技能暴击/, /无尽.*破防/]],
+    ["c105", "1342", [/开局有玛尔扎哈/, /2-1 拉 4/, /7 级小启动/, /团队法强/, /冕卫/, /8,000/, /累计近 2 万/, /再打近 4 万/, /6 万/, /青龙刀/]],
+    ["d6c2", "1343", [/五种不同稀有度/, /60,000 伤害/, /五阶段.*八级.*质量/, /青龙刀启动并偷属性/, /无尽补爆发/, /饮血补续航/]],
     ["fd13", "1341", [/补回妮蔻开五天才/, /回蓝和团队治疗/, /第二轮爆发/]],
   ];
   for (const [id, sampleId, mechanisms] of fastRoutes) {
@@ -245,7 +253,9 @@ test("the 14 featured guides pass on the combined public boards and retain roles
     assert.ok(sample?.elements.some(element => element.text_run?.text_element_style?.link?.url.startsWith("https://www.metatft.com/explorer?")), id);
     if (id !== "c105") {
       assert.deepEqual(team.pieces.find(piece => piece.unitId === "baron-nashor").items,
-        ["TFT_Item_BlueBuff", "TFT_Item_PowerGauntlet", "TFT_Item_InfinityEdge"], id);
+        ["TFT_Item_SpearOfShojin", "TFT_Item_InfinityEdge", "TFT_Item_Bloodthirster"], id);
+      assert.deepEqual(guideFacets(prodigy, team, prodigy.gameData).costs, [7], id);
+      assert.deepEqual(readingNotes(prodigy, team, prodigy.gameData).roles.find(role => role.label === "主C").units, ["baron-nashor"], id);
     }
   }
   const zeri = publication.sections.find(section => section.id.endsWith("0235"));

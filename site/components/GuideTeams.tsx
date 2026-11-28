@@ -24,7 +24,7 @@ import placementBatch from "@/data/guide-placement.json";
 import { compactGuideParagraph, compactUtilityCopy, hasGuideLinks, rememberGuideCopy } from "@/domain/guide-copy";
 import { guideFlexPreview, reviewedGuidePhases } from "@/domain/guide-execution";
 import { guideEquipmentConditions, guideReferenceConditions, sharedGuideEditorConditions } from "@/domain/guide-equipment-conditions";
-import { rerollRoute } from "@/domain/reroll-stages";
+import { isArchivedRerollBoard, rerollRoute } from "@/domain/reroll-stages";
 import { boardTraitLink } from "@/domain/trait-performance";
 import { editorLink, itemLink, posterShareLink, readPosterShare, type PosterShare } from "@/domain/links";
 import { posterStageTitle } from "@/domain/poster";
@@ -193,7 +193,8 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
   if (!team) return null;
   const launchStats = guideStatsLaunch(data.id);
   const currentSystem = systems?.find(system => system.sectionId === section.id && system.boardIds.includes(team.id));
-  const systemBoards = currentSystem ? teams.filter(board => currentSystem.boardIds.includes(board.id)) : teams;
+  const archived = isArchivedRerollBoard(section, team.id);
+  const systemBoards = archived ? [team] : currentSystem ? teams.filter(board => currentSystem.boardIds.includes(board.id)) : teams;
   const systemEntry = currentSystem && systemBoards.find(board => board.id === currentSystem.teamId);
   const displayedSystemBoards = currentSystem ? guideSystemDisplayBoards(section, systemBoards, team) : systemBoards;
   const formationId = rerollRoute(section, team)?.final.id ?? team.id;
@@ -251,7 +252,7 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
   const editBoardName = ownerEditor.editing && <OwnerInlineEdit label="编辑棋盘名称" onClick={() => ownerEditor.open("board")} />;
   const linkedChoices = route?.choices ?? mainRoute?.choices ?? [];
   const compactChoices = !detailView && linkedChoices.some(choice => choice.team?.boardRole === "variant");
-  const alternatives = teams.filter(option => !stageTeams.includes(option));
+  const alternatives = teams.filter(option => !stageTeams.includes(option) && !isArchivedRerollBoard(section, option.id));
   const oceanBoards = teams.some(board => board.id === oceanGravesUnlockBoardId)
     ? teams.filter(board => board.id !== oceanGravesUnlockBoardId) : undefined;
   const posterVariants = oceanBoards ? oceanBoards.map(board => ({

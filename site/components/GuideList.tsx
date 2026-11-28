@@ -13,7 +13,7 @@ import { carryMinGames, guideCarryRows } from "@/domain/guide-carry-stats";
 import { sectionTeams } from "@/domain/document-flow";
 import { boardTitle, groupGuides, type GuideFamily } from "@/domain/guide-families";
 import { guideBoardName, guideFacets, guideLink, guidePlaystyle, guideRollLevel, guideRoster, guideRoute, guideStrategyLabel, guideTitleWithoutPlaystyle, matchingGear, parseGuideFilters, primaryFirst, readingNotes, repeatsFormationLabel, type GuideFilters, type GuideSearchScope, type GuideSort } from "@/domain/guide-reading";
-import { rerollEntryTeamId } from "@/domain/reroll-stages";
+import { authoredDirectoryRoutes, isArchivedRerollBoard, rerollEntryTeamId } from "@/domain/reroll-stages";
 import { activeHomeRecommendationOverrides, patchRecommendationLabels, type PatchRecommendation, type PatchRecommendationBatch } from "@/domain/patch-recommendations";
 import { homeGuideFilter, matchesGuideStyle, guideWearerQuery, searchPhaseNote, splitGuideConditions, guideSearchKey, guideStyleKey } from "@/domain/guide-search";
 import { equippedGuideRoutes, familyNameMatches, homeSearchIntent, matchHomeGuide, searchUnitIds } from "@/domain/home-guide-search";
@@ -86,7 +86,7 @@ const shortOpenings: Record<string, readonly [source: string, short: string]> = 
   "四国风霞": ["霞来得早、场面能赢就走四国风。八级用四心之钢打工，先让霞上场做任务。", "霞来得早、场面能赢，八级用四心之钢打工。"],
   "高能流行芬妮&炸弹": ["六级上四高能、芬妮、斯维因，二费来得多再一起追三。", "六级追芬妮、璐璐和小炮。四个三星开巨星。"],
   "五天才玛尔扎哈": ["玛尔扎哈、艾克来得多就停七一起追三。五天才七级成型。", "玛尔扎哈、艾克来得多，七级一起追三。"],
-  "四主宰海之歌艾克辛德拉": ["辛德拉、艾克来得早走七级慢搜；双三成型立刻升八／九，别死停七级。", "辛德拉、艾克来得早走七级慢搜；双三立刻升八／九，别死停七级。"],
+  "四主宰艾克辛德拉": ["辛德拉、艾克来得早走七级慢搜；双三成型立刻升八／九，别死停七级。", "辛德拉、艾克来得早走七级慢搜；双三立刻升八／九，别死停七级。"],
   "爵士金克丝": ["八级自带 9 个非唯一羁绊，拉九零换牌自动领史密奇；物理装主养金克丝，战士装留史密奇。", "八级双两星稳血，原盘上九解锁史密奇。"],
   "四大触打击乐德莱文": ["德莱文、布隆来得早，有青龙刀或无尽就走。前期两星韦鲁斯带输出装，两星俄洛伊带肉装。德莱文、布隆各自两星再接装，预留一张韦鲁斯和俄洛伊补羁绊。七级优先追德莱文和布隆，卡莎顺手留。", "德莱文、布隆来得早，有青龙刀或无尽就七级一起追三。"],
   "五杀天使": ["炸弹人带羊刀，纳尔带肉。七级上纳尔、奥拉夫、死歌、炸弹人开天使，八级天使、约里克两星接装。不同名五杀合计 9 星开铁男，没开先用乌鸦，开了换铁男，九级补回乌鸦。", "七级开天使，八级找天使和约里克两星。"],
@@ -305,9 +305,10 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
       .flatMap(family => family.sections.map(section => [section.id, family] as const)));
     const prepare = (all: Section[]) => all.map(section => {
       const data = section.gameData ?? season;
-      const teams = primaryFirst(sectionTeams(section), section.primaryTeamId);
+      const teams = primaryFirst(sectionTeams(section).filter(board => !isArchivedRerollBoard(section, board.id)), section.primaryTeamId);
       const facet = guideFacets(section, teams[0], data);
       const family = familyBySection.get(section.id);
+      const directoryRoutes = authoredDirectoryRoutes(section);
       const rows = guideFamilyRows(familyStats, data.id, section.id, teams);
       const familyBoards = guideFamilyBoardIds(familyStats, data.id, section.id, teams[0]?.id);
       const costsByBoard = new Map(teams.filter(team => guideBoardKind(section, team, teams[0]) !== "过渡")
@@ -319,7 +320,7 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
       const stylesByBoard = new Map(teams.map(board => [board.id, guidePlaystyle(section, board) ?? filterStyle]));
       const searchTopic = section.category === "纹章阵容" ? "纹章 转职" : "";
       const curated = patch?.build ? guideEquipmentConditions(section, teams, data, patch.build) : undefined;
-      return { section, data, teams, facet, family, rows, familyBoards, costsByBoard, rowCosts, costOptions, playstyle, filterStyle, stylesByBoard, searchTopic, curated, augment: heroAugmentForGuide(section) };
+      return { section, data, teams, facet, family, directoryRoutes, rows, familyBoards, costsByBoard, rowCosts, costOptions, playstyle, filterStyle, stylesByBoard, searchTopic, curated, augment: heroAugmentForGuide(section) };
     });
     return { regular: prepare(sections), "hero-augments": prepare(heroSections) };
   }, [sections, heroSections, season, patch?.build]);
@@ -494,6 +495,7 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
   });
   const carryQuery = intent.scope === "carry" && needle ? searchUnitIds(intent.text, season) : undefined;
   const matchingRows = (entry: Candidate) => entry.rows.flatMap(({ stat, boards }) => {
+    if (entry.directoryRoutes.length && !entry.directoryRoutes.some(route => route.teamId === stat.teamId)) return [];
     if ((cost && !entry.rowCosts(stat).includes(cost)) || (carryQuery && !stat.carryIds.some(id => carryQuery.has(id)))) return [];
     const hits = boards.flatMap(board => {
       const hit = entry.matches.find(match => match.board.id === board.id && (!match.namedFamily || familyNameMatches(stat, intent.text)));
@@ -604,6 +606,21 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
     for (const route of [entry, ...entry.siblings]) {
       const focus = route.team;
       const matches = hasCurrentStats ? matchingRows(route) : [];
+      if (route.directoryRoutes.length) {
+        for (const { teamId, directoryTitle } of route.directoryRoutes) {
+          const hit = route.matches.find(result => result.board.id === teamId);
+          if (!hit) continue;
+          const core = archiveCorePlacements.get(teamId);
+          const rating = matches.find(match => match.team.id === teamId)?.stat ??
+            (core?.mean !== undefined ? { ...core, mean: core.mean } : undefined);
+          cards.push({
+            ...entry, ...route, team: hit.board, core, rating, routeName: directoryTitle,
+            cardId: route.section.id + "-" + teamId, rank: hit.rank, context: hit.context,
+            unitLabel: hit.unitLabel, tier: boardTier(route.section, hit.board, rating),
+          });
+        }
+        continue;
+      }
       const includesBoard = (boards: Team[], team?: Team) => boards.some(board => board.id === team?.id);
       for (const match of matches) {
         const isFocus = includesBoard(match.boards, focus);
@@ -900,7 +917,7 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
 
   const renderCards = (group: Card[], groupName: string, eager: boolean) => {
     const CardTitle = groupName ? "h3" : "h2";
-    return <div className="guide-list reader-list">{group.map(({ section, data, team, teams, matches, augment, siblings, family, rating: matchedRating, core, routeName, clusterId, rows, routes, cardId, tier, context: searchContext, unitLabel, facet, curated }, index) => {
+    return <div className="guide-list reader-list">{group.map(({ section, data, team, teams, matches, augment, siblings, family, rating: matchedRating, core, routeName, clusterId, rows, routes, cardId, tier, context: searchContext, unitLabel, facet, curated, directoryRoutes }, index) => {
       const playstyle = guidePlaystyle(section, team);
       const primary = teams[0];
       const kind = team && guideBoardKind(section, team, primary);
@@ -967,7 +984,8 @@ export function GuideList({ index, season = currentSeason, initial = {}, initial
         : alternative && team?.id !== family?.lead.team.id && kind && !title.includes(kind)
           ? [kind, strategyDetail].filter(Boolean).join(" · ") : repeatedFormation ? "" : strategyDetail ?? (styleTag ? "" : facet.style);
       const variants = [...new Map([{ section, teams, matches, rows }, ...siblings].flatMap(entry => {
-        const options = needle ? entry.matches.filter(match => match.kind === "board").map(match => match.board) : entry.teams;
+        const options = directoryRoutes.length && entry.section.id === section.id ? []
+          : needle ? entry.matches.filter(match => match.kind === "board").map(match => match.board) : entry.teams;
         return options.filter(option => {
           if (option.id === team?.id || routes?.some(board => board.id === option.id) || (!needle && guideBoardKind(entry.section, option, entry.teams[0]) === "过渡")) return false;
           const owners = hasCurrentStats && !isHeroList ? entry.rows.filter(row => row.boards.some(board => board.id === option.id)) : [];
