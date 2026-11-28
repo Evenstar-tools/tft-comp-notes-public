@@ -56,10 +56,11 @@
 .home-patch-card-link:is(:hover, :focus-visible) h3 { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
 .home-patch-title > span { padding: 1px 5px; border-radius: 4px; background: var(--raised); color: var(--accent); font-size: .75rem; white-space: nowrap; }
 .home-patch-card-link .home-patch-mean {
-  display: inline-flex; align-items: baseline; flex-wrap: nowrap; max-width: none; line-height: 1.2;
+  display: grid; justify-items: end; gap: 3px; max-width: none; line-height: 1.2;
 }
-.home-patch-mean-label { color: var(--muted); font-size: .75rem; }
-.home-patch-mean b { font-size: 1.25rem; }
+.home-patch-mean-label, .home-patch-win-rate { color: var(--muted); font-size: .75rem; }
+.home-patch-mean-row b { font-size: 1.25rem; }
+.home-patch-win-rate b { color: var(--text); font-weight: 650; }
 .home-patch-manual-badge {
   justify-self: end; max-inline-size: min(8em, 24vw); padding: 2px 6px; border-radius: 4px;
   background: var(--raised); color: var(--accent); font-size: .75rem; font-weight: 650; overflow-wrap: anywhere;
@@ -144,7 +145,7 @@
   .home-patch-card-copy p { text-wrap: pretty; }
   .home-patch-avatars { gap: 5px; }
   .home-patch-avatars img { width: 44px; height: 44px; }
-  .home-patch-mean b { font-size: 1.35rem; }
+  .home-patch-mean-row b { font-size: 1.35rem; }
   .home-patch-advice { font-size: .9375rem; line-height: 1.5; gap: 4px 8px; margin-top: 6px; }
   .home-guide-library .home-archive-tools .home-group-jumps { gap: 3px; }
   .home-guide-library .home-group-jumps a { border-color: transparent; background: transparent; }

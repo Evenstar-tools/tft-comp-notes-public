@@ -78,14 +78,15 @@ export function PatchRecommendationList({ stats, cards, home, previousBuild, qui
             } else {
               const tone = rating.mean < 4.5 ? "strong" : rating.mean > 4.5 ? "weak" : "middle";
               const mean = formatRecommendationMean(rating.mean);
-              const rates = [["前四", rating.topFourRate], ["登顶", rating.winRate]] as const;
-              const sample = ["平均排名 " + mean, ...rates.flatMap(([label, rate]) =>
-                rate != null && Number.isFinite(rate) && rate >= 0 && rate <= 1 ? [label + " " + (rate * 100).toFixed(1) + "%"] : []),
+              const [topFour, winRate] = [rating.topFourRate, rating.winRate].map(rate =>
+                rate != null && Number.isFinite(rate) && rate >= 0 && rate <= 1 ? (rate * 100).toFixed(1) + "%" : undefined);
+              const sample = ["平均排名 " + mean, topFour && "前四 " + topFour, winRate && "夺冠率 " + winRate,
                 rating.games.toLocaleString("zh-CN") + " 场",
                 stats && `${stats.queue} ${stats.patch} · 近 ${stats.days} 天体系样本`, rating.sampleScope,
               ].filter(Boolean).join(" · ");
               placement = <span id={ratingId} className={"home-patch-mean guide-placement " + tone} role="group" title={sample} aria-label={sample}>
-                <span className="home-patch-mean-label">均名</span> <b>{mean}</b>
+                <span className="home-patch-mean-row"><span className="home-patch-mean-label">均名</span> <b>{mean}</b></span>
+                {winRate && <span className="home-patch-win-rate">夺冠率 <b>{winRate}</b></span>}
               </span>;
             }
             const shownStrategy = repeatsFormationLabel(label, strategy) ? undefined : strategy;
