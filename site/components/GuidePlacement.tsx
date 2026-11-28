@@ -2,9 +2,9 @@ import batch from "@/data/guide-placement.json";
 import coreStats from "@/data/patch-recommendation-stats.json";
 import currentPatch from "@/data/current-patch.json";
 import { season } from "@/data";
-import { canRankRecommendations } from "@/domain/guide-family-stats";
+import { canRankRecommendations, type GuideFamilyBatch } from "@/domain/guide-family-stats";
 import { findPlacement, placementEvidenceKind, type PlacementBatch, type PlacementRating } from "@/domain/guide-placement";
-import { guideHeaderCoreSample, systemMeanTone } from "@/domain/guide-variant-strip";
+import { guideHeaderCoreSample, guideSystems, systemMeanTone } from "@/domain/guide-variant-strip";
 import { primaryFirst } from "@/domain/guide-reading";
 import { AD_GRAVES_BOARD_IDS } from "@/domain/guide-identities";
 import { oceanGravesGuideId, oceanGravesUnlockBoardId } from "@/domain/guide-reading";
@@ -92,6 +92,22 @@ export function guideCorePlacement(section: Section, boards: Team[], entryId: st
       tone: systemMeanTone(row.mean),
     };
   }
+}
+
+export function guideDirectoryCorePlacements(section: Section, teams: Team[], data: GuideFamilyBatch, reviewedRollingPatch?: string) {
+  const systems = guideSystems(section, data, (section.gameData ?? season).id, currentPatch, placementBatch.minGames, reviewedRollingPatch);
+  const ratings = new Map<string, GuideCorePlacement>();
+  const teamsById = new Map(teams.map(team => [team.id, team]));
+  for (const { stat, boardIds, teamId } of systems) {
+    if (stat) continue;
+    const boards = boardIds.flatMap(id => {
+      const board = teamsById.get(id);
+      return board ? [board] : [];
+    });
+    const core = guideCorePlacement(section, boards, teamId);
+    if (core) for (const id of boardIds) ratings.set(id, core);
+  }
+  return ratings;
 }
 
 export function recommendationBoardSample(team: Team, section: Section, scope: "fixed" | "core", build?: string) {
