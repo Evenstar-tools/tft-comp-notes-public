@@ -6835,6 +6835,258 @@
       "mean": 4.29,
       "topFourRate": 0.5595238095238095,
       "winRate": 0.023809523809523808
+    },
+    {
+      "population": 8,
+      "roster": [
+        "ahri",
+        "galio",
+        "garen",
+        "k-sante",
+        "leona",
+        "lucian",
+        "mel",
+        "swain"
+      ],
+      "games": 479,
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=comps&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_19_Ahri-1&unit=DA_Garen19-1&unit=DA_Leona19-1&unit=DA_Mel19-1&unit=DA_Swain19-1&unit=DA_Galio19-1&unit=DA_KSante19-1&unit=DA_Lucian19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "mean": 5.43,
+      "topFourRate": 0.29436325678496866,
+      "winRate": 0.020876826722338204,
+      "sampleScope": "八级结算 · 固定名单 · 不限星级与装备 · 无纹章、人口装或重复棋子",
+      "conditions": {
+        "kind": "full",
+        "teamId": "b8f3e967-922d-4a3a-83c4-c62d111b208f",
+        "population": 8
+      },
+      "observedOn": "2026-11-28",
+      "placementCounts": [
+        10,
+        13,
+        35,
+        83,
+        97,
+        98,
+        88,
+        55
+      ]
+    },
+    {
+      "population": 9,
+      "roster": [
+        "ahri",
+        "galio",
+        "garen",
+        "k-sante",
+        "leona",
+        "lucian",
+        "mel",
+        "smeech",
+        "swain"
+      ],
+      "games": 88,
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=comps&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_19_Ahri-1&unit=DA_Garen19-1&unit=DA_Leona19-1&unit=DA_Mel19-1&unit=DA_Swain19-1&unit=DA_Galio19-1&unit=DA_KSante19-1&unit=DA_Lucian19-1&unit=DA_Smeech19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "mean": 3.65,
+      "topFourRate": 0.7386363636363636,
+      "winRate": 0.07954545454545454,
+      "sampleScope": "九级结算 · 固定名单 · 不限星级与装备 · 无纹章、人口装或重复棋子",
+      "conditions": {
+        "kind": "full",
+        "teamId": "1c6360bc-59b9-4134-98d3-3795b30cf53a",
+        "population": 9
+      },
+      "observedOn": "2026-11-28",
+      "placementCounts": [
+        7,
+        15,
+        20,
+        23,
+        10,
+        9,
+        4,
+        0
+      ]
+    },
+    {
+      "population": 9,
+      "roster": [
+        "ahri",
+        "galio",
+        "garen",
+        "k-sante",
+        "leona",
+        "lucian",
+        "mel",
+        "neeko",
+        "swain"
+      ],
+      "games": 6,
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=comps&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_19_Ahri-1&unit=DA_Garen19-1&unit=DA_Leona19-1&unit=DA_Mel19-1&unit=DA_Swain19-1&unit=DA_Galio19-1&unit=DA_KSante19-1&unit=DA_Lucian19-1&unit=DA_Neeko19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "mean": 4.83,
+      "topFourRate": 0.5,
+      "winRate": 0,
+      "sampleScope": "九级结算 · 妮蔻解锁盘 · 固定名单 · 不限星级与装备 · 无纹章、人口装或重复棋子",
+      "conditions": {
+        "kind": "full",
+        "teamId": "9e3202c6-84e7-4fbc-b092-24f2818bbc3b",
+        "population": 9
+      },
+      "observedOn": "2026-11-28",
+      "placementCounts": [
+        0,
+        0,
+        0,
+        3,
+        1,
+        2,
+        0,
+        0
+      ]
+    },
+    {
+      "population": 9,
+      "roster": [
+        "ahri",
+        "alune",
+        "dr-mundo",
+        "garen",
+        "leona",
+        "malzahar",
+        "nasus",
+        "nidalee",
+        "renata-glasc"
+      ],
+      "games": 10,
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=comps&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_19_Ahri-1&unit=DA_Garen19-1&unit=DA_Leona19-1&unit=DA_DrMundo19-1&unit=DA_Nasus19-1&unit=DA_Malzahar19-1&unit=DA_RenataGlasc19-1&unit=DA_Nidalee19-1&unit=DA_Alune19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "mean": 3.2,
+      "topFourRate": 0.9,
+      "winRate": 0.2,
+      "sampleScope": "九级结算 · 四编舞三经纪 · 固定名单 · 不限星级与装备 · 无纹章、人口装或重复棋子",
+      "conditions": {
+        "kind": "full",
+        "teamId": "00000000-0000-4000-8000-000000001146",
+        "population": 9
+      },
+      "observedOn": "2026-11-28",
+      "placementCounts": [
+        2,
+        1,
+        2,
+        4,
+        0,
+        1,
+        0,
+        0
+      ]
+    },
+    {
+      "population": 8,
+      "roster": [
+        "ahri",
+        "galio",
+        "garen",
+        "k-sante",
+        "leona",
+        "lucian",
+        "mel",
+        "swain"
+      ],
+      "games": 12529,
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=units&unit=DA_19_Ahri-1&unit=DA_Garen19-1&unit=DA_Leona19-1&unit=DA_Mel19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "mean": 3.77,
+      "topFourRate": 0.6285417830632931,
+      "winRate": 0.2008939260914678,
+      "sampleScope": "阿狸、盖伦、蕾欧娜、梅尔同场 · 结算等级、星级与装备不限",
+      "conditions": {
+        "kind": "core",
+        "teamId": "b8f3e967-922d-4a3a-83c4-c62d111b208f",
+        "coreRoster": [
+          "ahri",
+          "garen",
+          "leona",
+          "mel"
+        ]
+      },
+      "observedOn": "2026-11-28",
+      "placementCounts": [
+        2517,
+        1883,
+        1847,
+        1628,
+        1505,
+        1366,
+        1073,
+        710
+      ]
+    },
+    {
+      "population": 9,
+      "roster": [
+        "ahri",
+        "dr-mundo",
+        "garen",
+        "k-sante",
+        "leona",
+        "mel",
+        "renata-glasc",
+        "smeech",
+        "vladimir"
+      ],
+      "games": 1,
+      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&queue=PBE&patch=19.1&b_patch=c&days=3&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_DrMundo19-1&unit=DA_Leona19-1&unit=DA_KSante19-1&unit=DA_Garen19-1&unit=DA_Vladimir19-1&unit=DA_Smeech19-1&unit=DA_RenataGlasc19-1&unit=DA_Mel19-1&unit=DA_19_Ahri-1",
+      "mean": 2,
+      "topFourRate": 1,
+      "winRate": 0,
+      "sampleScope": "九级结算 · 固定名单 · 不限星级与装备 · 无纹章、人口装或重复棋子",
+      "conditions": {
+        "kind": "full",
+        "teamId": "2ebc0e10-00bd-415f-9ba9-5f7f888ccf61",
+        "population": 9
+      },
+      "observedOn": "2026-11-28",
+      "placementCounts": [
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "population": 9,
+      "roster": [
+        "ahri",
+        "aphelios",
+        "dr-mundo",
+        "galio",
+        "garen",
+        "k-sante",
+        "leona",
+        "smeech",
+        "yone"
+      ],
+      "games": 0,
+      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&queue=PBE&patch=19.1&b_patch=c&days=3&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Galio19-1&unit=DA_DrMundo19-1&unit=DA_KSante19-1&unit=DA_Yone19-1&unit=DA_Leona19-1&unit=DA_Garen19-1&unit=DA_Smeech19-1&unit=DA_Aphelios19-1&unit=DA_19_Ahri-1",
+      "sampleScope": "九级结算 · 固定名单 · 不限星级与装备 · 无纹章、人口装或重复棋子",
+      "conditions": {
+        "kind": "full",
+        "teamId": "1808c76f-5fa3-4ccd-b1e3-8fdf6f5f03fe",
+        "population": 9
+      },
+      "observedOn": "2026-11-28",
+      "placementCounts": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
     }
   ],
   "edition": "s19-pbe-19.1",

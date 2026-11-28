@@ -23735,17 +23735,17 @@
     },
     {
       "id": "sample-block-0854",
-      "title": "四编舞三经纪阿狸",
+      "title": "编舞师阿狸",
       "category": "阵容储备",
       "blocks": [
         {
           "id": "sample-block-1019",
           "type": "text",
-          "text": "阿狸来得早、能做两套法装，走四编舞三经纪。",
+          "text": "眼泪和大棒顺，八级搜阿狸与两星前排。梅尔先到走双法，已开拉露恩、有第二套法装再走三经纪。",
           "elements": [
             {
               "text_run": {
-                "content": "阿狸来得早、能做两套法装，走四编舞三经纪。"
+                "content": "眼泪和大棒顺，八级搜阿狸与两星前排。梅尔先到走双法，已开拉露恩、有第二套法装再走三经纪。"
               }
             }
           ]
@@ -23774,11 +23774,11 @@
           "id": "sample-block-0854-rhythm",
           "type": "heading",
           "level": 3,
-          "text": "通用运营",
+          "text": "九级 · 四编舞三经纪阿狸",
           "elements": [
             {
               "text_run": {
-                "content": "通用运营"
+                "content": "九级 · 四编舞三经纪阿狸"
               }
             }
           ]
@@ -23810,11 +23810,11 @@
         {
           "id": "sample-block-0854-step-3",
           "type": "bullet",
-          "text": "稳住、有第二套法装再上九补奈德丽。没开拉露恩时，梅尔或弗拉基米尔先到就转四编舞双法师。五编舞等自然齐牌或有转职再补。",
+          "text": "两星阿狸和前排稳住再上九补奈德丽。拉露恩没开、梅尔先两星，可以走双编舞双法。",
           "elements": [
             {
               "text_run": {
-                "content": "稳住、有第二套法装再上九补奈德丽。没开拉露恩时，梅尔或弗拉基米尔先到就转四编舞双法师。五编舞等自然齐牌或有转职再补。"
+                "content": "两星阿狸和前排稳住再上九补奈德丽。拉露恩没开、梅尔先两星，可以走双编舞双法。"
               }
             }
           ]
@@ -23844,6 +23844,167 @@
           ]
         },
         {
+          "id": "choreo-ahri-flex-eight",
+          "type": "heading",
+          "level": 3,
+          "text": "八级 · 双编舞双法阿狸",
+          "elements": [
+            {
+              "text_run": {
+                "content": "八级 · 双编舞双法阿狸"
+              }
+            }
+          ]
+        },
+        {
+          "id": "choreo-ahri-flex-entry",
+          "type": "bullet",
+          "text": "妮蔻先拿青龙刀和法爆，莉莉娅拿肉装打工。梅尔没到用两星法师接余件，前排质量没搜出来就留八。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "妮蔻先拿青龙刀和法爆，莉莉娅拿肉装打工。梅尔没到用两星法师接余件，前排质量没搜出来就留八。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "choreo-ahri-flex-upgrade",
+          "type": "bullet",
+          "text": "九级补妮蔻开 2 安可解锁史密奇。阿狸和蕾欧娜已凑够 3 星 K/DA 时，也可以临时补韦鲁斯。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "九级补妮蔻开 2 安可解锁史密奇。阿狸和蕾欧娜已凑够 3 星 K/DA 时，也可以临时补韦鲁斯。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "choreo-ahri-flex-nine",
+          "type": "heading",
+          "level": 3,
+          "text": "九级 · 三爵士史密奇",
+          "elements": [
+            {
+              "text_run": {
+                "content": "九级 · 三爵士史密奇"
+              }
+            }
+          ]
+        },
+        {
+          "id": "choreo-ahri-flex-shop",
+          "type": "bullet",
+          "text": "锁解除后刷商店找史密奇。梅尔给了鬼书和虚空之杖，余装给前排，多余日炎或离子留给转阵。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "锁解除后刷商店找史密奇。梅尔给了鬼书和虚空之杖，余装给前排，多余日炎或离子留给转阵。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "choreo-ahri-flex-swap",
+          "type": "bullet",
+          "text": "佛耶戈两星且有战士装时可以替换卢锡安，改开三编舞、双舞者。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "佛耶戈两星且有战士装时可以替换卢锡安，改开三编舞、双舞者。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "choreo-ahri-flex-unlock",
+          "type": "heading",
+          "level": 3,
+          "text": "九级 · 妮蔻解锁史密奇",
+          "elements": [
+            {
+              "text_run": {
+                "content": "九级 · 妮蔻解锁史密奇"
+              }
+            }
+          ]
+        },
+        {
+          "id": "choreo-ahri-flex-unlock-time",
+          "type": "bullet",
+          "text": "到九级才上妮蔻补第九个羁绊，盖伦的专属羁绊不计。下个商店即可刷到史密奇。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "到九级才上妮蔻补第九个羁绊，盖伦的专属羁绊不计。下个商店即可刷到史密奇。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "choreo-ahri-flex-source",
+          "type": "text",
+          "text": "棋盘参考：犬狐狸",
+          "elements": [
+            {
+              "text_run": {
+                "content": "棋盘参考：犬狐狸"
+              }
+            }
+          ]
+        },
+        {
+          "id": "choreo-ahri-arc",
+          "type": "heading",
+          "level": 3,
+          "text": "九级 · 三编舞双法",
+          "elements": [
+            {
+              "text_run": {
+                "content": "九级 · 三编舞双法"
+              }
+            }
+          ]
+        },
+        {
+          "id": "choreo-ahri-arc-unlock",
+          "type": "bullet",
+          "text": "八级把前两排收成一名棋子解锁弗拉基米尔，买到再恢复站位。九级先用妮蔻解锁史密奇，再换这张盘。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "八级把前两排收成一名棋子解锁弗拉基米尔，买到再恢复站位。九级先用妮蔻解锁史密奇，再换这张盘。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "choreo-ahri-steel",
+          "type": "heading",
+          "level": 3,
+          "text": "九级 · 三心之钢",
+          "elements": [
+            {
+              "text_run": {
+                "content": "九级 · 三心之钢"
+              }
+            }
+          ]
+        },
+        {
+          "id": "choreo-ahri-steel-unlock",
+          "type": "bullet",
+          "text": "厄斐琉斯还没开就先留梅尔。上场两星永恩即可解锁厄斐琉斯，肉装等两星蒙多再换。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "厄斐琉斯还没开就先留梅尔。上场两星永恩即可解锁厄斐琉斯，肉装等两星蒙多再换。"
+              }
+            }
+          ]
+        },
+        {
           "id": "sample-block-0854-loadouts",
           "type": "heading",
           "level": 3,
@@ -23867,10 +24028,509 @@
               }
             }
           ]
+        },
+        {
+          "id": "choreo-ahri-flex-loadout-0",
+          "type": "text",
+          "text": "棋盘配装 · 八级 · 双编舞双法阿狸\n主C：阿狸。朔极之矛、纳什之牙、珠光护手。\n主坦：蕾欧娜。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副坦：盖伦。斯特拉克的挑战护手。\n副C：梅尔。蓝霸符、莫雷洛秘典、虚空之杖。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "棋盘配装 · 八级 · 双编舞双法阿狸\n主C：阿狸。朔极之矛、纳什之牙、珠光护手。\n主坦：蕾欧娜。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副坦：盖伦。斯特拉克的挑战护手。\n副C：梅尔。蓝霸符、莫雷洛秘典、虚空之杖。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "choreo-ahri-flex-loadout-1",
+          "type": "text",
+          "text": "棋盘配装 · 九级 · 三爵士史密奇\n主C：阿狸。朔极之矛、纳什之牙、珠光护手。\n主坦：蕾欧娜。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副坦：盖伦。斯特拉克的挑战护手。\n副C：梅尔。蓝霸符、莫雷洛秘典、虚空之杖。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "棋盘配装 · 九级 · 三爵士史密奇\n主C：阿狸。朔极之矛、纳什之牙、珠光护手。\n主坦：蕾欧娜。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副坦：盖伦。斯特拉克的挑战护手。\n副C：梅尔。蓝霸符、莫雷洛秘典、虚空之杖。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "choreo-ahri-flex-loadout-2",
+          "type": "text",
+          "text": "棋盘配装 · 九级 · 妮蔻解锁史密奇\n主C：阿狸。朔极之矛、纳什之牙、珠光护手。\n主坦：蕾欧娜。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副坦：盖伦。斯特拉克的挑战护手。\n副C：梅尔。蓝霸符、莫雷洛秘典、虚空之杖。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "棋盘配装 · 九级 · 妮蔻解锁史密奇\n主C：阿狸。朔极之矛、纳什之牙、珠光护手。\n主坦：蕾欧娜。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副坦：盖伦。斯特拉克的挑战护手。\n副C：梅尔。蓝霸符、莫雷洛秘典、虚空之杖。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "choreo-ahri-arc-loadout",
+          "type": "text",
+          "text": "棋盘配装 · 九级 · 三编舞双法\n主C：阿狸。朔极之矛、纳什之牙、珠光护手。\n主坦：蒙多医生。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副坦：盖伦。斯特拉克的挑战护手。\n副C：弗拉基米尔。适应性头盔、海克斯科技枪刃。\n功能装：梅尔。莫雷洛秘典、虚空之杖。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "棋盘配装 · 九级 · 三编舞双法\n主C：阿狸。朔极之矛、纳什之牙、珠光护手。\n主坦：蒙多医生。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副坦：盖伦。斯特拉克的挑战护手。\n副C：弗拉基米尔。适应性头盔、海克斯科技枪刃。\n功能装：梅尔。莫雷洛秘典、虚空之杖。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "choreo-ahri-steel-loadout",
+          "type": "text",
+          "text": "棋盘配装 · 九级 · 三心之钢\n主C：阿狸。朔极之矛、纳什之牙、珠光护手。\n主坦：蒙多医生。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副坦：盖伦。斯特拉克的挑战护手。\n副C：厄斐琉斯。鬼索的狂暴之刃、死亡之刃。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "棋盘配装 · 九级 · 三心之钢\n主C：阿狸。朔极之矛、纳什之牙、珠光护手。\n主坦：蒙多医生。石像鬼石板甲、狂徒铠甲、振奋盔甲。\n副坦：盖伦。斯特拉克的挑战护手。\n副C：厄斐琉斯。鬼索的狂暴之刃、死亡之刃。"
+              }
+            }
+          ]
         }
       ],
       "kind": "guide",
       "teams": [
+        {
+          "id": "1c6360bc-59b9-4134-98d3-3795b30cf53a",
+          "name": "九级 · 三爵士史密奇",
+          "category": "待分类",
+          "notes": "史密奇到手后替换妮蔻开三爵士。",
+          "revision": 1,
+          "updatedAt": "2026-11-28T14:16:16.232985+00:00",
+          "sectionId": "sample-block-0854",
+          "pieces": [
+            {
+              "instanceId": "4f4f56c2-0e0a-4746-9664-f07d5ce2f08c",
+              "unitId": "k-sante",
+              "position": 0,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "c5de4779-71ba-4628-a3cb-2ed082dc4536",
+              "unitId": "leona",
+              "position": 4,
+              "stars": 2,
+              "items": [
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_WarmogsArmor",
+                "TFT_Item_Redemption"
+              ]
+            },
+            {
+              "instanceId": "75642234-5009-4feb-8c03-595d1b8a1abd",
+              "unitId": "garen",
+              "position": 6,
+              "stars": 2,
+              "items": [
+                "TFT_Item_SteraksGage"
+              ]
+            },
+            {
+              "instanceId": "09a86397-cd12-4999-9d2c-3e3fd8bd06b0",
+              "unitId": "swain",
+              "position": 8,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "22198b1d-195d-4491-994a-b5e05957d4f6",
+              "unitId": "galio",
+              "position": 10,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "d258ee6a-a1f3-4ac0-9eee-e3da92e9e800",
+              "unitId": "lucian",
+              "position": 21,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "954bea9f-a3a4-4771-9c7d-0a1782642910",
+              "unitId": "mel",
+              "position": 25,
+              "stars": 2,
+              "items": [
+                "TFT_Item_BlueBuff",
+                "TFT_Item_Morellonomicon",
+                "TFT_Item_StatikkShiv"
+              ]
+            },
+            {
+              "instanceId": "bd0e0b4c-fdab-41cd-a8d6-60901a206501",
+              "unitId": "ahri",
+              "position": 27,
+              "stars": 2,
+              "items": [
+                "TFT_Item_SpearOfShojin",
+                "TFT_Item_Leviathan",
+                "TFT_Item_JeweledGauntlet"
+              ]
+            },
+            {
+              "instanceId": "ae62c4f5-ca21-41ae-b4f0-b62880e273b9",
+              "unitId": "smeech",
+              "position": 12,
+              "stars": 1,
+              "items": []
+            }
+          ],
+          "boardRole": "stage"
+        },
+        {
+          "id": "b8f3e967-922d-4a3a-83c4-c62d111b208f",
+          "name": "八级 · 双编舞双法阿狸",
+          "category": "待分类",
+          "notes": "阿狸、前排至少各两星一张再存钱上九。盖伦先两星就先接肉装。",
+          "revision": 1,
+          "updatedAt": "2026-11-28T14:16:16.232985+00:00",
+          "sectionId": "sample-block-0854",
+          "boardRole": "stage",
+          "pieces": [
+            {
+              "instanceId": "e7ad9186-b594-4bfb-9c6d-d63c9a08de27",
+              "unitId": "k-sante",
+              "position": 0,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "fb686836-a96b-47be-9804-23bc5ece6bfc",
+              "unitId": "leona",
+              "position": 4,
+              "stars": 2,
+              "items": [
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_WarmogsArmor",
+                "TFT_Item_Redemption"
+              ]
+            },
+            {
+              "instanceId": "830030a5-9960-4b98-a57d-e1000a28db43",
+              "unitId": "garen",
+              "position": 6,
+              "stars": 2,
+              "items": [
+                "TFT_Item_SteraksGage"
+              ]
+            },
+            {
+              "instanceId": "11ae34d1-8a2f-4543-934b-2d6fc26be9ca",
+              "unitId": "swain",
+              "position": 8,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "0dd4625a-f0d7-4997-a618-48fe59ca525c",
+              "unitId": "galio",
+              "position": 10,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "b4b2a7e7-faa6-4d45-85d0-0173be63d08f",
+              "unitId": "lucian",
+              "position": 21,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "add67135-d7c9-4904-8cd1-682c9b363b08",
+              "unitId": "mel",
+              "position": 25,
+              "stars": 2,
+              "items": [
+                "TFT_Item_BlueBuff",
+                "TFT_Item_Morellonomicon",
+                "TFT_Item_StatikkShiv"
+              ]
+            },
+            {
+              "instanceId": "ab8ce022-4334-4c03-a6f4-0278dfbf915b",
+              "unitId": "ahri",
+              "position": 27,
+              "stars": 2,
+              "items": [
+                "TFT_Item_SpearOfShojin",
+                "TFT_Item_Leviathan",
+                "TFT_Item_JeweledGauntlet"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "9e3202c6-84e7-4fbc-b092-24f2818bbc3b",
+          "name": "九级 · 妮蔻解锁史密奇",
+          "category": "待分类",
+          "notes": "九级先上妮蔻，和卢锡安开 2 安可，同时激活 9 个非唯一羁绊。",
+          "revision": 1,
+          "updatedAt": "2026-11-28T14:16:16.232985+00:00",
+          "sectionId": "sample-block-0854",
+          "boardRole": "stage",
+          "pieces": [
+            {
+              "instanceId": "c64ae5cf-d31c-44dc-b0fa-2dbfd9919549",
+              "unitId": "k-sante",
+              "position": 0,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "7d3d5de7-b2c3-463b-843d-7af4258b2db4",
+              "unitId": "leona",
+              "position": 4,
+              "stars": 2,
+              "items": [
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_WarmogsArmor",
+                "TFT_Item_Redemption"
+              ]
+            },
+            {
+              "instanceId": "1539af03-838f-4399-a69a-98fb7ef48ecb",
+              "unitId": "garen",
+              "position": 6,
+              "stars": 2,
+              "items": [
+                "TFT_Item_SteraksGage"
+              ]
+            },
+            {
+              "instanceId": "8df61077-6a24-41b5-bf48-21a532903dc4",
+              "unitId": "swain",
+              "position": 8,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "efde2b6a-8328-4d45-80f6-603ac158f809",
+              "unitId": "galio",
+              "position": 10,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "653498f7-c832-40a4-b80c-9965ebb3649d",
+              "unitId": "lucian",
+              "position": 21,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "eaddf8fb-caa5-41c7-afde-144e87788057",
+              "unitId": "mel",
+              "position": 25,
+              "stars": 2,
+              "items": [
+                "TFT_Item_BlueBuff",
+                "TFT_Item_Morellonomicon",
+                "TFT_Item_StatikkShiv"
+              ]
+            },
+            {
+              "instanceId": "e3957852-288b-4d28-ab1c-60eb1ac38525",
+              "unitId": "ahri",
+              "position": 27,
+              "stars": 2,
+              "items": [
+                "TFT_Item_SpearOfShojin",
+                "TFT_Item_Leviathan",
+                "TFT_Item_JeweledGauntlet"
+              ]
+            },
+            {
+              "instanceId": "d996a37c-bfde-4fcf-a3a4-04fd3fb47e54",
+              "unitId": "neeko",
+              "position": 7,
+              "stars": 1,
+              "items": []
+            }
+          ]
+        },
+        {
+          "id": "2ebc0e10-00bd-415f-9ba9-5f7f888ccf61",
+          "name": "九级 · 三编舞双法",
+          "category": "待分类",
+          "notes": "弗拉基米尔能接第二套法装时走这盘。先解史密奇，再换掉卢锡安的爵士挂件。",
+          "revision": 1,
+          "updatedAt": "2026-11-28T14:20:29.682167+00:00",
+          "sectionId": "sample-block-0854",
+          "boardRole": "stage",
+          "pieces": [
+            {
+              "instanceId": "4ffa0a5f-2f9f-40d4-9517-1748096fc817",
+              "unitId": "k-sante",
+              "position": 0,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "db7ab822-7b7b-473e-ae61-9ca09edf3ffa",
+              "unitId": "dr-mundo",
+              "position": 3,
+              "stars": 2,
+              "items": [
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_WarmogsArmor",
+                "TFT_Item_Redemption"
+              ]
+            },
+            {
+              "instanceId": "36f4a790-bfbe-4cb9-8f32-cec90f5c3dff",
+              "unitId": "garen",
+              "position": 5,
+              "stars": 2,
+              "items": [
+                "TFT_Item_SteraksGage"
+              ]
+            },
+            {
+              "instanceId": "6524b0d9-3e3a-407f-b422-56ebc94fd7d6",
+              "unitId": "leona",
+              "position": 11,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "4392680c-5b84-435e-b7c1-39b901881cef",
+              "unitId": "smeech",
+              "position": 12,
+              "stars": 1,
+              "items": []
+            },
+            {
+              "instanceId": "ba60641d-1e25-4215-a04d-19b6c85bcf5f",
+              "unitId": "vladimir",
+              "position": 18,
+              "stars": 1,
+              "items": [
+                "TFT_Item_AdaptiveHelm",
+                "TFT_Item_HextechGunblade"
+              ]
+            },
+            {
+              "instanceId": "60971087-329c-4657-a4dc-381c07ac3dbc",
+              "unitId": "renata-glasc",
+              "position": 21,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "4c1a092f-78bd-414b-b04d-9a9969dc5221",
+              "unitId": "mel",
+              "position": 25,
+              "stars": 2,
+              "items": [
+                "TFT_Item_Morellonomicon",
+                "TFT_Item_StatikkShiv"
+              ]
+            },
+            {
+              "instanceId": "58afa7d0-e02b-4e79-b36d-9fcea5537506",
+              "unitId": "ahri",
+              "position": 27,
+              "stars": 2,
+              "items": [
+                "TFT_Item_SpearOfShojin",
+                "TFT_Item_Leviathan",
+                "TFT_Item_JeweledGauntlet"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "1808c76f-5fa3-4ccd-b1e3-8fdf6f5f03fe",
+          "name": "九级 · 三心之钢",
+          "category": "待分类",
+          "notes": "永恩两星开出厄斐琉斯、有额外物理装再换这盘。十级补努努开双主唱。",
+          "revision": 1,
+          "updatedAt": "2026-11-28T14:20:29.682167+00:00",
+          "sectionId": "sample-block-0854",
+          "boardRole": "stage",
+          "pieces": [
+            {
+              "instanceId": "f37beb9e-96ad-4f39-a328-640478004eb8",
+              "unitId": "k-sante",
+              "position": 0,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "f92eb380-0035-40b8-9f4a-217247dc7dad",
+              "unitId": "dr-mundo",
+              "position": 3,
+              "stars": 2,
+              "items": [
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_WarmogsArmor",
+                "TFT_Item_Redemption"
+              ]
+            },
+            {
+              "instanceId": "fdb76f9e-4df7-44a5-b047-060ef4c9ec3d",
+              "unitId": "garen",
+              "position": 5,
+              "stars": 2,
+              "items": [
+                "TFT_Item_SteraksGage"
+              ]
+            },
+            {
+              "instanceId": "c8e8ae68-21a5-4e55-8f81-3f4a9170cc8c",
+              "unitId": "galio",
+              "position": 9,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "4125e0e9-ecf8-4308-be5b-1dc009230711",
+              "unitId": "leona",
+              "position": 11,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "01f6bbcd-939b-4e6d-bcbe-854bd1db063a",
+              "unitId": "smeech",
+              "position": 12,
+              "stars": 1,
+              "items": []
+            },
+            {
+              "instanceId": "aa84da6b-059a-4a38-a481-2f5776215469",
+              "unitId": "yone",
+              "position": 13,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "c27eadb2-9a2d-476c-b692-de5d56813611",
+              "unitId": "aphelios",
+              "position": 21,
+              "stars": 1,
+              "items": [
+                "TFT_Item_GuinsoosRageblade",
+                "TFT_Item_Deathblade"
+              ]
+            },
+            {
+              "instanceId": "36f66fb7-c2d7-411d-98d3-1080445fc7db",
+              "unitId": "ahri",
+              "position": 27,
+              "stars": 2,
+              "items": [
+                "TFT_Item_SpearOfShojin",
+                "TFT_Item_Leviathan",
+                "TFT_Item_JeweledGauntlet"
+              ]
+            }
+          ]
+        },
         {
           "id": "00000000-0000-4000-8000-000000001146",
           "name": "九级 · 四编舞三经纪阿狸",
@@ -24060,7 +24720,56 @@
           }
         ]
       },
-      "summaryBlockId": "sample-block-1019"
+      "summaryBlockId": "sample-block-1019",
+      "primaryTeamId": "00000000-0000-4000-8000-000000001146",
+      "stageTeamIds": [
+        "b8f3e967-922d-4a3a-83c4-c62d111b208f",
+        "1c6360bc-59b9-4134-98d3-3795b30cf53a",
+        "9e3202c6-84e7-4fbc-b092-24f2818bbc3b",
+        "2ebc0e10-00bd-415f-9ba9-5f7f888ccf61",
+        "1808c76f-5fa3-4ccd-b1e3-8fdf6f5f03fe"
+      ],
+      "reroll": {
+        "entryTeamId": "b8f3e967-922d-4a3a-83c4-c62d111b208f",
+        "stages": [
+          {
+            "teamId": "b8f3e967-922d-4a3a-83c4-c62d111b208f",
+            "name": "8级 · 双编舞双法",
+            "notes": "阿狸、前排至少各两星一张再存钱上九。盖伦先两星就先接肉装。",
+            "boardRole": "stage"
+          },
+          {
+            "teamId": "1c6360bc-59b9-4134-98d3-3795b30cf53a",
+            "name": "9级 · 三爵士史密奇",
+            "notes": "史密奇到手后替换妮蔻开三爵士。",
+            "boardRole": "stage"
+          },
+          {
+            "teamId": "9e3202c6-84e7-4fbc-b092-24f2818bbc3b",
+            "parentTeamId": "1c6360bc-59b9-4134-98d3-3795b30cf53a",
+            "name": "九级 · 妮蔻解锁史密奇",
+            "notes": "九级先上妮蔻，和卢锡安开 2 安可，同时激活 9 个非唯一羁绊。",
+            "boardRole": "stage"
+          },
+          {
+            "teamId": "2ebc0e10-00bd-415f-9ba9-5f7f888ccf61",
+            "parentTeamId": "1c6360bc-59b9-4134-98d3-3795b30cf53a",
+            "name": "九级 · 三编舞双法",
+            "notes": "弗拉基米尔能接第二套法装时走这盘。先解史密奇，再换掉卢锡安的爵士挂件。",
+            "boardRole": "stage"
+          },
+          {
+            "teamId": "1808c76f-5fa3-4ccd-b1e3-8fdf6f5f03fe",
+            "parentTeamId": "1c6360bc-59b9-4134-98d3-3795b30cf53a",
+            "name": "九级 · 三心之钢",
+            "notes": "永恩两星开出厄斐琉斯、有额外物理装再换这盘。十级补努努开双主唱。",
+            "boardRole": "stage"
+          }
+        ],
+        "advice": {},
+        "added": [],
+        "corrected": []
+      }
     },
     {
       "id": "sample-block-1180",
