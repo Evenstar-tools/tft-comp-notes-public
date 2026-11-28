@@ -2,7 +2,7 @@ import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
-import { changeSignals, exactFamilyBoardSignature, heroAugmentSourceUnits, makeReviewQueue, matchBoundCluster, sourceProfile } from "./family-review.mjs";
+import { changeSignals, compatibleFamilyBoard, exactFamilyBoardSignature, heroAugmentSourceUnits, makeReviewQueue, matchBoundCluster, sourceProfile } from "./family-review.mjs";
 import { crossCheck } from "./family-evidence.mjs";
 import { saveCompTrendBatch } from "./refresh-comp-trends.mjs";
 import { refreshCohort, verifyLookup } from "./refresh-cohort.mjs";
@@ -140,7 +140,7 @@ for (const b of bindings.rows) {
     droppedBindings.push(`${b.clusterId}(${b.name})`);
     continue;
   }
-  const info = { ...b };
+  const { landingRoster, ...info } = b;
   delete info.representativeUnits;
   delete info.boardSignatures;
   const anchor = publicBoardById.get(info.teamId);
@@ -174,17 +174,8 @@ for (const b of bindings.rows) {
     continue;
   }
   const ids = [...new Set([info.landingTeamId, ...(info.sharedTeamIds ?? [])].filter(Boolean))];
-  const compatible = ids.filter(id => {
-    const board = publicBoardById.get(id);
-    const carries = board?.roles.filter(role => role.label === "主C" || role.label === "主输出").flatMap(role => role.units) ?? [];
-    // An explicitly selected fast-eight landing can be a guide stage that adds one unit at nine.
-    const eightToNine = id === info.landingTeamId && board?.units.length === 8 && anchor.units.length === 9 &&
-      board.units.every(unit => anchor.units.includes(unit));
-    return board?.sectionId === info.sectionId && board.special === anchor.special && !board.emblems?.length &&
-      (board.kind !== "过渡" || eightToNine)
-      && carries.some(id => info.carryIds.includes(id))
-      && (!anchor.rollLevel || !board.rollLevel || anchor.rollLevel === board.rollLevel);
-  });
+  const sourceRoster = landingRoster && match.status === "exact" ? match.roster.map(id => unitIds.get(id)) : undefined;
+  const compatible = ids.filter(id => compatibleFamilyBoard({ ...info, landingRoster }, publicBoardById.get(id), anchor, sourceRoster));
   if (info.sharedTeamIds) info.sharedTeamIds = info.sharedTeamIds.filter(id => compatible.includes(id));
   if (info.landingTeamId && !compatible.includes(info.landingTeamId)) delete info.landingTeamId;
   if (compatible.length !== ids.length) review.push({id:b.clusterId,guide:b.name,reason:"变阵主 C、搜牌条件或目录已变",teamIds:ids.filter(id => !compatible.includes(id))});

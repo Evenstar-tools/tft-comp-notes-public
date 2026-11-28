@@ -7,6 +7,81 @@
   "redFrom": 4.25,
   "records": [
     {
+      "sectionId": "sample-block-0275",
+      "population": 8,
+      "roster": [
+        "bard",
+        "galio",
+        "kayle",
+        "locke",
+        "mel",
+        "olaf",
+        "swain",
+        "yorick"
+      ],
+      "build": "6045507",
+      "conditions": {
+        "kind": "full",
+        "teamId": "00000000-0000-4000-8000-000000000014",
+        "population": 8
+      },
+      "sampleScope": "固定名单 · 不限星级与装备 · 无纹章、人口装或重复棋子",
+      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Bard19-1&unit=DA_Galio19-1&unit=DA_Kayle19-1&unit=DA_Locke19-1&unit=DA_Mel19-1&unit=DA_Olaf19-1&unit=DA_Swain19-1&unit=DA_Yorick19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "placementCounts": [
+        5,
+        11,
+        35,
+        60,
+        85,
+        87,
+        75,
+        34
+      ],
+      "games": 392,
+      "observedOn": "2026-11-28",
+      "mean": 5.4,
+      "topFourRate": 0.28316326530612246,
+      "winRate": 0.012755102040816327
+    },
+    {
+      "sectionId": "sample-block-0275",
+      "population": 9,
+      "roster": [
+        "bard",
+        "camille",
+        "galio",
+        "kayle",
+        "mel",
+        "olaf",
+        "smeech",
+        "swain",
+        "yorick"
+      ],
+      "build": "6045507",
+      "conditions": {
+        "kind": "full",
+        "teamId": "00000000-0000-4000-8000-000000000082",
+        "population": 9
+      },
+      "sampleScope": "固定名单 · 不限星级与装备 · 无纹章、人口装或重复棋子",
+      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Bard19-1&unit=DA_Camille19-1&unit=DA_Galio19-1&unit=DA_Kayle19-1&unit=DA_Mel19-1&unit=DA_Olaf19-1&unit=DA_Smeech19-1&unit=DA_Swain19-1&unit=DA_Yorick19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "placementCounts": [
+        30,
+        53,
+        99,
+        147,
+        150,
+        107,
+        64,
+        21
+      ],
+      "games": 671,
+      "observedOn": "2026-11-28",
+      "mean": 4.51,
+      "topFourRate": 0.4903129657228018,
+      "winRate": 0.044709388971684055
+    },
+    {
       "population": 9,
       "roster": [
         "bard",
