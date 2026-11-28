@@ -8,7 +8,7 @@ import { GuideEquipmentConditions } from "./GuideEquipmentConditions";
 import { GuideEditorLink } from "./GuideEditorLink";
 import { GuideBoardPositionEditor } from "./GuideBoardPositionEditor";
 import { GuidePoster } from "./GuidePoster";
-import { guideBoardKind, guideStatsLaunch, teamPlacement } from "./GuidePlacement";
+import { guideBoardKind, guideCorePlacement, guideStatsLaunch, teamPlacement } from "./GuidePlacement";
 import { GuideMatchStats, guideMatchEvidence, type MatchStatsView } from "./GuideMatchStats";
 import { ItemIcon } from "./ItemIcon";
 import { GuideBoardZoom } from "./GuideBoardZoom";
@@ -36,7 +36,7 @@ import { guideFamilyRows, recommendationTier, type GuideFamilyBatch } from "@/do
 import currentPatch from "@/data/current-patch.json";
 import type { Section } from "@/domain/document";
 import { boardRosterChange, familyVariants, groupGuides, type PosterVariant } from "@/domain/guide-families";
-import { currentLaunchGuideFamily, guideHeaderCoreSample, guidePromotionRows, guideSystemDisplayBoards, guideSystemPhases, guideSystemSample, systemMeanTone, type GuideSystem } from "@/domain/guide-variant-strip";
+import { currentLaunchGuideFamily, guidePromotionRows, guideSystemDisplayBoards, guideSystemPhases, guideSystemSample, systemMeanTone, type GuideSystem } from "@/domain/guide-variant-strip";
 import type { BoardStage, Season, Team } from "@/domain/types";
 import { season } from "@/data";
 import { sameEdition } from "@/domain/version-updates";
@@ -222,9 +222,8 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
   const matchingFamily = familyRows.filter(row => row.boards.some(board => board.id === team.id));
   const overall = matchingFamily.length === 1 ? matchingFamily[0].stat : undefined;
   const showMatchStats = mainBoardActive && !showFlex;
-  const sharedBoards = primaryFirst(systemBoards.length ? systemBoards : teams, team.id);
   const placement = detailView && showMatchStats && !overall && !heroGuide
-    ? guideHeaderCoreSample(sharedBoards, board => teamPlacement(board, section, "core") ?? teamPlacement(board, section, "lineup"), placementBatch.minGames)
+    ? guideCorePlacement(section, systemBoards, systemEntry?.id ?? team.id)
     : undefined;
   const overview = detailView && (showMatchStats ? overall ?? placement : undefined);
   const evidence = placement && placementEvidenceKind(placement);
@@ -464,11 +463,11 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
     <ul className="guide-variant-links poster-variant-links">{otherSiblings.map(v => <li key={v.teamId}><a href={guideLink(v.sectionId, v.teamId, returnTo)}
       onClick={e => { const next = teams.find(t => t.id === v.teamId); if (next) { e.preventDefault(); pickTeam(next); } }}>
       <span>{v.title}{v.change && <small className="poster-change">{v.change}</small>}</span></a></li>)}</ul></details>;
-  function optionStats(stat: ReturnType<typeof guideSystemSample>, scope?: string, source?: string) {
+  function optionStats(stat: ReturnType<typeof guideSystemSample>, scope?: string, source?: string, countOnly = false) {
     return <span className="guide-variant-option-stats" title={source}>
-      <span className="guide-variant-mean-line">{scope && <small>{scope}</small>}
-        <strong data-tone={stat.tone} aria-label={stat.mean === "—" ? undefined : `均名 ${stat.mean}`}>{stat.mean}</strong>
-      </span>
+      {(!countOnly || scope) && <span className="guide-variant-mean-line">{scope && <small>{scope}</small>}
+        {!countOnly && <strong data-tone={stat.tone} aria-label={stat.mean === "—" ? undefined : `均名 ${stat.mean}`}>{stat.mean}</strong>}
+      </span>}
       <small>{stat.sample}</small>
     </span>;
   }
@@ -516,12 +515,12 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
     if (!currentSystem) return null;
     const allRows = guidePromotionRows(displayedSystemBoards, board => teamPlacement(board, section, "fixed") ??
       (heroGuide ? teamPlacement(board, section, "augment") : undefined), placementBatch);
-    if (allRows.length < 2 || !allRows.some(row => row.mean !== undefined)) return null;
     const rows = launchStats ? allRows.filter(row => row.mean !== undefined) : allRows;
+    if (allRows.length < 2 || !rows.some(row => row.games)) return null;
     return <section className="guide-promotion-comparison" aria-label="上人口与补卡对照">
       <h3>上人口与补卡对照</h3>
       <p>同套棋盘停级和升人口后的结算名次，仅用于比较补卡。</p>
-      <ul role="list">{rows.map(({ board, label, stat, scope, source, note }) => {
+      <ul role="list">{rows.map(({ board, label, stat, scope, source, games, mean, note }) => {
         const current = mainBoardActive && !showFlex && board.id === team.id;
         return <li key={board.id}>
           <button type="button" className="guide-variant-option" aria-pressed={current}
@@ -535,7 +534,7 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
               <strong>{guideBoardName(board)}</strong>{current && <small className="guide-variant-current">当前</small>}
               {note && <small className="guide-promotion-note">{note}</small>}
             </span>
-            {optionStats(stat, scope, source)}
+            {optionStats(stat, scope, source, !!games && mean === undefined)}
           </button>
         </li>;
       })}</ul>
@@ -565,10 +564,19 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
   </div>;
   const strategy = detailView && !guidePlaystyle(section, team) ? guideFacets(section, team, data) : undefined;
   const style = strategy?.styleLabel ?? strategy?.style;
+  const matchEvidence = showMatchStats ? guideMatchEvidence({
+    team, teams: displayedSystemBoards, section, edition: data.id, augmentName: augment?.name, heroGuide, familyRows,
+  }) : undefined;
+  const matchStats = matchEvidence && (!launchStats || matchEvidence.populatedViews.length > 0) &&
+    <GuideMatchStats key={team.id} id={sampleId} team={team} teams={displayedSystemBoards} section={section}
+      stage={inStage} edition={data.id} heroGuide={heroGuide} evidence={matchEvidence}
+      view={sampleView} onSelectView={setSampleView} onPickTeam={selectSampleTeam} />;
   const headerTools = <>
     {style && <span className="guide-playstyle-tag" title="打法">{style}</span>}
-    {mean !== undefined ? <div className="guide-title-stats">
-      <a className="guide-title-mean" data-tone={tone} href={"#" + sampleId} onClick={openMatchStats} title={scope + " · " + patch + " · " + windowLabel}>
+    {overview && mean !== undefined ? <div className="guide-title-stats">
+      <a className="guide-title-mean" data-tone={tone} href={matchStats ? "#" + sampleId : overview.url}
+        onClick={matchStats ? openMatchStats : undefined} target={matchStats ? undefined : "_blank"}
+        rel={matchStats ? undefined : "noreferrer"} title={scope + " · " + patch + " · " + windowLabel}>
         {meanLabel} <strong>{mean.toFixed(2)}</strong>
       </a>
       {topFour && <span>前四率 <strong>{topFour}</strong></span>}
@@ -588,13 +596,6 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
       ))}</dl>
     </details>}
   </details>;
-  const matchEvidence = showMatchStats ? guideMatchEvidence({
-    team, teams: displayedSystemBoards, section, edition: data.id, augmentName: augment?.name, heroGuide, familyRows,
-  }) : undefined;
-  const matchStats = matchEvidence && (!launchStats || matchEvidence.populatedViews.length > 0) &&
-    <GuideMatchStats key={team.id} id={sampleId} team={team} teams={displayedSystemBoards} section={section}
-      stage={inStage} edition={data.id} heroGuide={heroGuide} evidence={matchEvidence}
-      view={sampleView} onSelectView={setSampleView} onPickTeam={selectSampleTeam} />;
   const conditions = <>
     {equipmentConditions && <GuideEquipmentConditions conditions={equipmentConditions} guideHref={guideHref} />}
     {referenceConditions && <GuideEquipmentConditions conditions={referenceConditions} guideHref={guideHref}
@@ -624,7 +625,7 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
         <div><dt>登顶率</dt><dd>{win ?? "—"}</dd></div>
       </dl>}
       <p className="guide-overview-source">
-        {showPlayerBoard && "官方原盘 · "}{placement?.sourcePeriod && "历史 · "}{scope} · {windowLabel} · {overview.games.toLocaleString("zh-CN")} 场
+        {showPlayerBoard && "官方原盘 · "}{scope} · {windowLabel} · {overview.games.toLocaleString("zh-CN")} 场
         {placement && overview.games < placementBatch.minGames && " · 少量样本"}
       </p>
     </>}

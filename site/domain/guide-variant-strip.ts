@@ -200,14 +200,14 @@ export function guidePromotionRows(boards: Team[], rate: (board: Team) => Placem
     const level = population(board);
     const stop = level < levels[0];
     const sample = boardSample(rate(board));
-    const mean = sample?.mean;
+    const mean = sample && sample.games > 50 ? sample.mean : undefined;
     const small = !!sample && sample.games < batch.minGames;
-    const topFour = sample && mean !== undefined && sample.topFourRate !== undefined && !sample.referencesAugment && sample.games >= 5;
+    const topFour = sample && mean !== undefined && sample.topFourRate !== undefined && !sample.referencesAugment;
     const details = sample ? [topFour && `前四 ${percent.format(sample.topFourRate!)}`, `${frequency.format(sample.games)}场`, small && "少量样本"]
       .filter(Boolean).join(" · ") : "暂无数据";
     return { board, level, stop, label: stop ? `停在${level}级` : `${level}级补卡`,
       stat: { mean: mean?.toFixed(2) ?? "—", tone: stop || small ? "limited" : systemMeanTone(mean), sample: details },
-      mean, source: sample && [sample.referencesAugment ? "同装样本" : "固定结算", sample.patch, sample.window, sample.sampleScope].filter(Boolean).join(" · "),
+      mean, games: sample?.games, source: sample && [sample.referencesAugment ? "同装样本" : "固定结算", sample.patch, sample.window, sample.sampleScope].filter(Boolean).join(" · "),
       scope: sample?.sourcePeriod ? "历史" : sample?.referencesAugment ? "同装" : undefined,
       note: sample?.sampleNote };
   }).sort((a, b) => b.level - a.level || (a.mean ?? Infinity) - (b.mean ?? Infinity));

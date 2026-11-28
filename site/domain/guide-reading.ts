@@ -374,7 +374,6 @@ function playstyleCode(style?: string) {
 }
 
 export function guidePlaystyle(section: Section, team?: Team): "84" | "95" | undefined {
-  if (section.id === GUIDE_SECTION_IDS.oceanGraves && team?.id === PYKE_GRAVES_BOARD_ID) return "95";
   const style = authoredStrategy(section, team);
   if (style === "84" || style === "95") return style;
   return playstyleCode(style);
