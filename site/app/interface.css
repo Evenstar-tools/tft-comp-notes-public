@@ -75,13 +75,15 @@ body:has(.editor) .site-footer {display:none}
 @media (prefers-reduced-motion:reduce) {
   .editor .board-item-grip > .board-item {transition:none}
 }
-.board-alternate {
+.board-alternate,
+.editor button.board-alternate {
   position:absolute;z-index:2;display:grid;place-items:center;
-  width:clamp(22px,5.7cqw,34px);height:auto;aspect-ratio:1;min-height:0;padding:0;
+  width:clamp(22px,5.7cqw,34px);height:auto;aspect-ratio:1;min-height:0;padding:0;overflow:hidden;
   translate:10% 5%;border:2px solid var(--unit-cost,var(--board-edge));border-radius:50%;
   background:var(--panel);box-shadow:0 0 0 1px var(--panel);
 }
 button.board-alternate {touch-action:none;cursor:pointer}
+.editor button.board-alternate:hover {border-color:var(--unit-cost,var(--board-edge));background:var(--panel)}
 .read-board span.board-alternate {width:clamp(14px,4.4cqw,28px);translate:-15% 52%}
 .board-alternate img {width:100%;height:100%;aspect-ratio:1;object-fit:cover;border-radius:50%;pointer-events:none}
 .board-alternate:focus-visible {outline:2px solid var(--selection-ring);outline-offset:2px}

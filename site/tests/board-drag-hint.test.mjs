@@ -44,3 +44,14 @@ test("a bench drop explains the alternate action and the limit per slot", () => 
   assert.equal(dragNote.hidden, true);
   assert.equal(restingNote.hidden, false);
 });
+
+test("editor alternate badge overrides generic editor button padding, min-height, and radius", () => {
+  const css = readFileSync(new URL("../app/interface.css", import.meta.url), "utf8");
+  const match = css.match(/\.board-alternate,\s*\.editor button\.board-alternate\s*\{([^}]+)\}/);
+  assert.ok(match, "expected .editor button.board-alternate selector to out-rank .editor button");
+  const body = match[1];
+  assert.match(body, /min-height:\s*0/);
+  assert.match(body, /padding:\s*0/);
+  assert.match(body, /border-radius:\s*50%/);
+  assert.match(body, /overflow:\s*hidden/);
+});
