@@ -1,6 +1,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { fetchItemCohort, itemCohort, itemPlacementDelta } from "../scripts/special-item-cohort.mjs";
+import { refreshCohort } from "../scripts/refresh-cohort.mjs";
+
+const pbeCohort = refreshCohort({ seasonId: "s19-pbe", metaTftPatch: { patch: "19.1", bPatch: "a" } });
 
 test("item placement delta compares against the same hero without the item", () => {
   const overall = [100, 0, 100, 0, 0, 0, 0, 0];
@@ -29,13 +32,13 @@ test("item scores match the wearers' exact hotfix and day window", () => {
     ],
     units: [{ places: first }, { places: second }],
   };
-  assert.deepEqual(itemCohort(result, "chalice", "19.1", 3), {
+  assert.deepEqual(itemCohort(result, "chalice", pbeCohort, 3), {
     version: "19.1a", stats: { games: 4, mean: 3, winRate: 0.5 },
   });
   // The independent daily rollup can lag behind the ranked wearers by a game.
   const newerWearers = [{ places: first }, { places: [0, 2, 0, 0, 0, 0, 0, 0] }];
-  assert.equal(itemCohort({ ...result, units: newerWearers }, "chalice", "19.1", 3).stats.games, 5);
-  assert.throws(() => itemCohort({ ...result, units: [{ places: outside }] }, "chalice", "19.1", 3), /disagree/);
+  assert.equal(itemCohort({ ...result, units: newerWearers }, "chalice", pbeCohort, 3).stats.games, 5);
+  assert.throws(() => itemCohort({ ...result, units: [{ places: outside }] }, "chalice", pbeCohort, 3), /disagree/);
 });
 
 test("a rolling wearer cohort may span one extra day bucket from the same hotfix", () => {
@@ -52,8 +55,8 @@ test("a rolling wearer cohort may span one extra day bucket from the same hotfix
     ],
     units: [{ places: full }],
   };
-  assert.equal(itemCohort(result, "emblem", "19.1", 3).stats.games, 485);
-  assert.throws(() => itemCohort({ ...result, dates: result.dates.filter(row => row.day !== 4) }, "emblem", "19.1", 3), /disagree/);
+  assert.equal(itemCohort(result, "emblem", pbeCohort, 3).stats.games, 485);
+  assert.throws(() => itemCohort({ ...result, dates: result.dates.filter(row => row.day !== 4) }, "emblem", pbeCohort, 3), /disagree/);
 });
 
 test("transient item rollup mismatch is retried without accepting the inconsistent counts", async () => {
@@ -66,7 +69,8 @@ test("transient item rollup mismatch is retried without accepting the inconsiste
   const inconsistent = { ...aligned, units: [{ places: [100, 0, 0, 0, 0, 0, 0, 0] }] };
   const requests = [];
   const url = "https://example.test/items?itemName=fishbones&days=3";
-  const result = await fetchItemCohort(url, "fishbones", "19.1", 3, async request => {
+  const pbe191c = refreshCohort({ seasonId: "s19-pbe", metaTftPatch: { patch: "19.1", bPatch: "c" } });
+  const result = await fetchItemCohort(url, "fishbones", pbe191c, 3, async request => {
     requests.push(request);
     return Response.json(requests.length === 1 ? inconsistent : aligned);
   });

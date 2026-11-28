@@ -1,4 +1,5 @@
 import { setTimeout as delay } from "node:timers/promises";
+import { verifyItemWindow } from "./refresh-cohort.mjs";
 
 class ItemHistogramMismatch extends Error {}
 
@@ -24,20 +25,15 @@ export function itemPlacementDelta(worn, overall, minGames) {
   return rounded(withItem.mean - withoutItem.mean);
 }
 
-export function itemCohort(data, itemId, patch, days) {
-  const cohort = data.unit_games?.[0]?.patch;
-  if (data.queue_id !== "pbe" || data.tft_set !== "TFTSet19" || data.unit_games?.length !== 1 ||
-      !Array.isArray(data.units) || !Array.isArray(data.dates) ||
-      !Array.isArray(cohort) || cohort.length !== 2 || cohort[0] !== patch || typeof cohort[1] !== "string" ||
-      !Number.isFinite(data.updated) || data.updated <= 0)
-    throw new Error("Unexpected PBE cohort for " + itemId);
+export function itemCohort(data, itemId, cohort, days) {
+  verifyItemWindow(data, cohort, itemId);
 
   // dates includes earlier hotfixes and days outside the requested wearer cohort.
   const totals = Array(8).fill(0);
   const boundary = Array(8).fill(0);
   const seenDays = new Set();
   for (const row of data.dates) {
-    if (row.itemName !== itemId || row.patch[0] !== patch || row.patch[1] !== cohort[1] ||
+    if (row.itemName !== itemId || row.patch[0] !== cohort.patch || row.patch[1] !== cohort.bPatch ||
         !Number.isInteger(row.day) || row.day < 1 || row.day > days + 1) continue;
     if (seenDays.has(row.day)) throw new Error("Duplicate daily histogram for " + itemId);
     seenDays.add(row.day);
@@ -63,10 +59,10 @@ export function itemCohort(data, itemId, patch, days) {
     throw new ItemHistogramMismatch("Item and wearer placement histograms disagree for " + itemId);
   // The item and all individual wearers now share a single capture. Count every
   // wearer before mapping shop units or applying the best-wearer threshold.
-  return { version: cohort.join(""), stats };
+  return { version: cohort.version, stats };
 }
 
-export async function fetchItemCohort(url, itemId, patch, days, fetcher = fetch) {
+export async function fetchItemCohort(url, itemId, cohort, days, fetcher = fetch) {
   const alternate = new URL(url);
   alternate.search = new URLSearchParams([...alternate.searchParams].reverse()).toString();
   const decimal = new URL(url);
@@ -81,7 +77,7 @@ export async function fetchItemCohort(url, itemId, patch, days, fetcher = fetch)
     if (!response.ok) throw new Error(`HTTP ${response.status} · ${itemId}`);
     const data = await response.json();
     try {
-      return { data, ...itemCohort(data, itemId, patch, days) };
+      return { data, ...itemCohort(data, itemId, cohort, days) };
     } catch (error) {
       if (!(error instanceof ItemHistogramMismatch) || attempt === backoff.length) throw error;
       // Equivalent query spellings can bypass a stale upstream cache entry.
