@@ -42,11 +42,14 @@
   border-color: var(--accent);
   background: color-mix(in srgb, var(--raised) 38%, var(--panel));
 }
+.home-patch-card:has(> .home-patch-card-link:focus-visible) {
+  outline: 2px solid var(--accent); outline-offset: -1px;
+}
 .home-patch-card-link {
   display: grid; grid-template-columns: auto minmax(0, 1fr) max-content; min-height: 56px;
   align-items: start; gap: 4px 10px; padding: 8px 12px; border-radius: inherit;
 }
-.home-patch-card-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.home-patch-card-link:focus-visible { outline: none; }
 .home-patch-card-copy { min-width: 0; }
 .home-patch-title { display: flex; align-items: baseline; flex-wrap: wrap; gap: 2px 6px; min-width: 0; }
 .home-patch-card-copy h3 { margin: 0; font-size: 1rem; line-height: 1.35; font-weight: 680; overflow-wrap: anywhere; }
