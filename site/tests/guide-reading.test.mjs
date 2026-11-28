@@ -38,7 +38,7 @@ test("S19 guide titles and stage labels use current trait names with the origina
   assert.equal(display.title, "四大触打击乐德莱文");
   assert.equal(display.id, guide.id);
   assert.equal(display.primaryTeamId, guide.primaryTeamId);
-  assert.equal(display.teams[0].name, "花式射手德莱文");
+  assert.equal(display.teams[0].name, "花式德莱文");
   assert.equal(display.teams[0].webTitle, "7级 · 双花式射手");
   assert.equal(display.reroll.stages[0].name, "迅击鼓手泽丽");
   assert.equal(display.blocks[0].elements[0].text_run.content, "六护卫");

@@ -97,9 +97,10 @@ export function posterStageTitle(team: Team) {
 }
 
 export function posterTitle(section: Section | undefined, team: Team) {
-  const title = /^备选\s*·\s*/.test(team.name) ? guideBoardName(team) : section?.title ?? team.name;
-  if (team.mainStage || team.stages) return { title, subtitle: posterStageTitle(team) };
+  const rawTitle = /^备选\s*·\s*/.test(team.name) ? guideBoardName(team) : section?.title ?? team.name;
+  if (team.mainStage || team.stages) return { title: rawTitle, subtitle: posterStageTitle(team) };
   const { level, name } = teamCaption(team);
+  const title = !section && name && name !== "成型" && levelOf(rawTitle) === usedPopulation(team.pieces) ? name : rawTitle;
   return { title, subtitle: level + (name && !shortText(title).includes(name) ? " · " + name : "") };
 }
 

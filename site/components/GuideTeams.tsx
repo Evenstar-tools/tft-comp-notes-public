@@ -16,7 +16,7 @@ import { UnitDetails } from "./UnitBrowser";
 import { useOwnerSession } from "./OwnerSession";
 import { findPlayerGuideTeam, isPlayerTeamStorageKey, readPlayerTeams, samePlayerBoard } from "./player-team-storage";
 import { sectionTeams } from "@/domain/document-flow";
-import { allBlocks, guideBoardName, guideFacets, guideLink, guidePlaystyle, guideRoute, guideStrategyLabel, oceanGravesUnlockBoardId, primaryFirst, readingNotes, sourceSummary, type GuideRole } from "@/domain/guide-reading";
+import { allBlocks, guideBoardName, guideEditorTitle, guideFacets, guideLink, guidePlaystyle, guideRoute, guideStrategyLabel, oceanGravesUnlockBoardId, primaryFirst, readingNotes, sourceSummary, type GuideRole } from "@/domain/guide-reading";
 import { canonicalGuidePath, resolveBoardTeamId } from "@/domain/guide-slugs";
 import { placementEvidenceKind } from "@/domain/guide-placement";
 import placementBatch from "@/data/guide-placement.json";
@@ -161,8 +161,12 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
     return canonicalGuidePath(section.id, team.id, { from: returnTo, stage: stage === mainStage ? undefined : stage, flex });
   }
   const guideHref = publicationId ? boardViewLink(activeStage, showFlex ? flexPreview?.id : undefined) : undefined;
-  const editorTitle = [...new Set([section.title, guideBoardName(team), !mainBoardActive ? stageLabels[activeStage] : "",
-    showFlex && flexPreview ? flexPreview.incoming.name + "替" + flexPreview.outgoing.name : ""].filter(Boolean))].join(" · ");
+  const isVariantSystem = !!systems && systems.length >= 2 && !!currentSystem && currentSystem !== systems[0];
+  const editorBoardName = guideBoardName(team);
+  const editorTitle = guideEditorTitle(section.title, editorBoardName,
+    isVariantSystem && !/变[种阵]/.test(editorBoardName) ? "变种" : "",
+    !mainBoardActive ? stageLabels[activeStage] : "",
+    showFlex && flexPreview ? flexPreview.incoming.name + "替" + flexPreview.outgoing.name : "");
   const sourceGuide = guideHref && { sectionId: section.id, teamId: team.id, href: guideHref, title: editorTitle };
   const localTeam = canReadPlayerTeams && sourceGuide ? findPlayerGuideTeam(playerTeams, sourceGuide) : undefined;
   const hasPlayerBoard = !!localTeam && !samePlayerBoard(localTeam, officialBoard);
@@ -473,7 +477,7 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
         <span><small>当前变种</small><strong>{currentSystem?.title ?? selectedBoardLabel}</strong></span>
         <span>换变种 <ChevronDown size={16} aria-hidden /></span>
       </button>
-      <ul id={variantOptionsId} className="guide-variant-strip-list" role="list">{systems.map(system => {
+      <ul id={variantOptionsId} className="guide-variant-strip-list" role="list">{systems.map((system, index) => {
         const board = system.sectionId === section.id ? teams.find(option => option.id === system.teamId) : undefined;
         const current = system === currentSystem;
         const swap = !current && board ? boardRosterChange(systemEntry ?? team, board, data) : undefined;
@@ -482,7 +486,9 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
         const source = system.stat && `${system.stat.sourceName} · ${familyStats.patch} · 近 ${familyStats.days} 天`;
         const contents = <>
           <span className="guide-variant-option-copy">
-            <strong>{system.title}</strong>{current && <small className="guide-variant-current">当前</small>}
+            <strong>{system.title}</strong>
+            {index > 0 && <small className="guide-variant-kind">变种</small>}
+            {current && <small className="guide-variant-current">当前</small>}
             {change && <small className="guide-variant-change" title={change}>{swap?.describe(3) || change}</small>}
           </span>
           {optionStats(sample, undefined, source)}
