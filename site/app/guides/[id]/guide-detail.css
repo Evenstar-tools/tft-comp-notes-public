@@ -244,6 +244,7 @@
 .guide-detail-page .guide-promotion-comparison > ul { margin: 0; padding: 0; list-style: none; }
 .guide-detail-page .guide-promotion-comparison li { border-block-start: 1px solid var(--guide-soft-line); }
 .guide-detail-page .guide-promotion-level { display: block; margin-block-end: 2px; }
+.guide-detail-page .guide-promotion-note { display: block; margin-block-start: 2px; line-height: 1.35; }
 
 /* Restrained Two-Column Layout: single surface level, zero nested boxes */
 .guide-detail-page .guide-reader .reader-layout {

@@ -508,7 +508,7 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
     return <section className="guide-promotion-comparison" aria-label="上人口与补卡对照">
       <h3>上人口与补卡对照</h3>
       <p>同套棋盘停级和升人口后的结算名次，仅用于比较补卡。</p>
-      <ul role="list">{rows.map(({ board, label, stat, scope, source }) => {
+      <ul role="list">{rows.map(({ board, label, stat, scope, source, note }) => {
         const current = mainBoardActive && !showFlex && board.id === team.id;
         return <li key={board.id}>
           <button type="button" className="guide-variant-option" aria-pressed={current}
@@ -520,6 +520,7 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
             <span className="guide-variant-option-copy">
               <small className="guide-promotion-level">{label}</small>
               <strong>{guideBoardName(board)}</strong>{current && <small className="guide-variant-current">当前</small>}
+              {note && <small className="guide-promotion-note">{note}</small>}
             </span>
             {optionStats(stat, scope, source)}
           </button>

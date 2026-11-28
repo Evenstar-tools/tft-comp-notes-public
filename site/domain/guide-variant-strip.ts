@@ -199,7 +199,8 @@ export function guidePromotionRows(boards: Team[], rate: (board: Team) => Placem
     return { board, level, stop, label: stop ? `停在${level}级` : `${level}级补卡`,
       stat: { mean: mean?.toFixed(2) ?? "—", tone: stop || small ? "limited" : systemMeanTone(mean), sample: details },
       mean, source: sample && [sample.referencesAugment ? "同装样本" : "固定结算", sample.patch, sample.window, sample.sampleScope].filter(Boolean).join(" · "),
-      scope: sample?.sourcePeriod ? "历史" : sample?.referencesAugment ? "同装" : undefined };
+      scope: sample?.sourcePeriod ? "历史" : sample?.referencesAugment ? "同装" : undefined,
+      note: sample?.sampleNote };
   }).sort((a, b) => b.level - a.level || (a.mean ?? Infinity) - (b.mean ?? Infinity));
   return rows;
 }
