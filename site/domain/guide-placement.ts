@@ -22,6 +22,7 @@ export interface PlacementRecord {
   placementCounts?: number[];
   url: string;
   sampleScope?: string;
+  sampleNote?: string;
   sampleLabel?: string;
   detailOnly?: boolean;
   observedOn?: string;

@@ -3567,28 +3567,29 @@
         "zac",
         "zoe"
       ],
-      "games": 710,
-      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Taric19-1&unit=DA_Zac19-1&unit=DA_Renekton19-1&unit=DA_Graves19-1&unit=DA_Swain19-1&unit=DA_Zoe19-1&unit=DA_Ashe19-1&unit=DA_Syndra19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "games": 83,
+      "url": "https://www.metatft.com/explorer?tab=comps&set=TFTSet19&level=8&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Taric19-1&unit=DA_Zac19-1&unit=DA_Renekton19-1_2&unit=DA_Graves19-1_2&unit=DA_Swain19-1&unit=DA_Zoe19-1&unit=DA_Ashe19-1&unit=DA_Syndra19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
       "conditions": {
         "kind": "full",
         "teamId": "00000000-0000-4000-8000-000000000075",
         "population": 8
       },
-      "sampleScope": "固定名单 · 不限星级与装备 · 无纹章、人口装或重复棋子",
+      "sampleScope": "8级固定名单 · 仅计2★鳄鱼与2★男枪（排除3★救生员鳄鱼赌狗）· 其余星级与装备不限 · 无纹章、人口装或重复棋子",
+      "sampleNote": "已排除 3★ 救生员鳄鱼赌狗（仅计 2★ 鳄鱼 + 2★ 男枪）",
       "observedOn": "2026-11-28",
       "placementCounts": [
-        74,
-        142,
-        168,
-        130,
-        99,
-        57,
-        23,
-        17
+        3,
+        8,
+        14,
+        15,
+        19,
+        14,
+        7,
+        3
       ],
-      "mean": 3.54,
-      "topFourRate": 0.723943661971831,
-      "winRate": 0.10422535211267606
+      "mean": 4.49,
+      "topFourRate": 0.4819277108433735,
+      "winRate": 0.03614457831325301
     },
     {
       "population": 9,

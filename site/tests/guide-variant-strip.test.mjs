@@ -213,6 +213,9 @@ test("promotion metrics reject core or lineup records, keep small samples gray a
   assert.deepEqual(summarize(tiny), { mean: "4.50", tone: "limited", sample: "2场 · 少量样本" });
   const augment = { ...fixedSample, mean: 7.2, topFourRate: 0.1, referencesAugment: "He's Electric" };
   assert.deepEqual(summarize(augment), { mean: "7.20", tone: "limited", sample: "10场 · 少量样本" });
+  const noted = { ...fixedSample, sampleNote: "已排除 3★ 救生员鳄鱼赌狗（仅计 2★ 鳄鱼 + 2★ 男枪）" };
+  assert.equal(guidePromotionRows(three, board => board.id === id("1251") ? noted : undefined, placement)
+    .find(row => row.board.id === id("1251"))?.note, noted.sampleNote);
 });
 
 test("header core fallback stays on >=100-game full-population core samples and rejects fixed single-level or stale records", () => {
