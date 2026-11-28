@@ -513,6 +513,110 @@
         "teamId": "00000000-0000-4000-8000-000000000063",
         "name": "5级追三",
         "notes": "五级追三星瑟提。伊莉丝先扛，瑟提站第二排，跟带轻语的伊泽瑞尔同侧。缺卢锡安用两星韦鲁斯开双安可。"
+      },
+      {
+        "teamId": "e37e7094-74df-4839-a1ca-e9005bbee85f",
+        "parentTeamId": "00000000-0000-4000-8000-000000000061",
+        "boardRole": "stage",
+        "name": "九级 · 七心之钢",
+        "notes": "先留两星拉露恩开厄斐琉斯。九级上厄斐琉斯，悠米、俄洛伊换伊莉丝和蕾欧娜，奎桑提继续扛。",
+        "pieces": [
+          {
+            "unitId": "sett",
+            "stars": 3,
+            "position": 10,
+            "items": [
+              "TFT_Item_Bloodthirster",
+              "TFT_Item_TitansResolve",
+              "TFT_Item_SteraksGage"
+            ]
+          },
+          {
+            "unitId": "k-sante",
+            "stars": 2,
+            "position": 3,
+            "items": [
+              "TFT_Item_GargoyleStoneplate",
+              "TFT_Item_WarmogsArmor",
+              "TFT_Item_NightHarvester"
+            ]
+          },
+          {
+            "unitId": "leona",
+            "stars": 2,
+            "position": 2,
+            "items": [
+              "TFT_Item_RedBuff"
+            ]
+          },
+          {
+            "unitId": "yone",
+            "stars": 2,
+            "position": 12,
+            "items": [
+              "TFT_Item_Deathblade"
+            ]
+          },
+          {
+            "unitId": "kayn",
+            "stars": 2,
+            "position": 8,
+            "items": []
+          },
+          {
+            "unitId": "ezreal",
+            "stars": 2,
+            "position": 23,
+            "items": [
+              "TFT_Item_LastWhisper"
+            ]
+          },
+          {
+            "unitId": "alune",
+            "stars": 2,
+            "position": 25,
+            "items": []
+          },
+          {
+            "unitId": "aphelios",
+            "stars": 2,
+            "position": 26,
+            "items": []
+          },
+          {
+            "unitId": "elise",
+            "stars": 2,
+            "position": 11,
+            "items": []
+          }
+        ],
+        "roles": [
+          {
+            "label": "主C",
+            "units": [
+              "sett"
+            ]
+          },
+          {
+            "label": "主坦",
+            "units": [
+              "k-sante"
+            ]
+          },
+          {
+            "label": "副C",
+            "units": [
+              "yone"
+            ]
+          },
+          {
+            "label": "功能装",
+            "units": [
+              "ezreal",
+              "leona"
+            ]
+          }
+        ]
       }
     ]
   },

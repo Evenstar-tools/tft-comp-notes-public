@@ -161,6 +161,7 @@ const guideSlugs: Record<string, GuideSlugs> = {
   "sample-block-0258": { slug: "haymaker-sett", boards: {
     "00000000-0000-4000-8000-000000000061": "lv8",
     "00000000-0000-4000-8000-000000000063": "lv5",
+    "e37e7094-74df-4839-a1ca-e9005bbee85f": "lv9-heartsteel",
   } },
   "sample-block-0307": { slug: "ionic-jinx", boards: {
     "00000000-0000-4000-8000-000000000007": "lv8",

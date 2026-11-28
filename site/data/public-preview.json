@@ -18682,6 +18682,53 @@
           "text": "MetaTFT S19 PBE 强化、英雄与解锁数据 · La Casita 11 月 19 日 PBE 飞拳瑟提和装备参考"
         },
         {
+          "id": "haymaker-sett-nine-heading",
+          "type": "heading",
+          "level": 2,
+          "text": "九级 · 七心之钢"
+        },
+        {
+          "id": "haymaker-sett-nine-notes",
+          "type": "text",
+          "text": "先留两星拉露恩开厄斐琉斯。九级上厄斐琉斯，悠米、俄洛伊换伊莉丝和蕾欧娜，奎桑提继续扛。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "先留两星拉露恩开厄斐琉斯。九级上厄斐琉斯，悠米、俄洛伊换伊莉丝和蕾欧娜，奎桑提继续扛。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "haymaker-sett-nine-source",
+          "type": "text",
+          "text": "La Casita 九级阵容参考",
+          "elements": [
+            {
+              "text_run": {
+                "content": "La Casita 九级阵容参考",
+                "text_element_style": {
+                  "link": {
+                    "url": "https://lacasitadeltft.com/en/tierlist/comps/19/punch-line-sett"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "haymaker-sett-nine-loadout",
+          "type": "text",
+          "text": "棋盘配装 · 九级 · 七心之钢\n主C：瑟提。饮血剑、泰坦的坚决、斯特拉克的挑战护手。\n主坦：奎桑提。石像鬼石板甲、狂徒铠甲、坚定之心。\n副C：永恩。死亡之刃。\n功能装：伊泽瑞尔带最后的轻语，蕾欧娜带日炎斗篷。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "棋盘配装 · 九级 · 七心之钢\n主C：瑟提。饮血剑、泰坦的坚决、斯特拉克的挑战护手。\n主坦：奎桑提。石像鬼石板甲、狂徒铠甲、坚定之心。\n副C：永恩。死亡之刃。\n功能装：伊泽瑞尔带最后的轻语，蕾欧娜带日炎斗篷。"
+              }
+            }
+          ]
+        },
+        {
           "id": "sample-block-0813",
           "type": "heading",
           "elements": [
@@ -18719,7 +18766,7 @@
             },
             {
               "text_run": {
-                "content": "\n主C：瑟提。饮血剑、泰坦的坚决。\n主坦：伊莉丝。石像鬼石板甲、日炎斗篷。\n副C：伊泽瑞尔。最后的轻语。\n功能装：伊泽瑞尔。轻语减甲。\n",
+                "content": "\n主C：瑟提。饮血剑、泰坦的坚决、斯特拉克的挑战护手。\n主坦：伊莉丝。石像鬼石板甲、日炎斗篷、狂徒铠甲。\n副C：伊泽瑞尔。最后的轻语。\n功能装：伊泽瑞尔。轻语减甲。\n",
                 "text_element_style": {
                   "bold": false,
                   "inline_code": false,
@@ -18743,7 +18790,7 @@
             }
           ],
           "level": 0,
-          "text": "棋盘配装 · 五级慢 D\n主C：瑟提。饮血剑、泰坦的坚决。\n主坦：伊莉丝。石像鬼石板甲、日炎斗篷。\n副C：伊泽瑞尔。最后的轻语。\n功能装：伊泽瑞尔。轻语减甲。\n功能装：伊莉丝。日炎重伤和前排承伤。"
+          "text": "棋盘配装 · 五级慢 D\n主C：瑟提。饮血剑、泰坦的坚决、斯特拉克的挑战护手。\n主坦：伊莉丝。石像鬼石板甲、日炎斗篷、狂徒铠甲。\n副C：伊泽瑞尔。最后的轻语。\n功能装：伊泽瑞尔。轻语减甲。\n功能装：伊莉丝。日炎重伤和前排承伤。"
         },
         {
           "id": "sample-block-0039",

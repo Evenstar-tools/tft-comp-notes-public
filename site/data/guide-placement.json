@@ -7316,6 +7316,45 @@
       "mean": 3.22,
       "topFourRate": 0.7664233576642335,
       "winRate": 0.17153284671532848
+    },
+    {
+      "sectionId": "sample-block-0258",
+      "population": 9,
+      "roster": [
+        "alune",
+        "aphelios",
+        "elise",
+        "ezreal",
+        "k-sante",
+        "kayn",
+        "leona",
+        "sett",
+        "yone"
+      ],
+      "querySignature": "[9,[\"alune\",\"aphelios\",\"elise\",\"ezreal\",\"k-sante\",\"kayn\",\"leona\",\"sett\",\"yone\"]]",
+      "build": "6045507",
+      "conditions": {
+        "kind": "full",
+        "teamId": "e37e7094-74df-4839-a1ca-e9005bbee85f",
+        "population": 9
+      },
+      "sampleScope": "9级结算 · 固定名单 · 未限定英雄强化、星级与配装",
+      "url": "https://www.metatft.com/explorer?set=TFTSet19&tab=comps&level=9&emblem_count=0&tactician_item_count=0&duplicate_unit_count=0&unit=DA_Leona19-1&unit=DA_KSante19-1&unit=DA_Sett19-1&unit=DA_Elise19-1&unit=DA_Kayn19-1&unit=DA_Aphelios19-1&unit=DA_Ezreal19-1&unit=DA_Alune19-1&unit=DA_Yone19-1&queue=PBE&patch=19.1&b_patch=c&days=3",
+      "games": 28,
+      "placementCounts": [
+        2,
+        5,
+        6,
+        6,
+        3,
+        5,
+        1,
+        0
+      ],
+      "mean": 3.79,
+      "topFourRate": 0.6785714285714286,
+      "winRate": 0.07142857142857142,
+      "observedOn": "2026-11-28"
     }
   ],
   "edition": "s19-pbe-19.1",
