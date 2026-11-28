@@ -94,18 +94,22 @@ jobs:
           PROFILE: ${{ steps.plan.outputs.profile }}
         # The conditional runner adds --archive to the daily profile.
         run: node scripts/run-conditional-refresh.mjs --profile "$PROFILE" --dry-run
-      - name: Run conditional refresh and publish verified data
+      - name: Collect verified data for local review
         id: refresh
         if: steps.plan.outputs.profile != '' && inputs.dry_run != true
         env:
           PROFILE: ${{ steps.plan.outputs.profile }}
-          GH_TOKEN: ${{ secrets.DATA_REFRESH_TOKEN }}
-        run: |
-          : "${GH_TOKEN:?Configure DATA_REFRESH_TOKEN for candidate PR checks}"
-          gh auth setup-git --hostname github.com
-          git config --local user.name 'github-actions[bot]'
-          git config --local user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          node scripts/run-conditional-refresh.mjs --profile "$PROFILE"
+          REVIEW_OUTPUT: ${{ runner.temp }}/tft-data-review
+        run: node scripts/run-conditional-refresh.mjs --profile "$PROFILE" --output "$REVIEW_OUTPUT"
+      - name: Upload data candidate
+        id: review
+        if: steps.refresh.outputs.candidate == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: data-review-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/tft-data-review
+          if-no-files-found: error
+          retention-days: 7
       - name: ${{ steps.plan.outputs.launch_marker || 'Record verified launch data' }}
-        if: steps.plan.outputs.launch_marker != '' && steps.refresh.outputs.collected == 'true'
-        run: echo '本次开服档已完成采集和验收'
+        if: steps.plan.outputs.launch_marker != '' && steps.review.outcome == 'success'
+        run: echo '本次开服档已通过采集校验，候选已供本地验收'
