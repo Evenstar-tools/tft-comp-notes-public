@@ -170,10 +170,24 @@ function boardSample(rating: PlacementRating | undefined) {
   if (kind === "fixed" || (kind === "augment" && rating.conditions?.kind !== "core")) return fixedBoardPlacementDetail(rating);
 }
 
+export function guideHeaderCoreSample(
+  boards: Team[],
+  rateCore: (board: Team) => PlacementRating | undefined,
+  minGames: number,
+): PlacementRating | undefined {
+  for (const board of boards) {
+    const sample = rateCore(board);
+    if (!sample || sample.sourcePeriod || sample.games < minGames || sample.mean === undefined) continue;
+    const kind = placementEvidenceKind(sample);
+    if (kind === "core" || kind === "lineup") return sample;
+  }
+  return undefined;
+}
+
 export function guidePromotionRows(boards: Team[], rate: (board: Team) => PlacementRating | undefined, batch: Thresholds) {
   const levels = [...new Set(boards.map(population))].sort((a, b) => b - a).slice(0, 2);
   if (boards.length < 2) return [];
-  return boards.filter(board => levels.includes(population(board))).map(board => {
+  const rows = boards.filter(board => levels.includes(population(board))).map(board => {
     const level = population(board);
     const stop = level < levels[0];
     const sample = boardSample(rate(board));
@@ -187,4 +201,5 @@ export function guidePromotionRows(boards: Team[], rate: (board: Team) => Placem
       mean, source: sample && [sample.referencesAugment ? "同装样本" : "固定结算", sample.patch, sample.window, sample.sampleScope].filter(Boolean).join(" · "),
       scope: sample?.sourcePeriod ? "历史" : sample?.referencesAugment ? "同装" : undefined };
   }).sort((a, b) => b.level - a.level || (a.mean ?? Infinity) - (b.mean ?? Infinity));
+  return rows;
 }

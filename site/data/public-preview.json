@@ -26914,6 +26914,18 @@
               }
             }
           ]
+        },
+        {
+          "id": "arcanist-taliyah-vladimir-gear-lv9",
+          "type": "text",
+          "text": "棋盘配装 · 九级 · 补奈德丽上限\n主C：弗拉基米尔。珠光护手、纳什之牙、纳什之牙。\n副C：塔莉垭。莫雷洛秘典、虚空之杖、珠光护手。\n主坦：盖伦。石像鬼石板甲、狂徒铠甲、振奋盔甲。",
+          "elements": [
+            {
+              "text_run": {
+                "content": "棋盘配装 · 九级 · 补奈德丽上限\n主C：弗拉基米尔。珠光护手、纳什之牙、纳什之牙。\n副C：塔莉垭。莫雷洛秘典、虚空之杖、珠光护手。\n主坦：盖伦。石像鬼石板甲、狂徒铠甲、振奋盔甲。"
+              }
+            }
+          ]
         }
       ],
       "team": {
@@ -27080,10 +27092,101 @@
               "items": []
             }
           ]
+        },
+        {
+          "id": "1c4768e0-686a-495f-96f4-cda4348c8fdc",
+          "name": "九级 · 补奈德丽上限",
+          "category": "待分类",
+          "notes": "九级补奈德丽提高编舞师档位，两星弗拉基米尔与塔莉垭成型。",
+          "revision": 1,
+          "updatedAt": "2026-11-28T01:15:11.000Z",
+          "sectionId": "arcanist-taliyah-vladimir",
+          "pieces": [
+            {
+              "instanceId": "d3daf5d9-70c8-4c8d-b1a5-a5a1d7287597",
+              "unitId": "garen",
+              "position": 3,
+              "stars": 2,
+              "items": [
+                "TFT_Item_GargoyleStoneplate",
+                "TFT_Item_WarmogsArmor",
+                "TFT_Item_Redemption"
+              ]
+            },
+            {
+              "instanceId": "86f61845-c4a1-4ff0-95e6-31d3a452cba8",
+              "unitId": "braum",
+              "position": 7,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "0f704bc1-8ebe-4310-b043-6d6fd4d5b8b8",
+              "unitId": "zac",
+              "position": 8,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "625c118b-ea09-40b8-9215-8bc45ab64ee2",
+              "unitId": "vladimir",
+              "position": 16,
+              "stars": 1,
+              "items": [
+                "TFT_Item_JeweledGauntlet",
+                "TFT_Item_Leviathan",
+                "TFT_Item_Leviathan"
+              ]
+            },
+            {
+              "instanceId": "8bb785ad-77ba-408a-8de0-fa0892e429f9",
+              "unitId": "yuumi",
+              "position": 22,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "9323bfee-6be8-44ca-9773-dcd7e199a86e",
+              "unitId": "taliyah",
+              "position": 21,
+              "stars": 1,
+              "items": [
+                "TFT_Item_Morellonomicon",
+                "TFT_Item_StatikkShiv",
+                "TFT_Item_JeweledGauntlet"
+              ]
+            },
+            {
+              "instanceId": "87d4d1ef-bdad-473e-a95a-cf8ea4f11df3",
+              "unitId": "zoe",
+              "position": 14,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "c03c188d-dcd9-4fbf-a3cc-a0e8fc2d6ad9",
+              "unitId": "renata-glasc",
+              "position": 27,
+              "stars": 2,
+              "items": []
+            },
+            {
+              "instanceId": "5e7a7f1e-ebc6-431b-8d8c-800f80381c8f",
+              "unitId": "nidalee",
+              "position": 12,
+              "stars": 2,
+              "items": []
+            }
+          ],
+          "instrumentPositions": {
+            "maracas": 15
+          }
         }
       ],
       "primaryTeamId": "14d668d4-7d3a-4445-a5b5-bfcfc6aa555b",
-      "stageTeamIds": [],
+      "stageTeamIds": [
+        "1c4768e0-686a-495f-96f4-cda4348c8fdc"
+      ],
       "summaryBlockId": "arcanist-taliyah-vladimir-start"
     }
   ],

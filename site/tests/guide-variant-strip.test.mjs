@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { registerHooks } from "node:module";
 import { sectionTeams } from "../domain/document-flow.ts";
-import { guidePromotionRows, guideSystemDisplayBoards, guideSystemPhases, guideSystemSample, guideSystems, rankGuideSystems, systemMeanTone } from "../domain/guide-variant-strip.ts";
+import { guideHeaderCoreSample, guidePromotionRows, guideSystemDisplayBoards, guideSystemPhases, guideSystemSample, guideSystems, rankGuideSystems, systemMeanTone } from "../domain/guide-variant-strip.ts";
 import { GUIDE_SECTION_IDS } from "../domain/guide-identities.ts";
 import { usedPopulation } from "../domain/team.ts";
 
@@ -203,12 +203,29 @@ test("promotion metrics reject core or lineup records, keep small samples gray a
   const fixedSample = { population: 9, roster: ["zeri"], url: "https://www.metatft.com/explorer?tab=comps", games: 10,
     placementCounts: [0, 0, 0, 2, 0, 4, 2, 2], date: "2026-11-27", patch: "19.1c", window: "3天" };
   const summarize = sample => guidePromotionRows(three, board => board.id === id("1251") ? sample : undefined, placement)
-    .find(row => row.board.id === id("1251")).stat;
+    .find(row => row.board.id === id("1251"))?.stat;
   assert.deepEqual(summarize(fixedSample), { mean: "6.20", tone: "limited", sample: "前四 20% · 10场 · 少量样本" });
+  // Core/lineup records are rejected from fixed promotion rows
   assert.deepEqual(summarize({ ...fixedSample, url: "https://www.metatft.com/explorer?tab=units", conditions: { kind: "core" } }),
     { mean: "—", tone: "limited", sample: "暂无数据" });
+  assert.equal(guidePromotionRows(three, () => undefined, placement).some(row => row.mean !== undefined), false);
   const tiny = { ...fixedSample, games: 2, placementCounts: [1, 0, 0, 0, 0, 0, 0, 1] };
   assert.deepEqual(summarize(tiny), { mean: "4.50", tone: "limited", sample: "2场 · 少量样本" });
   const augment = { ...fixedSample, mean: 7.2, topFourRate: 0.1, referencesAugment: "He's Electric" };
   assert.deepEqual(summarize(augment), { mean: "7.20", tone: "limited", sample: "10场 · 少量样本" });
+});
+
+test("header core fallback stays on >=100-game full-population core samples and rejects fixed single-level or stale records", () => {
+  const { systems, boards } = guide(GUIDE_SECTION_IDS.jazzJinx);
+  const [lv8, lv9] = boards(systems[0]);
+  const coreSample = { population: 8, roster: ["jinx"], url: "https://www.metatft.com/explorer?tab=units", games: 630,
+    mean: 4.15, topFourRate: 0.567, winRate: 0.14, placementCounts: [88, 90, 90, 89, 80, 70, 63, 60], date: "2026-11-28",
+    patch: "19.1c", window: "近 3 天", conditions: { kind: "core", teamId: lv8.id, coreRoster: ["jinx"] } };
+  const fixedLv9 = { ...coreSample, population: 9, games: 167, mean: 2.88, url: "https://www.metatft.com/explorer?tab=comps&level=9",
+    conditions: { kind: "fixed", teamId: lv9.id, population: 9 } };
+  // Viewing lv9 shares the system's lv8 core sample and never leaks fixed lv9 mean (2.88) to the header
+  assert.equal(guideHeaderCoreSample([lv9, lv8], board => board.id === lv9.id ? fixedLv9 : coreSample, 100)?.mean, 4.15);
+  // Small (<100) or historical sourcePeriod records never leak into the header
+  assert.equal(guideHeaderCoreSample([lv8], () => ({ ...coreSample, games: 32 }), 100), undefined);
+  assert.equal(guideHeaderCoreSample([lv8], () => ({ ...coreSample, sourcePeriod: { patch: "19.1b", window: "历史" } }), 100), undefined);
 });
