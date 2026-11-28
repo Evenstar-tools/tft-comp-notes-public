@@ -4,7 +4,7 @@ import test from "node:test";
 import { boardNeighbors } from "../domain/board-layout.ts";
 import { traitCounts } from "../domain/team.ts";
 import { sectionTeams } from "../domain/document-flow.ts";
-import { guideBody, guidePlaystyle, guideRollLevel, guideRoster, guideUnitMatch, isBoardLoadout, readingNotes, sourceSummary } from "../domain/guide-reading.ts";
+import { guideBody, guideFacets, guidePlaystyle, guideRollLevel, guideRoster, guideUnitMatch, isBoardLoadout, readingNotes, sourceSummary } from "../domain/guide-reading.ts";
 import { heroAugmentForGuide } from "../domain/hero-augments.ts";
 import { allGuideIds, auditGuideBoard, auditGuideCopy, auditGuidePublication, featuredGuideIds, prepareAuditPublication } from "../scripts/audit-guide-boards.mjs";
 import guidePositionReferences from "../scripts/guide-position-references.json" with { type: "json" };
@@ -237,8 +237,8 @@ test("the 14 featured guides pass on the combined public boards and retain roles
   assert.deepEqual(prodigy.reroll.stages.filter(stage => stage.directoryTitle).map(stage => stage.teamId.slice(-4)), ["0017", "d6c2"]);
   assert.doesNotMatch(slow, /打法：95/);
   const fastRoutes = [
-    ["c105", "1342", [/开局有玛尔扎哈/, /2-1 拉 4/, /7 级小启动/, /团队法强/, /冕卫/, /8,000/, /累计近 2 万/, /再打近 4 万/, /6 万/, /蓝霸符/]],
-    ["d6c2", "1343", [/五种不同稀有度/, /60,000 伤害/, /五阶段.*八级.*质量/, /蓝霸符.*第一轮技能.*偷属性/, /技能暴击/, /无尽.*破防/]],
+    ["c105", "1342", [/开局有玛尔扎哈/, /2-1 拉 4/, /7 级小启动/, /团队法强/, /冕卫/, /8,000/, /累计近 2 万/, /再打近 4 万/, /6 万/, /青龙刀/]],
+    ["d6c2", "1343", [/五种不同稀有度/, /60,000 伤害/, /五阶段.*八级.*质量/, /青龙刀启动并偷属性/, /无尽补爆发/, /饮血补续航/]],
     ["fd13", "1341", [/补回妮蔻开五天才/, /回蓝和团队治疗/, /第二轮爆发/]],
   ];
   for (const [id, sampleId, mechanisms] of fastRoutes) {
@@ -253,7 +253,9 @@ test("the 14 featured guides pass on the combined public boards and retain roles
     assert.ok(sample?.elements.some(element => element.text_run?.text_element_style?.link?.url.startsWith("https://www.metatft.com/explorer?")), id);
     if (id !== "c105") {
       assert.deepEqual(team.pieces.find(piece => piece.unitId === "baron-nashor").items,
-        ["TFT_Item_BlueBuff", "TFT_Item_PowerGauntlet", "TFT_Item_InfinityEdge"], id);
+        ["TFT_Item_SpearOfShojin", "TFT_Item_InfinityEdge", "TFT_Item_Bloodthirster"], id);
+      assert.deepEqual(guideFacets(prodigy, team, prodigy.gameData).costs, [7], id);
+      assert.deepEqual(readingNotes(prodigy, team, prodigy.gameData).roles.find(role => role.label === "主C").units, ["baron-nashor"], id);
     }
   }
   const zeri = publication.sections.find(section => section.id.endsWith("0235"));

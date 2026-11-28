@@ -2180,6 +2180,14 @@
       {
         "before": "若七级时玛尔扎哈、艾克来得多且升九无望，可直接转七级慢搜追三保分。",
         "after": "七级若已有天才纹章，玛尔扎哈和艾克又来得多，可以转阿木木那套停七追三。"
+      },
+      {
+        "before": "安妮自带重伤可缓做鬼书，提前留水滴给男爵合蓝霸符。",
+        "after": "安妮自带重伤，先留大剑和水滴给男爵做青龙刀。"
+      },
+      {
+        "before": "男爵先做蓝霸符，第一轮技能越早放越早偷属性；刚解锁时可直接继承启动装和法装，技能暴击很重要（法爆等暴击装先用），后面再找物理装（无尽、破防链枷）替换。",
+        "after": "男爵接主 C 装。先做青龙刀启动并偷属性，无尽补爆发，饮血补续航。玛尔扎哈继续带法装打副 C。"
       }
     ],
     "stages": [
@@ -2288,7 +2296,7 @@
         "boardRole": "variant",
         "name": "9级 · 天才蚂蚱大龙",
         "directoryTitle": "两星玛尔扎哈开大龙",
-        "notes": "七级搜到两星玛尔扎哈就上人口。集齐五种乐器、打满 6 万伤害，九级下妮蔻上男爵。",
+        "notes": "七级搜到两星玛尔扎哈就上人口，九级让男爵接青龙刀、无尽和饮血。",
         "pieces": [
           {
             "unitId": "shyvana",
@@ -2345,9 +2353,9 @@
             "stars": 1,
             "position": 12,
             "items": [
-              "TFT_Item_BlueBuff",
-              "TFT_Item_PowerGauntlet",
-              "TFT_Item_InfinityEdge"
+              "TFT_Item_SpearOfShojin",
+              "TFT_Item_InfinityEdge",
+              "TFT_Item_Bloodthirster"
             ]
           }
         ],
@@ -2355,7 +2363,7 @@
           {
             "label": "主C",
             "units": [
-              "malzahar"
+              "baron-nashor"
             ]
           },
           {
@@ -2367,7 +2375,7 @@
           {
             "label": "副C",
             "units": [
-              "baron-nashor"
+              "malzahar"
             ]
           }
         ]
@@ -2377,7 +2385,7 @@
         "parentTeamId": "0dd45d5d-496c-459b-9db2-8e05355bd6c2",
         "boardRole": "stage",
         "name": "8级 · 天才蚂蚱大龙过渡",
-        "notes": "七级搜两星玛尔扎哈，八级找两星希瓦娜稳血。提前留水滴给大龙做启动装，优先蓝霸符。",
+        "notes": "七级搜两星玛尔扎哈，八级找两星希瓦娜稳血。给男爵留大剑和水滴做青龙刀。",
         "pieces": [
           {
             "unitId": "shyvana",
@@ -2456,7 +2464,7 @@
         "parentTeamId": "0dd45d5d-496c-459b-9db2-8e05355bd6c2",
         "boardRole": "stage",
         "name": "10级 · 天才蚂蚱大龙上限",
-        "notes": "十级补回妮蔻开五天才。男爵优先拿启动装，再补输出装。",
+        "notes": "十级补回妮蔻开五天才，男爵继续主 C。",
         "pieces": [
           {
             "unitId": "shyvana",
@@ -2519,9 +2527,9 @@
             "stars": 1,
             "position": 12,
             "items": [
-              "TFT_Item_BlueBuff",
-              "TFT_Item_PowerGauntlet",
-              "TFT_Item_InfinityEdge"
+              "TFT_Item_SpearOfShojin",
+              "TFT_Item_InfinityEdge",
+              "TFT_Item_Bloodthirster"
             ]
           }
         ],
@@ -2529,7 +2537,7 @@
           {
             "label": "主C",
             "units": [
-              "malzahar"
+              "baron-nashor"
             ]
           },
           {
@@ -2541,7 +2549,7 @@
           {
             "label": "副C",
             "units": [
-              "baron-nashor"
+              "malzahar"
             ]
           }
         ]
