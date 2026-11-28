@@ -78,17 +78,17 @@ function guide(sectionId, batch = family, reviewedRollingPatch) {
   return { systems, boards, comparison: system => guidePromotionRows(boards(system), rate, placement) };
 }
 
-test("Graves ranks independent clusters and keeps Twisted Fate in the AD route", () => {
+test("Graves keeps the eight-level swap and Twisted Fate in the AD route", () => {
   const { systems, boards, comparison } = guide(GUIDE_SECTION_IDS.oceanGraves);
-  assert.deepEqual(systems.map(system => guideSystemSample(system.stat).mean), ["4.15", "4.34", "4.38", "4.42", "—", "—"]);
+  assert.deepEqual(systems.map(system => guideSystemSample(system.stat).mean), ["4.15", "4.34", "4.38", "4.42", "—"]);
   assert.deepEqual(systems.slice(0, 4).map(system => guideSystemSample(system.stat).tone), ["middle", "middle", "middle", "middle"]);
   assert.deepEqual(systems.slice(0, 4).map(system => system.teamId), ["0075", "1261", "0102", "0093"].map(id));
   assert(systems.some(system => system.teamId === id("0030")));
-  assert(systems.some(system => system.teamId === id("0119")));
+  assert(!systems.some(system => system.teamId === id("0119")));
   assert(!systems.some(system => system.teamId === id("1262")));
   assert.deepEqual(comparison(systems[0]).map(row => row.board.id), ["0076", "0075"].map(id));
   assert.deepEqual(comparison(systems[1]).map(row => [row.board.id, row.label]), [
-    [id("1262"), "9级补卡"], [id("1261"), "停在8级"],
+    [id("1262"), "9级补卡"], [id("1261"), "停在8级"], [id("0119"), "停在8级"],
   ]);
   const ad = boards(systems[1]);
   const ocean = boards(systems[0]);
@@ -209,14 +209,16 @@ test("live launch displays qualified ranked evidence as it arrives and preserves
 });
 
 test("a count-only cluster cannot claim another board or supply its preferred landing", () => {
-  const small = row(oceanGraves, "0119", "小样本", 1.5, {
-    games: 12, landingTeamId: id("0030"), sharedTeamIds: [id("0030"), id("0075")],
+  const small = row(oceanGraves, "0030", "小样本", 1.5, {
+    games: 12, landingTeamId: id("0075"), sharedTeamIds: [id("0075"), id("0119")],
   });
-  const { systems } = guide(oceanGraves, { ...family, smallSamples: [small] });
-  const cluster = systems.find(system => system.teamId === id("0119"));
-  assert.deepEqual(cluster.boardIds, [id("0119")]);
+  const swapSample = row(oceanGraves, "0119", "八级换卡", 1.5, { games: 8 });
+  const { systems } = guide(oceanGraves, { ...family, smallSamples: [small, swapSample] });
+  const cluster = systems.find(system => system.teamId === id("0030"));
+  assert.deepEqual(cluster.boardIds, [id("0030")]);
   assert.equal(cluster.stat, undefined);
-  assert(systems.some(system => system.teamId === id("0030")));
+  assert(!systems.some(system => system.teamId === id("0119")));
+  assert(systems.find(system => system.teamId === id("1261")).boardIds.includes(id("0119")));
   assert.equal(systems[0].teamId, id("0075"));
 });
 

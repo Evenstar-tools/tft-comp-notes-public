@@ -555,14 +555,19 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
   }
   function renderPromotionComparison() {
     if (!currentSystem) return null;
+    const entryLevel = systemEntry && usedPopulation(systemEntry.pieces);
+    const swaps = displayedSystemBoards.filter(board => usedPopulation(board.pieces) === entryLevel &&
+      section.reroll?.stages.some(stage => stage.teamId === board.id && stage.boardRole === "stage" &&
+        stage.parentTeamId === systemEntry?.id));
     const allRows = guidePromotionRows(displayedSystemBoards, board => teamPlacement(board, section, "fixed") ??
       (heroGuide ? teamPlacement(board, section, "augment") : undefined), placementBatch);
     const rows = launchStats ? allRows.filter(row => row.mean !== undefined) : allRows;
-    if (allRows.length < 2 || !rows.some(row => row.games)) return null;
-    return <section className="guide-promotion-comparison" aria-label="上人口与补卡对照">
+    const showComparison = allRows.length >= 2 && rows.some(row => row.games);
+    const missingSwaps = swaps.filter(board => !showComparison || !rows.some(row => row.board.id === board.id));
+    const comparison = showComparison && <section className="guide-promotion-comparison" aria-label="上人口与补卡对照">
       <h3>上人口与补卡对照</h3>
       <p>同套棋盘停级和升人口后的结算名次，仅用于比较补卡。</p>
-      <ul role="list">{rows.map(({ board, label, stat, scope, source, games, mean, note }) => {
+      <ul role="list">{rows.map(({ board, level, label, stat, scope, source, games, mean, note }) => {
         const current = mainBoardActive && !showFlex && board.id === team.id;
         return <li key={board.id}>
           <button type="button" className="guide-variant-option" aria-pressed={current}
@@ -572,7 +577,7 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
               else if (!mainBoardActive) pickStage(mainStage);
             }}>
             <span className="guide-variant-option-copy">
-              <small className="guide-promotion-level">{label}</small>
+              <small className="guide-promotion-level">{swaps.includes(board) ? level + "级换卡" : label}</small>
               <strong>{guideBoardName(board)}</strong>{current && <small className="guide-variant-current">当前</small>}
               {note && <small className="guide-promotion-note">{note}</small>}
             </span>
@@ -581,6 +586,14 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
         </li>;
       })}</ul>
     </section>;
+    return <>
+      {comparison}
+      {systemEntry && missingSwaps.length > 0 && <div className="guide-flex-slot" role="group" aria-label={entryLevel + "级换卡"}>
+        <strong className="guide-flex-label">{entryLevel}级换卡</strong>
+        {[systemEntry, ...missingSwaps].map(option => <button key={option.id} type="button"
+          aria-pressed={option.id === team.id} onClick={() => pickTeam(option)}>{guideBoardName(option)}</button>)}
+      </div>}
+    </>;
   }
   const boardActions = <div className="guide-board-actions">
     <button type="button" className="guide-zoom-trigger guide-board-zoom" aria-label="放大棋盘" title="放大棋盘" aria-haspopup="dialog" onClick={() => setZoomed(true)}>

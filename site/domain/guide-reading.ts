@@ -279,7 +279,7 @@ export function guideRoute(section: Section, teams: Team[], current: Team): { ph
     ].filter(step => step.team || step.text) };
   }
   if (oceanGraves) {
-    if (AD_GRAVES_BOARD_IDS.some(id => id === current.id)) {
+    if (AD_GRAVES_BOARD_IDS.some(id => id === (staged?.final.id ?? current.id))) {
       const [landing, upgrade] = AD_GRAVES_BOARD_IDS.map(id => teams.find(team => team.id === id));
       return {
         phases: landing ? [phase(guideBoardName(landing), landing, "")] : [],
