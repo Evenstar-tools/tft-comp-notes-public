@@ -85,7 +85,8 @@ async function storedPublication(id?: string): Promise<PublishedSource | null> {
     return { publication: publicationWithBoardRevision(await bundlePreviewSnapshot(), record), repository: true };
   }
   // Older board writes stored a complete copy, without the draft or archive used for document publications.
-  if (!row.has_document && record.previousId && (record.boardEdits?.length || record.boardLayouts?.length)) {
+  if (!row.has_document && !Array.isArray(record.boardOverrides) && record.previousId &&
+      (record.boardEdits?.length || record.boardLayouts?.length)) {
     const base = await bundlePreviewSnapshot();
     const boardOverrides = legacyRepositoryOverrides(base, record);
     return { publication: publicationWithBoardRevision(base, {

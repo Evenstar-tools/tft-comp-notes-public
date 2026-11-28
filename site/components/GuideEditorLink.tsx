@@ -14,7 +14,9 @@ export function GuideEditorLink({ team, title, href, focusUnit, secondary = fals
   sourceGuide?: SourceGuide;
   sharedConditions?: TeamCondition[];
 }) {
-  const label = owner ? "带入工作区" : "带入编辑器";
+  const label = !owner ? "带入编辑器" : target ? "带入工作区" : "另存到工作区";
+  const help = !owner ? "带入编辑器，在此浏览器保存副本"
+    : target ? "在站主工作区编辑，可发布到当前公开棋盘" : "带入站主工作区，可保存为独立草稿";
   const [error, setError] = useState("");
   const [ready, setReady] = useState(false);
   useEffect(() => setReady(true), []);
@@ -39,7 +41,7 @@ export function GuideEditorLink({ team, title, href, focusUnit, secondary = fals
 
   return <div className="guide-editor-action">
     <button type="button" className={secondary ? "guide-zoom-trigger" : "guide-zoom-trigger guide-editor-link"} onClick={openEditor} disabled={!ready}
-      aria-label={label} title={target ? "带入站主工作区，可发布原棋盘" : owner ? "带入站主工作区，保存云端副本" : "带入编辑器，在此浏览器保存副本"}>
+      aria-label={label} title={help}>
       <SquarePen size={16} aria-hidden /><span>{label}</span>
     </button>
     {error && <span className="guide-editor-error" role="alert">{error}</span>}

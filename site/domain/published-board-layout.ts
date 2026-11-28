@@ -44,16 +44,19 @@ export function boardContentVersion(board: PublishedBoardContent): string {
   return JSON.stringify(publishedBoardContent(board));
 }
 
-export function publishedBoardEdits(sections: Section[], edits?: PublishedBoardEdit[]) {
+export function publishedBoardEdits(sections: Section[], edits?: PublishedBoardEdit[], renderedSections?: Section[]) {
   return (edits ?? []).filter(({ sectionId, teamId, source }) => {
     const section = sections.find(entry => entry.id === sectionId);
-    const team = section && sectionTeams(section).find(entry => entry.id === teamId);
+    if (!section) return false;
+    const original = sectionTeams(section).find(entry => entry.id === teamId);
+    const generated = !original && renderedSections?.find(entry => entry.id === sectionId && entry.reroll?.added.includes(teamId));
+    const team = original ?? (generated && sectionTeams(generated).find(entry => entry.id === teamId));
     return team && JSON.stringify(publishedBoardContent(team)) === JSON.stringify(source);
   });
 }
 
 export function applyPublishedBoardEdits(source: Publication, rendered: Publication): Publication {
-  const edits = publishedBoardEdits(source.sections, source.boardEdits);
+  const edits = publishedBoardEdits(source.sections, source.boardEdits, rendered.sections);
   if (!edits.length) return rendered;
   return {
     ...rendered,

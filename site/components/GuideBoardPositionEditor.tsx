@@ -16,7 +16,8 @@ type Target = { publicationId: string; sectionId: string; teamId: string; title:
 export function GuideBoardPositionEditor(target: Target) {
   const [open, setOpen] = useState(false);
   return <>
-    <button type="button" className="guide-zoom-trigger guide-position-trigger" aria-haspopup="dialog" onClick={() => setOpen(true)}>
+    <button type="button" className="guide-zoom-trigger guide-position-trigger" aria-haspopup="dialog"
+      title="修改当前公开棋盘站位" onClick={() => setOpen(true)}>
       <Move size={16} aria-hidden />改站位
     </button>
     {open && <PositionDialog {...target} onClose={() => setOpen(false)} />}
