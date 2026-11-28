@@ -28,8 +28,17 @@ export function currentEmblemSnapshot(snapshot: { set: string; mode: string; pat
   }, patch);
 }
 
-export function gearSampleMinimum(category: Item["category"], pbe: boolean, minGames: number) {
-  return pbe && (category === "radiant" || category === "emblem" || category === "artifact") ? 1 : minGames;
+function gearDisplayMinimum(category: Item["category"]) {
+  if (category === "emblem") return 50;
+  if (category === "artifact" || category === "radiant") return 100;
+}
+
+export function gearSampleMinimum(category: Item["category"], minGames: number) {
+  return gearDisplayMinimum(category) ?? minGames;
+}
+
+export function visibleGearSample(category: Item["category"], games = 0) {
+  return games >= (gearDisplayMinimum(category) ?? 0);
 }
 
 export function gearWearerMatches(units: Unit[], query: string) {

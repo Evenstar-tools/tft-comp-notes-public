@@ -7,7 +7,7 @@ import { itemReference } from "@/data/item-reference";
 import { itemWearers, type WearerSnapshot } from "@/data/item-wearers";
 import { specialItemWearers } from "@/data/special-item-wearers";
 import { guideLink } from "@/domain/guide-reading";
-import { currentEmblemSnapshot, currentWearerSnapshot, gearSampleMinimum } from "@/domain/gear-wearer";
+import { currentEmblemSnapshot, currentWearerSnapshot, gearSampleMinimum, visibleGearSample } from "@/domain/gear-wearer";
 import { compareGearWearerSamples, cookware, emblemMatches, emblemSnapshot, filterEmblems, filterGear, gearFilters, gearGroups, gearHref, gearMatches, gearWearerStats, isCookRecipe, itemName, recipeParts, searchGear, selectableWearers,
   type GearFilters, type GearGroup, type GearOrder, type ItemGroup } from "@/domain/gear-library";
 import { emblemItemId, type itemGuideOrigin } from "@/domain/links";
@@ -53,7 +53,7 @@ function displayCurrentWearers(snapshot: WearerSnapshot): WearerSnapshot {
   if (!duringLaunch) return snapshot;
   if (!currentWearerSnapshot(snapshot, currentPatch)) return { ...snapshot, items: {} };
   return { ...snapshot, items: Object.fromEntries(Object.entries(snapshot.items).map(([id, sample]) => [
-    id, { ...sample, rows: sample.rows.filter(row => row.games >= snapshot.minGames) },
+    id, { ...sample, rows: sample.rows.filter(row => row.games >= gearSampleMinimum(itemMap.get(id)?.category, snapshot.minGames)) },
   ])) };
 }
 
@@ -62,7 +62,7 @@ const currentEquipment: EquipmentStats = {
 };
 
 function itemSampleMinimum(item: Item, snapshot: WearerSnapshot) {
-  return gearSampleMinimum(item.category, /\bPBE\b/i.test(snapshot.version), snapshot.minGames);
+  return gearSampleMinimum(item.category, snapshot.minGames);
 }
 
 function itemPerformance(item: Item, snapshot: WearerSnapshot) {
@@ -130,19 +130,21 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
   const reverseRows = reverse ? visible.flatMap<ReverseGearRow>(entry => {
     if (!equipment) return [];
     const snapshot = equipment.special.items[entry.id] ? equipment.special : equipment.standard;
-    const row = snapshot.items[entry.id]?.rows.find(sample => sample.unitId === filters.wearer);
-    if (!row || entry.category === "component" || entry.category === "emblem") return [];
+    const stats = snapshot.items[entry.id];
+    const row = stats?.rows.find(sample => sample.unitId === filters.wearer);
+    if (!row || entry.category === "component" || entry.category === "emblem" ||
+        !visibleGearSample(entry.category, stats?.totalGames) || !visibleGearSample(entry.category, row.games)) return [];
     const category = snapshot === equipment.standard ? "completed" : entry.category === "radiant" ? "radiant" : "special";
     const minGames = itemSampleMinimum(entry, snapshot);
-    return [{ entry, category, sample: gearWearerStats(row, minGames), rankedMinimum: snapshot.minGames,
+    return [{ entry, category, sample: gearWearerStats(row, minGames), rankedMinimum: minGames,
       rate: row.games >= minGames ? row.rate : undefined, trait: "" }];
   }) : [];
   if (reverse && group === "all" && !period && (!duringLaunch || currentEmblemSnapshot(emblemSnapshot, currentPatch))) {
     for (const [trait, stats] of filterEmblems(query)) {
       const entry = itemMap.get(emblemItemId(trait));
       const holder = stats.holders.find(row => row.unitId === filters.wearer);
-      if (entry && holder && (!duringLaunch || holder.games >= emblemSnapshot.minGames)) {
-        reverseRows.push({ entry, category: "emblems", sample: holder, rankedMinimum: emblemSnapshot.minGames, trait });
+      if (entry && holder && visibleGearSample("emblem", stats.games) && visibleGearSample("emblem", holder.games)) {
+        reverseRows.push({ entry, category: "emblems", sample: holder, rankedMinimum: gearSampleMinimum("emblem", emblemSnapshot.minGames), trait });
       }
     }
   }
@@ -283,20 +285,24 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
   const search = <GearWearerSearch filters={filters} onChange={changeFilters} inputRef={searchBox} label="搜装备、散件或英雄" />;
   const categoryProps = { current: group, filters, hrefFor: groupLink, onNavigate: switchGroup };
   const radiantCount = group === "all" ? reverseRows.filter(row => row.category === "radiant").length : 0;
-  const rankedEntries = ranking && !reverse && specialStats ? visible.map(entry => {
+  const rankedEntries = ranking && !reverse && specialStats ? visible.flatMap(entry => {
     const stats = specialStats.items[entry.id];
-    const holders = stats?.rows.filter(row => !excluded.includes(row.unitId) && unitMap.has(row.unitId)) ?? [];
-    const qualified = holders.filter(row => row.games >= specialStats.minGames && row.mean !== undefined);
+    if (!visibleGearSample(entry.category, stats?.totalGames)) return [];
+    const holders = stats?.rows.filter(row => !excluded.includes(row.unitId) && unitMap.has(row.unitId) &&
+      visibleGearSample(entry.category, row.games)) ?? [];
+    const qualified = holders.filter(row => row.games >= itemSampleMinimum(entry, specialStats) && row.mean !== undefined);
     const commonOnly = !qualified.length;
     const best = (commonOnly ? holders.sort((a, b) => b.games - a.games) :
       qualified.sort((a, b) => a.mean! - b.mean! || b.games - a.games)).slice(0, 3);
-    return { entry, stats, commonOnly, best, performance: itemPerformance(entry, specialStats) };
+    return [{ entry, stats, commonOnly, best, performance: itemPerformance(entry, specialStats) }];
   }).sort((a, b) => {
     const games = (b.stats?.totalGames ?? 0) - (a.stats?.totalGames ?? 0);
     if (order === "games") return games;
     if (order === "wins") return (b.performance?.winRate ?? -1) - (a.performance?.winRate ?? -1) || games;
     return (a.performance?.mean ?? Infinity) - (b.performance?.mean ?? Infinity) || games;
   }) : [];
+  const referenceOnly = ranking && !reverse && specialStats && visible.find(entry =>
+    entry.id === selected && !visibleGearSample(entry.category, specialStats.items[entry.id]?.totalGames));
   const holderModes = new Set(rankedEntries.filter(row => row.best.length).map(row => row.commonOnly ? "usual" : "best"));
   const holderMode = holderModes.size === 1 ? [...holderModes][0] : undefined;
   const holderHeading = holderMode === "usual" ? "常用使用者" : holderMode === "best" ? "最佳使用者" : "使用者";
@@ -371,9 +377,15 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
             onChange={excluded => changeFilters({ ...filters, excluded })} />
         </div>
       </div>
+      {referenceOnly && <div className="gear-rank-detail"><ItemReading
+        item={referenceOnly} wearer={wearer} filters={filters} uses={examples[referenceOnly.id] ?? []}
+        onRecipe={openItem} equipment={equipment} period={period?.id}
+        onWearer={(event, unit) => openWearer(event, referenceOnly.id, unit)} wearerHref={unit => wearerLink(referenceOnly.id, unit)}
+        returnHref={itemHref(group, filters, { item: referenceOnly.id, unit: wearer })} origin={origin} />
+      </div>}
       {archiveMessage || (rankedEntries.length && specialStats ? <>
         <div className="gear-rank-head" aria-hidden="true"><span>装备</span><span>均名</span><span>登顶率</span><span>场数</span>
-          <span className="gear-holder-heading" title={holderMode === "usual" ? `未满 ${specialStats.minGames} 场，按携带场数排序` : holderMode === "best" ? `满 ${specialStats.minGames} 场，按均名排序` : undefined}>
+          <span className="gear-holder-heading" title={holderMode === "usual" ? "按携带场数排序" : holderMode === "best" ? "按均名排序" : undefined}>
             {holderHeading}<small>均名 · 场数</small>
           </span>
         </div>
@@ -405,7 +417,7 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
                 <span className="gear-rank-number"><small>场数</small>{stats?.totalGames !== undefined ? number.format(stats.totalGames) : "—"}</span>
               </a>
               <div className="gear-rank-holders" aria-label={commonOnly ? "常用使用者" : "最佳使用者、均名和携带场数"}>
-                {!!best.length && <span className="gear-pick-kind" data-kind={commonOnly ? "usual" : "best"} title={commonOnly ? "使用者均不足 " + specialStats.minGames + " 场，按携带场数排序" : "携带至少 " + specialStats.minGames + " 场，按均名排序"}>{commonOnly ? "常用" : "最佳"}</span>}
+                {!!best.length && <span className="gear-pick-kind" data-kind={commonOnly ? "usual" : "best"} title={commonOnly ? "按携带场数排序" : "携带至少 " + minGames + " 场，按均名排序"}>{commonOnly ? "常用" : "最佳"}</span>}
                 {best.length ? best.map(row => {
                   const unit = unitMap.get(row.unitId)!;
                   return <a className={"gear-holder cost-" + unit.cost} key={unit.id} href={wearerLink(entry.id, unit.id)}
@@ -426,7 +438,7 @@ export function ItemLibrary({ itemId, unitId, initialView, initialFilters, examp
             </div>}
           </li>;
         })}</ul>
-      </> : <GearCategoryEmpty {...categoryProps} onClear={clearSearch} />)}
+      </> : !referenceOnly && <GearCategoryEmpty {...categoryProps} onClear={clearSearch} />)}
     </section> : <div className="gear-library" data-detail-entry={Boolean(itemId && itemMap.has(itemId)) || undefined}>
       <aside className="gear-index" id="gear-rankings" aria-label="选择装备">
         {search}
@@ -462,7 +474,8 @@ function ItemReading({ item, wearer, filters, uses, onRecipe, onWearer, wearerHr
   const excluded = reverse ? [] : filters.excluded;
   const reference = itemReference.items[item.id];
   const snapshot = equipment?.special.items[item.id] ? equipment.special : equipment?.standard;
-  const sampled = snapshot?.items[item.id];
+  const stats = snapshot?.items[item.id];
+  const sampled = stats && visibleGearSample(item.category, stats.totalGames) ? stats : undefined;
   const minGames = snapshot ? itemSampleMinimum(item, snapshot) : Infinity;
   const showBuildQuery = item.category === "completed" && item.id !== "TFT_Item_ThiefsGloves";
   const [buildsOpen, setBuildsOpen] = useState(openBuilds);
@@ -479,11 +492,12 @@ function ItemReading({ item, wearer, filters, uses, onRecipe, onWearer, wearerHr
   const special = item.category === "artifact" || item.category === "support";
   const cookRecipe = isCookRecipe(item);
   const cookComponent = cookware.has(item.id);
-  const suitable = sampled?.rows.some(row => !excluded.includes(row.unitId) && unitMap.has(row.unitId) && row.mean !== undefined && row.games >= minGames);
+  const known = sampled?.rows.filter(row => !excluded.includes(row.unitId) && unitMap.has(row.unitId) &&
+    visibleGearSample(item.category, row.games)) ?? [];
+  const suitable = known.some(row => row.mean !== undefined && row.games >= minGames);
   const [order, setOrder] = useState<"games" | "mean">(!inRanking && (radiant || special) && suitable ? "mean" : "games");
   const wearerTable = useRef<HTMLDivElement>(null);
-  const selectedWearer = wearer && !excluded.includes(wearer) ? sampled?.rows.find(row => row.unitId === wearer && unitMap.has(wearer)) : undefined;
-  const known = sampled?.rows.filter(row => !excluded.includes(row.unitId) && unitMap.has(row.unitId)) ?? [];
+  const selectedWearer = wearer ? known.find(row => row.unitId === wearer) : undefined;
   const rankedMean = (row: (typeof known)[number]) => row.games >= minGames && row.mean !== undefined ? row.mean : Infinity;
   known.sort(order === "mean"
     ? (a, b) => rankedMean(a) - rankedMean(b) || b.games - a.games
@@ -520,8 +534,8 @@ function ItemReading({ item, wearer, filters, uses, onRecipe, onWearer, wearerHr
   const effect = lines.filter(line => !isGlossary(line)).join("\n");
   const glossary = lines.filter(isGlossary);
   const placement = (special || radiant) && snapshot ? itemPerformance(item, snapshot)?.mean : undefined;
-  const showWearers = snapshot && !reverse && (!!sampled?.rows.some(row => !excluded.includes(row.unitId) && unitMap.has(row.unitId)) ||
-    !inRanking && (item.category === "completed" || item.category === "team-size" || special || radiant));
+  const showWearers = snapshot && !reverse && (known.length > 0 ||
+    !inRanking && (item.category === "completed" || item.category === "team-size" || item.category === "support"));
   const showBoardUses = guideExamples.size > 0 || !inRanking && showWearers;
   const category = categoryNames[item.category ?? ""];
   const attributes = !!reference?.stats.length && <dl className="gear-attributes" aria-label="装备属性">{reference.stats.map(({ label, value }) =>

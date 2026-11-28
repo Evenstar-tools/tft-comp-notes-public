@@ -37,14 +37,14 @@ const updatedAt = snapshot.updatedAt ?? "";
 const time = Number.isFinite(Date.parse(updatedAt)) ? new Intl.DateTimeFormat("zh-CN", {
   timeZone: "Asia/Shanghai", month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false,
 }).format(new Date(updatedAt)) : undefined;
-const displayMinimum = gearSampleMinimum("emblem", snapshot.mode === "PBE", snapshot.minGames);
+const displayMinimum = gearSampleMinimum("emblem", snapshot.minGames);
 const currentPatchVersion = currentPatch.metaTftPatch
   ? currentPatch.metaTftPatch.patch + (currentPatch.metaTftPatch.bPatch ?? "") : "";
 const isPreviousPatch = Boolean(currentPatchVersion && snapshot.patch && snapshot.patch !== currentPatchVersion);
 const currentData = !duringLaunch || currentEmblemSnapshot(snapshot, currentPatch);
 const data: Record<string, Emblem | undefined> = currentData ? snapshot.emblems : {};
 const openEmblem = (trait: string | null | undefined) =>
-  trait && (duringLaunch ? catalogIds.includes(trait) : Object.hasOwn(data, trait)) ? trait : "";
+  trait && catalogIds.includes(trait) ? trait : "";
 const hasSample = (sample: Sample) => sample.games >= displayMinimum;
 const isSmallSample = (sample: Sample) => hasSample(sample) && sample.games < snapshot.minGames;
 
@@ -193,11 +193,13 @@ export function EmblemStats({ traitId, holderId, initialFilters, guideHref, guid
   const candidates = duringLaunch
     ? catalogIds.filter(id => emblemMatches(id, query)).map(id => [id, data[id]] as const)
     : filterEmblems(query);
-  const visible = candidates.flatMap(([id, entry]) => {
+  const listed = !duringLaunch && open && !data[open] && emblemMatches(open, query)
+    ? [...candidates, [open, undefined] as const] : candidates;
+  const visible = listed.flatMap(([id, entry]) => {
     const sample = selectedUnit ? entry?.holders.find(holder => holder.unitId === wearer) : entry;
-    const qualified = sample && (!duringLaunch || hasSample(sample)) ? sample : undefined;
+    const qualified = entry && hasSample(entry) && sample && hasSample(sample) ? sample : undefined;
     const hasGuideUse = selectedUnit && guideUses[emblemItemId(id)]?.some(use => use.unitId === wearer);
-    return qualified || duringLaunch && (!selectedUnit || hasGuideUse || id === open)
+    return qualified || (!selectedUnit && id === open) || (duringLaunch && !sample && (!selectedUnit || hasGuideUse))
       ? [{ id, entry, sample: qualified }] : [];
   }).sort((a, b) => {
     if (!a.sample || !b.sample) return Number(Boolean(b.sample)) - Number(Boolean(a.sample));
@@ -252,7 +254,7 @@ export function EmblemStats({ traitId, holderId, initialFilters, guideHref, guid
     {hasStats && <div className="emblem-column-head" aria-hidden="true">
       <span>纹章</span><span>均名</span><span>登顶率</span><span>场数</span>
       {!selectedUnit && (visible.some(({ id }) => id !== open)
-        ? <span className="emblem-best-heading" title={`满 ${snapshot.minGames} 场，按均名排序`}>最佳使用者<small>均名 · 场数</small></span>
+        ? <span className="emblem-best-heading" title={`满 ${displayMinimum} 场，按均名排序`}>最佳使用者<small>均名 · 场数</small></span>
         : <span />)}
       <span />
     </div>}
@@ -264,7 +266,7 @@ export function EmblemStats({ traitId, holderId, initialFilters, guideHref, guid
         const expanded = open === id;
         const smallSample = sample && isSmallSample(sample);
         const uses = (guideUses[item.id] ?? []).filter(use => !selectedUnit || use.unitId === wearer);
-        const best = expanded || selectedUnit ? [] : holders.filter(holder => holder.games >= snapshot.minGames && unitMap.has(holder.unitId))
+        const best = expanded || selectedUnit ? [] : holders.filter(holder => hasSample(holder) && unitMap.has(holder.unitId))
           .sort((a, b) => a.mean - b.mean || b.games - a.games).slice(0, 3);
         return <li key={id} className="emblem-result">
           <Tooltip.Root>
@@ -298,7 +300,7 @@ export function EmblemStats({ traitId, holderId, initialFilters, guideHref, guid
                 <small className="sr-only">最佳使用者</small>
                 {best.length ? best.map(holder => <span key={holder.unitId} className="emblem-best-entry">
                   <Wearer id={holder.unitId} /><span className="emblem-best-mean"><b>{holder.mean.toFixed(2)}</b><small>{number.format(holder.games)} 场</small></span>
-                </span>) : <span className="emblem-best-empty" title={`暂无满 ${snapshot.minGames} 场的使用者`} aria-label={`暂无满 ${snapshot.minGames} 场的使用者`}>—</span>}
+                </span>) : <span className="emblem-best-empty" title={`暂无满 ${displayMinimum} 场的使用者`} aria-label={`暂无满 ${displayMinimum} 场的使用者`}>—</span>}
               </span>}</>}
               <ChevronDown size={15} className="emblem-chevron" aria-hidden />
             </button>

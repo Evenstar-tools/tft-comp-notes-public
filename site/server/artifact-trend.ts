@@ -1,7 +1,7 @@
 import { itemMap, season, unitMap } from "@/data";
 import currentPatch from "@/data/current-patch.json";
 import { specialItemWearers } from "@/data/special-item-wearers";
-import { currentWearerSnapshot } from "@/domain/gear-wearer";
+import { currentWearerSnapshot, gearSampleMinimum, visibleGearSample } from "@/domain/gear-wearer";
 import { rankedWearers } from "@/domain/site-search";
 import { isOfficialEdition, sameEdition } from "@/domain/version-updates";
 
@@ -11,7 +11,7 @@ export function currentArtifactRanking(edition: string) {
       !currentWearerSnapshot(snapshot, currentPatch) ||
       (isOfficialEdition(edition) && (snapshot.rankedScope !== "international" || !["RANKED", "RANKED_TFT", "1100"].includes(snapshot.queue?.toUpperCase() ?? "")))) return;
 
-  const minGames = snapshot.minGames;
+  const minGames = gearSampleMinimum("artifact", snapshot.minGames);
   const rows = Object.entries(snapshot.items).flatMap(([id, sample]) => {
     const item = itemMap.get(id);
     const { totalGames, winRate } = sample;
@@ -20,7 +20,7 @@ export function currentArtifactRanking(edition: string) {
     return [{ item, games: totalGames, winRate, sample }];
   }).sort((a, b) => b.winRate - a.winRate || b.games - a.games || a.item.id.localeCompare(b.item.id))
     .slice(0, 6).map(({ sample, ...entry }) => {
-      const eligible = sample.rows.filter(row => unitMap.has(row.unitId));
+      const eligible = sample.rows.filter(row => unitMap.has(row.unitId) && visibleGearSample("artifact", row.games));
       const holders = rankedWearers(eligible, minGames).slice(0, 2);
       const order = eligible.some(row => row.games >= minGames && typeof row.mean === "number") ? "mean" : "games";
       return { ...entry, order, holders: holders.flatMap(({ unitId, ...stats }) => {
