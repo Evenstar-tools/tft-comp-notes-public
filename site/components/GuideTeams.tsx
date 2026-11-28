@@ -1,5 +1,5 @@
 "use client";
-import { Fragment, useCallback, useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
+import { Fragment, useCallback, useEffect, useId, useMemo, useRef, useState, type PointerEvent, type ReactNode } from "react";
 import Image from "next/image";
 import { ArrowRight, ChevronDown, ImageDown, Maximize2, X } from "lucide-react";
 import { Board } from "./Board";
@@ -48,6 +48,48 @@ export type GuidePatchAdvice = { teamId: string; note: string; label: string; hr
 const percent = new Intl.NumberFormat("zh-CN", { style: "percent", maximumFractionDigits: 1 });
 const familyStats = familyData as GuideFamilyBatch;
 const sampleScopes = { fixed: "固定终盘", core: "核心样本", lineup: "名单共现", augment: "强化样本" };
+
+function GuideVariantList({ id, overflow, children }: { id: string; overflow: boolean; children: ReactNode }) {
+  const drag = useRef<{ pointerId: number; startX: number; startScroll: number } | null>(null);
+  const dragged = useRef(false);
+
+  function finishDrag(event: PointerEvent<HTMLUListElement>) {
+    if (drag.current?.pointerId !== event.pointerId) return;
+    drag.current = null;
+    delete event.currentTarget.dataset.dragging;
+  }
+
+  return <ul id={id} className="guide-variant-strip-list" role="list" data-overflow={overflow || undefined}
+    onPointerDown={event => {
+      dragged.current = false;
+      const list = event.currentTarget;
+      if (!overflow || event.pointerType !== "mouse" || event.button !== 0 || list.scrollWidth <= list.clientWidth) return;
+      drag.current = { pointerId: event.pointerId, startX: event.clientX, startScroll: list.scrollLeft };
+    }}
+    onPointerMove={event => {
+      const start = drag.current;
+      if (!start || start.pointerId !== event.pointerId || !(event.buttons & 1)) return;
+      const list = event.currentTarget;
+      const delta = event.clientX - start.startX;
+      if (!dragged.current) {
+        if (Math.abs(delta) < 6) return;
+        dragged.current = true;
+        list.dataset.dragging = "true";
+        list.setPointerCapture(event.pointerId);
+      }
+      list.scrollLeft = start.startScroll - delta;
+    }}
+    onPointerUp={finishDrag} onPointerCancel={finishDrag} onLostPointerCapture={finishDrag}
+    onDragStart={event => { if (drag.current) event.preventDefault(); }}
+    onClickCapture={event => {
+      if (!dragged.current || event.detail === 0) return;
+      dragged.current = false;
+      event.preventDefault();
+      event.stopPropagation();
+    }}>
+    {children}
+  </ul>;
+}
 
 export function GuideTeams({ section, data, initialTeam, defaultTeam, initialStage, initialFlex, publicationId, returnTo, renderHeader, renderNotes, variants, systems, openPoster, initialPosterShare, patchAdvice }: {
   section: Section; data: Season; initialTeam?: string; defaultTeam?: string; publicationId?: string; returnTo?: string; renderHeader?: (team: Team, performance?: ReactNode) => ReactNode;
@@ -482,7 +524,7 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
         <span><small>当前变种</small><strong>{currentSystem?.title ?? selectedBoardLabel}</strong></span>
         <span>换变种 <ChevronDown size={16} aria-hidden /></span>
       </button>
-      <ul id={variantOptionsId} className="guide-variant-strip-list" role="list">{systems.map((system, index) => {
+      <GuideVariantList id={variantOptionsId} overflow={systems.length > 4}>{systems.map((system, index) => {
         const board = system.sectionId === section.id ? teams.find(option => option.id === system.teamId) : undefined;
         const current = system === currentSystem;
         const swap = !current && board ? boardRosterChange(systemEntry ?? team, board, data) : undefined;
@@ -508,7 +550,7 @@ export function GuideTeams({ section, data, initialTeam, defaultTeam, initialSta
           }}>{contents}</button>
           : <a className="guide-variant-option" href={guideLink(system.sectionId, system.teamId, returnTo)}>{contents}</a>}
         </li>;
-      })}</ul>
+      })}</GuideVariantList>
     </nav>;
   }
   function renderPromotionComparison() {
