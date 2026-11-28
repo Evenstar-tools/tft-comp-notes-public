@@ -1,3 +1,7 @@
+import { setTimeout as delay } from "node:timers/promises";
+
+class ItemHistogramMismatch extends Error {}
+
 export const rounded = value => Number(value.toFixed(6));
 
 export function placements(places) {
@@ -23,6 +27,7 @@ export function itemPlacementDelta(worn, overall, minGames) {
 export function itemCohort(data, itemId, patch, days) {
   const cohort = data.unit_games?.[0]?.patch;
   if (data.queue_id !== "pbe" || data.tft_set !== "TFTSet19" || data.unit_games?.length !== 1 ||
+      !Array.isArray(data.units) || !Array.isArray(data.dates) ||
       !Array.isArray(cohort) || cohort.length !== 2 || cohort[0] !== patch || typeof cohort[1] !== "string" ||
       !Number.isFinite(data.updated) || data.updated <= 0)
     throw new Error("Unexpected PBE cohort for " + itemId);
@@ -55,8 +60,33 @@ export function itemCohort(data, itemId, patch, days) {
   // Accept a trailing calendar bucket only when it reconciles every placement exactly.
   const boundaryAligns = holders.every((count, index) => count === totals[index] + boundary[index]);
   if (!aligns && !boundaryAligns)
-    throw new Error("Item and wearer placement histograms disagree for " + itemId);
+    throw new ItemHistogramMismatch("Item and wearer placement histograms disagree for " + itemId);
   // The item and all individual wearers now share a single capture. Count every
   // wearer before mapping shop units or applying the best-wearer threshold.
   return { version: cohort.join(""), stats };
+}
+
+export async function fetchItemCohort(url, itemId, patch, days, fetcher = fetch) {
+  const alternate = new URL(url);
+  alternate.search = new URLSearchParams([...alternate.searchParams].reverse()).toString();
+  const decimal = new URL(url);
+  decimal.searchParams.set("days", days.toFixed(1));
+  const decimalAlternate = new URL(alternate);
+  decimalAlternate.searchParams.set("days", days.toFixed(1));
+  const candidates = [url, alternate.href, decimal.href, decimalAlternate.href];
+  const backoff = [0, 750, 1_500, 4_500, 15_000, 35_000];
+  for (let attempt = 0; ; attempt++) {
+    const candidate = candidates[attempt % candidates.length];
+    const response = await fetcher(candidate, { signal: AbortSignal.timeout(18000), cache: "no-store" });
+    if (!response.ok) throw new Error(`HTTP ${response.status} · ${itemId}`);
+    const data = await response.json();
+    try {
+      return { data, ...itemCohort(data, itemId, patch, days) };
+    } catch (error) {
+      if (!(error instanceof ItemHistogramMismatch) || attempt === backoff.length) throw error;
+      // Equivalent query spellings can bypass a stale upstream cache entry.
+      // Both responses must pass the identical cohort and histogram checks.
+      if (backoff[attempt] > 0) await delay(backoff[attempt]);
+    }
+  }
 }

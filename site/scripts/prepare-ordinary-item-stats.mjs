@@ -1,7 +1,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { parseArgs } from "node:util";
-import { itemCohort, itemPlacementDelta, placements, rounded } from "./special-item-cohort.mjs";
+import { fetchItemCohort, itemPlacementDelta, placements, rounded } from "./special-item-cohort.mjs";
 
 const dataUrl = name => new URL("../data/" + name + ".json", import.meta.url);
 const { values: { evidence, out } } = parseArgs({ options: { evidence: { type: "string" }, out: { type: "string" } } });
@@ -28,10 +28,8 @@ async function collect(id, itemName) {
     itemName, queue: "PBE", patch: cohort.patch, b_patch: cohort.bPatch, days: String(days), permit_filter_adjustment: "false",
   });
   const url = endpoint + "?" + query;
-  const response = await fetch(url, { signal: AbortSignal.timeout(18_000) });
-  if (!response.ok) throw new Error(`HTTP ${response.status} · ${itemName}`);
-  const result = await response.json();
-  const { version, stats: { games: totalGames, mean, winRate } } = itemCohort(result, itemName, source.patch, days);
+  const { data: result, version, stats: { games: totalGames, mean, winRate } } =
+    await fetchItemCohort(url, itemName, source.patch, days);
   if (version !== cohort.patch + cohort.bPatch) throw new Error("Unexpected PBE hotfix for " + itemName);
   const overall = new Map(result.units_overall.map(row => [row.unit, { games: placements(row.places).games, places: row.places }]));
   const rows = result.units.flatMap(row => {
