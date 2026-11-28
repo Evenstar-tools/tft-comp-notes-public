@@ -653,8 +653,9 @@ def check_family_bindings(family_map, family, boards, family_aligned, errors):
                         or actual.get("teamId") != row.get("teamId")
                         or actual.get("landingTeamId") != row.get("landingTeamId")
                         or actual.get("sharedTeamIds", []) != row.get("sharedTeamIds", [])
-                        or actual.get("carryIds") != row.get("carryIds")):
-                    errors.append(f"{stats_name}：体系 {cid} 的攻略、主盘、落点盘、共用盘或主 C 与 {map_name} 不一致")
+                        or actual.get("carryIds") != row.get("carryIds")
+                        or actual.get("url") != row.get("url")):
+                    errors.append(f"{stats_name}：体系 {cid} 的攻略、棋盘、主 C 或来源与 {map_name} 不一致")
             orphans = sorted(set(present) - seen_clusters)
             if orphans:
                 errors.append(f"{stats_name}：存在未在 {map_name} 登记的残留分组（{'、'.join(orphans[:5])}）")

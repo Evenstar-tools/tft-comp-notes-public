@@ -87,6 +87,32 @@ test("the gate rejects an existing but wrong board and a mismatched fixed query"
   assert.ok(errors.some(error => error.includes("来源查询的结算等级与固定终盘样本不一致")));
 });
 
+test("release reconciliation rejects a missing fixed sample and an older same-patch batch", t => {
+  const cwd = fixture(t);
+  const git = spawnSync("git", ["rev-parse", "HEAD"], { cwd: site, encoding: "utf8" });
+  assert.equal(git.status, 0, git.stderr);
+  const path = join(cwd, "data", "guide-placement.json");
+  const batch = readJson(path);
+  const fixed = row => row.conditions?.teamId && !row.sourcePeriod && !row.boardObservation &&
+    !row.referencesAugment && !row.conditions.augmentId && row.conditions.kind !== "core" &&
+    new URL(row.url).searchParams.get("tab") === "comps";
+  const { teamId } = batch.records.find(fixed).conditions;
+  batch.records = batch.records.filter(row => !fixed(row) || row.conditions.teamId !== teamId);
+  writeFileSync(path, JSON.stringify(batch));
+  const heroPath = join(cwd, "data", "hero-stats.json");
+  const heroes = readJson(heroPath);
+  heroes.updatedAt = new Date(Date.parse(heroes.updatedAt) - 1000).toISOString();
+  writeFileSync(heroPath, JSON.stringify(heroes));
+
+  const [python, ...prefix] = process.platform === "win32" ? ["py", "-3", "-X", "utf8"] : ["python3"];
+  const result = spawnSync(python, [...prefix, "scripts/verify-data-integrity.py", "--base", git.stdout.trim()],
+    { cwd, encoding: "utf8", timeout: 20000 });
+  assert.equal(result.status, 1, result.stderr);
+  const { errors } = JSON.parse(result.stdout);
+  assert.ok(errors.some(error => error.includes(`发布目录遗漏 sample:fixed/${teamId}`)));
+  assert.ok(errors.some(error => error.includes("data/hero-stats.json：采样时间倒退")));
+});
+
 test("the gate rejects a bad histogram and a missing history archive", t => {
   const cwd = fixture(t);
   const file = join(cwd, "data", "guide-family-stats.json");
