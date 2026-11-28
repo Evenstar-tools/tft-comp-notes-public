@@ -5,9 +5,9 @@ import { chromium } from "playwright";
 import { changeSignals, heroAugmentSourceUnits, makeReviewQueue, matchBoundCluster, sourceProfile } from "./family-review.mjs";
 import { crossCheck } from "./family-evidence.mjs";
 import { saveCompTrendBatch } from "./refresh-comp-trends.mjs";
+import { refreshCohort, verifyLookup } from "./refresh-cohort.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
-const sourceUrl = "https://www.metatft.com/pbe-comps";
 const args = process.argv.slice(2);
 const arg = (key) => args.includes(key) ? args[args.indexOf(key) + 1] : undefined;
 const allowMissingBindings = args.includes("--allow-missing-bindings");
@@ -27,7 +27,7 @@ async function writeJson(file, value) {
   await rename(temp, file);
 }
 
-async function capture({ patch, bPatch }) {
+async function capture(cohort) {
   const channel = arg("--browser") || (process.platform === "win32" ? "msedge" : "chromium");
   const browser = await chromium.launch({ channel });
   try {
@@ -38,10 +38,10 @@ async function capture({ patch, bPatch }) {
         Object.entries(filters).every(([k, v]) => url.searchParams.get(k) === v);
     }, { timeout: 45000 });
     const [modelRes] = await Promise.all([
-      response("comps_data", { queue:"PBE" }),
-      page.goto(sourceUrl, {waitUntil:"domcontentloaded", timeout:45000}),
+      response("comps_data", { queue: cohort.apiQueue }),
+      page.goto(cohort.compsUrl, {waitUntil:"domcontentloaded", timeout:45000}),
     ]);
-    const query = new URLSearchParams({ queue: "PBE", patch, b_patch: bPatch, days: "3", permit_filter_adjustment: "false" });
+    const query = new URLSearchParams({ ...cohort.filters, days: "3", permit_filter_adjustment: "false" });
     const statsUrl = new URL("comps_stats?" + query, modelRes.url()).href;
     const statsRes = await page.request.get(statsUrl, { timeout: 30000 });
     if (!statsRes.ok()) throw Error("体系战绩请求失败：" + statsRes.status());
@@ -67,14 +67,15 @@ const season = await readJson(resolve(root,"data/season.json"));
 const currentPatch = await readJson(resolve(root, "data/current-patch.json"));
 const published = await readJson(resolve(root, "data/guide-family-stats.json"));
 const prior = await readJson(out).catch(e=>{if(e.code==="ENOENT") return null; throw e});
-const cohort = currentPatch.metaTftPatch;
+const cohort = refreshCohort(currentPatch);
 const patchStart = Date.parse(currentPatch.effectiveAt);
-if (currentPatch.seasonId !== "s19-pbe" || !/^\d+$/.test(currentPatch.build) ||
-    !/^19\.\d+$/.test(cohort?.patch) || typeof cohort.bPatch !== "string" ||
-    !/^[a-z]?$/.test(cohort.bPatch) || !Number.isFinite(patchStart)) {
-  throw Error("请先核实当前 PBE 构建、补丁和生效时间。");
+if (!/^\d+$/.test(currentPatch.build) || !Number.isFinite(patchStart) ||
+    bindings.set !== cohort.set || !cohort.queueMatches(bindings.queue) ||
+    !season.id.startsWith(cohort.edition + ".")) {
+  throw Error("当前赛季、补丁、构建、生效时间或体系绑定范围未对齐。");
 }
-const patch = cohort.patch + cohort.bPatch;
+const patch = cohort.version;
+const sourceUrl = cohort.compsUrl;
 const catalog = await readJson(catalogPath);
 if (catalog.seasonId !== season.id || !catalog.boards?.length) throw Error("缺少当前赛季公开攻略目录，保留上一批。");
 const publicBoards = catalog.boards.filter(b => b.edition === season.id);
@@ -82,9 +83,10 @@ const publicBoardById = new Map(publicBoards.map(board => [board.teamId, board])
 if (!publicBoards.length) throw Error("当前攻略目录与站点版本不一致。");
 const { stats, model, statsUrl } = await capture(cohort);
 if (stats.filter_adjustment || stats.tft_set !== bindings.set || model.tft_set !== bindings.set ||
-    [stats.queue_id,model.queue_id].some(q=>q?.toUpperCase()!==bindings.queue) ||
+    [stats.queue_id, model.queue_id].some(queue => !cohort.queueMatches(queue)) ||
     stats.cluster_id !== model.cluster_id || model.results.data.cluster_id !== model.cluster_id ||
-    !season.id.startsWith("s19-pbe-" + cohort.patch + ".") ||
+    (stats.resolved_patch && (stats.resolved_patch.patch !== cohort.patch ||
+      (stats.resolved_patch.b_patch_version ?? "") !== cohort.bPatch)) ||
     !Number.isFinite(stats.updated) || stats.updated < patchStart) {
   throw Error("队列、赛季、补丁或模型不一致，保留原批次。");
 }
@@ -95,7 +97,8 @@ async function fetchJson(url) {
   if (!res.ok) throw Error(url+" "+res.status);
   return res.json();
 }
-const lookup = await fetchJson("https://data.metatft.com/lookups/"+bindings.set+"_pbe_en_us.json");
+const lookup = await fetchJson(cohort.lookupUrl);
+verifyLookup(lookup, cohort);
 const localUnits = new Map(season.units.map(u=>[u.nameEn.toLowerCase().trim(),u.id]));
 const forms = {DA_Nunu19:"nunu-willump",DA_AkaliKDA19:"akali-kda",DA_Akali_TrueDamage19:"akali-true-damage"};
 const unitIds = new Map(lookup.units.filter(u=>u.apiName && (u.name || forms[u.apiName])).map(u=>[u.apiName,forms[u.apiName] ?? localUnits.get(u.name.toLowerCase().trim())]));
@@ -229,6 +232,7 @@ const spansBuilds = Date.parse(updatedAt) - 3 * 86400000 < patchStart &&
     batch?.patch === patch && (batch.build !== currentPatch.build || batch.spansBuilds));
 const accepted={seasonId:season.id,set:bindings.set,queue:bindings.queue,patch,build:currentPatch.build,days:3,updatedAt,model:model.cluster_id,
   spansBuilds:spansBuilds || undefined,
+  ...(!cohort.pbe && { rankedScope: "international" }),
   source:"MetaTFT",sourceUrl,statsUrl,totalFinishes:total,rows,smallSamples,previous:previousBatch ? previousSnapshot : undefined};
 await writeJson(out,accepted);
 if (trendOutput) {

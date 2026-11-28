@@ -1,9 +1,9 @@
 import { readFile, writeFile } from "node:fs/promises";
 import { fetchItemCohort } from "./special-item-cohort.mjs";
+import { refreshCohort, verifyLookup } from "./refresh-cohort.mjs";
 
 const json = async (file) => JSON.parse(await readFile(new URL(file, import.meta.url), "utf8"));
 const api = "https://api-hc.metatft.com/tft-stat-api/item_detail";
-const lookupUrl = "https://data.metatft.com/lookups/TFTSet19_pbe_en_us.json";
 const recordsFor = async (url) => {
   const result = await fetch(url, { signal: AbortSignal.timeout(16000), headers: { Accept: "application/json" } });
   if (!result.ok) throw new Error("HTTP " + result.status + " · " + url);
@@ -57,18 +57,17 @@ function statistics(places) {
   } : { games, mean: null, winRate: null };
 }
 
-const [season, references, lookup, current] = await Promise.all([
-  json("../data/season.json"), json("../data/trait-reference.json"), recordsFor(lookupUrl), json("../data/current-patch.json"),
+const cohort = refreshCohort(await json("../data/current-patch.json"));
+const [season, references, lookup] = await Promise.all([
+  json("../data/season.json"), json("../data/trait-reference.json"), recordsFor(cohort.lookupUrl),
 ]);
-const cohort = current.metaTftPatch;
-if (current.seasonId !== "s19-pbe" || !cohort?.patch || typeof cohort.bPatch !== "string" ||
-    lookup._metadata.set !== "TFTSet19" || lookup._metadata.patch !== "pbe")
-  throw new Error("Expected an S19 PBE cohort");
+verifyLookup(lookup, cohort);
+if (!season.id.startsWith(cohort.edition + ".")) throw new Error("Season data does not match the active patch");
 const catalog = Object.entries(references).filter(([,entry]) => entry.emblem);
 const emblemIds = new Set(lookup.items.filter(item => item.associatedTraits?.length && item.name.endsWith(" Emblem")).map(item => item.apiName));
 if (catalog.length !== emblemIds.size || catalog.some(([id]) => !emblemIds.has(sourceIds[id])) ||
     new Set(Object.values(sourceIds)).size !== emblemIds.size)
-  throw new Error("Current PBE emblem catalogue differs from the mapped source IDs");
+  throw new Error("Current emblem catalogue differs from the mapped source IDs");
 
 const unitIds = new Map(season.units.map(unit => {
   const matches = lookup.units.filter(value => value.shopUnit && value.cost === unit.cost && clean(value.name) === clean(unit.nameEn));
@@ -81,11 +80,10 @@ if (unitIds.size !== season.units.length) throw new Error("Source unit has dupli
 async function collect(traitId) {
   const sourceId = sourceIds[traitId];
   const params = new URLSearchParams({
-    queue: "PBE", patch: cohort.patch, b_patch: cohort.bPatch, days: String(days), permit_filter_adjustment: "false", itemName: sourceId,
+    ...cohort.filters, days: String(days), permit_filter_adjustment: "false", itemName: sourceId,
   });
-  const { data: result, version, stats } = await fetchItemCohort(api + "?" + params, sourceId, cohort.patch, days);
+  const { data: result, stats } = await fetchItemCohort(api + "?" + params, sourceId, cohort, days);
   if (!Array.isArray(result.units_overall)) throw new Error("Missing wearer baseline for " + traitId);
-  if (version !== cohort.patch + cohort.bPatch) throw new Error("Unexpected PBE hotfix for " + traitId);
   const overall = new Map(result.units_overall.map(row => [row.unit, statistics(row.places)]));
   const holders = [];
   for (const row of result.units) {
@@ -101,7 +99,7 @@ async function collect(traitId) {
   }
   holders.sort((a,b) => a.mean - b.mean || b.winRate - a.winRate || b.games - a.games);
   console.log(traitId,stats.games,stats.mean,stats.winRate,holders[0]?.unitId);
-  return [traitId, { sourceId, games: stats.games, mean: stats.mean ?? null, winRate: stats.winRate ?? null, holders }, Number(result.updated), version];
+  return [traitId, { sourceId, games: stats.games, mean: stats.mean ?? null, winRate: stats.winRate ?? null, holders }, result.updated];
 }
 
 const captured = [];
@@ -114,10 +112,8 @@ for (let start = 0; start < catalog.length; start += 4) {
 }
 if (captured.some(([, , timestamp]) => !Number.isFinite(timestamp) || timestamp <= 0))
   throw new Error("Invalid source refresh time");
-const versions = new Set(captured.map(([, , , version]) => version));
-if (versions.size !== 1) throw new Error("Different patches in the same emblem batch");
 const snapshot = {
-  source: "MetaTFT", set: "S19", mode: "PBE", patch: captured[0][3], days, minGames,
+  source: "MetaTFT", set: cohort.season, mode: cohort.queue, patch: cohort.version, days, minGames,
   updatedAt: new Date(Math.min(...captured.map(([, ,timestamp]) => timestamp))).toISOString(),
   emblems: Object.fromEntries(captured.map(([id,data]) => [id,data])),
 };

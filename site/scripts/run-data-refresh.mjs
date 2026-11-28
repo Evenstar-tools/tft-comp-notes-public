@@ -3,6 +3,7 @@ import { open, readFile, rename, rm, stat, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { parseArgs } from "node:util";
+import { archiveBatchId, refreshCohort } from "./refresh-cohort.mjs";
 
 const root = new URL("../", import.meta.url);
 const cwd = fileURLToPath(root);
@@ -25,17 +26,19 @@ const guides = ["guide-placement", "guide-family-stats", "guide-carry-stats",
   "comp-trends", "patch-recommendations", "patch-recommendation-stats"];
 const profiles = {
   fast: ["guide-family-stats", "comp-trends"],
-  daily: [...archiveModules, ...guides, "trait-stats"],
+  daily: [...archiveModules, "emblem-stats", ...guides, "trait-stats"],
   catalog: [...archiveModules, "emblem-stats", "trait-stats"],
   guides,
   all: Object.keys(scripts),
 };
 const automaticProfiles = new Set(["fast", "daily", "all"]);
 
-export function automaticRefreshModules(profile) {
+export function automaticRefreshModules(profile, { archive = false } = {}) {
   if (!automaticProfiles.has(profile)) throw new Error("未知自动刷新配置 " + profile);
-  return profiles[profile].filter(id => scripts[id]);
+  return [...new Set([...profiles[profile], ...(archive ? archiveModules : [])])].filter(id => scripts[id]);
 }
+
+const readJson = async file => JSON.parse((await readFile(new URL(file, root), "utf8")).replace(/^\uFEFF/, ""));
 
 function findPython() {
   const candidates = process.platform === "win32"
@@ -99,20 +102,22 @@ function status(verify, json) {
   process.exitCode = result.status ?? 1;
 }
 
-function planFor(options, verify, python) {
+async function planFor(options, verify, python) {
   const { profile, module: modules = [], archive, channel, patch, catalog } = options;
   if (profile && !Object.hasOwn(profiles, profile)) throw new Error(`未知维护配置 ${profile}`);
   if (profile && modules.length) throw new Error("--profile 与 --module 请选一种");
   if (!profile && !modules.length && !archive) throw new Error("请指定 --profile、--module 或 --archive");
   for (const id of modules) if (!Object.hasOwn(scripts, id)) throw new Error(`未知模块 ${id}`);
   if ((channel || patch) && !archive) throw new Error("--channel 和 --patch 用于归档，请搭配 --archive");
-  if (channel && channel !== "pbe" && channel !== "ranked") throw new Error("--channel 仅接受 pbe 或 ranked");
-  if (channel === "ranked" ? !/^\d+\.\d+[a-z]?$/.test(patch ?? "") : patch !== undefined) {
-    throw new Error("正式服归档须指定 --channel ranked --patch <实际补丁>，PBE 使用当前补丁映射");
-  }
   const selected = new Set(profile ? profiles[profile] : modules);
+  const cohort = archive || [...selected].some(id => scripts[id] && id !== "comp-trends")
+    ? refreshCohort(await readJson("data/current-patch.json")) : undefined;
+  const archiveChannel = cohort?.pbe ? "pbe" : "ranked";
+  if (archive && (channel !== undefined && channel !== archiveChannel ||
+      patch !== undefined && (cohort.pbe || patch !== cohort.version))) {
+    throw new Error("归档队列或补丁与 current-patch.json 不一致");
+  }
   if (archive && selected.size) {
-    if (channel === "ranked") throw new Error("现有采集器面向 S19 PBE。请准备正式服数据后单独运行 --archive");
     for (const id of archiveModules) selected.add(id);
   }
   if (catalog !== undefined && !selected.has("guide-family-stats")) {
@@ -139,21 +144,14 @@ function planFor(options, verify, python) {
   }
   steps.push({ ids: ["data:verify"], command: verify });
   if (archive) {
-    const args = ["--channel", channel ?? "pbe", ...(patch ? ["--patch", patch] : [])];
+    const args = ["--channel", archiveChannel, ...(!cohort.pbe ? ["--patch", cohort.version] : [])];
     steps.push({ ids: ["archive"], command: commandFor("archive-stat-period.mjs", args, python) });
     steps.push({ ids: ["data:verify"], command: verify });
   }
-  return { steps, catalogFile };
+  return { steps, catalogFile, cohort };
 }
 
-async function checkInputs(catalogFile, modules, channel) {
-  const readJson = async file => JSON.parse(await readFile(new URL(file, root), "utf8"));
-  const collectsPbe = modules.some(id => id !== "comp-trends");
-  if (collectsPbe || channel) {
-    const current = await readJson("data/current-patch.json");
-    const expected = collectsPbe ? /^s19-pbe$/ : channel === "ranked" ? /^s\d+-live$/ : /^s\d+-pbe$/;
-    if (!expected.test(current.seasonId)) throw new Error("当前赛季或队列与所选采集器或归档不一致");
-  }
+async function checkInputs(catalogFile) {
   if (catalogFile) {
     let catalog;
     try {
@@ -181,7 +179,7 @@ async function execute(steps, catalogFile, options) {
     throw error;
   }
   try {
-    await checkInputs(catalogFile, modules, options.archive ? options.channel ?? "pbe" : undefined);
+    await checkInputs(catalogFile);
     const baseline = await Promise.all(modules.map(async id => {
       const file = new URL(`data/${id}.json`, root);
       return { file, bytes: await readFile(file) };
@@ -211,7 +209,8 @@ async function execute(steps, catalogFile, options) {
         if (ids[0] === "archive") archived = true;
       }
       if (options.receipt) {
-        await writeFile(options.receipt, JSON.stringify({ profile: options.profile, modules: completed }) + "\n",
+        const archiveId = archived ? archiveBatchId(options.cohort, (await readJson("data/hero-stats.json")).date) : undefined;
+        await writeFile(options.receipt, JSON.stringify({ profile: options.profile, modules: completed, archiveId }) + "\n",
           { encoding: "utf8", flag: "wx" });
         console.log("本轮采集并通过数据门禁：" + completed.join("、"));
       }
@@ -265,10 +264,10 @@ async function main() {
   const verify = commandFor("verify-data-integrity.py", [], python);
   if (values.status) return status(verify, values.json);
   if (values.verify) return run(verify);
-  const { steps, catalogFile } = planFor(values, verify, python);
+  const { steps, catalogFile, cohort } = await planFor(values, verify, python);
   if (values.receipt !== undefined) {
-    automaticRefreshModules(values.profile);
-    if (!values.receipt || values.archive || values["dry-run"]) throw new Error("采集回执仅用于自动刷新实跑");
+    automaticRefreshModules(values.profile, { archive: values.archive });
+    if (!values.receipt || values["dry-run"]) throw new Error("采集回执仅用于自动刷新实跑");
   }
   if (values["dry-run"]) {
     console.log("仅预览 · 工作目录 site/");
@@ -277,7 +276,7 @@ async function main() {
     }
     return;
   }
-  await execute(steps, catalogFile, values);
+  await execute(steps, catalogFile, { ...values, cohort });
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {

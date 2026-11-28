@@ -3,8 +3,11 @@ name: Data refresh
 on:
   # Stagger refreshes away from GitHub Actions peak load at the top of the hour.
   schedule:
+    - cron: '17 1 * * *'
     - cron: '53 2 * * *'
+    - cron: '17 7 * * *'
     - cron: '17 13 * * *'
+    - cron: '17 19 * * *'
   workflow_dispatch:
     inputs:
       profile:
@@ -47,7 +50,7 @@ jobs:
         run: |
           case "$GITHUB_EVENT_NAME:$SCHEDULE" in
             'schedule:53 2 * * *') profile=daily ;;
-            'schedule:17 13 * * *') profile=fast ;;
+            'schedule:17 1 * * *'|'schedule:17 7 * * *'|'schedule:17 13 * * *'|'schedule:17 19 * * *') profile=fast ;;
             'workflow_dispatch:') profile="$DISPATCH_PROFILE" ;;
             *) echo 'Unexpected refresh trigger'; exit 1 ;;
           esac
@@ -73,6 +76,7 @@ jobs:
         if: inputs.dry_run == true
         env:
           PROFILE: ${{ steps.plan.outputs.profile }}
+        # The conditional runner adds --archive to the daily profile.
         run: node scripts/run-conditional-refresh.mjs --profile "$PROFILE" --dry-run
       - name: Run conditional refresh and publish verified data
         if: inputs.dry_run != true

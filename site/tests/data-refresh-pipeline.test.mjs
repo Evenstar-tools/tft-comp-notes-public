@@ -23,7 +23,7 @@ function fixture(t, { gitRepository = false } = {}) {
   if (gitRepository) mkdirSync(cwd);
   mkdirSync(join(cwd, "scripts"));
   mkdirSync(join(cwd, "public"));
-  for (const name of ["run-data-refresh.mjs", "verify-data-integrity.py", "archive-stat-period.mjs"]) {
+  for (const name of ["run-data-refresh.mjs", "verify-data-integrity.py", "archive-stat-period.mjs", "refresh-cohort.mjs"]) {
     cpSync(join(site, "scripts", name), join(cwd, "scripts", name));
   }
   for (const name of ["data", "public/stats-history"]) {
@@ -343,22 +343,30 @@ test("guide-placement refresh preserves existing stats on transient single-board
 test("daily dry-run lists every step in order and leaves the checkout unchanged", t => {
   const cwd = fixture(t);
   const baseline = snapshot(cwd);
-  const result = run(cwd, "--profile", "daily", "--dry-run");
+  const result = run(cwd, "--profile", "daily", "--archive", "--dry-run");
   assert.equal(result.status, 0, result.stderr);
   const steps = result.stdout.trim().split(/\r?\n/).slice(1);
   assert.deepEqual(steps.map(line => line.split(" · ")[0].replace(/^\d+\. /, "")), [
-    "hero-stats", "item-wearers", "special-item-wearers", "guide-placement", "trait-stats",
+    "hero-stats", "item-wearers", "special-item-wearers", "emblem-stats", "guide-placement", "trait-stats",
     "guide-family-stats + comp-trends", "guide-carry-stats",
-    "patch-recommendations", "patch-recommendation-stats", "data:verify",
+    "patch-recommendations", "patch-recommendation-stats", "data:verify", "archive", "data:verify",
   ]);
   assert.match(steps[0], /node scripts\/prepare-hero-stats\.mjs$/);
-  assert.match(steps[3], /scripts\/refresh-guide-distributions\.py$/);
-  assert.match(steps[5], /scripts\/refresh-guide-families\.mjs --catalog outputs\/family-review\/catalog\.json --trends data\/comp-trends\.json$/);
+  assert.match(steps[3], /scripts\/prepare-emblem-stats\.mjs$/);
+  assert.match(steps[4], /scripts\/refresh-guide-distributions\.py$/);
+  assert.match(steps[6], /scripts\/refresh-guide-families\.mjs --catalog outputs\/family-review\/catalog\.json --trends data\/comp-trends\.json$/);
+  assert.match(steps.at(-2), /archive-stat-period\.mjs --channel pbe$/);
   assert.match(steps.at(-1), /scripts\/verify-data-integrity\.py$/);
-  const ranked = run(cwd, "--archive", "--channel", "ranked", "--patch", "19.1", "--dry-run");
+  assert.deepEqual(snapshot(cwd), baseline);
+
+  const config = join(cwd, "data", "current-patch.json");
+  writeFileSync(config, JSON.stringify({ ...readJson(config), seasonId: "s19-live", queue: "RANKED",
+    tierFilter: "DIAMOND,MASTER", metaTftPatch: { patch: "19.1" } }));
+  const liveBaseline = snapshot(cwd);
+  const ranked = run(cwd, "--profile", "daily", "--archive", "--dry-run");
   assert.equal(ranked.status, 0, ranked.stderr);
   assert.match(ranked.stdout, /archive-stat-period\.mjs --channel ranked --patch 19\.1/);
-  assert.deepEqual(snapshot(cwd), baseline);
+  assert.deepEqual(snapshot(cwd), liveBaseline);
 });
 
 test("the runner restores a collected file when the gate fails", t => {
@@ -429,12 +437,18 @@ test("the archive writer recreates heroes and equipment archives from one batch"
   for (const [index, file] of archivedFiles.entries()) {
     writeFileSync(join(cwd, "data", file), JSON.stringify(expected[index]));
   }
-  const result = spawnSync(process.execPath, ["scripts/archive-stat-period.mjs", "--channel", "pbe"], {
+  const archive = () => spawnSync(process.execPath, ["scripts/archive-stat-period.mjs"], {
     cwd, encoding: "utf8", timeout: 20000,
   });
+  const result = archive();
   assert.equal(result.status, 0, result.stderr || result.stdout);
   assert.deepEqual(readJson(join(directory, "heroes.json")), heroes);
   assert.deepEqual(readJson(join(directory, "equipment.json")), equipment);
   assert.ok(readJson(historyFile).some(batch => batch.id === latest.id));
+  const files = [historyFile, join(directory, "heroes.json"), join(directory, "equipment.json")];
+  const first = files.map(file => readFileSync(file));
+  const repeated = archive();
+  assert.equal(repeated.status, 0, repeated.stderr || repeated.stdout);
+  assert.deepEqual(files.map(file => readFileSync(file)), first);
   assert.equal(run(cwd, "--verify").status, 0);
 });

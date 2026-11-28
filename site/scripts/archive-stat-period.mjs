@@ -1,5 +1,6 @@
 import { mkdir, open, readFile, rename, rm, writeFile } from "node:fs/promises";
 import { parseArgs } from "node:util";
+import { archiveBatchId, refreshCohort } from "./refresh-cohort.mjs";
 
 const dataDir = new URL("../data/", import.meta.url);
 const archiveDir = new URL("../public/stats-history/", import.meta.url);
@@ -7,7 +8,6 @@ const manifestFile = new URL("stats-history.json", dataDir);
 const lockFile = new URL(".stats-history.lock", dataDir);
 const readJson = async file => JSON.parse(await readFile(file, "utf8"));
 const shanghai = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Shanghai" });
-const patchFormat = /^\d+\.\d+[a-z]?$/;
 
 function requireValue(condition, message) {
   if (!condition) throw new Error(message);
@@ -41,34 +41,24 @@ async function stage(file, value) {
 }
 
 async function archive() {
-  const { values: { channel = "pbe", patch: requestedPatch } } = parseArgs({ options: {
+  const { values: { channel: requestedChannel, patch: requestedPatch } } = parseArgs({ options: {
     channel: { type: "string" }, patch: { type: "string" },
   } });
-  requireValue(channel === "pbe" || channel === "ranked", "--channel 仅接受 pbe 或 ranked");
-  requireValue(channel === "ranked" || requestedPatch === undefined, "PBE 补丁由 current-patch.json 的已核验映射确定");
-
   const files = ["hero-stats.json", "item-wearers.json", "special-item-wearers.json"];
   const [current, heroes, standard, special] = await Promise.all(["current-patch.json", ...files]
     .map(file => readJson(new URL(file, dataDir))));
   const snapshots = [heroes, standard, special];
-  const seasonMatch = current.seasonId?.match(/^(s\d+)-(pbe|live)(?:-|$)/);
-  requireValue(seasonMatch && seasonMatch[2] === (channel === "pbe" ? "pbe" : "live"), "采样队列与本站当前赛季环境不一致");
-  const season = seasonMatch[1];
+  const cohort = refreshCohort(current);
+  const { pbe, patch: basePatch, bPatch, version: patch } = cohort;
+  const channel = pbe ? "pbe" : "ranked";
+  requireValue(requestedChannel === undefined || requestedChannel === channel, "归档队列与本站当前赛季环境不一致");
+  requireValue(requestedPatch === undefined || (!pbe && requestedPatch === patch), "归档补丁与当前已核验的正式服补丁不一致");
+  const season = cohort.season.toLowerCase();
   const effectiveAt = Date.parse(current.effectiveAt);
   requireValue(Number.isFinite(effectiveAt), "缺少已核验的补丁生效时间");
 
-  const metaTft = current.metaTftPatch;
-  const mappedPatch = metaTft?.patch && metaTft.patch + (metaTft.bPatch ?? "");
-  if (channel === "pbe") {
-    requireValue(/^\d+\.\d+$/.test(metaTft?.patch) && /^[a-z]?$/.test(metaTft?.bPatch) && /^\d+$/.test(current.build),
-      "缺少已核验的 PBE 基础补丁、热补映射或实际构建号");
-  } else {
-    const livePatch = mappedPatch || current.label?.match(/\b(\d+\.\d+[a-z]?)\b/i)?.[1];
-    requireValue(patchFormat.test(requestedPatch) && requestedPatch === livePatch,
-      "--patch 必须明确指定当前已核验的正式服补丁，例如 --patch 19.1");
-  }
-  const patch = channel === "pbe" ? mappedPatch : requestedPatch;
-  const version = `${season.toUpperCase()} ${channel === "pbe" ? "PBE" : "Ranked"} ${patch}`;
+  if (pbe) requireValue(/^\d+$/.test(current.build ?? ""), "缺少已核验的 PBE 构建号");
+  const version = `${cohort.season} ${cohort.label} ${patch}`;
 
   const days = heroes.days;
   requireValue(Number.isInteger(days) && days > 0, "英雄战绩缺少滚动窗口天数");
@@ -89,20 +79,18 @@ async function archive() {
   const source = new URL(heroes.sourceUrl);
   const sourcePatch = source.searchParams.get("patch");
   const sourceHotfix = source.searchParams.get("b_patch") ?? "";
-  const sourceVersion = channel === "pbe" ? sourcePatch === metaTft.patch && sourceHotfix === metaTft.bPatch
-    : sourcePatch + sourceHotfix === patch;
-  requireValue(source.origin === "https://www.metatft.com" && sourceVersion &&
-    source.searchParams.get("set") === `TFTSet${season.slice(1)}` && source.searchParams.get("days") === String(days) &&
-    source.searchParams.get("queue") === (channel === "pbe" ? "PBE" : "1100"),
+  requireValue(source.origin === "https://www.metatft.com" && sourcePatch === basePatch && sourceHotfix === bPatch &&
+    source.searchParams.get("set") === cohort.set && source.searchParams.get("days") === String(days) &&
+    source.searchParams.get("queue") === cohort.apiQueue && source.searchParams.get("rank") === (cohort.rank || null),
   "英雄战绩来源链接未锁定相同的赛季、补丁、队列和时间窗");
 
   const date = heroes.date;
-  const id = channel === "pbe" ? `pbe-${season}-${date}-${patch}` : `ranked-${season}-${patch}`;
+  const id = archiveBatchId(cohort, date);
   const entry = {
     id, channel, season, date,
     label: channel === "pbe" ? `${date.slice(5).replace("-", "/")} · ${patch}` : `正式服 ${patch}`,
     description: `${date} 的${channel === "pbe" ? "测试服" : "正式服排位"}${patch}快照，近 ${days} 天滚动窗口。`,
-    ...(channel === "pbe" && { build: String(current.build), metaTft: { patch: metaTft.patch, bPatch: metaTft.bPatch } }),
+    ...(pbe && { build: String(current.build), metaTft: { patch: basePatch, bPatch } }),
   };
 
   const lock = await open(lockFile, "wx");
@@ -126,7 +114,8 @@ async function archive() {
         requireValue(times[i] >= snapshotTime(snapshot, files[i]), `${files[i]} 早于已归档的同批次数据`);
       });
     }
-    const output = [entry, ...history.filter(row => row.id !== id)].sort((a, b) => b.date.localeCompare(a.date));
+    const output = (existing ? history.map(row => row.id === id ? entry : row) : [entry, ...history])
+      .sort((a, b) => b.date.localeCompare(a.date));
     pending.push(await stage(heroesFile, heroes));
     pending.push(await stage(equipmentFile, { standard, special }));
     pending.push(await stage(manifestFile, output));
