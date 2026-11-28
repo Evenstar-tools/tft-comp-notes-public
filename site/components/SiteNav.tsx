@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, ClipboardList, LogOut, Moon, PanelsTopLeft, SquarePen, Sun } from "lucide-react";
+import { ChevronDown, ClipboardList, LogOut, Moon, SquarePen, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
@@ -46,8 +46,8 @@ function ThemeToggle() {
 
 export function SiteNav() {
   const { session } = useOwnerSession();
-  const showOwnerAccess = Boolean(session?.isOwner || session?.loginConfigured);
-  const ownerAccessLabel = session && !session.signedIn ? "站主登录" : "站主工作区";
+  const showOwnerAccess = session?.isOwner || session?.loginConfigured !== false;
+  const ownerAccessLabel = session?.isOwner ? "站主工作区" : "站主登录";
   const pathname = usePathname() ?? "/";
   const search = useSyncExternalStore(subscribeToGuideNavigation, guideQuery, initialGuideQuery);
   const current = { pathname, search };
@@ -104,7 +104,6 @@ export function SiteNav() {
             ))}</div>)}
             <div className="task-mobile-tools">
               <a href="/updates" aria-current={isCurrent("/updates") ? "page" : undefined}>版本更新</a>
-              {showOwnerAccess && <a href={ownerEditorPath} aria-current={isCurrent(ownerEditorPath) ? "page" : undefined}>{ownerAccessLabel}</a>}
               {session?.isOwner && <>
                 <a href="/manage">发布管理</a>
                 <button type="button" className="theme-toggle" disabled={signingOut} onClick={() => void signOut()}>退出站主</button>
@@ -123,10 +122,8 @@ export function SiteNav() {
           <a className="studio-primary" href="/editor" aria-label="阵容编辑器" aria-current={pathname === "/editor" ? "page" : undefined}>
             <SquarePen size={16} aria-hidden /><span className="studio-action-label">编辑器</span>
           </a>
-          {showOwnerAccess && <a href={ownerEditorPath} aria-label={ownerAccessLabel} title={ownerAccessLabel}
-            aria-current={isCurrent(ownerEditorPath) ? "page" : undefined}>
-            <PanelsTopLeft size={16} aria-hidden />
-          </a>}
+          {showOwnerAccess && <a className="studio-owner-access" href={ownerEditorPath}
+            aria-current={isCurrent(ownerEditorPath) ? "page" : undefined}>{ownerAccessLabel}</a>}
           {session?.isOwner && <a href="/manage" aria-label="发布管理" title="发布管理" aria-current={isCurrent("/manage") ? "page" : undefined}>
             <ClipboardList size={16} aria-hidden />
           </a>}
